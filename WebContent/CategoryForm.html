@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Category form</title>
+<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var Name = null;
+	var Description = null;
+	var Token = null;
+	var Parent = null;
+	var Child = null;
+	
+	getData = function (){
+		Name = document.getElementById("name").value;
+		if (Name === '') Name = null;
+		
+		Description = document.getElementById("description").value;
+		if (Description === '') Description = null;
+		
+		Parent = document.getElementById("parent").value;
+		if (Parent === '') Parent = null;
+		
+		Child = document.getElementById("child").value;
+		if (Child === '') Child = null;
+	};
+	
+	add = function() {
+		alert("inside add function.");
+		getData();
+		var req = {
+				table: "category",
+				operation: "add",
+				row: {
+					name: Name,
+					description: Description,
+					parent: Parent,
+					child: Child
+				},
+				token: null
+		};
+		alert("got data");
+		send(req);
+	};
+	
+	edit = function() {
+		alert("inside edit function");
+		getData();
+		var req = {
+				table:"category",
+				operation: "edit",
+				row: {
+					name: Name,
+					description: Description,
+					parent: Parent,
+					child: Child
+				},
+				token: null
+		};
+		alert("got data");
+		send(req);
+	};
+	
+	deleteD = function () {
+		alert("Inside delete function");
+		getData();
+		var req = {
+				table:"category",
+				operation: "delete",
+				row: {
+					name: Name,
+					description: Description,
+					parent: Parent,
+					child: Child
+				},
+				token: null
+		};
+		alert("got data");
+		send(req);
+	};
+	
+	getNext = function() {
+		alert("Inside get next function");
+		Token = document.getElementById("name").value;
+		var req = {
+				table:"category",
+				operation:"getNext",
+				row: {
+					name:Name,
+					description:Description,
+					parent: Parent,
+					child: Child
+				},
+				token: Token
+		}
+		send(req);
+	};
+	
+	getPrevious = function() {
+		alert("Inside get next function");
+		Token = document.getElementById("name").value;
+		var req = {
+				table:"category",
+				operation:"getPrevious",
+				row: {
+					name:Name,
+					description:Description,
+					parent: Parent,
+					child: Child
+				},
+				token: Token
+		}
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send function.");
+		$.ajax({
+			url: 'http://localhost:8080/fls1.1/AdminOps',
+			type:'get',
+			data: {req: JSON.stringify(req)},
+			contentType:"application/json",
+			dataType: "json",
+			
+			success: function(response) {
+				alert("working");
+				document.getElementById("Id").value = response.Id;
+				document.getElementById("Code").value = response.Code;
+				document.getElementById("Message").value = response.Message;
+			},
+			
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+	<h1>CATEGORY FORM</h1>
+	<form>
+		Category Name : <input type="text" name="name" id="name"><br/><br/>
+		Description : <input type="text" name="description" id="description"><br/><br/>
+		Category Parent : <input type="text" name="parent" id="parent"><br/><br/>
+		Category Child : <input type="text" name="child" id="child"><br/><br/>
+		<input type="button" value="Add" onclick="add()">
+		<input type="button" value="Edit" onclick="edit()">
+		<input type="button" value="Delete" onclick="deleteD()">
+		<input type="button" value="Get Next" onclick="getNext()">
+		<input type="button" value="Get Previous" onclick="getPrevious()"><br/><br/>
+		<h1>OUTPUT</h1>
+		ID : <input type="text" name="Id" id="Id"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message">
+	</form>
+</body>
+</html>
