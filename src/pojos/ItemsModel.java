@@ -4,8 +4,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ItemsModel {
-	private String title, description;
-	int quantity,id;
+	private String title, category, description,userId,leaseTerm,status;
+	int id, leaseValue;
 	private JSONObject obj;
 	
 	public void getData(JSONObject ob) {
@@ -19,10 +19,12 @@ public class ItemsModel {
 			
 			title = obj.getString("title");
 			description = obj.getString("description");
-			quantity = obj.getInt("quantity");
+			category = obj.getString("category");
+			userId = obj.getString("userId");
+			leaseTerm = obj.getString("leaseTerm");
 			id = obj.getInt("id");
-			
-			System.out.println("Extracted data : " +title + description+ quantity);
+			leaseValue = obj.getInt("leaseValue");
+			status = obj.getString("status");
 		} catch (JSONException e) {
 			System.out.println("Couldn't parse row object of JSON");
 			e.printStackTrace();
@@ -37,11 +39,27 @@ public class ItemsModel {
 		return this.title;
 	}
 	
-	public int getQuantity() {
-		return this.quantity;
+	public int getLeaseValue() {
+		return this.leaseValue;
 	}
 	
 	public int getId(){
 		return this.id;
+	}
+	
+	public String getCategory() {
+		return this.category;
+	}
+	
+	public String getLeaseTerm() {
+		return this.leaseTerm;
+	}
+	
+	public String getUserId() {
+		return this.userId;
+	}
+	
+	public String getStatus() {
+		return this.status;
 	}
 }

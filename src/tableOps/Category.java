@@ -228,7 +228,7 @@ public class Category extends Connect {
 	
 	private void getPrevious() {
 		check = null;
-		System.out.println("Inside GetNext method");
+		System.out.println("Inside GetPrevious method");
 		String sql = "SELECT * FROM category WHERE catName < ? ORDER BY catName DESC LIMIT 1";
 		
 		getConnection();

@@ -2,28 +2,44 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>AdminOps Service Page</title>
+<title>Items Form</title>
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var Id = 0;
 	var Title = null;
+	var Category = null;
 	var Description = null;
-	var Quantity = 0;
+	var UserId = null;
+	var LeaseTerm = null;
+	var Status = null;
+	var LeaseValue = 0;
 	var Token = 0;
 	
 	getData = function() {
 		//alert("Inside get Data");
 		Title = document.getElementById("title").value;
-		if(Title === '') Title = null;
+		if (Title === '') Title = null;
 		
 		Id = document.getElementById("id").value;
-		if(Id === '') Id = 0;
+		if (Id === '') Id = 0;
 		
 		Description = document.getElementById("description").value;
-		if(Description === '') Description = null;
+		if (Description === '') Description = null;
 		
-		Quantity = document.getElementById("quantity").value;
-		if(Quantity === '') Quantity = 0;
+		Category = document.getElementById("category").value;
+		if (Category === '') Category = null;
+		
+		UserId = document.getElementById("userId").value;
+		if (UserId === '') UserId = null;
+		
+		LeaseValue = document.getElementById("leaseValue").value;
+		if (LeaseValue === '') LeaseValue = 0;
+		
+		LeaseTerm = document.getElementById("leaseTerms").value;
+		if (LeaseTerm === '') LeaseTerm = null;
+		
+		Status = document.getElementById("status").value;
+		if (Status === '') Status = null;
 	}
 	
 	add = function() {
@@ -37,7 +53,11 @@
 					id:Id,
 					title:Title,
 					description:Description,
-					quantity:Quantity
+					category: Category,
+					userId: UserId,
+					leaseValue: LeaseValue,
+					leaseTerm: LeaseTerm,
+					status: Status
 				},
 				token:0
 		}
@@ -56,7 +76,11 @@
 					id:Id,
 					title:Title,
 					description:Description,
-					quantity:Quantity
+					category: Category,
+					userId: UserId,
+					leaseValue: LeaseValue,
+					leaseTerm: LeaseTerm,
+					status: Status
 				},
 				token:0
 		}
@@ -74,7 +98,11 @@
 					id:Id,
 					title:Title,
 					description:Description,
-					quantity:Quantity
+					category: Category,
+					userId: UserId,
+					leaseValue: LeaseValue,
+					leaseTerm: LeaseTerm,
+					status: Status
 				},
 				token:0
 		}
@@ -92,7 +120,11 @@
 					id:Id,
 					title:Title,
 					description:Description,
-					quantity:Quantity
+					category: Category,
+					userId: UserId,
+					leaseValue: LeaseValue,
+					leaseTerm: LeaseTerm,
+					status: Status
 				},
 				token:Token
 		}
@@ -110,7 +142,11 @@
 					id:Id,
 					title:Title,
 					description:Description,
-					quantity:Quantity
+					category: Category,
+					userId: UserId,
+					leaseValue: LeaseValue,
+					leaseTerm: LeaseTerm,
+					status: Status
 				},
 				token:Token
 		}
@@ -148,26 +184,17 @@
 	<form>
 		Item Id			: <input type="text" name="id" id="id" ><br/><br/>
 		Title       : <input type="text" name="title" id="title" ><br/><br/>
+		Category : <input type="text" name="category" id="category" ><br/><br/>
 		Description : <input type="text" name="description" id="description" ><br/><br/>
-		Quantity    : <input type="text" name="quantity" id="quantity" ><br/><br/>
+		User ID : <input type="text" name="userId" id="userId"><br/><br/>
 		Lease Terms : <input type="text" name="leaseTerms" id="leaseTerms"><br/><br/>
 		Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
+		Status : <input type="text" name="status" id="status"><br/><br/>
 		<input type="button" value="Add" onclick="add()">
 		<input type="button" value="Edit" onclick="edit()">
 		<input type="button" value="Delete" onclick="deleteData()">
 		<input type="button" value="Get Next" onclick="getNext()">
 		<input type="button" value="Get Previous" onclick="getPrevious()"><br/><br/>
-		
-		<!--  <h1>CATEGORY SERVICE FORM</h1>
-		Category Name : <input type="text" name="name1" id="name1" ><br/><br/>
-		Description : <input type="text" name="description1" id="description1" ><br/><br/>
-		Category Parent    : <input type="text" name="parent" id="parent" ><br/><br/>
-		Category Child : <input type="text" name="child" id="child"><br/><br/>
-		<input type="button" value="Add1" onclick="add1()">
-		<input type="button" value="Edit1" onclick="edit1()">
-		<input type="button" value="Delete1" onclick="deleteData1()">
-		<input type="button" value="Get Next1" onclick="getNext1()">
-		<input type="button" value="Get Previous1" onclick="getPrevious1()"><br/><br/>-->
 		
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>

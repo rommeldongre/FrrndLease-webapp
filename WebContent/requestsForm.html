@@ -2,50 +2,28 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Leases form</title>
+<title>Requests form</title>
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
-	var ReqUserId = null;
 	var ItemId = null;
-	var Token = null;
 	var UserId = null;
+	var Token = null;
 	
 	getData = function (){
-		ReqUserId = document.getElementById("reqUserId").value;
-		if (ReqUserId === '') ReqUserId = null;
-		
 		ItemId = document.getElementById("itemId").value;
 		if (ItemId === '') ItemId = null;
 		
 		UserId = document.getElementById("userId").value;
-		if (UserId === '') UserId = null;
+		if (UserId ==='') UserId = null;
 	};
 	
 	add = function() {
 		alert("inside add function.");
 		getData();
 		var req = {
-				table: "leases",
+				table: "requests",
 				operation: "add",
 				row: {
-					reqUserId: ReqUserId,
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: null
-		};
-		alert("got data");
-		send(req);
-	};
-	
-	edit = function() {
-		alert("inside edit function");
-		getData();
-		var req = {
-				table: "leases",
-				operation: "edit",
-				row: {
-					reqUserId: ReqUserId,
 					itemId: ItemId,
 					userId: UserId
 				},
@@ -59,10 +37,9 @@
 		alert("Inside delete function");
 		getData();
 		var req = {
-				table: "leases",
+				table: "requests",
 				operation: "delete",
 				row: {
-					reqUserId: ReqUserId,
 					itemId: ItemId,
 					userId: UserId
 				},
@@ -74,12 +51,11 @@
 	
 	getNext = function() {
 		alert("Inside get next function");
-		Token = document.getElementById("reqUserId").value;
+		Token = document.getElementById("itemId").value;
 		var req = {
-				table: "leases",
+				table: "requests",
 				operation: "getNext",
 				row: {
-					reqUserId: ReqUserId,
 					itemId: ItemId,
 					userId: UserId
 				},
@@ -90,12 +66,11 @@
 	
 	getPrevious = function() {
 		alert("Inside get next function");
-		Token = document.getElementById("reqUserId").value;
+		Token = document.getElementById("itemId").value;
 		var req = {
-				table: "leases",
+				table: "requests",
 				operation: "getPrevious",
 				row: {
-					reqUserId: ReqUserId,
 					itemId: ItemId,
 					userId: UserId
 				},
@@ -129,13 +104,11 @@
 </script>
 </head>
 <body>
-	<h1>LEASES FORM</h1>
+	<h1>REQUESTS FORM</h1>
 	<form>
-		Lease Req User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>
-		Lease Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
-		Lease User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Request Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
 		<input type="button" value="Add" onclick="add()">
-		<input type="button" value="Edit" onclick="edit()">
 		<input type="button" value="Delete" onclick="deleteD()">
 		<input type="button" value="Get Next" onclick="getNext()">
 		<input type="button" value="Get Previous" onclick="getPrevious()"><br/><br/>

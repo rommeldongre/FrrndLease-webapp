@@ -2,35 +2,35 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Leases form</title>
+<title>Lease Terms form</title>
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
-	var ReqUserId = null;
-	var ItemId = null;
+	var Name = null;
+	var Description = null;
 	var Token = null;
-	var UserId = null;
+	var Duration = 0;
 	
 	getData = function (){
-		ReqUserId = document.getElementById("reqUserId").value;
-		if (ReqUserId === '') ReqUserId = null;
+		Name = document.getElementById("name").value;
+		if (Name === '') Name = null;
 		
-		ItemId = document.getElementById("itemId").value;
-		if (ItemId === '') ItemId = null;
+		Description = document.getElementById("description").value;
+		if (Description === '') Description = null;
 		
-		UserId = document.getElementById("userId").value;
-		if (UserId === '') UserId = null;
+		Duration = document.getElementById("duration").value;
+		if (Duration === '') Duration = 0;
 	};
 	
 	add = function() {
 		alert("inside add function.");
 		getData();
 		var req = {
-				table: "leases",
+				table: "leaseTerms",
 				operation: "add",
 				row: {
-					reqUserId: ReqUserId,
-					itemId: ItemId,
-					userId: UserId
+					name: Name,
+					description: Description,
+					duration: Duration
 				},
 				token: null
 		};
@@ -42,12 +42,12 @@
 		alert("inside edit function");
 		getData();
 		var req = {
-				table: "leases",
+				table: "leaseTerms",
 				operation: "edit",
 				row: {
-					reqUserId: ReqUserId,
-					itemId: ItemId,
-					userId: UserId
+					name: Name,
+					description: Description,
+					duration: Duration
 				},
 				token: null
 		};
@@ -59,12 +59,12 @@
 		alert("Inside delete function");
 		getData();
 		var req = {
-				table: "leases",
+				table: "leaseTerms",
 				operation: "delete",
 				row: {
-					reqUserId: ReqUserId,
-					itemId: ItemId,
-					userId: UserId
+					name: Name,
+					description: Description,
+					duration: Duration
 				},
 				token: null
 		};
@@ -74,14 +74,14 @@
 	
 	getNext = function() {
 		alert("Inside get next function");
-		Token = document.getElementById("reqUserId").value;
+		Token = document.getElementById("name").value;
 		var req = {
-				table: "leases",
+				table: "leaseTerms",
 				operation: "getNext",
 				row: {
-					reqUserId: ReqUserId,
-					itemId: ItemId,
-					userId: UserId
+					name: Name,
+					description: Description,
+					duration: Duration
 				},
 				token: Token
 		}
@@ -90,14 +90,14 @@
 	
 	getPrevious = function() {
 		alert("Inside get next function");
-		Token = document.getElementById("reqUserId").value;
+		Token = document.getElementById("name").value;
 		var req = {
-				table: "leases",
+				table: "leaseTerms",
 				operation: "getPrevious",
 				row: {
-					reqUserId: ReqUserId,
-					itemId: ItemId,
-					userId: UserId
+					name: Name,
+					description: Description,
+					duration: Duration
 				},
 				token: Token
 		}
@@ -129,11 +129,11 @@
 </script>
 </head>
 <body>
-	<h1>LEASES FORM</h1>
+	<h1>LEASE-TERMS FORM</h1>
 	<form>
-		Lease Req User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>
-		Lease Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
-		Lease User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Term Name : <input type="text" name="name" id="name"><br/><br/>
+		Term Description : <input type="text" name="description" id="description"><br/><br/>
+		Duration : <input type="text" name="duration" id="duration"><br/><br/>
 		<input type="button" value="Add" onclick="add()">
 		<input type="button" value="Edit" onclick="edit()">
 		<input type="button" value="Delete" onclick="deleteD()">

@@ -14,8 +14,8 @@ import pojos.ItemsModel;
 
 public class Items extends Connect {
 	
-	private String operation, status, title, description, message,Id=null;
-	private int quantity,id,token,Code;
+	private String operation,category,leaseTerm,userId, status, title, description, message,Id=null;
+	private int leaseValue,id,token,Code;
 	private ItemsModel im;
 	private Response res = new Response();
 	private int check = 0;
@@ -76,10 +76,13 @@ public class Items extends Connect {
 	private void Add() {
 		title = im.getTitle();
 		description = im.getDescription();
-		quantity = im.getQuantity();
+		category = im.getCategory();
+		userId = im.getUserId();
+		leaseTerm = im.getLeaseTerm();
+		leaseValue = im.getLeaseValue();
 		
 		System.out.println("Inside add method...");
-		String sql = "insert into items (title, description, quantity) values (?,?,?)";
+		String sql = "insert into items (title, category, description, userId, leaseValue, leaseTerm) values (?,?,?,?,?,?)";
 		
 		getConnection();
 		try {
@@ -88,8 +91,11 @@ public class Items extends Connect {
 			
 			System.out.println("Statement created. Executing query.....");
 			stmt.setString(1, title);
-			stmt.setString(2, description);
-			stmt.setInt(3, quantity);
+			stmt.setString(2, category);
+			stmt.setString(3, description);
+			stmt.setString(4, userId);
+			stmt.setInt(5, leaseValue);
+			stmt.setString(6, leaseTerm);
 			stmt.executeUpdate();
 			System.out.println("Item added into table");
 			
@@ -141,7 +147,7 @@ public class Items extends Connect {
 				stmt.setInt(1, id);
 				stmt.executeUpdate();
 				status = "operation successfull deleted item id :" + id;
-				Id = String.valueOf(id);
+				Id = String.valueOf(check);
 				message = status;
 				Code = 001;
 				res.setData(Code,Id,message);
@@ -159,13 +165,17 @@ public class Items extends Connect {
 	
 	private void Edit() {
 		check = 0;
-		title = im.getTitle();
 		id = im.getId();
+		title = im.getTitle();
 		description = im.getDescription();
-		quantity = im.getQuantity();
+		category = im.getCategory();
+		userId = im.getUserId();
+		leaseTerm = im.getLeaseTerm();
+		leaseValue = im.getLeaseValue();
+		status = im.getStatus();
 		
 		System.out.println("Inside edit method...");
-		String sql = "UPDATE items SET title=?, description=?, quantity=? WHERE itemId=?";
+		String sql = "UPDATE items SET title=?, category=?, description=?, userId=?, leaseValue=?, leaseTerm=?, status=? WHERE itemId=?";
 		
 		getConnection();
 		try {
@@ -184,13 +194,16 @@ public class Items extends Connect {
 				
 				System.out.println("Statement created. Executing edit query...");
 				stmt.setString(1, title);
-				stmt.setString(2, description);
-				stmt.setInt(3, quantity);
-				stmt.setInt(4, id);
+				stmt.setString(2, category);
+				stmt.setString(3, description);
+				stmt.setString(4, userId);
+				stmt.setInt(5, leaseValue);
+				stmt.setString(6, leaseTerm);
+				stmt.setString(7, status);
+				stmt.setInt(8, id);
 				stmt.executeUpdate();
-				status = "operation successfull edited item id : " +id;
-				Id = String.valueOf(id);
-				message = status;
+				message = "operation successfull edited item id : " +id;
+				Id = String.valueOf(check);
 				Code = 002;
 				res.setData(Code,Id,message);
 			}
@@ -220,10 +233,9 @@ public class Items extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
-				System.out.println(rs.getInt("itemId")+"\t"+rs.getString("title")+"\t"+rs.getString("description"));
-				message = rs.getInt("itemId")+"\t"+rs.getString("title")+"\t"+rs.getString("description");
+				message = "Item Id : "+rs.getInt("itemId")+"; title : "+rs.getString("title")+"; category : "+rs.getString("category")+"; description : "+rs.getString("description")+"; userId : "+rs.getString("userId")+"; lease Value : "+rs.getInt("leaseValue")+"; lease Term : "+rs.getString("leaseTerm")+"; status : "+rs.getString("status");
+				System.out.println(message);
 				check = rs.getInt("itemId");
 				//System.out.println(id);
 			}
@@ -263,8 +275,8 @@ public class Items extends Connect {
 			
 			System.out.println("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
-				System.out.println(rs.getInt("itemId")+"\t"+rs.getString("title")+"\t"+rs.getString("description"));
-				message = rs.getInt("itemId")+"\t"+rs.getString("title")+"\t"+rs.getString("description");
+				message =  "Item Id : "+rs.getInt("itemId")+"; title : "+rs.getString("title")+"; category : "+rs.getString("category")+"; description : "+rs.getString("description")+"; userId : "+rs.getString("userId")+"; lease Value : "+rs.getInt("leaseValue")+"; lease Term : "+rs.getString("leaseTerm")+"; status : "+rs.getString("status");
+				System.out.println(message);
 				check = rs.getInt("itemId");
 			}
 			if(check != 0 ) { //checks if result Set is empty

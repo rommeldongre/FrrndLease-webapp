@@ -12,11 +12,6 @@ public class AdminOpsHandler {
 	private String table, operation;
 	private JSONObject jsonobj1,jsonobj2;
 
-	
-	
-	
-	
-	
 	private Response res = new Response();
 	
 	public Response getInfo(String Table, JSONObject obj){
@@ -75,6 +70,46 @@ public class AdminOpsHandler {
 			System.out.println("Leases table is selected....");
 			lm.getData(jsonobj1);
 			res = lease.selectOp(operation, lm, jsonobj2);
+			break;
+			
+		case "leaseterms" :
+			LeaseTerms leaseTerm = new LeaseTerms();
+			LeaseTermsModel ltm = new LeaseTermsModel();
+			System.out.println("LeaseTerms table is selected..");
+			ltm.getData(jsonobj1);
+			res = leaseTerm.selectOp(operation, ltm, jsonobj2);
+			break;
+			
+		case "requests" :
+			Requests request = new Requests();
+			RequestsModel rm = new RequestsModel();
+			System.out.println("Requests table is selected..");
+			rm.getData(jsonobj1);
+			res = request.selectOp(operation, rm, jsonobj2);
+			break;
+			
+		case "store" :
+			Store store = new Store();
+			StoreModel sm = new StoreModel();
+			System.out.println("Store table is selected");
+			sm.getData(jsonobj1);
+			res = store.selectOp(operation, sm, jsonobj2);
+			break;
+			
+		case "wishlist" :
+			Wishlist wish = new Wishlist();
+			WishlistModel wm = new WishlistModel();
+			System.out.println("Wishlist table is selected");
+			wm.getData(jsonobj1);
+			res = wish.selectOp(operation, wm, jsonobj2);
+			break;
+			
+		case "users" :
+			Users user = new Users();
+			UsersModel um = new UsersModel();
+			System.out.println("Users table is selected..");
+			um.getData(jsonobj1);
+			res = user.selectOp(operation, um, jsonobj2);
 			break;
 			
 		default:

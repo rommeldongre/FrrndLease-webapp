@@ -7,20 +7,19 @@ import java.sql.SQLException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pojos.FriendsModel;
-import adminOps.Response;
 import connect.Connect;
+import pojos.LeaseTermsModel;
+import adminOps.Response;
 
-public class Friends extends Connect{
-	
-	private String check=null, Id=null,token,friendId, fullName, mobile, userId,operation,message;
-	private int Code;
-	private FriendsModel fm;
+public class LeaseTerms extends Connect {
+	private String check=null, Id=null,token,name,description,operation,message;
+	private int Code,duration;
+	private LeaseTermsModel ltm;
 	private Response res = new Response();
 	
-	public Response selectOp(String Operation, FriendsModel fdm, JSONObject obj) {
+	public Response selectOp(String Operation, LeaseTermsModel ltml, JSONObject obj) {
 		operation = Operation.toLowerCase();
-		fm = fdm;
+		ltm = ltml;
 		
 		switch(operation) {
 		
@@ -70,12 +69,11 @@ public class Friends extends Connect{
 	}
 	
 	private void Add() {
-		friendId = fm.getFriendId();
-		fullName = fm.getFullName();
-		mobile = fm.getMobile();
-		userId = fm.getUserId();
+		name = ltm.getName();
+		description = ltm.getDescription();
+		duration = ltm.getDuration();
 		
-		String sql = "insert into friends (friendId,fullName,mobile,friendUserId) values (?,?,?,?)";		 //
+		String sql = "insert into leaseterms (termName,termDesc,termDuration) values (?,?,?)";		 //
 		getConnection();
 		
 		try {
@@ -83,16 +81,15 @@ public class Friends extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing query.....");
-			stmt.setString(1, friendId);
-			stmt.setString(2, fullName);
-			stmt.setString(3,mobile);
-			stmt.setString(4,userId);
+			stmt.setString(1, name);
+			stmt.setString(2, description);
+			stmt.setInt(3, duration);
 			stmt.executeUpdate();
-			System.out.println("Entry added into friends table");
+			System.out.println("Entry added into leasetrems table");
 			
-			message = "Entry added into friends table";
-			Code = 010;
-			Id = friendId;
+			message = "Entry added into leaseTerms table";
+			Code = 20;
+			Id = name;
 			
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
@@ -103,32 +100,32 @@ public class Friends extends Connect{
 	}
 	
 	private void Delete() {
-		friendId = fm.getFriendId();
+		name = ltm.getName();
 		check = null;
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM friends WHERE friendId=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friendId=?";			//
+		String sql = "DELETE FROM leaseterms WHERE termName=?";			//
+		String sql2 = "SELECT * FROM leaseterms WHERE termName=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
-			stmt2.setString(1, friendId);
+			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("friendId");
+				check = rs.getString("termName");
 			}
 			
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				System.out.println("Statement created. Executing delete query on ..." + check);
-				stmt.setString(1, friendId);
+				stmt.setString(1, name);
 				stmt.executeUpdate();
-				message = "operation successfull deleted friend id : "+friendId;
-				Code = 0011;
+				message = "operation successfull deleted leaseTerm Req User id : "+name;
+				Code = 21;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
@@ -144,35 +141,35 @@ public class Friends extends Connect{
 	}
 	
 	private void Edit() {
-		friendId = fm.getFriendId();
-		fullName = fm.getFullName();
-		mobile = fm.getMobile();
+		name = ltm.getName();
+		description = ltm.getDescription();
+		duration = ltm.getDuration();
 		check = null;
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE friends SET fullName=?, mobile=? WHERE friendId=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friendId=?";								//
+		String sql = "UPDATE leaseterms SET termDesc=?,termDuration=? WHERE termName=?";			//
+		String sql2 = "SELECT * FROM leaseterms WHERE termName=?";								//
 		
 		try {
 			System.out.println("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
-			stmt2.setString(1, friendId);
+			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("friendId");
+				check = rs.getString("termName");
 			}
 			
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				System.out.println("Statement created. Executing edit query on ..." + check);
-				stmt.setString(1, fullName);
-				stmt.setString(2,mobile);
-				stmt.setString(3,friendId);
+				stmt.setString(1, description);
+				stmt.setInt(2, duration);
+				stmt.setString(3,name);
 				stmt.executeUpdate();
-				message = "operation successfull edited friends id : "+friendId;
-				Code = 0012;
+				message = "operation successfull edited leaseterm Req User id : "+name;
+				Code = 22;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
@@ -189,7 +186,7 @@ public class Friends extends Connect{
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM friends WHERE friendId > ? ORDER BY friendId LIMIT 1";		//
+		String sql = "SELECT * FROM leaseterms WHERE termName > ? ORDER BY termName LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -201,13 +198,13 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friendId")+"; full name: "+rs.getString("fullName")+"; mobile : "+rs.getString("mobile") + "; friend user id : "+rs.getString("friendUserId");
+				message = "term Name: "+rs.getString("termName")+"; term Description : "+rs.getString("termDesc")+"; term Duration : "+rs.getInt("termDuration");
 				System.out.println(message);
-				check = rs.getString("friendId");
+				check = rs.getString("termName");
 			}
 			
 			if(check != null ) {
-				Code = 13;
+				Code = 23;
 				Id = check;
 			}
 			
@@ -227,7 +224,7 @@ public class Friends extends Connect{
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM friends WHERE friendId < ? ORDER BY friendId DESC LIMIT 1";			//
+		String sql = "SELECT * FROM leaseterms WHERE termName < ? ORDER BY termName DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -239,13 +236,13 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friendId")+"; full name: "+rs.getString("fullName")+"; mobile : "+rs.getString("mobile") + "; friend user id : "+rs.getString("friendUserId");
+				message = "term Name: "+rs.getString("termName")+"; term Description : "+rs.getString("termDesc")+"; term Duration : "+rs.getInt("termDuration");
 				System.out.println(message);
-				check = rs.getString("friendId");
+				check = rs.getString("termName");
 			}
 			
 			if(check != null ) {
-				Code = 14;
+				Code = 24;
 				Id = check;
 			}
 			
@@ -261,4 +258,5 @@ public class Friends extends Connect{
 			e.printStackTrace();
 		}	
 	}
+
 }

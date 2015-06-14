@@ -7,20 +7,19 @@ import java.sql.SQLException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import pojos.FriendsModel;
 import adminOps.Response;
 import connect.Connect;
+import pojos.UsersModel;
 
-public class Friends extends Connect{
-	
-	private String check=null, Id=null,token,friendId, fullName, mobile, userId,operation,message;
+public class Users extends Connect {
+	private String userId,fullName,mobile,location,auth,message,operation,Id=null,check=null,token;
 	private int Code;
-	private FriendsModel fm;
+	private UsersModel um;
 	private Response res = new Response();
 	
-	public Response selectOp(String Operation, FriendsModel fdm, JSONObject obj) {
+	public Response selectOp(String Operation, UsersModel usm, JSONObject obj) {
 		operation = Operation.toLowerCase();
-		fm = fdm;
+		um = usm;
 		
 		switch(operation) {
 		
@@ -70,12 +69,13 @@ public class Friends extends Connect{
 	}
 	
 	private void Add() {
-		friendId = fm.getFriendId();
-		fullName = fm.getFullName();
-		mobile = fm.getMobile();
-		userId = fm.getUserId();
+		userId = um.getUserId();
+		fullName = um.getFullName();
+		mobile = um.getMobile();
+		location = um.getLocation();
+		auth = um.getAuth();
 		
-		String sql = "insert into friends (friendId,fullName,mobile,friendUserId) values (?,?,?,?)";		 //
+		String sql = "insert into users (userId,fullName,mobile,location,auth) values (?,?,?,?,?)";
 		getConnection();
 		
 		try {
@@ -83,16 +83,17 @@ public class Friends extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing query.....");
-			stmt.setString(1, friendId);
+			stmt.setString(1, userId);
 			stmt.setString(2, fullName);
-			stmt.setString(3,mobile);
-			stmt.setString(4,userId);
+			stmt.setString(3, mobile);
+			stmt.setString(4, location);
+			stmt.setString(5, auth);
 			stmt.executeUpdate();
-			System.out.println("Entry added into friends table");
+			System.out.println("Entry added into users table");
 			
-			message = "Entry added into friends table";
-			Code = 010;
-			Id = friendId;
+			message = "Entry added into users table";
+			Code = 37;
+			Id = userId;
 			
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
@@ -103,32 +104,32 @@ public class Friends extends Connect{
 	}
 	
 	private void Delete() {
-		friendId = fm.getFriendId();
+		userId = um.getUserId();
 		check = null;
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM friends WHERE friendId=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friendId=?";			//
+		String sql = "DELETE FROM users WHERE userId=?";
+		String sql2 = "SELECT * FROM users WHERE userId=?";
 		
 		try {
 			System.out.println("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
-			stmt2.setString(1, friendId);
+			stmt2.setString(1, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("friendId");
+				check = rs.getString("userId");
 			}
 			
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				System.out.println("Statement created. Executing delete query on ..." + check);
-				stmt.setString(1, friendId);
+				stmt.setString(1, userId);
 				stmt.executeUpdate();
-				message = "operation successfull deleted friend id : "+friendId;
-				Code = 0011;
+				message = "operation successfull deleted user id : "+userId;
+				Code = 38;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
@@ -144,23 +145,25 @@ public class Friends extends Connect{
 	}
 	
 	private void Edit() {
-		friendId = fm.getFriendId();
-		fullName = fm.getFullName();
-		mobile = fm.getMobile();
+		userId = um.getUserId();
+		fullName = um.getFullName();
+		mobile = um.getMobile();
+		location = um.getLocation();
+		auth = um.getAuth();
 		check = null;
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE friends SET fullName=?, mobile=? WHERE friendId=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friendId=?";								//
+		String sql = "UPDATE users SET fullName=?, mobile=?, location=?, auth=?  WHERE userId=?";
+		String sql2 = "SELECT * FROM users WHERE userId=?";
 		
 		try {
 			System.out.println("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
-			stmt2.setString(1, friendId);
+			stmt2.setString(1, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("friendId");
+				check = rs.getString("userId");
 			}
 			
 			if(check != null) {
@@ -168,11 +171,13 @@ public class Friends extends Connect{
 				
 				System.out.println("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
-				stmt.setString(2,mobile);
-				stmt.setString(3,friendId);
+				stmt.setString(2, mobile);
+				stmt.setString(3, location);
+				stmt.setString(4, auth);
+				stmt.setString(5, userId);
 				stmt.executeUpdate();
-				message = "operation successfull edited friends id : "+friendId;
-				Code = 0012;
+				message = "operation successfull edited user id : "+userId;
+				Code = 39;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
@@ -189,7 +194,7 @@ public class Friends extends Connect{
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM friends WHERE friendId > ? ORDER BY friendId LIMIT 1";		//
+		String sql = "SELECT * FROM users WHERE userId > ? ORDER BY userId LIMIT 1";
 		
 		getConnection();
 		try {
@@ -201,13 +206,13 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friendId")+"; full name: "+rs.getString("fullName")+"; mobile : "+rs.getString("mobile") + "; friend user id : "+rs.getString("friendUserId");
+				message = "user ID: "+rs.getString("userId")+"; full name: "+rs.getString("fullName")+"; mobile: "+rs.getString("mobile")+"; location : "+rs.getString("location")+"; auth : "+rs.getString("auth");
 				System.out.println(message);
-				check = rs.getString("friendId");
+				check = rs.getString("userId");
 			}
 			
 			if(check != null ) {
-				Code = 13;
+				Code = 40;
 				Id = check;
 			}
 			
@@ -227,7 +232,7 @@ public class Friends extends Connect{
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM friends WHERE friendId < ? ORDER BY friendId DESC LIMIT 1";			//
+		String sql = "SELECT * FROM users WHERE userId < ? ORDER BY userId DESC LIMIT 1";
 		
 		getConnection();
 		try {
@@ -239,13 +244,13 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friendId")+"; full name: "+rs.getString("fullName")+"; mobile : "+rs.getString("mobile") + "; friend user id : "+rs.getString("friendUserId");
+				message = "user ID: "+rs.getString("userId")+"; full name: "+rs.getString("fullName")+"; mobile: "+rs.getString("mobile")+"; location : "+rs.getString("location")+"; auth : "+rs.getString("auth");
 				System.out.println(message);
-				check = rs.getString("friendId");
+				check = rs.getString("userId");
 			}
 			
 			if(check != null ) {
-				Code = 14;
+				Code = 41;
 				Id = check;
 			}
 			

@@ -222,7 +222,7 @@ public class Leases extends Connect {
 	
 	private void getPrevious() {
 		check = null;
-		System.out.println("Inside GetNext method");
+		System.out.println("Inside GetPrevious method");
 		String sql = "SELECT * FROM leases WHERE leaseReqUserId < ? ORDER BY leaseReqUserId DESC LIMIT 1";			//
 		
 		getConnection();
