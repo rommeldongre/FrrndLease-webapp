@@ -21,4 +21,8 @@ public class Response {
 	public String getMessage() {
 		return this.Message;
 	}
+	
+	public int getIntCode() {
+		return this.Code;
+	}
 }
