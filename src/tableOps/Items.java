@@ -80,9 +80,10 @@ public class Items extends Connect {
 		userId = im.getUserId();
 		leaseTerm = im.getLeaseTerm();
 		leaseValue = im.getLeaseValue();
+		status = im.getStatus();
 		
 		System.out.println("Inside add method...");
-		String sql = "insert into items (title, category, description, userId, leaseValue, leaseTerm) values (?,?,?,?,?,?)";
+		String sql = "insert into items (title, category, description, userId, leaseValue, leaseTerm, status) values (?,?,?,?,?,?,?)";
 		
 		getConnection();
 		try {
@@ -96,6 +97,7 @@ public class Items extends Connect {
 			stmt.setString(4, userId);
 			stmt.setInt(5, leaseValue);
 			stmt.setString(6, leaseTerm);
+			stmt.setString(7, status);
 			stmt.executeUpdate();
 			System.out.println("Item added into table");
 			

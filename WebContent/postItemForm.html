@@ -20,9 +20,6 @@
 		Title = document.getElementById("title").value;
 		if (Title === '') Title = null;
 		
-		Id = document.getElementById("id").value;
-		if (Id === '') Id = 0;
-		
 		Description = document.getElementById("description").value;
 		if (Description === '') Description = null;
 		
@@ -62,41 +59,21 @@
 		};
 		
 		var req2 = {
-				table:"items",
-				operation:"edit",
-				row:{
-					id:Id,
-					title:Title,
-					description:Description,
-					category: Category,
-					userId: UserId,
-					leaseValue: LeaseValue,
-					leaseTerm: LeaseTerm,
-					status: Status
-				},
-				token:0
-		};
-		
-		var req3 = {
 				table: "store",
 				operation: "add",
-				row: {
-					itemId: Id
-				},
 				token:0
 		};
 		//var Req = JSON.parse(JOSNObject);
-		send(req1,req2,req3);
+		send(req1,req2);
 	};
 	
-	send = function(req1,req2,req3) {
+	send = function(req1,req2) {
 		alert("Inside send");
 		$.ajax({
 			url: 'http://localhost:8080/fls1.1/PostItem',
 			type: 'get',
 			data: {req1 : JSON.stringify(req1),
-					req2 : JSON.stringify(req2),
-					req3 : JSON.stringify(req3)},
+					req2 : JSON.stringify(req2)},
 			contentType:"application/json",
 			dataType:"json",
 			
@@ -120,7 +97,6 @@
 <body>
 <h1> POST-ITEM SERVICE FORM</h1>
 	<form>
-		Item Id			: <input type="text" name="id" id="id" ><br/><br/>
 		Title       : <input type="text" name="title" id="title" ><br/><br/>
 		Category : <input type="text" name="category" id="category" ><br/><br/>
 		Description : <input type="text" name="description" id="description" ><br/><br/>
