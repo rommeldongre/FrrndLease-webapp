@@ -67,7 +67,7 @@ public class Store extends Connect {
 	private void Add() {
 		itemId = sm.getItemId();
 		
-		String sql = "insert into store (storeItemId) values (?)";		 //
+		String sql = "insert into store (store_item_id) values (?)";		 //
 		getConnection();
 		
 		try {
@@ -97,8 +97,8 @@ public class Store extends Connect {
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM store WHERE storeItemId=?";			//
-		String sql2 = "SELECT * FROM store WHERE storeItemId=?";			//
+		String sql = "DELETE FROM store WHERE store_item_id=?";			//
+		String sql2 = "SELECT * FROM store WHERE store_item_id=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
@@ -107,7 +107,7 @@ public class Store extends Connect {
 			stmt2.setInt(1, itemId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getInt("storeItemId");
+				check = rs.getInt("store_item_id");
 			}
 			
 			if(check != 0) {
@@ -135,7 +135,7 @@ public class Store extends Connect {
 	private void getNext() {
 		check = 0;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM store WHERE storeItemId > ? ORDER BY storeItemId LIMIT 1";		//
+		String sql = "SELECT * FROM store WHERE store_item_id > ? ORDER BY store_item_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -147,9 +147,9 @@ public class Store extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Store Item id : "+rs.getInt("storeItemId");
+				message = "Store Item id : "+rs.getInt("store_item_id");
 				System.out.println(message);
-				check = rs.getInt("storeItemId");
+				check = rs.getInt("store_item_id");
 			}
 			
 			if(check != 0 ) {
@@ -173,7 +173,7 @@ public class Store extends Connect {
 	private void getPrevious() {
 		check = 0;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM store WHERE storeItemId < ? ORDER BY storeItemId DESC LIMIT 1";		//
+		String sql = "SELECT * FROM store WHERE store_item_id < ? ORDER BY store_item_id DESC LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -185,9 +185,9 @@ public class Store extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Store Item id : "+rs.getInt("storeItemId");
+				message = "Store Item id : "+rs.getInt("store_item_id");
 				System.out.println(message);
-				check = rs.getInt("storeItemId");
+				check = rs.getInt("store_item_id");
 			}
 			
 			if(check != 0 ) {

@@ -66,7 +66,7 @@ public class Wishlist extends Connect {
 	private void Add() {
 		itemId = wm.getItemId();
 		
-		String sql = "insert into wishlist (wishItemId) values (?)";		 //
+		String sql = "insert into wishlist (wishlist_item_id) values (?)";		 //
 		getConnection();
 		
 		try {
@@ -96,8 +96,8 @@ public class Wishlist extends Connect {
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM wishlist WHERE wishItemId=?";			//
-		String sql2 = "SELECT * FROM wishlist WHERE wishItemId=?";			//
+		String sql = "DELETE FROM wishlist WHERE wishlist_item_id=?";			//
+		String sql2 = "SELECT * FROM wishlist WHERE wishlist_item_id=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
@@ -106,7 +106,7 @@ public class Wishlist extends Connect {
 			stmt2.setInt(1, itemId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getInt("wishItemId");
+				check = rs.getInt("wishlist_item_id");
 			}
 			
 			if(check != 0) {
@@ -134,7 +134,7 @@ public class Wishlist extends Connect {
 	private void getNext() {
 		check = 0;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM wishlist WHERE wishItemId > ? ORDER BY wishItemId LIMIT 1";		//
+		String sql = "SELECT * FROM wishlist WHERE wishlist_item_id > ? ORDER BY wishlist_item_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -146,9 +146,9 @@ public class Wishlist extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Wishlist Item id : "+rs.getInt("wishItemId");
+				message = "Wishlist Item id : "+rs.getInt("wishlist_item_id");
 				System.out.println(message);
-				check = rs.getInt("wishItemId");
+				check = rs.getInt("wishlist_item_id");
 			}
 			
 			if(check != 0 ) {
@@ -172,7 +172,7 @@ public class Wishlist extends Connect {
 	private void getPrevious() {
 		check = 0;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM wishlist WHERE wishItemId < ? ORDER BY wishItemId DESC LIMIT 1";		//
+		String sql = "SELECT * FROM wishlist WHERE wishlist_item_id < ? ORDER BY wishlist_item_id DESC LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -184,9 +184,9 @@ public class Wishlist extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Wishlist Item id : "+rs.getInt("wishItemId");
+				message = "Wishlist Item id : "+rs.getInt("wishlist_item_id");
 				System.out.println(message);
-				check = rs.getInt("wishItemId");
+				check = rs.getInt("wishlist_item_id");
 			}
 			
 			if(check != 0 ) {

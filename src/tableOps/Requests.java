@@ -67,7 +67,7 @@ public class Requests extends Connect{
 		userId = rm.getUserId();
 		itemId = rm.getItemId();
 		
-		String sql = "insert into requests (reqUserId,reqItemId) values (?,?)";		 //
+		String sql = "insert into requests (request_requser_id,request_item_id) values (?,?)";		 //
 		getConnection();
 		
 		try {
@@ -98,8 +98,8 @@ public class Requests extends Connect{
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM requests WHERE reqItemId=?";			//
-		String sql2 = "SELECT * FROM requests WHERE reqItemId=?";			//
+		String sql = "DELETE FROM requests WHERE request_item_id=?";			//
+		String sql2 = "SELECT * FROM requests WHERE request_item_id=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
@@ -108,7 +108,7 @@ public class Requests extends Connect{
 			stmt2.setString(1, itemId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("reqItemId");
+				check = rs.getString("request_item_id");
 			}
 			
 			if(check != null) {
@@ -136,7 +136,7 @@ public class Requests extends Connect{
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM requests WHERE reqItemId > ? ORDER BY reqItemId LIMIT 1";		//
+		String sql = "SELECT * FROM requests WHERE request_item_id > ? ORDER BY request_item_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -148,9 +148,9 @@ public class Requests extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Request Item Id : "+rs.getString("reqItemId")+"; Request User Id : "+rs.getString("reqUserId");
+				message = "Request Item Id : "+rs.getString("request_item_id")+"; Request User Id : "+rs.getString("request_requser_id");
 				System.out.println(message);
-				check = rs.getString("reqItemId");
+				check = rs.getString("request_item_id");
 			}
 			
 			if(check != null ) {
@@ -174,7 +174,7 @@ public class Requests extends Connect{
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM requests WHERE reqItemId < ? ORDER BY reqItemId DESC LIMIT 1";			//
+		String sql = "SELECT * FROM requests WHERE request_item_id < ? ORDER BY request_item_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -186,9 +186,9 @@ public class Requests extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Request Item Id : "+rs.getString("reqItemId")+"; Request User Id : "+rs.getString("reqUserId");
+				message = "Request Item Id : "+rs.getString("request_item_id")+"; Request User Id : "+rs.getString("request_requser_id");
 				System.out.println(message);
-				check = rs.getString("reqItemId");
+				check = rs.getString("request_item_id");
 			}
 			
 			if(check != null ) {

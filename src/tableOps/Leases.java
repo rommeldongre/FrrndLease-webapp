@@ -74,7 +74,7 @@ public class Leases extends Connect {
 		itemId = lm.getItemId();
 		userId = lm.getUserId();
 		
-		String sql = "insert into leases (leaseReqUserId,leaseItemId,leaseUserId) values (?,?,?)";		 //
+		String sql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id) values (?,?,?)";		 //
 		getConnection();
 		
 		try {
@@ -106,8 +106,8 @@ public class Leases extends Connect {
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM leases WHERE leaseReqUserId=?";			//
-		String sql2 = "SELECT * FROM leases WHERE leaseReqUserId=?";			//
+		String sql = "DELETE FROM leases WHERE lease_requser_id=?";			//
+		String sql2 = "SELECT * FROM leases WHERE lease_requser_id=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
@@ -116,7 +116,7 @@ public class Leases extends Connect {
 			stmt2.setString(1, reqUserId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("leaseReqUserId");
+				check = rs.getString("lease_requser_id");
 			}
 			
 			if(check != null) {
@@ -148,8 +148,8 @@ public class Leases extends Connect {
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE leases SET leaseUserId=? WHERE leaseReqUserId=?";			//
-		String sql2 = "SELECT * FROM leases WHERE leaseReqUserId=?";								//
+		String sql = "UPDATE leases SET lease_user_id=? WHERE lease_requser_id=?";			//
+		String sql2 = "SELECT * FROM leases WHERE lease_requser_id=?";								//
 		
 		try {
 			System.out.println("Creating Statement....");
@@ -157,7 +157,7 @@ public class Leases extends Connect {
 			stmt2.setString(1, reqUserId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("reqUserId");
+				check = rs.getString("lease_requser_id");
 			}
 			
 			if(check != null) {
@@ -185,7 +185,7 @@ public class Leases extends Connect {
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM leases WHERE leaseReqUserId > ? ORDER BY leaseReqUserId LIMIT 1";		//
+		String sql = "SELECT * FROM leases WHERE lease_requser_id > ? ORDER BY lease_requser_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -197,9 +197,9 @@ public class Leases extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "lease Req User Id : "+rs.getString("leaseReqUserId")+"; lease Item Id: "+rs.getString("leaseItemId")+"; lease User Id : "+rs.getString("leaseUserId");
+				message = "lease Req User Id : "+rs.getString("lease_requser_id")+"; lease Item Id: "+rs.getString("lease_item_id")+"; lease User Id : "+rs.getString("lease_user_id");
 				System.out.println(message);
-				check = rs.getString("leaseReqUserId");
+				check = rs.getString("lease_requser_id");
 			}
 			
 			if(check != null ) {
@@ -223,7 +223,7 @@ public class Leases extends Connect {
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM leases WHERE leaseReqUserId < ? ORDER BY leaseReqUserId DESC LIMIT 1";			//
+		String sql = "SELECT * FROM leases WHERE lease_requser_id < ? ORDER BY lease_requser_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -235,9 +235,9 @@ public class Leases extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "lease Req User Id : "+rs.getString("leaseReqUserId")+"; lease Item Id: "+rs.getString("leaseItemId")+"; lease User Id : "+rs.getString("leaseUserId");
+				message = "lease Req User Id : "+rs.getString("lease_requser_id")+"; lease Item Id: "+rs.getString("lease_item_id")+"; lease User Id : "+rs.getString("lease_user_id");
 				System.out.println(message);
-				check = rs.getString("leaseReqUserId");
+				check = rs.getString("lease_requser_id");
 			}
 			
 			if(check != null ) {

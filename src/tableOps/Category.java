@@ -75,7 +75,7 @@ public class Category extends Connect {
 		parent = cm.getParent();
 		child = cm.getChild();
 		
-		String sql = "insert into category (catName,catDesc,catParent,catChild) values (?,?,?,?)";
+		String sql = "insert into category (cat_name,cat_desc,cat_parent,cat_child) values (?,?,?,?)";
 		getConnection();
 		
 		try {
@@ -108,8 +108,8 @@ public class Category extends Connect {
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM category WHERE catName=?";
-		String sql2 = "SELECT * FROM category WHERE catName=?";
+		String sql = "DELETE FROM category WHERE cat_name=?";
+		String sql2 = "SELECT * FROM category WHERE cat_name=?";
 		
 		try {
 			System.out.println("Creating statement...");
@@ -118,7 +118,7 @@ public class Category extends Connect {
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("catName");
+				check = rs.getString("cat_name");
 			}
 			
 			if(check != null) {
@@ -152,8 +152,8 @@ public class Category extends Connect {
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE category SET catDesc=?, catParent=?, catChild=? WHERE catName=?";
-		String sql2 = "SELECT * FROM category WHERE catName=?";
+		String sql = "UPDATE category SET cat_desc=?, cat_parent=?, cat_child=? WHERE cat_name=?";
+		String sql2 = "SELECT * FROM category WHERE cat_name=?";
 		
 		try {
 			System.out.println("Creating Statement....");
@@ -161,7 +161,7 @@ public class Category extends Connect {
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("catName");
+				check = rs.getString("cat_name");
 			}
 			
 			if(check != null) {
@@ -191,7 +191,7 @@ public class Category extends Connect {
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM category WHERE catName > ? ORDER BY catName LIMIT 1";
+		String sql = "SELECT * FROM category WHERE cat_name > ? ORDER BY cat_name LIMIT 1";
 		
 		getConnection();
 		try {
@@ -203,9 +203,9 @@ public class Category extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "catName: "+rs.getString("catName")+"; catDesc: "+rs.getString("catDesc")+"; catParent: "+rs.getString("catParent");
+				message = "catName: "+rs.getString("cat_name")+"; catDesc: "+rs.getString("cat_desc")+"; catParent: "+rs.getString("cat_parent");
 				System.out.println(message);
-				check = rs.getString("catName");
+				check = rs.getString("cat_name");
 			}
 			
 			if(check != null ) {
@@ -229,7 +229,7 @@ public class Category extends Connect {
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM category WHERE catName < ? ORDER BY catName DESC LIMIT 1";
+		String sql = "SELECT * FROM category WHERE cat_name < ? ORDER BY cat_name DESC LIMIT 1";
 		
 		getConnection();
 		try {
@@ -241,9 +241,9 @@ public class Category extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "catName: "+rs.getString("catName")+"; catDesc: "+rs.getString("catDesc")+"; catParent: "+rs.getString("catParent");
+				message = "catName: "+rs.getString("cat_name")+"; catDesc: "+rs.getString("cat_desc")+"; catParent: "+rs.getString("cat_parent");
 				System.out.println(message);
-				check = rs.getString("catName");
+				check = rs.getString("cat_name");
 			}
 			
 			if(check != null ) {

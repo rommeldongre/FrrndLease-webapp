@@ -73,7 +73,7 @@ public class LeaseTerms extends Connect {
 		description = ltm.getDescription();
 		duration = ltm.getDuration();
 		
-		String sql = "insert into leaseterms (termName,termDesc,termDuration) values (?,?,?)";		 //
+		String sql = "insert into leaseterms (term_name,term_desc,term_duration) values (?,?,?)";		 //
 		getConnection();
 		
 		try {
@@ -105,8 +105,8 @@ public class LeaseTerms extends Connect {
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM leaseterms WHERE termName=?";			//
-		String sql2 = "SELECT * FROM leaseterms WHERE termName=?";			//
+		String sql = "DELETE FROM leaseterms WHERE term_name=?";			//
+		String sql2 = "SELECT * FROM leaseterms WHERE term_name=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
@@ -115,7 +115,7 @@ public class LeaseTerms extends Connect {
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("termName");
+				check = rs.getString("term_name");
 			}
 			
 			if(check != null) {
@@ -148,8 +148,8 @@ public class LeaseTerms extends Connect {
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE leaseterms SET termDesc=?,termDuration=? WHERE termName=?";			//
-		String sql2 = "SELECT * FROM leaseterms WHERE termName=?";								//
+		String sql = "UPDATE leaseterms SET term_desc=?,term_duration=? WHERE term_name=?";			//
+		String sql2 = "SELECT * FROM leaseterms WHERE term_name=?";								//
 		
 		try {
 			System.out.println("Creating Statement....");
@@ -157,7 +157,7 @@ public class LeaseTerms extends Connect {
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("termName");
+				check = rs.getString("term_name");
 			}
 			
 			if(check != null) {
@@ -186,7 +186,7 @@ public class LeaseTerms extends Connect {
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM leaseterms WHERE termName > ? ORDER BY termName LIMIT 1";		//
+		String sql = "SELECT * FROM leaseterms WHERE term_name > ? ORDER BY term_name LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -198,9 +198,9 @@ public class LeaseTerms extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "term Name: "+rs.getString("termName")+"; term Description : "+rs.getString("termDesc")+"; term Duration : "+rs.getInt("termDuration");
+				message = "term Name: "+rs.getString("term_name")+"; term Description : "+rs.getString("term_desc")+"; term Duration : "+rs.getInt("term_duration");
 				System.out.println(message);
-				check = rs.getString("termName");
+				check = rs.getString("term_name");
 			}
 			
 			if(check != null ) {
@@ -224,7 +224,7 @@ public class LeaseTerms extends Connect {
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM leaseterms WHERE termName < ? ORDER BY termName DESC LIMIT 1";			//
+		String sql = "SELECT * FROM leaseterms WHERE term_name < ? ORDER BY term_name DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -236,9 +236,9 @@ public class LeaseTerms extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "term Name: "+rs.getString("termName")+"; term Description : "+rs.getString("termDesc")+"; term Duration : "+rs.getInt("termDuration");
+				message = "term Name: "+rs.getString("term_name")+"; term Description : "+rs.getString("term_desc")+"; term Duration : "+rs.getInt("term_duration");
 				System.out.println(message);
-				check = rs.getString("termName");
+				check = rs.getString("term_name");
 			}
 			
 			if(check != null ) {

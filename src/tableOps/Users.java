@@ -75,7 +75,7 @@ public class Users extends Connect {
 		location = um.getLocation();
 		auth = um.getAuth();
 		
-		String sql = "insert into users (userId,fullName,mobile,location,auth) values (?,?,?,?,?)";
+		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth) values (?,?,?,?,?)";
 		getConnection();
 		
 		try {
@@ -109,8 +109,8 @@ public class Users extends Connect {
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM users WHERE userId=?";
-		String sql2 = "SELECT * FROM users WHERE userId=?";
+		String sql = "DELETE FROM users WHERE user_id=?";
+		String sql2 = "SELECT * FROM users WHERE user_id=?";
 		
 		try {
 			System.out.println("Creating statement...");
@@ -119,7 +119,7 @@ public class Users extends Connect {
 			stmt2.setString(1, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("userId");
+				check = rs.getString("user_id");
 			}
 			
 			if(check != null) {
@@ -154,8 +154,8 @@ public class Users extends Connect {
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE users SET fullName=?, mobile=?, location=?, auth=?  WHERE userId=?";
-		String sql2 = "SELECT * FROM users WHERE userId=?";
+		String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_auth=?  WHERE user_id=?";
+		String sql2 = "SELECT * FROM users WHERE user_id=?";
 		
 		try {
 			System.out.println("Creating Statement....");
@@ -163,7 +163,7 @@ public class Users extends Connect {
 			stmt2.setString(1, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("userId");
+				check = rs.getString("user_id");
 			}
 			
 			if(check != null) {
@@ -194,7 +194,7 @@ public class Users extends Connect {
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM users WHERE userId > ? ORDER BY userId LIMIT 1";
+		String sql = "SELECT * FROM users WHERE user_id > ? ORDER BY user_id LIMIT 1";
 		
 		getConnection();
 		try {
@@ -206,9 +206,9 @@ public class Users extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "user ID: "+rs.getString("userId")+"; full name: "+rs.getString("fullName")+"; mobile: "+rs.getString("mobile")+"; location : "+rs.getString("location")+"; auth : "+rs.getString("auth");
+				message = "user ID: "+rs.getString("user_id")+"; full name: "+rs.getString("user_full_name")+"; mobile: "+rs.getString("user_mobile")+"; location : "+rs.getString("user_location")+"; auth : "+rs.getString("user_auth");
 				System.out.println(message);
-				check = rs.getString("userId");
+				check = rs.getString("user_id");
 			}
 			
 			if(check != null ) {
@@ -232,7 +232,7 @@ public class Users extends Connect {
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM users WHERE userId < ? ORDER BY userId DESC LIMIT 1";
+		String sql = "SELECT * FROM users WHERE user_id < ? ORDER BY user_id DESC LIMIT 1";
 		
 		getConnection();
 		try {
@@ -244,9 +244,9 @@ public class Users extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "user ID: "+rs.getString("userId")+"; full name: "+rs.getString("fullName")+"; mobile: "+rs.getString("mobile")+"; location : "+rs.getString("location")+"; auth : "+rs.getString("auth");
+				message = "user ID: "+rs.getString("user_id")+"; full name: "+rs.getString("user_full_name")+"; mobile: "+rs.getString("user_mobile")+"; location : "+rs.getString("user_location")+"; auth : "+rs.getString("user_auth");
 				System.out.println(message);
-				check = rs.getString("userId");
+				check = rs.getString("user_id");
 			}
 			
 			if(check != null ) {

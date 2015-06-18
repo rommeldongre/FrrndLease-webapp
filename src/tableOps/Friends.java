@@ -75,7 +75,7 @@ public class Friends extends Connect{
 		mobile = fm.getMobile();
 		userId = fm.getUserId();
 		
-		String sql = "insert into friends (friendId,fullName,mobile,friendUserId) values (?,?,?,?)";		 //
+		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id) values (?,?,?,?)";		 //
 		getConnection();
 		
 		try {
@@ -108,8 +108,8 @@ public class Friends extends Connect{
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM friends WHERE friendId=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friendId=?";			//
+		String sql = "DELETE FROM friends WHERE friend_id=?";			//
+		String sql2 = "SELECT * FROM friends WHERE friend_id=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
@@ -118,7 +118,7 @@ public class Friends extends Connect{
 			stmt2.setString(1, friendId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("friendId");
+				check = rs.getString("friend_id");
 			}
 			
 			if(check != null) {
@@ -151,8 +151,8 @@ public class Friends extends Connect{
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE friends SET fullName=?, mobile=? WHERE friendId=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friendId=?";								//
+		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=?";			//
+		String sql2 = "SELECT * FROM friends WHERE friend_id=?";								//
 		
 		try {
 			System.out.println("Creating Statement....");
@@ -160,7 +160,7 @@ public class Friends extends Connect{
 			stmt2.setString(1, friendId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("friendId");
+				check = rs.getString("friend_id");
 			}
 			
 			if(check != null) {
@@ -189,7 +189,7 @@ public class Friends extends Connect{
 	private void getNext() {
 		check = null;
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM friends WHERE friendId > ? ORDER BY friendId LIMIT 1";		//
+		String sql = "SELECT * FROM friends WHERE friend_id > ? ORDER BY friend_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -201,9 +201,9 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friendId")+"; full name: "+rs.getString("fullName")+"; mobile : "+rs.getString("mobile") + "; friend user id : "+rs.getString("friendUserId");
+				message = "friendId : "+rs.getString("friend_id")+"; full name: "+rs.getString("friend_full_name")+"; mobile : "+rs.getString("friend_mobile") + "; friend user id : "+rs.getString("friend_user_id");
 				System.out.println(message);
-				check = rs.getString("friendId");
+				check = rs.getString("friend_id");
 			}
 			
 			if(check != null ) {
@@ -227,7 +227,7 @@ public class Friends extends Connect{
 	private void getPrevious() {
 		check = null;
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM friends WHERE friendId < ? ORDER BY friendId DESC LIMIT 1";			//
+		String sql = "SELECT * FROM friends WHERE friend_id < ? ORDER BY friend_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -239,9 +239,9 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friendId")+"; full name: "+rs.getString("fullName")+"; mobile : "+rs.getString("mobile") + "; friend user id : "+rs.getString("friendUserId");
+				message = "friendId : "+rs.getString("friend_id")+"; full name: "+rs.getString("friend_full_name")+"; mobile : "+rs.getString("friend_mobile") + "; friend user id : "+rs.getString("friend_user_id");
 				System.out.println(message);
-				check = rs.getString("friendId");
+				check = rs.getString("friend_id");
 			}
 			
 			if(check != null ) {

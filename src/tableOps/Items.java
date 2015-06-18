@@ -83,7 +83,7 @@ public class Items extends Connect {
 		status = im.getStatus();
 		
 		System.out.println("Inside add method...");
-		String sql = "insert into items (title, category, description, userId, leaseValue, leaseTerm, status) values (?,?,?,?,?,?,?)";
+		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status) values (?,?,?,?,?,?,?)";
 		
 		getConnection();
 		try {
@@ -106,7 +106,7 @@ public class Items extends Connect {
 			Code = 000;
 			
 			//returning the new id
-			sql = "SELECT MAX(itemId) FROM items";
+			sql = "SELECT MAX(item_id) FROM items";
 			Statement stmt1 = connection.createStatement();
 			ResultSet rs = stmt1.executeQuery(sql);
 			while(rs.next()) {
@@ -127,19 +127,19 @@ public class Items extends Connect {
 		id = im.getId();
 		check = 0;
 		System.out.println("Inside delete method....");
-		String sql = "DELETE FROM items WHERE itemId = ?";
+		String sql = "DELETE FROM items WHERE item_id = ?";
 		
 		getConnection();
 		try {
 			System.out.println("Creating statement...");
 			
 			//checking whether the input id is present in table
-			String sql2 = "SELECT * FROM items WHERE itemId=?";
+			String sql2 = "SELECT * FROM items WHERE item_id=?";
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setInt(1, id);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getInt("itemId");
+				check = rs.getInt("item_id");
 			}
 			
 			if(check != 0){
@@ -177,18 +177,18 @@ public class Items extends Connect {
 		status = im.getStatus();
 		
 		System.out.println("Inside edit method...");
-		String sql = "UPDATE items SET title=?, category=?, description=?, userId=?, leaseValue=?, leaseTerm=?, status=? WHERE itemId=?";
+		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_user_id=?, item_lease_value=?, item_lease_term=?, item_status=? WHERE item_id=?";
 		
 		getConnection();
 		try {
 			System.out.println("Creating statement...");
 			
-			String sql2 = "SELECT * FROM items WHERE itemId=?";
+			String sql2 = "SELECT * FROM items WHERE item_id=?";
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setInt(1, id);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getInt("itemId");
+				check = rs.getInt("item_id");
 			}
 			
 			if(check != 0) {
@@ -224,7 +224,7 @@ public class Items extends Connect {
 	private void GetNext() {
 		check = 0;
 		System.out.println("Inside GetNext Method..");
-		String sql = "SELECT * FROM items WHERE itemId > ? ORDER BY itemId LIMIT 1";
+		String sql = "SELECT * FROM items WHERE item_id > ? ORDER BY item_id LIMIT 1";
 		getConnection();
 		try {
 			System.out.println("Creating a statement .....");
@@ -236,7 +236,10 @@ public class Items extends Connect {
 			ResultSet rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-				message = "Item Id : "+rs.getInt("itemId")+"; title : "+rs.getString("title")+"; category : "+rs.getString("category")+"; description : "+rs.getString("description")+"; userId : "+rs.getString("userId")+"; lease Value : "+rs.getInt("leaseValue")+"; lease Term : "+rs.getString("leaseTerm")+"; status : "+rs.getString("status");
+				/*JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("itemId"));
+				josn.put("title", rs.getString());*/
+				message = "Item Id : "+rs.getInt("item_id")+"; title : "+rs.getString("item_name")+"; category : "+rs.getString("item_category")+"; description : "+rs.getString("item_desc")+"; userId : "+rs.getString("item_user_id")+"; lease Value : "+rs.getInt("item_lease_value")+"; lease Term : "+rs.getString("item_lease_term")+"; status : "+rs.getString("item_status");
 				System.out.println(message);
 				check = rs.getInt("itemId");
 				//System.out.println(id);
@@ -257,13 +260,16 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
-		}
+		} /*catch (JSONException e) {
+			res.setData(205,"0", "Couldnt create json object");
+			e.printStackTrace();
+		}*/
 	}
 	
 	private void GetPrevious() {
 		check = 0;
 		System.out.println("Inside getPrevious method");
-		String sql = "SELECT * FROM items WHERE itemId < ? ORDER BY itemId DESC LIMIT 1";
+		String sql = "SELECT * FROM items WHERE item_id < ? ORDER BY item_id DESC LIMIT 1";
 		getConnection();
 		
 		try {
@@ -277,9 +283,9 @@ public class Items extends Connect {
 			
 			System.out.println("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
-				message =  "Item Id : "+rs.getInt("itemId")+"; title : "+rs.getString("title")+"; category : "+rs.getString("category")+"; description : "+rs.getString("description")+"; userId : "+rs.getString("userId")+"; lease Value : "+rs.getInt("leaseValue")+"; lease Term : "+rs.getString("leaseTerm")+"; status : "+rs.getString("status");
+				message =  "Item Id : "+rs.getInt("item_id")+"; title : "+rs.getString("item_name")+"; category : "+rs.getString("item_category")+"; description : "+rs.getString("item_desc")+"; userId : "+rs.getString("item_user_id")+"; lease Value : "+rs.getInt("item_lease_value")+"; lease Term : "+rs.getString("item_lease_term")+"; status : "+rs.getString("item_status");
 				System.out.println(message);
-				check = rs.getInt("itemId");
+				check = rs.getInt("item_id");
 			}
 			if(check != 0 ) { //checks if result Set is empty
 				Id = String.valueOf(check);
