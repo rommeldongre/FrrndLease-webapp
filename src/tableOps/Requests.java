@@ -35,6 +35,11 @@ public class Requests extends Connect{
 			Delete();
 			break;
 			
+		case "deleteone" :
+			System.out.println("DeleteOne op is selected");
+			DeleteOne();
+			break;
+			
 		case "getnext" :
 			System.out.println("Get Next operation is selected.");
 			try {
@@ -138,6 +143,49 @@ public class Requests extends Connect{
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private void DeleteOne() {
+		itemId = rm.getItemId();
+		userId = rm.getUserId();
+		check = null;
+		System.out.println("Inside delete method....");
+		
+		getConnection();
+		String sql = "DELETE FROM requests WHERE request_item_id=? AND request_requser_id=?";			//
+		String sql2 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=?";			//
+		
+		try {
+			System.out.println("Creating statement...");
+			
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setString(1, itemId);
+			stmt2.setString(2, userId);
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getString("request_item_id");
+			}
+			
+			if(check != null) {
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				System.out.println("Statement created. Executing delete query on ..." + check);
+				stmt.setString(1, itemId);
+				stmt.setString(2, userId);
+				stmt.executeUpdate();
+				message = "operation successfull deleted request item id : "+itemId;
+				Code = 56;
+				Id = check;
+				res.setData(Code, Id, message);
+			}
+			else{
+				System.out.println("Entry not found in database!!");
+				res.setData(201, "0", "Entry not found in database!!");
+			}
+		} catch (SQLException e) {
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		}
 	}
 	
 	private void getNext() {

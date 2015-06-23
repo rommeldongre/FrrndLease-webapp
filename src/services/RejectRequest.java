@@ -16,14 +16,17 @@ import adminOps.Response;
 import adminOps.AdminOpsHandler;
 
 /**
- * Servlet implementation class RequestItem
+ * Servlet implementation class RejectRequest
  */
-@WebServlet("/RequestItem")
-public class RequestItem extends HttpServlet {
+@WebServlet("/RejectRequest")
+public class RejectRequest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
 	private Response res = new Response();
-	
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
 		System.out.println("Inside GET Method");
@@ -31,6 +34,9 @@ public class RequestItem extends HttpServlet {
 		doPost(request,response);
 	}
 
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Inside POST Method");
 		String table;
@@ -47,9 +53,9 @@ public class RequestItem extends HttpServlet {
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
-			if(Integer.parseInt(res.getCode()) == 25){
-				json.put("Code", "55");
-				json.put("Message", "Request added..");
+			if(Integer.parseInt(res.getCode()) == 56){
+				json.put("Code", res.getCode());
+				json.put("Message", "Request rejected..");
 				json.put("Id", res.getId());
 			}
 			
