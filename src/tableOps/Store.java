@@ -147,7 +147,10 @@ public class Store extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Store Item id : "+rs.getInt("store_item_id");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("store_item_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getInt("store_item_id");
 			}
@@ -167,6 +170,9 @@ public class Store extends Connect {
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
 		}	
 	}
 	
@@ -185,7 +191,10 @@ public class Store extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Store Item id : "+rs.getInt("store_item_id");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("store_item_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getInt("store_item_id");
 			}
@@ -204,6 +213,9 @@ public class Store extends Connect {
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
 			e.printStackTrace();
 		}	
 	}

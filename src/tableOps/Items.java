@@ -66,6 +66,28 @@ public class Items extends Connect {
 			}
 			break;
 			
+		case "browsen" :
+			System.out.println("Browse Next Operation is selected.");
+			try {
+				token = obj.getInt("token");
+				BrowseN();
+			} catch (JSONException e) {
+				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				e.printStackTrace();
+			}
+			break;
+			
+		case "browsep" :
+			System.out.println("Browse Previous Operation is selected.");
+			try {
+				token = obj.getInt("token");
+				BrowseP();
+			} catch (JSONException e) {
+				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				e.printStackTrace();
+			}
+			break;
+			
 		default:
 			res.setData(202, "0", "Invalid Operation!!");;
 			break;
@@ -236,12 +258,19 @@ public class Items extends Connect {
 			ResultSet rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-				/*JSONObject json = new JSONObject();
-				json.put("itemId", rs.getInt("itemId"));
-				josn.put("title", rs.getString());*/
-				message = "Item Id : "+rs.getInt("item_id")+"; title : "+rs.getString("item_name")+"; category : "+rs.getString("item_category")+"; description : "+rs.getString("item_desc")+"; userId : "+rs.getString("item_user_id")+"; lease Value : "+rs.getInt("item_lease_value")+"; lease Term : "+rs.getString("item_lease_term")+"; status : "+rs.getString("item_status");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
 				System.out.println(message);
-				check = rs.getInt("itemId");
+				check = rs.getInt("item_id");
 				//System.out.println(id);
 			}
 			if(check != 0 ) {
@@ -260,10 +289,10 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
-		} /*catch (JSONException e) {
-			res.setData(205,"0", "Couldnt create json object");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	private void GetPrevious() {
@@ -283,7 +312,17 @@ public class Items extends Connect {
 			
 			System.out.println("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
-				message =  "Item Id : "+rs.getInt("item_id")+"; title : "+rs.getString("item_name")+"; category : "+rs.getString("item_category")+"; description : "+rs.getString("item_desc")+"; userId : "+rs.getString("item_user_id")+"; lease Value : "+rs.getInt("item_lease_value")+"; lease Term : "+rs.getString("item_lease_term")+"; status : "+rs.getString("item_status");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getInt("item_id");
 			}
@@ -303,6 +342,121 @@ public class Items extends Connect {
 			System.out.println("Couldnt create a statement");
 			e.printStackTrace();
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
+		}
+	}
+	
+	private void BrowseN () {
+		check = 0;
+		status = im.getStatus();
+		
+		System.out.println("Inside Browse N method");
+		String sql = "SELECT * FROM items WHERE item_id > ? AND item_status= ? ORDER BY item_id LIMIT 1";
+		getConnection();
+		
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing Browse P query...");
+			stmt.setInt(1, token);
+			stmt.setString(2,status);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			System.out.println("itemId\tName\tDescription\tQuantity");
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getInt("item_id");
+			}
+			if(check != 0 ) { //checks if result Set is empty
+				Id = String.valueOf(check);
+				Code = 53;
+			}
+			else{
+				message = "End of Database!!";
+				Code = 199;
+			}
+			
+			res.setData(Code, Id, message);
+			
+			//status = String.valueOf(Id);
+		} catch (SQLException e) {
+			System.out.println("Couldnt create a statement");
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
+		}
+	}
+	
+	private void BrowseP() {
+		check = 0;
+		status = im.getStatus();
+		
+		System.out.println("Inside Browse P method");
+		String sql = "SELECT * FROM items WHERE item_id < ? AND item_status= ? ORDER BY item_id DESC LIMIT 1";
+		getConnection();
+		
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing BrowseP query...");
+			stmt.setInt(1, token);
+			stmt.setString(2,status);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			System.out.println("itemId\tName\tDescription\tQuantity");
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getInt("item_id");
+			}
+			if(check != 0 ) { //checks if result Set is empty
+				Id = String.valueOf(check);
+				Code = 54;
+			}
+			else{
+				message = "End of Database!!";
+				Code = 199;
+			}
+			
+			res.setData(Code, Id, message);
+			
+			//status = String.valueOf(Id);
+		} catch (SQLException e) {
+			System.out.println("Couldnt create a statement");
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
 		}
 	}
 	

@@ -197,7 +197,12 @@ public class Leases extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "lease Req User Id : "+rs.getString("lease_requser_id")+"; lease Item Id: "+rs.getString("lease_item_id")+"; lease User Id : "+rs.getString("lease_user_id");
+				JSONObject json = new JSONObject();
+				json.put("reqUserId", rs.getString("lease_requser_id"));
+				json.put("itemId", rs.getString("lease_item_id"));
+				json.put("userId", rs.getString("lease_user_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("lease_requser_id");
 			}
@@ -217,6 +222,9 @@ public class Leases extends Connect {
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
 		}	
 	}
 	
@@ -235,7 +243,12 @@ public class Leases extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "lease Req User Id : "+rs.getString("lease_requser_id")+"; lease Item Id: "+rs.getString("lease_item_id")+"; lease User Id : "+rs.getString("lease_user_id");
+				JSONObject json = new JSONObject();
+				json.put("reqUserId", rs.getString("lease_requser_id"));
+				json.put("itemId", rs.getString("lease_item_id"));
+				json.put("userId", rs.getString("lease_user_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("lease_requser_id");
 			}
@@ -254,6 +267,9 @@ public class Leases extends Connect {
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
 			e.printStackTrace();
 		}	
 	}

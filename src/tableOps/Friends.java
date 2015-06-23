@@ -201,7 +201,13 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friend_id")+"; full name: "+rs.getString("friend_full_name")+"; mobile : "+rs.getString("friend_mobile") + "; friend user id : "+rs.getString("friend_user_id");
+				JSONObject json = new JSONObject();
+				json.put("friendId",rs.getString("friend_id"));
+				json.put("fullName",rs.getString("friend_full_name"));
+				json.put("mobile",rs.getString("friend_mobile"));
+				json.put("userId",rs.getString("friend_user_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("friend_id");
 			}
@@ -221,6 +227,9 @@ public class Friends extends Connect{
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0","JSON Exception");
+			e.printStackTrace();
 		}	
 	}
 	
@@ -239,7 +248,13 @@ public class Friends extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friend_id")+"; full name: "+rs.getString("friend_full_name")+"; mobile : "+rs.getString("friend_mobile") + "; friend user id : "+rs.getString("friend_user_id");
+				JSONObject json = new JSONObject();
+				json.put("friendId",rs.getString("friend_id"));
+				json.put("fullName",rs.getString("friend_full_name"));
+				json.put("mobile",rs.getString("friend_mobile"));
+				json.put("userId",rs.getString("friend_user_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("friend_id");
 			}
@@ -258,6 +273,9 @@ public class Friends extends Connect{
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0","JSON Exception");
 			e.printStackTrace();
 		}	
 	}

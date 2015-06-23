@@ -148,7 +148,11 @@ public class Requests extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Request Item Id : "+rs.getString("request_item_id")+"; Request User Id : "+rs.getString("request_requser_id");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getString("request_item_id"));
+				json.put("userId", rs.getString("request_requser_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("request_item_id");
 			}
@@ -168,6 +172,9 @@ public class Requests extends Connect{
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
 		}	
 	}
 	
@@ -186,7 +193,11 @@ public class Requests extends Connect{
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "Request Item Id : "+rs.getString("request_item_id")+"; Request User Id : "+rs.getString("request_requser_id");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getString("request_item_id"));
+				json.put("userId", rs.getString("request_requser_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("request_item_id");
 			}
@@ -205,6 +216,9 @@ public class Requests extends Connect{
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
 			e.printStackTrace();
 		}	
 	}

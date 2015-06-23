@@ -135,7 +135,17 @@
 				alert("working");
 				document.getElementById("Id").value = response.Id;
 				document.getElementById("Code").value = response.Code;
-				document.getElementById("Message").value = response.Message;
+				if(parseInt(response.Code) === 40 || parseInt(response.Code) === 41) {
+					obj = JSON.parse(response.Message);
+					document.getElementById("userId1").value = obj.userId;
+					document.getElementById("fullName1").value = obj.fullName;
+					document.getElementById("mobile1").value = obj.mobile;
+					document.getElementById("location1").value = obj.location;
+					document.getElementById("auth1").value = obj.auth;
+				}
+				else{
+					document.getElementById("Message").value = response.Message;	
+				}
 			},
 			
 			error: function() {
@@ -162,7 +172,12 @@
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>
 		Code : <input type="text" name="code" id="Code"><br/><br/>
-		Message : <input type="text" name="message" id="Message">
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+		User email id : <input type="text" name="userId1" id="userId1"><br/><br/>
+		Full Name : <input type="text" name="fullName1" id="fullName1"><br/><br/>
+		Mobile : <input type="text" name="mobile1" id="mobile1"><br/><br/>
+		Location : <input type="text" name="location1" id="location1"><br/><br/>
+		Authorization : <input type="text" name="auth1" id="auth1"><br/><br/>
 	</form>
 	<br/>
 	<h3><A href="index.html">INDEX</A></h3>

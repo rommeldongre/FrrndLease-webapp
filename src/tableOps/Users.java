@@ -206,7 +206,14 @@ public class Users extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "user ID: "+rs.getString("user_id")+"; full name: "+rs.getString("user_full_name")+"; mobile: "+rs.getString("user_mobile")+"; location : "+rs.getString("user_location")+"; auth : "+rs.getString("user_auth");
+				JSONObject json = new JSONObject();
+				json.put("userId", rs.getString("user_id"));
+				json.put("fullName", rs.getString("user_full_name"));
+				json.put("mobile", rs.getString("user_mobile"));
+				json.put("location", rs.getString("user_location"));
+				json.put("auth", rs.getString("user_auth"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("user_id");
 			}
@@ -226,6 +233,9 @@ public class Users extends Connect {
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0","JSON Exception");
+			e.printStackTrace();
 		}	
 	}
 	
@@ -244,7 +254,14 @@ public class Users extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "user ID: "+rs.getString("user_id")+"; full name: "+rs.getString("user_full_name")+"; mobile: "+rs.getString("user_mobile")+"; location : "+rs.getString("user_location")+"; auth : "+rs.getString("user_auth");
+				JSONObject json = new JSONObject();
+				json.put("userId", rs.getString("user_id"));
+				json.put("fullName", rs.getString("user_full_name"));
+				json.put("mobile", rs.getString("user_mobile"));
+				json.put("location", rs.getString("user_location"));
+				json.put("auth", rs.getString("user_auth"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("user_id");
 			}
@@ -263,6 +280,9 @@ public class Users extends Connect {
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0","JSON Exception");
 			e.printStackTrace();
 		}	
 	}
