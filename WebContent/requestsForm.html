@@ -97,6 +97,7 @@
 					obj = JSON.parse(response.Message);
 					document.getElementById("itemId1").value = obj.itemId;
 					document.getElementById("userId1").value = obj.userId;
+					document.getElementById("date").value = obj.date
 				}
 				else{
 					document.getElementById("Message").value = response.Message
@@ -126,6 +127,7 @@
 		Message : <input type="text" name="message" id="Message"><br/><br/>
 		Request Item Id : <input type="text" name="itemId1" id="itemId1"><br/><br/>
 		Request User Id : <input type="text" name="userId1" id="userId1"><br/><br/>
+		Request Date : <input type="text" name="date" id="date"><br/><br/>
 	</form>
 	<br/>
 	<h3><A href="index.html">INDEX</A></h3>

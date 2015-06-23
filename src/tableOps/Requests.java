@@ -3,6 +3,8 @@ package tableOps;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +69,11 @@ public class Requests extends Connect{
 		userId = rm.getUserId();
 		itemId = rm.getItemId();
 		
-		String sql = "insert into requests (request_requser_id,request_item_id) values (?,?)";		 //
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String date = sdf.format(cal.getTime());
+		
+		String sql = "insert into requests (request_requser_id,request_item_id,request_date) values (?,?,?)";		 //
 		getConnection();
 		
 		try {
@@ -77,6 +83,7 @@ public class Requests extends Connect{
 			System.out.println("Statement created. Executing query.....");
 			stmt.setString(1, userId);
 			stmt.setString(2, itemId);
+			stmt.setString(3, date);
 			stmt.executeUpdate();
 			System.out.println("Entry added into requests table");
 			
@@ -151,6 +158,7 @@ public class Requests extends Connect{
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getString("request_item_id"));
 				json.put("userId", rs.getString("request_requser_id"));
+				json.put("date", rs.getString("request_date"));
 				
 				message = json.toString();
 				System.out.println(message);
@@ -196,6 +204,7 @@ public class Requests extends Connect{
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getString("request_item_id"));
 				json.put("userId", rs.getString("request_requser_id"));
+				json.put("date", rs.getString("request_date"));
 				
 				message = json.toString();
 				System.out.println(message);
