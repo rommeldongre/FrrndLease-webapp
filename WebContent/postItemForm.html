@@ -70,7 +70,7 @@
 	send = function(req1,req2) {
 		alert("Inside send");
 		$.ajax({
-			url: 'http://localhost:8080/fls1.1/PostItem',
+			url: '/flsv2/PostItem',
 			type: 'get',
 			data: {req1 : JSON.stringify(req1),
 					req2 : JSON.stringify(req2)},

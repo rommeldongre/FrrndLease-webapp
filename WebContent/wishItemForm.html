@@ -70,7 +70,7 @@
 	send = function(req1,req2,req3) {
 		alert("Inside send");
 		$.ajax({
-			url: 'http://localhost:8080/fls1.1/WishItem',
+			url: '/flsv2/WishItem',
 			type: 'get',
 			data: {req1 : JSON.stringify(req1),
 					req2 : JSON.stringify(req2)},

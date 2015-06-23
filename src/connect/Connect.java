@@ -10,7 +10,7 @@ public class Connect {
 	
 	//Database user name and password
 	private String name = "root";
-	private String pass = "password";
+	private String pass = "root";
 			
 	//Database URL and JDBC Driver
 	private String url = "jdbc:mysql://127.0.0.1:3306/fls";
