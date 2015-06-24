@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Reject Request form</title>
+<title>Grant Lease form</title>
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var ItemId = null;
@@ -10,24 +10,45 @@
 	
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
-		if (ItemId === '') ItemId = null;
 		
 		UserId = document.getElementById("userId").value;
-		if (UserId ==='') UserId = null;
+		
+		ReqUserId = document.getElementById("reqUserId").value;
 	};
 	
-	deleteD = function() {
+	grant = function() {
 		alert("inside add function.");
 		getData();
-		var req = {
-				table: "requests",
-				operation: "editone",
+		var req1 = {
+				table: "store",
+				operation: "delete",
 				row: {
+					itemId: ItemId
+				},
+				token: 0
+		};
+		
+		var req2 = {
+				table: "requests",
+				operation: "edits",
+				row: {
+					itemId: ItemId,
+					userId: ReqUserId
+				},
+				token: null
+		};
+		
+		var req3 = {
+				table: "leases",
+				operation: "add",
+				row: {
+					reqUserId: ReqUserId,
 					itemId: ItemId,
 					userId: UserId
 				},
 				token: null
 		};
+		
 		alert("got data");
 		send(req);
 	};
@@ -35,7 +56,7 @@
 	send = function(req) {
 		alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/RejectRequest',
+			url: '/flsv2/GrantLease',
 			type:'get',
 			data: {req: JSON.stringify(req)},
 			contentType:"application/json",
@@ -57,10 +78,11 @@
 </script>
 </head>
 <body>
-	<h1>REJECT REQUEST FORM</h1>
+	<h1>GRANT LEASE FORM</h1>
 	<form>
-		Request Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
-		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Request User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>
 		<input type="button" value="Reject Request" onclick="deleteD()"><br/><br/>
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>

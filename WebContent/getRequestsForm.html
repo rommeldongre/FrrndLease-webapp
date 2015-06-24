@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Requests form</title>
+<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var ItemId = null;
+	var UserId = null;
+	var Token = null;
+	
+	getNext = function() {
+		alert("Inside get next function");
+		Token = document.getElementById("itemId").value;
+		var req = {
+				table: "requests",
+				operation: "getNextR",
+				row: {
+					itemId: ItemId,
+					userId: UserId
+				},
+				token: Token
+		}
+		send(req);
+	};
+	
+	getPrevious = function() {
+		alert("Inside get next function");
+		Token = document.getElementById("itemId").value;
+		var req = {
+				table: "requests",
+				operation: "getPreviousR",
+				row: {
+					itemId: ItemId,
+					userId: UserId
+				},
+				token: Token
+		}
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send function.");
+		$.ajax({
+			url: '/flsv2/GetRequests',
+			type:'get',
+			data: {req: JSON.stringify(req)},
+			contentType:"application/json",
+			dataType: "json",
+			
+			success: function(response) {
+				alert("working");
+				document.getElementById("Id").value = response.Id;
+				document.getElementById("Code").value = response.Code;
+				
+				if(parseInt(response.Code) === 57) {
+					obj = JSON.parse(response.Message);
+					document.getElementById("itemId1").value = obj.itemId;
+					document.getElementById("userId1").value = obj.userId;
+					document.getElementById("date").value = obj.date
+				}
+				else{
+					document.getElementById("Message").value = response.Message
+				}
+			},
+			
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+	<h1>GET REQUESTS FORM</h1>
+	<form>
+		Request Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		<input type="button" value="Next" onclick="getNext()">
+		<input type="button" value="Previous" onclick="getPrevious()"><br/><br/>
+		<h1>OUTPUT</h1>
+		ID : <input type="text" name="Id" id="Id"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+		Request Item Id : <input type="text" name="itemId1" id="itemId1"><br/><br/>
+		Request User Id : <input type="text" name="userId1" id="userId1"><br/><br/>
+		Request Date : <input type="text" name="date" id="date"><br/><br/>
+	</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
