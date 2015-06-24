@@ -7,23 +7,22 @@
 <script type="text/javascript">
 	var ItemId = null;
 	var UserId = null;
+	var ReqUserId = null;
 	
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
-		
 		UserId = document.getElementById("userId").value;
-		
 		ReqUserId = document.getElementById("reqUserId").value;
 	};
 	
 	grant = function() {
 		alert("inside add function.");
 		getData();
-		var req1 = {
+		var req3 = {
 				table: "store",
 				operation: "delete",
 				row: {
-					itemId: ItemId
+					itemId: parseInt(ItemId)
 				},
 				token: 0
 		};
@@ -32,13 +31,13 @@
 				table: "requests",
 				operation: "edits",
 				row: {
-					itemId: ItemId,
-					userId: ReqUserId
+					itemId: ItemId.toString(),
+					userId: ReqUserId.toString()
 				},
 				token: null
 		};
 		
-		var req3 = {
+		var req1 = {
 				table: "leases",
 				operation: "add",
 				row: {
@@ -49,16 +48,35 @@
 				token: null
 		};
 		
+		var req4 = {
+				table: "items",
+				operation: "editstat",
+				row: {
+					id: ItemId,
+					title: null,
+					description: null,
+					category: null,
+					userId: null,
+					leaseValue: 0,
+					leaseTerm: null,
+					status: "Leased"
+				},
+				token: null
+		};
+		
 		alert("got data");
-		send(req);
+		send(req1,req2,req3,req4);
 	};
 	
-	send = function(req) {
+	send = function(req1,req2,req3,req4) {
 		alert("Inside send function.");
 		$.ajax({
 			url: '/flsv2/GrantLease',
 			type:'get',
-			data: {req: JSON.stringify(req)},
+			data: {req1: JSON.stringify(req1),
+				req2: JSON.stringify(req2),
+				req3: JSON.stringify(req3),
+				req4: JSON.stringify(req4)},
 			contentType:"application/json",
 			dataType: "json",
 			
@@ -80,10 +98,10 @@
 <body>
 	<h1>GRANT LEASE FORM</h1>
 	<form>
+		Request User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>
 		Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
 		User Id : <input type="text" name="userId" id="userId"><br/><br/>
-		Request User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>
-		<input type="button" value="Reject Request" onclick="deleteD()"><br/><br/>
+		<input type="button" value="Grant Lease" onclick="grant()"><br/><br/>
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>
 		Code : <input type="text" name="code" id="Code"><br/><br/>

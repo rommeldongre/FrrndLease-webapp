@@ -42,6 +42,11 @@ public class Items extends Connect {
 			Edit();
 			break;
 			
+		case "editstat" :
+			System.out.println("Edit status is selected");
+			EditStat();
+			break;
+			
 		case "getnext" :
 			System.out.println("Get Next operation is selected.");
 			try {
@@ -225,6 +230,50 @@ public class Items extends Connect {
 				stmt.setString(6, leaseTerm);
 				stmt.setString(7, status);
 				stmt.setInt(8, id);
+				stmt.executeUpdate();
+				message = "operation successfull edited item id : " +id;
+				Id = String.valueOf(check);
+				Code = 002;
+				res.setData(Code,Id,message);
+			}
+			else {
+				System.out.println("Entry not found in database!!");
+				res.setData(201, "0", "Entry not found in database!!");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Couldnt create a statement");
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		}
+	}
+	
+	private void EditStat() {
+		check = 0;
+		id = im.getId();
+		status = im.getStatus();
+		
+		System.out.println("Inside edit stat method...");
+		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
+		
+		getConnection();
+		try {
+			System.out.println("Creating statement...");
+			
+			String sql2 = "SELECT * FROM items WHERE item_id=?";
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setInt(1, id);
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getInt("item_id");
+			}
+			
+			if(check != 0) {
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				System.out.println("Statement created. Executing edit stat query...");
+				stmt.setString(1, status);
+				stmt.setInt(2, id);
 				stmt.executeUpdate();
 				message = "operation successfull edited item id : " +id;
 				Id = String.valueOf(check);

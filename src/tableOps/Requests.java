@@ -248,7 +248,7 @@ public class Requests extends Connect{
 				stmt.setString(2,itemId);
 				stmt.executeUpdate();
 				message = "operation successfull edited item id : "+itemId;
-				Code = 55; /////////
+				Code = 56; /////////
 				Id = check;
 				res.setData(Code, Id, message);
 			}
