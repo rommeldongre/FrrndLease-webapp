@@ -63,6 +63,28 @@ public class Leases extends Connect {
 			}
 			break;
 			
+		case "getnextactive" :
+			System.out.println("Get Next operation is selected.");
+			try {
+				token = obj.getString("token");
+				getNextActive();
+			} catch (JSONException e) {
+				res.setData(202, String.valueOf(token), "JSON Data not parsed/found(JSON Exception)");
+				e.printStackTrace();
+			}
+			break;
+			
+		case "getpreviousactive" :
+			System.out.println("Get Next operation is selected.");
+			try {
+				token = obj.getString("token");
+				getPreviousActive();
+			} catch (JSONException e) {
+				res.setData(202, String.valueOf(token), "JSON Data not parsed/found(JSON Exception)");
+				e.printStackTrace();
+			}
+			break;
+			
 		default:
 			res.setData(202, "0", "Invalid Operation!!");;
 			break;
@@ -260,6 +282,102 @@ public class Leases extends Connect {
 			
 			System.out.println("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("reqUserId", rs.getString("lease_requser_id"));
+				json.put("itemId", rs.getString("lease_item_id"));
+				json.put("userId", rs.getString("lease_user_id"));
+				json.put("expiry", rs.getString("lease_expiry_date"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getString("lease_requser_id");
+			}
+			
+			if(check != null ) {
+				Code = 19;
+				Id = check;
+			}
+			
+			else {
+				Id = null;
+				message = "End of Database!!!";
+				Code = 199;
+			}
+			
+			res.setData(Code,Id,message);
+		} catch (SQLException e) {
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
+		}	
+	}
+	
+	private void getNextActive () {
+		check = null;
+		System.out.println("Inside GetNext Active method");
+		String sql = "SELECT * FROM leases WHERE lease_item_id > ? AND lease_status=? ORDER BY lease_item_id LIMIT 1";		//
+		
+		getConnection();
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing getNext query...");
+			stmt.setString(1, token);
+			stmt.setString(2, "Active");
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("reqUserId", rs.getString("lease_requser_id"));
+				json.put("itemId", rs.getString("lease_item_id"));
+				json.put("userId", rs.getString("lease_user_id"));
+				json.put("expiry", rs.getString("lease_expiry_date"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getString("lease_requser_id");
+			}
+			
+			if(check != null ) {
+				Code = 18;
+				Id = check;
+			}
+			
+			else {
+				Id = null;
+				message = "End of Database!!!";
+				Code = 199;
+			}
+			
+			res.setData(Code,Id,message);
+		} catch (SQLException e) {
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
+		}	
+	}
+	
+	private void getPreviousActive() {
+		check = null;
+		System.out.println("Inside GetPrevious method");
+		String sql = "SELECT * FROM leases WHERE lease_item_id < ? AND lease_status=? ORDER BY lease_item_id DESC LIMIT 1";			//
+		
+		getConnection();
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing getPrevious query...");
+			stmt.setString(1, token);
+			stmt.setString(2, "Active");
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
