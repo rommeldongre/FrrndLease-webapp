@@ -12,18 +12,7 @@
 		//alert("Creating a json object");
 		Token = document.getElementById("id").value;
 		var req = {
-				table:"items",
 				operation:"BrowseN",
-				row:{
-					id: 0,
-					title: null,
-					description: null,
-					category: null,
-					userId: null,
-					leaseValue: 0,
-					leaseTerm: null,
-					status: "InStore"
-				},
 				token:Token
 		}
 		send(req);
@@ -34,18 +23,7 @@
 		//alert("Creating a json object");
 		Token = document.getElementById("id").value;
 		var req = {
-				table:"items",
 				operation:"BrowseP",
-				row:{
-					id: 0,
-					title: null,
-					description: null,
-					category: null,
-					userId: null,
-					leaseValue: 0,
-					leaseTerm: null,
-					status: "InStore"
-				},
 				token:Token
 		}
 		send(req);
@@ -65,7 +43,7 @@
 				document.getElementById("Id").value = response.Id;
 				document.getElementById("Code").value = response.Code;
 				
-				if(parseInt(response.Code) === 53 || parseInt(response.Code) === 54) {
+				if(response.Code == "FLS_SUCCESS") {
 					obj = JSON.parse(response.Message);
 					document.getElementById("itemId").value = obj.itemId;
 					document.getElementById("title1").value = obj.title;
