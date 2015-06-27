@@ -42,10 +42,7 @@
 		//alert("Inside Add function");
 		getData();
 		//alert("creating a json object")
-		var req1 = {
-				table:"items",
-				operation:"add",
-				row:{
+		var req = {
 					id:Id,
 					title:Title,
 					description:Description,
@@ -54,26 +51,17 @@
 					leaseValue: LeaseValue,
 					leaseTerm: LeaseTerm,
 					status: Status
-				},
-				token:0
-		};
-		
-		var req2 = {
-				table: "wishlist",
-				operation: "add",
-				token:0
 		};
 		//var Req = JSON.parse(JOSNObject);
-		send(req1,req2);
+		send(req);
 	};
 	
-	send = function(req1,req2,req3) {
+	send = function(req) {
 		alert("Inside send");
 		$.ajax({
 			url: '/flsv2/WishItem',
 			type: 'get',
-			data: {req1 : JSON.stringify(req1),
-					req2 : JSON.stringify(req2)},
+			data: {req : JSON.stringify(req)},
 			contentType:"application/json",
 			dataType:"json",
 			
