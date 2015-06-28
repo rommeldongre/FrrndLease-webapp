@@ -188,8 +188,9 @@ public class Friends extends Connect{
 	
 	private void getNext() {
 		check = null;
+		Id = fm.getFriendId();
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM friends WHERE friend_id > ? ORDER BY friend_id LIMIT 1";		//
+		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id>? ORDER BY friend_user_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -197,7 +198,8 @@ public class Friends extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getNext query...");
-			stmt.setString(1, token);
+			stmt.setString(1, Id);
+			stmt.setString(2, token);
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
@@ -235,8 +237,9 @@ public class Friends extends Connect{
 	
 	private void getPrevious() {
 		check = null;
+		Id = fm.getFriendId();
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM friends WHERE friend_id < ? ORDER BY friend_id DESC LIMIT 1";			//
+		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id<? ORDER BY friend_user_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -244,7 +247,8 @@ public class Friends extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getPrevious query...");
-			stmt.setString(1, token);
+			stmt.setString(1, Id);
+			stmt.setString(2, token);
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {

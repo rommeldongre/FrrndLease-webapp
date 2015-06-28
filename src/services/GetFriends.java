@@ -44,15 +44,23 @@ public class GetFriends extends HttpServlet {
 		
 		try {
 			JSONObject obj = new JSONObject(str);
-			table = obj.getString("table");
-			System.out.println(table);
+			table = "friends";
+			obj.put("table", table);
+			
+			JSONObject row = new JSONObject();
+			row.put("id", obj.getString("id"));
+			row.put("fullName", "0");
+			row.put("mobile", "0");
+			row.put("userId", "0");
+			
+			obj.put("row", row);
 			
 			//Sending data to Admin-Ops-Handler
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
 			if(Integer.parseInt(res.getCode()) == 13 || Integer.parseInt(res.getCode()) == 14){
-				json.put("Code", "60");
+				json.put("Code", "FLS_SUCCESS");
 				json.put("Message", res.getMessage());
 				json.put("Id", res.getId());
 			}

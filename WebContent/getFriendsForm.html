@@ -6,19 +6,15 @@
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var Token = null;
+	var Id = null
 	
 	getNext = function() {
 		alert("Inside get next function");
-		Token = document.getElementById("friendId").value;
+		Id = document.getElementById("friendId").value;
+		Token = document.getElementById("friendUserId").value;
 		var req = {
-				table: "friends",
 				operation: "getNext",
-				row: {
-					id: null,
-					fullName: null,
-					mobile: null,
-					userId: null
-				},
+				id: Id,
 				token: Token
 		}
 		send(req);
@@ -26,16 +22,11 @@
 	
 	getPrevious = function() {
 		alert("Inside get next function");
+		Id = document.getElemetById("friendId").value;
 		Token = document.getElementById("friendId").value;
 		var req = {
-				table: "friends",
 				operation: "getPrevious",
-				row: {
-					id: null,
-					fullName: null,
-					mobile: null,
-					userId: null
-				},
+				id: Id,
 				token: Token
 		}
 		send(req);
@@ -54,7 +45,7 @@
 				alert("working");
 				document.getElementById("Id").value = response.Id;
 				document.getElementById("Code").value = response.Code;
-				if(parseInt(response.Code) === 60) {
+				if(response.Code == "FLS_SUCCESS") {
 					obj = JSON.parse(response.Message);
 					document.getElementById("friendId1").value = obj.friendId;
 					document.getElementById("fullName1").value = obj.fullName;
@@ -78,6 +69,7 @@
 	<h1>GET FRIENDS FORM</h1>
 	<form>
 		Friend Id : <input type="text" name="friendId" id="friendId"><br/><br/>
+		Friend User Id : <input type="text" name="friendUserId" id="friendUserId"><br/><br/>
 		<input type="button" value="Get Next" onclick="getNext()">
 		<input type="button" value="Get Previous" onclick="getPrevious()"><br/><br/>
 		<h1>OUTPUT</h1>
