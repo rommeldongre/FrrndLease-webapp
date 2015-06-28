@@ -40,14 +40,35 @@ public class GetItemWishlist extends HttpServlet {
 		
 		try {
 			JSONObject obj = new JSONObject(str);
-			table = obj.getString("table");
+			table = "items";
+			obj.put("table", table);
+			
+			JSONObject row = new JSONObject();
+			row.put("id", 0);
+			row.put("leaseValue", 0);
+			row.put("title", "0");
+			row.put("description", "0");
+			row.put("category", "0");
+			row.put("userId", "0");
+			row.put("leaseTerm", "0");
+			row.put("status", "Wished");
+			obj.put("row", row);
+			
+			
 			System.out.println(table);
 			
 			//Sending data to Admin-Ops-Handler
 			res = aoh.getInfo(table, obj);
 			
 			JSONObject json = new JSONObject();
-			json.put("Code", res.getCode());
+			if(res.getIntCode() == 53 || res.getIntCode() == 54) {
+				json.put("Code", "FLS_SUCCESS");
+			}
+			
+			else {
+				json.put("Code", res.getCode());
+			}
+			
 			json.put("Message", res.getMessage());
 			json.put("Id", res.getId());
 			out.print(json);

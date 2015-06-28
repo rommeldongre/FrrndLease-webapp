@@ -45,16 +45,19 @@ public class RejectRequest extends HttpServlet {
 		String str = request.getParameter("req");
 		
 		try {
-			JSONObject obj = new JSONObject(str);
-			table = obj.getString("table");
-			System.out.println(table);
+			JSONObject row = new JSONObject(str);
+			JSONObject obj = new JSONObject();
+			table = "requests";
+			obj.put("table", table);
+			obj.put("operation", "editone");
+			obj.put("row", row);
 			
 			//Sending data to Admin-Ops-Handler
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
 			if(Integer.parseInt(res.getCode()) == 56){
-				json.put("Code", res.getCode());
+				json.put("Code", "FLS_SUCCESS");
 				json.put("Message", "Request rejected..");
 				json.put("Id", res.getId());
 			}

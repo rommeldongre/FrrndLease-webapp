@@ -20,13 +20,8 @@
 		alert("inside add function.");
 		getData();
 		var req = {
-				table: "requests",
-				operation: "editone",
-				row: {
 					itemId: ItemId,
 					userId: UserId
-				},
-				token: null
 		};
 		alert("got data");
 		send(req);

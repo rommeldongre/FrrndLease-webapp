@@ -39,8 +39,12 @@ public class RequestItem extends HttpServlet {
 		String str = request.getParameter("req");
 		
 		try {
-			JSONObject obj = new JSONObject(str);
-			table = obj.getString("table");
+			JSONObject row = new JSONObject(str);
+			JSONObject obj = new JSONObject();
+			table = "requests";
+			obj.put("table", table);
+			obj.put("operation", "add");
+			obj.put("row", row);
 			System.out.println(table);
 			
 			//Sending data to Admin-Ops-Handler
@@ -48,7 +52,7 @@ public class RequestItem extends HttpServlet {
 			JSONObject json = new JSONObject();
 			
 			if(Integer.parseInt(res.getCode()) == 25){
-				json.put("Code", "55");
+				json.put("Code", "FLS_SUCCESS");
 				json.put("Message", "Request added..");
 				json.put("Id", res.getId());
 			}
