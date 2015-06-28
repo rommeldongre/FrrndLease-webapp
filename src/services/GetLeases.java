@@ -41,16 +41,23 @@ public class GetLeases extends HttpServlet {
 		String str = request.getParameter("req");
 		
 		try {
+			JSONObject row = new JSONObject();
 			JSONObject obj = new JSONObject(str);
-			table = obj.getString("table");
-			System.out.println(table);
+			table = "leases";
+			obj.put("table", table);
+			
+			row.put("reqUserId", "0");
+			row.put("itemId", "0");
+			row.put("userId", "0");
+			
+			obj.put("row", row);
 			
 			//Sending data to Admin-Ops-Handler
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
 			if(Integer.parseInt(res.getCode()) == 18 || Integer.parseInt(res.getCode()) == 19){
-				json.put("Code", "59");
+				json.put("Code", "FLS_SUCCESS");
 				json.put("Message", res.getMessage());
 				json.put("Id", res.getId());
 			}

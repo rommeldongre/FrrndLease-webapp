@@ -11,13 +11,7 @@
 		alert("Inside get next function");
 		Token = document.getElementById("itemId").value;
 		var req = {
-				table: "leases",
 				operation: "getNextActive",
-				row: {
-					reqUserId: null,
-					itemId: null,
-					userId: null
-				},
 				token: Token
 		}
 		send(req);
@@ -27,13 +21,7 @@
 		alert("Inside get next function");
 		Token = document.getElementById("itemId").value;
 		var req = {
-				table: "leases",
 				operation: "getPreviousActive",
-				row: {
-					reqUserId: null,
-					itemId: null,
-					userId: null
-				},
 				token: Token
 		}
 		send(req);
@@ -53,7 +41,7 @@
 				document.getElementById("Id").value = response.Id;
 				document.getElementById("Code").value = response.Code;
 				
-				if(parseInt(response.Code) === 59) {
+				if(response.Code == "FLS_SUCCESS") {
 					obj = JSON.parse(response.Message);
 					document.getElementById("reqUserId1").value = obj.reqUserId;
 					document.getElementById("itemId1").value = obj.itemId;

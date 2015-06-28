@@ -318,9 +318,10 @@ public class Leases extends Connect {
 	}
 	
 	private void getNextActive () {
+		int t = Integer.parseInt(token);
 		check = null;
 		System.out.println("Inside GetNext Active method");
-		String sql = "SELECT * FROM leases WHERE lease_item_id > ? AND lease_status=? ORDER BY lease_item_id LIMIT 1";		//
+		String sql = "SELECT * FROM leases WHERE lease_id > ? AND lease_status=? ORDER BY lease_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -328,7 +329,7 @@ public class Leases extends Connect {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getNext query...");
-			stmt.setString(1, token);
+			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
 			
 			ResultSet rs = stmt.executeQuery();
@@ -341,7 +342,7 @@ public class Leases extends Connect {
 				
 				message = json.toString();
 				System.out.println(message);
-				check = rs.getString("lease_requser_id");
+				check = String.valueOf(rs.getInt("lease_id"));
 			}
 			
 			if(check != null ) {
@@ -367,8 +368,9 @@ public class Leases extends Connect {
 	
 	private void getPreviousActive() {
 		check = null;
+		int t = Integer.parseInt(token);
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM leases WHERE lease_item_id < ? AND lease_status=? ORDER BY lease_item_id DESC LIMIT 1";			//
+		String sql = "SELECT * FROM leases WHERE lease_id < ? AND lease_status=? ORDER BY lease_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -376,7 +378,7 @@ public class Leases extends Connect {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getPrevious query...");
-			stmt.setString(1, token);
+			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
 			
 			ResultSet rs = stmt.executeQuery();
@@ -389,7 +391,7 @@ public class Leases extends Connect {
 				
 				message = json.toString();
 				System.out.println(message);
-				check = rs.getString("lease_requser_id");
+				check = String.valueOf(rs.getInt("lease_id"));
 			}
 			
 			if(check != null ) {
