@@ -44,44 +44,73 @@ public class GrantLease extends HttpServlet {
 		String Id="0", Message="Lease Couldn't be granted", Code="220";
 		PrintWriter out = response.getWriter();
 		
-		String str1 = request.getParameter("req1");
-		String str2 = request.getParameter("req2");
-		String str3 = request.getParameter("req3");
-		String str4 = request.getParameter("req4");
+		String str = request.getParameter("req");
 		
 		try {
-			JSONObject obj1 = new JSONObject(str1);
-			table = obj1.getString("table");
-			System.out.println(table);
+			JSONObject r = new JSONObject(str);
+			JSONObject obj1 = new JSONObject();
+			table = "requests";
+			obj1.put("table", table);
+			obj1.put("operation", "edits");
 			
-			res1 = aoh1.getInfo(table, obj1); // goes to leases table - add()
+			JSONObject row1 = new JSONObject();
+			row1.put("itemId", r.getString("itemId"));
+			row1.put("userId", r.getString("userId"));
+			obj1.put("row", row1);
+			
+			res1 = aoh1.getInfo(table, obj1); // goes to requests table - edits()
 			System.out.println(res1.getCode());
-			if(res1.getIntCode() == 15){ // 15 is the success code
-				System.out.println("Lease added into lease table.");
-				JSONObject obj2 = new JSONObject(str2);
-				table = obj2.getString("table");
-				System.out.println(table);
+			if(res1.getIntCode() == 56){ // 56 is the success code
+				System.out.println("Request for that item archived in requests table.");
+				JSONObject obj2 = new JSONObject();
+				table = "store";
+				obj2.put("table", table);
+				obj2.put("operation", "delete");
 				
-				res2 = aoh2.getInfo(table, obj2);// goes to requests table - edits()
+				JSONObject row2 = new JSONObject();
+				row2.put("itemId", Integer.parseInt(r.getString("itemId")));
+				obj2.put("row", row2);
 				
-				if(res2.getIntCode() == 56) {
-					System.out.println("Request for that item archived in requests table.");
-					JSONObject obj3 = new JSONObject(str3);
-					table = obj3.getString("table");
-					System.out.println(table);
+				res2 = aoh2.getInfo(table, obj2);// goes to store table - edits()
+				
+				if(res2.getIntCode() == 30) {
+					System.out.println("Item entry deleted from store table");
+					JSONObject obj3 = new JSONObject();
+					table = "items";
+					obj3.put("table", table);
+					obj3.put("operation", "editstat");
 					
-					res3 = aoh3.getInfo(table, obj3);// goes to store table - delete()
+					JSONObject row3 = new JSONObject();
+					row3.put("id", Integer.parseInt(r.getString("itemId")));
+					row3.put("title", "0");
+					row3.put("description", "0");
+					row3.put("category", "0");
+					row3.put("userId", "0");
+					row3.put("leaseValue", 0);
+					row3.put("leaseTerm", "0");
+					row3.put("status", "Leased");
+					obj3.put("row", row3);
 					
-					if(res3.getIntCode() == 30) {
-						System.out.println("Item entry deleted from store table");
-						JSONObject obj4 = new JSONObject(str4);
-						table = obj4.getString("table");
-						System.out.println(table);
+					res3 = aoh3.getInfo(table, obj3);// goes to items table - editstat()
+					
+					if(res3.getIntCode() == 2) {
+						System.out.println("Item status updated to leased");
+						JSONObject obj4 = new JSONObject();
+						table = "leases";
+						obj4.put("table", table);
+						obj4.put("operation", "add");
 						
-						res4 = aoh4.getInfo(table, obj4);// goes to items table - editstat()
+						JSONObject row4 = new JSONObject();
+						row4.put("reqUserId", r.getString("reqUserId"));
+						row4.put("itemId", r.getString("itemId"));
+						row4.put("userId", r.getString("userId"));
 						
-						if(res4.getIntCode() == 2) {
-							Code = "58";
+						obj4.putOnce("row", row4);
+						
+						res4 = aoh4.getInfo(table, obj4);// goes to leases table - add()
+						
+						if(res4.getIntCode() == 15) {
+							Code = "FLS_SUCCESS";
 							Message = "Lease Granted";
 							Id = res4.getId();
 						}

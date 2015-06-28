@@ -18,65 +18,23 @@
 	grant = function() {
 		alert("inside add function.");
 		getData();
-		var req3 = {
-				table: "store",
-				operation: "delete",
-				row: {
-					itemId: parseInt(ItemId)
-				},
-				token: 0
-		};
 		
-		var req2 = {
-				table: "requests",
-				operation: "edits",
-				row: {
+		var req = {
+					reqUserId: ReqUserId.toString(),
 					itemId: ItemId.toString(),
-					userId: ReqUserId.toString()
-				},
-				token: null
-		};
-		
-		var req1 = {
-				table: "leases",
-				operation: "add",
-				row: {
-					reqUserId: ReqUserId,
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: null
-		};
-		
-		var req4 = {
-				table: "items",
-				operation: "editstat",
-				row: {
-					id: ItemId,
-					title: null,
-					description: null,
-					category: null,
-					userId: null,
-					leaseValue: 0,
-					leaseTerm: null,
-					status: "Leased"
-				},
-				token: null
+					userId: UserId.toString()
 		};
 		
 		alert("got data");
-		send(req1,req2,req3,req4);
+		send(req);
 	};
 	
-	send = function(req1,req2,req3,req4) {
+	send = function(req) {
 		alert("Inside send function.");
 		$.ajax({
 			url: '/flsv2/GrantLease',
 			type:'get',
-			data: {req1: JSON.stringify(req1),
-				req2: JSON.stringify(req2),
-				req3: JSON.stringify(req3),
-				req4: JSON.stringify(req4)},
+			data: {req: JSON.stringify(req)},
 			contentType:"application/json",
 			dataType: "json",
 			
