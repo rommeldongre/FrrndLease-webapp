@@ -5,20 +5,13 @@
 <title>Requests form</title>
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
-	var ItemId = null;
-	var UserId = null;
 	var Token = null;
 	
 	getNext = function() {
 		alert("Inside get next function");
 		Token = document.getElementById("itemId").value;
 		var req = {
-				table: "requests",
 				operation: "getNextR",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
 				token: Token
 		}
 		send(req);
@@ -28,12 +21,7 @@
 		alert("Inside get next function");
 		Token = document.getElementById("itemId").value;
 		var req = {
-				table: "requests",
 				operation: "getPreviousR",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
 				token: Token
 		}
 		send(req);
@@ -53,7 +41,7 @@
 				document.getElementById("Id").value = response.Id;
 				document.getElementById("Code").value = response.Code;
 				
-				if(parseInt(response.Code) === 57) {
+				if(response.Code == "FLS_SUCCESS") {
 					obj = JSON.parse(response.Message);
 					document.getElementById("itemId1").value = obj.itemId;
 					document.getElementById("userId1").value = obj.userId;

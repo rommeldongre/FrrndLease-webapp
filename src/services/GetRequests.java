@@ -41,15 +41,18 @@ public class GetRequests extends HttpServlet {
 		
 		try {
 			JSONObject obj = new JSONObject(str);
-			table = obj.getString("table");
-			System.out.println(table);
+			table = "requests";
+			JSONObject row = new JSONObject();
+			row.put("itemId", "0");
+			row.put("userId", "0");
+			obj.put("row", row); 
 			
 			//Sending data to Admin-Ops-Handler
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
 			if(Integer.parseInt(res.getCode()) == 27 || Integer.parseInt(res.getCode()) == 28){
-				json.put("Code", "57");
+				json.put("Code", "FLS_SUCCESS");
 				json.put("Message", res.getMessage());
 				json.put("Id", res.getId());
 			}

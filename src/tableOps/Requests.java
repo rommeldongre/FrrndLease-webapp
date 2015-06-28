@@ -400,8 +400,9 @@ public class Requests extends Connect{
 	
 	private void getNextR() {
 		check = null;
+		int t = Integer.parseInt(token);
 		System.out.println("Inside GetNextR method");
-		String sql = "SELECT * FROM requests WHERE request_item_id > ? AND request_status=? ORDER BY request_item_id LIMIT 1";		//
+		String sql = "SELECT * FROM requests WHERE request_id > ? AND request_status=? ORDER BY request_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -409,7 +410,7 @@ public class Requests extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getNext query...");
-			stmt.setString(1, token);
+			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
 			
 			ResultSet rs = stmt.executeQuery();
@@ -421,7 +422,7 @@ public class Requests extends Connect{
 				
 				message = json.toString();
 				System.out.println(message);
-				check = rs.getString("request_item_id");
+				check = String.valueOf(rs.getInt("request_id"));
 			}
 			
 			if(check != null ) {
@@ -447,8 +448,9 @@ public class Requests extends Connect{
 	
 	private void getPreviousR() {
 		check = null;
+		int t = Integer.parseInt(token);
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM requests WHERE request_item_id < ? AND request_status=? ORDER BY request_item_id DESC LIMIT 1";			//
+		String sql = "SELECT * FROM requests WHERE request_id < ? AND request_status=? ORDER BY request_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -456,7 +458,7 @@ public class Requests extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getPrevious query...");
-			stmt.setString(1, token);
+			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
 			
 			ResultSet rs = stmt.executeQuery();
@@ -468,7 +470,7 @@ public class Requests extends Connect{
 				
 				message = json.toString();
 				System.out.println(message);
-				check = rs.getString("request_item_id");
+				check = String.valueOf(rs.getInt("request_id"));
 			}
 			
 			if(check != null ) {
