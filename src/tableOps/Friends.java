@@ -104,18 +104,20 @@ public class Friends extends Connect{
 	
 	private void Delete() {
 		friendId = fm.getFriendId();
+		userId = fm.getUserId();
 		check = null;
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM friends WHERE friend_id=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friend_id=?";			//
+		String sql = "DELETE FROM friends WHERE friend_id=? AND friend_user_id=?";			//
+		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
+			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
 				check = rs.getString("friend_id");
@@ -126,6 +128,7 @@ public class Friends extends Connect{
 				
 				System.out.println("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, friendId);
+				stmt.setString(2, userId);
 				stmt.executeUpdate();
 				message = "operation successfull deleted friend id : "+friendId;
 				Code = 11;
@@ -147,17 +150,19 @@ public class Friends extends Connect{
 		friendId = fm.getFriendId();
 		fullName = fm.getFullName();
 		mobile = fm.getMobile();
+		userId = fm.getUserId();
 		check = null;
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friend_id=?";								//
+		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=? AND friend_user_id=?";			//
+		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";								//
 		
 		try {
 			System.out.println("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
+			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
 				check = rs.getString("friend_id");
@@ -170,6 +175,7 @@ public class Friends extends Connect{
 				stmt.setString(1, fullName);
 				stmt.setString(2,mobile);
 				stmt.setString(3,friendId);
+				stmt.setString(4, userId);
 				stmt.executeUpdate();
 				message = "operation successfull edited friends id : "+friendId;
 				Code = 12;
