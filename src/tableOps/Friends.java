@@ -91,7 +91,7 @@ public class Friends extends Connect{
 			System.out.println("Entry added into friends table");
 			
 			message = "Entry added into friends table";
-			Code = 010;
+			Code = 10;
 			Id = friendId;
 			
 			res.setData(Code,Id,message);
@@ -128,7 +128,7 @@ public class Friends extends Connect{
 				stmt.setString(1, friendId);
 				stmt.executeUpdate();
 				message = "operation successfull deleted friend id : "+friendId;
-				Code = 0011;
+				Code = 11;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
@@ -172,7 +172,7 @@ public class Friends extends Connect{
 				stmt.setString(3,friendId);
 				stmt.executeUpdate();
 				message = "operation successfull edited friends id : "+friendId;
-				Code = 0012;
+				Code = 12;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
