@@ -3,8 +3,10 @@ package tableOps;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +87,10 @@ public class Leases extends Connect {
 			}
 			break;
 			
+		case "renewlease" :
+			RenewLease();
+			break;
+			
 		default:
 			res.setData(202, "0", "Invalid Operation!!");;
 			break;
@@ -97,9 +103,17 @@ public class Leases extends Connect {
 		reqUserId = lm.getReqUserId();
 		itemId = lm.getItemId();
 		userId = lm.getUserId();
+		int days;
+		
+		Items item = new Items();
+		String term = item.GetLeaseTerm(Integer.parseInt(itemId));
+		
+		LeaseTerms Term = new LeaseTerms();
+		
+		days = Term.getDuration(term);
 		
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, 30);
+		cal.add(Calendar.DATE, days);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sdf.format(cal.getTime());
 		
@@ -413,5 +427,71 @@ public class Leases extends Connect {
 			res.setData(204,"0", "JSON Exception");
 			e.printStackTrace();
 		}	
+	}
+	
+	private void RenewLease() {
+		reqUserId = lm.getReqUserId();
+		itemId = lm.getItemId();
+		check = null;
+		String date1 = null;
+		
+		Calendar cal = new GregorianCalendar();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//String date = sdf.format(cal.getTime());
+		
+		System.out.println("inside edit method");
+		getConnection();
+		
+		String sql1 = "SELECT lease_expiry_date,lease_id FROM leases WHERE lease_requser_id=? AND lease_item_id=?";
+		
+		try {
+			PreparedStatement stmt1 = connection.prepareStatement(sql1);
+			stmt1.setString(1, reqUserId);
+			stmt1.setString(2, itemId);
+			
+			ResultSet rs = stmt1.executeQuery();
+			while(rs.next()) {
+				date1 = rs.getString("lease_expiry_date");
+				check = String.valueOf(rs.getInt("lease_id"));
+				System.out.println(date1);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		Items item = new Items();
+		String term = item.GetLeaseTerm(Integer.parseInt(itemId));
+		
+		LeaseTerms Term = new LeaseTerms();
+		int days = Term.getDuration(term);
+		
+		try {
+			cal.setTime(sdf.parse(date1));
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		cal.add(Calendar.DATE, days);
+		String date = sdf.format(cal.getTime());
+		System.out.println(date);
+		
+		String sql = "UPDATE leases SET lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=?";								//
+		
+		try {
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				System.out.println("Statement created. Executing renew query ...");
+				stmt.setString(1, date);
+				stmt.setString(2, reqUserId);
+				stmt.setString(3, itemId);
+				stmt.executeUpdate();
+				message = "operation successfull edited lease Req User id : "+reqUserId;
+				Code = 17;
+				Id = check;
+				res.setData(Code, Id, message);
+			
+		} catch (SQLException e) {
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		}
 	}
 }

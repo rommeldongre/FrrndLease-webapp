@@ -509,6 +509,28 @@ public class Items extends Connect {
 		}
 	}
 	
+	public String GetLeaseTerm(int itemId) {
+		String term=null;
+		System.out.println("Inside getItemLeaseTerm");
+		String sql = "SELECT item_lease_term FROM items WHERE item_id=?";
+		getConnection();
+		
+		try {
+			System.out.println("executing getItemLesae Term query");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, itemId);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				term = rs.getString("item_lease_term");
+				System.out.println(term);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return term;
+	}
+	
 	/*private void GetMax(){
 		//id = im.getId();
 		getConnection();

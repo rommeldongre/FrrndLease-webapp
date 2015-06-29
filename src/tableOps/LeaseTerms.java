@@ -274,5 +274,26 @@ public class LeaseTerms extends Connect {
 			e.printStackTrace();
 		}	
 	}
+	
+	public int getDuration (String term) {
+		int days=0;
+		System.out.println("Inside getDuration");
+		String sql = "SELECT term_duration FROM leaseterms WHERE term_name=?";
+		getConnection();
+		
+		try {
+			System.out.println("executing getDuration query...");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, term);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				days = rs.getInt("term_duration");
+				System.out.println(days);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return days;
+	}
 
 }
