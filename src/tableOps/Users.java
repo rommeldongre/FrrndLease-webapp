@@ -60,6 +60,17 @@ public class Users extends Connect {
 			}
 			break;
 			
+		case "info" :
+			System.out.println("Get Next operation is selected.");
+			try {
+				token = obj.getString("token");
+				getUserInfo();
+			} catch (JSONException e) {
+				res.setData(202, String.valueOf(token), "JSON Data not parsed/found(JSON Exception)");
+				e.printStackTrace();
+			}
+			break;
+			
 		default:
 			res.setData(202, "0", "Invalid Operation!!");;
 			break;
@@ -260,6 +271,55 @@ public class Users extends Connect {
 				json.put("mobile", rs.getString("user_mobile"));
 				json.put("location", rs.getString("user_location"));
 				json.put("auth", rs.getString("user_auth"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getString("user_id");
+			}
+			
+			if(check != null ) {
+				Code = 41;
+				Id = check;
+			}
+			
+			else {
+				Id = null;
+				message = "End of Database!!!";
+				Code = 199;
+			}
+			
+			res.setData(Code,Id,message);
+		} catch (SQLException e) {
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0","JSON Exception");
+			e.printStackTrace();
+		}	
+	}
+	
+	private void getUserInfo() {
+		check = null;
+		auth = um.getAuth();
+		System.out.println("Inside GetPrevious method");
+		String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
+		
+		getConnection();
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing getPrevious query...");
+			stmt.setString(1, token);
+			stmt.setString(2, auth);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("userId", rs.getString("user_id"));
+				json.put("fullName", rs.getString("user_full_name"));
+				json.put("mobile", rs.getString("user_mobile"));
+				json.put("location", rs.getString("user_location"));
 				
 				message = json.toString();
 				System.out.println(message);
