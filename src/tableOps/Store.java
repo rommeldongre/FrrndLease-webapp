@@ -219,4 +219,39 @@ public class Store extends Connect {
 			e.printStackTrace();
 		}	
 	}
+	
+	public void DeleteP(int id) { //used in delete posting
+		check = 0;
+		System.out.println("Inside deleteP method of store....");
+		
+		getConnection();
+		String sql = "DELETE FROM store WHERE store_item_id=?";			//
+		String sql2 = "SELECT * FROM store WHERE store_item_id=?";			//
+		
+		try {
+			System.out.println("Creating statement...");
+			
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setInt(1, id);
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getInt("store_item_id");
+			}
+			
+			if(check != 0) {
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				System.out.println("Statement created. Executing delete query on ..." + check);
+				stmt.setInt(1, id);
+				stmt.executeUpdate();
+				message = "operation successfully deleted store item id : "+itemId;
+				System.out.println(message);
+			}
+			else{
+				System.out.println("Entry not found in database!!");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
