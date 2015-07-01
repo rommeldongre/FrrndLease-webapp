@@ -98,6 +98,11 @@ public class Items extends Connect {
 			DeletePosting();
 			break;
 			
+		case "deletewish" :
+			System.out.println("Delete Wishlist operation is selected");
+			DeleteWishlist();
+			break;		
+			
 		default:
 			res.setData(202, "0", "Invalid Operation!!");;
 			break;
@@ -611,6 +616,59 @@ public class Items extends Connect {
 		}
 	}
 	
+	private void DeleteWishlist() {
+		id = im.getId();
+		userId = im.getUserId();
+		String check2 = null;
+		System.out.println("Inside delete wishlist method....");
+		
+		
+		getConnection();
+		try {
+			System.out.println("Creating statement...");
+			
+			//checking whether the input id is present in table
+			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setInt(1, id);
+			stmt2.setString(2, userId);
+			stmt2.setString(3, "Wished");
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getInt("item_id");
+				check2 = rs.getString("item_status");
+				System.out.println(check2);
+			}
+			
+			if(check != 0){
+					Wishlist wish = new Wishlist();
+					wish.DeleteW(id);
+					
+					String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
+					PreparedStatement stmt = connection.prepareStatement(sql);
+					
+					//deletes entry from items table
+					
+					System.out.println("Statement created. Executing delete wishlist query..." + check);
+					stmt.setInt(1, id);
+					stmt.setString(2, userId);
+					stmt.executeUpdate();
+					status = "Wish Deleted!!";
+					Id = String.valueOf(check);
+					message = status;
+					Code = 001;
+					res.setData(Code,Id,message);
+			}
+			else {
+				System.out.println("Entry not found in database!!");
+				res.setData(201, "0", "Entry not found in database!!");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		}
+	}
 	/*private void GetMax(){
 		//id = im.getId();
 		getConnection();

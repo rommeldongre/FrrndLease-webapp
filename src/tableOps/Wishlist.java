@@ -218,4 +218,38 @@ public class Wishlist extends Connect {
 			e.printStackTrace();
 		}	
 	}
+	
+	public void DeleteW(int id){
+		check = 0;
+		System.out.println("Inside delete method....");
+		
+		getConnection();
+		String sql = "DELETE FROM wishlist WHERE wishlist_item_id=?";			//
+		String sql2 = "SELECT * FROM wishlist WHERE wishlist_item_id=?";			//
+		
+		try {
+			System.out.println("Creating statement...");
+			
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setInt(1, id);
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getInt("wishlist_item_id");
+			}
+			
+			if(check != 0) {
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				System.out.println("Statement created. Executing delete query on ..." + check);
+				stmt.setInt(1, id);
+				stmt.executeUpdate();
+				message = "operation successfully deleted wishlist item id : "+id;
+			}
+			else{
+				System.out.println("Entry not found in database!!");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

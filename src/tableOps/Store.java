@@ -244,7 +244,7 @@ public class Store extends Connect {
 				System.out.println("Statement created. Executing delete query on ..." + check);
 				stmt.setInt(1, id);
 				stmt.executeUpdate();
-				message = "operation successfully deleted store item id : "+itemId;
+				message = "operation successfully deleted store item id : "+id;
 				System.out.println(message);
 			}
 			else{
