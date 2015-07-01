@@ -214,15 +214,17 @@ public class Items extends Connect {
 		status = im.getStatus();
 		
 		System.out.println("Inside edit method...");
-		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_user_id=?, item_lease_value=?, item_lease_term=?, item_status=? WHERE item_id=?";
+		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=? WHERE item_id=? AND item_user_id=? AND item_status=?";
 		
 		getConnection();
 		try {
 			System.out.println("Creating statement...");
 			
-			String sql2 = "SELECT * FROM items WHERE item_id=?";
+			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setInt(1, id);
+			stmt2.setString(2, userId);
+			stmt2.setString(3, status);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
 				check = rs.getInt("item_id");
@@ -235,11 +237,12 @@ public class Items extends Connect {
 				stmt.setString(1, title);
 				stmt.setString(2, category);
 				stmt.setString(3, description);
-				stmt.setString(4, userId);
-				stmt.setInt(5, leaseValue);
-				stmt.setString(6, leaseTerm);
-				stmt.setString(7, status);
-				stmt.setInt(8, id);
+				stmt.setInt(4, leaseValue);
+				stmt.setString(5, leaseTerm);
+				stmt.setInt(6, id);
+				stmt.setString(7, userId);
+				stmt.setString(8, status);
+				
 				stmt.executeUpdate();
 				message = "operation successfull edited item id : " +id;
 				Id = String.valueOf(check);
