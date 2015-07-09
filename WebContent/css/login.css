@@ -1,0 +1,12 @@
+#newuser{
+	color: gray;
+}
+
+#signup{
+	color: red;
+}
+
+#signup:hover{
+	color: green;
+	text-decoration: none;
+}

@@ -35,36 +35,42 @@ public class PostItem extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Inside POST Method");
-		String table1,table2;
+		String table;
 		String Id="0", Message="PostItem couldn't be performed..", Code="210";
 		PrintWriter out = response.getWriter();
 		
-		String str1 = request.getParameter("req1");
-		String str2 = request.getParameter("req2");
+		String str = request.getParameter("req");
+		//String str2 = request.getParameter("req2");
 		
 		try {
-			JSONObject obj1 = new JSONObject(str1);
-			table1 = obj1.getString("table");
-			System.out.println(table1);
+			JSONObject row = new JSONObject(str);
+			JSONObject obj1 = new JSONObject();
+			table = "items";
+			obj1.put("table", table);
+			obj1.put("operation", "add");
+			obj1.put("row", row);
 			
-			JSONObject obj2 = new JSONObject(str2);
+			/*JSONObject obj2 = new JSONObject(str2);
 			table2 = obj2.getString("table");
-			System.out.println(table2);
+			System.out.println(table2);*/
 			
-			res1 = aoh1.getInfo(table1, obj1);
+			res1 = aoh1.getInfo(table, obj1);
 			System.out.println(res1.getCode());
 			System.out.println(res1.getId());
 			if(res1.getIntCode() == 0){
 				System.out.println("Item added to items table..");
-				JSONObject row = new JSONObject();
+				JSONObject obj2 = new JSONObject();
 				row.put("itemId", Integer.parseInt(res1.getId()));
+				table = "store";
+				obj2.put("table", table);
+				obj2.put("operation", "add");
 				obj2.put("row", row);
-				res2 = aoh2.getInfo(table2, obj2);
+				res2 = aoh2.getInfo(table, obj2);
 				
 				if(res2.getIntCode() == 29) {
 					Id = res2.getId();
 					Message = "PostItem Performed successfully..";
-					Code = "50";
+					Code = "FLS_SUCCESS";
 				}
 			}
 			

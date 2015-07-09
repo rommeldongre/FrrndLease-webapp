@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+-->    
+    <title>Signup Page</title>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery-1.11.3.min.js"></script>
+    
+	<!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/index.css" rel="stylesheet">
+	<link href="css/login.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body onload="start()">
+	<div id="main">	
+		<nav class="navbar navbar-default" id="header">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+					<a class="navbar-brand">FriendLease</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar1">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<nav class="navbar navbar-inverse" id="subheader">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar2">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+						<li><a href="myfriends.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>	
+		
+		<div class="container">
+<!--			<div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-6">
+					<div class="g-signin2" data-onsuccess="onSignIn">			
+					</div>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6">
+					<fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();">
+					</fb:login-button>		
+				</div>
+			</div>
+-->			
+			<form class="form-signin" id="signupform">
+				<h2 class="form-signin-heading">Please sign up</h2>
+				
+				<input type="text" id="name" class="form-control" placeholder="Name" required autofocus><br />
+				<input type="email" id="email" class="form-control" placeholder="Email address" required><br />
+				<input type="number" id="mobile" class="form-control" placeholder="Mobile Number" required><br />
+				<input type="text" id="location" class="form-control" placeholder="Location" required><br />
+				<input type="password" id="password" class="form-control" placeholder="Password" required><br />
+				<input type="password" id="retypepassword" class="form-control" placeholder="Retype the Password" required><br />
+				
+				<span id="newuser">
+				Already have an account? <a href="mylogin.html" id="signup">Login</a>
+				</span>
+				<br /><br />
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>	
+		  </form>
+		  <br />
+			<!--Form ends here-->
+			
+			<!--Displaying error of the form-->
+			<div id="error_row">
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="alert alert-danger fade in" id="errormsg">
+						<a href="#" class="close" data-dismiss="alert">&times;</a>
+						<strong>Error!</strong> 
+					</div>
+				</div>
+			</div>
+		</div> <!-- /container -->
+		
+		
+		<!-- Button trigger Alert Modal -->
+		<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal">
+		  Launch demo modal
+		</button>
+
+		<!-- Alert Modal -->
+		<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			  </div>
+			  <div class="modal-body" id="alertModalMsg">
+				
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="continueWork()">Yes</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		
+		<!-- Button trigger Confirmation Modal -->
+		<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+		  Launch demo modal
+		</button>
+
+		<!-- Confirmation Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			  </div>
+			  <div class="modal-body" id="modalMsg">
+				
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<nav class="navbar navbar-default navbar-fixed-bottom">
+			<div class="container-fluid">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+				</button>
+				<div class="collapse navbar-collapse" id="myNavbarBottom">
+					<ul class="nav navbar-nav navbar-center">
+						<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+	</div>
+	
+	<script type="text/javascript">
+		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword;
+		
+		function start(){
+			$("#modalTriggerButton").hide();
+			$("#alertModalTriggerButton").hide();
+			
+			$('#subheader').hide();		//if logged in as anonymous then don't display subheader, else show the subheader
+			$('#error_row').hide();
+		}
+		
+		$("#signupform").submit(function(event){
+			event.preventDefault();						//stop page from reloading
+		
+			$('#error_row').hide();						//just to hide the error on re-submission of the form
+			
+			//get information filled in the form
+			signupname = $("#name").val();
+			signupemail = $("#email").val();
+			signupmobile = $("#mobile").val();
+			signuplocation = $("#location").val();
+			signuppassword = $("#password").val();
+			signupretypepassword = $("#retypepassword").val();
+			
+			if(name == '') name = null;
+			if(mobile == '') mobile = null;
+			if(location == '') location = null;
+			
+			if(signuppassword != signupretypepassword){			//if password and retypedpassword are different
+			
+				var errormsg = document.getElementById("errormsg");
+				var span = document.createElement("span");
+				span.innerHTML = "Different passwords entered";
+				errormsg.appendChild(span);
+				
+				$('#error_row').show();		
+			}
+			else{									//signup successful	
+				signUpDbCreate();	//this function is in the script_admin_v2.js
+			}
+		
+		});
+				
+		function onSignIn(googleUser){					//google signup
+			var profile = googleUser.getBasicProfile();
+			
+			signupname = profile.getName();
+			signupemail = profile.getEmail();
+			//signuppassword = profile.getId();
+			//signupImage = profile.getImageUrl();
+			signuppassword = 'google';
+			//signuppassword = googleUser.getAuthResponse().id_token;
+			
+			signUpDbCreate();		//this function is in the script_admin_v2.js	
+		
+		}	
+
+		function signupContinued(msg){
+			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
+			localStorage.setItem("userloggedin", signupemail);				//set the "name" of the user who is loggedin	
+			
+			confirmationIndex(msg);
+		}
+
+		
+/*		function signOut() {
+			var auth2 = gapi.auth2.getAuthInstance();
+			auth2.signOut().then(function () {
+			console.log('User signed out.');
+			});
+		}	
+*/		
+		function confirmationIndex(msg){			//called from script_admin_v2.js
+			var div = document.getElementById("modalMsg");
+			div.innerHTML = msg;
+			
+			$("#modalTriggerButton").click();
+		}
+		
+		function redirectToHomePage(){
+			window.location.replace("myindex.html");
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		function checkLoginState(){
+			FB.getLoginStatus(function(response) {
+				statusChangeCallback(response);
+			});
+		}
+		
+		function statusChangeCallback(response) {
+			console.log('statusChangeCallback');
+			console.log(response);
+			if (response.status === 'connected') {				// Logged into your app and Facebook.
+				//alert("connected");
+				testAPI();
+			}
+			else if (response.status === 'not_authorized') {	// The person is logged into Facebook, but not your app	
+				//alert("not_authorized");
+				/*var msg = "Please log into this app.";
+				confirmationIndex(msg); */
+			} 
+			else {					// The person is not logged into Facebook, so we're not sure if they are logged into this app or not
+				//alert("else");
+				/*var msg = 'Please log into Facebook.';
+				confirmationIndex(msg);*/
+			}
+		}
+
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '476241882534199',
+				cookie     : true,  	// enable cookies to allow the server to access the session
+				xfbml      : true,  	// parse social plugins on this page
+				version    : 'v2.2' 	// use version 2.2
+			});
+
+			FB.getLoginStatus(function(response) {
+				statusChangeCallback(response);
+			});
+
+		};
+
+		// Load the SDK asynchronously
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+		function testAPI() {
+			//console.log('Welcome!  Fetching your information.... ');
+			FB.api('/me', function(response) {
+				signuppassword = response.id;
+				signupname = response.name;
+				signupemail = response.email;
+				
+				signUpDbCreate();		//this function is in the script_admin_v2.js
+				
+			});
+		}
+		
+	</script>
+    <div id="status">
+	</div>
+	
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/index.js"></script>
+	<script type="text/javascript" src="js/script_admin_v2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>

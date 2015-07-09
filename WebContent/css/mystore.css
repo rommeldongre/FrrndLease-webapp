@@ -1,0 +1,92 @@
+#main{
+	margin-top: 50px;
+	margin-bottom: 300px;
+}
+
+#itemform{
+	margin: auto;
+	width: 100%;
+	min-width: 200px;
+}
+
+#subheader{
+	margin-top: -21px;
+}
+
+#main{
+	margin: auto;
+}
+
+#midcontainer{
+	margin: auto;
+}
+
+#add_picture{
+	margin-left: 40%;
+	min-width: 150px;
+}	
+/*
+#capturedPicture{
+	width: 100%;
+	height: 400px;
+	background-color: #ffffff;
+	border: 2px solid #d7d7d7; 
+	border-radius: 7px;
+}
+*/
+#lease_item{
+	margin-left: 40%;
+	min-width: 150px;
+}
+
+#request_item{
+	margin-left: 40%;
+	min-width: 150px;
+}
+
+#add_item{
+	margin-left: 40%;
+	min-width: 150px;
+}
+
+#edit_item{
+	margin-left: 40%;
+	min-width: 150px;
+}
+
+#delete_item{
+	margin-left: 40%;
+	min-width: 150px;
+}
+
+@media screen and (max-width: 500px){
+	#add_picture{
+		margin-left: 20%;
+		min-width: 150px;
+	}	
+
+	#lease_item{
+		margin-left: 20%;
+		min-width: 150px;
+	}
+
+	#request_item{
+		margin-left: 20%;
+		min-width: 150px;
+	}
+
+	#add_item{
+		margin-left: 20%;
+		min-width: 150px;
+	}
+
+	#edit_item{
+		margin-left: 20%;
+		min-width: 150px;
+	}
+
+	#delete_item{
+		margin-left: 20%;
+		min-width: 150px;
+	}	
+}

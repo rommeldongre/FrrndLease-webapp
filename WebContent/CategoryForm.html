@@ -116,7 +116,7 @@
 	send = function(req) {
 		alert("Inside send function.");
 		$.ajax({
-			url: 'http://localhost:8080/fls1.1/AdminOps',
+			url: '/flsv2/AdminOps',
 			type:'get',
 			data: {req: JSON.stringify(req)},
 			contentType:"application/json",
@@ -126,7 +126,15 @@
 				alert("working");
 				document.getElementById("Id").value = response.Id;
 				document.getElementById("Code").value = response.Code;
-				document.getElementById("Message").value = response.Message;
+				if(parseInt(response.Code) === 8 || parseInt(response.Code) === 9) {
+					obj = JSON.parse(response.Message);
+					document.getElementById("catName").value = obj.catName;
+					document.getElementById("catDesc").value = obj.catDesc;
+					document.getElementById("catParent").value = obj.catParent;
+				}
+				else{
+					document.getElementById("Message").value = response.Message;
+				}
 			},
 			
 			error: function() {
@@ -152,7 +160,10 @@
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>
 		Code : <input type="text" name="code" id="Code"><br/><br/>
-		Message : <input type="text" name="message" id="Message">
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+		Category Name : <input type="text" name="catName" id="catName"><br/><br/>
+		Category Description : <input type="text" name="catDesc" id="catDesc"><br/><br/>
+		Category Parent : <input type="text" name="catParent" id="catParent"><br/><br/>
 	</form>
 	<br/>
 	<h3><A href="index.html">INDEX</A></h3>

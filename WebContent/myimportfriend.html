@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+-->    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Import Friends</title>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+	
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/myfriend.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body onload="start()">
+	<div id="main">	
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+					<a class="navbar-brand">FriendLease</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar1">
+					<ul class="nav navbar-nav navbar-right" id="navbar1right">
+						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<nav class="navbar navbar-inverse" id="subheader">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar2">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+						<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+						<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div class="container-fluid" id="midcontainer">
+			<div class="row" id="importbuttons">
+				<div class="col-lg-5 col-md-5 col-sm-5">
+					<button class="btn btn-success" id="importfb" onclick="importfb()">Import Facebook</button>
+				</div>
+				<div class="col-lg-5 col-md-5 col-sm-5">
+					<button class="btn btn-success" id="importwhatsapp" onclick="importwhatsapp()">Import Whatsapp</button>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2">
+					<button class="btn btn-success" id="importgoogle" onclick="importgoogle()">Import Google</button>
+				</div>
+			</div>
+			
+			<br /><br /><br />
+				<div id="emailbox" class="input-group">
+					<input type="email" id="importemail" class="form-control" placeholder=" Email, comma separated ">
+					<span class="input-group-btn">
+						<button class="btn btn-default" onclick="directImport()">Import Email</button>
+					</span>
+				</div>
+			<br /><br />
+
+			<!-- Button trigger Alert Modal -->
+			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal">
+			  Launch demo modal
+			</button>
+
+			<!-- Alert Modal -->
+			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				  </div>
+				  <div class="modal-body" id="alertModalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="continueWork()">Yes</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Button trigger Confirmation Modal -->
+			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+			  Launch demo modal
+			</button>
+
+			<!-- Confirmation Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				  </div>
+				  <div class="modal-body" id="modalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			
+			<nav class="navbar navbar-default navbar-fixed-bottom">
+				<div class="container-fluid">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>                        
+					</button>
+					<div class="collapse navbar-collapse" id="myNavbarBottom">
+						<ul class="nav navbar-nav navbar-center">
+							<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		
+		</div>
+	</div>
+		
+	<script type="text/javascript">
+		function start(){
+			$("#modalTriggerButton").hide();
+			$("#alertModalTriggerButton").hide();
+			
+			//show hello "username"
+			userloggedin = localStorage.getItem("userloggedin");
+			
+			var navbar1right = document.getElementById("navbar1right");
+			var li = document.createElement("li");
+			li.innerHTML = "Hello "+userloggedin;
+			navbar1right.appendChild(li);
+			
+			look_good();
+		}
+		
+		function importfb(){
+			//confirmationIndex("importfb called");
+		}
+		
+		function importwhatsapp(){
+			//confirmationIndex("importwhatsapp called");
+		}
+		function importgoogle(){
+			//confirmationIndex("importgoogle called");
+		}	
+		
+		function directImport(){
+			var value = $("#importemail").val();
+			confirmationIndex(value);	
+		}
+		
+		function confirmationIndex(msg){			//called from script_admin_v2.js
+			var div = document.getElementById("modalMsg");
+			div.innerHTML = msg;
+			
+			$("#modalTriggerButton").click();
+		}
+		
+		function redirectToHomePage(){
+			window.location.replace("myindex.html");
+		}
+		
+		
+		function look_good(){
+			var fbwidth = $('#importfb').width();
+			$('#importwhatsapp').width(fbwidth);
+			$('#importgoogle').width(fbwidth);
+		}
+	</script>	
+		
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/mystore.js"></script>
+	<script src="js/script_admin_v2.js"></script>	
+    <script src="js/bootstrap.min.js"></script>
+
+  </body>
+</html>

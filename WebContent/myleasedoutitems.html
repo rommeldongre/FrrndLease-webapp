@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+-->    
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>My LeasedOut Items</title>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+	
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/mystore.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body onload="start()">
+	<div id="main">
+		<!--header starts---------------------------------------->
+		<nav class="navbar navbar-default" id="header">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+					<a class="navbar-brand">FriendLease</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar1">
+					<ul class="nav navbar-nav navbar-right" id="navbar1right">
+						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!--header ends----------------------------------------->
+		<!--subheader starts-------------------------------------->
+		<nav class="navbar navbar-inverse" id="subheader">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar2">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+						<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+						<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<!--subheader ends-->
+		
+		<div class="container-fluid" id="midcontainer">
+			<h2>My Leased Out Items</h2>
+			
+			<table id="leasetable" class="table table-striped">
+				<thead>
+					<tr>
+						<th class="tablecell">Date</th>
+						<th class="tablecell">Item</th>
+						<th class="tablecell">ReqUserId</th>
+						<th class="tablecell">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+			
+			<!-- Button trigger Alert Modal -->
+			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal">
+			  Launch demo modal
+			</button>
+
+			<!-- Alert Modal -->
+			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				  </div>
+				  <div class="modal-body" id="alertModalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="continueWork()">Yes</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Button trigger Confirmation Modal -->
+			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+			  Launch demo modal
+			</button>
+
+			<!-- Confirmation Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				  </div>
+				  <div class="modal-body" id="modalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>			
+			
+			<!--Footer starts------------------------------------>
+			<nav class="navbar navbar-default navbar-fixed-bottom">
+				<div class="container-fluid">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>                        
+					</button>
+					<div class="collapse navbar-collapse" id="myNavbarBottom">
+						<ul class="nav navbar-nav navbar-center">
+							<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+			<!--Footer ends--------------------------------------->
+		</div>
+	</div>
+	
+	
+	<script type="text/javascript">
+		var userloggedin;
+		
+		function start(){
+			
+			$("#modalTriggerButton").hide();
+			$("#alertModalTriggerButton").hide();
+			
+			itemNextId = 0;
+			
+			userloggedin = localStorage.getItem("userloggedin");
+			
+			lease_read();
+			
+			look_good();
+			
+			
+			//show hello "username"
+			userloggedin = localStorage.getItem("userloggedin");
+			
+			var navbar1right = document.getElementById("navbar1right");
+			var li = document.createElement("li");
+			li.innerHTML = "Hello "+userloggedin;
+			navbar1right.appendChild(li);
+		}
+
+		$("#logoutoptionmenu").click(function(){					//when user logs out  
+			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
+			window.location.replace("myindex.html");
+		});
+		
+		function lease_read(){
+			
+			reasonForGetLeaseItem = 'showLeaseTable';
+			
+			getLeaseItem(itemNextId);
+			
+		}
+		
+		function showLeaseItem(obj){
+			userloggedin = localStorage.getItem("userloggedin");
+			
+			//alert("objUserId:"+obj.userId+" "+"objReqUserId: "+obj.reqUserId);
+			
+			if(obj.userId == userloggedin){
+				var table = document.getElementById("leasetable");
+				var row = table.insertRow(1);
+				var cell0 = row.insertCell(0);
+				var cell1 = row.insertCell(1);
+				var cell2 = row.insertCell(2);
+				var cell3 = row.insertCell(3);
+				
+				var span1 = document.createElement("span");
+				var span2 = document.createElement("span");
+				var span3 = document.createElement("span");
+				var span4 = document.createElement("span");
+				
+				span1.className = "remove";
+				span2.className = "renew";
+			
+				span3.className="glyphicon glyphicon-remove";
+				span4.className="glyphicon glyphicon-repeat";
+				
+				span3.id = itemNextId;
+				span4.id = itemNextId;
+				
+				span1.appendChild(span3);
+				span2.appendChild(span4);
+				
+				
+				cell0.innerHTML = obj.expiry;
+				cell1.innerHTML = obj.itemId;	
+				
+				cell2.innerHTML = obj.reqUserId;		//took name from item table
+				
+				cell3.appendChild(span1);
+				cell3.appendChild(span2);
+				
+				
+				//cell0.id = "date";			//commented because, not using this id anywhere
+				cell1.id = obj.itemId;
+				cell2.id = obj.itemId;
+				
+				cell0.className = "tablecell";
+				cell1.className = "tablecellItem";
+				cell2.className = "tablecellFriend";
+				cell3.className = "tablecellAction";
+			
+			}
+			
+			lease_read();
+		}
+		
+		
+		$(document).on("click",".renew",function(event){
+			itemNextId = event.target.id;
+			itemNextId--;
+			
+			reasonForGetLeaseItem = 'renewLease';
+				
+			currentWork = 'renewLease';
+			
+			var div = document.getElementById("alertModalMsg");
+			div.innerHTML = "Are you sure you want to renew the lease on the Item?";
+			
+			$("#alertModalTriggerButton").click();		
+		});
+		
+		function renew_Lease(obj){
+			itemId = obj.itemId;
+			reqUserId = obj.reqUserId;
+			
+			renewLeaseDbCreate();
+		}
+/*	
+		$(document).on("click",".tablecellItem",function(event){
+			storeCurrentFunction("viewItemOwner");
+			
+			var k = event.target.id;			//when itemname is clicked
+			
+			storeItemToShow(k);
+			
+			//window.location.replace('mystore.html');
+			
+		});
+*/		
+		function setLeaseItemId(obj){
+			storeItemToShow(obj.itemId);
+			storeCurrentFunction("viewItemOwner");
+			//alert(obj.itemId);
+			window.location.replace("mystore.html");
+		}
+		
+		function continueWork(){
+			if(currentWork == 'renewLease'){
+				getLeaseItem(itemNextId);		
+			}
+			
+		}
+		
+		function confirmationIndex(msg){			//called from script_admin_v2.js
+			var div = document.getElementById("modalMsg");
+			div.innerHTML = msg;
+			
+			$("#modalTriggerButton").click();
+		}
+		
+		
+		function redirectToHomePage(){
+			window.location.replace("myindex.html");
+		}
+
+		function look_good(){		//just for looks
+			$('.actionbutton').css("margin-left","10px");
+			$('.tablecell').css("text-align","center");
+			$('.tablecellItem').css("text-align","center");
+			$('.tablecellFriend').css("text-align","center");
+			$('.tablecellAction').css("text-align","center");
+		}
+	</script>
+	
+	
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/index.js"></script>
+	<script src="js/script_admin_v2.js"></script>	
+    <script src="js/bootstrap.min.js"></script>
+
+  </body>
+</html>

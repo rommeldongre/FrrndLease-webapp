@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+--> 
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Friend Details</title>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/mystore.css" rel="stylesheet">
+	
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  
+  <body onload="start()">
+	<div id="main">	
+		<nav class="navbar navbar-default" id="header">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+					<a class="navbar-brand">FriendLease</a>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar1">
+					<ul class="nav navbar-nav navbar-right" id="navbar1right">
+						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<nav class="navbar navbar-inverse" id="subheader">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>                        
+					</button>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar2">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+						<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+						<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container-fluid" id="midcontainer">
+			<div class="row">
+				<div class="col-md-6" id="outertable">
+					<div class="row">	
+						<div class="col-md-12">
+							<form>
+								<div class="form-group">
+<!-- http://www.syntaxxx.com/accessing-user-device-photos-with-the-html5-camera-api/ -->
+<!--http://www.codeproject.com/Articles/589445/JavaScript-Modal-Popup-Window-->								
+									<label for="item_image" id="image_label">Add Picture</label>
+									<input id="item_image" type="file" class="form-control" id="add_picture" accept="image/*"> <!--onchange="saveAndDisplayImage(event)"-->
+								</div>
+							</form>
+						</div>	
+					</div>
+					<br />
+					<div class="row">
+						<!--<div class="col-md-12">
+							<img id="capturedPicture"/>
+							</img>
+						</div>-->
+					</div>
+					<form id="itemform">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="name">Name</label>
+									<input type="text" class="form-control" id="name" placeholder="Enter Name" required>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="mobile">Mobile</label>
+									<input type="number" class="form-control" id="mobile" placeholder="Mobile">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input type="email" class="form-control" id="email" placeholder="Email">
+								</div>
+							</div>
+						</div>
+						<button class="btn btn-default" id="submit" type="submit">
+							Submit
+						</button>
+						
+					</form>
+				</div>
+				<div class="col-md-6">
+					<br />
+					<div id="error_row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="alert alert-danger fade in">
+								<a href="#" class="close" data-dismiss="alert">&times;</a>
+								<strong>Error!</strong> Operation failed.
+							</div>
+						</div>
+					</div>	
+					<br />
+					<div id="add_friend_row" class="row">	
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<button id="add_friend" class="btn btn-success" onclick="add_friend()">Add</button>
+						</div>
+					</div>
+						
+					<div id="edit_friend_row" class="row">	
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<button id="edit_friend" class="btn btn-success" onclick="edit_friend()">Edit</button>
+						</div>
+					</div>
+						
+					<div id="delete_friend_row" class="row">	
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<button id="delete_friend" class="btn btn-success" onclick="delete_friend()">Delete</button>
+						</div>
+					</div>
+				
+				</div>
+		
+			</div>
+		
+			<!-- Button trigger Alert Modal -->
+			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal">
+			  Launch demo modal
+			</button>
+
+			<!-- Alert Modal -->
+			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				  </div>
+				  <div class="modal-body" id="alertModalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="continueWork()">Yes</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Button trigger Confirmation Modal -->
+			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+			  Launch demo modal
+			</button>
+
+			<!-- Confirmation Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				  </div>
+				  <div class="modal-body" id="modalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			
+		
+			<nav class="navbar navbar-default navbar-fixed-bottom">
+				<div class="container-fluid">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>                        
+					</button>
+					<div class="collapse navbar-collapse" id="myNavbarBottom">
+						<ul class="nav navbar-nav navbar-center">
+							<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		
+		</div>
+	</div>
+	
+	
+	<script type="text/javascript">
+		var userloggedin, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, storeObj, currentWork;
+		
+		function start(){
+
+			$("#modalTriggerButton").hide();
+			$("#alertModalTriggerButton").hide();
+		
+			$('#error_row').hide();
+			$('#submit').hide();
+			
+			look_good();
+			
+			//checking if user is logged in or not
+			userloggedin = localStorage.getItem("userloggedin");
+			
+			if(userloggedin == "" || userloggedin == null){					//this will be required when database is empty
+				userloggedin = "anonymous";
+				localStorage.setItem("userloggedin", userloggedin);
+			}
+			
+			if(userloggedin == "anonymous"){	//if logged in as anonymous then don't display subheader
+				$('#subheader').hide();		 
+			}else{							//else show the subheader, and hide login and signup buttons	
+				$('#subheader').show();			
+				
+				//show hello "username"
+				var navbar1right = document.getElementById("navbar1right");
+				var li = document.createElement("li");
+				li.innerHTML = "Hello "+userloggedin;
+				navbar1right.appendChild(li);
+				
+			}
+			//end of checking if user is logged in or not
+			
+			var prevfunc = getPrevFunc();		//to see from which page we have arrived to this page and show buttons accordingly
+			
+			if(prevfunc == "addFriend"){			//if arrived by pressing + button on mywishlists page
+				
+				$("#edit_friend_row").css("display","none");
+				$("#delete_friend_row").css("display","none");
+				$("#add_friend_row").css("margin-bottom","35%");
+			}
+			else if(prevfunc == "viewFriend"){		//if arrived from the mywishlists page by clicking an item/edit item	
+				getItemInfo();
+				
+				$("#add_friend_row").css("display","none");
+				$("#delete_friend_row").css("margin-bottom","35%");
+				
+			}
+		}
+
+		$("#logoutoptionmenu").click(function(){					//when user logs out  
+			localStorage.setItem("userloggedin", "anonymous");			//userloggedin -> anonymous
+			
+			window.location.replace("myindex.html");
+		});
+		
+		
+		function add_friend(){				//called when Add is clicked
+			//$('#submit').click();
+			
+			//reasonForFriend = 'addFriend';
+			currentWork = 'addFriend';
+			
+			var name = $("#name").val(); 
+			var mobile = $("#mobile").val();
+			var email = $("#email").val();
+			var user = userloggedin;
+			
+			addFriendSetValues(name, mobile, email, user);
+			
+			addFriendDbCreate();
+		}
+		
+		function edit_friend(){
+			//$('#submit').click();
+			
+			currentWork = 'editFriend';
+			var div = document.getElementById("alertModalMsg");
+			div.innerHTML = "Are you sure you want to save the editted information?";
+			
+			$("#alertModalTriggerButton").click();		
+		}
+		
+		/*	//for taking image input from user
+		
+		function saveAndDisplayImage(event){
+			var fileInput = event.target.files;
+			
+			if(fileInput.length>0){
+				var img = document.getElementById("capturedPicture");
+				var fr = new FileReader();
+				fr.onload = function(){
+					img.src = fr.result;
+				}
+				fr.readAsDataURL(fileInput[0]);
+			}
+		}*/
+		
+		function delete_friend(){
+			currentWork = 'deleteFriend';
+		
+			var div = document.getElementById("alertModalMsg");
+			div.innerHTML = "Are you sure you want to delete friend?";
+			
+			$("#alertModalTriggerButton").click();	
+			
+		}
+		
+		function continueWork(){
+			if(currentWork == 'editFriend'){
+				var name = $("#name").val(); 
+				var mobile = $("#mobile").val();
+				var email = $("#email").val();
+				var user = userloggedin;
+
+				editFriendSetValues(name, email, mobile, user);
+			
+				editFriendDbCreate();		
+				
+			}else if(currentWork == 'deleteFriend'){
+				var email = getItemToShow();
+				var user = userloggedin;
+				
+				deleteFriendSetValues(email, user);
+				deleteFriendDbCreate();	
+			}
+			
+		}
+		
+		function confirmationIndex(msg){			//called from script_admin_v2.js
+			var div = document.getElementById("modalMsg");
+			div.innerHTML = msg;
+			
+			$("#modalTriggerButton").click();
+		}
+		
+		function redirectToHomePage(){
+			window.location.replace("myindex.html");
+		}	
+			
+		
+		
+		//getting item info when user wants to view an existing item--------------------------------------------------------------------		
+		function getItemInfo(){
+			
+			//reasonForGetfriend = 'getItemInfo';
+			
+			itemNextId = getItemToShow();
+			
+			reasonForGetFriend = 'prevFriend';
+			getPrevFriend(itemNextId);		//get Id of the prev of curr Id	
+		}
+		
+		function gotPrevFriend(idOfPrevFriend){
+			itemNextId = idOfPrevFriend;
+			reasonForGetFriend = 'viewFriendsDetail';
+			getNextFriend(itemNextId);		//getting Info of current friend(i.e. next of previous)
+		}
+		
+		function getItemInfoContinued(obj){				//called from ajax response
+			//alert("getItemInfoContinued called");
+			
+			$("#name").val(obj.fullName);
+			$("#mobile").val(obj.mobile);
+			$("#email").val(obj.userId);
+			
+		}	
+		
+		function look_good(){
+			$("#edit_friend").css("margin-left","30%");
+			$("#delete_friend").css("margin-left","30%");
+			$("#add_friend").css("margin-left","30%");
+			
+			$("#edit_friend").css("margin-bottom","10px");
+			$("#delete_friend").css("margin-bottom","10px");
+			$("#add_friend").css("margin-bottom","10px");	
+			
+			$("#edit_friend").css("min-width","100px");
+			$("#delete_friend").css("min-width","100px");
+			$("#add_friend").css("min-width","100px");
+			
+		}
+		
+	</script>
+	
+	
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/mystore.js"></script>
+	<script src="js/script_admin_v2.js"></script>	
+    <script src="js/bootstrap.min.js"></script>
+
+  </body>
+</html>

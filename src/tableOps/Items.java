@@ -42,6 +42,11 @@ public class Items extends Connect {
 			Edit();
 			break;
 			
+		case "editstat" :
+			System.out.println("Edit status is selected");
+			EditStat();
+			break;
+			
 		case "getnext" :
 			System.out.println("Get Next operation is selected.");
 			try {
@@ -65,6 +70,38 @@ public class Items extends Connect {
 				e.printStackTrace();
 			}
 			break;
+			
+		case "browsen" :
+			System.out.println("Browse Next Operation is selected.");
+			try {
+				token = obj.getInt("token");
+				BrowseN();
+			} catch (JSONException e) {
+				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				e.printStackTrace();
+			}
+			break;
+			
+		case "browsep" :
+			System.out.println("Browse Previous Operation is selected.");
+			try {
+				token = obj.getInt("token");
+				BrowseP();
+			} catch (JSONException e) {
+				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				e.printStackTrace();
+			}
+			break;
+			
+		case "deletepost" :
+			System.out.println("Delete Posting operation is selected");
+			DeletePosting();
+			break;
+			
+		case "deletewish" :
+			System.out.println("Delete Wishlist operation is selected");
+			DeleteWishlist();
+			break;		
 			
 		default:
 			res.setData(202, "0", "Invalid Operation!!");;
@@ -177,7 +214,60 @@ public class Items extends Connect {
 		status = im.getStatus();
 		
 		System.out.println("Inside edit method...");
-		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_user_id=?, item_lease_value=?, item_lease_term=?, item_status=? WHERE item_id=?";
+		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=? WHERE item_id=? AND item_user_id=? AND item_status=?";
+		
+		getConnection();
+		try {
+			System.out.println("Creating statement...");
+			
+			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setInt(1, id);
+			stmt2.setString(2, userId);
+			stmt2.setString(3, status);
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getInt("item_id");
+			}
+			
+			if(check != 0) {
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				System.out.println("Statement created. Executing edit query...");
+				stmt.setString(1, title);
+				stmt.setString(2, category);
+				stmt.setString(3, description);
+				stmt.setInt(4, leaseValue);
+				stmt.setString(5, leaseTerm);
+				stmt.setInt(6, id);
+				stmt.setString(7, userId);
+				stmt.setString(8, status);
+				
+				stmt.executeUpdate();
+				message = "operation successfull edited item id : " +id;
+				Id = String.valueOf(check);
+				Code = 002;
+				res.setData(Code,Id,message);
+			}
+			else {
+				System.out.println("Entry not found in database!!");
+				res.setData(201, "0", "Entry not found in database!!");
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("Couldnt create a statement");
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		}
+	}
+	
+	private void EditStat() {
+		check = 0;
+		id = im.getId();
+		status = im.getStatus();
+		
+		System.out.println("Inside edit stat method...");
+		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
 		
 		getConnection();
 		try {
@@ -194,15 +284,9 @@ public class Items extends Connect {
 			if(check != 0) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				System.out.println("Statement created. Executing edit query...");
-				stmt.setString(1, title);
-				stmt.setString(2, category);
-				stmt.setString(3, description);
-				stmt.setString(4, userId);
-				stmt.setInt(5, leaseValue);
-				stmt.setString(6, leaseTerm);
-				stmt.setString(7, status);
-				stmt.setInt(8, id);
+				System.out.println("Statement created. Executing edit stat query...");
+				stmt.setString(1, status);
+				stmt.setInt(2, id);
 				stmt.executeUpdate();
 				message = "operation successfull edited item id : " +id;
 				Id = String.valueOf(check);
@@ -236,12 +320,19 @@ public class Items extends Connect {
 			ResultSet rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-				/*JSONObject json = new JSONObject();
-				json.put("itemId", rs.getInt("itemId"));
-				josn.put("title", rs.getString());*/
-				message = "Item Id : "+rs.getInt("item_id")+"; title : "+rs.getString("item_name")+"; category : "+rs.getString("item_category")+"; description : "+rs.getString("item_desc")+"; userId : "+rs.getString("item_user_id")+"; lease Value : "+rs.getInt("item_lease_value")+"; lease Term : "+rs.getString("item_lease_term")+"; status : "+rs.getString("item_status");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
 				System.out.println(message);
-				check = rs.getInt("itemId");
+				check = rs.getInt("item_id");
 				//System.out.println(id);
 			}
 			if(check != 0 ) {
@@ -260,10 +351,10 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
-		} /*catch (JSONException e) {
-			res.setData(205,"0", "Couldnt create json object");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	private void GetPrevious() {
@@ -283,7 +374,17 @@ public class Items extends Connect {
 			
 			System.out.println("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
-				message =  "Item Id : "+rs.getInt("item_id")+"; title : "+rs.getString("item_name")+"; category : "+rs.getString("item_category")+"; description : "+rs.getString("item_desc")+"; userId : "+rs.getString("item_user_id")+"; lease Value : "+rs.getInt("item_lease_value")+"; lease Term : "+rs.getString("item_lease_term")+"; status : "+rs.getString("item_status");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getInt("item_id");
 			}
@@ -303,9 +404,274 @@ public class Items extends Connect {
 			System.out.println("Couldnt create a statement");
 			e.printStackTrace();
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
 		}
 	}
 	
+	private void BrowseN () {
+		check = 0;
+		status = im.getStatus();
+		
+		System.out.println("Inside Browse N method");
+		String sql = "SELECT * FROM items WHERE item_id > ? AND item_status= ? ORDER BY item_id LIMIT 1";
+		getConnection();
+		
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing Browse P query...");
+			stmt.setInt(1, token);
+			stmt.setString(2,status);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			System.out.println("itemId\tName\tDescription\tQuantity");
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getInt("item_id");
+			}
+			if(check != 0 ) { //checks if result Set is empty
+				Id = String.valueOf(check);
+				Code = 53;
+			}
+			else{
+				message = "End of Database!!";
+				Code = 199;
+			}
+			
+			res.setData(Code, Id, message);
+			
+			//status = String.valueOf(Id);
+		} catch (SQLException e) {
+			System.out.println("Couldnt create a statement");
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
+		}
+	}
+	
+	private void BrowseP() {
+		check = 0;
+		status = im.getStatus();
+		
+		System.out.println("Inside Browse P method");
+		String sql = "SELECT * FROM items WHERE item_id < ? AND item_status= ? ORDER BY item_id DESC LIMIT 1";
+		getConnection();
+		
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing BrowseP query...");
+			stmt.setInt(1, token);
+			stmt.setString(2,status);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			System.out.println("itemId\tName\tDescription\tQuantity");
+			while(rs.next()) {
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getInt("item_id");
+			}
+			if(check != 0 ) { //checks if result Set is empty
+				Id = String.valueOf(check);
+				Code = 54;
+			}
+			else{
+				message = "End of Database!!";
+				Code = 199;
+			}
+			
+			res.setData(Code, Id, message);
+			
+			//status = String.valueOf(Id);
+		} catch (SQLException e) {
+			System.out.println("Couldnt create a statement");
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		} catch (JSONException e) {
+			res.setData(204,"0", "JSON Exception");
+			e.printStackTrace();
+		}
+	}
+	
+	public String GetLeaseTerm(int itemId) {
+		String term=null;
+		System.out.println("Inside getItemLeaseTerm");
+		String sql = "SELECT item_lease_term FROM items WHERE item_id=?";
+		getConnection();
+		
+		try {
+			System.out.println("executing getItemLesae Term query");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, itemId);
+			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				term = rs.getString("item_lease_term");
+				System.out.println(term);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return term;
+	}
+	
+	private void DeletePosting() {
+		id = im.getId();
+		userId = im.getUserId();
+		String check2 = null;
+		System.out.println("Inside delete posting method....");
+		
+		
+		getConnection();
+		try {
+			System.out.println("Creating statement...");
+			
+			//checking whether the input id is present in table
+			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setInt(1, id);
+			stmt2.setString(2, userId);
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getInt("item_id");
+				check2 = rs.getString("item_status");
+				System.out.println(check2);
+			}
+			
+			if(check != 0){
+				
+				switch(check2) {
+				
+				case "InStore" :
+					Store st = new Store();
+					st.DeleteP(id);//deletes entry from store table
+					
+					String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
+					PreparedStatement stmt = connection.prepareStatement(sql);
+					
+					//deletes entry from items table
+					
+					System.out.println("Statement created. Executing delete posting query..." + check);
+					stmt.setInt(1, id);
+					stmt.setString(2, userId);
+					stmt.executeUpdate();
+					status = "Posting Deleted!!";
+					Id = String.valueOf(check);
+					message = status;
+					Code = 001;
+					res.setData(Code,Id,message);
+					break;
+					
+				case "Leased" :
+					status = "Item is leased, close the lease first!!!";
+					Id = String.valueOf(check);
+					message = status;
+					Code = 215;
+					res.setData(Code,Id,message);
+					break;
+					
+				default :
+					status = "Item is niether posted nor leased!!!";
+					Id = String.valueOf(check);
+					message = status;
+					Code = 216;
+					res.setData(Code,Id,message);
+					break;
+				}
+			}
+			else {
+				System.out.println("Entry not found in database!!");
+				res.setData(201, "0", "Entry not found in database!!");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		}
+	}
+	
+	private void DeleteWishlist() {
+		id = im.getId();
+		userId = im.getUserId();
+		String check2 = null;
+		System.out.println("Inside delete wishlist method....");
+		
+		
+		getConnection();
+		try {
+			System.out.println("Creating statement...");
+			
+			//checking whether the input id is present in table
+			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setInt(1, id);
+			stmt2.setString(2, userId);
+			stmt2.setString(3, "Wished");
+			ResultSet rs = stmt2.executeQuery();
+			while(rs.next()) {
+				check = rs.getInt("item_id");
+				check2 = rs.getString("item_status");
+				System.out.println(check2);
+			}
+			
+			if(check != 0){
+					Wishlist wish = new Wishlist();
+					wish.DeleteW(id);
+					
+					String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
+					PreparedStatement stmt = connection.prepareStatement(sql);
+					
+					//deletes entry from items table
+					
+					System.out.println("Statement created. Executing delete wishlist query..." + check);
+					stmt.setInt(1, id);
+					stmt.setString(2, userId);
+					stmt.executeUpdate();
+					status = "Wish Deleted!!";
+					Id = String.valueOf(check);
+					message = status;
+					Code = 001;
+					res.setData(Code,Id,message);
+			}
+			else {
+				System.out.println("Entry not found in database!!");
+				res.setData(201, "0", "Entry not found in database!!");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+		}
+	}
 	/*private void GetMax(){
 		//id = im.getId();
 		getConnection();

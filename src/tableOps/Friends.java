@@ -91,7 +91,7 @@ public class Friends extends Connect{
 			System.out.println("Entry added into friends table");
 			
 			message = "Entry added into friends table";
-			Code = 010;
+			Code = 10;
 			Id = friendId;
 			
 			res.setData(Code,Id,message);
@@ -104,18 +104,20 @@ public class Friends extends Connect{
 	
 	private void Delete() {
 		friendId = fm.getFriendId();
+		userId = fm.getUserId();
 		check = null;
 		System.out.println("Inside delete method....");
 		
 		getConnection();
-		String sql = "DELETE FROM friends WHERE friend_id=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friend_id=?";			//
+		String sql = "DELETE FROM friends WHERE friend_id=? AND friend_user_id=?";			//
+		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";			//
 		
 		try {
 			System.out.println("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
+			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
 				check = rs.getString("friend_id");
@@ -126,9 +128,10 @@ public class Friends extends Connect{
 				
 				System.out.println("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, friendId);
+				stmt.setString(2, userId);
 				stmt.executeUpdate();
 				message = "operation successfull deleted friend id : "+friendId;
-				Code = 0011;
+				Code = 11;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
@@ -147,17 +150,19 @@ public class Friends extends Connect{
 		friendId = fm.getFriendId();
 		fullName = fm.getFullName();
 		mobile = fm.getMobile();
+		userId = fm.getUserId();
 		check = null;
 		
 		System.out.println("inside edit method");
 		getConnection();
-		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friend_id=?";								//
+		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=? AND friend_user_id=?";			//
+		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";								//
 		
 		try {
 			System.out.println("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
+			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
 				check = rs.getString("friend_id");
@@ -170,9 +175,10 @@ public class Friends extends Connect{
 				stmt.setString(1, fullName);
 				stmt.setString(2,mobile);
 				stmt.setString(3,friendId);
+				stmt.setString(4, userId);
 				stmt.executeUpdate();
 				message = "operation successfull edited friends id : "+friendId;
-				Code = 0012;
+				Code = 12;
 				Id = check;
 				res.setData(Code, Id, message);
 			}
@@ -188,8 +194,9 @@ public class Friends extends Connect{
 	
 	private void getNext() {
 		check = null;
+		Id = fm.getFriendId();
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM friends WHERE friend_id > ? ORDER BY friend_id LIMIT 1";		//
+		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id>? ORDER BY friend_user_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -197,11 +204,18 @@ public class Friends extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getNext query...");
-			stmt.setString(1, token);
+			stmt.setString(1, Id);
+			stmt.setString(2, token);
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friend_id")+"; full name: "+rs.getString("friend_full_name")+"; mobile : "+rs.getString("friend_mobile") + "; friend user id : "+rs.getString("friend_user_id");
+				JSONObject json = new JSONObject();
+				json.put("friendId",rs.getString("friend_id"));
+				json.put("fullName",rs.getString("friend_full_name"));
+				json.put("mobile",rs.getString("friend_mobile"));
+				json.put("userId",rs.getString("friend_user_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("friend_id");
 			}
@@ -221,13 +235,17 @@ public class Friends extends Connect{
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
 			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0","JSON Exception");
+			e.printStackTrace();
 		}	
 	}
 	
 	private void getPrevious() {
 		check = null;
+		Id = fm.getFriendId();
 		System.out.println("Inside GetPrevious method");
-		String sql = "SELECT * FROM friends WHERE friend_id < ? ORDER BY friend_id DESC LIMIT 1";			//
+		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id<? ORDER BY friend_user_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
@@ -235,11 +253,18 @@ public class Friends extends Connect{
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			System.out.println("Statement created. Executing getPrevious query...");
-			stmt.setString(1, token);
+			stmt.setString(1, Id);
+			stmt.setString(2, token);
 			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				message = "friendId : "+rs.getString("friend_id")+"; full name: "+rs.getString("friend_full_name")+"; mobile : "+rs.getString("friend_mobile") + "; friend user id : "+rs.getString("friend_user_id");
+				JSONObject json = new JSONObject();
+				json.put("friendId",rs.getString("friend_id"));
+				json.put("fullName",rs.getString("friend_full_name"));
+				json.put("mobile",rs.getString("friend_mobile"));
+				json.put("userId",rs.getString("friend_user_id"));
+				
+				message = json.toString();
 				System.out.println(message);
 				check = rs.getString("friend_id");
 			}
@@ -258,6 +283,9 @@ public class Friends extends Connect{
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			e.printStackTrace();
+		} catch (JSONException e) {
+			res.setData(204,"0","JSON Exception");
 			e.printStackTrace();
 		}	
 	}

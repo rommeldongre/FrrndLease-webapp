@@ -1,0 +1,68 @@
+#main{
+	margin-bottom: 100px;
+}
+
+#subheader{
+	margin-top: -21px;
+}
+
+#button_top_right{
+	position: relative;
+	float: right;
+}
+
+#categorybrowsing{
+	position: relative;
+	margin-left: 35%;
+}
+
+@media screen and (max-width: 1000px){
+	#categorybrowsing{
+		position: relative;
+		margin-left: 28%;
+	}
+
+}
+
+@media screen and (max-width: 500px){
+	#categorybrowsing{
+		position: relative;
+		margin-left: -2%;
+	}
+}
+
+#carouselObject{
+	height: 70%;
+	width: 80%;
+	margin: auto;
+	min-height: 300px;
+	min-width: 300px;
+	max-height: 300px;
+}
+
+#carouselinner{
+	max-height: 300px;
+}
+
+#searchbox{
+	margin-left: 25%;
+	max-width: 600px;
+	width: 100%;
+}
+
+
+@media screen and (max-width: 1000px){
+	#searchbox{
+		margin-left: 10%;
+		max-width: 600px;
+		width: 100%;
+	}	
+}
+
+@media screen and (max-width: 500px){
+	#searchbox{
+		margin: auto;
+		max-width: 600px;
+		width: 100%;
+	}	
+}

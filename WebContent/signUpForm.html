@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>SignUp form</title>
+<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var UserId = null;
+	var FullName = null;
+	var Mobile = null;
+	var Location = null;
+	var Auth = null;
+	
+	getData = function (){
+		UserId = document.getElementById("userId").value;
+		if (UserId === '') UserId = null;
+		
+		FullName = document.getElementById("fullName").value;
+		if (FullName === '') FullName = null;
+		
+		Mobile = document.getElementById("mobile").value;
+		if (Mobile === '') Mobile = null;
+		
+		Location = document.getElementById("location").value;
+		if (Location === '') Location = null;
+		
+		Auth = document.getElementById("auth").value;
+		if (Auth ==='') Auth = null;
+	};
+	
+	add = function() {
+		alert("inside add function.");
+		getData();
+		var req = {
+					userId: UserId,
+					fullName: FullName,
+					mobile: Mobile,
+					location: Location,
+					auth: Auth
+		};
+		alert("got data");
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send function.");
+		$.ajax({
+			url: '/flsv2/SignUp',
+			type:'get',
+			data: {req: JSON.stringify(req)},
+			contentType:"application/json",
+			dataType: "json",
+			
+			success: function(response) {
+				alert("working");
+				document.getElementById("Id").value = response.Id;
+				document.getElementById("Code").value = response.Code;
+				document.getElementById("Message").value = response.Message;
+			},
+			
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+	<h1>SIGNUP FORM</h1>
+	<form>
+		User email id : <input type="text" name="userId" id="userId"><br/><br/>
+		Full Name : <input type="text" name="fullName" id="fullName"><br/><br/>
+		Mobile : <input type="text" name="mobile" id="mobile"><br/><br/>
+		Location : <input type="text" name="location" id="location"><br/><br/>
+		Authorization : <input type="text" name="auth" id="auth"><br/><br/>
+		<input type="button" value="SignUp" onclick="add()">
+
+		<h1>OUTPUT</h1>
+		ID : <input type="text" name="Id" id="Id"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+		</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
