@@ -15,7 +15,7 @@ public class Connect extends ErrorCat{
 	private String pass = "";
 			
 	//Database URL and JDBC Driver
-	private String url = "jdbc:mysql://127.0.0.1:3306/flsv2";
+	private String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private String driver = "com.mysql.jdbc.Driver";
 	
 	protected /*static Connection*/void getConnection() {
