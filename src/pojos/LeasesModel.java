@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LeasesModel {
-	private String reqUserId, itemId, userId;
+	private String reqUserId, itemId, userId,status;
 	private JSONObject obj;
 	
 	public void getData(JSONObject ob) {
@@ -17,6 +17,7 @@ public class LeasesModel {
 			reqUserId = obj.getString("reqUserId");
 			itemId = obj.getString("itemId");
 			userId = obj.getString("userId");
+			status = obj.getString("status");
 		} catch (JSONException e) {
 			System.out.println("Couldn't parse json");
 			e.printStackTrace();
@@ -33,5 +34,9 @@ public class LeasesModel {
 	
 	public String getUserId() {
 		return this.userId;
+	}
+	
+	public String getStatus() {
+		return this.status;
 	}
 }

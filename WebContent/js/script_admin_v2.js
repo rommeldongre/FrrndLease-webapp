@@ -1,3 +1,4 @@
+
 var itemId = 0,
 	itemTitle = null,
 	itemCategory = null,
@@ -17,13 +18,21 @@ var itemId = 0,
 	reasonForGetWishItem = null,
 	reasonForWishItem = null,
 	reasonForGetFriend = null,
+	reasonForGetCategory = null,
+	reasonForAddFriend = null,
+	reasonForSearchItem = null,
 	friendName = null,
 	friendMobile = 0,
 	friendEmail = null,
 	reqId = 0,
 	leaseId = 0,
 	catName = null,
-	leaseTermName = null;
+	leaseTermName = null,
+	storeObjcanvasCtx = null,
+	imageFile = null, 
+	url = null,
+	prevPage = null,
+	endOfCarousel = 0;
 	
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
@@ -41,7 +50,7 @@ function itemSetValues(){			//setting values for item object from the form
 		itemDescription = null;
 	
 	itemCategory = $("#dropdownbuttoncategory").text();
-	if (itemCategory === '') 
+	if (itemCategory === '' || itemCategory == 'Category') 
 		itemCategory = null;
 	
 	itemUserId = userloggedin;
@@ -54,7 +63,7 @@ function itemSetValues(){			//setting values for item object from the form
 		itemLeaseValue = 0;
 	
 	itemLeaseTerm = $("#dropdownbuttonlease_term").text();
-	if (itemLeaseTerm === '') 
+	if (itemLeaseTerm === '' || itemLeaseTerm == 'Lease Term') 
 		itemLeaseTerm = null;
 	
 	itemStatus = "InStore";
@@ -63,6 +72,7 @@ function itemSetValues(){			//setting values for item object from the form
 }
 
 itemDbCreate = function(){									//for storing in db/localstorage
+	
 	var req = {
 		id: itemId,
 		title: itemTitle,
@@ -71,9 +81,11 @@ itemDbCreate = function(){									//for storing in db/localstorage
 		userId: itemUserId,
 		leaseValue: itemLeaseValue,
 		leaseTerm: itemLeaseTerm,
-		status: itemStatus
+		status: itemStatus,
+		image: url
 	};
-				
+	console.log(JSON.stringify(req));
+	
 	postItemSend(req);
 }
 	
@@ -81,21 +93,23 @@ function postItemSend(req) {
 	
 		$.ajax({
 			url: '/flsv2/PostItem',
-			type: 'get',
+			type: 'post',
 			data: {req : JSON.stringify(req)},
-			contentType:"application/json",
-			dataType:"json",
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
 			
 			success: function(response) {
 
 				//alert(response.Code+" "+response.Message);
-				
-				var msg = "Item Added Successfully. Your ItemId is: "+response.Id;
-				confirmationIndex(msg);
+				var heading = "Successful";
+				var msg = response.Message;
+				confirmationIndex(heading, msg);
 			},
 		
 			error: function() {
-				alert('Not Working');
+				var heading = "Unsuccessful";
+				var msg = "Not Working";
+				confirmationIndex(heading ,msg);
 			}
 		});
 };
@@ -149,13 +163,13 @@ getItemSend = function(req) {
 				itemObj = JSON.parse(response.Message);
 				
 				if(reasonForGetItem == 'carousel'){				//index.html
-					addItemToCarousel();			
+					addItemToCarousel(itemObj);			
 				}else if(reasonForGetItem == 'getItemInfo'){		//mystore.html
 					getItemInfoContinued(itemObj);
 				}else if(reasonForGetItem == 'leaseItem'){
 					lease_requestedItem(itemObj);						//myincomingrequests.html
 				}else if(reasonForGetItem == 'showRequestTable')
-					showRequestItem(itemObj);
+					showRequestItem(itemObj);							//myincomingrequests.html
 				else if(reasonForGetItem == 'viewItem')
 					viewClickedItem(itemObj);								//index.html
 			}
@@ -163,42 +177,60 @@ getItemSend = function(req) {
 				//alert(response.Message);
 				
 				if(reasonForGetItem == 'carousel'){
-					var src = "images/homeimg.jpg"; 				//last image 
-					var img1 = document.createElement("img");
-					img1.src = src;
+					if(startingCarousel == 0 && counter == 0){		//empty carousel
+						
+						//categoryempty image begins
+						span1 = document.createElement("span");
+						span1.className = "items";
 					
-					$(img1).css("width", imgwidth);
-					$(img1).css("height", imgheight);
+						src = "images/emptycategory.jpg";
 					
-					col1.appendChild(img1);
-					row1.appendChild(col1);
-					
-					if(navigatingSide == 'next'){
-						itemNextId = 0;					//when end of DB is reached, get the first item
-					}else if(navigatingSide == 'prev'){
-						disableLeftButton();			//when beginning of DB is reached, get the last item
-					}
-					
-					counter++;
-					
-					if(counter >= noOfImagesInCarousel){
+						var img1 = document.createElement("img");
+						img1.src = src;
+						
+						$(img1).css("width", imgwidth);
+						$(img1).css("height", imgheight);
+						
+						var caption1 = document.createElement("div");
+						caption1.className = "carousel-caption";
+						caption1.style.backgroundColor = "black";
+						caption1.style.opacity = 0.6;
+						
+						var p = document.createElement("p");
+						p.innerHTML = "Try selecting another category";
+						
+						caption1.appendChild(p);
+						span1.appendChild(img1);
+						span1.appendChild(caption1);
+						col1.appendChild(span1);
+						row1.appendChild(col1);	
+						
 						item1.appendChild(row1);
 						carouselinner.appendChild(item1);
-						
-						startingCarousel = 1;
+						//categoryempty image ends
 					}
+
+					disableRightButton();
+					if(counter != 0){
+						item1.appendChild(row1);
+						carouselinner.appendChild(item1);
+						$("#carousel-example-generic").carousel('next');				//load next slide
+					}
+						
+					startingCarousel = 1;
 					
-					getImg();
+					endOfCarousel = 1;
 				}else if(reasonForGetItem == 'getItemInfo'){
-					itemNextId = 0;
+						itemNextId = 0;
 				}		
 				
-			}		//end of else
+			}	
 				
 		},
 	
 		error: function() {
-			alert('Not Working');
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 };
@@ -221,7 +253,7 @@ function editItemSetValues(){
 		itemDescription = null;
 	
 	itemCategory = $("#dropdownbuttoncategory").text();
-	if (itemCategory === '') 
+	if (itemCategory === '' || itemCategory == 'Category') 
 		itemCategory = null;
 	
 	itemUserId = userloggedin;
@@ -233,7 +265,7 @@ function editItemSetValues(){
 		itemLeaseValue = 0;
 	
 	itemLeaseTerm = $("#dropdownbuttonlease_term").text();
-	if (itemLeaseTerm === '') 
+	if (itemLeaseTerm === '' || itemLeaseTerm == 'Lease Term') 
 		itemLeaseTerm = null;
 	
 	
@@ -248,6 +280,7 @@ function editItemDbCreate(){
 		userId: itemUserId,
 		leaseValue: itemLeaseValue,
 		leaseTerm: itemLeaseTerm,
+		image: url
 	}
 	editItemSend(req);	
 }
@@ -255,20 +288,21 @@ function editItemDbCreate(){
 function editItemSend(req){
 	$.ajax({
 		url: '/flsv2/EditPosting',
-		type: 'get',
+		type: 'post',
 		data: {req : JSON.stringify(req)},
-		contentType:"application/json",
+		contentType: "application/x-www-form-urlencoded",
 		dataType:"json",
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			
-			var msg = "Item Edited Successfully. Your ItemId is: "+response.Id;
-			confirmationIndex(msg);
+			var heading = "Successful";
+			var msg = response.Message;
+			confirmationIndex(heading ,msg);
 		},
 	
 		error: function() {
-			alert('Not Working');
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 	
@@ -296,12 +330,12 @@ function deleteItemSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			var msg = "Item Deleted Successfully.";
-			confirmationIndex(msg);
+			confirmationIndex(response.Message);
 		},
 	
 		error: function() {
-			alert('Not Working');
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});	
 }
@@ -341,18 +375,17 @@ function requestItemSend(req){
 		dataType: "json",
 		
 		success: function(response) {
-			//alert(response.Id+" "+response.Code+" "+response.Message);
+			var heading = "Successful";
 			
-			var msg = "Item Requested Successfully.";
+			var msg = response.Message;
 			var objOwner = getItemOwner();
 			
-			//sendMail(objOwner, "FriendLease", "Your Item is requested");
-			
-			confirmationIndex(msg);
+			confirmationIndex(heading, msg);
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 }
@@ -400,12 +433,16 @@ function getRequestItemSend(req){
 				
 			}
 			else{
-				//alert(response.Message);
+				//confirmationIndex(response.Message);
+				if(itemNextRequestId == 0){
+					showEmptyText();		//function is in myincomingrequests.html
+				}
 			}
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 	
@@ -439,12 +476,13 @@ function rejectRequestSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			
-			var msg = "Request Rejected Successfully.";
-			confirmationIndex(msg);
+			var heading = "Successful";
+			var msg = response.Message;
+			confirmationIndex(heading, msg);
 		},
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});	
 }
@@ -489,11 +527,13 @@ function leaseItemSend(req){
 			
 			success: function(response) {
 				//alert(response.Id+" "+response.Code+" "+response.Message);
-				var msg = "Item Leased Successfully to "+response.Id;
-				confirmationIndex(msg);	
+				var heading = "Successful";
+				var msg = response.Message;
+				confirmationIndex(heading, msg);	
 			},
 			error: function() {
-				var msg = "Not Working";confirmationIndex(msg);
+				var msg = "Not Working";
+				confirmationIndex(msg);
 			}
 		});
 	
@@ -534,21 +574,27 @@ function getLeaseItemSend(req){
 				//alert(reasonForGetRequestItem);
 				
 				if(reasonForGetLeaseItem == 'showLeaseTable')	
-					showLeaseItem(obj);		//function is in the myleasedoutitems.html
+					showLeaseItem(obj);		//function is in the myleasedoutitems.html and myleasedinitems.html
 				else if(reasonForGetLeaseItem == 'renewLease'){
 					renew_Lease(obj);		//function is in the myleasedoutitems.html
 				}else if(reasonForGetLeaseItem == 'justGetLeaseItem'){
 					setLeaseItemId(obj);
+				}else if(reasonForGetLeaseItem == 'closeLease'){
+					close_Lease(obj);
 				}
 
 			}
 			else{
-				//alert(response.Message);
+				//confirmationIndex(response.Message);
+				if(itemNextId == 0){
+					showEmptyText();		//function is in the myleasedoutitems.html and myleasedinitems.html
+				}
 			}
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 }
@@ -561,7 +607,8 @@ function getLeaseItemSend(req){
 function renewLeaseDbCreate(){
 	var req = {
 		itemId: itemId.toString(),
-		reqUserId: reqUserId.toString()
+		reqUserId: reqUserId.toString(),
+		flag: "renew"
 	};
 	
 	renewLeaseSend(req);	
@@ -579,21 +626,234 @@ function renewLeaseSend(req){
 		success: function(response) {
 			
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			var msg = "Lease Renewed Successfully.";
-			confirmationIndex(msg);
+			var heading = "Successful";
+			var msg = response.Message;
+			confirmationIndex(heading, msg);
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});	
 }
 
 //renewLeaseItem ends here------------------------------------------------
+//closeLease begins here------------------------------------------------
+function closeLeaseDbCreate(){
+	var req = {
+		itemId: itemId.toString(),
+		reqUserId: reqUserId.toString(),
+		flag: "close"
+	};
+	
+	closeLeaseSend(req);
+}
+
+function closeLeaseSend(req){
+	$.ajax({
+		url: '/flsv2/RenewLease',
+		type:'get',
+		data: {req: JSON.stringify(req)},
+		contentType:"application/json",
+		dataType: "json",
+		
+		success: function(response) {
+			var heading = "Successful";
+			var msg = response.Message;
+			confirmationIndex(heading, msg);
+		},
+		
+		error: function() {
+			var msg = "Not Working";
+			confirmationIndex(msg);
+		}
+	});
+}
+//closeLease ends here------------------------------------------------
+//searchItem begins here------------------------------------------------
+
+function searchItemSetValues(id, title, description, category, leasevalue, leaseterm){
+	itemId = id;
+	if(itemId == null || itemId == '' || itemId == 'null')
+		itemId = 0;
+	
+	itemTitle = title;
+	if (itemTitle === '') 
+		itemTitle = "";
+	 
+	itemDescription = description;
+	if (itemDescription === '') 
+		itemDescription = "";
+	 
+	itemCategory = category;
+	if (itemCategory === '') 
+		itemCategory = "";
+	
+	itemLeaseValue = leasevalue;
+	if (itemLeaseValue === '') 
+		itemLeaseValue = 0;
+	
+	itemLeaseTerm = leaseterm;
+	if (itemLeaseTerm === '') 
+		itemLeaseTerm = "";
+}
+
+function searchItemDbCreate(){	
+	var req = {
+		token: itemId,
+		title: itemTitle,
+		description: itemDescription,
+		category: itemCategory,
+		leaseValue: itemLeaseValue,
+		leaseTerm: itemLeaseTerm
+	};
+	
+	searchItemSend(req);
+}
+
+function searchItemSend(req){
+	
+	$.ajax({
+		url: '/flsv2/SearchItem',
+		type: 'post',
+		data: {req : JSON.stringify(req)},
+		contentType: "application/x-www-form-urlencoded",
+		dataType: "json",
+		
+		success: function(response) {	
+			if(response.Code == "FLS_SUCCESS") {
+				itemObj = JSON.parse(response.Message);
+				
+				if(reasonForSearchItem == "getLeasedItemInfo"){
+					showLeaseItemContinued(itemObj);
+					
+				}else{
+					itemId = itemObj.itemId;
+					console.log(itemObj.title);
+					addItemToCarousel(itemObj);
+				}	
+			}
+			else{
+				
+				if(startingCarousel == 0 && counter == 0){		//empty carousel
+					//categoryempty image begins
+					span1 = document.createElement("span");
+					span1.className = "items";
+				
+					src = "images/emptycategory.jpg";
+				
+					var img1 = document.createElement("img");
+					img1.src = src;
+					
+					$(img1).css("width", imgwidth);
+					$(img1).css("height", imgheight);
+					
+					var caption1 = document.createElement("div");
+					caption1.className = "carousel-caption";
+					caption1.style.backgroundColor = "black";
+					caption1.style.opacity = 0.6;
+					
+					var p = document.createElement("p");
+					p.innerHTML = "Try selecting another category";
+					
+					caption1.appendChild(p);
+					span1.appendChild(img1);
+					span1.appendChild(caption1);
+					col1.appendChild(span1);
+					row1.appendChild(col1);	
+					
+					item1.appendChild(row1);
+					carouselinner.appendChild(item1);
+					
+					//categoryempty image ends
+				}
+
+				disableRightButton();
+				if(counter != 0){
+					item1.appendChild(row1);
+					carouselinner.appendChild(item1);
+					
+					$("#carousel-example-generic").carousel('next');				//load next slide
+				}
+					
+				startingCarousel = 1;
+				
+				endOfCarousel = 1;
+							
+				//searchItemByDescriptionSetValues(itemTitle);
+				//searchItemByDescriptionDbCreate();
+			}
+		},
+	
+		error: function() {
+			alert('Not Working');
+		}
+	});
+}
+
+//searchItem ends here------------------------------------------------
+//searchItemByDescription begins here---------------------------------------------
+/*
+function searchItemByDescriptionSetValues(description){
+	itemDescription = description;
+	if (itemDescription === '') 
+		itemDescription = "";
+	 
+}
+
+function searchItemByDescriptionDbCreate(){	
+	var req = {
+		token: itemId,
+		title: "",
+		description: itemDescription,
+		category: "",
+		leaseValue: 0,
+		leaseTerm: ""
+	};
+	
+	searchItemByDescriptionSend(req);
+}
+
+function searchItemByDescriptionSend(req){
+	
+	$.ajax({
+		url: '/flsv2/SearchItem',
+		type: 'post',
+		data: {req : JSON.stringify(req)},
+		contentType: "application/x-www-form-urlencoded",
+		dataType: "json",
+		
+		success: function(response) {	
+			if(response.Code == "FLS_SUCCESS") {
+				itemObj = JSON.parse(response.Message);
+				itemId = itemObj.itemId;
+				console.log("title "+itemObj.title+" category "+itemObj.category);
+				//url = obj.image;
+				addItemToCarousel(itemObj);	
+			}
+			else{
+				console.log("Search Failed. Now adding to wishlist");
+				reasonForWishItem = "searchFromHome";
+				var userid = userloggedin;
+				wishItemSetValues(itemTitle, null, null, userid, 0, null, null);
+				
+				wishItemDbCreate();
+			}
+		},
+	
+		error: function() {
+			alert('Not Working');
+		}
+	});
+}
+*/
+//searchItemByDescription ends here---------------------------------------------
 //wishItem begins here---------------------------------------------------
 
 
-function wishItemSetValues(title,description,category,userid,leasevalue,leaseterm){
+function wishItemSetValues(title,description,category,userid,leasevalue,leaseterm,imgurl){
+	
 	itemId = 0;
 	
 	itemTitle = title;
@@ -611,9 +871,14 @@ function wishItemSetValues(title,description,category,userid,leasevalue,leaseter
 		itemUserId = "anonymous";
 	
 	itemLeaseValue = leasevalue;
+	if(itemLeaseValue == '')
+		itemLeaseValue = 0;
+	
 	itemLeaseTerm = leaseterm;
 	itemStatus = "Wished";
-		
+	
+	url = imgurl;	
+	console.log(itemId+"\n"+itemTitle+"\n"+itemDescription+"\n"+itemCategory+"\n"+itemUserId+"\n"+itemLeaseValue+"\n"+itemLeaseTerm+"\n"+itemStatus+"\n"+url);
 }
 
 wishItemDbCreate = function(){									//for storing in db/localstorage
@@ -626,7 +891,8 @@ wishItemDbCreate = function(){									//for storing in db/localstorage
 		userId: itemUserId,
 		leaseValue: itemLeaseValue,
 		leaseTerm: itemLeaseTerm,
-		status: itemStatus
+		status: itemStatus,
+		image: url
 	};
 
 	wishItemSend(req);			
@@ -634,24 +900,33 @@ wishItemDbCreate = function(){									//for storing in db/localstorage
 }
 
 function wishItemSend(req){
-	
+		
 		$.ajax({
 			url: '/flsv2/WishItem',
-			type: 'get',
+			type: 'post',
 			data: {req : JSON.stringify(req)},
-			contentType:"application/json",
+			contentType: "application/x-www-form-urlencoded",
 			dataType:"json",
 			
 			success: function(response) {
-				//alert(response.Id+" "+response.Code+" "+response.Message);
-				
-				var msg = "Item Wished Successfully. Your ItemId is: "+response.Id;
-				confirmationIndex(msg);
-
+				var heading;
+				var msg = response.Message+" Your ItemId is: "+response.Id;
+				if(reasonForWishItem == "searchFromHome"){
+					heading = "No Items Found";
+					msg = "Item has been stored in your Wishlist";
+					confirmationIndex(heading, msg);			//index.html
+				}else{
+					setPrevPage("mywishlists.html");
+					heading = "Successful";
+					msg = response.Message;
+					confirmationIndex(heading, msg);			//mywishitemdetails.html
+				}
+					
 			},
 		
 			error: function() {
-				alert('Not Working');
+				var msg = "Not Working";
+				confirmationIndex(msg);
 			}
 		});
 }
@@ -682,22 +957,25 @@ function wishItemSend(req){
 					obj = JSON.parse(response.Message);
 					
 					itemNextId = obj.itemId;
-					//alert(itemNextId);
 						
-					if(reasonForGetWishItem == 'getItemInfo'){
+					if(reasonForGetWishItem == 'getItemInfo'){		//mywishitemdetails.html
 						getItemInfoContinued(obj);
 						
 					}else{
-						showWishItem(obj);		//function is in the mywishlists.html
+						showWishItem(obj);		//mywishlists.html
 					}
 				}
 				else{
-					//alert(response.Message);
+					//confirmationIndex(response.Message);
+					if(itemNextId == 0){
+						showEmptyText();		//mywishlists.html
+					}
 				}
 			},
 		
 			error: function() {
-				alert('Not Working');
+				var msg = "Not Working";
+				confirmationIndex(msg);
 			}
 		});
 	}
@@ -720,7 +998,7 @@ function editWishItemSetValues(){
 		itemDescription = null;
 	
 	itemCategory = $("#dropdownbuttoncategory").text();
-	if (itemCategory === '') 
+	if (itemCategory === '' || itemCategory === 'Category') 
 		itemCategory = null;
 	
 	itemUserId = userloggedin;
@@ -732,7 +1010,7 @@ function editWishItemSetValues(){
 		itemLeaseValue = 0;
 	
 	itemLeaseTerm = $("#dropdownbuttonlease_term").text();
-	if (itemLeaseTerm === '') 
+	if (itemLeaseTerm === '' || itemLeaseTerm === 'Lease Term') 
 		itemLeaseTerm = null;
 	
 }
@@ -746,6 +1024,7 @@ function editWishItemDbCreate(){
 		userId: itemUserId,
 		leaseValue: itemLeaseValue,
 		leaseTerm: itemLeaseTerm,
+		image: url
 	}
 	editWishItemSend(req);	
 }
@@ -754,21 +1033,24 @@ function editWishItemSend(req){
 	
 	$.ajax({
 			url: '/flsv2/EditWishlist',
-			type: 'get',
+			type: 'post',
 			data: {req : JSON.stringify(req)},
-			contentType:"application/json",
+			contentType: "application/x-www-form-urlencoded",
 			dataType:"json",
 			
 			success: function(response) {
-				
 				//alert(response.Id+" "+response.Code+" "+response.Message);
-				var msg = "WishItem edited Successfully. Your ItemId is: "+response.Id;
-				confirmationIndex(msg);
 				
+				setPrevPage("mywishlists.html");
+				var heading = "Successful";
+				msg = response.Message;
+				confirmationIndex(heading, msg);			//mywishitemdetails.html
+			
 			},
 		
 			error: function() {
-				alert('Not Working');
+				var msg = "Not Working";
+				confirmationIndex(msg);
 			}
 		});
 }
@@ -798,12 +1080,16 @@ function deleteWishItemSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			var msg = "WishItem deleted Successfully.";
-			confirmationIndex(msg);
+			setPrevPage("mywishlists.html");
+			heading = "Successful";
+			
+			msg = response.Message;
+			confirmationIndex(heading, msg);			//mywishitemdetails.html
 		},
 	
 		error: function() {
-			alert('Not Working');
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});	
 	
@@ -849,12 +1135,24 @@ function addFriendSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			var msg = response.Message;
-			confirmationIndex(msg);
+			setPrevPage("myfriendslist.html");
+			
+			if(reasonForAddFriend == "importGoogle"){
+				add_checked_friends_continued();
+			}else if(reasonForAddFriend == "importEmail"){
+				var header = "Congrats";
+				var msg = response.Message;
+				confirmationIndex(header, msg);
+			}else{
+				var header = "Friend Added";
+				var msg = "You can now lease items from "+friendName;
+				confirmationIndex(header, msg);	
+			}
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 		
@@ -914,12 +1212,15 @@ function getFriendSend(req){
 				//alert(response.Message);
 				if(reasonForGetFriend == 'prevFriend'){
 					gotPrevFriend('');	
+				}else if(itemNextId == 0){
+					showEmptyText();			//in myfriendlist.html
 				}
 			}
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 }
@@ -964,12 +1265,14 @@ function editFriendSend(req){
 		dataType: "json",
 		
 		success: function(response) {
+			var header = "Friend Editted";
 			var msg = response.Message;
-			confirmationIndex(msg);
+			confirmationIndex(header, msg);
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 }
@@ -1005,12 +1308,14 @@ function deleteFriendSend(req){
 		dataType: "json",
 		
 		success: function(response) {
+			var header = "Friend Deleted";
 			var msg = response.Message;
-			confirmationIndex(msg);	
+			confirmationIndex(header, msg);	
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 }
@@ -1042,7 +1347,12 @@ function getNextCategorySend(req){
 			
 			if(response.Code === "FLS_SUCCESS") {
 				obj = JSON.parse(response.Message);
-				loadCategoryDropdownContinued(obj);
+				
+				if(reasonForGetCategory == 'categoryFilter'){
+					loadCategoryFilterContinued(obj);					//myindex.html	
+				}else if(reasonForGetCategory == 'categoryDropdown'){
+					loadCategoryDropdownContinued(obj);					//mystore.html
+				}
 			}
 			else{
 				//alert(response.Message);
@@ -1050,7 +1360,8 @@ function getNextCategorySend(req){
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});	
 	
@@ -1092,7 +1403,8 @@ function getNextLeaseTermSend(req){
 		},
 		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 }
@@ -1101,6 +1413,8 @@ function getNextLeaseTermSend(req){
 //signUp begins here------------------------------------------------
 
 function signUpDbCreate(){
+	signuppassword = CryptoJS.MD5(signuppassword);
+	signuppassword = signuppassword.toString();
 	
 	var req = {
 		userId: signupemail,
@@ -1111,7 +1425,6 @@ function signUpDbCreate(){
 	};
 	
 	signUpSend(req);
-
 }
 
 function signUpSend(req){
@@ -1126,10 +1439,11 @@ function signUpSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			signupContinued(response.Message);			//this function is in signup.html
+			signupContinued(response.Code);			//this function is in signup.html
 		},		
 		error: function() {
-			var msg = "Not Working";confirmationIndex(msg);
+			var msg = "Not Working";
+			confirmationIndex(msg);
 		}
 	});
 }
@@ -1138,7 +1452,9 @@ function signUpSend(req){
 //login begins here------------------------------------------------
 
 function loginDbCreate(){
-	
+	loginpassword = CryptoJS.MD5(loginpassword);
+	loginpassword = loginpassword.toString();
+
 	var req = {
 		auth: loginpassword,
 		token: loginemail
@@ -1172,40 +1488,11 @@ function loginSend(req){
 			},
 			
 			error: function() {
-				var msg = "Not Working";confirmationIndex(msg);
+				var msg = "Not Working";
+				confirmationIndex(msg);
 			}
 		});
 };
 
 
 //login ends here------------------------------------------------
-//sending email notification begins here------------------------------------------------
-//sendMail(email, subject, msg);
-/*
-function sendMail(email, subject, content){
-	$.ajax({
-	type: 'POST',
-	url: 'https://mandrillapp.com/api/1.0/messages/send.json',
-	data: {
-		'key': 'AOz9ESV_lIw7OJRkUH_yBg',								//mandrill App key	
-		'message': {
-			'from_email': 'redhu.sunny1994@gmail.com',					//email of sender
-			'to': [
-				{
-					'email': email,				//email of receiver
-					'name': '',				//name of receiver	
-					'type': 'to'
-				}
-			],
-			'autotext': 'true',
-			'subject': subject,			//subject of mail
-			'html': content				//content of mail
-		}
-	}
-	}).done(function(response) {
-		console.log(response); // if you're into that sorta thing
-	});
-}
-*/
-
-//sending email notification ends here------------------------------------------------

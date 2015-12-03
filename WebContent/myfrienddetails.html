@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
---> 
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script> 
+	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Friend Details</title>
 
@@ -16,6 +17,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/mystore.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,6 +29,7 @@
   
   <body onload="start()">
 	<div id="main">	
+		
 		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -35,33 +38,33 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand">FriendLease</a>
+					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<nav class="navbar navbar-inverse" id="subheader">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar2">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-						<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-						<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+						
+						<!--<span id="subheader">-->
+						<li class="dropdown" id="subheader">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span id="salutation"></span> <span class="caret"></span></a>
+							
+							<ul class="dropdown-menu">
+								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+								<li role="separator" class="divider"></li>
+								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							</ul>
+						</li>
+						<!--</span>-->
 					</ul>
 				</div>
 			</div>
@@ -102,7 +105,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="mobile">Mobile</label>
-									<input type="number" class="form-control" id="mobile" placeholder="Mobile">
+									<input type="text" class="form-control" id="mobile" placeholder="10 digit Mobile Number" maxlength="10" required>
 								</div>
 							</div>
 						</div>
@@ -110,7 +113,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="email">Email</label>
-									<input type="email" class="form-control" id="email" placeholder="Email">
+									<input type="email" class="form-control" id="email" placeholder="email@xyz.com" required>
 								</div>
 							</div>
 						</div>
@@ -122,35 +125,40 @@
 				</div>
 				<div class="col-md-6">
 					<br />
-					<div id="error_row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<div class="alert alert-danger fade in">
-								<a href="#" class="close" data-dismiss="alert">&times;</a>
-								<strong>Error!</strong> Operation failed.
-							</div>
-						</div>
-					</div>	
-					<br />
 					<div id="add_friend_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_friend" class="btn btn-success" onclick="add_friend()">Add</button>
+							<button id="add_friend" class="btn btn-primary" onclick="add_friend()">Add</button>
 						</div>
 					</div>
 						
 					<div id="edit_friend_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_friend" class="btn btn-success" onclick="edit_friend()">Edit</button>
+							<button id="edit_friend" class="btn btn-primary" onclick="edit_friend()">Edit</button>
 						</div>
 					</div>
 						
 					<div id="delete_friend_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_friend" class="btn btn-success" onclick="delete_friend()">Delete</button>
+							<button id="delete_friend" class="btn btn-primary" onclick="delete_friend()">Delete</button>
 						</div>
 					</div>
-				
+					<div id="cancel_row" class="row">	
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<a href="myfriendslist.html"><button id="cancel" class="btn btn-primary">Cancel</button><a/>
+						</div>
+					</div>
 				</div>
-		
+			
+				<!--Displaying error of the form-->
+				<div id="error_row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="alert alert-danger fade in" id="errormsg">
+							<a href="#" class="close" data-dismiss="alert">&times;</a>
+							<strong>Error!</strong> 
+						</div>
+					</div>
+				</div>
+			
 			</div>
 		
 			<!-- Button trigger Alert Modal -->
@@ -164,7 +172,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<!--<h4 class="modal-title" id="myModalLabel"></h4>-->
 				  </div>
 				  <div class="modal-body" id="alertModalMsg">
 					
@@ -188,13 +196,13 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<h4 class="modal-title" id="myModalLabel"></h4>
 				  </div>
 				  <div class="modal-body" id="modalMsg">
 					
 				  </div>
 				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
 				  </div>
 				</div>
 			  </div>
@@ -211,9 +219,11 @@
 					</button>
 					<div class="collapse navbar-collapse" id="myNavbarBottom">
 						<ul class="nav navbar-nav navbar-center">
-							<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
 						</ul>
 					</div>
 				</div>
@@ -227,11 +237,14 @@
 		var userloggedin, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, storeObj, currentWork;
 		
 		function start(){
-
+			prevPage = getPrevPage();
+			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
-		
 			$('#error_row').hide();
+			
+			load_Gapi();
+		
 			$('#submit').hide();
 			
 			look_good();
@@ -249,11 +262,12 @@
 			}else{							//else show the subheader, and hide login and signup buttons	
 				$('#subheader').show();			
 				
-				//show hello "username"
-				var navbar1right = document.getElementById("navbar1right");
-				var li = document.createElement("li");
-				li.innerHTML = "Hello "+userloggedin;
-				navbar1right.appendChild(li);
+				//show "username"
+				var salutation = document.getElementById("salutation");
+				var span = document.createElement("span");
+				
+				span.innerHTML = userloggedin;
+				salutation.appendChild(span);
 				
 			}
 			//end of checking if user is logged in or not
@@ -264,38 +278,43 @@
 				
 				$("#edit_friend_row").css("display","none");
 				$("#delete_friend_row").css("display","none");
-				$("#add_friend_row").css("margin-bottom","35%");
+				$("#add_friend_row").css("margin-bottom","5px");
+				$("#cancel_row").css("margin-bottom","35%");
 			}
 			else if(prevfunc == "viewFriend"){		//if arrived from the mywishlists page by clicking an item/edit item	
 				getItemInfo();
 				
 				$("#add_friend_row").css("display","none");
-				$("#delete_friend_row").css("margin-bottom","35%");
-				
+				$("#delete_friend_row").css("margin-bottom","5px");
+				$("#cancel_row").css("margin-bottom","35%");
 			}
+			
 		}
 
+		function load_Gapi(){						//for google
+			gapi.load('auth2', function() {
+				gapi.auth2.init();
+			});
+		}
+		
 		$("#logoutoptionmenu").click(function(){					//when user logs out  
 			localStorage.setItem("userloggedin", "anonymous");			//userloggedin -> anonymous
+			signOutFromGoogle();
 			
-			window.location.replace("myindex.html");
+			redirectToHomePage();
 		});
-		
+			
+		function signOutFromGoogle() {					//signout from google
+			var auth2 = gapi.auth2.getAuthInstance();
+			auth2.signOut().then(function () {
+				console.log('User signed out.');
+			});
+		}	
 		
 		function add_friend(){				//called when Add is clicked
-			//$('#submit').click();
-			
 			//reasonForFriend = 'addFriend';
 			currentWork = 'addFriend';
-			
-			var name = $("#name").val(); 
-			var mobile = $("#mobile").val();
-			var email = $("#email").val();
-			var user = userloggedin;
-			
-			addFriendSetValues(name, mobile, email, user);
-			
-			addFriendDbCreate();
+			$('#submit').click();
 		}
 		
 		function edit_friend(){
@@ -333,6 +352,41 @@
 			
 		}
 		
+		$("#itemform").submit(function(event){
+			event.preventDefault();
+			
+			$('#error_row').hide();						//just to hide the error on re-submission of the form
+			
+			var name = $("#name").val(); 
+			var mobile = $("#mobile").val();
+			var email = $("#email").val();
+			var user = userloggedin;
+			
+			if(mobile.length != 10){									//mobile number validation (10 digits and number)
+				var errormsg = document.getElementById("errormsg");
+				var span = document.createElement("span");
+				span.innerHTML = "Must be a 10 digit number";
+				errormsg.appendChild(span);
+				
+				$('#error_row').show();
+				
+				mobile = Number(mobile);
+				if(isNaN(mobile)){
+					var errormsg = document.getElementById("errormsg");
+					var span = document.createElement("span");
+					span.innerHTML = "Must be a number";
+					errormsg.appendChild(span);
+				
+					$('#error_row').show();
+				}
+			}
+			else{
+				addFriendSetValues(name, mobile, email, user);
+			
+				addFriendDbCreate();
+			}
+		});
+		
 		function continueWork(){
 			if(currentWork == 'editFriend'){
 				var name = $("#name").val(); 
@@ -354,7 +408,10 @@
 			
 		}
 		
-		function confirmationIndex(msg){			//called from script_admin_v2.js
+		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
+			var header = document.getElementById("myModalLabel");
+			header.innerHTML = heading;
+			
 			var div = document.getElementById("modalMsg");
 			div.innerHTML = msg;
 			
@@ -362,10 +419,13 @@
 		}
 		
 		function redirectToHomePage(){
-			window.location.replace("myindex.html");
+			window.location.replace("index.html");
 		}	
 			
-		
+		function redirectToPrevPage(){
+			prevPage = getPrevPage("prevPage");
+			window.location.replace(prevPage);
+		}	
 		
 		//getting item info when user wants to view an existing item--------------------------------------------------------------------		
 		function getItemInfo(){
@@ -397,14 +457,17 @@
 			$("#edit_friend").css("margin-left","30%");
 			$("#delete_friend").css("margin-left","30%");
 			$("#add_friend").css("margin-left","30%");
+			$("#cancel").css("margin-left","30%");
 			
 			$("#edit_friend").css("margin-bottom","10px");
 			$("#delete_friend").css("margin-bottom","10px");
 			$("#add_friend").css("margin-bottom","10px");	
+			$("#cancel").css("margin-bottom","10px");
 			
 			$("#edit_friend").css("min-width","100px");
 			$("#delete_friend").css("min-width","100px");
 			$("#add_friend").css("min-width","100px");
+			$("#cancel").css("min-width","100px");
 			
 		}
 		

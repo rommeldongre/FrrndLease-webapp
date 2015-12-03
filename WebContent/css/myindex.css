@@ -1,0 +1,92 @@
+body{
+	background-image: url("bluebackground.jpg");
+	background-repeat: repeat;
+	overflow-x: hidden;
+}
+
+#icon{
+	font-family: 'Happy Monkey', serif;
+	color: #0066ff;
+	font-size: 200%;
+}
+
+#main{
+	margin-bottom: 100px;
+}
+
+#mainbackground{
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /*opacity: 0.4;*/
+	
+}
+
+#button_top_right{
+	position: relative;
+	float: right;
+}
+
+#categorybrowsing{
+	position: relative;
+	margin-left: 35%;
+}
+
+@media screen and (max-width: 1000px){
+	#categorybrowsing{
+		position: relative;
+		margin-left: 28%;
+	}
+
+}
+
+@media screen and (max-width: 500px){
+	#categorybrowsing{
+		position: relative;
+		margin-left: -2%;
+	}
+}
+
+#carouselObject{
+	height: 70%;
+	width: 80%;
+	margin: auto;
+	min-height: 300px;
+	min-width: 300px;
+	max-height: 300px;
+}
+
+#carouselinner{
+	max-height: 300px;
+}
+
+.items:hover{
+	cursor: pointer;
+}
+
+#searchbox{
+	margin-left: 25%;
+	max-width: 600px;
+	width: 100%;
+}
+
+
+@media screen and (max-width: 1000px){
+	#searchbox{
+		margin-left: 10%;
+		max-width: 600px;
+		width: 100%;
+	}	
+}
+
+@media screen and (max-width: 500px){
+	#searchbox{
+		margin: auto;
+		max-width: 600px;
+		width: 100%;
+	}	
+}

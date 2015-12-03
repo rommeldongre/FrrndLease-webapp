@@ -12,6 +12,9 @@
 	var UserId = null;
 	var LeaseTerm = null;
 	var LeaseValue = 0;
+	var canvasCtx = null;
+	var imageFile = null;
+	var url = null;
 	
 	getData = function() {
 		//alert("Inside get Data");
@@ -37,6 +40,36 @@
 		if (LeaseTerm === '') LeaseTerm = null;
 	}
 	
+	window.onload = function () {
+		canvasCtx = document.getElementById("panel").getContext("2d");
+		
+		document.getElementById("ifile").onchange = function(event) {
+			
+			this.imageFile = event.target.files[0];
+			
+			var reader = new FileReader();
+			reader.onload =  function(event) {
+				var img = new Image();
+				//img.src = event.target.result;
+				img.onload = function() {
+					drawImage(img);
+				}
+				img.src = event.target.result;
+				//img.src = jic.compress(img,40).src;
+				//img.style.display = "block";
+			}
+			reader.readAsDataURL(this.imageFile);
+		}
+	
+		drawImage = function(img) {
+			this.canvasCtx.canvas.width = 500;
+			this.canvasCtx.canvas.height = 500;
+			this.canvasCtx.drawImage(img,0,0,500,500);
+			url = canvasCtx.canvas.toDataURL("image/png");
+			console.log(url);
+		}
+	}
+	
 	edit = function() {
 		//alert("Inside Edit function");
 		getData();
@@ -49,6 +82,7 @@
 					userId: UserId,
 					leaseValue: LeaseValue,
 					leaseTerm: LeaseTerm,
+					image: url
 		}
 		send(req);
 	};
@@ -58,9 +92,9 @@
 		alert("Inside send");
 		$.ajax({
 			url: '/flsv2/EditPosting',
-			type: 'get',
+			type: 'post',
 			data: {req : JSON.stringify(req)},
-			contentType:"application/json",
+			contentType: "application/x-www-form-urlencoded",
 			dataType:"json",
 			
 			success: function(response) {
@@ -88,6 +122,8 @@
 		Description : <input type="text" name="description" id="description" ><br/><br/>
 		Lease Terms : <input type="text" name="leaseTerms" id="leaseTerms"><br/><br/>
 		Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
+		<input type="file" id="ifile"><br/>
+		<canvas id="panel"></canvas><br/><br/>
 		<input type="button" value="Edit" onclick="edit()"><br/><br/>
 		
 		<h1>OUTPUT</h1>

@@ -40,7 +40,7 @@ public class Store extends Connect {
 				token = obj.getInt("token");
 				getNext();
 			} catch (JSONException e) {
-				res.setData(202, String.valueOf(token), "JSON Data not parsed/found(JSON Exception)");
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			break;
@@ -51,13 +51,13 @@ public class Store extends Connect {
 				token = obj.getInt("token");
 				getPrevious();
 			} catch (JSONException e) {
-				res.setData(202, String.valueOf(token), "JSON Data not parsed/found(JSON Exception)");
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			break;
 			
 		default:
-			res.setData(202, "0", "Invalid Operation!!");;
+			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
 		}
 		
@@ -83,10 +83,10 @@ public class Store extends Connect {
 			Code = 29;
 			Id = String.valueOf(itemId);
 			
-			res.setData(Code,Id,message);
+			res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
 		} catch (SQLException e) {
 			System.out.println("Couldn't create statement");
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
@@ -119,14 +119,14 @@ public class Store extends Connect {
 				message = "operation successfully deleted store item id : "+itemId;
 				Code = 30;
 				Id = String.valueOf(check);
-				res.setData(Code, Id, message);
+				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 			}
 			else{
 				System.out.println("Entry not found in database!!");
-				res.setData(201, "0", "Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
 		
@@ -156,22 +156,22 @@ public class Store extends Connect {
 			}
 			
 			if(check != 0 ) {
-				Code = 31;
+				Code = FLS_SUCCESS;
 				Id = String.valueOf(check);
 			}
 			
 			else {
-				Id = null;
-				message = "End of Database!!!";
-				Code = 199;
+				Id = "0";
+				message = FLS_END_OF_DB_M;
+				Code = FLS_END_OF_DB;
 			}
 			
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(204,"0", "JSON Exception");
+			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 		}	
 	}
@@ -200,22 +200,22 @@ public class Store extends Connect {
 			}
 			
 			if(check != 0 ) {
-				Code = 32;
+				Code = FLS_SUCCESS;
 				Id = String.valueOf(check);
 			}
 			
 			else {
-				Id = null;
-				message = "End of Database!!!";
-				Code = 199;
+				Id = "0";
+				message = FLS_END_OF_DB_M;
+				Code = FLS_END_OF_DB;
 			}
 			
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(204,"0", "JSON Exception");
+			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 		}	
 	}

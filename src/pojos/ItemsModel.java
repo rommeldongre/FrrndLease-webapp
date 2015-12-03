@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ItemsModel {
-	private String title, category, description,userId,leaseTerm,status;
+	private String title, category, description,userId,leaseTerm,status,image;
 	int id, leaseValue;
 	private JSONObject obj;
 	
@@ -25,6 +25,7 @@ public class ItemsModel {
 			id = obj.getInt("id");
 			leaseValue = obj.getInt("leaseValue");
 			status = obj.getString("status");
+			image = obj.getString("image");
 		} catch (JSONException e) {
 			System.out.println("Couldn't parse row object of JSON");
 			e.printStackTrace();
@@ -61,5 +62,9 @@ public class ItemsModel {
 	
 	public String getStatus() {
 		return this.status;
+	}
+	
+	public String getImage() {
+		return this.image;
 	}
 }

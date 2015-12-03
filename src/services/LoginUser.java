@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -22,7 +24,8 @@ import adminOps.Response;
 public class LoginUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
-	private Response res = new Response();   
+	private Response res = new Response(); 
+	private ErrorCat e = new ErrorCat();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -60,7 +63,7 @@ public class LoginUser extends HttpServlet {
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
-			if(res.getIntCode() == 41){
+			if(res.getIntCode() == e.FLS_SUCCESS){
 				json.put("Code", "FLS_SUCCESS");
 				json.put("Message",res.getMessage());
 				json.put("Id", res.getId());
@@ -68,7 +71,7 @@ public class LoginUser extends HttpServlet {
 			
 			else {
 				json.put("Code", res.getCode());
-				json.put("Message","INVALID PASSWORD OR USERNAME");
+				json.put("Message",e.FLS_LOGIN_USER_F);
 				json.put("Id", res.getId());
 			}
 			

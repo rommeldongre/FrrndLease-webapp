@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
--->    
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>    
+	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>My Incoming Requests</title>
 
@@ -16,6 +17,9 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/mystore.css" rel="stylesheet">
+	<link href="css/myindex.css" rel="stylesheet">
+	
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,6 +31,7 @@
   
   <body onload="start()">
 	<div id="main">
+		
 		<!--header starts---------------------------------------->
 		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
@@ -36,43 +41,51 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand">FriendLease</a>
+					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+						
+						
+						<li class="dropdown" id="subheader">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span id="salutation"></span> <span class="caret"></span></a>
+							
+							<ul class="dropdown-menu">
+								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+								<li role="separator" class="divider"></li>
+								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							</ul>
+						</li>
+						
 					</ul>
 				</div>
 			</div>
 		</nav>
 		<!--header ends----------------------------------------->
-		<!--subheader starts-------------------------------------->
-		<nav class="navbar navbar-inverse" id="subheader">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar2">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-						<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-						<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<!--subheader ends-->
+		
 		
 		<div class="container-fluid" id="midcontainer">
 			<h2>My Incoming Requests List</h2>
+			
+			<div class="row">
+				<div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+				</div>
+				<div id="topcolright" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+					<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+				</div>
+			</div>
+			<br />
 			
 			<table id="requesttable" class="table table-striped">
 				<thead>
@@ -87,6 +100,10 @@
 					
 				</tbody>
 			</table>
+			<h4 id="emptyText">
+			
+			</h4>
+			
 			
 			<!-- Button trigger Alert Modal -->
 			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal">
@@ -99,7 +116,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<!--<h4 class="modal-title" id="myModalLabel"></h4>-->
 				  </div>
 				  <div class="modal-body" id="alertModalMsg">
 					
@@ -123,13 +140,13 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<h4 class="modal-title" id="myModalLabel"></h4>
 				  </div>
 				  <div class="modal-body" id="modalMsg">
 					
 				  </div>
 				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
 				  </div>
 				</div>
 			  </div>
@@ -146,9 +163,11 @@
 					</button>
 					<div class="collapse navbar-collapse" id="myNavbarBottom">
 						<ul class="nav navbar-nav navbar-center">
-							<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
 						</ul>
 					</div>
 				</div>
@@ -166,6 +185,11 @@
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
 			
+			load_Gapi();
+			
+			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
+			userloggedin = localStorage.getItem("userloggedin");
+			
 			itemNextId = 0;
 			itemNextRequestId = 0;
 			request_read();
@@ -173,20 +197,33 @@
 			look_good();
 			
 			
-			//show hello "username"
-			userloggedin = localStorage.getItem("userloggedin");
-			
-			var navbar1right = document.getElementById("navbar1right");
-			var li = document.createElement("li");
-			li.innerHTML = "Hello "+userloggedin;
-			navbar1right.appendChild(li);
+			//show "username"
+				var salutation = document.getElementById("salutation");
+				var span = document.createElement("span");
+				
+				span.innerHTML = userloggedin;
+				salutation.appendChild(span);
+		}
+		
+		function load_Gapi(){						//for google
+			gapi.load('auth2', function() {
+				gapi.auth2.init();
+			});
 		}
 		
 		$("#logoutoptionmenu").click(function(){					//when user logs out  
 			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
+			signOutFromGoogle();
 			
-			window.location.replace("myindex.html");
+			redirectToHomePage()
 		});
+		
+		function signOutFromGoogle() {					//signout from google
+			var auth2 = gapi.auth2.getAuthInstance();
+			auth2.signOut().then(function () {
+				console.log('User signed out.');
+			});
+		}
 		
 		function request_read(){
 			
@@ -242,7 +279,8 @@
 				span3.appendChild(span6);
 				
 				cell0.innerHTML = reqDate;
-				cell1.innerHTML = obj.itemId;
+				//cell1.innerHTML = obj.itemId;
+				cell1.innerHTML = obj.title;
 				cell2.innerHTML = reqUserId;
 				
 				cell3.appendChild(span1);
@@ -261,9 +299,21 @@
 				request_read();	
 		}
 			
+		function showEmptyText(){
+			var h4 = document.getElementById("emptyText");
+			h4.innerHTML = "You have no Incoming Requests. Post more items to the Store";
+		}
+		
+		function storeYourStuff(){
+			storeCurrentFunction('storeYourStuff');
+			setPrevPage("myincomingrequests.html");
+			
+			window.location.replace("mystore.html");
+		}
 		
 		//grant request to lease---------------------------------
 		$(document).on("click",".grant",function(event){		//grant lease	
+			setPrevPage("myincomingrequests.html");
 			currentWork = 'leaseItem';
 			storeItemToShow(event.target.id);
 			
@@ -275,6 +325,7 @@
 		});
 		
 		function leaseItemFromRequest(obj){
+			setPrevPage("myincomingrequests.html");
 			itemNextId = obj.itemId;
 			itemNextId--;
 			
@@ -283,6 +334,7 @@
 		}
 		
 		function lease_requestedItem(obj){
+			setPrevPage("myincomingrequests.html");
 			storeItemToShow(obj.itemId);
 			
 			leaseItemSetValues();
@@ -292,6 +344,7 @@
 		
 		//reject request---------------------------
 		$(document).on("click",".refuse",function(event){		//refust request
+			setPrevPage("myincomingrequests.html");
 			itemNextId = event.target.id;
 			itemNextId--;
 			reasonForGetRequestItem = 'rejectRequest';
@@ -307,13 +360,14 @@
 		
 		
 		function rejectRequest(obj){
+			setPrevPage("myincomingrequests.html");
 			rejectRequestSetValues(obj.itemId, obj.userId);
 		}
 		
 		//----------------------------------------
 	
 		$(document).on("click",".tablecellItem",function(event){
-			
+			setPrevPage("myincomingrequests.html");
 			storeCurrentFunction("viewItemOwner");
 			storeRequestingUser(reqUserId);
 			
@@ -325,6 +379,8 @@
 		});
 		
 		function continueWork(){
+			setPrevPage("myincomingrequests.html");
+			
 			if(currentWork == 'deleteItem'){
 				itemId = itemObj.itemId;
 				userId = userloggedin;
@@ -343,7 +399,9 @@
 			
 		}
 		
-		function confirmationIndex(msg){			//called from script_admin_v2.js
+		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
+			var header = document.getElementById("myModalLabel");
+			header.innerHTML = heading;
 			var div = document.getElementById("modalMsg");
 			div.innerHTML = msg;
 			
@@ -352,9 +410,14 @@
 		
 		
 		function redirectToHomePage(){
-			window.location.replace("myindex.html");
+			window.location.replace("index.html");
 		}
 
+		function redirectToPrevPage(){
+			prevPage = getPrevPage("prevPage");
+			window.location.replace(prevPage);
+		}
+		
 		function look_good(){		//just for looks
 			$('.actionbutton').css("margin-left","10px");
 			$('.tablecell').css("text-align","center");

@@ -1,12 +1,14 @@
-<!DOCTYPE html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
--->    
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>    
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
+	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>WishItem Details</title>
 
@@ -16,6 +18,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/mystore.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,6 +30,7 @@
   
   <body onload="start()">
 	<div id="main">	
+		
 		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -35,33 +39,33 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand">FriendLease</a>
+					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<nav class="navbar navbar-inverse" id="subheader">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar2">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-						<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-						<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+						
+						
+						<li class="dropdown" id="subheader">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span id="salutation"></span> <span class="caret"></span></a>
+							
+							<ul class="dropdown-menu">
+								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+								<li role="separator" class="divider"></li>
+								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							</ul>
+						</li>
+						
 					</ul>
 				</div>
 			</div>
@@ -77,17 +81,18 @@
 <!-- http://www.syntaxxx.com/accessing-user-device-photos-with-the-html5-camera-api/ -->
 <!--http://www.codeproject.com/Articles/589445/JavaScript-Modal-Popup-Window-->								
 									<label for="item_image" id="image_label">Add Picture</label>
-									<input id="item_image" type="file" class="form-control" id="add_picture" accept="image/*"> <!--onchange="saveAndDisplayImage(event)"-->
+									<input type="file" id="ifile">		<!--Taking image as input-->
 								</div>
 							</form>
 						</div>	
 					</div>
 					<br />
 					<div class="row">
-						<!--<div class="col-md-12">
-							<img id="capturedPicture"/>
-							</img>
-						</div>-->
+						<div class="col-md-12">
+							<canvas id="panel">
+								
+							</canvas>
+						</div>
 					</div>
 					<form id="itemform">
 						<div class="row">
@@ -169,27 +174,27 @@
 					<br />
 					<div id="add_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_wishitem" class="btn btn-success" onclick="add_wishitem()">Add</button>
+							<button id="add_wishitem" class="btn btn-primary" onclick="add_wishitem()">Add</button>
 						</div>
 					</div>
 						
 					<div id="edit_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_wishitem" class="btn btn-success" onclick="edit_wishitem()">Edit</button>
+							<button id="edit_wishitem" class="btn btn-primary" onclick="edit_wishitem()">Edit</button>
 						</div>
 					</div>
 						
 					<div id="delete_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_wishitem" class="btn btn-success" onclick="delete_wishitem()">Delete</button>
+							<button id="delete_wishitem" class="btn btn-primary" onclick="delete_wishitem()">Delete</button>
 						</div>
 					</div>
-						
-					<div id="addpicture_wishitem_row" class="row">	
+
+					<div id="cancel_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="addpicture_wishitem" class="btn btn-success" onclick="addpicture_wishitem()">Add Picture</button>
+							<button id="cancel_wishitem" class="btn btn-primary" onclick="cancel_wishitem()">Cancel</button>
 						</div>
-					</div>
+					</div>	
 				</div>
 		
 			</div>
@@ -205,7 +210,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<!--<h4 class="modal-title" id="myModalLabel"></h4>-->
 				  </div>
 				  <div class="modal-body" id="alertModalMsg">
 					
@@ -229,13 +234,15 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<h4 class="modal-title" id="myModalLabel">
+					
+					</h4>
 				  </div>
 				  <div class="modal-body" id="modalMsg">
 					
 				  </div>
 				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
 				  </div>
 				</div>
 			  </div>
@@ -252,9 +259,11 @@
 					</button>
 					<div class="collapse navbar-collapse" id="myNavbarBottom">
 						<ul class="nav navbar-nav navbar-center">
-							<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
 						</ul>
 					</div>
 				</div>
@@ -268,9 +277,13 @@
 		var userloggedin, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, storeObj, currentWork;
 		
 		function start(){
+			prevPage = getPrevPage();
 			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
+			
+			load_Gapi();
+			
 			$('#error_row').hide();
 			$('#submit').hide();
 			
@@ -278,6 +291,8 @@
 			getLeaseValueWidth();
 			loadCategoryDropdown();
 			loadLeaseTermDropdown();
+			
+			getLocation();				//to show default location of the user
 			
 			look_good();
 			
@@ -294,11 +309,12 @@
 			}else{							//else show the subheader, and hide login and signup buttons	
 				$('#subheader').show();			
 				
-				//show hello "username"
-				var navbar1right = document.getElementById("navbar1right");
-				var li = document.createElement("li");
-				li.innerHTML = "Hello "+userloggedin;
-				navbar1right.appendChild(li);
+				//show "username"
+				var salutation = document.getElementById("salutation");
+				var span = document.createElement("span");
+				
+				span.innerHTML = userloggedin;
+				salutation.appendChild(span);
 				
 			}
 			//end of checking if user is logged in or not
@@ -306,29 +322,75 @@
 			var prevfunc = getPrevFunc();		//to see from which page we have arrived to this page and show buttons accordingly
 			
 			if(prevfunc == "addWishItem"){			//if arrived by pressing + button on mywishlists page
+				$("#quantity").val(1);
+				$("#lease_value").val(1000);
+				$("#dropdownbuttonlease_term").text("Month");
 				
-				$("#image_label").css("display","none");
-				$("#item_image").css("display","none");
 				$("#edit_wishitem_row").css("display","none");
 				$("#delete_wishitem_row").css("display","none");
-				$("#addpicture_wishitem_row").css("margin-bottom","35%");
+				$("#add_wishitem_row").css("margin-bottom","5px");
+				$("#cancel_wishitem_row").css("margin-bottom","35%");
+				$("#description").css("margin-bottom","35%");
 			}
 			else if(prevfunc == "viewItemOwner"){		//if arrived from the mywishlists page by clicking an item/edit item	
 				getItemInfo();
 				
-				$("#image_label").css("display","none");
-				$("#item_image").css("display","none");
 				$("#add_wishitem_row").css("display","none");
-				$("#addpicture_wishitem_row").css("margin-bottom","35%");
-				
+				$("#delete_wishitem_row").css("margin-bottom","5px");
+				$("#cancel_wishitem_row").css("margin-bottom","35%");
+				$("#description").css("margin-bottom","35%");
 			}
+			
+			//display image begins here
+			canvasCtx = document.getElementById("panel").getContext("2d");
+		
+			document.getElementById("ifile").onchange = function(event) {
+				
+				this.imageFile = event.target.files[0];
+				
+				var reader = new FileReader();
+				reader.onload =  function(event) {
+					var img = new Image();
+					//img.style.width = "300px";
+					//img.style.height = "300px";
+					
+					img.onload = function() {
+						drawImage(img);
+					}
+					img.src = event.target.result;
+				}
+				reader.readAsDataURL(this.imageFile);
+			}
+		
+			drawImage = function(img) {
+				this.canvasCtx.canvas.width = 300;
+				this.canvasCtx.canvas.height = 300;
+				this.canvasCtx.drawImage(img,0,0,300,300);
+				url = canvasCtx.canvas.toDataURL("image/png");
+				console.log(url);
+			}
+			//display image ends here		
+		}
+		
+		function load_Gapi(){						//for google
+			gapi.load('auth2', function() {
+				gapi.auth2.init();
+			});
 		}
 		
 		$("#logoutoptionmenu").click(function(){					//when user logs out  
-			localStorage.setItem("userloggedin", "anonymous");			//userloggedin -> anonymous
+			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
+			signOutFromGoogle();
 			
-			window.location.replace("myindex.html");
+			redirectToHomePage();
 		});
+		
+		function signOutFromGoogle() {					//signout from google
+			var auth2 = gapi.auth2.getAuthInstance();
+			auth2.signOut().then(function () {
+				console.log('User signed out.');
+			});
+		}
 		
 		$(window).resize(function(){			
 			getLocationWidth();
@@ -337,7 +399,7 @@
 		
 		function loadCategoryDropdown(){			//for category dropdown
 			catName = '';
-			
+			reasonForGetCategory = 'categoryDropdown';
 			getNextCategory(catName);	
 
 		}
@@ -410,47 +472,20 @@
 		
 		
 		function add_wishitem(){				//called when Add Item is clicked then add the item to Items table and to Store table
-			//$('#submit').click();
-			
-			reasonForWishItem = 'addItem';
-			
-			var title = $("#title").val(); 
-			var description = $("#description").val();
-			var category = $("#dropdownbuttoncategory").text();
-			var userid = userloggedin;
-			var leasevalue = $("#lease_value").val();
-			var leaseterm = $("#dropdownbuttonlease_term").text();
-			
-			wishItemSetValues(title,description,category,userid,leasevalue,leaseterm);
-			
-			wishItemDbCreate();
+			currentWork = 'addWishItem';
+			$('#submit').click();
 		}
 		
 		
 		function edit_wishitem(){
 			currentWork = 'editWishItem';
-			
 			var div = document.getElementById("alertModalMsg");
 			div.innerHTML = "Are you sure you want to save the edited values?";
 			
 			$("#alertModalTriggerButton").click();
-				
 		}
 		
-		/*	//for taking image input from user
 		
-		function saveAndDisplayImage(event){
-			var fileInput = event.target.files;
-			
-			if(fileInput.length>0){
-				var img = document.getElementById("capturedPicture");
-				var fr = new FileReader();
-				fr.onload = function(){
-					img.src = fr.result;
-				}
-				fr.readAsDataURL(fileInput[0]);
-			}
-		}*/
 		
 		function delete_wishitem(){
 			currentWork = 'deleteWishItem';
@@ -460,6 +495,40 @@
 			
 			$("#alertModalTriggerButton").click();
 		}
+		
+		function cancel_wishitem(){
+			redirectToPrevPage();
+		}
+		
+		$("#itemform").submit(function(event){
+			event.preventDefault();
+			
+			if(currentWork == 'addWishItem'){
+				reasonForWishItem = 'addItem';
+			
+				var title = $("#title").val(); 
+				var description = $("#description").val();
+				var category = $("#dropdownbuttoncategory").text();
+				if(category == '' || category == " Category"){
+					category == null;
+				}
+				
+				var userid = userloggedin;
+				var leasevalue = $("#lease_value").val();
+				var leaseterm = $("#dropdownbuttonlease_term").text();
+
+				if(leaseterm == '' || leaseterm == ' Lease Term'){
+					leaseterm = null;
+				}
+				
+				if(url == '')
+					url = null;
+				
+				wishItemSetValues(title,description,category,userid,leasevalue,leaseterm,url);
+				
+				wishItemDbCreate();
+			}
+		});
 		
 		function continueWork(){
 			if(currentWork == 'editWishItem'){
@@ -481,7 +550,9 @@
 			
 		}
 		
-		function confirmationIndex(msg){			//called from script_admin_v2.js
+		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
+			var header = document.getElementById("myModalLabel");
+			header.innerHTML = heading;
 			var div = document.getElementById("modalMsg");
 			div.innerHTML = msg;
 			
@@ -489,8 +560,13 @@
 		}
 		
 		function redirectToHomePage(){
-			window.location.replace('myindex.html');
+			window.location.replace('index.html');
 		}	
+		
+		function redirectToPrevPage(){
+			prevPage = getPrevPage("prevPage");
+			window.location.replace(prevPage);
+		}
 			
 		//getting item info when user wants to view an existing item--------------------------------------------------------------------		
 		function getItemInfo(){
@@ -516,12 +592,57 @@
 				
 			$("#location").val("");
 			$("#description").val(obj.description);
-			$("#lease_value").val(obj.leaseValue);
+			if(obj.leaseValue == '' || obj.leaseValue == ' ' || obj.leaseValue == null || obj.leaseValue == "null"){
+				$("#lease_value").val(1000);
+			}else{
+				$("#lease_value").val(obj.leaseValue);
+			} 
 			
-			if(obj.leaseTerm == "" || obj.leaseTerm == " ")	//if leaseterm is empty
-				$("#dropdownbuttonlease_term").text("Lease_Term");
+			$("#quantity").val(1);		//default value
+			
+			if(obj.leaseTerm == "" || obj.leaseTerm == " " || obj.leaseTerm == null || obj.leaseTerm == "null")	//if leaseterm is empty
+				$("#dropdownbuttonlease_term").text("Month");
 			else
 				$("#dropdownbuttonlease_term").text(obj.leaseTerm);
+			
+			//display the picture of the item begins here
+			
+			url = obj.image;
+			var img = new Image();
+			
+			img.src = url;
+			if(img.src != null && img.src != "null")
+				drawImage(img);
+			//display the picture of the item ends here
+			
+		}
+		
+		//to get current location of the user and show it in the location by default
+		function getLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+			} else { 
+				console.log("Geolocation is not supported by this browser.");
+			}
+		}
+
+		function showPosition(position) {
+			console.log("Latitude: "+position.coords.latitude+"<br>Longitude: "+position.coords.longitude);
+
+			latitude = position.coords.latitude;
+			longitude = position.coords.longitude;
+			coords = new google.maps.LatLng(latitude, longitude);	
+			
+			var geocoder = new google.maps.Geocoder();
+			var latLng = new google.maps.LatLng(latitude, longitude);
+			geocoder.geocode( { 'latLng': latLng}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					console.log(results[4].formatted_address);
+					$("#location").val(results[4].formatted_address);
+				}else{
+						console.log("Geocode was unsucessfull in detecting your current location");
+					}
+			});
 		}
 
 		function makeFormReadOnly(){
@@ -539,15 +660,18 @@
 			$("#delete_wishitem").css("margin-left","30%");
 			$("#add_wishitem").css("margin-left","30%");
 			$("#addpicture_wishitem").css("margin-left","30%");
+			$("#cancel_wishitem").css("margin-left","30%");
 			
 			$("#edit_wishitem").css("margin-bottom","10px");
 			$("#delete_wishitem").css("margin-bottom","10px");
 			$("#add_wishitem").css("margin-bottom","10px");	
+			$("#cancel_wishitem").css("margin-bottom","10px");
 			
 			$("#edit_wishitem").css("min-width","100px");
 			$("#delete_wishitem").css("min-width","100px");
 			$("#add_wishitem").css("min-width","100px");
 			$("#addpicture_wishitem").css("min-width","100px");
+			$("#cancel_wishitem").css("min-width","100px");
 			
 		}
 		

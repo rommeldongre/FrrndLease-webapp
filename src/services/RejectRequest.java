@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -23,6 +25,7 @@ public class RejectRequest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
 	private Response res = new Response();
+	private ErrorCat e = new ErrorCat();
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -56,9 +59,9 @@ public class RejectRequest extends HttpServlet {
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
-			if(Integer.parseInt(res.getCode()) == 56){
+			if(Integer.parseInt(res.getCode()) == e.FLS_SUCCESS){
 				json.put("Code", "FLS_SUCCESS");
-				json.put("Message", "Request rejected..");
+				json.put("Message", e.FLS_REJECT_REQUEST);
 				json.put("Id", res.getId());
 			}
 			

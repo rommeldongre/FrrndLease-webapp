@@ -15,6 +15,10 @@
 	var LeaseValue = 0;
 	var Token = 0;
 	
+	var canvasCtx = null;
+	var imageFile = null;
+	var url = null;
+	
 	getData = function() {
 		//alert("Inside get Data");
 		Title = document.getElementById("title").value;
@@ -38,6 +42,33 @@
 		Status = "Wished";
 	}
 	
+	window.onload = function () {
+		canvasCtx = document.getElementById("panel").getContext("2d");
+		
+		document.getElementById("ifile").onchange = function(event) {
+			
+			this.imageFile = event.target.files[0];
+			
+			var reader = new FileReader();
+			reader.onload =  function(event) {
+				var img = new Image();
+				img.onload = function() {
+					drawImage(img);
+				}
+				img.src = event.target.result;
+			}
+			reader.readAsDataURL(this.imageFile);
+		}
+	
+		drawImage = function(img) {
+			this.canvasCtx.canvas.width = 500;
+			this.canvasCtx.canvas.height = 500;
+			this.canvasCtx.drawImage(img,0,0,500,500);
+			url = canvasCtx.canvas.toDataURL("image/png");
+			console.log(url);
+		}
+	}
+	
 	wishItem = function() {
 		//alert("Inside Add function");
 		getData();
@@ -50,7 +81,8 @@
 					userId: UserId,
 					leaseValue: LeaseValue,
 					leaseTerm: LeaseTerm,
-					status: Status
+					status: Status,
+					image: url
 		};
 		//var Req = JSON.parse(JOSNObject);
 		send(req);
@@ -60,9 +92,9 @@
 		alert("Inside send");
 		$.ajax({
 			url: '/flsv2/WishItem',
-			type: 'get',
+			type: 'post',
 			data: {req : JSON.stringify(req)},
-			contentType:"application/json",
+			contentType: "application/x-www-form-urlencoded",
 			dataType:"json",
 			
 			success: function(response) {
@@ -91,6 +123,8 @@
 		User ID : <input type="text" name="userId" id="userId"><br/><br/>
 		Lease Terms : <input type="text" name="leaseTerms" id="leaseTerms"><br/><br/>
 		Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
+		<input type="file" id="ifile"><br/>
+		<canvas id="panel"></canvas><br/><br/>
 		<input type="button" value="Wish Item" onclick="wishItem()">
 		
 		<h1>OUTPUT</h1>

@@ -35,3 +35,12 @@ function getItemOwner(){
 	var owner = localStorage.getItem("itemOwner");
 	return owner;
 }
+
+function setPrevPage(prevPage){
+	localStorage.setItem("prevPage",prevPage);
+}
+
+function getPrevPage(){
+	var prevPage = localStorage.getItem("prevPage");
+	return prevPage;
+}

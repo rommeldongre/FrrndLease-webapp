@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -23,6 +25,7 @@ public class DeleteFriend extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
 	private Response res = new Response();
+	private ErrorCat e = new ErrorCat();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -57,9 +60,9 @@ public class DeleteFriend extends HttpServlet {
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
-			if(res.getIntCode() == 11){
+			if(res.getIntCode() == e.FLS_SUCCESS){
 				json.put("Code", "FLS_SUCCESS");
-				json.put("Message", "Friend Deleted");
+				json.put("Message", e.FLS_DELETE_FRIEND);
 				json.put("Id", res.getId());
 			}
 			

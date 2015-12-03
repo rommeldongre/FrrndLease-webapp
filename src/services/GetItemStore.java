@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -22,6 +24,7 @@ public class GetItemStore extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
 	private Response res = new Response();
+	private ErrorCat e = new ErrorCat();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -51,6 +54,7 @@ public class GetItemStore extends HttpServlet {
 			row.put("userId", "0");
 			row.put("leaseTerm", "0");
 			row.put("status", "InStore");
+			row.put("image", "0");
 			obj.put("row", row);
 			
 			
@@ -60,7 +64,7 @@ public class GetItemStore extends HttpServlet {
 			res = aoh.getInfo(table, obj);
 			
 			JSONObject json = new JSONObject();
-			if(res.getIntCode() == 53 || res.getIntCode() == 54) {
+			if(res.getIntCode() == e.FLS_SUCCESS) {
 				json.put("Code", "FLS_SUCCESS");
 			}
 			

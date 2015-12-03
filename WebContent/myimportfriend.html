@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
--->    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>    
+	<script src="https://apis.google.com/js/client.js"></script>
+	
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Import Friends</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -15,6 +18,8 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/myfriend.css" rel="stylesheet">
+	<link href="css/mystore.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,67 +31,93 @@
   
   <body onload="start()">
 	<div id="main">	
+		
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand">FriendLease</a>
+					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+						
+						<li class="dropdown" id="subheader">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span id="salutation"></span> <span class="caret"></span></a>
+							
+							<ul class="dropdown-menu">
+								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+								<li role="separator" class="divider"></li>
+								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							</ul>
+						</li>
+						
 					</ul>
 				</div>
 			</div>
 		</nav>
-		<nav class="navbar navbar-inverse" id="subheader">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar2">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-						<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-						<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
+		
 		<div class="container-fluid" id="midcontainer">
 			<div class="row" id="importbuttons">
 				<div class="col-lg-5 col-md-5 col-sm-5">
-					<button class="btn btn-success" id="importfb" onclick="importfb()">Import Facebook</button>
+					<button class="btn btn-primary" id="importfb" onclick="importfb()">Import Facebook</button>
 				</div>
 				<div class="col-lg-5 col-md-5 col-sm-5">
-					<button class="btn btn-success" id="importwhatsapp" onclick="importwhatsapp()">Import Whatsapp</button>
+					<button class="btn btn-primary" id="importwhatsapp" onclick="importwhatsapp()">Import Whatsapp</button>
 				</div>
 				<div class="col-lg-2 col-md-2 col-sm-2">
-					<button class="btn btn-success" id="importgoogle" onclick="importgoogle()">Import Google</button>
+					<button class="btn btn-primary" id="importgoogle" onclick="importgoogle()">Import Google</button>
 				</div>
 			</div>
 			
 			<br /><br /><br />
-				<div id="emailbox" class="input-group">
-					<input type="email" id="importemail" class="form-control" placeholder=" Email, comma separated ">
-					<span class="input-group-btn">
-						<button class="btn btn-default" onclick="directImport()">Import Email</button>
-					</span>
-				</div>
+			<div id="emailbox" class="input-group">
+				<input type="text" id="importemail" class="form-control" placeholder=" Email, comma separated. example1@xyz.com, example2@abc.net">
+				<span class="input-group-btn">
+					<button class="btn btn-primary" onclick="directImport()">Import Email</button>
+				</span>
+			</div>
 			<br /><br />
-
+			
+			<!--for friends imported from google-->
+			<table id="friendsoptionstable" class="table table-striped">
+				<thead>
+					<tr>
+						<th class="tablecell">Email</th>
+						<th class="tablecell">Name</th>
+						<th class="tablecell">Mobile</th>
+						<th class="tablecell">Import</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+				</tbody>
+			</table>
+			<br />
+			<div class="row">
+				<div class="col-md-5 col-lg-5 col-sm-5 col-xs-5"></div>
+				<div class="col-md-5 col-lg-5 col-sm-5 col-xs-5">
+					<button class="btn btn-primary" id="addcheckedfriends" onclick="add_checked_friends()">Save Selected Friends</button>
+				</div>
+				<div class="col-md-2 col-lg-2 col-sm-2 col-xs-2"></div>
+			</div>
+			<br />
+			<br />
+			<br />
 			<!-- Button trigger Alert Modal -->
 			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal">
 			  Launch demo modal
@@ -98,7 +129,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
 				  </div>
 				  <div class="modal-body" id="alertModalMsg">
 					
@@ -122,13 +153,13 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<h4 class="modal-title" id="myModalLabel"></h4>
 				  </div>
 				  <div class="modal-body" id="modalMsg">
 					
 				  </div>
 				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
 				  </div>
 				</div>
 			  </div>
@@ -144,9 +175,11 @@
 					</button>
 					<div class="collapse navbar-collapse" id="myNavbarBottom">
 						<ul class="nav navbar-nav navbar-center">
-							<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
 						</ul>
 					</div>
 				</div>
@@ -156,38 +189,258 @@
 	</div>
 		
 	<script type="text/javascript">
+		var googleFriendsCounter = 0, counter = 0, email = '', name = '', number = '', user_email = '', len = 0, directFriendCounter = 1, i = 0, emailFlag1 = 0, emailFlag2 = 0;
+		
+		var clientId = '420409134995-9pai2dr3clt5cs03u6e6i6o2vjaeer96.apps.googleusercontent.com';
+		var apiKey = 'API Code';
+		var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
+	
 		function start(){
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
+			$("#addcheckedfriends").hide();
 			
-			//show hello "username"
+			load_Gapi();
+			
+			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
 			userloggedin = localStorage.getItem("userloggedin");
 			
-			var navbar1right = document.getElementById("navbar1right");
-			var li = document.createElement("li");
-			li.innerHTML = "Hello "+userloggedin;
-			navbar1right.appendChild(li);
+			//show "username"
+				var salutation = document.getElementById("salutation");
+				var span = document.createElement("span");
+				
+				span.innerHTML = userloggedin;
+				salutation.appendChild(span);
 			
 			look_good();
 		}
 		
+		function load_Gapi(){						//for google
+			gapi.load('auth2', function() {
+				gapi.auth2.init();
+			});
+		}
+		
+		$("#logoutoptionmenu").click(function(){					//when user logs out  
+			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
+			signOutFromGoogle();
+			
+			redirectToHomePage()
+		});
+		
+		function signOutFromGoogle() {					//signout from google
+			var auth2 = gapi.auth2.getAuthInstance();
+			auth2.signOut().then(function () {
+				console.log('User signed out.');
+			});
+		}
+		
 		function importfb(){
+			
 			//confirmationIndex("importfb called");
 		}
 		
 		function importwhatsapp(){
+			
 			//confirmationIndex("importwhatsapp called");
 		}
+		
 		function importgoogle(){
 			//confirmationIndex("importgoogle called");
-		}	
-		
-		function directImport(){
-			var value = $("#importemail").val();
-			confirmationIndex(value);	
+			gapi.client.setApiKey(apiKey);
+            window.setTimeout(authorize);		//calls authorize()
+			$("#addcheckedfriends").show();
 		}
 		
-		function confirmationIndex(msg){			//called from script_admin_v2.js
+		function authorize() {
+			gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthorization);		//calls handleAuthorization()
+        }
+		
+        function handleAuthorization(authorizationResult) {
+            if (authorizationResult && !authorizationResult.error) {
+				$.get("https://www.google.com/m8/feeds/contacts/default/thin?alt=json&access_token=" + authorizationResult.access_token + "&max-results=500&v=3.0",
+				function(response){
+					console.log(response);
+					//function for length of entry array  (for number of contacts)
+					var getLength = function(obj) {
+						var i = 0, key;
+						for (key in obj) {
+							if (obj.hasOwnProperty(key)){
+								i++;
+							}
+						}
+						return i;
+					};
+					var n = getLength(response.feed.entry);
+					var tp;
+					
+					googleFriendsCounter = n;
+					
+					for(i=0;i<n;i++){
+						tp = i+1;
+						
+						user_email = JSON.stringify(response.feed.author[0].email.$t);
+						user_email = user_email.substring(1,user_email.length-1);
+						
+						try{
+							number = JSON.stringify(response.feed.entry[i].gd$phoneNumber[0].$t);
+							number = number.substring(1,number.length-1);
+						}catch(Exception){
+							//number = "Number do not Exist for Friend " + tp;
+							number = "-";
+						}
+						try{
+							name = JSON.stringify(response.feed.entry[i].gd$name.gd$givenName.$t);
+							name =  name.substring(1,name.length-1);
+						}catch (Exception){ 
+							//name = "Name do not Exist for Friend " +  tp;	 	
+							name = "-";
+						}
+						try{
+							email =  JSON.stringify(response.feed.entry[i].gd$email[0].address);
+							email = email.substring(1,email.length-1);
+						}catch(Exception){
+							//email = "Email do not Exist for Friend " +  tp;	
+							email = "-";
+						}
+					 
+						addFriendOptionToPage(email,name,number,user_email,i); 
+						
+					}
+					
+				});
+			}
+		}
+
+		function addFriendOptionToPage(email,name,number,user_email,i){
+			var table = document.getElementById("friendsoptionstable");
+				var row = table.insertRow(1);
+				var cell0 = row.insertCell(0);
+				var cell1 = row.insertCell(1);
+				var cell2 = row.insertCell(2);
+				var cell3 = row.insertCell(3);
+				
+				var inputgp = document.createElement("div");
+				var checkbox = document.createElement("input");
+				inputgp.className = "input-group";
+				checkbox.setAttribute("type","checkbox");
+				inputgp.appendChild(checkbox);
+				checkbox.id = i;
+				
+				cell0.innerHTML = email;
+				cell1.innerHTML = name;
+				cell2.innerHTML = number;
+				cell3.appendChild(inputgp);
+				
+				cell0.id = "email"+i;
+				cell1.id = "name"+i;
+				cell2.id = "mobile"+i;
+				
+				cell0.className = "tablecellName";
+				cell1.className = "tablecellMobile";
+				cell2.className = "tablecellEmail";
+				cell3.className = "checkboxes";
+		}
+		
+		function directImport(){
+			email = '';
+			reasonForAddFriend = "importEmail"
+			
+			var value = $("#importemail").val();
+			if(value != '' && value != ' '){
+				len = value.length;
+				
+				for(;i<len;i++){
+					
+					if(value[i] == ','){
+						var isValid = checkEmailValidity(email);
+						if(isValid){
+							addFriendSetValues('-', '-', email, userloggedin);
+							addFriendDbCreate();
+						}else{
+							setPrevPage("myimportfriend.html");
+							confirmationIndex("Sorry", "Entered email is not valid");	
+						}
+						email = '';
+						break;
+					}else{
+						email += value[i];
+					}
+				}
+				
+				if(i == len){
+					var isValid = checkEmailValidity(email);
+					if(isValid){
+						addFriendSetValues('-', '-', email, userloggedin);
+						addFriendDbCreate();
+					}else{
+						setPrevPage("myimportfriend.html");
+						confirmationIndex("Sorry", "Entered email is not valid");	
+					}
+					email = '';
+				}
+			}	
+		}
+		
+		function directImportContinued(heading, msg){
+			if(i == len){
+				confirmationIndex(heading, msg);
+			}else{
+				directImport();
+			}
+		}
+		
+		function checkEmailValidity(email){
+			var length = email.length;
+			var j=0;
+			for(j=0;j<length;j++){
+				if(email[j] == '@'){
+					emailFlag1 = 1;
+				}else if(email[j] == '.' && emailFlag1 == 1){		//there should be a '.' after '@'.  e.g. sr@gmail.com			
+					emailFlag2 = 1;
+				}
+			}
+			
+			if(emailFlag1 == 1 && emailFlag2 == 1){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function add_checked_friends(){
+			//alert("noOfUsers: "+googleFriendsCounter);
+			reasonForAddFriend = "importGoogle";
+			if(counter<googleFriendsCounter){
+				var ischecked = $("#"+counter).is(":checked");
+				console.log(counter+": "+ischecked);
+				
+				if(ischecked){
+					name = $("#name"+counter).text();
+					mobile = $("#mobile"+counter).text();
+					email = $("#email"+counter).text();
+					console.log("name: "+name+" mobile: "+mobile+" email: "+email);
+					
+					addFriendSetValues(name, mobile, email, userloggedin);
+					addFriendDbCreate();
+				}else{
+					add_checked_friends_continued();		//basically just increment and call the same function again
+				}
+			}else{
+				confirmationIndex("Successful", "Friends Imported");
+			}
+		}
+		
+		function add_checked_friends_continued(){
+			counter++;
+			add_checked_friends();
+		}
+		
+		
+		
+		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
+			var header = document.getElementById("myModalLabel");
+			header.innerHTML = heading;
 			var div = document.getElementById("modalMsg");
 			div.innerHTML = msg;
 			
@@ -195,9 +448,13 @@
 		}
 		
 		function redirectToHomePage(){
-			window.location.replace("myindex.html");
+			window.location.replace("index.html");
 		}
-		
+
+		function redirectToPrevPage(){
+			prevPage = getPrevPage("prevPage");
+			window.location.replace(prevPage);
+		}		
 		
 		function look_good(){
 			var fbwidth = $('#importfb').width();

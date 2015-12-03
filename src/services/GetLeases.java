@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -23,6 +25,7 @@ public class GetLeases extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
 	private Response res = new Response();
+	private ErrorCat e = new ErrorCat();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -49,6 +52,7 @@ public class GetLeases extends HttpServlet {
 			row.put("reqUserId", "0");
 			row.put("itemId", "0");
 			row.put("userId", "0");
+			row.put("status", "0");
 			
 			obj.put("row", row);
 			
@@ -56,7 +60,7 @@ public class GetLeases extends HttpServlet {
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
-			if(Integer.parseInt(res.getCode()) == 18 || Integer.parseInt(res.getCode()) == 19){
+			if(res.getIntCode() == e.FLS_SUCCESS){
 				json.put("Code", "FLS_SUCCESS");
 				json.put("Message", res.getMessage());
 				json.put("Id", res.getId());

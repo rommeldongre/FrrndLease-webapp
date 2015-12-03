@@ -14,7 +14,7 @@ import pojos.ItemsModel;
 
 public class Items extends Connect {
 	
-	private String operation,category,leaseTerm,userId, status, title, description, message,Id=null;
+	private String operation,category,leaseTerm,userId, status, title, description, message,Id=null,image;
 	private int leaseValue,id,token,Code;
 	private ItemsModel im;
 	private Response res = new Response();
@@ -54,7 +54,7 @@ public class Items extends Connect {
 				System.out.println(token);
 				GetNext();
 			} catch (JSONException e) {
-				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			
@@ -66,7 +66,7 @@ public class Items extends Connect {
 				token = obj.getInt("token");
 				GetPrevious();
 			} catch (JSONException e) {
-				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			break;
@@ -77,7 +77,7 @@ public class Items extends Connect {
 				token = obj.getInt("token");
 				BrowseN();
 			} catch (JSONException e) {
-				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			break;
@@ -88,7 +88,7 @@ public class Items extends Connect {
 				token = obj.getInt("token");
 				BrowseP();
 			} catch (JSONException e) {
-				res.setData(202, String.valueOf(token), "JSON Data not parsed/found");
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			break;
@@ -101,10 +101,22 @@ public class Items extends Connect {
 		case "deletewish" :
 			System.out.println("Delete Wishlist operation is selected");
 			DeleteWishlist();
-			break;		
+			break;
+		
+		case "searchitem" :
+			System.out.println("Search Item operation is selected");
+			try {
+				token = obj.getInt("token");
+				System.out.println(token);
+				SearchItem();
+			} catch (JSONException e) {
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
+				e.printStackTrace();
+			}
+			break;
 			
 		default:
-			res.setData(202, "0", "Invalid Operation!!");;
+			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);;
 			break;
 		}
 		return res;
@@ -118,9 +130,10 @@ public class Items extends Connect {
 		leaseTerm = im.getLeaseTerm();
 		leaseValue = im.getLeaseValue();
 		status = im.getStatus();
+		image = im.getImage();
 		
 		System.out.println("Inside add method...");
-		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status) values (?,?,?,?,?,?,?)";
+		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 		
 		getConnection();
 		try {
@@ -135,6 +148,7 @@ public class Items extends Connect {
 			stmt.setInt(5, leaseValue);
 			stmt.setString(6, leaseTerm);
 			stmt.setString(7, status);
+			stmt.setString(8, image);
 			stmt.executeUpdate();
 			System.out.println("Item added into table");
 			
@@ -151,12 +165,12 @@ public class Items extends Connect {
 				System.out.println(Id);
 			}
 			Id = String.valueOf(id);
-			res.setData(Code, Id, message);
+			res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
 			
 		} catch (SQLException e) {
 			System.out.println("Couldn't create statement");
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		}
 	}
 	
@@ -189,16 +203,16 @@ public class Items extends Connect {
 				Id = String.valueOf(check);
 				message = status;
 				Code = 001;
-				res.setData(Code,Id,message);
+				res.setData(FLS_SUCCESS,Id,FLS_ITEMS_DELETE);
 			}
 			else {
 				System.out.println("Entry not found in database!!");
-				res.setData(201, "0", "Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		}
 	}
 	
@@ -212,9 +226,10 @@ public class Items extends Connect {
 		leaseTerm = im.getLeaseTerm();
 		leaseValue = im.getLeaseValue();
 		status = im.getStatus();
+		image = im.getImage();
 		
 		System.out.println("Inside edit method...");
-		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=? WHERE item_id=? AND item_user_id=? AND item_status=?";
+		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=?, item_image=? WHERE item_id=? AND item_user_id=? AND item_status=?";
 		
 		getConnection();
 		try {
@@ -239,25 +254,26 @@ public class Items extends Connect {
 				stmt.setString(3, description);
 				stmt.setInt(4, leaseValue);
 				stmt.setString(5, leaseTerm);
-				stmt.setInt(6, id);
-				stmt.setString(7, userId);
-				stmt.setString(8, status);
+				stmt.setString(6, image);
+				stmt.setInt(7, id);
+				stmt.setString(8, userId);
+				stmt.setString(9, status);
 				
 				stmt.executeUpdate();
 				message = "operation successfull edited item id : " +id;
 				Id = String.valueOf(check);
 				Code = 002;
-				res.setData(Code,Id,message);
+				res.setData(FLS_SUCCESS,Id,FLS_ITEMS_EDIT);
 			}
 			else {
 				System.out.println("Entry not found in database!!");
-				res.setData(201, "0", "Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 			
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		}
 	}
 	
@@ -291,17 +307,17 @@ public class Items extends Connect {
 				message = "operation successfull edited item id : " +id;
 				Id = String.valueOf(check);
 				Code = 002;
-				res.setData(Code,Id,message);
+				res.setData(FLS_SUCCESS,Id,FLS_ITEMS_EDIT_STAT);
 			}
 			else {
 				System.out.println("Entry not found in database!!");
-				res.setData(201, "0", "Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 			
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		}
 	}
 	
@@ -336,23 +352,23 @@ public class Items extends Connect {
 				//System.out.println(id);
 			}
 			if(check != 0 ) {
-				Code = 003;
+				Code = FLS_SUCCESS;
 				Id = String.valueOf(check);
 			}
 			else {
 				Id = "0";
-				message = "End of Database!!!";
-				Code = 199;
+				message = FLS_END_OF_DB_M;
+				Code = FLS_END_OF_DB;
 			}
 			
 			res.setData(Code, Id, message);
 			
 			status = String.valueOf(id);
 		} catch (SQLException e) {
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(204,"0", "JSON Exception");
+			res.setData(FLS_JSON_EXCEPTION,"0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
@@ -389,12 +405,13 @@ public class Items extends Connect {
 				check = rs.getInt("item_id");
 			}
 			if(check != 0 ) { //checks if result Set is empty
+				Code = FLS_SUCCESS;
 				Id = String.valueOf(check);
-				Code = 004;
 			}
 			else{
-				message = "End of Database!!";
-				Code = 199;
+				Id = "0";
+				message = FLS_END_OF_DB_M;
+				Code = FLS_END_OF_DB;
 			}
 			
 			res.setData(Code, Id, message);
@@ -403,9 +420,9 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		} catch (JSONException e) {
-			res.setData(204,"0", "JSON Exception");
+			res.setData(FLS_JSON_EXCEPTION,"0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
@@ -439,6 +456,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs.getInt("item_lease_value"));
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
+				json.put("image", rs.getString("item_image"));
 				
 				message = json.toString();
 				System.out.println(message);
@@ -446,11 +464,12 @@ public class Items extends Connect {
 			}
 			if(check != 0 ) { //checks if result Set is empty
 				Id = String.valueOf(check);
-				Code = 53;
+				Code = FLS_SUCCESS;
 			}
 			else{
-				message = "End of Database!!";
-				Code = 199;
+				Id = "0";
+				message = FLS_END_OF_DB_M;
+				Code = FLS_END_OF_DB;
 			}
 			
 			res.setData(Code, Id, message);
@@ -459,9 +478,9 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		} catch (JSONException e) {
-			res.setData(204,"0", "JSON Exception");
+			res.setData(FLS_JSON_EXCEPTION,"0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
@@ -495,6 +514,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs.getInt("item_lease_value"));
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
+				json.put("image", rs.getString("item_image"));
 				
 				message = json.toString();
 				System.out.println(message);
@@ -502,11 +522,12 @@ public class Items extends Connect {
 			}
 			if(check != 0 ) { //checks if result Set is empty
 				Id = String.valueOf(check);
-				Code = 54;
+				Code = FLS_SUCCESS;
 			}
 			else{
-				message = "End of Database!!";
-				Code = 199;
+				Id = "0";
+				message = FLS_END_OF_DB_M;
+				Code = FLS_END_OF_DB;
 			}
 			
 			res.setData(Code, Id, message);
@@ -515,9 +536,9 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		} catch (JSONException e) {
-			res.setData(204,"0", "JSON Exception");
+			res.setData(FLS_JSON_EXCEPTION,"0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
@@ -588,7 +609,7 @@ public class Items extends Connect {
 					Id = String.valueOf(check);
 					message = status;
 					Code = 001;
-					res.setData(Code,Id,message);
+					res.setData(FLS_SUCCESS,Id,FLS_ITEMS_DELETE_POSTING);
 					break;
 					
 				case "Leased" :
@@ -596,7 +617,7 @@ public class Items extends Connect {
 					Id = String.valueOf(check);
 					message = status;
 					Code = 215;
-					res.setData(Code,Id,message);
+					res.setData(FLS_ITEMS_DP_LEASED,Id,FLS_ITEMS_DP_LEASED_M);
 					break;
 					
 				default :
@@ -604,18 +625,18 @@ public class Items extends Connect {
 					Id = String.valueOf(check);
 					message = status;
 					Code = 216;
-					res.setData(Code,Id,message);
+					res.setData(FLS_ITEMS_DP_DEFAULT,Id,FLS_ITEMS_DP_DEFAULT_M);
 					break;
 				}
 			}
 			else {
 				System.out.println("Entry not found in database!!");
-				res.setData(201, "0", "Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		}
 	}
 	
@@ -660,16 +681,86 @@ public class Items extends Connect {
 					Id = String.valueOf(check);
 					message = status;
 					Code = 001;
-					res.setData(Code,Id,message);
+					res.setData(FLS_SUCCESS,Id,FLS_ITEMS_DELETE_WISH);
 			}
 			else {
 				System.out.println("Entry not found in database!!");
-				res.setData(201, "0", "Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			res.setData(200, "0", "Couldn't create statement, or couldn't execute a query(SQL Exception)");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}
+	}
+	
+	private void SearchItem() {
+		check = 0;
+		title = im.getTitle();
+		description = im.getDescription();
+		category = im.getCategory();
+		leaseValue = im.getLeaseValue();
+		leaseTerm = im.getLeaseTerm();
+		status = im.getStatus();
+		System.out.println(title+description+category+leaseValue+leaseTerm+token);
+		
+		System.out.println("Inside Search Item method");
+		String sql = "SELECT * FROM items WHERE item_id > ? AND item_name LIKE ? AND item_desc LIKE ? AND item_category LIKE ? AND item_lease_term LIKE ? ORDER BY item_id LIMIT 1";
+		getConnection();
+		
+		try {
+			System.out.println("Creating a statement .....");
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			
+			System.out.println("Statement created. Executing BrowseP query...");
+			stmt.setInt(1, token);
+			stmt.setString(2,title);
+			stmt.setString(3, description);
+			stmt.setString(4, category);
+			//stmt.setInt(5, leaseValue);
+			stmt.setString(5, leaseTerm);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			System.out.println("itemId\tName\tDescription\tQuantity");
+			while(rs.next()) {
+				System.out.println("itemId\tName\tDescription\tQuantity");
+				JSONObject json = new JSONObject();
+				json.put("itemId", rs.getInt("item_id"));
+				json.put("title", rs.getString("item_name"));
+				json.put("category", rs.getString("item_category"));
+				json.put("description", rs.getString("item_desc"));
+				json.put("userId", rs.getString("item_user_id"));
+				json.put("leaseValue", rs.getInt("item_lease_value"));
+				json.put("leaseTerm", rs.getString("item_lease_term"));
+				json.put("status", rs.getString("item_status"));
+				json.put("image", rs.getString("item_image"));
+				
+				message = json.toString();
+				System.out.println(message);
+				check = rs.getInt("item_id");
+				break;
+			}
+			if(check != 0 ) { //checks if result Set is empty
+				Id = String.valueOf(check);
+				Code = FLS_SUCCESS;
+			}
+			else{
+				Id = "0";
+				message = FLS_END_OF_DB_M;
+				Code = FLS_END_OF_DB;
+			}
+			
+			res.setData(Code, Id, message);
+			
+			//status = String.valueOf(Id);
+		} catch (SQLException e) {
+			System.out.println("Couldnt create a statement");
+			e.printStackTrace();
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		} catch (JSONException e) {
+			res.setData(FLS_JSON_EXCEPTION,"0", FLS_JSON_EXCEPTION_M);
+			e.printStackTrace();
 		}
 	}
 	/*private void GetMax(){

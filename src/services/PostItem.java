@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -25,16 +27,79 @@ public class PostItem extends HttpServlet {
 	private AdminOpsHandler aoh2 = new AdminOpsHandler();
 	private Response res1 = new Response();
 	private Response res2 = new Response();
+	private ErrorCat e = new ErrorCat();
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json");
-		System.out.println("Inside GET Method");
+		/*response.setContentType("application/json");
+		/*System.out.println("Inside GET Method");
 		
-		doPost(request,response);
+		doPost(request,response);*/
+		System.out.println("Inside POST Method");
+		String table;
+		String Id="0", Message=e.FLS_POST_ITEM_F_M, Code=String.valueOf(e.FLS_POST_ITEM_F);
+		PrintWriter out = response.getWriter();
+		
+		String str = request.getParameter("req");
+		System.out.println(str);
+		//String str2 = request.getParameter("req2");
+		
+		try {
+			JSONObject row = new JSONObject(str);
+			JSONObject obj1 = new JSONObject();
+			table = "items";
+			obj1.put("table", table);
+			obj1.put("operation", "add");
+			obj1.put("row", row);
+			
+			/*JSONObject obj2 = new JSONObject(str2);
+			table2 = obj2.getString("table");
+			System.out.println(table2);*/
+			
+			res1 = aoh1.getInfo(table, obj1);
+			System.out.println(res1.getCode());
+			System.out.println(res1.getId());
+			if(res1.getIntCode() == e.FLS_SUCCESS){
+				System.out.println("Item added to items table..");
+				JSONObject obj2 = new JSONObject();
+				row.put("itemId", Integer.parseInt(res1.getId()));
+				table = "store";
+				obj2.put("table", table);
+				obj2.put("operation", "add");
+				obj2.put("row", row);
+				res2 = aoh2.getInfo(table, obj2);
+				
+				if(res2.getIntCode() == e.FLS_SUCCESS) {
+					Id = res2.getId();
+					Message = e.FLS_POST_ITEM;
+					Code = "FLS_SUCCESS";
+				}
+			}
+			
+			else{
+				System.out.println("Couldn't perform postItem");
+			}
+			
+			JSONObject json = new JSONObject();
+			json.put("Code", Code);
+			json.put("Message", Message);
+			json.put("Id", Id);
+			out.print(json);
+			
+			
+		} catch (JSONException e) {
+			System.out.println("Couldn't parse/retrieve JSON");
+			e.printStackTrace();
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Inside POST Method");
+		
+		response.setContentType("application/json");
+		System.out.println("Inside GET Method");
+		
+		doGet(request,response);
+		
+		/*System.out.println("Inside POST Method");
 		String table;
 		String Id="0", Message="PostItem couldn't be performed..", Code="210";
 		PrintWriter out = response.getWriter();
@@ -50,9 +115,9 @@ public class PostItem extends HttpServlet {
 			obj1.put("operation", "add");
 			obj1.put("row", row);
 			
-			/*JSONObject obj2 = new JSONObject(str2);
-			table2 = obj2.getString("table");
-			System.out.println(table2);*/
+			//JSONObject obj2 = new JSONObject(str2);
+			//table2 = obj2.getString("table");
+			//System.out.println(table2);
 			
 			res1 = aoh1.getInfo(table, obj1);
 			System.out.println(res1.getCode());
@@ -88,7 +153,7 @@ public class PostItem extends HttpServlet {
 		} catch (JSONException e) {
 			System.out.println("Couldn't parse/retrieve JSON");
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 }

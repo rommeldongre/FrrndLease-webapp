@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -23,6 +25,7 @@ public class RequestItem extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
 	private Response res = new Response();
+	private ErrorCat e = new ErrorCat();
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
@@ -51,9 +54,9 @@ public class RequestItem extends HttpServlet {
 			res = aoh.getInfo(table, obj);
 			JSONObject json = new JSONObject();
 			
-			if(Integer.parseInt(res.getCode()) == 25){
+			if(Integer.parseInt(res.getCode()) == e.FLS_SUCCESS){
 				json.put("Code", "FLS_SUCCESS");
-				json.put("Message", "Request added..");
+				json.put("Message", e.FLS_REQUEST_ITEM);
 				json.put("Id", res.getId());
 			}
 			

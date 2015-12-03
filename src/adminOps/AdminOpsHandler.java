@@ -1,5 +1,7 @@
 package adminOps;
 
+import errorCat.ErrorCat;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,7 +9,7 @@ import pojos.*;
 
 import tableOps.*;
 
-public class AdminOpsHandler {
+public class AdminOpsHandler extends ErrorCat{
 	
 	private String table, operation;
 	private JSONObject jsonobj1,jsonobj2;
@@ -114,7 +116,7 @@ public class AdminOpsHandler {
 			
 		default:
 			System.out.println("Table not present..");
-			res.setData(203, "0", "Table not found!!!");
+			res.setData(FLS_INVALID_TABLE_NAME, "0", FLS_INVALID_TABLE_NAME_M);
 			break;
 		}
 	}

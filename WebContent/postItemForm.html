@@ -4,6 +4,7 @@
 <meta charset="ISO-8859-1">
 <title>Post Item Form</title>
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="js/JIC.js"></script>
 <script type="text/javascript">
 	var Id = 0;
 	var Title = null;
@@ -14,6 +15,10 @@
 	var Status = null;
 	var LeaseValue = 0;
 	var Token = 0;
+	//var canvasCtx = document.getElementById("panel").getContext("2d");
+	var canvasCtx = null;
+	var imageFile = null;
+	var url = null;
 	
 	getData = function() {
 		//alert("Inside get Data");
@@ -38,9 +43,41 @@
 		Status = "InStore";
 	}
 	
+	window.onload = function () {
+		canvasCtx = document.getElementById("panel").getContext("2d");
+		
+		document.getElementById("ifile").onchange = function(event) {
+			
+			this.imageFile = event.target.files[0];
+			
+			var reader = new FileReader();
+			reader.onload =  function(event) {
+				var img = new Image();
+				//img.src = event.target.result;
+				img.onload = function() {
+					drawImage(img);
+				}
+				img.src = event.target.result;
+				//img.src = jic.compress(img,40).src;
+				//img.style.display = "block";
+			}
+			reader.readAsDataURL(this.imageFile);
+		}
+	
+		drawImage = function(img) {
+			this.canvasCtx.canvas.width = 500;
+			this.canvasCtx.canvas.height = 500;
+			this.canvasCtx.drawImage(img,0,0,500,500);
+			url = canvasCtx.canvas.toDataURL("image/png");
+			console.log(url);
+		}
+	}
+	
 	postItem = function() {
 		//alert("Inside Add function");
+		
 		getData();
+		//alert(url);
 		//alert("creating a json object")
 		var req = {
 				id:Id,
@@ -50,8 +87,11 @@
 				userId: UserId,
 				leaseValue: LeaseValue,
 				leaseTerm: LeaseTerm,
-				status: Status
+				status: Status,
+				//image: JSON.stringify(url.replace(/^data:image\/(png|jpg);base64,/, ""))
+				image: url
 		};
+		console.log(JSON.stringify(req));
 		//var Req = JSON.parse(JOSNObject);
 		send(req);
 	};
@@ -60,10 +100,12 @@
 		alert("Inside send");
 		$.ajax({
 			url: '/flsv2/PostItem',
-			type: 'get',
+			type: 'post',
 			data: {req : JSON.stringify(req)},
-			contentType:"application/json",
-			dataType:"json",
+			//contentType: false,
+			contentType: "application/x-www-form-urlencoded",
+			//Content-transfer-encoding: base64,
+			dataType: "json",
 			
 			success: function(response) {
 				alert('Working');
@@ -91,6 +133,8 @@
 		User ID : <input type="text" name="userId" id="userId"><br/><br/>
 		Lease Terms : <input type="text" name="leaseTerms" id="leaseTerms"><br/><br/>
 		Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
+		<input type="file" id="ifile"><br/>
+		<canvas id="panel"></canvas><br/><br/>
 		<input type="button" value="Post Item" onclick="postItem()">
 		
 		<h1>OUTPUT</h1>

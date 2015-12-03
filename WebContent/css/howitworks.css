@@ -1,0 +1,33 @@
+html,body{
+	overflow-x: hidden;
+}
+
+#banner{
+	text-align: justify;
+}
+
+hr{
+	border-top: 1px solid black;
+	width: 95%;
+}
+
+#iconimage{
+	width: 50%;
+	height: 50%;
+}
+
+.actionImage{
+	margin-left: 40%;
+}
+
+.headings{
+	margin-left: 40%;
+}
+
+.tasks{
+	text-align: justify;
+}
+
+#topheader{
+	text-align: center;
+}

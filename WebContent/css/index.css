@@ -1,9 +1,158 @@
-#main{
-	margin-bottom: 100px;
+html, body{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background-color: #edefed;
+	overflow-x: hidden;
 }
 
-#subheader{
-	margin-top: -21px;
+#marketingpanel{
+	background-image: url("test.jpg");
+	background-position: relative;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	
+	position: relative;
+	margin:0;
+	padding:0;
+	width: 100%;
+	height: 100%;
+}
+
+#marketingheading{
+	position: relative;
+	display: block;
+	text-align: center;
+	color: white;
+	font-family: 'Happy Monkey', serif;
+}
+
+#marketingline{
+	position: relative;
+	display: block;
+	text-align: center;
+	color: white;
+	/*font-size: 150%;*/
+	font-family: 'Happy Monkey', serif;
+}
+
+#marketingstore{
+	display: block;
+	position: relative;
+}
+
+#storebutton{
+	position: relative;
+	margin-left: 46%;
+}
+
+#marketingsearch{
+	display: block;
+	background-color: black;
+	opacity: 0.7;
+	height: 100px;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+#wishbox{
+	position: absolute;
+	max-width: 600px;
+	width: 90%;
+	bottom: 30px;
+	left: 50%;
+}
+
+#searchbox{
+	position: relative;
+	left: -50%;
+}
+
+#main{
+	background-color: #edefed;
+	
+	position: relative;
+	margin-top: 0;
+	padding:0;
+	width: 100%;
+	height: 100%;
+	/*z-index: 1;*/
+}
+
+#friendstoreline{
+	position: relative;
+	text-align: center;
+	color: #0066ff;
+	font-size: 200%;
+	font-family: 'Happy Monkey', serif;
+	margin-top: 5%;
+}
+
+#categoryfilters{
+	position: relative;
+	margin-top: 3%;
+}
+
+#icon{
+	font-family: 'Happy Monkey', serif;
+	color: white;
+	font-size: 200%;
+}
+
+#header{
+	background-color: transparent;
+	border: none;
+}
+
+#footerpanel{
+	position: relative;
+	background-color: #2b2d2e;
+	color: #bcbcbc;
+	text-align: center;
+	height: 30%;
+}
+
+#footertable{
+	position: relative;
+	text-align: justify;
+	font-family: 'Happy Monkey', serif;
+	font-size: 100%;
+	color: #bcbcbc;
+}
+
+.footerpart{
+	float: left;
+	display: inline;
+	position: relative;
+	width: 100%;
+	text-align: justify;
+	margin-left: 3%;
+}
+
+ul{
+	list-style-type: none;
+}
+
+#footer{
+	background-color: transparent;
+	border: none;
+}
+
+#collapsebutton{
+	border: none;
+}
+
+#collapseline{
+	background-color: white;
+}
+
+#headerfooteroptions{
+	color: white;
+}
+
+#main{
+	margin-bottom: 100px;
 }
 
 #button_top_right{
@@ -16,19 +165,9 @@
 	margin-left: 35%;
 }
 
-@media screen and (max-width: 1000px){
-	#categorybrowsing{
-		position: relative;
-		margin-left: 28%;
-	}
-
-}
-
-@media screen and (max-width: 500px){
-	#categorybrowsing{
-		position: relative;
-		margin-left: -2%;
-	}
+#clearSearchButton{
+	position: relative;
+	margin-left: 35%;
 }
 
 #carouselObject{
@@ -40,29 +179,32 @@
 	max-height: 300px;
 }
 
+.items:hover{
+	cursor: pointer;
+}
+
 #carouselinner{
 	max-height: 300px;
 }
 
-#searchbox{
-	margin-left: 25%;
-	max-width: 600px;
-	width: 100%;
-}
-
-
 @media screen and (max-width: 1000px){
-	#searchbox{
-		margin-left: 10%;
-		max-width: 600px;
-		width: 100%;
-	}	
+	#carouselinner{
+		max-height: 300px;
+	}
+	
+	#categorybrowsing{
+		position: relative;
+		margin-left: 28%;
+	}
 }
 
 @media screen and (max-width: 500px){
-	#searchbox{
-		margin: auto;
-		max-width: 600px;
-		width: 100%;
-	}	
+	#carouselinner{
+		max-height: 250px;
+	}
+	
+	#categorybrowsing{
+		position: relative;
+		margin-left: -2%;
+	}
 }

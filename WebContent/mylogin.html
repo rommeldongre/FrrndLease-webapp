@@ -4,10 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
--->    
-	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="420409134995-9pai2dr3clt5cs03u6e6i6o2vjaeer96.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>   
+	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+	
     <title>Login Page</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -15,8 +16,9 @@
     
 	<!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/index.css" rel="stylesheet">
+	<link href="css/myindex.css" rel="stylesheet">
 	<link href="css/login.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,6 +30,7 @@
   
   <body onload="start()">
 	<div id="main">	
+		
 		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -36,53 +39,42 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand">FriendLease</a>
+					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="index_admin_v2.html"><span class="glyphicon glyphicon-king"></span> Admin</a></li>
-						<!--<li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-						<li><a href="signup.html"><span class="glyphicon glyphicon-user"></span> Signup</a></li>-->
-						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<nav class="navbar navbar-inverse" id="subheader">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar2">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-						<li><a href="myfriends.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+					<ul class="nav navbar-nav navbar-right" id="navbar1right">
+						
+						
+						<li class="dropdown" id="subheader">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span id="salutation"></span> <span class="caret"></span></a>
+							
+							<ul class="dropdown-menu">
+								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+								<li role="separator" class="divider"></li>
+								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							</ul>
+						</li>
+						
 					</ul>
 				</div>
 			</div>
 		</nav>	
 		
 		<div class="container">
-<!--			<div class="row">
-				<div class="col-lg-6 col-md-6 col-sm-6">
-					<div class="g-signin2" data-onsuccess="onSignIn">			
-					</div>
-				</div>
-				<div class="col-lg-6 col-md-6 col-sm-6">
-					<button>			
-					</button>
-				</div>
-			</div>
-	-->
+			<div class="g-signin2" data-onsuccess="onSignIn"></div>			<!--Google login button-->
+			<br/>
+		
 			<form class="form-signin" id="loginform">
 				<h2 class="form-signin-heading">Please Log in</h2>
 				
@@ -119,7 +111,9 @@
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<!--<h4 class="modal-title" id="myModalLabel">-->
+				
+				</h4>
 			  </div>
 			  <div class="modal-body" id="alertModalMsg">
 				
@@ -143,13 +137,15 @@
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<h4 class="modal-title" id="myModalLabel">
+				
+				</h4>
 			  </div>
 			  <div class="modal-body" id="modalMsg">
 				
 			  </div>
 			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
 			  </div>
 			</div>
 		  </div>
@@ -166,11 +162,11 @@
 				</button>
 				<div class="collapse navbar-collapse" id="myNavbarBottom">
 					<ul class="nav navbar-nav navbar-center">
-						<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+						<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+						<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
 					</ul>
 				</div>
 			</div>
@@ -208,43 +204,68 @@
 		
 		});
 
-		function onSignIn(googleUser){					//google signup
-			
-			var profile = googleUser.getBasicProfile();
-			
-			loginemail = profile.getEmail();
-			//console.log('ID: ' + profile.getId()); 	//Do not send to your backend! Use an ID token instead.
-			loginpassword = profile.getId();
-			
-			//loginpassword = 'google';
-			loginDbCreate();		//this function is in the script_admin_v2.js	
+		//google login starts here--------------------------------------------------	
+		function onSignIn(googleUser) {
 		
-		}
+			var profile = googleUser.getBasicProfile();
+			loginpassword = profile.getId();
+			loginemail =  profile.getEmail();
+			
+			// The ID token you need to pass to your backend:
+			//var id_token = googleUser.getAuthResponse().id_token;
+			
+			loginDbCreate();	//this function is in the script_admin_v2.js
+		};
+		//google login ends here---------------------------------------------
 		
 		function loginSuccessful(obj){
 			localStorage.setItem("userloggedin", obj.userId);				//set the "name" of the user who is loggedin
-				
-			var msg = "Login successful";
+			//localStorage.setItem("userLocation", obj.location);
+			
+			var msg = 1;
 			
 			confirmationIndex(msg);
 		}
 		
 		function loginUnsuccessful(str){
-			var msg = "Wrong Username or Password";
+			var msg = -1;
 			
 			confirmationIndex(msg);
 			
 		}
 		
 		function confirmationIndex(msg){			//called from script_admin_v2.js
-			var div = document.getElementById("modalMsg");
-			div.innerHTML = msg;
+			if(msg == -1){
+				setPrevPage("mylogin.html");
+				
+				var heading = document.getElementById("myModalLabel");
+				heading.innerHTML = "Login Failed";
+				
+				var div = document.getElementById("modalMsg");
+				div.innerHTML = "Incorrect username or password";
+			}else{
+				setPrevPage("index.html");
+				
+				var heading = document.getElementById("myModalLabel");
+				heading.innerHTML = "Login Successful";
+				
+				var div = document.getElementById("modalMsg");
+				div.innerHTML = "Welcome back to fRRndLease";
+			}
 			
 			$("#modalTriggerButton").click();
 		}
 		
+		function redirectToPrevPage(){
+			prevPage = getPrevPage();
+			
+			if(prevPage != "mylogin.html"){
+				window.location.replace(prevPage);
+			}
+		}
+		
 		function redirectToHomePage(){
-			window.location.replace("myindex.html");
+			window.location.replace("index.html");
 		}
 	</script>
     

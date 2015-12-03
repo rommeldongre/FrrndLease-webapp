@@ -6,6 +6,8 @@
 <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var Token = 0;
+	var canvasCtx = null;
+	var url = null;
 	
 	Next = function() {
 		//alert("Inside GetNext function");
@@ -30,6 +32,7 @@
 	};
 	
 	send = function(req) {
+		canvasCtx = document.getElementById("panel").getContext("2d");
 		alert("Inside send");
 		$.ajax({
 			url: '/flsv2/GetItemWishlist',
@@ -53,6 +56,19 @@
 					document.getElementById("leaseTerm").value = obj.leaseTerm;
 					document.getElementById("leaseValue1").value = obj.leaseValue;
 					document.getElementById("Status").value = obj.status;
+					url = obj.image;
+					
+					var img = new Image();
+					img.onload = function() {
+						drawImage(img);
+					}
+					img.src = url;
+					
+					drawImage = function(img) {
+						this.canvasCtx.canvas.width = img.width;
+						this.canvasCtx.canvas.height = img.height;
+						this.canvasCtx.drawImage(img,0,0);
+					}
 				}
 				else{
 					document.getElementById("Message").value = response.Message
@@ -87,6 +103,8 @@
 		Lease Terms : <input type="text" name="leaseTerm" id="leaseTerm"><br/><br/>
 		Lease Value : <input type="text" name="leaseValue1" id="leaseValue1"><br/><br/>
 		Status : <input type="text" name="Status" id="Status"><br/><br/>
+		
+		<canvas id="panel"></canvas>
 	</form>
 	
 	<br/>

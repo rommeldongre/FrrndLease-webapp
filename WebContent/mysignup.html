@@ -4,18 +4,22 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--	<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-	<script src="https://apis.google.com/js/platform.js" async defer></script>
--->    
-    <title>Signup Page</title>
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="420409134995-9pai2dr3clt5cs03u6e6i6o2vjaeer96.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>		    			<!--for google signin-->
+	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>		<!--Password encryption-->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
+	
+	<title>Signup Page</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="js/jquery-1.11.3.min.js"></script>
     
 	<!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/index.css" rel="stylesheet">
+	<link href="css/myindex.css" rel="stylesheet">
 	<link href="css/login.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -27,6 +31,7 @@
   
   <body onload="start()">
 	<div id="main">	
+		
 		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -35,59 +40,53 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>                        
 					</button>
-					<a class="navbar-brand">FriendLease</a>
+					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="myindex.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+					<ul class="nav navbar-nav navbar-right" id="navbar1right">
+						
+						
+						<li class="dropdown" id="subheader">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span id="salutation"></span> <span class="caret"></span></a>
+							
+							<ul class="dropdown-menu">
+								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
+								<li role="separator" class="divider"></li>
+								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							</ul>
+						</li>
+						
 					</ul>
 				</div>
 			</div>
 		</nav>
-		<nav class="navbar navbar-inverse" id="subheader">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar2">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar2">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-						<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-						<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-						<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-						<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-						<li><a href="myfriends.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>	
 		
 		<div class="container">
-<!--			<div class="row">
-				<div class="col-lg-6 col-md-6 col-sm-6">
-					<div class="g-signin2" data-onsuccess="onSignIn">			
-					</div>
-				</div>
-				<div class="col-lg-6 col-md-6 col-sm-6">
-					<fb:login-button scope="public_profile,email,user_friends" onlogin="checkLoginState();">
-					</fb:login-button>		
-				</div>
-			</div>
--->			
+			<div class="g-signin2" data-onsuccess="onSignIn"></div>			<!--Google signup button-->
+			<br/>
+			
 			<form class="form-signin" id="signupform">
 				<h2 class="form-signin-heading">Please sign up</h2>
 				
-				<input type="text" id="name" class="form-control" placeholder="Name" required autofocus><br />
-				<input type="email" id="email" class="form-control" placeholder="Email address" required><br />
-				<input type="number" id="mobile" class="form-control" placeholder="Mobile Number" required><br />
-				<input type="text" id="location" class="form-control" placeholder="Location" required><br />
-				<input type="password" id="password" class="form-control" placeholder="Password" required><br />
-				<input type="password" id="retypepassword" class="form-control" placeholder="Retype the Password" required><br />
+				<span style="color:red">*</span><input type="email" id="email" class="form-control" placeholder="Email address" required autofocus><br />
+				<span style="color:red">*</span><input type="password" id="password" class="form-control" placeholder="Password" required><br />
+				<span style="color:red">*</span><input type="password" id="retypepassword" class="form-control" placeholder="Retype the Password" required><br />
+				
+				<input type="text" id="name" class="form-control" placeholder="Name"><br />
+				<input type="text" id="mobile" class="form-control" placeholder="Mobile Number"><br />
+				<input type="text" id="location" class="form-control" placeholder="Location"><br />
+				
 				
 				<span id="newuser">
 				Already have an account? <a href="mylogin.html" id="signup">Login</a>
@@ -121,7 +120,7 @@
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<!--<h4 class="modal-title" id="myModalLabel"></h4>-->
 			  </div>
 			  <div class="modal-body" id="alertModalMsg">
 				
@@ -145,13 +144,15 @@
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				<h4 class="modal-title" id="myModalLabel">
+				
+				</h4>
 			  </div>
 			  <div class="modal-body" id="modalMsg">
 				
 			  </div>
 			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToHomePage()">Close</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
 			  </div>
 			</div>
 		  </div>
@@ -166,11 +167,11 @@
 				</button>
 				<div class="collapse navbar-collapse" id="myNavbarBottom">
 					<ul class="nav navbar-nav navbar-center">
-						<li><a href="#"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+						<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+						<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
 					</ul>
 				</div>
 			</div>
@@ -179,7 +180,7 @@
 	</div>
 	
 	<script type="text/javascript">
-		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword;
+		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, latitude, longitude, coords;
 		
 		function start(){
 			$("#modalTriggerButton").hide();
@@ -187,11 +188,13 @@
 			
 			$('#subheader').hide();		//if logged in as anonymous then don't display subheader, else show the subheader
 			$('#error_row').hide();
+			
+			getLocation();				//to show default location of the user
 		}
 		
 		$("#signupform").submit(function(event){
 			event.preventDefault();						//stop page from reloading
-		
+			
 			$('#error_row').hide();						//just to hide the error on re-submission of the form
 			
 			//get information filled in the form
@@ -202,11 +205,30 @@
 			signuppassword = $("#password").val();
 			signupretypepassword = $("#retypepassword").val();
 			
-			if(name == '') name = null;
-			if(mobile == '') mobile = null;
-			if(location == '') location = null;
+			if(signupname == '') name = null;
+			if(signupmobile == '') mobile = null;
+			if(signuplocation == '') location = null;
 			
-			if(signuppassword != signupretypepassword){			//if password and retypedpassword are different
+			
+			if(signupmobile.length != 10){									//mobile number validation (10 digits and number)
+				var errormsg = document.getElementById("errormsg");
+				var span = document.createElement("span");
+				span.innerHTML = "Must be a 10 digit number";
+				errormsg.appendChild(span);
+				
+				$('#error_row').show();
+				
+				signupmobile = Number(signupmobile);
+				if(isNaN(signupmobile)){
+					var errormsg = document.getElementById("errormsg");
+					var span = document.createElement("span");
+					span.innerHTML = "Must be a number";
+					errormsg.appendChild(span);
+				
+					$('#error_row').show();
+				}
+			}
+			else if(signuppassword != signupretypepassword){			//if password and retypedpassword are different
 			
 				var errormsg = document.getElementById("errormsg");
 				var span = document.createElement("span");
@@ -220,122 +242,104 @@
 			}
 		
 		});
-				
-		function onSignIn(googleUser){					//google signup
-			var profile = googleUser.getBasicProfile();
-			
-			signupname = profile.getName();
-			signupemail = profile.getEmail();
-			//signuppassword = profile.getId();
-			//signupImage = profile.getImageUrl();
-			signuppassword = 'google';
-			//signuppassword = googleUser.getAuthResponse().id_token;
-			
-			signUpDbCreate();		//this function is in the script_admin_v2.js	
-		
-		}	
 
+		//google signup starts here--------------------------------------------------	
+		function onSignIn(googleUser) {
+		
+			var profile = googleUser.getBasicProfile();
+			signuppassword = profile.getId();
+			signupname = profile.getName();
+			signupemail =  profile.getEmail();
+			signuplocation = "";
+			signupmobile = 1001;
+			
+			console.log("ID: " + profile.getId()); 
+			console.log("Name: " + profile.getName());
+			console.log("Image URL: " + profile.getImageUrl());
+			console.log("Email: " + profile.getEmail());
+			
+			// The ID token you need to pass to your backend:
+			//var id_token = googleUser.getAuthResponse().id_token;
+			
+			signUpDbCreate();	//this function is in the script_admin_v2.js
+		};
+		
+		//google signup ends here---------------------------------------------
+		
 		function signupContinued(msg){
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
-			localStorage.setItem("userloggedin", signupemail);				//set the "name" of the user who is loggedin	
+			if(msg != 200){
+				localStorage.setItem("userloggedin", signupemail);				//set the "name" of the user who is loggedin	
+				localStorage.setItem("userLocation", $("#location").val());
+			}
 			
 			confirmationIndex(msg);
 		}
-
-		
-/*		function signOut() {
-			var auth2 = gapi.auth2.getAuthInstance();
-			auth2.signOut().then(function () {
-			console.log('User signed out.');
-			});
-		}	
-*/		
+	
 		function confirmationIndex(msg){			//called from script_admin_v2.js
-			var div = document.getElementById("modalMsg");
-			div.innerHTML = msg;
+			if(msg == 200){
+				setPrevPage("mysignup.html");
+				
+				var heading = document.getElementById("myModalLabel");
+				heading.innerHTML = "Signup Failed";
+				
+				var div = document.getElementById("modalMsg");
+				div.innerHTML = "User Already Exists";
+			}else{
+				setPrevPage("index.html");
+				
+				var heading = document.getElementById("myModalLabel");
+				heading.innerHTML = "Signup Successful";
+				
+				var div = document.getElementById("modalMsg");
+				div.innerHTML = "Welcome to fRRndLease";
+			}
 			
 			$("#modalTriggerButton").click();
 		}
 		
+		function redirectToPrevPage(){
+			prevPage = getPrevPage();
+			
+			if(prevPage != "mysignup.html")
+				window.location.replace(prevPage);
+		}
+		
 		function redirectToHomePage(){
-			window.location.replace("myindex.html");
+			window.location.replace("index.html");
 		}
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		function checkLoginState(){
-			FB.getLoginStatus(function(response) {
-				statusChangeCallback(response);
-			});
-		}
-		
-		function statusChangeCallback(response) {
-			console.log('statusChangeCallback');
-			console.log(response);
-			if (response.status === 'connected') {				// Logged into your app and Facebook.
-				//alert("connected");
-				testAPI();
-			}
-			else if (response.status === 'not_authorized') {	// The person is logged into Facebook, but not your app	
-				//alert("not_authorized");
-				/*var msg = "Please log into this app.";
-				confirmationIndex(msg); */
-			} 
-			else {					// The person is not logged into Facebook, so we're not sure if they are logged into this app or not
-				//alert("else");
-				/*var msg = 'Please log into Facebook.';
-				confirmationIndex(msg);*/
+		//to get current location of the user and show it in the location by default
+		function getLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+			} else { 
+				console.log("Geolocation is not supported by this browser.");
 			}
 		}
 
-		window.fbAsyncInit = function() {
-			FB.init({
-				appId      : '476241882534199',
-				cookie     : true,  	// enable cookies to allow the server to access the session
-				xfbml      : true,  	// parse social plugins on this page
-				version    : 'v2.2' 	// use version 2.2
-			});
+		function showPosition(position) {
+			console.log("Latitude: "+position.coords.latitude+" Longitude: "+position.coords.longitude);
 
-			FB.getLoginStatus(function(response) {
-				statusChangeCallback(response);
-			});
-
-		};
-
-		// Load the SDK asynchronously
-		(function(d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) return;
-			js = d.createElement(s); js.id = id;
-			js.src = "//connect.facebook.net/en_US/sdk.js";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-
-		function testAPI() {
-			//console.log('Welcome!  Fetching your information.... ');
-			FB.api('/me', function(response) {
-				signuppassword = response.id;
-				signupname = response.name;
-				signupemail = response.email;
-				
-				signUpDbCreate();		//this function is in the script_admin_v2.js
-				
+			latitude = position.coords.latitude;
+			longitude = position.coords.longitude;
+			coords = new google.maps.LatLng(latitude, longitude);	
+			
+			var geocoder = new google.maps.Geocoder();
+			var latLng = new google.maps.LatLng(latitude, longitude);
+			geocoder.geocode( { 'latLng': latLng}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					console.log(results[4].formatted_address);
+					$("#location").val(results[4].formatted_address);
+				}else{
+						console.log("Geocode was unsucessfull in detecting your current location");
+					}
 			});
 		}
-		
+			
 	</script>
-    <div id="status">
-	</div>
-	
+
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/index.js"></script>
 	<script type="text/javascript" src="js/script_admin_v2.js"></script>

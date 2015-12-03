@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -31,6 +33,8 @@ public class GrantLease extends HttpServlet {
 	private Response res3 = new Response();
 	private Response res4 = new Response();
 	
+	private ErrorCat e = new ErrorCat();
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
 		System.out.println("Inside GET Method");
@@ -41,7 +45,7 @@ public class GrantLease extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Inside POST Method");
 		String table;
-		String Id="0", Message="Lease Couldn't be granted", Code="220";
+		String Id="0", Message=e.FLS_GRANT_LEASE_N_M, Code=String.valueOf(e.FLS_GRANT_LEASE_N);
 		PrintWriter out = response.getWriter();
 		
 		String str = request.getParameter("req");
@@ -60,7 +64,7 @@ public class GrantLease extends HttpServlet {
 			
 			res1 = aoh1.getInfo(table, obj1); // goes to requests table - edits()
 			System.out.println(res1.getCode());
-			if(res1.getIntCode() == 56){ // 56 is the success code
+			if(res1.getIntCode() == e.FLS_SUCCESS){ // 56 is the success code
 				System.out.println("Request for that item archived in requests table.");
 				JSONObject obj2 = new JSONObject();
 				table = "store";
@@ -73,7 +77,7 @@ public class GrantLease extends HttpServlet {
 				
 				res2 = aoh2.getInfo(table, obj2);// goes to store table - edits()
 				
-				if(res2.getIntCode() == 30) {
+				if(res2.getIntCode() == e.FLS_SUCCESS) {
 					System.out.println("Item entry deleted from store table");
 					JSONObject obj3 = new JSONObject();
 					table = "items";
@@ -89,11 +93,12 @@ public class GrantLease extends HttpServlet {
 					row3.put("leaseValue", 0);
 					row3.put("leaseTerm", "0");
 					row3.put("status", "Leased");
+					row3.put("image", "0");
 					obj3.put("row", row3);
 					
 					res3 = aoh3.getInfo(table, obj3);// goes to items table - editstat()
 					
-					if(res3.getIntCode() == 2) {
+					if(res3.getIntCode() == e.FLS_SUCCESS) {
 						System.out.println("Item status updated to leased");
 						JSONObject obj4 = new JSONObject();
 						table = "leases";
@@ -104,14 +109,15 @@ public class GrantLease extends HttpServlet {
 						row4.put("reqUserId", r.getString("reqUserId"));
 						row4.put("itemId", r.getString("itemId"));
 						row4.put("userId", r.getString("userId"));
+						row4.put("status", "0");
 						
 						obj4.putOnce("row", row4);
 						
 						res4 = aoh4.getInfo(table, obj4);// goes to leases table - add()
 						
-						if(res4.getIntCode() == 15) {
+						if(res4.getIntCode() == e.FLS_SUCCESS) {
 							Code = "FLS_SUCCESS";
-							Message = "Lease Granted";
+							Message = e.FLS_GRANT_LEASE;
 							Id = res4.getId();
 						}
 					}

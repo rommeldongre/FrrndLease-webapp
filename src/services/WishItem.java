@@ -1,5 +1,7 @@
 package services;
 
+import errorCat.ErrorCat;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -22,20 +24,24 @@ public class WishItem extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh1 = new AdminOpsHandler();
 	private AdminOpsHandler aoh2 = new AdminOpsHandler();
+	
 	private Response res1 = new Response();
 	private Response res2 = new Response();
 	
+	private ErrorCat e = new ErrorCat();
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json");
-		System.out.println("Inside GET Method");
 		
-		doPost(request,response);
+		/*System.out.println("Inside GET Method");
+		
+		doPost(request,response);*/
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json");
 		System.out.println("Inside POST Method");
 		String table;
-		String Id="0", Message="WishItem couldn't be performed..", Code="211";
+		String Id="0", Message=e.FLS_WISH_ITEM_F_M, Code=String.valueOf(e.FLS_WISH_ITEM_F);
 		PrintWriter out = response.getWriter();
 		
 		String str = request.getParameter("req");
@@ -50,7 +56,7 @@ public class WishItem extends HttpServlet {
 			
 			res1 = aoh1.getInfo(table, obj1);
 			System.out.println(res1.getCode());
-			if(res1.getIntCode() == 0){
+			if(res1.getIntCode() == e.FLS_SUCCESS){
 				System.out.println("Item added to items table..");
 				JSONObject obj2 = new JSONObject();
 				row.put("itemId", Integer.parseInt(res1.getId()));
@@ -60,10 +66,10 @@ public class WishItem extends HttpServlet {
 				obj2.put("row", row);
 				res2 = aoh2.getInfo(table, obj2);
 				
-				if(res2.getIntCode() == 33) { 
+				if(res2.getIntCode() == e.FLS_SUCCESS) { 
 					System.out.println("Item added to store...");
 					Id = res2.getId();
-					Message = "WishItem Performed successfully..";
+					Message = e.FLS_WISH_ITEM;
 					Code = "FLS_SUCCESS";
 				}
 				else{

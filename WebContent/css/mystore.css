@@ -1,16 +1,43 @@
+body{
+	background-image: url("bluebackground.jpg");
+	background-repeat: repeat;
+	overflow-x: hidden;
+}
+
+#icon{
+	font-family: 'Happy Monkey', serif;
+	color: #0066ff;
+	font-size: 200%;
+}
+
 #main{
 	margin-top: 50px;
 	margin-bottom: 300px;
 }
 
+#mainbackground{
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /*opacity: 0.7;*/
+	
+}
+/*
+#panel{
+	min-width: 200px;
+	height: 200px;
+	max-width: 300px;
+	max-height: 300px;
+}
+*/
 #itemform{
 	margin: auto;
 	width: 100%;
 	min-width: 200px;
-}
-
-#subheader{
-	margin-top: -21px;
 }
 
 #main{
@@ -25,15 +52,26 @@
 	margin-left: 40%;
 	min-width: 150px;
 }	
-/*
-#capturedPicture{
-	width: 100%;
-	height: 400px;
-	background-color: #ffffff;
-	border: 2px solid #d7d7d7; 
-	border-radius: 7px;
+
+.addImport:hover{
+	cursor: pointer;
 }
-*/
+.grant:hover{
+	cursor: pointer;
+}
+.refuse:hover{
+	cursor: pointer;
+}
+.think:hover{
+	cursor: pointer;
+}
+.remove:hover{
+	cursor: pointer;
+}
+.renew:hover{
+	cursor: pointer;
+}
+
 #lease_item{
 	margin-left: 40%;
 	min-width: 150px;
@@ -55,6 +93,11 @@
 }
 
 #delete_item{
+	margin-left: 40%;
+	min-width: 150px;
+}
+
+#cancel{
 	margin-left: 40%;
 	min-width: 150px;
 }
@@ -89,4 +132,9 @@
 		margin-left: 20%;
 		min-width: 150px;
 	}	
+	
+	#cancel{
+		margin-left: 20%;
+		min-width: 150px;
+	}
 }

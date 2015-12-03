@@ -42,7 +42,16 @@ function storeRequestingUser(reqUserId){
 	localStorage.setItem("requestingUser", reqUserId);
 }
 
-function getRequestingUser(reqUserId){
+function getRequestingUser(){
 	var reqUser = localStorage.getItem("requestingUser");
 	return reqUser;
+}
+
+function setPrevPage(prevPage){
+	localStorage.setItem("prevPage",prevPage);
+}
+
+function getPrevPage(){
+	var prevPage = localStorage.getItem("prevPage");
+	return prevPage;
 }

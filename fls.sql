@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 28, 2015 at 08:41 PM
+-- Generation Time: Jul 23, 2015 at 08:27 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.6.8
 
@@ -62,8 +62,9 @@ CREATE TABLE IF NOT EXISTS `items` (
   `item_user_id` varchar(255) DEFAULT NULL,
   `item_lease_value` int(11) DEFAULT NULL,
   `item_lease_term` varchar(255) DEFAULT NULL,
+  `item_image` longtext,
   `item_status` varchar(255) NOT NULL DEFAULT 'Created'
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -73,12 +74,12 @@ CREATE TABLE IF NOT EXISTS `items` (
 
 CREATE TABLE IF NOT EXISTS `leases` (
   `lease_id` int(11) NOT NULL,
-  `lease_requser_id` varchar(255) NOT NULL DEFAULT '',
-  `lease_item_id` varchar(255) NOT NULL DEFAULT '',
-  `lease_user_id` varchar(255) DEFAULT NULL,
+  `lease_requser_id` varchar(255) NOT NULL,
+  `lease_item_id` varchar(255) NOT NULL,
+  `lease_user_id` varchar(255) NOT NULL,
   `lease_status` varchar(20) NOT NULL DEFAULT 'Active',
-  `lease_expiry_date` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+  `lease_expiry_date` varchar(30) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -100,11 +101,11 @@ CREATE TABLE IF NOT EXISTS `leaseterms` (
 
 CREATE TABLE IF NOT EXISTS `requests` (
   `request_id` int(11) NOT NULL,
-  `request_requser_id` varchar(255) NOT NULL DEFAULT '',
-  `request_item_id` varchar(255) NOT NULL DEFAULT '',
-  `request_status` varchar(20) NOT NULL DEFAULT 'Active',
-  `request_date` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+  `request_requser_id` varchar(255) NOT NULL,
+  `request_item_id` varchar(255) NOT NULL,
+  `request_status` varchar(255) NOT NULL DEFAULT 'Active',
+  `request_date` varchar(30) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -166,7 +167,7 @@ ALTER TABLE `items`
 -- Indexes for table `leases`
 --
 ALTER TABLE `leases`
-  ADD PRIMARY KEY (`lease_requser_id`,`lease_item_id`), ADD KEY `lease_id` (`lease_id`);
+  ADD PRIMARY KEY (`lease_id`,`lease_requser_id`,`lease_item_id`);
 
 --
 -- Indexes for table `leaseterms`
@@ -178,7 +179,7 @@ ALTER TABLE `leaseterms`
 -- Indexes for table `requests`
 --
 ALTER TABLE `requests`
-  ADD PRIMARY KEY (`request_requser_id`,`request_item_id`), ADD KEY `request_id` (`request_id`);
+  ADD PRIMARY KEY (`request_id`,`request_requser_id`,`request_item_id`);
 
 --
 -- Indexes for table `store`
@@ -206,17 +207,17 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=79;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=111;
 --
 -- AUTO_INCREMENT for table `leases`
 --
 ALTER TABLE `leases`
-  MODIFY `lease_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `lease_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
