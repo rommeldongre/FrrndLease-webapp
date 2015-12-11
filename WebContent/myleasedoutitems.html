@@ -6,7 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>    
+    <script src="https://apis.google.com/js/platform.js" async defer></script> 
+    
+<!--Loading Animation code CSS & JS Links  -->
+<link href="css/animation.css" type="text/css" rel="stylesheet">
+<script src="js/jquery.js"></script>
+<script src="js/jquery.backstretch.js"></script>
+<script src="js/animation.js"></script>
+<!--Loading Animation code CSS & JS Links ends here  -->   
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>My LeasedOut Items</title>
@@ -28,6 +35,8 @@
   </head>
   
   <body onload="start()">
+   <div id="loader">
+   </div>
 	<div id="main">
 		
 		<!--header starts---------------------------------------->

@@ -10,6 +10,13 @@
 	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>		<!--Password encryption-->
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
 	
+	<!--Loading Animation code CSS & JS Links  -->
+	<link href="css/animation.css" type="text/css" rel="stylesheet">
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.backstretch.js"></script>
+	<script src="js/animation.js"></script>
+	<!--Loading Animation code CSS & JS Links ends here  -->
+	
 	<title>Signup Page</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -30,6 +37,8 @@
   </head>
   
   <body onload="start()">
+  <div id="loader">
+	</div>
 	<div id="main">	
 		
 		<nav class="navbar navbar-default" id="header">
