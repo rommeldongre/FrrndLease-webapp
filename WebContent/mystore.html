@@ -9,6 +9,13 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>    
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
 	
+	<!--Loading Animation code CSS & JS Links  -->
+	<link href="css/animation.css" type="text/css" rel="stylesheet">
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.backstretch.js"></script>
+	<script src="js/animation.js"></script>
+	<!--Loading Animation code CSS & JS Links ends here  -->
+	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Item Details</title>
 
@@ -30,6 +37,8 @@
   </head>
   
   <body onload="start()">
+  <div id="loader">
+	</div>
 	<div id="main">	
 		
 		<nav class="navbar navbar-default" id="header">
@@ -107,7 +116,7 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Category <span class="caret"</span></button>
+										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Category <span class="caret"></span></button>
 										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
 
 										</ul>
@@ -132,7 +141,7 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="lease_term">Lease Term</label><br />
-										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"</span></button>
+										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
 										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
 
 										</ul>
@@ -189,7 +198,7 @@
 						</div>
 					</div>
 						
-					<div id="edit_item_row" class="row">	
+					 <div id="edit_item_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
 							<button id="edit_item" class="btn btn-primary" onclick="edit_item()">Edit Item</button>
 						</div>
@@ -343,7 +352,7 @@
 				$("#description").css("margin-bottom","35%");
 				$("#lease_item_row").css("display","none");
 				$("#request_item_row").css("display","none");
-				$("#add_item").css("margin-bottom","5px");
+				$("#add_item").css("margin-bottom","10px");
 				$("#cancel").css("margin-bottom","35%");
 				$("#edit_item_row").css("display","none");
 				$("#delete_item_row").css("display","none");
