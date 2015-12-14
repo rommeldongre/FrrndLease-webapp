@@ -189,6 +189,29 @@
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
 			userloggedin = localStorage.getItem("userloggedin");
 			
+			if(userloggedin == "" || userloggedin == null){					//this will be required when database is empty
+				userloggedin = "anonymous";
+				localStorage.setItem("userloggedin", userloggedin);
+			}
+			
+			if(userloggedin == "anonymous"){	//if logged in as anonymous then don't display subheader
+				//$('#subheader').hide();		 
+				window.location.replace("mylogin.html");
+			}else{							//else show the subheader, and hide login and signup buttons	
+				$('#subheader').show();			
+				$("#loginoptionmenu").hide();
+				$("#signupoptionmenu").hide();
+				
+				//show "username"
+				var salutation = document.getElementById("salutation");
+				var span = document.createElement("span");
+				
+				span.innerHTML = userloggedin;
+				salutation.appendChild(span);
+				
+			}
+			//end of checking if user is logged in or not
+			
 			itemNextId = 0;
 			wishlist_read();
 			
@@ -196,11 +219,11 @@
 			
 			
 			//show "username"
-				var salutation = document.getElementById("salutation");
+				/*var salutation = document.getElementById("salutation");
 				var span = document.createElement("span");
 				
 				span.innerHTML = userloggedin;
-				salutation.appendChild(span);
+				salutation.appendChild(span);*/
 		}
 		
 		function load_Gapi(){						//for google
