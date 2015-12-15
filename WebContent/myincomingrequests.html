@@ -8,12 +8,16 @@
     <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     
-<!--Loading Animation code CSS & JS Links  -->
-<link href="css/animation.css" type="text/css" rel="stylesheet">
-<script src="js/jquery.js"></script>
-<script src="js/jquery.backstretch.js"></script>
-<script src="js/animation.js"></script>
-<!--Loading Animation code CSS & JS Links ends here  -->    
+	<!--Loading Animation code CSS & JS Links  -->
+	<link href="css/animation.css" type="text/css" rel="stylesheet">
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.backstretch.js"></script>
+	<script src="js/animation.js"></script>
+	<!--Loading Animation code CSS & JS Links ends here  -->    
+	
+	<!-- DropDown list code-->
+	<script src="js/dropdownlist.js"></script>
+	<!-- DropDown list code ends-->
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>My Incoming Requests</title>
@@ -60,20 +64,10 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 							<span id="salutation"></span> <span class="caret"></span></a>
 							
-							<ul class="dropdown-menu">
-								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-								<li role="separator" class="divider"></li>
-								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							<ul class="dropdown-menu" id="dropA">
+							
+							<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
+							
 							</ul>
 						</li>
 						
