@@ -1,5 +1,5 @@
 $(function(){
-            $.get("menu.inc", function(response) {
+            $.get("dynamicdropdown.html", function(response) {
                   $('#dropA').html(response);
 				  applyDynamicBindings('#dropA');
             });
