@@ -19,6 +19,10 @@
     <script src="js/dropdownlist.js"></script>
     <!-- DropDown list code ends-->
 	
+	<!--Check whether user is logged in or not  -->
+	<script src="js/logincheck.js"></script>
+	<!--Check whether user is logged in or not ends here  -->
+	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>My Friends</title>
 
@@ -55,8 +59,6 @@
 					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
-				
-				
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
 						
 						
@@ -193,39 +195,10 @@
 			
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
 			userloggedin = localStorage.getItem("userloggedin");
-			
-			if(userloggedin == "" || userloggedin == null){					//this will be required when database is empty
-				userloggedin = "anonymous";
-				localStorage.setItem("userloggedin", userloggedin);
-			}
-			
-			if(userloggedin == "anonymous"){	//if logged in as anonymous then don't display subheader
-				//$('#subheader').hide();		 
-				window.location.replace("mylogin.html");
-			}else{							//else show the subheader, and hide login and signup buttons	
-				$('#subheader').show();			
-				$("#loginoptionmenu").hide();
-				$("#signupoptionmenu").hide();
-				
-				//show "username"
-				var salutation = document.getElementById("salutation");
-				var span = document.createElement("span");
-				
-				span.innerHTML = userloggedin;
-				salutation.appendChild(span);
-				
-			}
-			//end of checking if user is logged in or not
-			
+	
+            logInCheck();
+	
 			look_good();
-			
-			//show "username"
-			/*
-				var salutation = document.getElementById("salutation");
-				var span = document.createElement("span");
-				
-				span.innerHTML = userloggedin;
-				salutation.appendChild(span);*/
 			
 			itemNextId = '';
 			reasonForGetFriend = 'showTable';
@@ -238,13 +211,6 @@
 				gapi.auth2.init();
 			});
 		}
-		
-		$("#logoutoptionmenu").click(function(){					//when user logs out  
-			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
-			signOutFromGoogle();
-			
-			redirectToHomePage();
-		});
 		
 		function signOutFromGoogle() {					//signout from google
 			var auth2 = gapi.auth2.getAuthInstance();
