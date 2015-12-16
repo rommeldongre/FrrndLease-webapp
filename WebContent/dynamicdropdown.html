@@ -13,15 +13,15 @@
 								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
 								
 								<script>
-								$("#logoutoptionmenu").click(function(){					//when user logs out  
-			                    localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
-			                    signOutFromGoogle();
-			
-                                 redirectToHomePage();
-		                         });
-								 
-								
-								 function redirectToHomePage(){
-			                     window.location.replace('index.html');
-		                          }
+								$("#logoutoptionmenu").click(function() {                   //when user logs out  
+                                        localStorage.setItem("userloggedin", "anonymous");  //userloggedin-> anonymous
+                                            signOutFromGoogle();
+                                        
+                                            redirectToHomePage();
+                                        });
+                                        
+                                        
+								function redirectToHomePage() {
+									window.location.replace('index.html');
+								}
 								</script>
