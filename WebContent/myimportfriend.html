@@ -21,6 +21,20 @@
 	<link href="css/mystore.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
+	<!--Loading Animation code CSS & JS Links  -->
+	<link href="css/animation.css" type="text/css" rel="stylesheet">
+	<script src="js/jquery.backstretch.js"></script>
+	<script src="js/animation.js"></script>
+	<!--Loading Animation code CSS & JS Links ends here  -->
+	
+	<!-- DropDown list code-->
+    <script src="js/dropdownlist.js"></script>
+    <!-- DropDown list code ends-->
+	
+	<!--Check whether user is logged in or not  -->
+	<script src="js/logincheck.js"></script>
+	<!--Check whether user is logged in or not ends here  -->
+	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -30,6 +44,8 @@
   </head>
   
   <body onload="start()">
+  <div id="loader">
+</div>
 	<div id="main">	
 		
 		<nav class="navbar navbar-default">
@@ -49,20 +65,8 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 							<span id="salutation"></span> <span class="caret"></span></a>
 							
-							<ul class="dropdown-menu">
-								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-								<li role="separator" class="divider"></li>
-								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+							<ul class="dropdown-menu" id="dropA">
+								<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
 							</ul>
 						</li>
 						
@@ -205,12 +209,7 @@
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
 			userloggedin = localStorage.getItem("userloggedin");
 			
-			//show "username"
-				var salutation = document.getElementById("salutation");
-				var span = document.createElement("span");
-				
-				span.innerHTML = userloggedin;
-				salutation.appendChild(span);
+			logInCheck();
 			
 			look_good();
 		}

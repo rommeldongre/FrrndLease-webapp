@@ -10,7 +10,7 @@
 	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>		<!--Password encryption-->
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
 	
-	<title>Signup Page</title>
+	><title>Signup Page</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="js/jquery-1.11.3.min.js"></script>
@@ -21,6 +21,12 @@
 	<link href="css/login.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
+	<!--Loading Animation code CSS & JS Links  -->
+	<link href="css/animation.css" type="text/css" rel="stylesheet">
+	<script src="js/jquery.backstretch.js"></script>
+	<script src="js/animation.js"></script>
+	<!--Loading Animation code CSS & JS Links ends here  --
+	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -30,6 +36,8 @@
   </head>
   
   <body onload="start()">
+  <div id="loader">
+	</div>
 	<div id="main">	
 		
 		<nav class="navbar navbar-default" id="header">
