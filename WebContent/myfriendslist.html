@@ -8,9 +8,19 @@
     <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script> 
     
-    <!--Loading Animation code CSS & JS Links  -->
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>My Friends</title>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+	
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/mystore.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+	
+	<!--Loading Animation code CSS & JS Links  -->
     <link href="css/animation.css" type="text/css" rel="stylesheet">
-    <script src="js/jquery.js"></script>
     <script src="js/jquery.backstretch.js"></script>
     <script src="js/animation.js"></script>
     <!--Loading Animation code CSS & JS Links ends here  -->
@@ -22,17 +32,6 @@
 	<!--Check whether user is logged in or not  -->
 	<script src="js/logincheck.js"></script>
 	<!--Check whether user is logged in or not ends here  -->
-	
-	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>My Friends</title>
-
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-1.11.3.min.js"></script>
-	
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/mystore.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -68,7 +67,6 @@
 							
 							<ul class="dropdown-menu" id="dropA">
 							<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
-								
 							</ul>
 						</li>
 						
@@ -196,7 +194,7 @@
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
 			userloggedin = localStorage.getItem("userloggedin");
 	
-            logInCheck();
+            logInCheck();  //refer file logincheck.js
 	
 			look_good();
 			

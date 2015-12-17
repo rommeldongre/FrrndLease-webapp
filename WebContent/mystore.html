@@ -9,17 +9,6 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>    
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
 	
-	<!--Loading Animation code CSS & JS Links  -->
-	<link href="css/animation.css" type="text/css" rel="stylesheet">
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery.backstretch.js"></script>
-	<script src="js/animation.js"></script>
-	<!--Loading Animation code CSS & JS Links ends here  -->
-	
-	<!-- DropDown list code-->
-    <script src="js/dropdownlist.js"></script>
-    <!-- DropDown list code ends-->
-	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Item Details</title>
 
@@ -30,6 +19,20 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/mystore.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+	
+	<!--Loading Animation code CSS & JS Links  -->
+	<link href="css/animation.css" type="text/css" rel="stylesheet">
+	<script src="js/jquery.backstretch.js"></script>
+	<script src="js/animation.js"></script>
+	<!--Loading Animation code CSS & JS Links ends here  -->
+	
+	<!-- DropDown list code-->
+    <script src="js/dropdownlist.js"></script>
+    <!-- DropDown list code ends-->
+	
+	<!--Check whether user is logged in or not  -->
+	<script src="js/logincheck.js"></script>
+	<!--Check whether user is logged in or not ends here  -->
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -64,9 +67,7 @@
 							<span id="salutation"></span> <span class="caret"></span></a>
 							
 							<ul class="dropdown-menu" id="dropA">
-							
 							<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
-							
 							</ul>
 						</li>
 						
@@ -310,28 +311,7 @@
 			userloggedin = localStorage.getItem("userloggedin");
 			//userLocation = localStorage.getItem("userLocation");
 			
-			if(userloggedin == "" || userloggedin == null){					//this will be required when database is empty
-				userloggedin = "anonymous";
-				localStorage.setItem("userloggedin", userloggedin);
-			}
-			
-			if(userloggedin == "anonymous"){	//if logged in as anonymous then don't display subheader
-				//$('#subheader').hide();		 
-				window.location.replace("mylogin.html");
-			}else{							//else show the subheader, and hide login and signup buttons	
-				$('#subheader').show();			
-				$("#loginoptionmenu").hide();
-				$("#signupoptionmenu").hide();
-				
-				//show "username"
-				var salutation = document.getElementById("salutation");
-				var span = document.createElement("span");
-				
-				span.innerHTML = userloggedin;
-				salutation.appendChild(span);
-				
-			}
-			//end of checking if user is logged in or not
+			logInCheck();  //refer file logincheck.js  
 			
 			var prevfunc = getPrevFunc();		//to see from which page we have arrived to this page and show buttons accordingly
 			
@@ -424,13 +404,6 @@
 				gapi.auth2.init();
 			});
 		}
-		
-		$("#logoutoptionmenu").click(function(){					//when user logs out  
-			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
-			signOutFromGoogle();
-			
-			redirectToHomePage();
-		});
 		
 		function signOutFromGoogle() {					//signout from google
 			var auth2 = gapi.auth2.getAuthInstance();
