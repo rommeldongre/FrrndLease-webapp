@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Search Item Form</title>
+<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="js/JIC.js"></script>
+<script type="text/javascript">
+	var Title = null;
+	var Category = null;
+	var Description = null;
+	var LeaseTerm = null;
+	var LeaseValue = 0;
+	var Token = 0;
+	//var canvasCtx = document.getElementById("panel").getContext("2d");
+	var canvasCtx = null;
+	var url = null;
+	
+	getData = function() {
+		//alert("Inside get Data");
+		Title = document.getElementById("title").value;
+		if (Title === '') Title = "";
+		
+		Description = document.getElementById("description").value;
+		if (Description === '') Description = "";
+		
+		Category = document.getElementById("category").value;
+		if (Category === '') Category = "";
+		
+		LeaseValue = document.getElementById("leaseValue").value;
+		if (LeaseValue === '') LeaseValue = 0;
+		
+		LeaseTerm = document.getElementById("leaseTerms").value;
+		if (LeaseTerm === '') LeaseTerm = "";
+		
+		Token = document.getElementById("Id").value;
+		if (Token === '') Token = 0;
+	}
+	
+	search = function() {
+		//alert("Inside Add function");
+		
+		getData();
+		//alert(url);
+		//alert("creating a json object")
+		var req = {
+				token: Token,
+				title:Title,
+				description:Description,
+				category: Category,
+				leaseValue: LeaseValue,
+				leaseTerm: LeaseTerm
+		};
+		console.log(JSON.stringify(req));
+		//var Req = JSON.parse(JOSNObject);
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send");
+		$.ajax({
+			url: '/flsv2/SearchItem',
+			type: 'post',
+			data: {req : JSON.stringify(req)},
+			//contentType: false,
+			contentType: "application/x-www-form-urlencoded",
+			//Content-transfer-encoding: base64,
+			dataType: "json",
+			
+			success: function(response) {
+				canvasCtx = document.getElementById("panel").getContext("2d");
+				alert('Working');
+				document.getElementById("Id").value = response.Id;
+				document.getElementById("Code").value = response.Code;
+					
+				if(response.Code == "FLS_SUCCESS") {
+					obj = JSON.parse(response.Message);
+					document.getElementById("itemId").value = obj.itemId;
+					document.getElementById("title1").value = obj.title;
+					document.getElementById("category1").value = obj.category;
+					document.getElementById("description1").value = obj.description;
+					document.getElementById("userId1").value = obj.userId;
+					document.getElementById("leaseTerm").value = obj.leaseTerm;
+					document.getElementById("leaseValue1").value = obj.leaseValue;
+					document.getElementById("Status").value = obj.status;
+					url = obj.image;
+						
+					var img = new Image();
+					img.onload = function() {
+						drawImage(img);
+					}
+					img.src = url;
+						
+					drawImage = function(img) {
+						this.canvasCtx.canvas.width = img.width;
+						this.canvasCtx.canvas.height = img.height;
+						this.canvasCtx.drawImage(img,0,0);
+					}
+				}
+				else{
+					document.getElementById("Message").value = response.Message
+				}
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> SEARCH-ITEM SERVICE FORM</h1>
+	<form>
+		ID : <input type="text" name="Id" id="Id"><br/><br/>
+		Title       : <input type="text" name="title" id="title" ><br/><br/>
+		Category : <input type="text" name="category" id="category" ><br/><br/>
+		Description : <input type="text" name="description" id="description" ><br/><br/>
+		Lease Terms : <input type="text" name="leaseTerms" id="leaseTerms"><br/><br/>
+		Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
+		<input type="button" value="Search Item" onclick="search()">
+		
+		<h1>OUTPUT</h1>
+		ID : <input type="text" name="Id" id="Id"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+		
+		Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		Title : <input type="text" name="title1" id="title1"><br/><br/>
+		Category : <input type="text" name="category1" id="category1"><br/><br/>
+		Description : <input type="text" name="description1" id="description1"><br/><br/>
+		User ID : <input type="text" name="userId1" id="userId1"><br/><br/>
+		Lease Terms : <input type="text" name="leaseTerm" id="leaseTerm"><br/><br/>
+		Lease Value : <input type="text" name="leaseValue1" id="leaseValue1"><br/><br/>
+		Status : <input type="text" name="Status" id="Status"><br/><br/>
+		Image : 
+		<canvas id="panel"></canvas>
+	</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

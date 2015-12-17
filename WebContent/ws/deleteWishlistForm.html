@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Delete Wishlist Form</title>
+<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var Id = 0;
+	var Title = null;
+	var Category = null;
+	var Description = null;
+	var UserId = null;
+	var LeaseTerm = null;
+	var Status = null;
+	var LeaseValue = 0;
+	var Token = 0;
+	
+	getData = function() {
+		//alert("Inside get Data");
+		
+		Id = document.getElementById("id").value;
+		if (Id === '') Id = 0;
+		
+		UserId = document.getElementById("userId").value;
+		if (UserId === '') UserId = null;
+	}
+	
+	deleteData = function() {
+		//alert("Inside delete function");
+		getData();
+		//alert("Creating json object");
+		var req = {
+					id:Id,
+					userId: UserId
+		}
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send");
+		$.ajax({
+			url: '/flsv2/DeleteWishlist',
+			type: 'get',
+			data: {req : JSON.stringify(req)},
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				alert('Working');
+				document.getElementById("Id").value = response.Id;
+				document.getElementById("Code").value = response.Code;
+				document.getElementById("Message").value = response.Message
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> DELETE WISHLIST FORM</h1>
+	<form>
+		Item Id			: <input type="text" name="id" id="id" ><br/><br/>
+		User ID : <input type="text" name="userId" id="userId"><br/><br/>
+		<input type="button" value="Delete" onclick="deleteData()">
+		
+		<h1>OUTPUT</h1>
+		ID : <input type="text" name="Id" id="Id"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+	</form>
+	
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
