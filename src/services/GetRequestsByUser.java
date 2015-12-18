@@ -1,4 +1,4 @@
-package service;
+package services;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,6 +14,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
+import errorCat.ErrorCat;
+import adminOps.AdminOpsHandler;
+import adminOps.Response;
 import app.GetRequestsByUserHandler;
 import app.NotImplementedException;
 import pojos.GetRequestsByUserReqObj;
@@ -23,12 +26,23 @@ import pojos.GetRequestsByUserResObj;
 /**
  * Servlet implementation class GetRequestsByUser
  */
-@WebServlet(description = "List Items from the Store by search criterion.", urlPatterns = { "/GetRequestsByUser" })
+@WebServlet(description = "List Items from the Store By User.", urlPatterns = { "/GetRequestsByUser" })
 public class GetRequestsByUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private GetRequestsByUserHandler grbuh = new GetRequestsByUserHandler();
+	private Response res = new Response();
+	private ErrorCat e = new ErrorCat();
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	
+	protected void doGet(HttpServletRequest httprequest, HttpServletResponse httpresponse) throws ServletException, IOException {
+		httpresponse.setContentType("application/json");
+		System.out.println("Inside GET Method");
+		
+		doPost(httprequest,httpresponse);
+	}
+	
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 				
@@ -45,8 +59,9 @@ public class GetRequestsByUser extends HttpServlet {
 				getResponse = (GetRequestsByUserResObj) GetRequestsByUserHandler.getInstance().process(request);
 				
 				//Service response pojo to JSON
+				/*
 				PrintWriter out = httpresponse.getWriter();
-				JSONObject ResponseObj=new JSONObject();
+				JSONObject ResponseObj=new JSONObject();*/
 				
 				/* sample code. replace with actual mapping from response pojo to JSON 
 				ResponseObj.put("title", getResponse.getTitle());
@@ -61,10 +76,14 @@ public class GetRequestsByUser extends HttpServlet {
 				ResponseObj.put("cookie",getResponse.getCookie());
 				*/
 				
-				httpresponse.setContentType("text/json");				
-				httpresponse.setContentType("application/json; charset=UTF-8");
+				
+				/*httpresponse.setContentType("text/json");				
 				PrintWriter printout = httpresponse.getWriter();
-				printout.print(ResponseObj.toString());		
+				printout.print(response.toString());*/	
+				
+				ObjectMapper mapper1 = new ObjectMapper();
+				mapper1.writeValue(httpresponse.getOutputStream(), getResponse);
+				httpresponse.setContentType("application/json; charset=UTF-8");
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
