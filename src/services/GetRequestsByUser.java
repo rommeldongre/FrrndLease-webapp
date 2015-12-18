@@ -14,6 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
+import connect.Connect;
 import errorCat.ErrorCat;
 import adminOps.AdminOpsHandler;
 import adminOps.Response;
@@ -26,7 +27,8 @@ import pojos.GetRequestsByUserResObj;
 /**
  * Servlet implementation class GetRequestsByUser
  */
-@WebServlet(description = "List Items from the Store By User.", urlPatterns = { "/GetRequestsByUser" })
+/*@WebServlet(description = "List Items from the Store By User.", urlPatterns = { "/GetRequestsByUser" })*/
+@WebServlet("/GetRequestsByUser")
 public class GetRequestsByUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private GetRequestsByUserHandler grbuh = new GetRequestsByUserHandler();

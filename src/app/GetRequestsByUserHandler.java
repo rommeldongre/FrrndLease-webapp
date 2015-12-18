@@ -41,7 +41,7 @@ public class GetRequestsByUserHandler implements AppHandler {
 		
 		GetRequestsByUserReqObj r = (GetRequestsByUserReqObj) req;
 		
-		
+		System.out.println(r);
 		//TODO: Core of the processing takes place here
 		
 		//Create the response
@@ -49,11 +49,11 @@ public class GetRequestsByUserHandler implements AppHandler {
 		
 		//Populate the response
 		
-		response.setTitle("");;
-		response.setDesc("");
+		response.setTitle("Sample");;
+		response.setDesc("Sample Desc");
 		response.setOwneruserId("");
 		response.setRequestId(0);
-		response.setTitle("");
+		response.setDate("1/12/2015");
 		response.setToken(0);
 		
 		
@@ -66,6 +66,7 @@ public class GetRequestsByUserHandler implements AppHandler {
 		// TODO Auto-generated method stub
 	}
 	
+	/*
 	private void getNext() {
 		check = 0;
 		System.out.println("Inside GetNext method");
@@ -109,5 +110,5 @@ public class GetRequestsByUserHandler implements AppHandler {
 			e.printStackTrace();
 		}	
 	}
-
+*/
 }
