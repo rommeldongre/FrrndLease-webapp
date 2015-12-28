@@ -31,7 +31,7 @@ public class GetRequestsByUser extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-				
+			System.out.println("Inside POST method");
 			//HTTP request to Service request pojo 
 			ObjectMapper mapper = new ObjectMapper();
 			GetRequestsByUserReqObj request = mapper.readValue(httprequest.getInputStream(), GetRequestsByUserReqObj.class);
@@ -49,7 +49,7 @@ public class GetRequestsByUser extends HttpServlet {
 				httpresponse.setContentType("text/json");				
 				httpresponse.setContentType("application/json; charset=UTF-8");	
 				mapper.writeValue(out, Response);
-
+				System.out.println("Finished POST method " + Response.getTitle());
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();

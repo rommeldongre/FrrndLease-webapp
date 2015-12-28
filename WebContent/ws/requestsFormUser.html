@@ -8,6 +8,13 @@
 	var ItemId = null;
 	var UserId = null;
 	var Token = null;
+	var Title = null;
+	var Desc = null;
+	var RequestId = null;
+	var OwnerId = null;
+	var RDate = null;
+	var RStatus = null;
+	var Message = null;
 	
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
@@ -15,102 +22,72 @@
 		
 		UserId = document.getElementById("userId").value;
 		if (UserId ==='') UserId = null;
+		
+		Message = document.getElementById("message").value;
+		if (Message ==='') Message = null;
+		
+		Title = document.getElementById("title").value;
+		if (Title ==='') Title = null;
+		
+		Desc = document.getElementById("Desc").value;
+		if (Desc ==='') Desc = null;
+		
+		RequestId = document.getElementById("RequestId").value;
+		if (RequestId ==='') RequestId = null;
+		
+		OwnerId = document.getElementById("OwnerId").value;
+		if (OwnerId ==='') OwnerId = null;
+		
+		RDate = document.getElementById("Rdate").value;
+		if (RDate ==='') RDate = null;
+		
+		RStatus = document.getElementById("Rstatus").value;
+		if (RStatus ==='') RStatus = null;
 	};
-	/*
-	add = function() {
-		alert("inside add function.");
-		getData();
-		var req = {
-				table: "requests",
-				operation: "add",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: null
-		};
-		alert("got data");
-		send(req);
-	};
-	*/
-	/*
-	deleteD = function () {
-		alert("Inside delete function");
-		getData();
-		var req = {
-				table: "requests",
-				operation: "delete",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: null
-		};
-		alert("got data");
-		send(req);
-	};
-	*/
-	
+		
 	submit1 = function() {
 		alert("Inside submit function");
+		getData();
 		Token = document.getElementById("itemId").value;
 		UserId = document.getElementById("userId").value;
 		var req = {
-				requestoruserId: UserId,
-				token: Token,
-		
+				userId: UserId,
+				cookie: Token
 		}
 		send(req);
 	};
 	
-	/*getPrevious = function() {
-		alert("Inside get next function");
-		Token = document.getElementById("itemId").value;
-		var req = {
-				table: "requests",
-				operation: "getPrevious",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: Token
-		}
-		send(req);
-	};*/
-	
 	send = function(req) {
 		alert("Inside send function.");
-		alert(JSON.stringify(req));
 		$.ajax({
 			url: '/flsv2/GetRequestsByUser',
-			type:'get',
+			type:'POST',
 			data: JSON.stringify(req),
 			contentType:"application/json",
-			dataType: "json",
-			
+			dataType: "JSON",
 			success: function(response) {
 				alert("working");
-				document.getElementById("Id").value = response.token;
-				document.getElementById("Code").value = response.Title;
-				document.getElementById("Message").value = response.Desc;
-				document.getElementById("itemId1").value = response.RequestId;
-				document.getElementById("userId1").value = response.Owneruserid;
-				document.getElementById("date").value = response.Date;
-				
-				/*if(parseInt(response.Code) === 27 || parseInt(response.Code) === 28) {
-					obj = JSON.parse(response.Message);
-					document.getElementById("itemId1").value = obj.itemId;
-					document.getElementById("userId1").value = obj.userId;
-					document.getElementById("Message").value = obj.date
+				if(!response.title){
+					alert("Not records exist for this request id");
+					document.getElementById("message").value = "Sorry! No such Record Exists";
+					document.getElementById("title").value = "";
+					document.getElementById("Desc").value = "";
+					document.getElementById("RequestId").value = "";
+					document.getElementById("OwnerId").value = "";
+					document.getElementById("Rdate").value = "";
+					document.getElementById("Rstatus").value = "";
+				}else{
+				    document.getElementById("message").value = "Success! Record Exists";
+					document.getElementById("title").value = response.title;
+					document.getElementById("Desc").value = response.desc;
+					document.getElementById("RequestId").value = response.request_id;
+					document.getElementById("OwnerId").value = response.owner_Id;
+					document.getElementById("Rdate").value = response.request_date;
+					document.getElementById("Rstatus").value = response.request_status;
 				}
-				else{
-					document.getElementById("Message").value = response.Message
-				}*/
 			},
-			
 			error: function() {
 				alert("not working");
-				alert(data);
 			}
 		});
 	};
@@ -118,21 +95,19 @@
 </script>
 </head>
 <body>
-	<h1>My Requests FORM</h1>
+	<h1>My Outgoing Requests FORM</h1>
 	<form>
 		Request Token Id : <input type="text" name="itemId" id="itemId"><br/><br/>
 		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
-		<!--<input type="button" value="Add" onclick="add()">
-		<input type="button" value="Delete" onclick="deleteD()">-->
 		<input type="button" value="Submit" onclick="submit1()">
-		<!--<input type="button" value="Get Previous" onclick="getPrevious()"><br/><br/>-->
 		<h1>OUTPUT</h1>
-		token : <input type="text" name="Id" id="Id"><br/><br/>
-		title : <input type="text" name="code" id="Code"><br/><br/>
-		Description : <input type="text" name="message" id="Message"><br/><br/>
-		Request Id : <input type="text" name="itemId1" id="itemId1"><br/><br/>
-		Owner Id : <input type="text" name="userId1" id="userId1"><br/><br/>
-		Request Date : <input type="text" name="date" id="date"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+		title : <input type="text" name="code" id="title"><br/><br/>
+		Description : <input type="text" name="message" id="Desc"><br/><br/>
+		Request Id : <input type="text" name="itemId1" id="RequestId"><br/><br/>
+		Owner Id : <input type="text" name="userId1" id="OwnerId"><br/><br/>
+		Request Date : <input type="text" name="date" id="Rdate"><br/><br/>
+		Request Status : <input type="text" name="date" id="Rstatus"><br/><br/>
 	</form>
 	<br/>
 	<h3><A href="index.html">INDEX</A></h3>
