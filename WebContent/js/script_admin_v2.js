@@ -33,6 +33,7 @@ var itemId = 0,
 	url = null,
 	prevPage = null,
 	endOfCarousel = 0;
+	userName = null;
 	
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
@@ -402,6 +403,7 @@ function getRequestItem(i){
 		operation: "getNextR",
 		token: itemToken
 	}
+	alert(req);
 	getRequestItemSend(req);
 }
 
@@ -418,7 +420,7 @@ function getRequestItemSend(req){
 			
 			if(response.Code == "FLS_SUCCESS") {
 				obj = JSON.parse(response.Message);
-				
+				alert(response.Id);
 				itemNextRequestId = response.Id;
 				
 				if(reasonForGetRequestItem == 'showRequestTable')	
@@ -1496,3 +1498,47 @@ function loginSend(req){
 
 
 //login ends here------------------------------------------------
+
+//MyOutgoingRequests starts here---------------------------------
+
+function getNextOutItem(i,j){
+	//alert("Inside getNextOutItem function.");
+	if(i == '' || i == undefined)
+		itemToken = 0;
+	
+	itemToken = i;
+	userName = j;
+	
+	var req = {
+		userId: userName,
+		cookie: itemToken
+	}
+	
+	getOutRequest(req);
+}
+
+getOutRequest = function(req) {
+		//alert("Inside send function.");
+		$.ajax({
+			url: '/flsv2/GetRequestsByUser',
+			type:'POST',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType: "JSON",
+			success: function(response) {
+				//alert("working");
+				if(!response.title){
+				}else{
+					console.log(response);
+					getOutItemForRequest(response);
+					//alert(response.title);
+				}
+			},
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+	
+//MyOutgoingRequests ends here---------------------------------
