@@ -403,7 +403,6 @@ function getRequestItem(i){
 		operation: "getNextR",
 		token: itemToken
 	}
-	alert(req);
 	getRequestItemSend(req);
 }
 
@@ -420,7 +419,6 @@ function getRequestItemSend(req){
 			
 			if(response.Code == "FLS_SUCCESS") {
 				obj = JSON.parse(response.Message);
-				alert(response.Id);
 				itemNextRequestId = response.Id;
 				
 				if(reasonForGetRequestItem == 'showRequestTable')	
@@ -1495,7 +1493,6 @@ function loginSend(req){
 			}
 		});
 };
-
 
 //login ends here------------------------------------------------
 
