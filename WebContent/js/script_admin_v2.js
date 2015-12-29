@@ -1540,5 +1540,4 @@ getOutRequest = function(req) {
 		});
 	};
 	
-	
 //MyOutgoingRequests ends here---------------------------------
