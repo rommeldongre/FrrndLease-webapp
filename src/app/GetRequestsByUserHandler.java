@@ -41,7 +41,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		//TODO: Core of the processing takes place here
 		check = null;
 		System.out.println("Inside GetOutgoingrequests method");
-		String sql = "SELECT requests.request_date, requests.request_id, requests.request_status, items.item_name, items.item_desc, items.item_user_id  FROM requests INNER JOIN items on requests.request_item_id = items.item_id WHERE requests.request_requser_id=? AND requests.request_id>? LIMIT 1";
+		String sql = "SELECT requests.request_date, requests.request_id, requests.request_status, items.item_name, items.item_desc, items.item_user_id  FROM requests INNER JOIN items on requests.request_item_id = items.item_id WHERE requests.request_requser_id=? AND requests.request_id>? HAVING requests.request_status='Active' LIMIT 1";
 		
 		getConnection();
 		try {
