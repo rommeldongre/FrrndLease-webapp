@@ -12,7 +12,7 @@ public class Connect extends ErrorCat{
 	
 	//Database user name and password
 	private String name = "root";
-	private String pass = "";
+	private String pass = "root";
 			
 	//Database URL and JDBC Driver
 	private String url = "jdbc:mysql://127.0.0.1:3306/fls";
