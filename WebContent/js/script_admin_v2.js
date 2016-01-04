@@ -450,7 +450,6 @@ function getRequestItemSend(req){
 //rejectRequest begins here------------------------------------------------
 
 function rejectRequestSetValues(i, req){
-	
 	itemId = i;
 	if (itemId === '') itemId = null;
 	
