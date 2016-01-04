@@ -401,7 +401,7 @@ function getRequestItem(i){
 	var req = {
 		operation: "getNextR",
 		token: itemToken
-	};
+	}
 	getRequestItemSend(req);
 }
 
@@ -441,8 +441,6 @@ function getRequestItemSend(req){
 		error: function() {
 			var msg = "Not Working";
 			confirmationIndex(msg);
-			alert(msg);
-			console.log('Oh noes!');
 		}
 	});
 	
