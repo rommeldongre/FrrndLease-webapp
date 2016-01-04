@@ -3,7 +3,6 @@ package pojos;
 import javax.validation.constraints.NotNull;
 
 import java.util.Date;
-//import org.apache.tomcat.util.buf.StringCache;
 
 public class GetRequestsByUserResObj extends ResObj{
 	
