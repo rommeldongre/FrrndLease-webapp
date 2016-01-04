@@ -25,7 +25,7 @@ public class GetRequestsByUserResObj extends ResObj{
 	// ID of request
 	// TBD: need to change type
 	@NotNull
-	int request_id;
+	int request_item_id;
 	
 	// user posting item
 	// TBD: change to user id type
@@ -86,12 +86,12 @@ public class GetRequestsByUserResObj extends ResObj{
 		this.quantity = quantity;
 	}
 
-	public int getRequest_id() {
-		return request_id;
+	public int getRequest_item_id() {
+		return request_item_id;
 	}
 
-	public void setRequest_id(int request_id) {
-		this.request_id = request_id;
+	public void setRequest_item_id(int request_item_id) {
+		this.request_item_id = request_item_id;
 	}
 
 	public String getOwner_Id() {
@@ -134,6 +134,5 @@ public class GetRequestsByUserResObj extends ResObj{
 		Request_date = request_date;
 	}
 
-	
 	
 }

@@ -41,7 +41,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		//TODO: Core of the processing takes place here
 		check = null;
 		System.out.println("Inside GetOutgoingrequests method");
-		String sql = "SELECT requests.request_date, requests.request_id, requests.request_status, items.item_name, items.item_desc, items.item_user_id  FROM requests INNER JOIN items on requests.request_item_id = items.item_id WHERE requests.request_requser_id=? AND requests.request_id>? HAVING requests.request_status='Active' LIMIT 1";
+		String sql = "SELECT requests.request_date, requests.request_item_id, requests.request_status, items.item_name, items.item_desc, items.item_user_id  FROM requests INNER JOIN items on requests.request_item_id = items.item_id WHERE requests.request_requser_id=? AND requests.request_item_id>? HAVING requests.request_status='Active' LIMIT 1";
 		
 		getConnection();
 		try {
@@ -60,14 +60,14 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 				rs.setDesc(rs1.getString("item_desc"));
 				rs.setOwner_Id(rs1.getString("item_user_id"));
 				rs.setRequest_status(rs1.getString("request_status"));
-				rs.setRequest_id(rs1.getInt("request_id"));
+				rs.setRequest_item_id(rs1.getInt("request_item_id"));
 				rs.setRequest_date(rs1.getDate("request_date"));
 				
 				
 				
-				message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_id()+", "+rs.getRequest_date();
+				message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
 				System.out.println("Printing out Resultset: "+message);
-				check = rs1.getString("request_id");
+				check = rs1.getString("request_item_id");
 			}
 			
 			if(check != null ) {
