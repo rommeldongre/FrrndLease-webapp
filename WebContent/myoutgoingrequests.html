@@ -9,7 +9,7 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>My Incoming Requests</title>
+    <title>My Outgoing Requests</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-1.11.3.min.js"></script>
@@ -80,7 +80,7 @@
 		
 		
 		<div class="container-fluid" id="midcontainer">
-			<h2>My Incoming Requests List</h2>
+			<h2>My Outgoing Requests List</h2>
 			
 			<div class="row">
 				<div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -182,7 +182,7 @@
 	
 	
 	<script type="text/javascript">
-		var userloggedin, reqUserId, objUserId, reqDate;
+		var userloggedin, reqUserId, objUserId, reqDate, reasonForGetRequestItem, itemNextId;
 		
 		function start(){
 			
@@ -217,29 +217,48 @@
 		}
 		
 		function request_read(){
+			//reasonForGetRequestItem = 'showoutRequestTable';
+			//reasonForGetItem = 'showoutRequestTable';
 			
-			reasonForGetRequestItem = 'showRequestTable';
-			reasonForGetItem = 'showRequestTable';
-			getRequestItem(itemNextRequestId);
+			getNextOutItem(itemNextRequestId,userloggedin);
 		}
 		
-		function getItemForRequest(obj){
-			var itemno = obj.itemId;
+		function getOutItemForRequest(obj){ // Call populating function and Increment token 
+			
+			var itemno = obj.request_item_id;
 			reqUserId = obj.userId;
+			
+			var owner = obj.owner_Id;
+			var sdate = obj.request_date;
+			var rstatus = obj.request_status;
+			var rtitle = obj.title;
+			
+												//Alerts just to check whether values are being sent from back to front
+			/*alert(itemno);
+			alert(owner);
+			alert(sdate);
+			alert(rstatus);
+			alert(rtitle);*/
 				
+			itemNextRequestId = itemno;
+			showRequestItem(sdate,rtitle,owner);
+			getNextOutItem(itemNextRequestId,userloggedin);
+			
 			reqDate = obj.date;	
 			
-			itemno--;
 			
-			getNextItem(itemno);
+			//itemno--;
+			
+			//getNextItem(itemno);
 			
 		}
 		
-		function showRequestItem(obj){
+		function showRequestItem(i,j,k){
 			userloggedin = localStorage.getItem("userloggedin");
-			
-			if(obj.userId == userloggedin){
-		
+			 var rDate = i;
+			 var rTitle = j;
+			 var iOwner = k;
+			 
 				var table = document.getElementById("requesttable");
 				var row = table.insertRow(1);
 				var cell0 = row.insertCell(0);
@@ -247,117 +266,70 @@
 				var cell2 = row.insertCell(2);
 				var cell3 = row.insertCell(3);
 				
-				var span1 = document.createElement("span");
 				var span2 = document.createElement("span");
-				var span3 = document.createElement("span");
-				var span4 = document.createElement("span");
 				var span5 = document.createElement("span");
-				var span6 = document.createElement("span");
 				
-				span1.className = "grant";
 				span2.className = "refuse";
-				span3.className = "think";
-				span4.className="glyphicon glyphicon-ok";
 				span5.className="glyphicon glyphicon-remove";
-				span6.className="glyphicon glyphicon-repeat";
-				span4.id = itemNextId;
 				span5.id = itemNextRequestId;			//here request id is taken, this is not a mistake.
-				span6.id = itemNextId;
 				
-				span1.appendChild(span4);
 				span2.appendChild(span5);
-				span3.appendChild(span6);
 				
-				cell0.innerHTML = reqDate;
+				cell0.innerHTML = rDate;
 				//cell1.innerHTML = obj.itemId;
-				cell1.innerHTML = obj.title;
-				cell2.innerHTML = reqUserId;
+				cell1.innerHTML = rTitle;
+				cell2.innerHTML = iOwner;
 				
-				cell3.appendChild(span1);
 				cell3.appendChild(span2);
-				cell3.appendChild(span3);
 				
-				cell1.id = obj.itemId;
-				cell2.id = obj.itemId;
+				//cell1.id = obj.itemId;
+				//cell2.id = obj.itemId;
 				
 				cell0.className = "tablecell";
 				cell1.className = "tablecellItem";
 				cell2.className = "tablecellFriend";
-				cell3.className = "tablecellAction";
-			}
-				
-				request_read();	
+				cell3.className = "tablecellAction";	
 		}
 			
 		function showEmptyText(){
 			var h4 = document.getElementById("emptyText");
-			h4.innerHTML = "You have no Incoming Requests. Post more items to the Store";
+			h4.innerHTML = "You have no Outgoing Requests. Post Requests items from the Store";
 		}
 		
 		function storeYourStuff(){
 			storeCurrentFunction('storeYourStuff');
-			setPrevPage("myincomingrequests.html");
+			setPrevPage("myoutgoingrequests.html");
 			
 			window.location.replace("mystore.html");
 		}
 		
-		//grant request to lease---------------------------------
-		$(document).on("click",".grant",function(event){		//grant lease	
-			setPrevPage("myincomingrequests.html");
-			currentWork = 'leaseItem';
-			storeItemToShow(event.target.id);
-			
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to lease the Item?";
-			
-			$("#alertModalTriggerButton").click();	
-			
-		});
-		
-		function leaseItemFromRequest(obj){
-			setPrevPage("myincomingrequests.html");
-			itemNextId = obj.itemId;
-			itemNextId--;
-			
-			reasonForGetItem = 'leaseItem';
-			getNextItem(itemNextId);
-		}
-		
-		function lease_requestedItem(obj){
-			setPrevPage("myincomingrequests.html");
-			storeItemToShow(obj.itemId);
-			
-			leaseItemSetValues();
-		}
-		
-		//---------------------------------------
-		
 		//reject request---------------------------
 		$(document).on("click",".refuse",function(event){		//refust request
-			setPrevPage("myincomingrequests.html");
+			setPrevPage("myoutgoingrequests.html");
 			itemNextId = event.target.id;
-			//itemNextId--;
+			//itemNextId++;
 			reasonForGetRequestItem = 'rejectRequest';
 			
 			currentWork = 'rejectRequest';
 			
 			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to refuse this request?";
-			
+			div.innerHTML = "Are you sure you want to remove this request?";
 			$("#alertModalTriggerButton").click();
 		});
 		
 		
 		
-		function rejectRequest(obj){
-			setPrevPage("myincomingrequests.html");
-			rejectRequestSetValues(obj.itemId, obj.userId);
+		function rejectRequest(itemNextId,userloggedin){
+		    var it = itemNextId;
+			var u = userloggedin;
+			setPrevPage("myoutgoingrequests.html");
+			rejectRequestSetValues(it,u);
 		}
 		
 		//----------------------------------------
 	
-		$(document).on("click",".tablecellItem",function(event){
-			setPrevPage("myincomingrequests.html");
+		/*$(document).on("click",".tablecellItem",function(event){
+			setPrevPage("myoutgoingrequests.html");
 			storeCurrentFunction("viewItemOwner");
 			storeRequestingUser(reqUserId);
 			
@@ -366,26 +338,12 @@
 			storeItemToShow(k);
 			
 			window.location.replace("mystore.html");
-		});
+		});*/
 		
 		function continueWork(){
-			setPrevPage("myincomingrequests.html");
-			
-			if(currentWork == 'deleteItem'){
-				itemId = itemObj.itemId;
-				userId = userloggedin;
-				
-				if(itemId == '')
-					itemId = 0;
-				if(userId == '')
-					userId = null;
-					
-				deleteItemDbCreate();
-			}else if(currentWork == 'leaseItem'){
-				leaseItemSetValues(reqUserId);
-			}else if(currentWork == 'rejectRequest'){
-				getRequestItem(itemNextId);
-			}
+			setPrevPage("myoutgoingrequests.html");
+			//getRequestItem(itemNextId);
+			rejectRequest(itemNextId,userloggedin);
 			
 		}
 		

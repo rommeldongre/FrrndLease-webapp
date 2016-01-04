@@ -397,23 +397,21 @@ function requestItemSend(req){
 
 
 function getRequestItem(i){
-	itemToken = i;	
-	
+	itemToken = i;
 	var req = {
 		operation: "getNextR",
 		token: itemToken
-	}
+	};
 	getRequestItemSend(req);
 }
 
 function getRequestItemSend(req){
-	
 	$.ajax({
 		url: '/flsv2/GetRequests',
-		type:'get',
-		data: {req: JSON.stringify(req)},
+		type:'GET',
+		data: {req : JSON.stringify(req)},
 		contentType:"application/json",
-		dataType: "json",
+		dataType: "JSON",
 		
 		success: function(response) {
 			
@@ -443,6 +441,8 @@ function getRequestItemSend(req){
 		error: function() {
 			var msg = "Not Working";
 			confirmationIndex(msg);
+			alert(msg);
+			console.log('Oh noes!');
 		}
 	});
 	
@@ -452,6 +452,7 @@ function getRequestItemSend(req){
 //rejectRequest begins here------------------------------------------------
 
 function rejectRequestSetValues(i, req){
+	
 	itemId = i;
 	if (itemId === '') itemId = null;
 	
@@ -462,7 +463,6 @@ function rejectRequestSetValues(i, req){
 		itemId: itemId,
 		userId: reqUserId
 	};
-	
 	rejectRequestSend(req);
 }
 
