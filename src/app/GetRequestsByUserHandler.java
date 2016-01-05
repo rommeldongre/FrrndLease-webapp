@@ -41,10 +41,10 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		//TODO: Core of the processing takes place here
 		check = null;
 		System.out.println("Inside GetOutgoingrequests method");
-		String sql = "SELECT requests.request_date, requests.request_item_id, requests.request_status, items.item_name, items.item_desc, items.item_user_id  FROM requests INNER JOIN items on requests.request_item_id = items.item_id WHERE requests.request_requser_id=? AND requests.request_item_id>? HAVING requests.request_status='Active' LIMIT 1";
 		
-		getConnection();
 		try {
+			getConnection();
+			String sql = "SELECT requests.request_date, requests.request_item_id, requests.request_status, items.item_name, items.item_desc, items.item_user_id  FROM requests INNER JOIN items on requests.request_item_id = items.item_id WHERE requests.request_requser_id=? AND requests.request_item_id>? HAVING requests.request_status='Active' LIMIT 1";
 			System.out.println("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
@@ -52,34 +52,31 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 			stmt.setString(1, rq.getUserId());
 			stmt.setInt(2, rq.getCookie());
 			
-			ResultSet rs1 = stmt.executeQuery();
-			while(rs1.next()) {
-				
-				//Populate the response
-				rs.setTitle(rs1.getString("item_name"));
-				rs.setDesc(rs1.getString("item_desc"));
-				rs.setOwner_Id(rs1.getString("item_user_id"));
-				rs.setRequest_status(rs1.getString("request_status"));
-				rs.setRequest_item_id(rs1.getInt("request_item_id"));
-				rs.setRequest_date(rs1.getDate("request_date"));
-				
-				
-				
-				message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
-				System.out.println("Printing out Resultset: "+message);
-				check = rs1.getString("request_item_id");
-			}
+			ResultSet dbResponse = stmt.executeQuery();
 			
-			if(check != null ) {
-				Code = FLS_SUCCESS;
-				Id = check;
-			}
-			
-			else {
-				Id = "0";
-				message = FLS_END_OF_DB_M;
-				Code = FLS_END_OF_DB;
-				rs.setErrorString("End of table reached");
+			if(dbResponse.next()){
+				check = dbResponse.getString("request_item_id");
+				
+				if (check!= null) {
+					//Populate the response
+					rs.setTitle(dbResponse.getString("item_name"));
+					rs.setDesc(dbResponse.getString("item_desc"));
+					rs.setOwner_Id(dbResponse.getString("item_user_id"));
+					rs.setRequest_status(dbResponse.getString("request_status"));
+					rs.setRequest_item_id(dbResponse.getInt("request_item_id"));
+					rs.setRequest_date(dbResponse.getDate("request_date"));
+					
+					message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
+					System.out.println("Printing out Resultset: "+message);
+					Code = FLS_SUCCESS;
+					Id = check;
+				}
+				else {
+					Id = "0";
+					message = FLS_END_OF_DB_M;
+					Code = FLS_END_OF_DB;
+					rs.setErrorString("End of table reached");
+				}
 			}
 			
 			//res.setData(Code,Id,message);
