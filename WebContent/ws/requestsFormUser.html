@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Requests form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var ItemId = null;
+	var UserId = null;
+	var Token = null;
+	var Title = null;
+	var Desc = null;
+	var RequestId = null;
+	var OwnerId = null;
+	var RDate = null;
+	var RStatus = null;
+	var Message = null;
+	
+	getData = function (){
+		ItemId = document.getElementById("itemId").value;
+		if (ItemId === '') ItemId = null;
+		
+		UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+		
+		Message = document.getElementById("message").value;
+		if (Message ==='') Message = null;
+		
+		Title = document.getElementById("title").value;
+		if (Title ==='') Title = null;
+		
+		Desc = document.getElementById("Desc").value;
+		if (Desc ==='') Desc = null;
+		
+		RequestId = document.getElementById("RequestId").value;
+		if (RequestId ==='') RequestId = null;
+		
+		OwnerId = document.getElementById("OwnerId").value;
+		if (OwnerId ==='') OwnerId = null;
+		
+		RDate = document.getElementById("Rdate").value;
+		if (RDate ==='') RDate = null;
+		
+		RStatus = document.getElementById("Rstatus").value;
+		if (RStatus ==='') RStatus = null;
+	};
+		
+	submit1 = function() {
+		alert("Inside submit function");
+		getData();
+		Token = document.getElementById("itemId").value;
+		UserId = document.getElementById("userId").value;
+		var req = {
+				userId: UserId,
+				cookie: Token
+		}
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send function.");
+		$.ajax({
+			url: '/flsv2/GetRequestsByUser',
+			type:'POST',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType: "JSON",
+			success: function(response) {
+				alert("working");
+				if(!response.title){
+					document.getElementById("message").value = "Sorry! No such Record Exists";
+					document.getElementById("title").value = "";
+					document.getElementById("Desc").value = "";
+					document.getElementById("RequestId").value = "";
+					document.getElementById("OwnerId").value = "";
+					document.getElementById("Rdate").value = "";
+					document.getElementById("Rstatus").value = "";
+				}else{
+				    document.getElementById("message").value = "Success! Record Exists";
+					document.getElementById("title").value = response.title;
+					document.getElementById("Desc").value = response.desc;
+					document.getElementById("RequestId").value = response.request_item_id;
+					document.getElementById("OwnerId").value = response.owner_Id;
+					document.getElementById("Rdate").value = response.request_date;
+					document.getElementById("Rstatus").value = response.request_status;
+				}
+			},
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+	<h1>My Outgoing Requests FORM</h1>
+	<form>
+		Request Token Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		<input type="button" value="Submit" onclick="submit1()">
+		<h1>OUTPUT</h1>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+		title : <input type="text" name="code" id="title"><br/><br/>
+		Description : <input type="text" name="message" id="Desc"><br/><br/>
+		Request Id : <input type="text" name="itemId1" id="RequestId"><br/><br/>
+		Owner Id : <input type="text" name="userId1" id="OwnerId"><br/><br/>
+		Request Date : <input type="text" name="date" id="Rdate"><br/><br/>
+		Request Status : <input type="text" name="date" id="Rstatus"><br/><br/>
+	</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
