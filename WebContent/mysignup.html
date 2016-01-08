@@ -9,8 +9,9 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>		    			<!--for google signin-->
 	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>		<!--Password encryption-->
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
+	<script src="js/Facebook_api.js"></script>                                                      <!--for Facebook signin-->
 	
-	><title>Signup Page</title>
+	<title>Signup Page</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="js/jquery-1.11.3.min.js"></script>
@@ -83,6 +84,8 @@
 		<div class="container">
 			<div class="g-signin2" data-onsuccess="onSignIn"></div>			<!--Google signup button-->
 			<br/>
+			<!--FB signup button-->
+			 <button onclick="javascript:facebookSignIn();">Login Facebook</button>
 			
 			<form class="form-signin" id="signupform">
 				<h2 class="form-signin-heading">Please sign up</h2>
@@ -273,6 +276,34 @@
 		};
 		
 		//google signup ends here---------------------------------------------
+		
+		
+		// Facebook signup starts here----------------------------------------
+		
+		function facebookSignIn() {
+		
+            FB.login(function(response) {
+				// handle the response
+				console.log("Response goes here!");
+				console.log(JSON.stringify(response));
+				
+				FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
+					console.log('Successful login for: ' + response.name+" "+response.id+" "+response.email);
+					console.log(JSON.stringify(response));
+					signuppassword = response.id;
+					signupname = response.name;
+					signupemail =  response.email;
+					signuplocation = "";
+					signupmobile = "";
+					
+					signUpDbCreate();	//this function is in the script_admin_v2.js
+				});
+
+            }, {scope: 'email,public_profile'});            
+        }
+		
+		
+		// Facebook signup ends here----------------------------------------
 		
 		function signupContinued(msg){
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices

@@ -8,6 +8,7 @@
     <meta name="google-signin-client_id" content="349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>   
 	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+	<script src="js/Facebook_api.js"></script>                                                      <!--for Facebook signin-->
 	
 	<title>Login Page</title>
 
@@ -83,7 +84,10 @@
 			<div class="g-signin2" data-onsuccess="onSignIn"></div>			<!--Google login button-->
 			<br/>
 		
-			<form class="form-signin" id="loginform">
+		    <!--FB signup button-->
+			<button onclick="javascript:facebookSignIn();">Login Facebook</button>
+
+		<form class="form-signin" id="loginform">
 				<h2 class="form-signin-heading">Please Log in</h2>
 				
 				<input type="email" id="email" class="form-control" placeholder="Email address" required autofocus><br />
@@ -225,6 +229,30 @@
 			loginDbCreate();	//this function is in the script_admin_v2.js
 		};
 		//google login ends here---------------------------------------------
+		
+		
+		//Facebook Login starts here---------------------------------------------
+		
+		function facebookSignIn() {
+		
+            FB.login(function(response) {
+				// handle the response
+				console.log("Response goes here!");
+				console.log(JSON.stringify(response));
+				
+				FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
+					console.log('Successful login for: ' + response.name+" "+response.id+" "+response.email);
+					console.log(JSON.stringify(response));
+					loginpassword = response.id;
+					loginemail =  response.email;
+					
+					loginDbCreate();	//this function is in the script_admin_v2.js
+				});
+
+            }, {scope: 'email,public_profile'});            
+        }
+		
+		//Facebook Login ends here---------------------------------------------
 		
 		function loginSuccessful(obj){
 			localStorage.setItem("userloggedin", obj.userId);				//set the "name" of the user who is loggedin
