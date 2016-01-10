@@ -83,14 +83,19 @@
 		</nav>	
 		
 		<div class="container">
-			<div class="g-signin2" data-onsuccess="onSignIn"></div>	                 <!--Google login button-->
-			<br/>
+			
+			<div class ="google">
+			<div style="float:left;" class="g-signin2" data-onsuccess="onSignIn"></div>	                 <!--Google login button-->
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			
 		    <!--FB signup button-->
-			<a class="btn btn-block btn-social btn-facebook" onclick="facebookSignIn();" style="width:220px;">
+			<div class="facebook" style="float:left;padding-left: 20px">
+			<a class="btn btn-block btn-social btn-facebook" onclick="facebookSignIn();" style="width:220px;;height: 37px">
             <span class="fa fa-facebook"></span> Connect with Facebook
 			</a>
-
+			</div>
+			
 		<form class="form-signin" id="loginform">
 				<h2 class="form-signin-heading">Please Log in</h2>
 				
