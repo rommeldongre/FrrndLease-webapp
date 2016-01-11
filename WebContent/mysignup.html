@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>		    			<!--for google signin-->
+    <script src="https://apis.google.com/js/platform.js"></script>		    			<!--for google signin-->
 	<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>		<!--Password encryption-->
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
+	<script src="js/Facebook_api.js"></script>                                                      <!--for Facebook signin-->
 	
-	><title>Signup Page</title>
+	<title>Signup Page</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="js/jquery-1.11.3.min.js"></script>
@@ -20,6 +21,8 @@
 	<link href="css/myindex.css" rel="stylesheet">
 	<link href="css/login.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+	<link href="css/bootstrap-social.css" rel="stylesheet">
+	<link href="css/font-awesome.css" rel="stylesheet">
 	
 	<!--Loading Animation code CSS & JS Links  -->
 	<link href="css/animation.css" type="text/css" rel="stylesheet">
@@ -81,8 +84,18 @@
 		</nav>
 		
 		<div class="container">
-			<div class="g-signin2" data-onsuccess="onSignIn"></div>			<!--Google signup button-->
-			<br/>
+			
+			<div class ="google">
+			<div style="float:left;" class="g-signin2" data-onsuccess="onSignIn"></div>	                 <!--Google login button-->
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			
+		    <!--FB signup button-->
+			<div class="facebook" style="float:left;padding-left: 20px">
+			<a class="btn btn-block btn-social btn-facebook" onclick="facebookSignIn();" style="width:220px;;height: 37px">
+            <span class="fa fa-facebook"></span> Connect with Facebook
+			</a>
+			</div>
 			
 			<form class="form-signin" id="signupform">
 				<h2 class="form-signin-heading">Please sign up</h2>
@@ -273,6 +286,34 @@
 		};
 		
 		//google signup ends here---------------------------------------------
+		
+		
+		// Facebook signup starts here----------------------------------------
+		
+		function facebookSignIn() {
+		
+            FB.login(function(response) {
+				// handle the response
+				console.log("Response goes here!");
+				console.log(JSON.stringify(response));
+				
+				FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
+					console.log('Successful login for: ' + response.name+" "+response.id+" "+response.email);
+					console.log(JSON.stringify(response));
+					signuppassword = response.id;
+					signupname = response.name;
+					signupemail =  response.email;
+					signuplocation = "";
+					signupmobile = "";
+					
+					signUpDbCreate();	//this function is in the script_admin_v2.js
+				});
+
+            }, {scope: 'email,public_profile'});            
+        }
+		
+		
+		// Facebook signup ends here----------------------------------------
 		
 		function signupContinued(msg){
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
