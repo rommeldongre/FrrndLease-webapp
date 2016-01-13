@@ -110,7 +110,7 @@ public class Users extends Connect {
 			
 			try{
 				FlsSendMail newE = new FlsSendMail();
-				newE.send(userId);
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER);
 				}catch(Exception e){
 				  e.printStackTrace();
 				}
