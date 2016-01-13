@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import connect.Connect;
 import adminOps.Response;
 import pojos.ItemsModel;
+import util.FlsSendMail;
 
 public class Items extends Connect {
 	
@@ -155,6 +156,13 @@ public class Items extends Connect {
 			status = "operation successfull!!!";
 			message = "Item added into table";
 			Code = 000;
+			
+			try{
+				FlsSendMail newE = new FlsSendMail();
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);
+				}catch(Exception e){
+				  e.printStackTrace();
+				}
 			
 			//returning the new id
 			sql = "SELECT MAX(item_id) FROM items";

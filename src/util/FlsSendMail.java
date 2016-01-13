@@ -10,11 +10,10 @@ public class FlsSendMail {
 	
 	private static String user_id;
 	
-	public enum Fls_Enum { FLS_MAIL_REGISTER, FLS_MAIL_POST_ITEM, SUMMER, FALL }
-	public static void send(String userId, Fls_Enum fls_enum) throws Exception {
+	public enum Fls_Enum { FLS_MAIL_REGISTER, FLS_MAIL_POST_ITEM, FLS_MAIL_DELETE_ITEM, FLS_MAIL_GRANT_REQUEST, FLS_MAIL_REJECT_REQUEST, FLS_MAIL_ADD_FRIEND, FLS_MAIL_DELETE_FRIEND, FLS_MAIL_GRANT_lEASE, FLS_MAIL_REJECT_lEASE   }
+	public static void send(String userId, Fls_Enum fls_enum, Object obj) throws Exception {
 		//Fls_Enum = fls_enum;
 		user_id = userId;
-		//Class oclass = obj.getClass();
 		
 	    Email email = new SimpleEmail();
 	    email.setSmtpPort(465);
@@ -26,8 +25,15 @@ public class FlsSendMail {
 	    
 	    switch (fls_enum) {
 		case FLS_MAIL_REGISTER:
+			UsersModel uom = (UsersModel) obj;
 			email.setSubject("SignUp Notification");
-			email.setMsg(" You Have signed up ... :-)");
+			email.setMsg(uom.getFullName()+" You Have signed up ... :-)");
+			break;
+			
+		case FLS_MAIL_POST_ITEM:
+			ItemsModel iom = (ItemsModel) obj;
+			email.setSubject("Item "+iom.getTitle()+" Added to friendlease");
+			email.setMsg("Item "+iom.getTitle()+" belonging to category "+iom.getCategory()+" has been added");
 			break;
 
 		default:
