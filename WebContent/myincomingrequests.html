@@ -182,7 +182,7 @@
 	
 	
 	<script type="text/javascript">
-		var userloggedin, reqUserId, objUserId, reqDate;
+		var userloggedin, reqUserId, objUserId, reqDate,itemNextId,itemNextRequestId ;
 		
 		function start(){
 			
@@ -196,8 +196,8 @@
 			
 			logInCheck();
 			
-			itemNextId = 0;
-			itemNextRequestId = 0;
+			itemNextId = "0";
+			itemNextRequestId = "0";
 			request_read();
 			
 			look_good();
@@ -338,6 +338,7 @@
 			setPrevPage("myincomingrequests.html");
 			itemNextId = event.target.id;
 			itemNextId--;
+			itemNextId = itemNextId.toString();
 			reasonForGetRequestItem = 'rejectRequest';
 			
 			currentWork = 'rejectRequest';
