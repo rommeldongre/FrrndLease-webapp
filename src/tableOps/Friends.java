@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import pojos.FriendsModel;
 import adminOps.Response;
 import connect.Connect;
+import util.FlsSendMail;
 
 public class Friends extends Connect{
 	
@@ -94,6 +95,14 @@ public class Friends extends Connect{
 			Code = 10;
 			Id = friendId;
 			
+			try{
+				FlsSendMail newE = new FlsSendMail();
+				newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm);
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO,fm);
+				}catch(Exception e){
+				  e.printStackTrace();
+				}
+			
 			res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
 		} catch (SQLException e) {
 			System.out.println("Couldn't create statement");
@@ -134,6 +143,14 @@ public class Friends extends Connect{
 				Code = 11;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				
+				try{
+					FlsSendMail newE = new FlsSendMail();
+					newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_FROM,fm);
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_TO,fm);
+					}catch(Exception e){
+					  e.printStackTrace();
+					}
 			}
 			else{
 				System.out.println("Entry not found in database!!");
