@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import connect.Connect;
 import pojos.LeasesModel;
 import adminOps.Response;
+import util.FlsSendMail;
 
 public class Leases extends Connect {
 	
@@ -141,6 +142,14 @@ public class Leases extends Connect {
 			Code = 15;
 			Id = reqUserId;
 			
+			try{
+				FlsSendMail newE = new FlsSendMail();
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM,lm);
+				newE.send(reqUserId,FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO,lm);
+				}catch(Exception e){
+				  e.printStackTrace();
+				}
+			
 			res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
 		} catch (SQLException e) {
 			System.out.println("Couldn't create statement");
@@ -265,6 +274,15 @@ public class Leases extends Connect {
 			Code = 17;
 			Id = check;
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			
+			try{
+				FlsSendMail newE = new FlsSendMail();
+				userId = lm.getUserId();
+				//newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM,lm);
+				newE.send(reqUserId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO,lm);
+				}catch(Exception e){
+				  e.printStackTrace();
+				}
 			
 		} catch (SQLException e) {
 			 res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
