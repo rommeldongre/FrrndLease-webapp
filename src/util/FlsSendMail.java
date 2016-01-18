@@ -14,7 +14,7 @@ public class FlsSendMail {
 						   FLS_MAIL_POST_ITEM, //done
 						   FLS_MAIL_DELETE_ITEM, //done
 						   FLS_MAIL_MAKE_REQUEST_FROM, //done
-						   FLS_MAIL_MAKE_REQUEST_TO, // not done as pojo needs to be filled
+						   FLS_MAIL_MAKE_REQUEST_TO, // done
 						   FLS_MAIL_GRANT_REQUEST_FROM, //same as grant lease from
 						   FLS_MAIL_GRANT_REQUEST_TO, //same as grant lease to
 						   FLS_MAIL_REJECT_REQUEST_FROM, // working partially. Set flag for lease part
@@ -25,7 +25,7 @@ public class FlsSendMail {
 						   FLS_MAIL_DELETE_FRIEND_TO, //done
 						   FLS_MAIL_GRANT_LEASE_FROM,//done
 						   FLS_MAIL_GRANT_LEASE_TO,//done
-						   FLS_MAIL_REJECT_LEASE_FROM, // not done pojo needs to be filled
+						   FLS_MAIL_REJECT_LEASE_FROM, // not done pojo needs to be filled   //done
 						   FLS_MAIL_REJECT_LEASE_TO } //done
 	public static void send(String userId, Fls_Enum fls_enum, Object obj) throws Exception {
 		//Fls_Enum = fls_enum;
@@ -120,26 +120,26 @@ public class FlsSendMail {
 			
 		case FLS_MAIL_REJECT_LEASE_FROM:
 			LeasesModel rflm = (LeasesModel) obj;
-			email.setSubject("Lease granted to user ["+rflm.getReqUserId()+"] Rejected");
-			email.setMsg("You have sucessfully leased an item to ["+rflm.getReqUserId()+"] on Friend Lease - \n \n");      
+			email.setSubject("Lease Cancelled to user ["+rflm.getReqUserId()+"]");
+			email.setMsg("You have closed leased of item having id ["+rflm.getItemId()+"] and leasee ["+rflm.getReqUserId()+"] on Friend Lease - \n \n");      
 			break;
 			
 		case FLS_MAIL_REJECT_LEASE_TO:
 			LeasesModel rtlm = (LeasesModel) obj;
-			email.setSubject("Lease Closed by the other party");
-			email.setMsg("Lease has been closed by the other party for an item on Friend Lease - \n \n");      
+			email.setSubject("Lease Closed by the Owner");
+			email.setMsg("Lease has been closed by the Owner for the item having id ["+rtlm.getItemId()+"] \n \n");      
 			break;
 		 
 		case FLS_MAIL_MAKE_REQUEST_FROM:
 			RequestsModel rfrm = (RequestsModel) obj;
 			email.setSubject("Item Requested");
-			email.setMsg("You have sucessfully Requested an item on Friend Lease - \n \n");      
+			email.setMsg("You have sucessfully Requested an item having id ["+rfrm.getItemId()+"] on Friend Lease - \n \n");      
 			break;
 			
 		case FLS_MAIL_MAKE_REQUEST_TO:
 			ItemsModel irtm = (ItemsModel) obj;
 			email.setSubject("Item Requested");
-			email.setMsg("The Item having id"+irtm.getId()+" has been requested on Friend Lease - \n \n");      
+			email.setMsg("Your Item ["+irtm.getTitle()+"] having id ["+irtm.getId()+"] has been requested on Friend Lease - \n \n");      
 			break;
 			
 		default:
