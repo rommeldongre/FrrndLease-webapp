@@ -12,16 +12,21 @@ import org.json.JSONObject;
 import adminOps.Response;
 import connect.Connect;
 import pojos.RequestsModel;
+import pojos.ItemsModel;
+import util.FlsSendMail;
 
 public class Requests extends Connect{
-	private String check=null, Id=null,token,userId,itemId,operation,message;
+	private String check=null,check1=null,Id=null,token,userId,ownerUserId,itemId,operation,message;
 	private int Code;
+	private boolean outerLeaseFlag;
 	private RequestsModel rm;
+	private ItemsModel im;
 	private Response res = new Response();
 	
 	public Response selectOp(String Operation, RequestsModel rtm, JSONObject obj) {
 		operation = Operation.toLowerCase();
 		rm = rtm;
+		//outerLeaseFlag = tabLeaseFlag[0];
 		
 		switch(operation) {
 		
@@ -107,6 +112,9 @@ public class Requests extends Connect{
 		itemId = rm.getItemId();
 		check = null;
 		
+		check1 = null;
+		ItemsModel im = new ItemsModel();
+		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sdf.format(cal.getTime());
@@ -115,6 +123,8 @@ public class Requests extends Connect{
 		
 		String sql = "insert into requests (request_requser_id,request_item_id,request_date) values (?,?,?)";		 //
 		getConnection();
+		
+		String sql2= "SELECT * FROM items WHERE item_id=?";
 		
 		try {
 			
@@ -131,6 +141,55 @@ public class Requests extends Connect{
 			}
 			
 			if(check == null) {
+				
+				//code for populating item pojo for sending owner email
+				
+				System.out.println("Creating a statement .....");
+				PreparedStatement stmt2 = connection.prepareStatement(sql2);
+				
+				System.out.println("Statement created. Executing select row query...");
+				stmt2.setString(1,itemId);
+				
+				ResultSet dbResponse = stmt2.executeQuery();
+				System.out.println("Query to request pojos fired into requests table");
+				if(dbResponse.next()){
+					check1 = dbResponse.getString("item_id");
+				
+					if (check1!= null) {
+						System.out.println("Inside Nested check1 statement");
+						System.out.println(check1);
+						
+						
+						//Populate the response
+						try {
+							JSONObject obj1 = new JSONObject();
+							obj1.put("title", dbResponse.getString("item_name"));
+							obj1.put("description", dbResponse.getString("item_desc"));
+							obj1.put("category", dbResponse.getString("item_category"));
+							obj1.put("userId", dbResponse.getString("item_user_id"));
+							obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
+							obj1.put("id", dbResponse.getString("item_id"));
+							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
+							obj1.put("status", "InStore");
+							obj1.put("image", " ");
+							
+							im.getData(obj1);
+							System.out.println("Json parsed for FLS_MAIL_MAKE_REQUEST_TO");
+							
+							/*rs.setRequest_status(dbResponse.getString("request_status"));
+							rs.setRequest_item_id(dbResponse.getInt("request_item_id"));
+							rs.setRequest_date(dbResponse.getDate("request_date"));*/
+						} catch (JSONException e) {
+							System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
+							e.printStackTrace();
+						}
+						
+						
+						
+					}
+				}
+				//code for populating item pojo for sending owner email ends here 
+				
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				System.out.println("Statement created. Executing query.....");
@@ -143,6 +202,18 @@ public class Requests extends Connect{
 				message = FLS_SUCCESS_M;
 				Code = FLS_SUCCESS;
 				Id = itemId;
+				
+				try{
+					FlsSendMail newE = new FlsSendMail();
+					//userId = rm.getUserId();
+					ownerUserId = im.getUserId();
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_FROM,rm);
+					System.out.println("Statement FLS_MAIL_MAKE_REQUEST_FROM fired......");
+					newE.send(ownerUserId,FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_TO,im);
+					System.out.println("Statement FLS_MAIL_MAKE_REQUEST_TO fired......");
+					}catch(Exception e){
+					  e.printStackTrace();
+					}
 			}
 			
 			else {
@@ -187,7 +258,7 @@ public class Requests extends Connect{
 				message = "operation successfull deleted request item id : "+itemId;
 				Code = 26;
 				Id = check;
-				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);	
 			}
 			else{
 				System.out.println("Entry not found in database!!");
@@ -248,7 +319,7 @@ public class Requests extends Connect{
 		userId = rm.getUserId();
 		String status = "Archived";
 		check = null;
-		
+		//boolean leaseFlag = lf[0];
 		System.out.println("inside edit method");
 		getConnection();
 		String sql = "UPDATE requests SET request_status=? WHERE request_item_id=?";			//
@@ -274,6 +345,17 @@ public class Requests extends Connect{
 				Code = 56; /////////
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				
+				//if (leaseFlag != true) {
+					try{
+						FlsSendMail newE = new FlsSendMail();
+						userId = rm.getUserId();
+						newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm);
+						}catch(Exception e){
+						  e.printStackTrace();
+						}	
+				//}
+				
 			}
 			else{
 				System.out.println("Entry not found in database!!");
@@ -318,6 +400,15 @@ public class Requests extends Connect{
 				Code = 56;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				
+				try{
+					FlsSendMail newE = new FlsSendMail();
+					userId = rm.getUserId();
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm);
+					//newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm);
+					}catch(Exception e){
+					  e.printStackTrace();
+					}
 			}
 			else{
 				System.out.println("Entry not found in database!!");
