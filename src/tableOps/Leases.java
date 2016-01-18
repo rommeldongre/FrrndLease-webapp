@@ -255,10 +255,52 @@ public class Leases extends Connect {
 		reqUserId = lm.getReqUserId();
 		itemId = lm.getItemId();
 		status = lm.getStatus();
+		check = null;
+		LeasesModel lm1 = new LeasesModel();
 		
 		System.out.println("inside edit method");
 		getConnection();
 		String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?";							//
+		
+		//code for populating lease pojo for sending owner email...
+		String sqlrf ="SELECT * FROM leases WHERE lease_item_id=?";
+		   try {
+			System.out.println("Creating Statement....");
+			PreparedStatement stmtrf = connection.prepareStatement(sqlrf);
+			stmtrf.setString(1, itemId);
+		
+			System.out.println("Statement created. Executing select query on ..." + check);
+			ResultSet dbResponse = stmtrf.executeQuery();
+			
+			if(dbResponse.next()) {
+				check = dbResponse.getString("lease_item_id");
+			
+			
+			if (check!= null) {
+				System.out.println("Inside Nested check statement for FLS_MAIL_REJECT_LEASE_FROM");
+				System.out.println(check);
+				
+				//Populate the response
+				try {
+					JSONObject obj1 = new JSONObject();
+					obj1.put("reqUserId", dbResponse.getString("lease_requser_id"));
+					obj1.put("itemId", dbResponse.getString("lease_item_id"));
+					obj1.put("userId", dbResponse.getString("lease_user_id"));
+					obj1.put("status", dbResponse.getString("lease_status"));
+					
+					lm1.getData(obj1);
+					System.out.println("Json parsed for FLS_MAIL_REJECT_LEASE_FROM");
+				} catch (JSONException e) {
+					System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_REJECT_LEASE_FROM");
+					e.printStackTrace();
+				}
+			}
+	      }
+		   } catch (SQLException e) {
+				 res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+					e.printStackTrace();
+				}
+		//code for populating lease pojo for sending owner email ends here...
 		
 		try {
 			System.out.println("Creating Statement....");
@@ -277,8 +319,8 @@ public class Leases extends Connect {
 			
 			try{
 				FlsSendMail newE = new FlsSendMail();
-				userId = lm.getUserId();
-				//newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM,lm);
+				userId = lm1.getUserId();
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM,lm1);
 				newE.send(reqUserId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO,lm);
 				}catch(Exception e){
 				  e.printStackTrace();
