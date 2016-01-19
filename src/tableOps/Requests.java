@@ -16,17 +16,14 @@ import pojos.ItemsModel;
 import util.FlsSendMail;
 
 public class Requests extends Connect{
-	private String check=null,check1=null,Id=null,token,userId,ownerUserId,itemId,operation,message;
+	private String check=null,Id=null,token,userId,ownerUserId,itemId,operation,message;
 	private int Code;
-	private boolean outerLeaseFlag;
 	private RequestsModel rm;
-	private ItemsModel im;
 	private Response res = new Response();
 	
 	public Response selectOp(String Operation, RequestsModel rtm, JSONObject obj) {
 		operation = Operation.toLowerCase();
 		rm = rtm;
-		//outerLeaseFlag = tabLeaseFlag[0];
 		
 		switch(operation) {
 		
@@ -112,9 +109,6 @@ public class Requests extends Connect{
 		itemId = rm.getItemId();
 		check = null;
 		
-		check1 = null;
-		ItemsModel im = new ItemsModel();
-		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sdf.format(cal.getTime());
@@ -143,7 +137,7 @@ public class Requests extends Connect{
 			if(check == null) {
 				
 				//code for populating item pojo for sending owner email
-				
+				ItemsModel im = new ItemsModel();
 				System.out.println("Creating a statement .....");
 				PreparedStatement stmt2 = connection.prepareStatement(sql2);
 				
@@ -153,9 +147,8 @@ public class Requests extends Connect{
 				ResultSet dbResponse = stmt2.executeQuery();
 				System.out.println("Query to request pojos fired into requests table");
 				if(dbResponse.next()){
-					check1 = dbResponse.getString("item_id");
 				
-					if (check1!= null) {
+					if (dbResponse.getString("item_id")!= null) {
 						System.out.println("Inside Nested check1 statement");
 						System.out.println(check1);
 						
@@ -175,10 +168,6 @@ public class Requests extends Connect{
 							
 							im.getData(obj1);
 							System.out.println("Json parsed for FLS_MAIL_MAKE_REQUEST_TO");
-							
-							/*rs.setRequest_status(dbResponse.getString("request_status"));
-							rs.setRequest_item_id(dbResponse.getInt("request_item_id"));
-							rs.setRequest_date(dbResponse.getDate("request_date"));*/
 						} catch (JSONException e) {
 							System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
 							e.printStackTrace();
@@ -205,7 +194,6 @@ public class Requests extends Connect{
 				
 				try{
 					FlsSendMail newE = new FlsSendMail();
-					//userId = rm.getUserId();
 					ownerUserId = im.getUserId();
 					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_FROM,rm);
 					System.out.println("Statement FLS_MAIL_MAKE_REQUEST_FROM fired......");
@@ -319,7 +307,7 @@ public class Requests extends Connect{
 		userId = rm.getUserId();
 		String status = "Archived";
 		check = null;
-		//boolean leaseFlag = lf[0];
+		
 		System.out.println("inside edit method");
 		getConnection();
 		String sql = "UPDATE requests SET request_status=? WHERE request_item_id=?";			//
@@ -345,17 +333,6 @@ public class Requests extends Connect{
 				Code = 56; /////////
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-				
-				//if (leaseFlag != true) {
-					try{
-						FlsSendMail newE = new FlsSendMail();
-						userId = rm.getUserId();
-						newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm);
-						}catch(Exception e){
-						  e.printStackTrace();
-						}	
-				//}
-				
 			}
 			else{
 				System.out.println("Entry not found in database!!");
@@ -378,17 +355,63 @@ public class Requests extends Connect{
 		String sql = "UPDATE requests SET request_status=? WHERE request_item_id=? AND request_requser_id=?";			//
 		String sql2 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=?";								//
 		
+		String sql1= "SELECT * FROM items WHERE item_id=?";
 		try {
 			System.out.println("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, itemId);
-			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("request_item_id");
+				check = rs.getString("item_id");
 			}
 			
 			if(check != null) {
+				
+               //code for populating item pojo for sending requester email
+				RequestsModel rm1 = new RequestsModel();
+				ItemsModel im = new ItemsModel();
+				System.out.println("Creating a statement .....");
+				PreparedStatement stmt1 = connection.prepareStatement(sql1);
+				
+				System.out.println("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
+				stmt1.setString(1,itemId);
+				stmt1.setString(2,"Active");
+				
+				ResultSet dbResponse = stmt1.executeQuery();
+				System.out.println("Query to request pojos fired into requests table");
+				if(dbResponse.next()){
+				
+					if (dbResponse.getString("request_item_id")!= null) {
+						System.out.println("Inside Nested check1 statement of FLS_MAIL_REJECT_REQUEST_TO");
+						System.out.println(check1);
+						
+						
+						//Populate the response
+						try {
+							JSONObject obj1 = new JSONObject();
+							obj1.put("title", dbResponse.getString("item_name"));
+							obj1.put("description", dbResponse.getString("item_desc"));
+							obj1.put("category", dbResponse.getString("item_category"));
+							obj1.put("userId", dbResponse.getString("item_user_id"));
+							obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
+							obj1.put("id", dbResponse.getString("item_id"));
+							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
+							obj1.put("status", "InStore");
+							obj1.put("image", " ");
+							
+							im.getData(obj1);
+							System.out.println("Json parsed for FLS_MAIL_REJECT_REQUEST_TO");
+						} catch (JSONException e) {
+							System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_REJECT_REQUEST_TO");
+							e.printStackTrace();
+						}
+						
+						
+						
+					}
+				}
+				//code for populating item pojo for sending requester email ends here 
+				
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				System.out.println("Statement created. Executing edit query on ..." + check);
@@ -403,9 +426,8 @@ public class Requests extends Connect{
 				
 				try{
 					FlsSendMail newE = new FlsSendMail();
-					userId = rm.getUserId();
-					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm);
-					//newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm);
+					//ownerId= im.getUserId();
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_TO,rm);
 					}catch(Exception e){
 					  e.printStackTrace();
 					}
