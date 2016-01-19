@@ -150,7 +150,6 @@ public class Requests extends Connect{
 				
 					if (dbResponse.getString("item_id")!= null) {
 						System.out.println("Inside Nested check1 statement");
-						System.out.println(check1);
 						
 						
 						//Populate the response
@@ -383,7 +382,6 @@ public class Requests extends Connect{
 				
 					if (dbResponse.getString("request_item_id")!= null) {
 						System.out.println("Inside Nested check1 statement of FLS_MAIL_REJECT_REQUEST_TO");
-						System.out.println(check1);
 						
 						
 						//Populate the response
