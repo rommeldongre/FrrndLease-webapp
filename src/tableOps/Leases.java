@@ -255,7 +255,6 @@ public class Leases extends Connect {
 		reqUserId = lm.getReqUserId();
 		itemId = lm.getItemId();
 		status = lm.getStatus();
-		check = null;
 		LeasesModel lm1 = new LeasesModel();
 		
 		System.out.println("inside edit method");
@@ -276,7 +275,6 @@ public class Leases extends Connect {
 			
 			if (dbResponse.getString("lease_item_id")!= null) {
 				System.out.println("Inside Nested check statement for FLS_MAIL_REJECT_LEASE_FROM");
-				System.out.println(check);
 				
 				//Populate the response
 				try {
