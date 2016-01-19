@@ -97,13 +97,13 @@ public class FlsSendMail {
 		case FLS_MAIL_REJECT_REQUEST_FROM:
 			RequestsModel dfrm = (RequestsModel) obj;
 			email.setSubject("Request removed");
-			email.setMsg("Item request has been removed sucessfully. \n \n");      
+			email.setMsg("Request for item having id ["+dfrm.getItemId()+"] has been removed as a lease might be granted. \n \n");      
 			break;
 			
 		case FLS_MAIL_REJECT_REQUEST_TO:
 			RequestsModel dtrm = (RequestsModel) obj;
 			email.setSubject("Request removed");
-			email.setMsg("An item request has been removed. \n \n");      
+			email.setMsg("Request of item having id ["+dtrm.getItemId()+"] has been removed by the owner as a lease might be granted. \n \n");      
 			break;
 			
 		case FLS_MAIL_GRANT_LEASE_FROM:
