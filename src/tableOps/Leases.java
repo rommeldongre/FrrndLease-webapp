@@ -273,10 +273,8 @@ public class Leases extends Connect {
 			ResultSet dbResponse = stmtrf.executeQuery();
 			
 			if(dbResponse.next()) {
-				check = dbResponse.getString("lease_item_id");
 			
-			
-			if (check!= null) {
+			if (dbResponse.getString("lease_item_id")!= null) {
 				System.out.println("Inside Nested check statement for FLS_MAIL_REJECT_LEASE_FROM");
 				System.out.println(check);
 				
