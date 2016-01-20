@@ -11,6 +11,8 @@ import adminOps.Response;
 import connect.Connect;
 import pojos.UsersModel;
 
+import util.FlsSendMail;
+
 public class Users extends Connect {
 	private String userId,fullName,mobile,location,auth,message,operation,Id=null,check=null,token;
 	private int Code;
@@ -105,6 +107,14 @@ public class Users extends Connect {
 			message = "Entry added into users table";
 			Code = 37;
 			Id = userId;
+			
+			try{
+				FlsSendMail newE = new FlsSendMail();
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER,um);
+				}catch(Exception e){
+				  e.printStackTrace();
+				}
+			
 			
 			res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
 		} catch (SQLException e) {

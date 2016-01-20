@@ -12,9 +12,11 @@ import org.json.JSONObject;
 import adminOps.Response;
 import connect.Connect;
 import pojos.RequestsModel;
+import pojos.ItemsModel;
+import util.FlsSendMail;
 
 public class Requests extends Connect{
-	private String check=null, Id=null,token,userId,itemId,operation,message;
+	private String check=null,Id=null,token,userId,itemId,operation,message;
 	private int Code;
 	private RequestsModel rm;
 	private Response res = new Response();
@@ -131,6 +133,51 @@ public class Requests extends Connect{
 			}
 			
 			if(check == null) {
+				
+				//code for populating item pojo for sending owner email
+				private String ownerUserId;
+				ItemsModel im = new ItemsModel();
+				String sql2= "SELECT * FROM items WHERE item_id=?";
+				System.out.println("Creating a statement .....");
+				PreparedStatement stmt2 = connection.prepareStatement(sql2);
+				
+				System.out.println("Statement created. Executing select row query...");
+				stmt2.setString(1,itemId);
+				
+				ResultSet dbResponse = stmt2.executeQuery();
+				System.out.println("Query to request pojos fired into requests table");
+				if(dbResponse.next()){
+				
+					if (dbResponse.getString("item_id")!= null) {
+						System.out.println("Inside Nested check1 statement");
+						
+						
+						//Populate the response
+						try {
+							JSONObject obj1 = new JSONObject();
+							obj1.put("title", dbResponse.getString("item_name"));
+							obj1.put("description", dbResponse.getString("item_desc"));
+							obj1.put("category", dbResponse.getString("item_category"));
+							obj1.put("userId", dbResponse.getString("item_user_id"));
+							obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
+							obj1.put("id", dbResponse.getString("item_id"));
+							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
+							obj1.put("status", "InStore");
+							obj1.put("image", " ");
+							
+							im.getData(obj1);
+							System.out.println("Json parsed for FLS_MAIL_MAKE_REQUEST_TO");
+						} catch (JSONException e) {
+							System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
+							e.printStackTrace();
+						}
+						
+						
+						
+					}
+				}
+				//code for populating item pojo for sending owner email ends here 
+				
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				System.out.println("Statement created. Executing query.....");
@@ -143,6 +190,17 @@ public class Requests extends Connect{
 				message = FLS_SUCCESS_M;
 				Code = FLS_SUCCESS;
 				Id = itemId;
+				
+				try{
+					FlsSendMail newE = new FlsSendMail();
+					ownerUserId = im.getUserId();
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_FROM,rm);
+					System.out.println("Statement FLS_MAIL_MAKE_REQUEST_FROM fired......");
+					newE.send(ownerUserId,FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_TO,im);
+					System.out.println("Statement FLS_MAIL_MAKE_REQUEST_TO fired......");
+					}catch(Exception e){
+					  e.printStackTrace();
+					}
 			}
 			
 			else {
@@ -187,7 +245,7 @@ public class Requests extends Connect{
 				message = "operation successfull deleted request item id : "+itemId;
 				Code = 26;
 				Id = check;
-				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);	
 			}
 			else{
 				System.out.println("Entry not found in database!!");
@@ -300,13 +358,58 @@ public class Requests extends Connect{
 			System.out.println("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, itemId);
-			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
 			while(rs.next()) {
-				check = rs.getString("request_item_id");
+				check = rs.getString("item_id");
 			}
 			
 			if(check != null) {
+				
+               //code for populating item pojo for sending requester email
+				RequestsModel rm1 = new RequestsModel();
+				ItemsModel im = new ItemsModel();
+				String sql1= "SELECT * FROM items WHERE item_id=?";
+				System.out.println("Creating a statement .....");
+				PreparedStatement stmt1 = connection.prepareStatement(sql1);
+				
+				System.out.println("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
+				stmt1.setString(1,itemId);
+				stmt1.setString(2,"Active");
+				
+				ResultSet dbResponse = stmt1.executeQuery();
+				System.out.println("Query to request pojos fired into requests table");
+				if(dbResponse.next()){
+				
+					if (dbResponse.getString("request_item_id")!= null) {
+						System.out.println("Inside Nested check1 statement of FLS_MAIL_REJECT_REQUEST_TO");
+						
+						
+						//Populate the response
+						try {
+							JSONObject obj1 = new JSONObject();
+							obj1.put("title", dbResponse.getString("item_name"));
+							obj1.put("description", dbResponse.getString("item_desc"));
+							obj1.put("category", dbResponse.getString("item_category"));
+							obj1.put("userId", dbResponse.getString("item_user_id"));
+							obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
+							obj1.put("id", dbResponse.getString("item_id"));
+							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
+							obj1.put("status", "InStore");
+							obj1.put("image", " ");
+							
+							im.getData(obj1);
+							System.out.println("Json parsed for FLS_MAIL_REJECT_REQUEST_TO");
+						} catch (JSONException e) {
+							System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_REJECT_REQUEST_TO");
+							e.printStackTrace();
+						}
+						
+						
+						
+					}
+				}
+				//code for populating item pojo for sending requester email ends here 
+				
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				System.out.println("Statement created. Executing edit query on ..." + check);
@@ -318,6 +421,14 @@ public class Requests extends Connect{
 				Code = 56;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				
+				try{
+					FlsSendMail newE = new FlsSendMail();
+					//ownerId= im.getUserId();
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_TO,rm);
+					}catch(Exception e){
+					  e.printStackTrace();
+					}
 			}
 			else{
 				System.out.println("Entry not found in database!!");

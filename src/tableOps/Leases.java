@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import connect.Connect;
 import pojos.LeasesModel;
 import adminOps.Response;
+import util.FlsSendMail;
 
 public class Leases extends Connect {
 	
@@ -141,6 +142,14 @@ public class Leases extends Connect {
 			Code = 15;
 			Id = reqUserId;
 			
+			try{
+				FlsSendMail newE = new FlsSendMail();
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM,lm);
+				newE.send(reqUserId,FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO,lm);
+				}catch(Exception e){
+				  e.printStackTrace();
+				}
+			
 			res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
 		} catch (SQLException e) {
 			System.out.println("Couldn't create statement");
@@ -247,9 +256,48 @@ public class Leases extends Connect {
 		itemId = lm.getItemId();
 		status = lm.getStatus();
 		
+		
 		System.out.println("inside edit method");
 		getConnection();
 		String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?";							//
+		
+		//code for populating lease pojo for sending owner email...
+		LeasesModel lm1 = new LeasesModel();
+		String sqlrf ="SELECT * FROM leases WHERE lease_item_id=?";
+		   try {
+			System.out.println("Creating Statement....");
+			PreparedStatement stmtrf = connection.prepareStatement(sqlrf);
+			stmtrf.setString(1, itemId);
+		
+			System.out.println("Statement created. Executing select query on ..." + check);
+			ResultSet dbResponse = stmtrf.executeQuery();
+			
+			if(dbResponse.next()) {
+			
+			if (dbResponse.getString("lease_item_id")!= null) {
+				System.out.println("Inside Nested check statement for FLS_MAIL_REJECT_LEASE_FROM");
+				
+				//Populate the response
+				try {
+					JSONObject obj1 = new JSONObject();
+					obj1.put("reqUserId", dbResponse.getString("lease_requser_id"));
+					obj1.put("itemId", dbResponse.getString("lease_item_id"));
+					obj1.put("userId", dbResponse.getString("lease_user_id"));
+					obj1.put("status", dbResponse.getString("lease_status"));
+					
+					lm1.getData(obj1);
+					System.out.println("Json parsed for FLS_MAIL_REJECT_LEASE_FROM");
+				} catch (JSONException e) {
+					System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_REJECT_LEASE_FROM");
+					e.printStackTrace();
+				}
+			}
+	      }
+		   } catch (SQLException e) {
+				 res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+					e.printStackTrace();
+				}
+		//code for populating lease pojo for sending owner email ends here...
 		
 		try {
 			System.out.println("Creating Statement....");
@@ -265,6 +313,15 @@ public class Leases extends Connect {
 			Code = 17;
 			Id = check;
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			
+			try{
+				FlsSendMail newE = new FlsSendMail();
+				userId = lm1.getUserId();
+				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM,lm1);
+				newE.send(reqUserId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO,lm);
+				}catch(Exception e){
+				  e.printStackTrace();
+				}
 			
 		} catch (SQLException e) {
 			 res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
