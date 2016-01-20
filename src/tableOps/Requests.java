@@ -16,7 +16,7 @@ import pojos.ItemsModel;
 import util.FlsSendMail;
 
 public class Requests extends Connect{
-	private String check=null,Id=null,token,userId,ownerUserId,itemId,operation,message;
+	private String check=null,Id=null,token,userId,itemId,operation,message;
 	private int Code;
 	private RequestsModel rm;
 	private Response res = new Response();
@@ -118,8 +118,6 @@ public class Requests extends Connect{
 		String sql = "insert into requests (request_requser_id,request_item_id,request_date) values (?,?,?)";		 //
 		getConnection();
 		
-		String sql2= "SELECT * FROM items WHERE item_id=?";
-		
 		try {
 			
 			System.out.println("Creating statement.....");
@@ -137,7 +135,9 @@ public class Requests extends Connect{
 			if(check == null) {
 				
 				//code for populating item pojo for sending owner email
+				private String ownerUserId;
 				ItemsModel im = new ItemsModel();
+				String sql2= "SELECT * FROM items WHERE item_id=?";
 				System.out.println("Creating a statement .....");
 				PreparedStatement stmt2 = connection.prepareStatement(sql2);
 				
@@ -354,7 +354,6 @@ public class Requests extends Connect{
 		String sql = "UPDATE requests SET request_status=? WHERE request_item_id=? AND request_requser_id=?";			//
 		String sql2 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=?";								//
 		
-		String sql1= "SELECT * FROM items WHERE item_id=?";
 		try {
 			System.out.println("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
@@ -369,6 +368,7 @@ public class Requests extends Connect{
                //code for populating item pojo for sending requester email
 				RequestsModel rm1 = new RequestsModel();
 				ItemsModel im = new ItemsModel();
+				String sql1= "SELECT * FROM items WHERE item_id=?";
 				System.out.println("Creating a statement .....");
 				PreparedStatement stmt1 = connection.prepareStatement(sql1);
 				
