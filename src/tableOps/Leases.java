@@ -255,13 +255,14 @@ public class Leases extends Connect {
 		reqUserId = lm.getReqUserId();
 		itemId = lm.getItemId();
 		status = lm.getStatus();
-		LeasesModel lm1 = new LeasesModel();
+		
 		
 		System.out.println("inside edit method");
 		getConnection();
 		String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?";							//
 		
 		//code for populating lease pojo for sending owner email...
+		LeasesModel lm1 = new LeasesModel();
 		String sqlrf ="SELECT * FROM leases WHERE lease_item_id=?";
 		   try {
 			System.out.println("Creating Statement....");
