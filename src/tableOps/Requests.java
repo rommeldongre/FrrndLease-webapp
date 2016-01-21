@@ -135,7 +135,7 @@ public class Requests extends Connect{
 			if(check == null) {
 				
 				//code for populating item pojo for sending owner email
-				private String ownerUserId;
+				String ownerUserId;
 				ItemsModel im = new ItemsModel();
 				String sql2= "SELECT * FROM items WHERE item_id=?";
 				System.out.println("Creating a statement .....");
