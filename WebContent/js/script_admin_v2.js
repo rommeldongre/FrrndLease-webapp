@@ -547,6 +547,7 @@ function getLeaseItem(i){
 		operation: "getNextActive",
 		token: itemToken
 	}
+	
 	getLeaseItemSend(req);
 }
 
