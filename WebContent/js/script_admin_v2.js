@@ -542,7 +542,7 @@ function leaseItemSend(req){
 
 function getLeaseItem(i){
 	itemToken = i;
-	
+	itemToken = itemToken.toString();
 	var req = {
 		operation: "getNextActive",
 		token: itemToken
