@@ -181,11 +181,11 @@ public class Items extends Connect {
 			if(e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
 			      res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I) , FLS_SQL_EXCEPTION_IMAGE);
+			      System.out.println(e.getErrorCode( )+" "+e.getMessage());
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
-			System.out.println(e.getErrorCode( )+" "+e.getMessage());
 		}
 	}
 	
@@ -290,11 +290,11 @@ public class Items extends Connect {
 			if(e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
 			      res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I), FLS_SQL_EXCEPTION_IMAGE);
+			      System.out.println(e.getErrorCode( )+" "+e.getMessage());
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
-			System.out.println(e.getErrorCode( )+" "+e.getMessage());
 		}
 	}
 	
