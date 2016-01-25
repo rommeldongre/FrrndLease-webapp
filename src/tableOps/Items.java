@@ -183,7 +183,7 @@ public class Items extends Connect {
 			//Boolean found = Arrays.asList(error.split(" ")).contains(keyword);
 			if(errCode == 1406 & error.matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
-			      res.setData(FLS_SQL_EXCEPTION, "200", FLS_SQL_EXCEPTION_IMAGE);
+			      res.setData(FLS_SQL_EXCEPTION_I, "1406", FLS_SQL_EXCEPTION_IMAGE);
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			}
@@ -296,7 +296,7 @@ public class Items extends Connect {
 			//Boolean found = Arrays.asList(error.split(" ")).contains(keyword);
 			if(errCode == 1406 & error.matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
-			      res.setData(FLS_SQL_EXCEPTION, "200", FLS_SQL_EXCEPTION_IMAGE);
+			      res.setData(FLS_SQL_EXCEPTION_I, "1406", FLS_SQL_EXCEPTION_IMAGE);
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			}

@@ -6,6 +6,7 @@ public class ErrorCat {
 	final public int FLS_SUCCESS = 0;
 	final public int FLS_END_OF_DB = 199;
 	final public int FLS_SQL_EXCEPTION = 200;
+	final public int FLS_SQL_EXCEPTION_I = 1406;
 	final public int FLS_ENTRY_NOT_FOUND = 201;
 	final public int FLS_JSON_EXCEPTION = 202;
 	final public int FLS_INVALID_OPERATION = 203;

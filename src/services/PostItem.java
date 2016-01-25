@@ -74,9 +74,11 @@ public class PostItem extends HttpServlet {
 					Code = "FLS_SUCCESS";
 				}
 			}
-			
-			else{
+			else if(res1.getIntCode() == e.FLS_SQL_EXCEPTION_I){
+				System.out.println("The error code in case of large image is "+res1.getIntCode());
 				Message = res1.getMessage();
+			}
+			else{
 				System.out.println("Couldn't perform postItem");
 			}
 			
