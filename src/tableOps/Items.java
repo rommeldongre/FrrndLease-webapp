@@ -176,9 +176,19 @@ public class Items extends Connect {
 			res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
 			
 		} catch (SQLException e) {
-			System.out.println("Couldn't create statement");
-			e.printStackTrace();
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			System.out.println("Couldnt create a statement");
+			Integer errCode =e.getErrorCode();
+			String error =e.getMessage();
+			String keyword = "item_image";
+			//Boolean found = Arrays.asList(error.split(" ")).contains(keyword);
+			if(errCode == 1406 & error.matches(".*\\bitem_image\\b.*")){
+			      System.out.println("The image size is too large. Please select image less than 16MB");
+			      res.setData(FLS_SQL_EXCEPTION, "200", FLS_SQL_EXCEPTION_IMAGE);
+			}else{
+				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			}
+			System.out.println(e.getErrorCode( )+" "+e.getMessage());
+			//e.printStackTrace();
 		}
 	}
 	
@@ -280,8 +290,19 @@ public class Items extends Connect {
 			
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
-			e.printStackTrace();
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			Integer errCode =e.getErrorCode();
+			String error =e.getMessage();
+			String keyword = "item_image";
+			//Boolean found = Arrays.asList(error.split(" ")).contains(keyword);
+			if(errCode == 1406 & error.matches(".*\\bitem_image\\b.*")){
+			      System.out.println("The image size is too large. Please select image less than 16MB");
+			      res.setData(FLS_SQL_EXCEPTION, "200", FLS_SQL_EXCEPTION_IMAGE);
+			}else{
+				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			}
+			System.out.println(e.getErrorCode( )+" "+e.getMessage());
+			//e.printStackTrace();
+			
 		}
 	}
 	
