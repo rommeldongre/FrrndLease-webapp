@@ -76,6 +76,7 @@ public class PostItem extends HttpServlet {
 			}
 			
 			else{
+				Message = res1.getMessage();
 				System.out.println("Couldn't perform postItem");
 			}
 			
