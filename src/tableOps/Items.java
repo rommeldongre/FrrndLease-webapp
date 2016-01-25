@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import com.mysql.jdbc.MysqlErrorNumbers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -176,9 +177,15 @@ public class Items extends Connect {
 			res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
 			
 		} catch (SQLException e) {
-			System.out.println("Couldn't create statement");
-			e.printStackTrace();
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			System.out.println("Couldnt create a statement");
+			if(e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")){
+			      System.out.println("The image size is too large. Please select image less than 16MB");
+			      res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I) , FLS_SQL_EXCEPTION_IMAGE);
+			      System.out.println(e.getErrorCode( )+" "+e.getMessage());
+			}else{
+				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -280,8 +287,14 @@ public class Items extends Connect {
 			
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
-			e.printStackTrace();
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			if(e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")){
+			      System.out.println("The image size is too large. Please select image less than 16MB");
+			      res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I), FLS_SQL_EXCEPTION_IMAGE);
+			      System.out.println(e.getErrorCode( )+" "+e.getMessage());
+			}else{
+				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+				e.printStackTrace();
+			}
 		}
 	}
 	

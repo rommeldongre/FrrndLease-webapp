@@ -17,6 +17,7 @@ public class ErrorCat {
 	final public int FLS_GRANT_LEASE_N = 220;
 	final public int FLS_WISH_ITEM_F = 211;
 	final public int FLS_SEARCH_ITEM_F = 212;
+	final public int FLS_SQL_EXCEPTION_I = 213;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "ITEM ADDED INTO  ITEMS TABLE";
@@ -44,6 +45,7 @@ public class ErrorCat {
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "COULDN'T CREATE STATEMENT OR COULDN'T EXECUTE QUERY (SQL EXCEPTION)";
+	final public String FLS_SQL_EXCEPTION_IMAGE = "PLEASE SELECT IMAGE LESS THAN 16MB";
 	final public String FLS_ENTRY_NOT_FOUND_M = "ENTRY NOT FOUND IN TABLE";
 	final public String FLS_END_OF_DB_M = "END OF DATABASE.";
 	final public String FLS_JSON_EXCEPTION_M = "JSON EXCEPTION ENCOUNTERED.";
