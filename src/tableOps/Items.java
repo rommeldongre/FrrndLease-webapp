@@ -181,7 +181,6 @@ public class Items extends Connect {
 			if(e.getErrorCode() == 1406 & e.getMessage().matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
 			      res.setData(FLS_SQL_EXCEPTION_I, "1406", FLS_SQL_EXCEPTION_IMAGE);
-			      e.printStackTrace();
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
@@ -292,7 +291,6 @@ public class Items extends Connect {
 			if(e.getErrorCode() == 1406 & e.getMessage().matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
 			      res.setData(FLS_SQL_EXCEPTION_I, "1406", FLS_SQL_EXCEPTION_IMAGE);
-			      e.printStackTrace();
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
