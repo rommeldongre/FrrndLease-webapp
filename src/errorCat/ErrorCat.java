@@ -44,6 +44,7 @@ public class ErrorCat {
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "COULDN'T CREATE STATEMENT OR COULDN'T EXECUTE QUERY (SQL EXCEPTION)";
+	final public String FLS_SQL_EXCEPTION_IMAGE = "PLEASE SELECT IMAGE LESS THAN 16MB";
 	final public String FLS_ENTRY_NOT_FOUND_M = "ENTRY NOT FOUND IN TABLE";
 	final public String FLS_END_OF_DB_M = "END OF DATABASE.";
 	final public String FLS_JSON_EXCEPTION_M = "JSON EXCEPTION ENCOUNTERED.";
