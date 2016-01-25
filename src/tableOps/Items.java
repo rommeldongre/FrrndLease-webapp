@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import com.mysql.jdbc.MysqlErrorNumbers;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,10 +178,9 @@ public class Items extends Connect {
 			
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
-			// 1406 is MySql error code for Data Truncation and "item_image" is a column name in items table.
-			if(e.getErrorCode() == 1406 & e.getMessage().matches(".*\\bitem_image\\b.*")){
+			if(e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
-			      res.setData(FLS_SQL_EXCEPTION_I, "1406", FLS_SQL_EXCEPTION_IMAGE);
+			      res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I) , FLS_SQL_EXCEPTION_IMAGE);
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
@@ -287,10 +287,9 @@ public class Items extends Connect {
 			
 		} catch (SQLException e) {
 			System.out.println("Couldnt create a statement");
-			// 1406 is MySql error code for Data Truncation and "item_image" is a column name in items table.
-			if(e.getErrorCode() == 1406 & e.getMessage().matches(".*\\bitem_image\\b.*")){
+			if(e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
-			      res.setData(FLS_SQL_EXCEPTION_I, "1406", FLS_SQL_EXCEPTION_IMAGE);
+			      res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I), FLS_SQL_EXCEPTION_IMAGE);
 			}else{
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();

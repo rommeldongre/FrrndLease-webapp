@@ -6,7 +6,6 @@ public class ErrorCat {
 	final public int FLS_SUCCESS = 0;
 	final public int FLS_END_OF_DB = 199;
 	final public int FLS_SQL_EXCEPTION = 200;
-	final public int FLS_SQL_EXCEPTION_I = 1406;
 	final public int FLS_ENTRY_NOT_FOUND = 201;
 	final public int FLS_JSON_EXCEPTION = 202;
 	final public int FLS_INVALID_OPERATION = 203;
@@ -18,6 +17,7 @@ public class ErrorCat {
 	final public int FLS_GRANT_LEASE_N = 220;
 	final public int FLS_WISH_ITEM_F = 211;
 	final public int FLS_SEARCH_ITEM_F = 212;
+	final public int FLS_SQL_EXCEPTION_I = 213;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "ITEM ADDED INTO  ITEMS TABLE";
