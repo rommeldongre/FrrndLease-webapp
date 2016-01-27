@@ -59,6 +59,9 @@ public class ErrorCat {
 	final public String FLS_WISH_ITEM_F_M = "WISHITEM COULD NOT BE PERFORMED";
 	final public String FLS_INVALID_TABLE_NAME_M = "REQUEST CONTAINS INVALID TABLE NAME";
 	final public String FLS_SEARCH_ITEM_F_M = "NO DATA FOUND.";
+	
+	//String query variables.
+	final public String FLS_WISHLIST_ADD = "Wished";
 }
 
 //JSON EXCEPTION AT SWITCH-CASE: res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
