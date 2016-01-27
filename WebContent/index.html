@@ -535,6 +535,9 @@
 				$("#clearSearchButton").show();
 				$("#categorybrowsing").hide();
 				
+				wishItemSetValues($("#wish_title").val(),'','',userloggedin,'','','');
+				wishItemDbCreate();
+				
 				itemId = 0;
 				reasonForSearchItem = "searchItem";
 				setBrowsingCategory("All");
