@@ -133,6 +133,7 @@ public class Items extends Connect {
 		leaseValue = im.getLeaseValue();
 		status = im.getStatus();
 		image = im.getImage();
+		String status_W= im.getStatus();
 		
 		System.out.println("Inside add method...");
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
@@ -158,12 +159,14 @@ public class Items extends Connect {
 			message = "Item added into table";
 			Code = 000;
 			
-			try{
-				FlsSendMail newE = new FlsSendMail();
-				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);
-				}catch(Exception e){
-				  e.printStackTrace();
-				}
+			if (!FLS_WISHLIST_ADD.equals(status_W)) {
+				try{
+						FlsSendMail newE = new FlsSendMail();
+						newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+			}
 			
 			//returning the new id
 			sql = "SELECT MAX(item_id) FROM items";
