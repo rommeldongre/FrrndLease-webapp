@@ -133,7 +133,6 @@ public class Items extends Connect {
 		leaseValue = im.getLeaseValue();
 		status = im.getStatus();
 		image = im.getImage();
-		String status_W= im.getStatus();
 		
 		System.out.println("Inside add method...");
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
@@ -159,6 +158,7 @@ public class Items extends Connect {
 			message = "Item added into table";
 			Code = 000;
 			
+			String status_W= im.getStatus();     // To be used to check if Request is from WishItem API.
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try{
 						FlsSendMail newE = new FlsSendMail();
