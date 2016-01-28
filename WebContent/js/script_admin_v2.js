@@ -34,7 +34,6 @@ var itemId = 0,
 	prevPage = null,
 	endOfCarousel = 0;
 	userName = null;
-	reqFlag = 0;
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
@@ -449,7 +448,7 @@ function getRequestItemSend(req){
 //getRequestItem ends here---------------------------------------------------
 //rejectRequest begins here------------------------------------------------
 
-function rejectRequestSetValues(i, req, flag){
+function rejectRequestSetValues(i, req){
 	itemId = i;
 	if (itemId === '') itemId = null;
 	
@@ -460,9 +459,7 @@ function rejectRequestSetValues(i, req, flag){
 	var req = {
 		itemId: itemId,
 		userId: reqUserId,
-		rejectFlag: reqFlag
 	};
-	alert(JSON.stringify(req));
 	rejectRequestSend(req);
 }
 
