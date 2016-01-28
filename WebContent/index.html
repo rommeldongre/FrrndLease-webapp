@@ -480,8 +480,16 @@
 				var p = document.createElement("p");
 				p.innerHTML = obj.description;
 				p.id = obj.itemId;
+				var full_Name = document.createElement("p");
+				full_Name.innerHTML = obj.fullName;
+				full_Name.id = obj.itemId;
+				var userLocation = document.createElement("p");
+				userLocation.innerHTML = obj.location;
+				userLocation.id = obj.itemId;
 				
 				caption1.appendChild(h3);
+				caption1.appendChild(full_Name);
+				caption1.appendChild(userLocation);
 				caption1.appendChild(p);
 				span1.appendChild(img1);
 				span1.appendChild(caption1);

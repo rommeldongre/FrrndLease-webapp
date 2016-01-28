@@ -456,7 +456,7 @@ public class Items extends Connect {
 		status = im.getStatus();
 		
 		System.out.println("Inside Browse N method");
-		String sql = "SELECT * FROM items WHERE item_id > ? AND item_status= ? ORDER BY item_id LIMIT 1";
+		String sql = "SELECT  tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= ? ORDER BY item_id LIMIT 1";
 		getConnection();
 		
 		try {
@@ -481,6 +481,8 @@ public class Items extends Connect {
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
 				json.put("image", rs.getString("item_image"));
+				json.put("fullName", rs.getString("user_full_name"));
+				json.put("location", rs.getString("user_location"));
 				
 				message = json.toString();
 				System.out.println(message);
