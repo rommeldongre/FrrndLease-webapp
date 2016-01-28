@@ -455,7 +455,6 @@ function rejectRequestSetValues(i, req){
 	reqUserId = req;
 	if (reqUserId ==='') reqUserId = null;
 	
-	reqFlag = flag;
 	var req = {
 		itemId: itemId,
 		userId: reqUserId,
