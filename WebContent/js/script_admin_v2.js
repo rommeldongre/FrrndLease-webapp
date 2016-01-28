@@ -35,7 +35,6 @@ var itemId = 0,
 	endOfCarousel = 0;
 	userName = null;
 	
-	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
 function itemSetValues(){			//setting values for item object from the form
@@ -458,7 +457,7 @@ function rejectRequestSetValues(i, req){
 	
 	var req = {
 		itemId: itemId,
-		userId: reqUserId
+		userId: reqUserId,
 	};
 	rejectRequestSend(req);
 }
@@ -891,7 +890,7 @@ wishItemDbCreate = function(){									//for storing in db/localstorage
 		status: itemStatus,
 		image: url
 	};
-
+		
 	wishItemSend(req);			
 	
 }
@@ -911,19 +910,19 @@ function wishItemSend(req){
 				if(reasonForWishItem == "searchFromHome"){
 					heading = "No Items Found";
 					msg = "Item has been stored in your Wishlist";
-					confirmationIndex(heading, msg);			//index.html
+					//confirmationIndex(heading, msg);			//index.html
 				}else{
-					setPrevPage("mywishlists.html");
+					//setPrevPage("mywishlists.html");
 					heading = "Successful";
 					msg = response.Message;
-					confirmationIndex(heading, msg);			//mywishitemdetails.html
+					//confirmationIndex(heading, msg);			//mywishitemdetails.html
 				}
 					
 			},
 		
 			error: function() {
 				var msg = "Not Working";
-				confirmationIndex(msg);
+				//confirmationIndex(msg);
 			}
 		});
 }
