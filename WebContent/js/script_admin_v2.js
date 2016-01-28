@@ -34,7 +34,7 @@ var itemId = 0,
 	prevPage = null,
 	endOfCarousel = 0;
 	userName = null;
-	
+	reqFlag = 0;
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
@@ -449,17 +449,20 @@ function getRequestItemSend(req){
 //getRequestItem ends here---------------------------------------------------
 //rejectRequest begins here------------------------------------------------
 
-function rejectRequestSetValues(i, req){
+function rejectRequestSetValues(i, req, flag){
 	itemId = i;
 	if (itemId === '') itemId = null;
 	
 	reqUserId = req;
 	if (reqUserId ==='') reqUserId = null;
 	
+	reqFlag = flag;
 	var req = {
 		itemId: itemId,
-		userId: reqUserId
+		userId: reqUserId,
+		rejectFlag: reqFlag
 	};
+	alert(JSON.stringify(req));
 	rejectRequestSend(req);
 }
 
@@ -891,7 +894,7 @@ wishItemDbCreate = function(){									//for storing in db/localstorage
 		status: itemStatus,
 		image: url
 	};
-
+		
 	wishItemSend(req);			
 	
 }
@@ -911,19 +914,19 @@ function wishItemSend(req){
 				if(reasonForWishItem == "searchFromHome"){
 					heading = "No Items Found";
 					msg = "Item has been stored in your Wishlist";
-					confirmationIndex(heading, msg);			//index.html
+					//confirmationIndex(heading, msg);			//index.html
 				}else{
-					setPrevPage("mywishlists.html");
+					//setPrevPage("mywishlists.html");
 					heading = "Successful";
 					msg = response.Message;
-					confirmationIndex(heading, msg);			//mywishitemdetails.html
+					//confirmationIndex(heading, msg);			//mywishitemdetails.html
 				}
 					
 			},
 		
 			error: function() {
 				var msg = "Not Working";
-				confirmationIndex(msg);
+				//confirmationIndex(msg);
 			}
 		});
 }
