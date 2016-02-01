@@ -443,9 +443,9 @@
 				caption1.style.backgroundColor = "black";
 				caption1.style.opacity = 0.6;
 				
-				var h3 = document.createElement("h4");
-				h3.innerHTML ='<b>' +obj.title+ '</b>';
-				h3.id = obj.itemId;
+				var h4 = document.createElement("h4");
+				h4.innerHTML ='<b>' +obj.title+ '</b>';
+				h4.id = obj.itemId;
 				
 				var p = document.createElement("p");
 				p.innerHTML = "Lease Term: "+obj.leaseTerm;
@@ -470,7 +470,7 @@
 				full_Name.innerHTML = obj.fullName;
 				full_Name.id = obj.itemId;
 				
-				caption1.appendChild(h3);
+				caption1.appendChild(h4);
 				caption1.appendChild(p);
 				if(obj.location){
 				caption1.appendChild(userLocation);
