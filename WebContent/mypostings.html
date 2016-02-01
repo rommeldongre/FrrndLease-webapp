@@ -443,23 +443,39 @@
 				caption1.style.backgroundColor = "black";
 				caption1.style.opacity = 0.6;
 				
-				var h3 = document.createElement("h3");
-				h3.innerHTML =obj.title;
+				var h3 = document.createElement("h4");
+				h3.innerHTML ='<b>' +obj.title+ '</b>';
 				h3.id = obj.itemId;
+				
 				var p = document.createElement("p");
-				p.innerHTML = obj.description;
+				p.innerHTML = "Lease Term: "+obj.leaseTerm;
 				p.id = obj.itemId;
+				
+				console.log(obj);
+				
+				if(obj.location){
+				var address = obj.location;
+				var locationArr = address.split(',');
+				var cityName = locationArr[0];
+				var cityLocation = locationArr[1];
+				var pinCode = locationArr[1].match(/\d+/)[0];
+				var properLocation = cityName+" - "+ pinCode;
+				
+				var userLocation = document.createElement("p");
+				userLocation.innerHTML = " "+properLocation;
+				userLocation.id = obj.itemId;
+				}
+				
 				var full_Name = document.createElement("p");
 				full_Name.innerHTML = obj.fullName;
 				full_Name.id = obj.itemId;
-				var userLocation = document.createElement("p");
-				userLocation.innerHTML = obj.location;
-				userLocation.id = obj.itemId;
 				
 				caption1.appendChild(h3);
-				caption1.appendChild(full_Name);
-				caption1.appendChild(userLocation);
 				caption1.appendChild(p);
+				if(obj.location){
+				caption1.appendChild(userLocation);
+				}
+				caption1.appendChild(full_Name);
 				span1.appendChild(img1);
 				span1.appendChild(caption1);
 				col1.appendChild(span1);
