@@ -454,16 +454,16 @@
 				console.log(obj);
 				
 				if(obj.location){
-				var address = obj.location;
-				var locationArr = address.split(',');
-				var cityName = locationArr[0];
-				var cityLocation = locationArr[1];
-				var pinCode = locationArr[1].match(/\d+/)[0];
-				var properLocation = cityName+" - "+ pinCode;
-				
-				var userLocation = document.createElement("p");
-				userLocation.innerHTML = " "+properLocation;
-				userLocation.id = obj.itemId;
+					var address = obj.location;
+					var locationArr = address.split(',');
+					var cityName = locationArr[0];
+					var cityLocation = locationArr[1];
+					var pinCode = locationArr[1].match(/\d+/)[0];
+					var properLocation = cityName+" - "+ pinCode;
+					
+					var userLocation = document.createElement("p");
+					userLocation.innerHTML = " "+properLocation;
+					userLocation.id = obj.itemId;
 				}
 				
 				var full_Name = document.createElement("p");
@@ -473,7 +473,7 @@
 				caption1.appendChild(h4);
 				caption1.appendChild(p);
 				if(obj.location){
-				caption1.appendChild(userLocation);
+					caption1.appendChild(userLocation);
 				}
 				caption1.appendChild(full_Name);
 				span1.appendChild(img1);
