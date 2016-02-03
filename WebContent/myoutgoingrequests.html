@@ -182,7 +182,7 @@
 	
 	
 	<script type="text/javascript">
-		var userloggedin, reqUserId, objUserId, reqDate, reasonForGetRequestItem, itemNextId;
+		var userloggedin, reqUserId, objUserId, reqDate, reasonForGetRequestItem, ownerName, itemNextId;
 		
 		function start(){
 			
@@ -198,7 +198,11 @@
 			
 			itemNextId = 0;
 			itemNextRequestId = 0;
-			request_read();
+			
+			if(userloggedin != "anonymous"){	//if logged in as anonymous then don't proceed with table display
+				request_read();
+			}
+			
 			
 			look_good();
 		}
@@ -229,6 +233,7 @@
 			reqUserId = obj.userId;
 			
 			var owner = obj.owner_Id;
+			ownerName = obj.owner_name;
 			var sdate = obj.request_date;
 			var rstatus = obj.request_status;
 			var rtitle = obj.title;
@@ -278,7 +283,7 @@
 				cell0.innerHTML = rDate;
 				//cell1.innerHTML = obj.itemId;
 				cell1.innerHTML = rTitle;
-				cell2.innerHTML = iOwner;
+				cell2.innerHTML = ownerName;
 				
 				cell3.appendChild(span2);
 				
@@ -328,17 +333,17 @@
 		
 		//----------------------------------------
 	
-		/*$(document).on("click",".tablecellItem",function(event){
+		$(document).on("click",".tablecellItem",function(event){
 			setPrevPage("myoutgoingrequests.html");
 			storeCurrentFunction("viewItemOwner");
 			storeRequestingUser(reqUserId);
 			
 			var k = event.target.id;			//when itemname is clicked
-			
+			console.log(k);
 			storeItemToShow(k);
 			
-			window.location.replace("mystore.html");
-		});*/
+			//window.location.replace("mystore.html");
+		});
 		
 		function continueWork(){
 			setPrevPage("myoutgoingrequests.html");
