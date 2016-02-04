@@ -239,7 +239,6 @@
 		
 		function showRequestItem(obj){
 			userloggedin = localStorage.getItem("userloggedin");
-			console.log(obj);
 			if(obj.userId == userloggedin){
 		
 				var table = document.getElementById("requesttable");
@@ -355,7 +354,7 @@
 		function rejectRequest(obj){
 		    var flag = 1;
 			setPrevPage("myincomingrequests.html");
-			rejectRequestSetValues(obj.itemId, obj.userId, flag);
+			rejectRequestSetValues(obj.itemId, obj.userId);
 		}
 		
 		//----------------------------------------
