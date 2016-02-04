@@ -182,7 +182,7 @@
 	
 	
 	<script type="text/javascript">
-		var userloggedin, reqUserId, objUserId, reqDate,itemNextId,itemNextRequestId ;
+		var userloggedin, reqUserId, objUserId, reqDate,itemNextId,itemNextRequestId, reqUserName ;
 		
 		function start(){
 			
@@ -227,7 +227,8 @@
 		function getItemForRequest(obj){
 			var itemno = obj.itemId;
 			reqUserId = obj.userId;
-				
+			reqUserName = obj.requser_name;
+			
 			reqDate = obj.date;	
 			
 			itemno--;
@@ -238,7 +239,7 @@
 		
 		function showRequestItem(obj){
 			userloggedin = localStorage.getItem("userloggedin");
-			
+			console.log(obj);
 			if(obj.userId == userloggedin){
 		
 				var table = document.getElementById("requesttable");
@@ -272,7 +273,7 @@
 				cell0.innerHTML = reqDate;
 				//cell1.innerHTML = obj.itemId;
 				cell1.innerHTML = obj.title;
-				cell2.innerHTML = reqUserId;
+				cell2.innerHTML = reqUserName;
 				
 				cell3.appendChild(span1);
 				cell3.appendChild(span2);
@@ -352,8 +353,9 @@
 		
 		
 		function rejectRequest(obj){
+		    var flag = 1;
 			setPrevPage("myincomingrequests.html");
-			rejectRequestSetValues(obj.itemId, obj.userId);
+			rejectRequestSetValues(obj.itemId, obj.userId, flag);
 		}
 		
 		//----------------------------------------
