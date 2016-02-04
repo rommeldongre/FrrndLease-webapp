@@ -536,7 +536,7 @@ public class Requests extends Connect{
 		check = null;
 		int t = Integer.parseInt(token);
 		System.out.println("Inside GetNextR method");
-		String sql = "SELECT * FROM requests WHERE request_id > ? AND request_status=? ORDER BY request_id LIMIT 1";		//
+		String sql = "SELECT tb1.*, tb2.user_full_name FROM requests tb1 INNER JOIN users tb2 ON tb1.request_requser_id = tb2.user_id WHERE request_id > ? AND request_status=? ORDER BY request_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -553,6 +553,7 @@ public class Requests extends Connect{
 				json.put("itemId", rs.getString("request_item_id"));
 				json.put("userId", rs.getString("request_requser_id"));
 				json.put("date", rs.getString("request_date"));
+				json.put("requser_name", rs.getString("user_full_name"));
 				
 				message = json.toString();
 				System.out.println(message);

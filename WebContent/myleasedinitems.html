@@ -169,7 +169,7 @@
 	
 	
 	<script type="text/javascript">
-		var userloggedin, leaseExpiry, leaseItemId, leaseReqUser, objUserId;
+		var userloggedin, leaseExpiry, leaseItemId, leaseReqUser, leaseReqOwnerName,objUserId;
 		
 		function start(){
 			
@@ -219,6 +219,7 @@
 			leaseItemId = obj.itemId; 
 			leaseReqUser = obj.reqUserId;
 			objUserId = obj.userId;
+			leaseReqOwnerName= obj.OwnerFullName;
 			
 			leaseItemId--;
 			
@@ -258,7 +259,7 @@
 				cell0.innerHTML = leaseExpiry;
 				cell1.innerHTML = obj.title;	
 				
-				cell2.innerHTML = objUserId;		
+				cell2.innerHTML = leaseReqOwnerName;		
 				
 				cell3.appendChild(span1);
 				cell3.appendChild(span2);

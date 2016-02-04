@@ -427,7 +427,7 @@ public class Leases extends Connect {
 		int t = Integer.parseInt(token);
 		check = null;
 		System.out.println("Inside GetNext Active method");
-		String sql = "SELECT * FROM leases WHERE lease_id > ? AND lease_status=? ORDER BY lease_id LIMIT 1";		//
+		String sql = "SELECT tb1.*, tb2.user_full_name, tb3.user_full_name AS Owner FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id WHERE lease_id > ? AND lease_status=? ORDER BY lease_id LIMIT 1";		//
 		
 		getConnection();
 		try {
@@ -445,6 +445,8 @@ public class Leases extends Connect {
 				json.put("itemId", rs.getString("lease_item_id"));
 				json.put("userId", rs.getString("lease_user_id"));
 				json.put("expiry", rs.getString("lease_expiry_date"));
+				json.put("requestorFullName", rs.getString("user_full_name"));
+				json.put("OwnerFullName", rs.getString("Owner"));
 				
 				message = json.toString();
 				System.out.println(message);

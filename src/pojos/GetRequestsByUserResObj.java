@@ -44,6 +44,17 @@ public class GetRequestsByUserResObj extends ResObj{
 	
 	//Request date
 	Date Request_date;
+	
+	//Owner Name
+	String owner_name;
+
+	public String getOwner_name() {
+		return owner_name;
+	}
+
+	public void setOwner_name(String owner_name) {
+		this.owner_name = owner_name;
+	}
 
 	public int getReturnCode() {
 		return ReturnCode;
