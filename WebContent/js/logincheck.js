@@ -17,7 +17,8 @@ function logInCheck() {
 				var salutation = document.getElementById("salutation");
 				var span = document.createElement("span");
 				
-				span.innerHTML = userloggedin;
+				userloggedinName = localStorage.getItem("userloggedinName");
+				span.innerHTML = userloggedinName;
 				salutation.appendChild(span);
 				
 			}

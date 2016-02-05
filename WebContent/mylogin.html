@@ -268,6 +268,7 @@
 		function loginSuccessful(obj){
 			localStorage.setItem("userloggedin", obj.userId);				//set the "name" of the user who is loggedin
 			//localStorage.setItem("userLocation", obj.location);
+			localStorage.setItem("userloggedinName", obj.fullName);
 			
 			var msg = 1;
 			
