@@ -111,7 +111,7 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Category <span class="caret"></span></button>
+										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span></button>
 										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
 
 										</ul>
@@ -391,9 +391,16 @@
 			drawImage = function(img) {
 				this.canvasCtx.canvas.width = 300;//img.width;
 				this.canvasCtx.canvas.height = 300;//img.height;
-				this.canvasCtx.drawImage(img,0,0,300,300);
-				url = canvasCtx.canvas.toDataURL("image/png");
-				console.log(url);
+				
+				if(img.width>img.height){                      							//Landscape Image 
+					canvasCtx.width = 300;
+					canvasCtx.height = 300 / img.width * img.height;
+				} else {                                                                  //Portrait Image
+					canvasCtx.width = 300 / img.height * img.width;
+					canvasCtx.height = 300;
+				} 
+				this.canvasCtx.drawImage(img,0,0,canvasCtx.width, canvasCtx.height);
+				url = canvasCtx.canvas.toDataURL();
 			}			
 			//end of image display
 			
@@ -627,7 +634,7 @@
 			else
 				$("#dropdownbuttonlease_term").text(obj.leaseTerm);
 				
-			//display the picture of the item begins here
+			//display the picture of the item begins heredrawImage
 			
 			url = obj.image;
 			var img = new Image();
