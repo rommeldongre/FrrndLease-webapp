@@ -134,6 +134,23 @@ public class Requests extends Connect{
 			
 			if(check == null) {
 				
+				//code to check whether item has been already leased out not 
+				String checklease = null;
+				System.out.println("Creating statement to check if lease exists.....");
+				String sql3= "SELECT * FROM leases WHERE lease_item_id=? AND lease_requser_id=? AND lease_status =?";
+				PreparedStatement stmt3 = connection.prepareStatement(sql3);
+				stmt3.setString(1, itemId);
+				stmt3.setString(2, userId);
+				stmt3.setString(3, "Active");
+				
+				ResultSet rslease = stmt3.executeQuery();
+				
+				while (rslease.next()) {
+					checklease = rslease.getString("lease_id");
+				}
+				//code to check whether item has been already leased out not ends here
+			if(checklease == null) {
+				
 				//code for populating item pojo for sending owner email
 				String ownerUserId;
 				ItemsModel im = new ItemsModel();
@@ -201,14 +218,16 @@ public class Requests extends Connect{
 					}catch(Exception e){
 					  e.printStackTrace();
 					}
-			}
-			
-			else {
-				message = FLS_DUPLICATE_ENTRY_M;
+			}else {
+				message = FLS_DUPLICATE_ENTRY_L;
 				Code = FLS_DUPLICATE_ENTRY;
 				Id = "0";
 			}
-			
+		}else {
+			message = FLS_DUPLICATE_ENTRY_M;
+			Code = FLS_DUPLICATE_ENTRY;
+			Id = "0";
+		}
 			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			System.out.println("Couldn't create statement");
