@@ -1143,9 +1143,7 @@ function addFriendSend(req){
 				addFriendAPICall--;
 				var msg = 1;
 				if(addFriendAPICall==0){
-					console.log("All Add friend API requests(FB) executed sucessfully");
 					confirmationIndex(msg);
-					console.log("All Add friend API requests(FB) executed sucessfully");
 				}
 			}else{
 				var header = "Friend Added";
