@@ -17,7 +17,7 @@ public class FlsSendMail {
 						   FLS_MAIL_MAKE_REQUEST_TO, // done
 						   FLS_MAIL_GRANT_REQUEST_FROM, //same as grant lease from
 						   FLS_MAIL_GRANT_REQUEST_TO, //same as grant lease to
-						   FLS_MAIL_REJECT_REQUEST_FROM, // working partially. Set flag for lease part
+						   FLS_MAIL_REJECT_REQUEST_FROM, // working partially. Set flag for lease part(done)
 						   FLS_MAIL_REJECT_REQUEST_TO, // not done as pojo needs to be filled
 						   FLS_MAIL_ADD_FRIEND_FROM, //done
 						   FLS_MAIL_ADD_FRIEND_TO, //done
@@ -27,7 +27,7 @@ public class FlsSendMail {
 						   FLS_MAIL_GRANT_LEASE_TO,//done
 						   FLS_MAIL_REJECT_LEASE_FROM, // not done pojo needs to be filled   //done
 						   FLS_MAIL_REJECT_LEASE_TO } //done
-	public static void send(String userId, Fls_Enum fls_enum, Object obj) throws Exception {
+	public static void send(String userId, Fls_Enum fls_enum, Object obj, String... apiflag) throws Exception {
 		//Fls_Enum = fls_enum;
 		user_id = userId;
 		
@@ -72,14 +72,19 @@ public class FlsSendMail {
 			
 		case FLS_MAIL_ADD_FRIEND_FROM:
 			FriendsModel affm = (FriendsModel) obj;
-			email.setSubject("["+affm.getFullName()+"] added to Friendlist");
-			email.setMsg("You have sucessfully added ["+affm.getFullName()+"] to your Friendlist- \n \n");      
+			if (apiflag!=null) {
+				email.setSubject("["+affm.getFullName()+"] added to Friendlist");
+				email.setMsg("You have sucessfully added ["+affm.getFullName()+"] to your Friendlist- \n \n");  
+			}else{
+			email.setSubject("["+affm.getFriendId()+"] added to Friendlist");
+			email.setMsg("You have sucessfully added ["+affm.getFriendId()+"] to your Friendlist- \n \n");
+			}
 			break;
 		
 		case FLS_MAIL_ADD_FRIEND_TO:
 			FriendsModel atfm = (FriendsModel) obj;
-			email.setSubject("["+atfm.getFriendId()+"] added you");
-			email.setMsg("You have been connected to ["+atfm.getFriendId()+"] on Friend Lease- \n \n");      
+			email.setSubject("["+atfm.getUserId()+"] added you");
+			email.setMsg("You have been connected to ["+atfm.getUserId()+"] on Friend Lease- \n \n");      
 			break;
 			
 		case FLS_MAIL_DELETE_FRIEND_FROM:
