@@ -8,6 +8,7 @@
     <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>    
 	<script src="https://apis.google.com/js/client.js"></script>
+	<script src="js/Facebook_api.js"></script>
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Import Friends</title>
@@ -236,7 +237,28 @@
 		
 		function importfb(){
 			
-			//confirmationIndex("importfb called");
+			FB.login(function(response) {
+				// handle the response
+				
+				// check whether user is logged in or not and ask for credentials if not.
+				/*
+				FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
+					console.log('Successful login for: ' + response.name+" "+response.id+" "+response.email);
+					loginpassword = response.id;
+					loginemail =  response.email;
+				});
+				*/
+				// send message to facebook friends using send request dialog
+				FB.ui({
+					method: 'send',
+					link: 'http://www.frrndlease.com/flsv2/mylogin.html',
+				},function(response){
+					if (response && !response.error) {
+						//check 'response' to see if call was successful
+						confirmationIndex("Success","Message to Facebook Friend(s) sent");
+						}
+				});
+            }, {scope: 'email,public_profile,user_friends'});
 		}
 		
 		function importwhatsapp(){
