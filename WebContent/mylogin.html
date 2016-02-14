@@ -197,7 +197,7 @@
 	
 	
 	<script type="text/javascript">
-		var loginemail, loginpassword;
+		var loginemail, loginpassword, reasonforLogIn= '', friends;
 		
 		function start(){
 			$("#modalTriggerButton").hide();
@@ -246,21 +246,16 @@
 		
 		function facebookSignIn() {
 		
+		    reasonforLogIn = "Facebook";
             FB.login(function(response) {
 				// handle the response
-				console.log("Response goes here!");
-				console.log(JSON.stringify(response));
 				
 				FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
-					console.log('Successful login for: ' + response.name+" "+response.id+" "+response.email);
-					console.log(JSON.stringify(response));
 					loginpassword = response.id;
 					loginemail =  response.email;
-					
 					loginDbCreate();	//this function is in the script_admin_v2.js
 				});
-
-            }, {scope: 'email,public_profile'});            
+            }, {scope: 'email,public_profile,user_friends'});    
         }
 		
 		//Facebook Login ends here---------------------------------------------
@@ -272,7 +267,29 @@
 			
 			var msg = 1;
 			
-			confirmationIndex(msg);
+			
+			if(reasonforLogIn == "Facebook"){
+			reasonForAddFriend = "importFacebook";
+			// retrieve the list of friends who have signed up using Facebook
+				FB.api(
+						'/me/friends', function (response) {
+							if (response && !response.error) {
+								addFriendAPICall = response.data.length;
+								friends = response.data.length;
+								for(var i =0;i<=response.data.length;i++){
+									if (response.data.hasOwnProperty(i)) {
+										var friend_name = response.data[i].name;
+										var friend_id= response.data[i].id+"@fb";						
+										addFriendSetValues(friend_name, '-', friend_id, loginemail);
+										addFriendDbCreate();
+									}
+								}
+							}
+						}
+					);
+				}else{
+				confirmationIndex(msg);
+				}
 		}
 		
 		function loginUnsuccessful(str){
@@ -298,7 +315,12 @@
 				heading.innerHTML = "Login Successful";
 				
 				var div = document.getElementById("modalMsg");
+				
+				if(reasonforLogIn == "Facebook"){
+				div.innerHTML = "Welcome back to fRRndLease, You have "+friends+" Facebook friends in your fRRndLease friendlist";
+				}else{
 				div.innerHTML = "Welcome back to fRRndLease";
+				}
 			}
 			
 			$("#modalTriggerButton").click();

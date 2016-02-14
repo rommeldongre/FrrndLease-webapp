@@ -34,6 +34,7 @@ var itemId = 0,
 	prevPage = null,
 	endOfCarousel = 0;
 	userName = null;
+	addFriendAPICall = 0;
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
@@ -84,7 +85,6 @@ itemDbCreate = function(){									//for storing in db/localstorage
 		status: itemStatus,
 		image: url
 	};
-	console.log(JSON.stringify(req));
 	
 	postItemSend(req);
 }
@@ -726,7 +726,6 @@ function searchItemSend(req){
 					
 				}else{
 					itemId = itemObj.itemId;
-					console.log(itemObj.title);
 					addItemToCarousel(itemObj);
 				}	
 			}
@@ -1112,10 +1111,10 @@ function addFriendSetValues(name, mobile, email, user){
 function addFriendDbCreate(){
 	
 	var req = {
-		id: userId,
+		id: friendEmail,
 		fullName: friendName,
 		mobile: friendMobile,
-		userId: friendEmail
+		userId: userId
 	};
 	
 	addFriendSend(req);
@@ -1131,7 +1130,7 @@ function addFriendSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			setPrevPage("myfriendslist.html");
+			//setPrevPage("myfriendslist.html");
 			
 			if(reasonForAddFriend == "importGoogle"){
 				add_checked_friends_continued();
@@ -1139,6 +1138,13 @@ function addFriendSend(req){
 				var header = "Congrats";
 				var msg = response.Message;
 				confirmationIndex(header, msg);
+			}else if(reasonForAddFriend == "importFacebook"){
+				var header = "Congrats";
+				addFriendAPICall--;
+				var msg = 1;
+				if(addFriendAPICall==0){
+					confirmationIndex(msg);
+				}
 			}else{
 				var header = "Friend Added";
 				var msg = "You can now lease items from "+friendName;
@@ -1522,7 +1528,6 @@ getOutRequest = function(req) {
 				//alert("working");
 				if(!response.title){
 				}else{
-					console.log(response);
 					getOutItemForRequest(response);
 					//alert(response.title);
 				}

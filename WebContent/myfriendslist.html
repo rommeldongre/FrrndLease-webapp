@@ -225,7 +225,7 @@
 			
 			userloggedin = localStorage.getItem("userloggedin");
 								
-			if(obj.friendId == userloggedin){
+			if(obj.userId == userloggedin){
 				
 				var table = document.getElementById("friendstable");
 				var row = table.insertRow(1);
@@ -235,7 +235,13 @@
 								
 				cell0.innerHTML = obj.fullName;
 				cell1.innerHTML = obj.mobile;
-				cell2.innerHTML = obj.userId;
+				var strIndex = obj.friendId.indexOf('@fb');
+				if(strIndex == -1){
+					cell2.innerHTML = obj.friendId;
+					
+				}else{
+					cell2.innerHTML = '-';
+				}
 				
 				cell0.id = obj.userId;
 				cell1.id = obj.userId;
@@ -246,7 +252,7 @@
 				cell2.className = "tablecellEmail";
 
 			}
-			
+			itemNextId = obj.friendId;
 			friends_read();
 		}
 

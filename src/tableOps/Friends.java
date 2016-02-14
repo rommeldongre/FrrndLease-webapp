@@ -77,33 +77,56 @@ public class Friends extends Connect{
 		userId = fm.getUserId();
 		
 		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id) values (?,?,?,?)";		 //
+		String sql1 = "SELECT * FROM friends WHERE friend_user_id=? AND friend_id=?";
 		getConnection();
 		
 		try {
-			System.out.println("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			System.out.println("Creating Select statement.....");
+			PreparedStatement stmt1 = connection.prepareStatement(sql1);
+			stmt1.setString(1, userId);
+			stmt1.setString(2, friendId);
 			
-			System.out.println("Statement created. Executing query.....");
-			stmt.setString(1, friendId);
-			stmt.setString(2, fullName);
-			stmt.setString(3,mobile);
-			stmt.setString(4,userId);
-			stmt.executeUpdate();
-			System.out.println("Entry added into friends table");
+			ResultSet rs = stmt1.executeQuery();
 			
-			message = "Entry added into friends table";
-			Code = 10;
-			Id = friendId;
+			while (rs.next()) {
+				check = rs.getString("friend_id");
+			}
+			if (check == null) {
+				System.out.println("Creating statement.....");
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				System.out.println("Statement created. Executing query.....");
+				stmt.setString(1, friendId);
+				stmt.setString(2, fullName);
+				stmt.setString(3,mobile);
+				stmt.setString(4,userId);
+				stmt.executeUpdate();
+				System.out.println("Entry added into friends table");
+				
+				message = "Entry added into friends table";
+				Code = 10;
+				Id = friendId;
+				
+				try{
+						FlsSendMail newE = new FlsSendMail();
+						String api = "@api";
+						if (friendId.contains("@fb") || friendId.contains("@google")) {
+							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,api);
+						}else {
+							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm);
+							newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO,fm);
+						}
+					}catch(Exception e){
+					  e.printStackTrace();
+					}
+			}else{
+				System.out.println("Friend Already exists.....");
+				res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
+			}
 			
-			try{
-				FlsSendMail newE = new FlsSendMail();
-				newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm);
-				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO,fm);
-				}catch(Exception e){
-				  e.printStackTrace();
-				}
 			
-			res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
+			//res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
+			res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			System.out.println("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
@@ -213,7 +236,7 @@ public class Friends extends Connect{
 		check = null;
 		Id = fm.getFriendId();
 		System.out.println("Inside GetNext method");
-		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id>? ORDER BY friend_user_id LIMIT 1";		//
+		String sql = "SELECT * FROM friends WHERE friend_user_id = ? AND friend_id>? ORDER BY friend_id LIMIT 1";		//
 		
 		getConnection();
 		try {
