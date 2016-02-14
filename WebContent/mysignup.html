@@ -201,7 +201,7 @@
 	</div>
 	
 	<script type="text/javascript">
-		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, latitude, longitude, coords, reasonforLogIn = '';
+		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, latitude, longitude, coords, reasonforLogIn = '', friends;
 		
 		function start(){
 			$("#modalTriggerButton").hide();
@@ -326,6 +326,7 @@
 						'/me/friends', function (response) {
 							if (response && !response.error) {
 								addFriendAPICall = response.data.length;
+								friends = response.data.length;
 								for(var i =0;i<=response.data.length;i++){
 									if (response.data.hasOwnProperty(i)) {
 										var friend_name = response.data[i].name;
@@ -358,7 +359,12 @@
 				heading.innerHTML = "Signup Successful";
 				
 				var div = document.getElementById("modalMsg");
+				
+				if(reasonforLogIn == "Facebook"){
+				div.innerHTML = "Welcome to fRRndLease, You have "+friends+" Facebook friends in your fRRndLease friendlist";
+				}else{
 				div.innerHTML = "Welcome to fRRndLease";
+				}
 			}
 			
 			$("#modalTriggerButton").click();
