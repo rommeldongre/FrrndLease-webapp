@@ -109,12 +109,12 @@ public class Friends extends Connect{
 				
 				try{
 						FlsSendMail newE = new FlsSendMail();
-						String api = "@api";
+						String source = "@api";
 						if (friendId.contains("@fb") || friendId.contains("@google")) {
-							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,api);
+							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,source);
 						}else {
-							api = "@email";
-							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,api);
+							source = "@email";
+							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,source);
 							newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO,fm);
 						}
 					}catch(Exception e){

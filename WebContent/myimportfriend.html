@@ -370,22 +370,28 @@
 			var value = $("#importemail").val();
 			var arrEmail = [];
 			var errCount = 0;
+			arrEmail = value.split(",");
+			len = arrEmail.length;
 			if(value != '' && value != ' '){
-				arrEmail = value.split(",");
-				len = arrEmail.length;
-				for(;i<len;i++){
-					var isValid = checkEmailValidity(arrEmail[i]);
-					if(checkEmailValidity(arrEmail[i])){
-							addFriendSetValues('-', '-', arrEmail[i], userloggedin);
-							addFriendDbCreate();
-						}else{
-							errCount = errCount+1;
-						}
-					
-				}
-				if(errCount!=0){
+				if(len<=20){
+					for(;i<len;i++){
+						var isValid = checkEmailValidity(arrEmail[i]);
+						if(checkEmailValidity(arrEmail[i])){
+								addFriendSetValues('-', '-', arrEmail[i], userloggedin);
+								addFriendDbCreate();
+							}else{
+								errCount = errCount+1;
+							}
+						
+					}
+					if(errCount!=0){
+						setPrevPage("myimportfriend.html");
+						var validEmail = len-errCount;
+						confirmationIndex("Success", "Number of email(s) imported: "+validEmail+" ,Number of email(s) not imported as they are valid: "+errCount);	
+					}
+				}else{
 					setPrevPage("myimportfriend.html");
-				    confirmationIndex("Sorry", "Number of Entered email(s) not valid: "+errCount);	
+					confirmationIndex("Sorry", "Please enter emails less than or equal to 20");
 				}
 			}	
 		}

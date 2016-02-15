@@ -72,12 +72,12 @@ public class FlsSendMail {
 			
 		case FLS_MAIL_ADD_FRIEND_FROM:
 			FriendsModel affm = (FriendsModel) obj;
-			if (apiflag[0]=="@api") {
+			if (apiflag != null && apiflag[0]=="@api") {
 				email.setSubject("["+affm.getFullName()+"] added to Friendlist");
 				email.setMsg( "You have sucessfully added ["
 						+ affm.getFullName()
 						+ "] to your Friendlist- \n \n");  
-			}else if (apiflag[0]=="@email"){
+			}else if (apiflag != null && apiflag[0]=="@email"){
 				email.setSubject("[" 
 						+ (affm.getFriendId()) 
 						+ "] added to Friendlist");
