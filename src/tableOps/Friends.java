@@ -113,7 +113,8 @@ public class Friends extends Connect{
 						if (friendId.contains("@fb") || friendId.contains("@google")) {
 							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,api);
 						}else {
-							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm);
+							api = "@email";
+							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,api);
 							newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO,fm);
 						}
 					}catch(Exception e){
