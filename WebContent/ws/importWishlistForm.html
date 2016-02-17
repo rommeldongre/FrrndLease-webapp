@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Wish Item Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var WishlistUrl = null;
+	
+	getData = function() {
+		//alert("Inside get Data");
+		
+		Status = "Wished";
+		
+		WishlistUrl = document.getElementById("wishlisturl").value;
+		if (WishlistUrl === '') WishlistUrl = null;
+	}
+	
+	wishItem = function() {
+		//alert("Inside Add function");
+		getData();
+		//alert("creating a json object")
+		var req = {
+					url: WishlistUrl
+		};
+		//var Req = JSON.parse(JOSNObject);
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send");
+		$.ajax({
+			url: '/flsv2/ImportWishlist',
+			type: 'POST',
+			data: JSON.stringify(req),
+			contentType: "application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				alert('Working');
+				document.getElementById("count").value = response.wishItemCount;
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> Import Wishlist FORM</h1>
+	<form>
+		Wishlist URL      : <input type="text" name="wishlisturl" id="wishlisturl" ><br/><br/>
+
+		<input type="button" value="Import Wishlist" onclick="wishItem()">
+		
+		<h1>OUTPUT</h1>
+		Count of Items Imported : <input type="text" name="count" id="count"><br/><br/>
+	</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
