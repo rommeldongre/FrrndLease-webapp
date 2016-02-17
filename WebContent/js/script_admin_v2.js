@@ -35,6 +35,7 @@ var itemId = 0,
 	endOfCarousel = 0;
 	userName = null;
 	addFriendAPICall = 0;
+	WishlistUrl = null;
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
@@ -1539,3 +1540,46 @@ getOutRequest = function(req) {
 	};
 	
 //MyOutgoingRequests ends here---------------------------------
+
+
+//ImportWishlist starts here---------------------------------
+
+function getWishlist(i){
+	//alert("Inside getNextOutItem function.");
+	if(i == '' || i == undefined)
+		WishlistUrl = "";
+	
+	WishlistUrl = i;
+	
+	var req = {
+		url: WishlistUrl
+	}
+	
+	getWishlistRequest(req);
+}
+
+getWishlistRequest = function(req) {
+		//alert("Inside send function.");
+		$.ajax({
+			url: '/flsv2/ImportWishlist',
+			type:'POST',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType: "JSON",
+			success: function(response) {
+				//alert("working");
+				if(!response.wishItemCount){
+				}else{
+					confirmationIndex("Success", "Length of string is: "+response.wishItemCount);
+					//getOutItemForRequest(response);
+					console.log(response.wishItemCount);
+					//alert(response.title);
+				}
+			},
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+//ImportWishlist ends here---------------------------------

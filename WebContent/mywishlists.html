@@ -17,7 +17,7 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/mystore.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
 	<!--Loading Animation code CSS & JS Links  -->
 	<link href="css/animation.css" type="text/css" rel="stylesheet">
@@ -156,6 +156,32 @@
 			</div>
 			
 			
+			<!-- Button trigger Text Input Modal -->
+			<button id="inputTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModalAlert">
+			  Launch demo modal
+			</button>
+
+			<!-- Text Input Modal Modal -->
+			<div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabelInput">
+					</h4>
+				  </div>
+				  <div class="modal-body" id="modalMsgInput">
+					<input type="text" name="urlInput" id="urlInput" class="form-control">
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="">Close</button>
+					<button type="button" class="btn btn-primary" onclick="import_wishlist()">Submit URL</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			
 			<!--Footer starts------------------------------------>
 			<nav class="navbar navbar-default navbar-fixed-bottom">
 				<div class="container-fluid">
@@ -270,7 +296,23 @@
 		
 		function import_wishitem(){
 			setPrevPage("mywishlists.html");
-			alert("importbutton clicked");
+			//alert("importbutton clicked");
+			var header = document.getElementById("myModalLabelInput");
+			header.innerHTML = "Input URL of Public Amazon Wishlist";
+			$("#inputTriggerButton").click();
+			
+			
+		}
+		
+		function import_wishlist(){
+		var inputURL = document.getElementById("urlInput").value;
+		if(inputURL!=null || inputURL!=' '){
+			$('#myModalAlert').modal('hide');
+			getWishlist(inputURL);
+			
+		}else{
+			console.log("No Input Given: ");
+		}
 		}
 
 		$(document).on("click",".remove",function(event){			//when X button is pressed
