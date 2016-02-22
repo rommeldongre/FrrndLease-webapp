@@ -32,7 +32,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 	
 	private String user_name, check=null,Id=null,token, message,check1;
 	private int Code;
-	private int count=0;
+	private int newItemCount=0;
 	Response res = new Response();
 	WishlistModel wm = new WishlistModel();
 
@@ -91,9 +91,9 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
          
          
        //rs.setWishItemCount(rq.getUrl().length());
-        rs.setWishItemCount(count);
-        if(count==0){
-        	 rs.setWishItemCount(count);
+        rs.setWishItemCount(newItemCount);
+        if(newItemCount==0){
+        	 rs.setWishItemCount(newItemCount);
         }
 		message = rs.getWishItemCount().toString();
 		System.out.println("Printing out Resultset: "+message);
@@ -201,7 +201,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				stmt3.setInt(1, itemId);
 				stmt3.executeUpdate();
 				System.out.println("Entry added into wishlist table");
-				count++;
+				newItemCount++;
 				//message = "Entry added into wishlist table";
 				//Code = 33;
 				//Id = String.valueOf(itemId);
