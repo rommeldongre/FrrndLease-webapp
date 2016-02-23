@@ -1544,14 +1544,16 @@ getOutRequest = function(req) {
 
 //ImportWishlist starts here---------------------------------
 
-function getWishlist(i){
+function getWishlist(i,j){
 	//alert("Inside getNextOutItem function.");
 	if(i == '' || i == undefined)
 		WishlistUrl = "";
 	
 	WishlistUrl = i;
+	userName = j;
 	
 	var req = {
+		userId: userName,
 		url: WishlistUrl
 	}
 	
@@ -1568,13 +1570,11 @@ getWishlistRequest = function(req) {
 			dataType: "JSON",
 			success: function(response) {
 				//alert("working");
-				if(!response.wishItemCount){
-				}else{
-					confirmationIndex("Success", "Length of string is: "+response.wishItemCount);
+					confirmationIndex("Success", " New Amazon Wishlist Items imported : "+response.wishItemCount);
 					//getOutItemForRequest(response);
 					console.log(response.wishItemCount);
 					//alert(response.title);
-				}
+				
 			},
 			error: function() {
 				alert("not working");

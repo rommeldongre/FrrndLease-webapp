@@ -30,7 +30,7 @@ import org.jsoup.select.Elements;
 
 public class ImportWishlistHandler extends Connect implements AppHandler {
 	
-	private String user_name, check=null,Id=null,token, message,check1;
+	private String user_name, check=null,Id=null,token, message,check1=null;
 	private int Code;
 	private int newItemCount=0;
 	Response res = new Response();
@@ -59,11 +59,12 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		//TODO: Core of the processing takes place here
 		check = null;
 		System.out.println("Inside ImportWishlist method");
-         
-         Document doc = Jsoup.connect(rq.getUrl()).timeout(10*1000).get();
+		newItemCount=0;
+         Document doc = Jsoup.connect(rq.getUrl()).timeout(10*1000).post();
 
          Elements links = doc.select("a[id*=itemName]");
          System.out.println("Total number of elements: " + links.size()); 
+         System.out.println("Value before for loop: "+newItemCount);
          
          for (int i = 0;i<links.size();i++) {  
              System.out.println("\ntext : " + links.get(i).text()); 
@@ -88,13 +89,10 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				 System.out.println("Calling Amazon Wishlist Function "); 
 				AmazonWishlist(links.get(i).text(),rq.getUserId());
          }
-         
+         System.out.println("Value after for loop: "+newItemCount);
          
        //rs.setWishItemCount(rq.getUrl().length());
         rs.setWishItemCount(newItemCount);
-        if(newItemCount==0){
-        	 rs.setWishItemCount(newItemCount);
-        }
 		message = rs.getWishItemCount().toString();
 		System.out.println("Printing out Resultset: "+message);
 		Code = FLS_SUCCESS;
@@ -113,7 +111,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 	private void AmazonWishlist(String URL, String name){
 		
 		String Iname, User;
-		Integer insertcount=0, LeaseValue=0;
+		Integer insertcount=0;
 		Iname = URL;
 		User = name;
 		
@@ -132,11 +130,12 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			ResultSet dbResponse = stmt.executeQuery();
 			System.out.println("ImportWishlistHandler select query executed...");
 			
-			while(dbResponse.next()){
-				check1 = dbResponse.getString("item_name");
-				System.out.println("Inside check1");
-			}
-				if (check1==null) {
+			if(dbResponse.next() == false){
+				//check1 = dbResponse.getString("item_name");
+				//System.out.println("Inside check1: "+check1);
+			//}
+				//if (check1 == null) {
+					System.out.println("Item: "+Iname+"for user: "+User+" does not exist");
 					String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 					System.out.println("Creating Insert statement of ImportWishlistHandler.....");
 					PreparedStatement stmt1 = connection.prepareStatement(sql1);
@@ -172,6 +171,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 					
 				}else {
 					System.out.println("Amazon Wishlist Item Already exists");
+					System.out.println("Item: "+Iname+"for user: "+User+" exists");
 					//Id = "0";
 					//message = FLS_END_OF_DB_M;
 					//Code = FLS_END_OF_DB;
@@ -184,8 +184,8 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			System.out.println("Error Check Stacktrace");
 			e.printStackTrace();
 		}
-		
-		if(insertcount> 0){
+
+		if(insertcount== 1){
 			
 			Integer itemId = wm.getItemId();
 			
@@ -200,8 +200,8 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				System.out.println("Statement created. Executing query.....");
 				stmt3.setInt(1, itemId);
 				stmt3.executeUpdate();
-				System.out.println("Entry added into wishlist table");
-				newItemCount++;
+				System.out.println("Entry added into wishlist table: "+insertcount);
+				newItemCount = newItemCount+ 1;
 				//message = "Entry added into wishlist table";
 				//Code = 33;
 				//Id = String.valueOf(itemId);
