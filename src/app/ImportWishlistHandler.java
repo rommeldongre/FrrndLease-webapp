@@ -30,7 +30,7 @@ import org.jsoup.select.Elements;
 
 public class ImportWishlistHandler extends Connect implements AppHandler {
 	
-	private String user_name, check=null,Id=null,token, message,check1=null;
+	private String user_name, check=null,Id=null,token, message;
 	private int Code;
 	private int newItemCount=0;
 	Response res = new Response();
@@ -131,10 +131,6 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			System.out.println("ImportWishlistHandler select query executed...");
 			
 			if(dbResponse.next() == false){
-				//check1 = dbResponse.getString("item_name");
-				//System.out.println("Inside check1: "+check1);
-			//}
-				//if (check1 == null) {
 					System.out.println("Item: "+Iname+"for user: "+User+" does not exist");
 					String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 					System.out.println("Creating Insert statement of ImportWishlistHandler.....");
