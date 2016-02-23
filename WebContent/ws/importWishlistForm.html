@@ -6,6 +6,7 @@
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var WishlistUrl = null;
+	var userloggedin = null;
 	
 	getData = function() {
 		//alert("Inside get Data");
@@ -14,6 +15,8 @@
 		
 		WishlistUrl = document.getElementById("wishlisturl").value;
 		if (WishlistUrl === '') WishlistUrl = null;
+		
+		userloggedin = localStorage.getItem("userloggedin");
 	}
 	
 	wishItem = function() {
@@ -21,7 +24,9 @@
 		getData();
 		//alert("creating a json object")
 		var req = {
+					userId: userloggedin,
 					url: WishlistUrl
+					
 		};
 		//var Req = JSON.parse(JOSNObject);
 		send(req);

@@ -308,7 +308,7 @@
 		var inputURL = document.getElementById("urlInput").value;
 		if(inputURL!=null || inputURL!=' '){
 			$('#myModalAlert').modal('hide');
-			getWishlist(inputURL);
+			getWishlist(inputURL,userloggedin);
 			
 		}else{
 			console.log("No Input Given: ");
