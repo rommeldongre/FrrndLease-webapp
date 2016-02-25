@@ -20,7 +20,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/myfriend.css" rel="stylesheet">
 	<link href="css/mystore.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
 	<!--Loading Animation code CSS & JS Links  -->
 	<link href="css/animation.css" type="text/css" rel="stylesheet">
@@ -196,7 +196,7 @@
 	<script type="text/javascript">
 		var googleFriendsCounter = 0, counter = 0, email = '', name = '', number = '', user_email = '', len = 0, directFriendCounter = 1, i = 0, emailFlag1 = 0, emailFlag2 = 0;
 		
-		var clientId = '420409134995-9pai2dr3clt5cs03u6e6i6o2vjaeer96.apps.googleusercontent.com';
+		var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
 		var apiKey = 'API Code';
 		var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
 	
@@ -268,7 +268,7 @@
 		
 		function importgoogle(){
 			//confirmationIndex("importgoogle called");
-			gapi.client.setApiKey(apiKey);
+			//gapi.client.setApiKey(apiKey);
             window.setTimeout(authorize);		//calls authorize()
 			$("#addcheckedfriends").show();
 		}
@@ -387,7 +387,7 @@
 					if(errCount!=0){
 						setPrevPage("myimportfriend.html");
 						var validEmail = len-errCount;
-						confirmationIndex("Success", "Number of email(s) imported: "+validEmail+" ,Number of email(s) not imported as they are valid: "+errCount);	
+						confirmationIndex("Success", "Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount);	
 					}
 				}else{
 					setPrevPage("myimportfriend.html");
