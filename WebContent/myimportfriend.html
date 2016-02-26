@@ -236,7 +236,7 @@
 	</div>
 		
 	<script type="text/javascript">
-		var googleFriendsCounter = 0, counter = 0, email = '', name = '', number = '', user_email = '', len = 0, directFriendCounter = 1, i = 0, emailFlag1 = 0, emailFlag2 = 0;
+		var googleFriendsCounter = 0, counter = 0, checkcounter = 0, email = '', name = '', number = '', user_email = '', len = 0, directFriendCounter = 1, i = 0, emailFlag1 = 0, emailFlag2 = 0;
 		
 		var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
 		var apiKey = 'API Code';
@@ -341,6 +341,7 @@
 					googleFriendsCounter = n;
 					
 					for(i=0;i<n;i++){
+					    if(response.feed.entry[i].gd$email){
 						tp = i+1;
 						
 						user_email = JSON.stringify(response.feed.author[0].email.$t);
@@ -354,7 +355,7 @@
 							number = "-";
 						}
 						try{
-							name = JSON.stringify(response.feed.entry[i].gd$name.gd$givenName.$t);
+							name = JSON.stringify(response.feed.entry[i].gd$name.gd$fullName.$t);
 							name =  name.substring(1,name.length-1);
 						}catch (Exception){ 
 							//name = "Name do not Exist for Friend " +  tp;	 	
@@ -369,7 +370,7 @@
 						}
 					 
 						addFriendOptionToPage(email,name,number,user_email,i); 
-						
+						}
 					}
 					
 				});
@@ -467,6 +468,7 @@
 					mobile = $("#mobile"+counter).text();
 					email = $("#email"+counter).text();
 					console.log("name: "+name+" mobile: "+mobile+" email: "+email);
+					checkcounter++;
 					
 					addFriendSetValues(name, mobile, email, userloggedin);
 					addFriendDbCreate();
@@ -474,7 +476,7 @@
 					add_checked_friends_continued();		//basically just increment and call the same function again
 				}
 			}else{
-				confirmationIndex("Successful", "Friends Imported");
+				confirmationIndex("Successful", " Number of Friends Imported : "+checkcounter);
 			}
 		}
 		
