@@ -1570,7 +1570,7 @@ getWishlistRequest = function(req) {
 			dataType: "JSON",
 			success: function(response) {
 				//alert("working");
-					confirmationIndex("Success", " New Amazon Wishlist Items imported : "+response.wishItemCount);
+					confirmationIndex("Success",response.wishItemCount+" out of "+response.totalWishItemCount+" Amazon Wishlist Items Imported");
 					//getOutItemForRequest(response);
 					console.log(response.wishItemCount);
 					//alert(response.title);

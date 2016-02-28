@@ -4,6 +4,7 @@ package app;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.regex.*;
 
 import connect.Connect;
 import pojos.ImportWishlistReqObj;
@@ -65,6 +66,15 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
          Elements links = doc.select("a[id*=itemName]");
          System.out.println("Total number of elements: " + links.size()); 
          System.out.println("Value before for loop: "+newItemCount);
+         
+         Element links2 = doc.select("div[class*=selected] > a > span > span").first();
+         System.out.println("selected Wishlist count: " +links2.text());
+         Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(links2.text());
+         while(m.find()) {
+           System.out.println(m.group(1));
+           int foo = Integer.parseInt(m.group(1));
+           rs.setTotalWishItemCount(foo);
+         }
          
          for (int i = 0;i<links.size();i++) {  
              System.out.println("\ntext : " + links.get(i).text()); 
