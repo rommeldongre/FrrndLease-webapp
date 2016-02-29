@@ -12,7 +12,8 @@
 				var salutation = document.getElementById("salutation");
 				var span = document.createElement("span");
 				
-				span.innerHTML = userloggedin;
+				userloggedinName = localStorage.getItem("userloggedinName");
+				span.innerHTML = userloggedinName;
 				salutation.appendChild(span);
 			}else{                               // if a user is not logged in show login & signup options.
 			    $('#subheader').hide();			
