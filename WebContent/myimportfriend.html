@@ -77,25 +77,35 @@
 		</nav>
 		
 		<div class="container-fluid" id="midcontainer">
-			<div class="row" id="importbuttons">
-				<div class="col-lg-5 col-md-5 col-sm-5">
-					<button class="btn btn-primary" id="importfb" onclick="importfb()">Import Facebook</button>
-				</div>
-				<div class="col-lg-5 col-md-5 col-sm-5">
-					<button class="btn btn-primary" id="importwhatsapp" onclick="importwhatsapp()">Import Whatsapp</button>
-				</div>
-				<div class="col-lg-2 col-md-2 col-sm-2">
-					<button class="btn btn-primary" id="importgoogle" onclick="importgoogle()">Import Google</button>
+		<h2>Invite Friends</h2>
+			<div class="row">
+				<div class="col-*-12">
+					<center><button class="btn btn-primary" id="importfb" onclick="importfb()">Invite Facebook Friends</button>
+					</center>
 				</div>
 			</div>
-			
-			<br /><br /><br />
+			</br> </br>
+			<div class="row">
+				<div class="col-*-12">
+					<center><button class="btn btn-primary" id="importgoogle" onclick="importgoogle()">Invite Gmail Friends</button>
+					</center>
+				</div>
+			</div>
+			</br> </br>
+			<div class="row">
+				<div class="col-*-12">
+					<center><button class="btn btn-primary" id="importwhatsapp" onclick="importwhatsapp()">Invite Whatsapp Friends</button>
+					</center>
+				</div> 
+			</div>
+			</br> <br />
+
 			<div id="emailbox" class="input-group">
 				<input type="text" id="importemail" class="form-control" placeholder=" Email, comma separated. example1@xyz.com, example2@abc.net">
 				<span class="input-group-btn">
-					<button class="btn btn-primary" onclick="directImport()">Import Email</button>
+					<button class="btn btn-primary" onclick="directImport()">Invite Friends by Email</button>
 				</span>
-			</div>
+			</div>			
 			<br /><br />
 			
 			<!-- sample pop up starts here-->
@@ -306,7 +316,7 @@
 		
 		function importwhatsapp(){
 			
-			//confirmationIndex("importwhatsapp called");
+			confirmationIndex("Not Currently Supported");
 		}
 		
 		function importgoogle(){
