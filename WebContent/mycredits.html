@@ -43,7 +43,26 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 	
-	<style>@media screen and (min-width:700px){#fls_image,#credits{margin-left:20%}}{#rommelsocial{display:inline}}</style>
+	<style>@media screen and (min-width:700px){#fls_image,#credits{margin-left:20%}}{#rommelsocial{display:inline}}
+	<style>
+	<!--
+	#wishbox{
+		position: absolute;
+		max-width: 600px;
+		width: 90%;
+		bottom: 30px;
+		left: 40%;
+		top: 10px
+	}
+
+	#searchbox{
+		position: relative;
+		left: -50%;
+	}
+	#navBarSearchForm input[type=text]{width:330px !important;}
+	-->
+	
+	</style>
   </head>
   
   <body onload="start()">
@@ -53,6 +72,7 @@
 		
 		<!--header starts---------------------------------------->
 		<nav class="navbar navbar-default" id="header">
+		
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
@@ -63,6 +83,11 @@
 					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
+					
+					<form class="navbar-form navbar-left" role="search" id="navBarSearchForm">
+					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+					</form>
+					
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
 						<li id="loginoptionmenu"><a id="headerfooteroptions" href="mylogin.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 						<li id="signupoptionmenu"><a id="headerfooteroptions" href="mysignup.html"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
@@ -79,6 +104,7 @@
 					</ul>
 				</div>
 			</div>
+			
 		</nav>
 		<!--header ends----------------------------------------->
 		
