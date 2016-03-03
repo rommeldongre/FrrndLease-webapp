@@ -50,7 +50,7 @@
 </div>
 	<div id="main">	
 		
-		<nav class="navbar navbar-default">
+		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
@@ -61,11 +61,7 @@
 					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
-					
-					<form class="navbar-form navbar-left" role="search" id="navBarSearchForm">
-					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
-					</form>
-					
+				
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
 						<li id="loginoptionmenu"><a id="headerfooteroptions" href="mylogin.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 						<li id="signupoptionmenu"><a id="headerfooteroptions" href="mysignup.html"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
@@ -73,18 +69,21 @@
 						<li class="dropdown" id="subheader">
 							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 							<span id="salutation"></span> <span class="caret"></span></a>
-							
-							<ul class="dropdown-menu" id="dropA">
-								<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
-							</ul>
+								<ul class="dropdown-menu" id="dropA">
+									<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
+								</ul>
 						</li>
-						
 					</ul>
+					
+					<form class="navbar-form navbar-right" role="search" id="navBarSearchForm" type=get action="index.html">
+					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+					</form>
+					
 				</div>
 			</div>
 		</nav>
 		
-		<div id="banner">
+		<div id="banner" style="padding-top: 50px;">
 			<div class="col-md-3 col-lg-3 col-sm-3"></div>
 			<div id="topheader" class="col-md-6 col-lg-6 col-sm-6">
 				<h2><strong>Reduce. Reuse. Feel Good!</strong></h2><br />
