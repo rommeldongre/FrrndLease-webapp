@@ -46,6 +46,7 @@ body{
 
 #midcontainer{
 	margin: auto;
+	padding-top: 50px;
 }
 
 #add_picture{
