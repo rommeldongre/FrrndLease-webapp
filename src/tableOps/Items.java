@@ -162,12 +162,8 @@ public class Items extends Connect {
 			String status_W= im.getStatus();     // To be used to check if Request is from WishItem API.
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try{
-						FlsSendMail newE = new FlsSendMail();
-						AwsSESEmail awsEmail = new AwsSESEmail();
-						//newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);
-						awsEmail.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);
-						System.out.println("====> Test done?!!");
-						
+						AwsSESEmail newE = new AwsSESEmail();
+						newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);						
 				}catch(Exception e){
 						e.printStackTrace();
 				}

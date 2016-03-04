@@ -48,26 +48,7 @@ public class AwsSESEmail {
 
 	private static String user_id;
 	
-	/*
-	public enum Fls_Enum { FLS_MAIL_REGISTER, //done
-						   FLS_MAIL_POST_ITEM, //done
-						   FLS_MAIL_DELETE_ITEM, //done
-						   FLS_MAIL_MAKE_REQUEST_FROM, //done
-						   FLS_MAIL_MAKE_REQUEST_TO, // done
-						   FLS_MAIL_GRANT_REQUEST_FROM, //same as grant lease from
-						   FLS_MAIL_GRANT_REQUEST_TO, //same as grant lease to
-						   FLS_MAIL_REJECT_REQUEST_FROM, // working partially. Set flag for lease part(done)
-						   FLS_MAIL_REJECT_REQUEST_TO, // not done as pojo needs to be filled
-						   FLS_MAIL_ADD_FRIEND_FROM, //done
-						   FLS_MAIL_ADD_FRIEND_TO, //done
-						   FLS_MAIL_DELETE_FRIEND_FROM, //done
-						   FLS_MAIL_DELETE_FRIEND_TO, //done
-						   FLS_MAIL_GRANT_LEASE_FROM,//done
-						   FLS_MAIL_GRANT_LEASE_TO,//done
-						   FLS_MAIL_REJECT_LEASE_FROM, // not done pojo needs to be filled   //done
-						   FLS_MAIL_REJECT_LEASE_TO } //done
-	*/
-    
+  
     /*
      * Before running the code:
      *      Fill in your AWS access credentials in the provided credentials
