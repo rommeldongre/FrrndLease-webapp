@@ -1,7 +1,12 @@
 $(function(){
             $.get("dynamicdropdown.html", function(response) {
                   $('#dropA').html(response);
+				  
 				  //applyDynamicBindings('#dropA');
+            });
+			
+			$.get("searchbar.html", function(response) {
+                  $('#navBarSearchForm').html(response);
             });
         });
 		

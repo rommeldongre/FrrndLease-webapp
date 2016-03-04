@@ -90,7 +90,7 @@
 			<div id="searchbox" class="input-group">
 				<input id="wish_title" type="text" class="form-control" placeholder="Search from over 100 useful items in your Friend's Store"></input>
 				<span class="input-group-btn">
-					<button class="btn btn-primary" onclick="searchItem()"><i class="glyphicon glyphicon-search"></i></button>
+					<button class="btn btn-primary" onclick="searchItem()" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
 				</span>
 			</div>
 		</div>
@@ -245,9 +245,40 @@
 			
 			getScreenType();
 			
-			loadCarousel();				//called when page is loaded initially
+			searchbar();				//called when page is loaded initially
 		}
 		
+		function searchbar(){
+		
+			params = getParams();
+			var search_item = unescape(params["wish_title1"]);
+			if (search_item != "undefined" ) {
+				search_item = search_item.replace(/\+/g, " ");
+				document.getElementById("wish_title").value = search_item;
+				//$("#search_btn_home").click();
+				document.getElementById("search_btn_home").click();
+				//searchItem()
+				console.log("not undefined");
+				window.location.hash = '#wishbox';
+			}else{
+				loadCarousel();
+			}
+			
+			//console.log(search_item);
+		}
+		
+		 function getParams(){
+			var idx = document.URL.indexOf('?');
+			var params = new Array();
+			if (idx != -1) {
+				var pairs = document.URL.substring(idx+1, document.URL.length).split('&');
+			for (var i=0; i<pairs.length; i++){
+				nameVal = pairs[i].split('=');
+				params[nameVal[0]] = nameVal[1];
+				}
+			}
+			return params;
+		}
 		function load_Gapi(){						//for google
 			gapi.load('auth2', function() {
 				gapi.auth2.init();

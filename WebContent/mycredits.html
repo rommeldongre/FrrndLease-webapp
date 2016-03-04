@@ -52,7 +52,8 @@
 	<div id="main">
 		
 		<!--header starts---------------------------------------->
-		<nav class="navbar navbar-default" id="header">
+		<nav class="navbar navbar-default navbar-fixed-top" id="header">
+		
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
@@ -63,6 +64,7 @@
 					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
+					
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
 						<li id="loginoptionmenu"><a id="headerfooteroptions" href="mylogin.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 						<li id="signupoptionmenu"><a id="headerfooteroptions" href="mysignup.html"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
@@ -75,10 +77,15 @@
 								<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
 							</ul>
 						</li>
-						
 					</ul>
+					
+					<form class="navbar-form navbar-right" role="search" id="navBarSearchForm" type=get action="index.html">
+					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+					</form>
+					
 				</div>
 			</div>
+			
 		</nav>
 		<!--header ends----------------------------------------->
 		
