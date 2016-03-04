@@ -10,12 +10,17 @@ public class Connect extends ErrorCat{
 	
 	protected static Connection connection = null;
 	
-	//Database user name and password
+	//Local - Database 
+	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private static String name = "root";
 	private static String pass = "root";
 			
-	//Database URL and JDBC Driver
-	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
+	//Amazon RDS Database
+	//private static String url = "jdbc:mysql://greylabsdb.c2dfmnaqzg4x.ap-southeast-1.rds.amazonaws.com:3306/fls";
+	//private static String name = "awsuser";
+	//private static String pass = "greylabs123";
+
+	//JDBC Driver
 	private static String driver = "com.mysql.jdbc.Driver";
 	
 	protected static /*Connection*/void getConnection() {

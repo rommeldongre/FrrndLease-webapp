@@ -13,6 +13,7 @@ import connect.Connect;
 import adminOps.Response;
 import pojos.ItemsModel;
 import util.FlsSendMail;
+import util.AwsSESEmail;
 
 public class Items extends Connect {
 	
@@ -161,11 +162,11 @@ public class Items extends Connect {
 			String status_W= im.getStatus();     // To be used to check if Request is from WishItem API.
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try{
-						FlsSendMail newE = new FlsSendMail();
-						newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);
-						}catch(Exception e){
-							e.printStackTrace();
-						}
+						AwsSESEmail newE = new AwsSESEmail();
+						newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM,im);						
+				}catch(Exception e){
+						e.printStackTrace();
+				}
 			}
 			
 			//returning the new id
