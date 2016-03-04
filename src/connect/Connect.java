@@ -8,17 +8,17 @@ import errorCat.ErrorCat;
 
 public class Connect extends ErrorCat{
 	
-	protected Connection connection = null;
+	protected static Connection connection = null;
 	
 	//Database user name and password
-	private String name = "root";
-	private String pass = "root";
+	private static String name = "root";
+	private static String pass = "root";
 			
 	//Database URL and JDBC Driver
-	private String url = "jdbc:mysql://127.0.0.1:3306/fls";
-	private String driver = "com.mysql.jdbc.Driver";
+	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
+	private static String driver = "com.mysql.jdbc.Driver";
 	
-	protected /*static Connection*/void getConnection() {
+	protected static /*Connection*/void getConnection() {
 		
 		if (connection == null){
 			System.out.println("Registering driver....");
@@ -40,6 +40,9 @@ public class Connect extends ErrorCat{
 				e.printStackTrace();
 				System.out.println("Couldnt connect to database...");
 			}
+		}else {
+			System.out.println("Connection exists....");
+			
 		}
 		
 		//return connection;
