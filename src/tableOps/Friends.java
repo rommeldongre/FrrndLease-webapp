@@ -11,6 +11,7 @@ import pojos.FriendsModel;
 import adminOps.Response;
 import connect.Connect;
 import util.FlsSendMail;
+import util.FlsLogger;
 
 public class Friends extends Connect{
 	
@@ -18,7 +19,7 @@ public class Friends extends Connect{
 	private int Code;
 	private FriendsModel fm;
 	private Response res = new Response();
-	
+
 	public Response selectOp(String Operation, FriendsModel fdm, JSONObject obj) {
 		operation = Operation.toLowerCase();
 		fm = fdm;
@@ -41,7 +42,8 @@ public class Friends extends Connect{
 			break;
 			
 		case "getnext" :
-			System.out.println("Get Next operation is selected.");
+			//System.out.println("Get Next operation is selected.");
+			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getNext();
@@ -236,15 +238,18 @@ public class Friends extends Connect{
 	private void getNext() {
 		check = null;
 		Id = fm.getFriendId();
-		System.out.println("Inside GetNext method");
+		//System.out.println("Inside GetNext method");
+		LOGGER.fine("Inside GetNext method");
 		String sql = "SELECT * FROM friends WHERE friend_user_id = ? AND friend_id>? ORDER BY friend_id LIMIT 1";		//
 		
 		getConnection();
 		try {
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing getNext query...");
+			//System.out.println("Statement created. Executing getNext query...");
+			LOGGER.fine("Statement created. Executing getNext query...");
 			stmt.setString(1, Id);
 			stmt.setString(2, token);
 			
@@ -257,7 +262,8 @@ public class Friends extends Connect{
 				json.put("userId",rs.getString("friend_user_id"));
 				
 				message = json.toString();
-				System.out.println(message);
+				//System.out.println(message);
+				LOGGER.fine(message);
 				check = rs.getString("friend_id");
 			}
 			
