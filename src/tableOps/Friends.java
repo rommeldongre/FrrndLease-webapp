@@ -27,17 +27,20 @@ public class Friends extends Connect{
 		switch(operation) {
 		
 		case "add" :
-			System.out.println("Add op is selected..");
+			//System.out.println("Add op is selected..");
+			LOGGER.fine("Add op is selected..");
 			Add();
 			break;
 			
 		case "delete" : 
-			System.out.println("Delete operation is selected");
+			//System.out.println("Delete operation is selected");
+			LOGGER.fine("Delete operation is selected");
 			Delete();
 			break;
 			
 		case "edit" :
-			System.out.println("Edit operation is selected.");
+			//System.out.println("Edit operation is selected.");
+			LOGGER.fine("Edit operation is selected.");
 			Edit();
 			break;
 			
@@ -54,7 +57,8 @@ public class Friends extends Connect{
 			break;
 			
 		case "getprevious" :
-			System.out.println("Get Next operation is selected.");
+			//System.out.println("Get Next operation is selected.");
+			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getPrevious();
@@ -83,7 +87,8 @@ public class Friends extends Connect{
 		getConnection();
 		
 		try {
-			System.out.println("Creating Select statement.....");
+			//System.out.println("Creating Select statement.....");
+			LOGGER.fine("Creating Select statement.....");
 			PreparedStatement stmt1 = connection.prepareStatement(sql1);
 			stmt1.setString(1, userId);
 			stmt1.setString(2, friendId);
@@ -94,16 +99,19 @@ public class Friends extends Connect{
 				check = rs.getString("friend_id");
 			}
 			if (check == null) {
-				System.out.println("Creating statement.....");
+				//System.out.println("Creating statement.....");
+				LOGGER.fine("Creating statement.....");
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				System.out.println("Statement created. Executing query.....");
+				//System.out.println("Statement created. Executing query.....");
+				LOGGER.fine("Statement created. Executing query.....");
 				stmt.setString(1, friendId);
 				stmt.setString(2, fullName);
 				stmt.setString(3,mobile);
 				stmt.setString(4,userId);
 				stmt.executeUpdate();
-				System.out.println("Entry added into friends table");
+				//System.out.println("Entry added into friends table");
+				LOGGER.fine("Entry added into friends table");
 				
 				message = "Entry added into friends table";
 				Code = 10;
@@ -123,7 +131,8 @@ public class Friends extends Connect{
 					  e.printStackTrace();
 					}
 			}else{
-				System.out.println("Friend Already exists.....");
+				//System.out.println("Friend Already exists.....");
+				LOGGER.fine("Friend Already exists.....");
 				res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
 			}
 			
@@ -141,14 +150,16 @@ public class Friends extends Connect{
 		friendId = fm.getFriendId();
 		userId = fm.getUserId();
 		check = null;
-		System.out.println("Inside delete method....");
+		//System.out.println("Inside delete method....");
+		LOGGER.fine("Inside delete method....");
 		
 		getConnection();
 		String sql = "DELETE FROM friends WHERE friend_id=? AND friend_user_id=?";			//
 		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";			//
 		
 		try {
-			System.out.println("Creating statement...");
+			//System.out.println("Creating statement...");
+			LOGGER.fine("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
@@ -161,7 +172,8 @@ public class Friends extends Connect{
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				System.out.println("Statement created. Executing delete query on ..." + check);
+				//System.out.println("Statement created. Executing delete query on ..." + check);
+				LOGGER.fine("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, friendId);
 				stmt.setString(2, userId);
 				stmt.executeUpdate();
@@ -179,7 +191,8 @@ public class Friends extends Connect{
 					}
 			}
 			else{
-				System.out.println("Entry not found in database!!");
+				//System.out.println("Entry not found in database!!");
+				LOGGER.fine("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
@@ -196,13 +209,15 @@ public class Friends extends Connect{
 		userId = fm.getUserId();
 		check = null;
 		
-		System.out.println("inside edit method");
+		//System.out.println("inside edit method");
+		LOGGER.fine("inside edit method");
 		getConnection();
 		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=? AND friend_user_id=?";			//
 		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";								//
 		
 		try {
-			System.out.println("Creating Statement....");
+			//System.out.println("Creating Statement....");
+			LOGGER.fine("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
 			stmt2.setString(2, userId);
@@ -214,7 +229,8 @@ public class Friends extends Connect{
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				System.out.println("Statement created. Executing edit query on ..." + check);
+				//System.out.println("Statement created. Executing edit query on ..." + check);
+				LOGGER.fine("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
 				stmt.setString(2,mobile);
 				stmt.setString(3,friendId);
@@ -226,7 +242,8 @@ public class Friends extends Connect{
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 			}
 			else{
-				System.out.println("Entry not found in database!!");
+				//System.out.println("Entry not found in database!!");
+				LOGGER.fine("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
@@ -291,15 +308,18 @@ public class Friends extends Connect{
 	private void getPrevious() {
 		check = null;
 		Id = fm.getFriendId();
-		System.out.println("Inside GetPrevious method");
+		//System.out.println("Inside GetPrevious method");
+		LOGGER.fine("Inside GetPrevious method");
 		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id<? ORDER BY friend_user_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing getPrevious query...");
+			//System.out.println("Statement created. Executing getPrevious query...");
+			LOGGER.fine(message);
 			stmt.setString(1, Id);
 			stmt.setString(2, token);
 			
@@ -312,7 +332,8 @@ public class Friends extends Connect{
 				json.put("userId",rs.getString("friend_user_id"));
 				
 				message = json.toString();
-				System.out.println(message);
+				//System.out.println(message);
+				LOGGER.fine(message);
 				check = rs.getString("friend_id");
 			}
 			
