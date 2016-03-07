@@ -4,22 +4,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import java.util.logging.*;
 import errorCat.ErrorCat;
 
 public class Connect extends ErrorCat{
 	
 	protected static Connection connection = null;
+	protected static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	//Local - Database 
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private static String name = "root";
 	private static String pass = "root";
-			
+
 	//Amazon RDS Database
 	//private static String url = "jdbc:mysql://greylabsdb.c2dfmnaqzg4x.ap-southeast-1.rds.amazonaws.com:3306/fls";
 	//private static String name = "awsuser";
 	//private static String pass = "greylabs123";
-
+	
 	//JDBC Driver
 	private static String driver = "com.mysql.jdbc.Driver";
 	
