@@ -54,7 +54,7 @@ public class Connect extends ErrorCat{
 		}
 		
 		
-		// Below code specifies the level of the logger. Change value is setLevel() function according to environment
+		// Below code specifies the level of the logger. Change value in setLevel() function according to environment
 		   
 		    LOGGER.setLevel(Level.INFO);
 	        ConsoleHandler handler = new ConsoleHandler();
