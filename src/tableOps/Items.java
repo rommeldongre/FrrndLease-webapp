@@ -30,28 +30,33 @@ public class Items extends Connect {
 		switch(operation) {
 		
 		case "add" :
-			System.out.println("Add op is selected..");
+			//System.out.println("Add op is selected..");
+			LOGGER.fine("Add op is selected..");
 			Add();
 			//status = "Performing addition operation..";
 			break;
 			
 		case "delete" : 
-			System.out.println("Delete operation is selected");
+			//System.out.println("Delete operation is selected");
+			LOGGER.fine("Delete operation is selected");
 			Delete();
 			break;
 			
 		case "edit" :
-			System.out.println("Edit operation is selected.");
+			//System.out.println("Edit operation is selected.");
+			LOGGER.fine("Edit operation is selected.");
 			Edit();
 			break;
 			
 		case "editstat" :
-			System.out.println("Edit status is selected");
+			//System.out.println("Edit status is selected");
+			LOGGER.fine("Edit status is selected");
 			EditStat();
 			break;
 			
 		case "getnext" :
-			System.out.println("Get Next operation is selected.");
+			//System.out.println("Get Next operation is selected.");
+			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getInt("token");
 				System.out.println(token);
@@ -64,7 +69,8 @@ public class Items extends Connect {
 			break;
 			
 		case "getprevious" :
-			System.out.println("Get Previous Operation is selected.");
+			//System.out.println("Get Previous Operation is selected.");
+			LOGGER.fine("Get Previous Operation is selected.");
 			try {
 				token = obj.getInt("token");
 				GetPrevious();
@@ -75,7 +81,8 @@ public class Items extends Connect {
 			break;
 			
 		case "browsen" :
-			System.out.println("Browse Next Operation is selected.");
+			//System.out.println("Browse Next Operation is selected.");
+			LOGGER.fine("Browse Next Operation is selected.");
 			try {
 				token = obj.getInt("token");
 				BrowseN();
@@ -86,7 +93,8 @@ public class Items extends Connect {
 			break;
 			
 		case "browsep" :
-			System.out.println("Browse Previous Operation is selected.");
+			//System.out.println("Browse Previous Operation is selected.");
+			LOGGER.fine("Browse Previous Operation is selected.");
 			try {
 				token = obj.getInt("token");
 				BrowseP();
@@ -97,17 +105,20 @@ public class Items extends Connect {
 			break;
 			
 		case "deletepost" :
-			System.out.println("Delete Posting operation is selected");
+			//System.out.println("Delete Posting operation is selected");
+			LOGGER.fine("Delete Posting operation is selected");
 			DeletePosting();
 			break;
 			
 		case "deletewish" :
-			System.out.println("Delete Wishlist operation is selected");
+			//System.out.println("Delete Wishlist operation is selected");
+			LOGGER.fine("Delete Wishlist operation is selected");
 			DeleteWishlist();
 			break;
 		
 		case "searchitem" :
-			System.out.println("Search Item operation is selected");
+			//System.out.println("Search Item operation is selected");
+			LOGGER.fine("Search Item operation is selected");
 			try {
 				token = obj.getInt("token");
 				System.out.println(token);
@@ -135,15 +146,18 @@ public class Items extends Connect {
 		status = im.getStatus();
 		image = im.getImage();
 		
-		System.out.println("Inside add method...");
+		//System.out.println("Inside add method...");
+		LOGGER.fine("Inside add method...");
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 		
 		getConnection();
 		try {
-			System.out.println("Creating statement.....");
+			//System.out.println("Creating statement.....");
+			LOGGER.fine("Creating statement.....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing query.....");
+			//System.out.println("Statement created. Executing query.....");
+			LOGGER.fine("Statement created. Executing query.....");
 			stmt.setString(1, title);
 			stmt.setString(2, category);
 			stmt.setString(3, description);
@@ -153,7 +167,8 @@ public class Items extends Connect {
 			stmt.setString(7, status);
 			stmt.setString(8, image);
 			stmt.executeUpdate();
-			System.out.println("Item added into table");
+			//System.out.println("Item added into table");
+			LOGGER.fine("Item added into table");
 			
 			status = "operation successfull!!!";
 			message = "Item added into table";
@@ -181,7 +196,8 @@ public class Items extends Connect {
 			res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
 			
 		} catch (SQLException e) {
-			System.out.println("Couldnt create a statement");
+			//System.out.println("Couldnt create a statement");
+			LOGGER.fine("Couldnt create a statement");
 			if(e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")){
 			      System.out.println("The image size is too large. Please select image less than 16MB");
 			      res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I) , FLS_SQL_EXCEPTION_IMAGE);
@@ -196,12 +212,14 @@ public class Items extends Connect {
 	private void Delete() {
 		id = im.getId();
 		check = 0;
-		System.out.println("Inside delete method....");
+		//System.out.println("Inside delete method....");
+		LOGGER.fine("Inside delete method....");
 		String sql = "DELETE FROM items WHERE item_id = ?";
 		
 		getConnection();
 		try {
-			System.out.println("Creating statement...");
+			//System.out.println("Creating statement...");
+			LOGGER.fine("Creating statement...");
 			
 			//checking whether the input id is present in table
 			String sql2 = "SELECT * FROM items WHERE item_id=?";
@@ -215,7 +233,8 @@ public class Items extends Connect {
 			if(check != 0){
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				System.out.println("Statement created. Executing delete query..." + check);
+				//System.out.println("Statement created. Executing delete query..." + check);
+				LOGGER.fine("Statement created. Executing delete query..." + check);
 				stmt.setInt(1, id);
 				stmt.executeUpdate();
 				status = "operation successfull deleted item id :" + id;
@@ -247,12 +266,14 @@ public class Items extends Connect {
 		status = im.getStatus();
 		image = im.getImage();
 		
-		System.out.println("Inside edit method...");
+		//System.out.println("Inside edit method...");
+		LOGGER.fine("Inside edit method...");
 		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=?, item_image=? WHERE item_id=? AND item_user_id=? AND item_status=?";
 		
 		getConnection();
 		try {
-			System.out.println("Creating statement...");
+			//System.out.println("Creating statement...");
+			LOGGER.fine("Creating statement...");
 			
 			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
@@ -267,7 +288,8 @@ public class Items extends Connect {
 			if(check != 0) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				System.out.println("Statement created. Executing edit query...");
+				//System.out.println("Statement created. Executing edit query...");
+				LOGGER.fine("Statement created. Executing edit query...");
 				stmt.setString(1, title);
 				stmt.setString(2, category);
 				stmt.setString(3, description);
@@ -307,12 +329,14 @@ public class Items extends Connect {
 		id = im.getId();
 		status = im.getStatus();
 		
-		System.out.println("Inside edit stat method...");
+		//System.out.println("Inside edit stat method...");
+		LOGGER.fine("Inside edit stat method...");
 		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
 		
 		getConnection();
 		try {
-			System.out.println("Creating statement...");
+			//System.out.println("Creating statement...");
+			LOGGER.fine("Creating statement...");
 			
 			String sql2 = "SELECT * FROM items WHERE item_id=?";
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
@@ -325,7 +349,8 @@ public class Items extends Connect {
 			if(check != 0) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				System.out.println("Statement created. Executing edit stat query...");
+				//System.out.println("Statement created. Executing edit stat query...");
+				LOGGER.fine("Statement created. Executing edit stat query...");
 				stmt.setString(1, status);
 				stmt.setInt(2, id);
 				stmt.executeUpdate();
@@ -348,14 +373,17 @@ public class Items extends Connect {
 	
 	private void GetNext() {
 		check = 0;
-		System.out.println("Inside GetNext Method..");
+		//System.out.println("Inside GetNext Method..");
+		LOGGER.fine("Inside GetNext Method..");
 		String sql = "SELECT * FROM items WHERE item_id > ? ORDER BY item_id LIMIT 1";
 		getConnection();
 		try {
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing getNext query...");
+			//System.out.println("Statement created. Executing getNext query...");
+			LOGGER.fine("Statement created. Executing getNext query...");
 			stmt.setInt(1, token);
 			
 			ResultSet rs = stmt.executeQuery();
@@ -372,7 +400,8 @@ public class Items extends Connect {
 				json.put("status", rs.getString("item_status"));
 				
 				message = json.toString();
-				System.out.println(message);
+				//System.out.println(message);
+				LOGGER.fine(message);
 				check = rs.getInt("item_id");
 				//System.out.println(id);
 			}
@@ -400,20 +429,24 @@ public class Items extends Connect {
 	
 	private void GetPrevious() {
 		check = 0;
-		System.out.println("Inside getPrevious method");
+		//System.out.println("Inside getPrevious method");
+		LOGGER.fine("Inside getPrevious method");
 		String sql = "SELECT * FROM items WHERE item_id < ? ORDER BY item_id DESC LIMIT 1";
 		getConnection();
 		
 		try {
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing getprevious query...");
+			//System.out.println("Statement created. Executing getprevious query...");
+			LOGGER.fine("Statement created. Executing getprevious query...");
 			stmt.setInt(1, token);
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("itemId\tName\tDescription\tQuantity");
+			//System.out.println("itemId\tName\tDescription\tQuantity");
+			LOGGER.fine("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getInt("item_id"));
@@ -426,7 +459,8 @@ public class Items extends Connect {
 				json.put("status", rs.getString("item_status"));
 				
 				message = json.toString();
-				System.out.println(message);
+				//System.out.println(message);
+				LOGGER.fine(message);
 				check = rs.getInt("item_id");
 			}
 			if(check != 0 ) { //checks if result Set is empty
@@ -456,21 +490,25 @@ public class Items extends Connect {
 		check = 0;
 		status = im.getStatus();
 		
-		System.out.println("Inside Browse N method");
+		//System.out.println("Inside Browse N method");
+		LOGGER.fine("Inside Browse N method");
 		String sql = "SELECT  tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= ? ORDER BY item_id LIMIT 1";
 		getConnection();
 		
 		try {
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing Browse P query...");
+			//System.out.println("Statement created. Executing Browse P query...");
+			LOGGER.fine("Statement created. Executing Browse P query...");
 			stmt.setInt(1, token);
 			stmt.setString(2,status);
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("itemId\tName\tDescription\tQuantity");
+			//System.out.println("itemId\tName\tDescription\tQuantity");
+			LOGGER.fine("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getInt("item_id"));
@@ -486,7 +524,8 @@ public class Items extends Connect {
 				json.put("location", rs.getString("user_location"));
 				
 				message = json.toString();
-				System.out.println(message);
+				//System.out.println(message);
+				LOGGER.fine(message);
 				check = rs.getInt("item_id");
 			}
 			if(check != 0 ) { //checks if result Set is empty
@@ -516,21 +555,25 @@ public class Items extends Connect {
 		check = 0;
 		status = im.getStatus();
 		
-		System.out.println("Inside Browse P method");
+		//System.out.println("Inside Browse P method");
+		LOGGER.fine("Inside Browse P method");
 		String sql = "SELECT * FROM items WHERE item_id < ? AND item_status= ? ORDER BY item_id DESC LIMIT 1";
 		getConnection();
 		
 		try {
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing BrowseP query...");
+			//System.out.println("Statement created. Executing BrowseP query...");
+			LOGGER.fine("Statement created. Executing BrowseP query...");
 			stmt.setInt(1, token);
 			stmt.setString(2,status);
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("itemId\tName\tDescription\tQuantity");
+			//System.out.println("itemId\tName\tDescription\tQuantity");
+			LOGGER.fine("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getInt("item_id"));
@@ -544,7 +587,8 @@ public class Items extends Connect {
 				json.put("image", rs.getString("item_image"));
 				
 				message = json.toString();
-				System.out.println(message);
+				//System.out.println(message);
+				LOGGER.fine(message);
 				check = rs.getInt("item_id");
 			}
 			if(check != 0 ) { //checks if result Set is empty
@@ -572,12 +616,14 @@ public class Items extends Connect {
 	
 	public String GetLeaseTerm(int itemId) {
 		String term=null;
-		System.out.println("Inside getItemLeaseTerm");
+		//System.out.println("Inside getItemLeaseTerm");
+		LOGGER.fine("Inside getItemLeaseTerm");
 		String sql = "SELECT item_lease_term FROM items WHERE item_id=?";
 		getConnection();
 		
 		try {
-			System.out.println("executing getItemLesae Term query");
+			//System.out.println("executing getItemLesae Term query");
+			LOGGER.fine("executing getItemLesae Term query");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setInt(1, itemId);
 			
@@ -596,12 +642,14 @@ public class Items extends Connect {
 		id = im.getId();
 		userId = im.getUserId();
 		String check2 = null;
-		System.out.println("Inside delete posting method....");
+		//System.out.println("Inside delete posting method....");
+		LOGGER.fine("Inside delete posting method....");
 		
 		
 		getConnection();
 		try {
-			System.out.println("Creating statement...");
+			//System.out.println("Creating statement...");
+			LOGGER.fine("Creating statement...");
 			
 			//checking whether the input id is present in table
 			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
@@ -628,7 +676,8 @@ public class Items extends Connect {
 					
 					//deletes entry from items table
 					
-					System.out.println("Statement created. Executing delete posting query..." + check);
+					//System.out.println("Statement created. Executing delete posting query..." + check);
+					LOGGER.fine("Statement created. Executing delete posting query..." + check);
 					stmt.setInt(1, id);
 					stmt.setString(2, userId);
 					stmt.executeUpdate();
@@ -671,12 +720,14 @@ public class Items extends Connect {
 		id = im.getId();
 		userId = im.getUserId();
 		String check2 = null;
-		System.out.println("Inside delete wishlist method....");
+		//System.out.println("Inside delete wishlist method....");
+		LOGGER.fine("Inside delete wishlist method....");
 		
 		
 		getConnection();
 		try {
-			System.out.println("Creating statement...");
+			//System.out.println("Creating statement...");
+			LOGGER.fine("Creating statement...");
 			
 			//checking whether the input id is present in table
 			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
@@ -700,7 +751,8 @@ public class Items extends Connect {
 					
 					//deletes entry from items table
 					
-					System.out.println("Statement created. Executing delete wishlist query..." + check);
+					//System.out.println("Statement created. Executing delete wishlist query..." + check);
+					LOGGER.fine("Statement created. Executing delete wishlist query..." + check);
 					stmt.setInt(1, id);
 					stmt.setString(2, userId);
 					stmt.executeUpdate();
@@ -731,15 +783,18 @@ public class Items extends Connect {
 		status = im.getStatus();
 		System.out.println(title+description+category+leaseValue+leaseTerm+token);
 		
-		System.out.println("Inside Search Item method");
+		//System.out.println("Inside Search Item method");
+		LOGGER.fine("Inside Search Item method");
 		String sql = "SELECT * FROM items WHERE item_id > ? AND item_name LIKE ? AND item_desc LIKE ? AND item_category LIKE ? AND item_lease_term LIKE ? ORDER BY item_id LIMIT 1";
 		getConnection();
 		
 		try {
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing BrowseP query...");
+			//System.out.println("Statement created. Executing BrowseP query...");
+			LOGGER.fine("Statement created. Executing BrowseP query...");
 			stmt.setInt(1, token);
 			stmt.setString(2,title);
 			stmt.setString(3, description);
@@ -749,9 +804,11 @@ public class Items extends Connect {
 			
 			ResultSet rs = stmt.executeQuery();
 			
-			System.out.println("itemId\tName\tDescription\tQuantity");
+			//System.out.println("itemId\tName\tDescription\tQuantity");
+			LOGGER.fine("itemId\tName\tDescription\tQuantity");
 			while(rs.next()) {
-				System.out.println("itemId\tName\tDescription\tQuantity");
+				//System.out.println("itemId\tName\tDescription\tQuantity");
+				LOGGER.fine("itemId\tName\tDescription\tQuantity");
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getInt("item_id"));
 				json.put("title", rs.getString("item_name"));
@@ -764,7 +821,8 @@ public class Items extends Connect {
 				json.put("image", rs.getString("item_image"));
 				
 				message = json.toString();
-				System.out.println(message);
+				//System.out.println(message);
+				LOGGER.fine(message);
 				check = rs.getInt("item_id");
 				break;
 			}
