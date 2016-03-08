@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import java.util.logging.*;
-import java.io.IOException;
 import errorCat.ErrorCat;
 
 public class Connect extends ErrorCat{
