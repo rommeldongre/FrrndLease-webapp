@@ -30,31 +30,26 @@ public class Leases extends Connect {
 		switch(operation) {
 		
 		case "add" :
-			//System.out.println("Add op is selected..");
 			LOGGER.fine("Add op is selected..");
 			Add();
 			break;
 			
 		case "delete" : 
-			//System.out.println("Delete operation is selected");
 			LOGGER.fine("Delete operation is selected");
 			Delete();
 			break;
 			
 		case "edit" :
-			//System.out.println("Edit operation is selected.");
 			LOGGER.fine("Edit operation is selected.");
 			Edit();
 			break;
 			
 		case "editstat" :
-			//System.out.println("Edit operation is selected.");
 			LOGGER.fine("Edit operation is selected.");
 			EditStat();
 			break;
 			
 		case "getnext" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
@@ -66,7 +61,6 @@ public class Leases extends Connect {
 			break;
 			
 		case "getprevious" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
@@ -78,7 +72,6 @@ public class Leases extends Connect {
 			break;
 			
 		case "getnextactive" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
@@ -90,7 +83,6 @@ public class Leases extends Connect {
 			break;
 			
 		case "getpreviousactive" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
@@ -135,18 +127,15 @@ public class Leases extends Connect {
 		getConnection();
 		
 		try {
-			//System.out.println("Creating statement.....");
 			LOGGER.fine("Creating statement.....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing query.....");
 			LOGGER.fine("Statement created. Executing query.....");
 			stmt.setString(1, reqUserId);
 			stmt.setString(2, itemId);
 			stmt.setString(3, userId);
 			stmt.setString(4, date);
 			stmt.executeUpdate();
-			//System.out.println("Entry added into leases table");
 			LOGGER.fine("Entry added into leases table");
 			
 			message = "Entry added into leases table";
@@ -173,7 +162,6 @@ public class Leases extends Connect {
 		reqUserId = lm.getReqUserId();
 		itemId = lm.getItemId();
 		check = null;
-		//System.out.println("Inside delete method....");
 		LOGGER.fine("Inside delete method....");
 		
 		getConnection();
@@ -181,7 +169,6 @@ public class Leases extends Connect {
 		String sql2 = "SELECT * FROM leases WHERE lease_requser_id=?,lease_item_id=?";			//
 		
 		try {
-			//System.out.println("Creating statement...");
 			LOGGER.fine("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
@@ -195,7 +182,6 @@ public class Leases extends Connect {
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				//System.out.println("Statement created. Executing delete query on ..." + check);
 				LOGGER.fine("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, reqUserId);
 				stmt.setString(2, itemId);
@@ -226,14 +212,12 @@ public class Leases extends Connect {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String date = sdf.format(cal.getTime());
 		
-		//System.out.println("inside edit method");
 		LOGGER.fine("inside edit method");
 		getConnection();
 		String sql = "UPDATE leases SET lease_user_id=?,lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=?";			//
 		String sql2 = "SELECT * FROM leases WHERE lease_requser_id=? AND lease_item_id=?";								//
 		
 		try {
-			//System.out.println("Creating Statement....");
 			LOGGER.fine("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, reqUserId);
@@ -246,7 +230,6 @@ public class Leases extends Connect {
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				//System.out.println("Statement created. Executing edit query on ..." + check);
 				LOGGER.fine("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, userId);
 				stmt.setString(2, date);
@@ -274,7 +257,6 @@ public class Leases extends Connect {
 		status = lm.getStatus();
 		
 		
-		//System.out.println("inside edit method");
 		LOGGER.fine("inside edit method");
 		getConnection();
 		String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?";							//
@@ -283,19 +265,16 @@ public class Leases extends Connect {
 		LeasesModel lm1 = new LeasesModel();
 		String sqlrf ="SELECT * FROM leases WHERE lease_item_id=?";
 		   try {
-			//System.out.println("Creating Statement....");
 			LOGGER.fine("Creating Statement....");
 			PreparedStatement stmtrf = connection.prepareStatement(sqlrf);
 			stmtrf.setString(1, itemId);
 		
-			//System.out.println("Statement created. Executing select query on ..." + check);
 			LOGGER.fine("Statement created. Executing select query on ..." + check);
 			ResultSet dbResponse = stmtrf.executeQuery();
 			
 			if(dbResponse.next()) {
 			
 			if (dbResponse.getString("lease_item_id")!= null) {
-				//System.out.println("Inside Nested check statement for FLS_MAIL_REJECT_LEASE_FROM");
 				LOGGER.fine("Inside Nested check statement for FLS_MAIL_REJECT_LEASE_FROM");
 				
 				//Populate the response
@@ -307,7 +286,6 @@ public class Leases extends Connect {
 					obj1.put("status", dbResponse.getString("lease_status"));
 					
 					lm1.getData(obj1);
-					//System.out.println("Json parsed for FLS_MAIL_REJECT_LEASE_FROM");
 					LOGGER.fine("Json parsed for FLS_MAIL_REJECT_LEASE_FROM");
 				} catch (JSONException e) {
 					System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_REJECT_LEASE_FROM");
@@ -322,11 +300,9 @@ public class Leases extends Connect {
 		//code for populating lease pojo for sending owner email ends here...
 		
 		try {
-			//System.out.println("Creating Statement....");
 			LOGGER.fine("Creating Statement....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 				
-			//System.out.println("Statement created. Executing edit query on ..." + check);
 			LOGGER.fine("Statement created. Executing edit query on ..." + check);
 			stmt.setString(1, status);
 			stmt.setString(2, reqUserId);
@@ -355,17 +331,14 @@ public class Leases extends Connect {
 	
 	private void getNext() {
 		check = null;
-		//System.out.println("Inside GetNext method");
 		LOGGER.fine("Inside GetNext method");
 		String sql = "SELECT * FROM leases WHERE lease_requser_id > ? ORDER BY lease_requser_id LIMIT 1";		//
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getNext query...");
 			LOGGER.fine("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
 			
@@ -405,17 +378,14 @@ public class Leases extends Connect {
 	
 	private void getPrevious() {
 		check = null;
-		//System.out.println("Inside GetPrevious method");
 		LOGGER.fine("Inside GetPrevious method");
 		String sql = "SELECT * FROM leases WHERE lease_requser_id < ? ORDER BY lease_requser_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getPrevious query...");
 			LOGGER.fine("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
 			
@@ -456,17 +426,14 @@ public class Leases extends Connect {
 	private void getNextActive () {
 		int t = Integer.parseInt(token);
 		check = null;
-		//System.out.println("Inside GetNext Active method");
 		LOGGER.fine("Inside GetNext Active method");
 		String sql = "SELECT tb1.*, tb2.user_full_name, tb3.user_full_name AS Owner FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id WHERE lease_id > ? AND lease_status=? ORDER BY lease_id LIMIT 1";		//
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getNext query...");
 			LOGGER.fine("Statement created. Executing getNext query...");
 			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
@@ -510,17 +477,14 @@ public class Leases extends Connect {
 	private void getPreviousActive() {
 		check = null;
 		int t = Integer.parseInt(token);
-		//System.out.println("Inside GetPrevious method");
 		LOGGER.fine("Inside GetPrevious method");
 		String sql = "SELECT * FROM leases WHERE lease_id < ? AND lease_status=? ORDER BY lease_id DESC LIMIT 1";			//
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getPrevious query...");
 			LOGGER.fine("Statement created. Executing getPrevious query...");
 			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
@@ -569,7 +533,6 @@ public class Leases extends Connect {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//String date = sdf.format(cal.getTime());
 		
-		//System.out.println("inside edit method");
 		LOGGER.fine("inside edit method");
 		getConnection();
 		
@@ -610,7 +573,6 @@ public class Leases extends Connect {
 		try {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				//System.out.println("Statement created. Executing renew query ...");
 				LOGGER.fine("Statement created. Executing renew query ...");
 				stmt.setString(1, date);
 				stmt.setString(2, reqUserId);

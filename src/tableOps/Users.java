@@ -26,25 +26,21 @@ public class Users extends Connect {
 		switch(operation) {
 		
 		case "add" :
-			//System.out.println("Add op is selected..");
 			LOGGER.fine("Add op is selected..");
 			Add();
 			break;
 			
 		case "delete" : 
-			//System.out.println("Delete operation is selected");
 			LOGGER.fine("Delete operation is selected");
 			Delete();
 			break;
 			
 		case "edit" :
-			//System.out.println("Edit operation is selected.");
 			LOGGER.fine("Edit operation is selected.");
 			Edit();
 			break;
 			
 		case "getnext" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
@@ -56,7 +52,6 @@ public class Users extends Connect {
 			break;
 			
 		case "getprevious" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
@@ -68,7 +63,6 @@ public class Users extends Connect {
 			break;
 			
 		case "info" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
@@ -98,11 +92,9 @@ public class Users extends Connect {
 		getConnection();
 		
 		try {
-			//System.out.println("Creating statement.....");
 			LOGGER.fine("Creating statement.....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing query.....");
 			LOGGER.fine("Statement created. Executing query.....");
 			stmt.setString(1, userId);
 			stmt.setString(2, fullName);
@@ -110,7 +102,6 @@ public class Users extends Connect {
 			stmt.setString(4, location);
 			stmt.setString(5, auth);
 			stmt.executeUpdate();
-			//System.out.println("Entry added into users table");
 			LOGGER.fine("Entry added into users table");
 			
 			message = "Entry added into users table";
@@ -136,7 +127,6 @@ public class Users extends Connect {
 	private void Delete() {
 		userId = um.getUserId();
 		check = null;
-		//System.out.println("Inside delete method....");
 		LOGGER.fine("Inside delete method....");
 		
 		getConnection();
@@ -144,7 +134,6 @@ public class Users extends Connect {
 		String sql2 = "SELECT * FROM users WHERE user_id=?";
 		
 		try {
-			//System.out.println("Creating statement...");
 			LOGGER.fine("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
@@ -157,7 +146,6 @@ public class Users extends Connect {
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				//System.out.println("Statement created. Executing delete query on ..." + check);
 				LOGGER.fine("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, userId);
 				stmt.executeUpdate();
@@ -185,14 +173,12 @@ public class Users extends Connect {
 		auth = um.getAuth();
 		check = null;
 		
-		//System.out.println("inside edit method");
 		LOGGER.fine("inside edit method");
 		getConnection();
 		String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_auth=?  WHERE user_id=?";
 		String sql2 = "SELECT * FROM users WHERE user_id=?";
 		
 		try {
-			//System.out.println("Creating Statement....");
 			LOGGER.fine("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, userId);
@@ -204,7 +190,6 @@ public class Users extends Connect {
 			if(check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				//System.out.println("Statement created. Executing edit query on ..." + check);
 				LOGGER.fine("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
 				stmt.setString(2, mobile);
@@ -229,17 +214,14 @@ public class Users extends Connect {
 	
 	private void getNext() {
 		check = null;
-		//System.out.println("Inside GetNext method");
 		LOGGER.fine("Inside GetNext method");
 		String sql = "SELECT * FROM users WHERE user_id > ? ORDER BY user_id LIMIT 1";
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getNext query...");
 			LOGGER.fine("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
 			
@@ -281,17 +263,14 @@ public class Users extends Connect {
 	
 	private void getPrevious() {
 		check = null;
-		//System.out.println("Inside GetPrevious method");
 		LOGGER.fine("Inside GetPrevious method");
 		String sql = "SELECT * FROM users WHERE user_id < ? ORDER BY user_id DESC LIMIT 1";
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getPrevious query...");
 			LOGGER.fine("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
 			
@@ -333,17 +312,14 @@ public class Users extends Connect {
 	private void getUserInfo() {
 		check = null;
 		auth = um.getAuth();
-		//System.out.println("Inside GetPrevious method");
 		LOGGER.fine("Inside GetPrevious method");
 		String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getPrevious query...");
 			LOGGER.fine("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
 			stmt.setString(2, auth);

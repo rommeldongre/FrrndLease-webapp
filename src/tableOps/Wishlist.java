@@ -24,19 +24,16 @@ public class Wishlist extends Connect {
 		switch(operation) {
 		
 		case "add" :
-			//System.out.println("Add op is selected..");
 			LOGGER.fine("Add op is selected..");
 			Add();
 			break;
 			
 		case "delete" : 
-			//System.out.println("Delete operation is selected");
 			LOGGER.fine("Delete operation is selected");
 			Delete();
 			break;
 			
 		case "getnext" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getInt("token");
@@ -48,7 +45,6 @@ public class Wishlist extends Connect {
 			break;
 			
 		case "getprevious" :
-			//System.out.println("Get Next operation is selected.");
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getInt("token");
@@ -74,15 +70,12 @@ public class Wishlist extends Connect {
 		getConnection();
 		
 		try {
-			//System.out.println("Creating statement.....");
 			LOGGER.fine("Creating statement.....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing query.....");
 			LOGGER.fine("Statement created. Executing query.....");
 			stmt.setInt(1, itemId);
 			stmt.executeUpdate();
-			//System.out.println("Entry added into wishlist table");
 			LOGGER.fine("Entry added into wishlist table");
 			
 			message = "Entry added into wishlist table";
@@ -100,7 +93,6 @@ public class Wishlist extends Connect {
 	private void Delete() {
 		itemId = wm.getItemId();
 		check = 0;
-		//System.out.println("Inside delete method....");
 		LOGGER.fine("Inside delete method....");
 		
 		getConnection();
@@ -108,7 +100,6 @@ public class Wishlist extends Connect {
 		String sql2 = "SELECT * FROM wishlist WHERE wishlist_item_id=?";			//
 		
 		try {
-			//System.out.println("Creating statement...");
 			LOGGER.fine("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
@@ -121,7 +112,6 @@ public class Wishlist extends Connect {
 			if(check != 0) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				//System.out.println("Statement created. Executing delete query on ..." + check);
 				LOGGER.fine("Statement created. Executing delete query on ..." + check);
 				stmt.setInt(1, itemId);
 				stmt.executeUpdate();
@@ -143,17 +133,14 @@ public class Wishlist extends Connect {
 	
 	private void getNext() {
 		check = 0;
-		//System.out.println("Inside GetNext method");
 		LOGGER.fine("Inside GetNext method");
 		String sql = "SELECT * FROM wishlist WHERE wishlist_item_id > ? ORDER BY wishlist_item_id LIMIT 1";		//
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getNext query...");
 			LOGGER.fine("Statement created. Executing getNext query...");
 			stmt.setInt(1, token);
 			
@@ -190,17 +177,14 @@ public class Wishlist extends Connect {
 	
 	private void getPrevious() {
 		check = 0;
-		//System.out.println("Inside GetPrevious method");
 		LOGGER.fine("Inside GetPrevious method");
 		String sql = "SELECT * FROM wishlist WHERE wishlist_item_id < ? ORDER BY wishlist_item_id DESC LIMIT 1";		//
 		
 		getConnection();
 		try {
-			//System.out.println("Creating a statement .....");
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			//System.out.println("Statement created. Executing getPrevious query...");
 			LOGGER.fine("Statement created. Executing getPrevious query...");
 			stmt.setInt(1, token);
 			
@@ -210,7 +194,6 @@ public class Wishlist extends Connect {
 				json.put("itemId", rs.getInt("wishlist_item_id"));
 				
 				message = json.toString();
-				//System.out.println(message);
 				LOGGER.fine(message);
 				check = rs.getInt("wishlist_item_id");
 			}
@@ -238,7 +221,6 @@ public class Wishlist extends Connect {
 	
 	public void DeleteW(int id){
 		check = 0;
-		//System.out.println("Inside delete method....");
 		LOGGER.fine("Inside delete method....");
 		
 		getConnection();
@@ -246,7 +228,6 @@ public class Wishlist extends Connect {
 		String sql2 = "SELECT * FROM wishlist WHERE wishlist_item_id=?";			//
 		
 		try {
-			//System.out.println("Creating statement...");
 			LOGGER.fine("Creating statement...");
 			
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
@@ -259,7 +240,6 @@ public class Wishlist extends Connect {
 			if(check != 0) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
-				//System.out.println("Statement created. Executing delete query on ..." + check);
 				LOGGER.fine("Statement created. Executing delete query on ..." + check);
 				stmt.setInt(1, id);
 				stmt.executeUpdate();
