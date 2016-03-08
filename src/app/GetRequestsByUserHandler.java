@@ -37,18 +37,22 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 		GetRequestsByUserReqObj rq = (GetRequestsByUserReqObj) req;
 		GetRequestsByUserResObj rs = new GetRequestsByUserResObj();
-		System.out.println("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
+		//System.out.println("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
+		LOGGER.fine("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
 		//TODO: Core of the processing takes place here
 		check = null;
-		System.out.println("Inside GetOutgoingrequests method");
+		//System.out.println("Inside GetOutgoingrequests method");
+		LOGGER.fine("Inside GetOutgoingrequests method");
 		
 		try {
 			getConnection();
 			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_item_id>0 HAVING tb1.request_status=? LIMIT 1";
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing GetOutgoingrequests query...");
+			//System.out.println("Statement created. Executing GetOutgoingrequests query...");
+			LOGGER.fine("Statement created. Executing GetOutgoingrequests query...");
 			stmt.setString(1, rq.getUserId());
 			stmt.setInt(2, rq.getCookie());
 			
@@ -68,7 +72,8 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 					rs.setOwner_name(dbResponse.getString("user_full_name"));
 					
 					message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
-					System.out.println("Printing out Resultset: "+message);
+					//System.out.println("Printing out Resultset: "+message);
+					LOGGER.fine("Printing out Resultset: "+message);
 					Code = FLS_SUCCESS;
 					Id = check;
 				}
@@ -86,7 +91,8 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 			System.out.println("Error Check Stacktrace");
 			e.printStackTrace();
 		}	
-		System.out.println("Finished process method ");
+		//System.out.println("Finished process method ");
+		LOGGER.fine("Finished process method ");
 		//return the response
 		return rs;
 		
