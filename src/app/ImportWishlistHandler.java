@@ -147,7 +147,6 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 					LOGGER.fine("Creating Insert statement of ImportWishlistHandler.....");
 					PreparedStatement stmt1 = connection.prepareStatement(sql1);
 					
-					//System.out.println("Statement created. Executing query.....");
 					LOGGER.fine("Statement created. Executing query.....");
 					stmt1.setString(1, Iname);
 					stmt1.setString(2, "");
