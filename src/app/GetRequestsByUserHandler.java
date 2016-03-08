@@ -86,7 +86,6 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 			System.out.println("Error Check Stacktrace");
 			e.printStackTrace();
 		}	
-		//System.out.println("Finished process method ");
 		LOGGER.fine("Finished process method ");
 		//return the response
 		return rs;
