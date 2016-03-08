@@ -56,28 +56,36 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		ImportWishlistReqObj rq = (ImportWishlistReqObj) req;
 		ImportWishlistResObj rs = new ImportWishlistResObj();
 		ItemsModel im = new ItemsModel();
-		System.out.println("Inside process method "+ rq.getUrl());
+		//Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		//System.out.println("Inside process method "+ rq.getUrl());
+		LOGGER.fine("Inside process method "+ rq.getUrl());
 		//TODO: Core of the processing takes place here
 		check = null;
-		System.out.println("Inside ImportWishlist method");
+		//System.out.println("Inside ImportWishlist method");
+		LOGGER.fine("Inside ImportWishlist method");
 		newItemCount=0;
          Document doc = Jsoup.connect(rq.getUrl()).timeout(10*1000).post();
 
          Elements links = doc.select("a[id*=itemName]");
-         System.out.println("Total number of elements: " + links.size()); 
-         System.out.println("Value before for loop: "+newItemCount);
+         //System.out.println("Total number of elements: " + links.size()); 
+         LOGGER.fine("Total number of elements: " + links.size());
+         //System.out.println("Value before for loop: "+newItemCount);
+         LOGGER.fine("Value before for loop: "+newItemCount);
          
          Element links2 = doc.select("div[class*=selected] > a > span > span").first();
-         System.out.println("selected Wishlist count: " +links2.text());
+        //System.out.println("selected Wishlist count: " +links2.text());
+         LOGGER.fine("selected Wishlist count: " +links2.text());
          Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(links2.text());
          while(m.find()) {
-           System.out.println(m.group(1));
+           //System.out.println(m.group(1));
+           LOGGER.fine(m.group(1));
            int foo = Integer.parseInt(m.group(1));
            rs.setTotalWishItemCount(foo);
          }
          
          for (int i = 0;i<links.size();i++) {  
-             System.out.println("\ntext : " + links.get(i).text()); 
+             //System.out.println("\ntext : " + links.get(i).text()); 
+             LOGGER.fine("\ntext : " + links.get(i).text());
            //Populate the response
 				try {
 					JSONObject obj1 = new JSONObject();
@@ -96,18 +104,22 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
 				e.printStackTrace();
 			}
-				 System.out.println("Calling Amazon Wishlist Function "); 
+				 //System.out.println("Calling Amazon Wishlist Function "); 
+				 LOGGER.fine("Calling Amazon Wishlist Function ");
 				AmazonWishlist(links.get(i).text(),rq.getUserId());
          }
-         System.out.println("Value after for loop: "+newItemCount);
+        // System.out.println("Value after for loop: "+newItemCount);
+         LOGGER.fine("Value after for loop: "+newItemCount);
          
        //rs.setWishItemCount(rq.getUrl().length());
         rs.setWishItemCount(newItemCount);
 		message = rs.getWishItemCount().toString();
-		System.out.println("Printing out Resultset: "+message);
+		//System.out.println("Printing out Resultset: "+message);
+		LOGGER.fine("Printing out Resultset: "+message);
 		Code = FLS_SUCCESS;
 		Id = check;
-		System.out.println("Finished process method ");
+		//System.out.println("Finished process method ");
+		LOGGER.fine("Finished process method ");
 		//return the response
 		return rs;
 		
@@ -129,24 +141,30 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		try {
 			getConnection();
 			String sql = "SELECT * FROM items WHERE item_name=? AND item_user_id=? AND item_status=? LIMIT 1";
-			System.out.println("Creating a statement .....");
+			//System.out.println("Creating a statement .....");
+			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
-			System.out.println("Statement created. Executing ImportWishlistHandler select query...");
+			//System.out.println("Statement created. Executing ImportWishlistHandler select query...");
+			LOGGER.fine("Statement created. Executing ImportWishlistHandler select query...");
 			stmt.setString(1, Iname);
 			stmt.setString(2, User);
 			stmt.setString(3, "Wished");
 			
 			ResultSet dbResponse = stmt.executeQuery();
-			System.out.println("ImportWishlistHandler select query executed...");
+			//System.out.println("ImportWishlistHandler select query executed...");
+			LOGGER.fine("ImportWishlistHandler select query executed...");
 			
 			if(dbResponse.next() == false){
-					System.out.println("Item: "+Iname+"for user: "+User+" does not exist");
+					//System.out.println("Item: "+Iname+"for user: "+User+" does not exist");
+					LOGGER.fine("Item: "+Iname+"for user: "+User+" does not exist");
 					String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
-					System.out.println("Creating Insert statement of ImportWishlistHandler.....");
+					//System.out.println("Creating Insert statement of ImportWishlistHandler.....");
+					LOGGER.fine("Creating Insert statement of ImportWishlistHandler.....");
 					PreparedStatement stmt1 = connection.prepareStatement(sql1);
 					
-					System.out.println("Statement created. Executing query.....");
+					//System.out.println("Statement created. Executing query.....");
+					LOGGER.fine("Statement created. Executing query.....");
 					stmt1.setString(1, Iname);
 					stmt1.setString(2, "");
 					stmt1.setString(3, "");
@@ -156,7 +174,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 					stmt1.setString(7, "Wished");
 					stmt1.setString(8, "");
 					insertcount = stmt1.executeUpdate();
-					System.out.println("Entry added into items table: "+insertcount);
+					//System.out.println("Entry added into items table: "+insertcount);
 					
 					
 					//returning the new id
@@ -176,8 +194,10 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 					}
 					
 				}else {
-					System.out.println("Amazon Wishlist Item Already exists");
-					System.out.println("Item: "+Iname+"for user: "+User+" exists");
+					//System.out.println("Amazon Wishlist Item Already exists");
+					LOGGER.fine("Amazon Wishlist Item Already exists");
+					//System.out.println("Item: "+Iname+"for user: "+User+" exists");
+					LOGGER.fine("Item: "+Iname+"for user: "+User+" exists");
 					//Id = "0";
 					//message = FLS_END_OF_DB_M;
 					//Code = FLS_END_OF_DB;
@@ -200,13 +220,16 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			
 			try {
 				getConnection();
-				System.out.println("Creating statement.....");
+				//System.out.println("Creating statement.....");
+				LOGGER.fine("Creating statement.....");
 				PreparedStatement stmt3 = connection.prepareStatement(sql3);
 				
-				System.out.println("Statement created. Executing query.....");
+				//System.out.println("Statement created. Executing query.....");
+				LOGGER.fine("Statement created. Executing query.....");
 				stmt3.setInt(1, itemId);
 				stmt3.executeUpdate();
-				System.out.println("Entry added into wishlist table: "+insertcount);
+				//System.out.println("Entry added into wishlist table: "+insertcount);
+				LOGGER.fine("Entry added into wishlist table: "+insertcount);
 				newItemCount = newItemCount+ 1;
 				//message = "Entry added into wishlist table";
 				//Code = 33;
@@ -218,7 +241,8 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				e.printStackTrace();
 			}
 		}else{
-			System.out.println("Wishlist op not performed as Add item not performed");
+			//System.out.println("Wishlist op not performed as Add item not performed");
+			LOGGER.fine("Wishlist op not performed as Add item not performed");
 		}
 		
 	}
