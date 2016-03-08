@@ -5,12 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import java.util.logging.*;
+import java.io.IOException;
 import errorCat.ErrorCat;
 
 public class Connect extends ErrorCat{
 	
 	protected static Connection connection = null;
 	protected static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	protected static FileHandler fh; 
 	
 	//Local - Database 
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
@@ -52,6 +54,20 @@ public class Connect extends ErrorCat{
 			
 		}
 		
+		 try {  
+
+		        // This block configure the logger with handler and formatter  
+		        fh = new FileHandler("C:/temp/test/MyLogFile.log");  
+		        LOGGER.addHandler(fh);
+		        SimpleFormatter formatter = new SimpleFormatter();  
+		        fh.setFormatter(formatter);  
+
+		    } catch (SecurityException e) {  
+		        e.printStackTrace();  
+		    } catch (IOException e) {  
+		        e.printStackTrace();  
+		    }  
+
 		//return connection;
 	}
 	
