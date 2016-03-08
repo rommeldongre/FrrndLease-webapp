@@ -312,7 +312,6 @@ public class LeaseTerms extends Connect {
 			while(rs.next()) {
 				days = rs.getInt("term_duration");
 				//System.out.println(days);
-				LOGGER.fine(days);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
