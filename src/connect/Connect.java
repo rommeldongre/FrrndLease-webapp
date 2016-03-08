@@ -12,7 +12,6 @@ public class Connect extends ErrorCat{
 	
 	protected static Connection connection = null;
 	protected static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	protected static FileHandler fh; 
 	
 	//Local - Database 
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
@@ -54,20 +53,14 @@ public class Connect extends ErrorCat{
 			
 		}
 		
-		 try {  
-
-		        // This block configure the logger with handler and formatter  
-		        fh = new FileHandler("C:/temp/test/MyLogFile.log");  
-		        LOGGER.addHandler(fh);
-		        SimpleFormatter formatter = new SimpleFormatter();  
-		        fh.setFormatter(formatter);  
-
-		    } catch (SecurityException e) {  
-		        e.printStackTrace();  
-		    } catch (IOException e) {  
-		        e.printStackTrace();  
-		    }  
-
+		
+		// Below code specifies the level of the logger. Change value is setLevel() function according to environment
+		   
+		    LOGGER.setLevel(Level.INFO);
+	        ConsoleHandler handler = new ConsoleHandler();
+	        // PUBLISH this level
+	        handler.setLevel(Level.INFO);
+	       LOGGER.addHandler(handler);
 		//return connection;
 	}
 	
