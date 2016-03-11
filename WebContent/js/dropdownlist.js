@@ -25,5 +25,5 @@ $(function(){
                  //alert('triggered function bound to dynamic element');
              });
         }*/
-		
-		
+        
+        	

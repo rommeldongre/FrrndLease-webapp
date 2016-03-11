@@ -17,6 +17,7 @@
 	<!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/index.css" rel="stylesheet">
+	<link href="css/mystore.css" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>		
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -39,13 +40,26 @@
 	<!--Check whether user is logged in or not  -->
 	<script src="js/logincheck.js"></script>
 	<!--Check whether user is logged in or not ends here  -->
+	
+	<style type="text/css">
+	
+	<!--body{
+		background-image: url("bluebackground.jpg");
+		background-repeat: repeat;
+		overflow-x: hidden;
+	}
+	
+	#indexsearchA{
+		width: 100%;
+	}-->
+	</style>
   </head>
   
   <body onload="start()">
     <div id="loader">
 	</div>
-	<div id="marketingpanel">
-		<nav class="navbar navbar-static" id="header">
+	<div id="marketingpanel1">
+		<nav class="navbar navbar-default navbar-fixed-top" id="header" style="background-color: white">
 			<div class="container-fluid">
 				<div class="navbar-header">
 					<button id="collapsebutton" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
@@ -66,18 +80,28 @@
 						<li class="dropdown" id="subheader">
 							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 							<span id="salutation"></span> <span class="caret"></span></a>
-							
 							<ul class="dropdown-menu" id="dropA">
 								<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
 							</ul>
 						</li>
-						
 					</ul>
+					
+					<form class="navbar-form navbar-right"  id="navBarSearchFormindex"> <!--role="search"-->
+					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+						<div class="input-group" id ="indexsearchA">
+						<input id="wish_title" type="text" class="form-control" placeholder="Search Frrndlease" name="wish_title"></input>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary" id="search_btn_home" onclick="searchItem()"><i class="glyphicon glyphicon-search"></i></button>
+								</span>
+					</div>
+					</form>
+					
 				</div>
 			</div>
 		</nav>
 		
-		<div id="marketingheading"><strong>MAKE SPACE FOR LIFE</strong></div>
+		
+		<!--<div id="marketingheading"><strong>MAKE SPACE FOR LIFE</strong></div>
 		<div id="marketingline"><strong>Because the world is too small for all of our stuff</strong></div>
 		
 		<div id="marketingstore">
@@ -93,8 +117,7 @@
 					<button class="btn btn-primary" onclick="searchItem()" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
 				</span>
 			</div>
-		</div>
-		
+		</div>-->
 	</div>
 	
 	
@@ -102,7 +125,8 @@
 	
 	
 	<div id="main" style="background-image: url('images/bluebackground.jpg')">
-		<br /><br />
+	
+		<div class="container-fluid" id="midcontainer">
 		<div id="friendstoreline"><strong>The Friend Store</strong></div>
 		<br />
 		
@@ -159,36 +183,28 @@
 			</div>
 		  </div>
 		</div>
-
-	</div>
-	
-	
-	<div id="footerpanel">
-		<br />
 		
-		<nav id="footer" class="navbar navbar-default">
-			<div class="container-fluid">
-				<button id="collapsebutton" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom" onClick="increaseSizeOfFooter()">
-						<span id="collapseline" class="icon-bar"></span>
-						<span id="collapseline" class="icon-bar"></span>
-						<span id="collapseline" class="icon-bar"></span>                        
-				</button>
-				<div class="collapse navbar-collapse" id="myNavbarBottom">
-					<ul class="nav navbar-nav navbar-center">
-						<li><a id="headerfooteroptions" href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-						<li><a id="headerfooteroptions" href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-						<li><a id="headerfooteroptions" href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-						<li><a id="headerfooteroptions" href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-						<li><a id="headerfooteroptions" href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
-					</ul>
+		<!--Footer starts------------------------------------>
+			<nav class="navbar navbar-default navbar-fixed-bottom">
+				<div class="container-fluid">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>                        
+					</button>
+					<div class="collapse navbar-collapse" id="myNavbarBottom">
+						<ul class="nav navbar-nav navbar-center">
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+						</ul>
+					</div>
 				</div>
-			</div>
-		</nav>
-		<div id="footertable">
-			<div class="footerpart">
-				(c) 2015-2016 Grey Labs LLP. All Rights Reserved.
-			</div>	
-		</div>
+			</nav>
+			<!--Footer ends--------------------------------------->
+	</div>
 	</div>
 	
 	<script type="text/javascript">
@@ -203,7 +219,7 @@
 			$("#modalTriggerButton").hide();
 			$("#clearSearchButton").hide();
 			
-			load_Gapi();		
+			load_Gapi();	
 			
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
 			userloggedin = localStorage.getItem("userloggedin");
@@ -221,6 +237,7 @@
 			}else if(userloggedin == "anonymous"){	//if logged in as anonymous then don't display subheader
 				$('#subheader').hide();
 				$("#admin").hide();	
+				window.location.replace("mylogin.html");
 			}else{							//else show the subheader, and hide login and signup buttons	
 				$("#admin").hide();
 				$('#subheader').show();			
@@ -230,12 +247,10 @@
 				//show "username"
 				var salutation = document.getElementById("salutation");
 				var span = document.createElement("span");
-				span.style.color = "white";
+				//span.style.color = "white";
 				userloggedinName = localStorage.getItem("userloggedinName");
 				span.innerHTML = userloggedinName;
 				salutation.appendChild(span);
-				
-				window.location.replace("myindex.html");
 			}
 			
 			startingCarousel = 0;
@@ -261,7 +276,7 @@
 				document.getElementById("search_btn_home").click();
 				//searchItem()
 				console.log("not undefined");
-				window.location.hash = '#wishbox';
+				window.location.hash = '#midcontainer';
 			}else{
 				loadCarousel();
 			}
