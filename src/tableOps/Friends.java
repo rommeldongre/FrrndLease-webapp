@@ -11,6 +11,7 @@ import pojos.FriendsModel;
 import adminOps.Response;
 import connect.Connect;
 import util.FlsSendMail;
+import util.AwsSESEmail;
 
 public class Friends extends Connect{
 	
@@ -108,7 +109,7 @@ public class Friends extends Connect{
 				Id = friendId;
 				
 				try{
-						FlsSendMail newE = new FlsSendMail();
+						AwsSESEmail newE = new AwsSESEmail();
 						String source = "@api";
 						if (friendId.contains("@fb") || friendId.contains("@google")) {
 							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,source);
@@ -169,7 +170,7 @@ public class Friends extends Connect{
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 				
 				try{
-					FlsSendMail newE = new FlsSendMail();
+					AwsSESEmail newE = new AwsSESEmail();
 					newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_FROM,fm);
 					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_TO,fm);
 					}catch(Exception e){

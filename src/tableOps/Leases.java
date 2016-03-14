@@ -15,6 +15,7 @@ import connect.Connect;
 import pojos.LeasesModel;
 import adminOps.Response;
 import util.FlsSendMail;
+import util.AwsSESEmail;
 
 public class Leases extends Connect {
 	
@@ -143,7 +144,7 @@ public class Leases extends Connect {
 			Id = reqUserId;
 			
 			try{
-				FlsSendMail newE = new FlsSendMail();
+				AwsSESEmail newE = new AwsSESEmail();
 				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM,lm);
 				newE.send(reqUserId,FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO,lm);
 				}catch(Exception e){
@@ -315,7 +316,7 @@ public class Leases extends Connect {
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 			
 			try{
-				FlsSendMail newE = new FlsSendMail();
+				AwsSESEmail newE = new AwsSESEmail();
 				userId = lm1.getUserId();
 				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM,lm1);
 				newE.send(reqUserId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO,lm);
