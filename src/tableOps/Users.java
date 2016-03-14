@@ -12,6 +12,7 @@ import connect.Connect;
 import pojos.UsersModel;
 
 import util.FlsSendMail;
+import util.AwsSESEmail;
 
 public class Users extends Connect {
 	private String userId,fullName,mobile,location,auth,message,operation,Id=null,check=null,token;
@@ -109,7 +110,7 @@ public class Users extends Connect {
 			Id = userId;
 			
 			try{
-				FlsSendMail newE = new FlsSendMail();
+				AwsSESEmail newE = new AwsSESEmail();
 				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER,um);
 				}catch(Exception e){
 				  e.printStackTrace();

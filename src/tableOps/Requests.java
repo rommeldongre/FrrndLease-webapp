@@ -14,6 +14,7 @@ import connect.Connect;
 import pojos.RequestsModel;
 import pojos.ItemsModel;
 import util.FlsSendMail;
+import util.AwsSESEmail;
 
 public class Requests extends Connect{
 	private String check=null,Id=null,token,userId,itemId,operation,message;
@@ -209,7 +210,7 @@ public class Requests extends Connect{
 				Id = itemId;
 				
 				try{
-					FlsSendMail newE = new FlsSendMail();
+					AwsSESEmail newE = new AwsSESEmail();
 					ownerUserId = im.getUserId();
 					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_FROM,rm);
 					LOGGER.fine("Statement FLS_MAIL_MAKE_REQUEST_FROM fired......");
@@ -442,7 +443,7 @@ public class Requests extends Connect{
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 				
 				try{
-					FlsSendMail newE = new FlsSendMail();
+					AwsSESEmail newE = new AwsSESEmail();
 					//ownerId= im.getUserId();
 					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_TO,rm);
 					}catch(Exception e){
