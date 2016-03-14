@@ -8,9 +8,17 @@ import java.sql.SQLException;
 import connect.Connect;
 import pojos.DeleteRequestReqObj;
 import pojos.DeleteRequestResObj;
+import pojos.RequestsModel;
+import pojos.ItemsModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import pojos.ReqObj;
 import pojos.ResObj;
 import adminOps.Response;
+import util.FlsSendMail;
+import util.AwsSESEmail;
 
 
 public class DeleteRequestHandler extends Connect implements AppHandler {
@@ -39,60 +47,105 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		DeleteRequestResObj rs = new DeleteRequestResObj();
 		LOGGER.info("Inside process method "+ rq.getItemId()+", "+ rq.getUserId());
 		//TODO: Core of the processing takes place here
+		check = null;	
+		
+		String status = "Archived";
 		check = null;
-		LOGGER.info("Inside GetOutgoingrequests method");
 		
+		LOGGER.info("inside DeleteRequestHandler method");
+		getConnection();
+		String sql = "UPDATE requests SET request_status=? WHERE request_item_id=? AND request_requser_id=?";			//
+		String sql2 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=? AND request_status=?";								//
 		
-		rs.setErrorString("No Error");
-		rs.setReturnCode(0);
-		
-		/*
 		try {
-			getConnection();
-			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_item_id>0 HAVING tb1.request_status=? LIMIT 1";
-			LOGGER.fine("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing GetOutgoingrequests query...");
-			stmt.setString(1, rq.getUserId());
-			stmt.setInt(2, rq.getCookie());
-			
-			ResultSet dbResponse = stmt.executeQuery();
-			
-			if(dbResponse.next()){
-				check = dbResponse.getString("request_item_id");
-				
-				if (check!= null) {
-					//Populate the response
-					rs.setTitle(dbResponse.getString("item_name"));
-					rs.setDesc(dbResponse.getString("item_desc"));
-					rs.setOwner_Id(dbResponse.getString("item_user_id"));
-					rs.setRequest_status(dbResponse.getString("request_status"));
-					rs.setRequest_item_id(dbResponse.getInt("request_item_id"));
-					rs.setRequest_date(dbResponse.getDate("request_date"));
-					rs.setOwner_name(dbResponse.getString("user_full_name"));
-					
-					message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
-					LOGGER.fine("Printing out Resultset: "+message);
-					Code = FLS_SUCCESS;
-					Id = check;
-				}
-				else {
-					Id = "0";
-					message = FLS_END_OF_DB_M;
-					Code = FLS_END_OF_DB;
-					rs.setErrorString("End of table reached");
-				}
+			LOGGER.info("Creating Statement....");
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2.setString(1, rq.getItemId());
+			stmt2.setString(2, rq.getUserId());
+			stmt2.setString(3, "Active");
+			ResultSet rs1 = stmt2.executeQuery();
+			while(rs1.next()) {
+				check = rs1.getString("request_id");
 			}
 			
-			//res.setData(Code,Id,message);
+			if(check != null) {
+				
+               //code for populating item pojo for sending requester email
+				RequestsModel rm1 = new RequestsModel();
+				ItemsModel im = new ItemsModel();
+				String sql1= "SELECT * FROM items WHERE item_id=?";
+				LOGGER.info("Creating a statement .....");
+				PreparedStatement stmt1 = connection.prepareStatement(sql1);
+				
+				LOGGER.info("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
+				stmt1.setString(1,rq.getItemId());
+				
+				ResultSet dbResponse = stmt1.executeQuery();
+				LOGGER.info("Query to request pojos fired into requests table");
+				if(dbResponse.next()){
+				
+					if (dbResponse.getString("item_id")!= null) {
+						LOGGER.info("Inside Nested check1 statement of FLS_MAIL_REJECT_REQUEST_TO");
+						
+						
+						//Populate the response
+						try {
+							JSONObject obj1 = new JSONObject();
+							obj1.put("title", dbResponse.getString("item_name"));
+							obj1.put("description", dbResponse.getString("item_desc"));
+							obj1.put("category", dbResponse.getString("item_category"));
+							obj1.put("userId", dbResponse.getString("item_user_id"));
+							obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
+							obj1.put("id", dbResponse.getString("item_id"));
+							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
+							obj1.put("status", "InStore");
+							obj1.put("image", " ");
+							
+							im.getData(obj1);
+							LOGGER.info("Json parsed for FLS_MAIL_REJECT_REQUEST_TO");
+						} catch (JSONException e) {
+							System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_REJECT_REQUEST_TO");
+							e.printStackTrace();
+						}
+						
+						
+						
+					}
+				}
+				//code for populating item pojo for sending requester email ends here 
+				
+				PreparedStatement stmt = connection.prepareStatement(sql);
+				
+				LOGGER.info("Statement created. Executing edit query on ..." + check);
+				stmt.setString(1, status);
+				stmt.setString(2,rq.getItemId());
+				stmt.setString(3, rq.getUserId());
+				stmt.executeUpdate();
+				message = "operation successfull edited item id : "+rq.getItemId();
+				Code = 56;
+				Id = check;
+				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				
+				try{
+					AwsSESEmail newE = new AwsSESEmail();
+					//ownerId= im.getUserId();
+					//newE.send(rq.getUserId(),FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm1);
+					rs.setErrorString("No Error");
+					rs.setReturnCode(0);
+					}catch(Exception e){
+					  e.printStackTrace();
+					}
+			}
+			else{
+				System.out.println("Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-			System.out.println("Error Check Stacktrace");
 			e.printStackTrace();
-		}	*/
+		}
 		
-		LOGGER.fine("Finished process method ");
+		LOGGER.info("Finished process method ");
 		//return the response
 		return rs;
 		
