@@ -6,24 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connect.Connect;
-import pojos.GetRequestsByUserReqObj;
-import pojos.GetRequestsByUserResObj;
+import pojos.DeleteRequestReqObj;
+import pojos.DeleteRequestResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import adminOps.Response;
 
 
-public class GetRequestsByUserHandler extends Connect implements AppHandler {
+public class DeleteRequestHandler extends Connect implements AppHandler {
 	
 	private String user_name, check=null,Id=null,token, message;
 	private int Code;
 	private Response res = new Response();
 	
-	private static GetRequestsByUserHandler instance = null;
+	private static DeleteRequestHandler instance = null;
 
-	public static GetRequestsByUserHandler getInstance() {
+	public static DeleteRequestHandler getInstance() {
 		if (instance == null)
-			instance = new GetRequestsByUserHandler();
+			instance = new DeleteRequestHandler();
 		return instance;
 	}
 	
@@ -35,13 +35,18 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 		// TODO Auto-generated method stub
-		GetRequestsByUserReqObj rq = (GetRequestsByUserReqObj) req;
-		GetRequestsByUserResObj rs = new GetRequestsByUserResObj();
-		LOGGER.fine("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
+		DeleteRequestReqObj rq = (DeleteRequestReqObj) req;
+		DeleteRequestResObj rs = new DeleteRequestResObj();
+		LOGGER.info("Inside process method "+ rq.getItemId()+", "+ rq.getUserId());
 		//TODO: Core of the processing takes place here
 		check = null;
-		LOGGER.fine("Inside GetOutgoingrequests method");
+		LOGGER.info("Inside GetOutgoingrequests method");
 		
+		
+		rs.setErrorString("No Error");
+		rs.setReturnCode(0);
+		
+		/*
 		try {
 			getConnection();
 			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_item_id>0 HAVING tb1.request_status=? LIMIT 1";
@@ -85,7 +90,8 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			System.out.println("Error Check Stacktrace");
 			e.printStackTrace();
-		}	
+		}	*/
+		
 		LOGGER.fine("Finished process method ");
 		//return the response
 		return rs;

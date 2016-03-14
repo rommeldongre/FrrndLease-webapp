@@ -14,17 +14,17 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
-import pojos.GetRequestsByUserReqObj;
-import pojos.GetRequestsByUserResObj;
-import app.GetRequestsByUserHandler;
+import pojos.DeleteRequestReqObj;
+import pojos.DeleteRequestResObj;
+import app.DeleteRequestHandler;
 import app.NotImplementedException;
 
 
 /**
- * Servlet implementation class GetRequestsByUser
+ * Servlet implementation class DeleteRequest
  */
-@WebServlet(description = "List Item Requests for a given UserId", urlPatterns = { "/GetRequestsByUser" })
-public class GetRequestsByUser extends HttpServlet {
+@WebServlet(description = "List Item Requests for a given UserId", urlPatterns = { "/DeleteRequest" })
+public class DeleteRequest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -34,27 +34,27 @@ public class GetRequestsByUser extends HttpServlet {
 			System.out.println("Inside POST method");
 			//HTTP request to Service request pojo 
 			ObjectMapper mapper = new ObjectMapper();
-			GetRequestsByUserReqObj request = mapper.readValue(httprequest.getInputStream(), GetRequestsByUserReqObj.class);
+			DeleteRequestReqObj request = mapper.readValue(httprequest.getInputStream(), DeleteRequestReqObj.class);
 			httpresponse.setContentType("application/json");
 			
 			// application logic comes here --------		
-			GetRequestsByUserResObj Response = null;
+			DeleteRequestResObj Response = null;
 		
 			try {
 				//App handler to process request and create Service response pojo
-				Response = (GetRequestsByUserResObj) GetRequestsByUserHandler.getInstance().process(request);
+				Response = (DeleteRequestResObj) DeleteRequestHandler.getInstance().process(request);
 				
 				//Service response pojo to JSON
 				PrintWriter out = httpresponse.getWriter();
 				httpresponse.setContentType("text/json");				
 				httpresponse.setContentType("application/json; charset=UTF-8");	
 				mapper.writeValue(out, Response);
-				System.out.println("Finished POST method " + Response.getTitle());
+				//System.out.println("Finished POST method " + Response.getTitle());
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
-				System.out.println("GetRequestsByUser process method not implemented");
-				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetRequestsByUser process method not implemented");
+				System.out.println("DeleteRequest process method not implemented");
+				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "DeleteRequest process method not implemented");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
