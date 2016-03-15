@@ -54,8 +54,8 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		
 		LOGGER.info("inside DeleteRequestHandler method");
 		getConnection();
-		String sql = "UPDATE requests SET request_status=? WHERE request_item_id=? AND request_requser_id=?";			//
-		String sql2 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=? AND request_status=?";								//
+		String sql = "UPDATE requests SET request_status=? WHERE request_date=? AND request_requser_id=?";			//
+		String sql2 = "SELECT * FROM requests WHERE request_date=? AND request_requser_id=? AND request_status=?";								//
 		
 		try {
 			LOGGER.info("Creating Statement....");

@@ -43,7 +43,7 @@ public class GetRequestsByUserResObj extends ResObj{
 	String Request_status;
 	
 	//Request date
-	Date Request_date;
+	String Request_date;
 	
 	//Owner Name
 	String owner_name;
@@ -136,11 +136,11 @@ public class GetRequestsByUserResObj extends ResObj{
 		Request_status = request_status;
 	}
 
-	public Date getRequest_date() {
+	public String getRequest_date() {
 		return Request_date;
 	}
 
-	public void setRequest_date(Date request_date) {
+	public void setRequest_date(String request_date) {
 		Request_date = request_date;
 	}
 

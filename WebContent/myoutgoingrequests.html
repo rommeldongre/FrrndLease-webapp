@@ -200,7 +200,7 @@
 			logInCheck();
 			
 			itemNextId = 0;
-			itemNextRequestId = 0;
+			itemNextRequestId = '';
 			
 			if(userloggedin != "anonymous"){	//if logged in as anonymous then don't proceed with table display
 				request_read();
@@ -248,7 +248,7 @@
 			alert(rstatus);
 			alert(rtitle);*/
 				
-			itemNextRequestId = itemno;
+			itemNextRequestId = sdate;
 			showRequestItem(sdate,rtitle,owner);
 			getNextOutItem(itemNextRequestId,userloggedin);
 			

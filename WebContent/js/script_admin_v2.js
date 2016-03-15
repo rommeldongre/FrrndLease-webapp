@@ -36,6 +36,7 @@ var itemId = 0,
 	userName = null;
 	addFriendAPICall = 0;
 	WishlistUrl = null;
+	itemTokenString = null;
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
@@ -1503,17 +1504,16 @@ function loginSend(req){
 
 function getNextOutItem(i,j){
 	//alert("Inside getNextOutItem function.");
-	if(i == '' || i == undefined)
-		itemToken = 0;
-	
-	itemToken = i;
+	if(i == '' || i == undefined){
+		itemTokenString = '';
+	}
+	itemTokenString = i;
 	userName = j;
 	
 	var req = {
 		userId: userName,
-		cookie: itemToken
+		cookie: itemTokenString
 	}
-	
 	getOutRequest(req);
 }
 
@@ -1588,14 +1588,14 @@ getWishlistRequest = function(req) {
 //Delete Request starts here---------------------------------
 
 function deleteRequestSetValues(i, req){
-	itemId = i;
-	if (itemId === '') itemId = null;
+	itemTokenString = i;
+	if (itemTokenString === '') itemId = '';
 	
 	reqUserId = req;
-	if (reqUserId ==='') reqUserId = null;
+	if (reqUserId ==='') reqUserId = '';
 	
 	var req = {
-		itemId: itemId,
+		itemId: itemTokenString,
 		userId: reqUserId,
 	};
 	deleteRequestSend(req);

@@ -44,13 +44,13 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		
 		try {
 			getConnection();
-			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_item_id>? HAVING tb1.request_status=? ORDER by tb1.request_date ASC LIMIT 1";
+			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_date>? HAVING tb1.request_status=? LIMIT 1";
 			LOGGER.fine("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			
 			LOGGER.fine("Statement created. Executing GetOutgoingrequests query...");
 			stmt.setString(1, rq.getUserId());
-			stmt.setInt(2, rq.getCookie());
+			stmt.setString(2, rq.getCookie());
 			stmt.setString(3, "Active");
 			
 			ResultSet dbResponse = stmt.executeQuery();
@@ -65,7 +65,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 					rs.setOwner_Id(dbResponse.getString("item_user_id"));
 					rs.setRequest_status(dbResponse.getString("request_status"));
 					rs.setRequest_item_id(dbResponse.getInt("request_item_id"));
-					rs.setRequest_date(dbResponse.getDate("request_date"));
+					rs.setRequest_date(dbResponse.getString("request_date"));
 					rs.setOwner_name(dbResponse.getString("user_full_name"));
 					
 					message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
