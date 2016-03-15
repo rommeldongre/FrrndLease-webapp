@@ -54,7 +54,6 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		
 		LOGGER.info("inside DeleteRequestHandler method");
 		getConnection();
-		String sql = "UPDATE requests SET request_status=? WHERE request_date=? AND request_requser_id=?";			//
 		String sql2 = "SELECT * FROM requests WHERE request_date=? AND request_requser_id=? AND request_status=?";								//
 		
 		try {
@@ -65,7 +64,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 			stmt2.setString(3, "Active");
 			ResultSet rs1 = stmt2.executeQuery();
 			while(rs1.next()) {
-				check = rs1.getString("request_id");
+				check = rs1.getString("request_item_id");
 			}
 			
 			if(check != null) {
@@ -78,7 +77,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				PreparedStatement stmt1 = connection.prepareStatement(sql1);
 				
 				LOGGER.info("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
-				stmt1.setString(1,rq.getItemId());
+				stmt1.setString(1,check);
 				
 				ResultSet dbResponse = stmt1.executeQuery();
 				LOGGER.info("Query to request pojos fired into requests table");
@@ -114,6 +113,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				}
 				//code for populating item pojo for sending requester email ends here 
 				
+				String sql = "UPDATE requests SET request_status=? WHERE request_date=? AND request_requser_id=?";			//
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
@@ -129,7 +129,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				try{
 					AwsSESEmail newE = new AwsSESEmail();
 					//ownerId= im.getUserId();
-					//newE.send(rq.getUserId(),FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,rm1);
+					newE.send(rq.getUserId(),FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,im);
 					rs.setErrorString("No Error");
 					rs.setReturnCode(0);
 					}catch(Exception e){
