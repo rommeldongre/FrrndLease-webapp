@@ -1583,3 +1583,44 @@ getWishlistRequest = function(req) {
 	};
 	
 //ImportWishlist ends here---------------------------------
+
+
+//Delete Request starts here---------------------------------
+
+function deleteRequestSetValues(i, req){
+	itemId = i;
+	if (itemId === '') itemId = null;
+	
+	reqUserId = req;
+	if (reqUserId ==='') reqUserId = null;
+	
+	var req = {
+		itemId: itemId,
+		userId: reqUserId,
+	};
+	deleteRequestSend(req);
+}
+
+function deleteRequestSend(req){
+	$.ajax({
+		url: '/flsv2/DeleteRequest',
+		type:'POST',
+		data: JSON.stringify(req),
+		contentType:"application/json",
+		dataType: "json",
+		
+		success: function(response) {
+			//alert(response.Id+" "+response.Code+" "+response.Message);
+			var heading = "Successful";
+			if(response.errorString == "No Error"){
+			var msg = "Request Deleted successfully";
+			}
+			confirmationIndex(heading, msg);
+		},
+		error: function() {
+			var msg = "Not Working";
+			confirmationIndex(msg);
+		}
+	});	
+}
+//Delete Request ends here---------------------------------
