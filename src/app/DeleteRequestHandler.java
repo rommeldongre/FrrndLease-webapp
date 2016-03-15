@@ -47,11 +47,9 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		DeleteRequestResObj rs = new DeleteRequestResObj();
 		LOGGER.info("Inside process method "+ rq.getItemId()+", "+ rq.getUserId());
 		//TODO: Core of the processing takes place here
-		check = null;	
 		
 		String status = "Archived";
-		check = null;
-		
+	
 		LOGGER.info("inside DeleteRequestHandler method");
 		getConnection();
 		String sql2 = "SELECT * FROM requests WHERE request_date=? AND request_requser_id=? AND request_status=?";								//
@@ -63,6 +61,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 			stmt2.setString(2, rq.getUserId());
 			stmt2.setString(3, "Active");
 			ResultSet rs1 = stmt2.executeQuery();
+			check = null;
 			while(rs1.next()) {
 				check = rs1.getString("request_item_id");
 			}
