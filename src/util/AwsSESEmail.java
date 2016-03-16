@@ -135,9 +135,9 @@ public class AwsSESEmail {
 				break;
 				
 			case FLS_MAIL_REJECT_REQUEST_FROM:
-				ItemsModel dfrm = (ItemsModel) obj;
+				RequestsModel dfrm = (RequestsModel) obj;
 				SUBJECT = ("Request removed");
-				BODY = ("Request for item having id ["+dfrm.getId()+"] has been removed as a lease might be granted. \n \n");      
+				BODY = ("Request for item having id ["+dfrm.getItemId()+"] has been removed as a lease might be granted. \n \n");      
 				break;
 				
 			case FLS_MAIL_REJECT_REQUEST_TO:
