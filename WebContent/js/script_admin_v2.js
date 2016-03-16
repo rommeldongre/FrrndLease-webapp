@@ -874,7 +874,6 @@ function wishItemSetValues(title,description,category,userid,leasevalue,leaseter
 	itemStatus = "Wished";
 	
 	url = imgurl;	
-	console.log(itemId+"\n"+itemTitle+"\n"+itemDescription+"\n"+itemCategory+"\n"+itemUserId+"\n"+itemLeaseValue+"\n"+itemLeaseTerm+"\n"+itemStatus+"\n"+url);
 }
 
 wishItemDbCreate = function(){									//for storing in db/localstorage
@@ -1530,7 +1529,6 @@ getOutRequest = function(req) {
 				}else{
 					getOutItemForRequest(response);
 					//alert(response.title);
-					console.log(response);
 				}
 			},
 			error: function() {
@@ -1572,7 +1570,6 @@ getWishlistRequest = function(req) {
 				//alert("working");
 					confirmationIndex("Success",response.wishItemCount+" out of "+response.totalWishItemCount+" Amazon Wishlist Items Imported");
 					//getOutItemForRequest(response);
-					console.log(response.wishItemCount);
 					//alert(response.title);
 				
 			},
@@ -1598,7 +1595,7 @@ function deleteRequestSetValues(i, req){
 		request_Id: itemToken,
 		userId: reqUserId
 	};
-	console.log(JSON.stringify(req));
+	
 	deleteRequestSend(req);
 }
 
