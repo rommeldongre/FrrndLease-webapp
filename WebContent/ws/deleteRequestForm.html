@@ -5,12 +5,12 @@
 <title>Delete Request form</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
-	var ItemId = null;
+	var RequestId = null;
 	var UserId = null;
 	
 	getData = function (){
-		ItemId = document.getElementById("itemId").value;
-		if (ItemId === '') ItemId = null;
+		RequestId = document.getElementById("RequestId").value;
+		if (RequestId === '') RequestId = null;
 		
 		UserId = document.getElementById("userId").value;
 		if (UserId ==='') UserId = null;
@@ -20,7 +20,7 @@
 		alert("inside add function.");
 		getData();
 		var req = {
-					itemId: ItemId,
+					request_Id: RequestId,
 					userId: UserId
 		};
 		alert("got data");
@@ -56,7 +56,7 @@
 <body>
 	<h1>DELETE REQUEST FORM</h1>
 	<form>
-		Request Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		Request Id : <input type="text" name="RequestId" id="RequestId"><br/><br/>
 		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
 		<input type="button" value="Delete Request" onclick="deleteD()"><br/><br/>
 		<h1>OUTPUT</h1>
