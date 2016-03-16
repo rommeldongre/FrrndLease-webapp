@@ -21,6 +21,9 @@ public class GetRequestsByUserResObj extends ResObj{
 	// number of items, default is 1
 	int quantity = 1;
 	
+	// Request id 
+		int request_id;
+		
 	// ID of request
 	// TBD: need to change type
 	@NotNull
@@ -94,6 +97,15 @@ public class GetRequestsByUserResObj extends ResObj{
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+    
+	
+	public int getRequest_id() {
+		return request_id;
+	}
+
+	public void setRequest_id(int request_id) {
+		this.request_id = request_id;
 	}
 
 	public int getRequest_item_id() {

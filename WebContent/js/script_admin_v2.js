@@ -1505,14 +1505,14 @@ function loginSend(req){
 function getNextOutItem(i,j){
 	//alert("Inside getNextOutItem function.");
 	if(i == '' || i == undefined){
-		itemTokenString = '';
+		itemToken = '';
 	}
-	itemTokenString = i;
+	itemToken = i;
 	userName = j;
 	
 	var req = {
 		userId: userName,
-		cookie: itemTokenString
+		cookie: itemToken
 	}
 	getOutRequest(req);
 }

@@ -11,7 +11,7 @@ public class GetRequestsByUserReqObj extends ReqObj {
 		// Cookie
 		// TBD: change to user id type
 		@NotNull
-		String cookie;
+		int cookie;
 				
 		/**
 		 * @return the userId
@@ -31,10 +31,10 @@ public class GetRequestsByUserReqObj extends ReqObj {
 		/**
 		 * @param userId the userId to set
 		 */
-		public String getCookie() {
+		public int getCookie() {
 			return cookie;
 		}
-		public void setCookie(String cookie) {
+		public void setCookie(int cookie) {
 			this.cookie = cookie;
 		}
 	
