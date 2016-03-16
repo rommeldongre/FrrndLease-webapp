@@ -36,7 +36,6 @@ var itemId = 0,
 	userName = null;
 	addFriendAPICall = 0;
 	WishlistUrl = null;
-	itemTokenString = null;
 	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
@@ -1505,7 +1504,7 @@ function loginSend(req){
 function getNextOutItem(i,j){
 	//alert("Inside getNextOutItem function.");
 	if(i == '' || i == undefined){
-		itemToken = '';
+		itemToken = 0;
 	}
 	itemToken = i;
 	userName = j;
