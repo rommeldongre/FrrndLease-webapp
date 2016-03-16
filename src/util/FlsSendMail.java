@@ -19,7 +19,6 @@ public class FlsSendMail {
 						   FLS_MAIL_GRANT_REQUEST_TO, //same as grant lease to
 						   FLS_MAIL_REJECT_REQUEST_FROM, // working partially. Set flag for lease part(done)
 						   FLS_MAIL_REJECT_REQUEST_TO, // not done as pojo needs to be filled
-						   FLS_MAIL_REJECT_REQUEST_TO_OWNER,
 						   FLS_MAIL_ADD_FRIEND_FROM, //done
 						   FLS_MAIL_ADD_FRIEND_TO, //done
 						   FLS_MAIL_DELETE_FRIEND_FROM, //done
