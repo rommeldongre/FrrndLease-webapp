@@ -13,10 +13,6 @@ public class GetRequestsByUserReqObj extends ReqObj {
 		@NotNull
 		int cookie;
 				
-		public void setCookie(int cookie) {
-			this.cookie = cookie;
-		}
-		
 		/**
 		 * @return the userId
 		 */
@@ -32,11 +28,15 @@ public class GetRequestsByUserReqObj extends ReqObj {
 		/**
 		 * @return the userId
 		 */
-		public int getCookie() {
-			return cookie;
-		}
 		/**
 		 * @param userId the userId to set
 		 */
+		public int getCookie() {
+			return cookie;
+		}
+		public void setCookie(int cookie) {
+			this.cookie = cookie;
+		}
 	
+		
 	}

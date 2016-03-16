@@ -874,7 +874,6 @@ function wishItemSetValues(title,description,category,userid,leasevalue,leaseter
 	itemStatus = "Wished";
 	
 	url = imgurl;	
-	console.log(itemId+"\n"+itemTitle+"\n"+itemDescription+"\n"+itemCategory+"\n"+itemUserId+"\n"+itemLeaseValue+"\n"+itemLeaseTerm+"\n"+itemStatus+"\n"+url);
 }
 
 wishItemDbCreate = function(){									//for storing in db/localstorage
@@ -1503,9 +1502,9 @@ function loginSend(req){
 
 function getNextOutItem(i,j){
 	//alert("Inside getNextOutItem function.");
-	if(i == '' || i == undefined)
+	if(i == '' || i == undefined){
 		itemToken = 0;
-	
+	}
 	itemToken = i;
 	userName = j;
 	
@@ -1513,7 +1512,6 @@ function getNextOutItem(i,j){
 		userId: userName,
 		cookie: itemToken
 	}
-	
 	getOutRequest(req);
 }
 
@@ -1572,7 +1570,6 @@ getWishlistRequest = function(req) {
 				//alert("working");
 					confirmationIndex("Success",response.wishItemCount+" out of "+response.totalWishItemCount+" Amazon Wishlist Items Imported");
 					//getOutItemForRequest(response);
-					console.log(response.wishItemCount);
 					//alert(response.title);
 				
 			},
@@ -1583,3 +1580,45 @@ getWishlistRequest = function(req) {
 	};
 	
 //ImportWishlist ends here---------------------------------
+
+
+//Delete Request starts here---------------------------------
+
+function deleteRequestSetValues(i, req){
+	itemToken = i;
+	if (itemToken === '') itemToken = 0;
+	
+	reqUserId = req;
+	if (reqUserId ==='') reqUserId = '';
+	
+	var req = {
+		request_Id: itemToken,
+		userId: reqUserId
+	};
+	
+	deleteRequestSend(req);
+}
+
+function deleteRequestSend(req){
+	$.ajax({
+		url: '/flsv2/DeleteRequest',
+		type:'POST',
+		data: JSON.stringify(req),
+		contentType:"application/json",
+		dataType: "json",
+		
+		success: function(response) {
+			//alert(response.Id+" "+response.Code+" "+response.Message);
+			var heading = "Successful";
+			if(response.errorString == "No Error"){
+			var msg = "Request Deleted successfully";
+			}
+			confirmationIndex(heading, msg);
+		},
+		error: function() {
+			var msg = "Not Working";
+			confirmationIndex(msg);
+		}
+	});	
+}
+//Delete Request ends here---------------------------------

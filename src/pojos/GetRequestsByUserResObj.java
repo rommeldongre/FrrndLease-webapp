@@ -21,6 +21,9 @@ public class GetRequestsByUserResObj extends ResObj{
 	// number of items, default is 1
 	int quantity = 1;
 	
+	// Request id 
+		int request_id;
+		
 	// ID of request
 	// TBD: need to change type
 	@NotNull
@@ -43,7 +46,7 @@ public class GetRequestsByUserResObj extends ResObj{
 	String Request_status;
 	
 	//Request date
-	Date Request_date;
+	String Request_date;
 	
 	//Owner Name
 	String owner_name;
@@ -95,6 +98,15 @@ public class GetRequestsByUserResObj extends ResObj{
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+    
+	
+	public int getRequest_id() {
+		return request_id;
+	}
+
+	public void setRequest_id(int request_id) {
+		this.request_id = request_id;
+	}
 
 	public int getRequest_item_id() {
 		return request_item_id;
@@ -136,11 +148,11 @@ public class GetRequestsByUserResObj extends ResObj{
 		Request_status = request_status;
 	}
 
-	public Date getRequest_date() {
+	public String getRequest_date() {
 		return Request_date;
 	}
 
-	public void setRequest_date(Date request_date) {
+	public void setRequest_date(String request_date) {
 		Request_date = request_date;
 	}
 

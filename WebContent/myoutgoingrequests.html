@@ -248,7 +248,7 @@
 			alert(rstatus);
 			alert(rtitle);*/
 				
-			itemNextRequestId = itemno;
+			itemNextRequestId = obj.request_id;
 			showRequestItem(sdate,rtitle,owner);
 			getNextOutItem(itemNextRequestId,userloggedin);
 			
@@ -331,7 +331,7 @@
 		    var it = itemNextId;
 			var u = userloggedin;
 			setPrevPage("myoutgoingrequests.html");
-			rejectRequestSetValues(it,u);
+			deleteRequestSetValues(it,u);
 		}
 		
 		//----------------------------------------
