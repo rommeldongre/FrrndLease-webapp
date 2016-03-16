@@ -1530,6 +1530,7 @@ getOutRequest = function(req) {
 				}else{
 					getOutItemForRequest(response);
 					//alert(response.title);
+					console.log(response);
 				}
 			},
 			error: function() {
@@ -1587,16 +1588,17 @@ getWishlistRequest = function(req) {
 //Delete Request starts here---------------------------------
 
 function deleteRequestSetValues(i, req){
-	itemTokenString = i;
-	if (itemTokenString === '') itemId = '';
+	itemToken = i;
+	if (itemToken === '') itemToken = 0;
 	
 	reqUserId = req;
 	if (reqUserId ==='') reqUserId = '';
 	
 	var req = {
-		itemId: itemTokenString,
-		userId: reqUserId,
+		request_Id: itemToken,
+		userId: reqUserId
 	};
+	console.log(JSON.stringify(req));
 	deleteRequestSend(req);
 }
 

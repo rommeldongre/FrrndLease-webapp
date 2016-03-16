@@ -23,7 +23,7 @@ import util.AwsSESEmail;
 
 public class DeleteRequestHandler extends Connect implements AppHandler {
 	
-	private String user_name, check=null,Id=null,token, message;
+	private String user_name, check=null,item_Id=null,Id=null,token, message;
 	private int Code;
 	private Response res = new Response();
 	
@@ -45,28 +45,26 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 		DeleteRequestReqObj rq = (DeleteRequestReqObj) req;
 		DeleteRequestResObj rs = new DeleteRequestResObj();
-		LOGGER.info("Inside process method "+ rq.getItemId()+", "+ rq.getUserId());
+		LOGGER.info("Inside process method "+ rq.getRequest_Id()+", "+ rq.getUserId());
 		//TODO: Core of the processing takes place here
 		
 		String status = "Archived";
 	
 		LOGGER.info("inside DeleteRequestHandler method");
 		getConnection();
-		String sql2 = "SELECT * FROM requests WHERE request_date=? AND request_requser_id=? AND request_status=?";								//
+		String sql2 = "SELECT * FROM requests WHERE request_id=?";								//
 		
 		try {
 			LOGGER.info("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
-			stmt2.setString(1, rq.getItemId());
-			stmt2.setString(2, rq.getUserId());
-			stmt2.setString(3, "Active");
+			stmt2.setInt(1, rq.getRequest_Id());
 			ResultSet rs1 = stmt2.executeQuery();
 			check = null;
 			while(rs1.next()) {
-				check = rs1.getString("request_item_id");
+				item_Id = rs1.getString("request_item_id");
 			}
 			
-			if(check != null) {
+			if(item_Id != null) {
 				
                //code for populating item pojo for sending requester email
 				RequestsModel rm1 = new RequestsModel();
@@ -76,7 +74,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				PreparedStatement stmt1 = connection.prepareStatement(sql1);
 				
 				LOGGER.info("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
-				stmt1.setString(1,check);
+				stmt1.setString(1,item_Id);
 				
 				ResultSet dbResponse = stmt1.executeQuery();
 				LOGGER.info("Query to request pojos fired into requests table");
@@ -112,15 +110,14 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				}
 				//code for populating item pojo for sending requester email ends here 
 				
-				String sql = "UPDATE requests SET request_status=? WHERE request_date=? AND request_requser_id=?";			//
+				String sql = "UPDATE requests SET request_status=? WHERE request_id=?";			//
 				PreparedStatement stmt = connection.prepareStatement(sql);
 				
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, status);
-				stmt.setString(2,rq.getItemId());
-				stmt.setString(3, rq.getUserId());
+				stmt.setInt(2,rq.getRequest_Id());
 				stmt.executeUpdate();
-				message = "operation successfull edited item id : "+rq.getItemId();
+				message = "operation successfull edited request id : "+rq.getRequest_Id();
 				Code = 56;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
