@@ -141,17 +141,21 @@ public class AwsSESEmail {
 				break;
 				
 			case FLS_MAIL_REJECT_REQUEST_TO:
-				if (apiflag != null && apiflag[0]=="@reject_request") {
-					ItemsModel dtrm = (ItemsModel) obj;
-					SUBJECT = ("Request removed");
-					BODY = ( "A Request for an Item having Id ["
-							+ dtrm.getId()
-							+ "] has been removed by the Requestor \n \n");  
-				}else{
 					RequestsModel dtrm = (RequestsModel) obj;
 					SUBJECT = ("Request removed");
 					BODY = ("Request of item having id ["+dtrm.getItemId()+"] has been removed by the owner as a lease might be granted. \n \n");
-				}
+				break;
+				
+			case FLS_MAIL_DELETE_REQUEST_FROM:
+				ItemsModel dfim = (ItemsModel) obj;
+				SUBJECT = ("Request removed");
+				BODY = ("Your Request for item having id ["+dfim.getId()+"] has been removed. \n \n");      
+				break;
+				
+			case FLS_MAIL_DELETE_REQUEST_TO:
+				ItemsModel dtim = (ItemsModel) obj;
+					SUBJECT = ("Request removed");
+					BODY = ("Request of item having id ["+dtim.getId()+"] has been removed a Requestor. \n \n");
 				break;
 				
 			case FLS_MAIL_GRANT_LEASE_FROM:

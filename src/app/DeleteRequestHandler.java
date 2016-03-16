@@ -125,9 +125,8 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				try{
 					AwsSESEmail newE = new AwsSESEmail();
 					//ownerId= im.getUserId();
-					newE.send(rq.getUserId(),FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_FROM,im);
-					String source = "@reject_request";
-					newE.send(im.getUserId(),FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_TO,im,source);
+					newE.send(rq.getUserId(),FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_REQUEST_FROM,im);
+					newE.send(im.getUserId(),FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_REQUEST_TO,im);
 					rs.setErrorString("No Error");
 					rs.setReturnCode(0);
 					}catch(Exception e){
