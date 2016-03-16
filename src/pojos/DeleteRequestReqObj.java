@@ -2,7 +2,8 @@ package pojos;
 
 public class DeleteRequestReqObj extends ReqObj {
 	
-	String userId, itemId;
+	String userId;
+	int request_Id;
 
 	public String getUserId() {
 		return userId;
@@ -12,14 +13,13 @@ public class DeleteRequestReqObj extends ReqObj {
 		this.userId = userId;
 	}
 
-	public String getItemId() {
-		return itemId;
+	public int getRequest_Id() {
+		return request_Id;
 	}
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setRequest_Id(int request_Id) {
+		this.request_Id = request_Id;
 	}
-	
-	
 
+	
 }
