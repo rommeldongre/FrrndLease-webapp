@@ -141,8 +141,6 @@ public class AwsSESEmail {
 				break;
 				
 			case FLS_MAIL_REJECT_REQUEST_TO:
-				//SUBJECT = ("Request removed");
-				//BODY = ("Request of item having id ["+dtrm.getItemId()+"] has been removed by the owner as a lease might be granted. \n \n");
 				if (apiflag != null && apiflag[0]=="@reject_request") {
 					ItemsModel dtrm = (ItemsModel) obj;
 					SUBJECT = ("Request removed");
