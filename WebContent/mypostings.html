@@ -198,6 +198,48 @@
 			  </div>
 			</div>
 			
+			<!-- sample pop up starts here-->
+			<!--<button href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>-->
+			<div id="opendiv" class="span4 proj-div" data-toggle="modal" data-target="#myModalTable"></div>
+
+			<div class="modal fade" id="myModalTable" style="overflow-y: auto;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 class="modal-title">Import Amazon Orders</h3>
+					</div>
+					<div class="modal-body">
+					<h5 class="text-center">Please Select the Amazon Orders you want to Import</h5>
+					<table id="friendsoptionstable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
+						<thead>
+							<tr>
+								<!--<th class="tablecell"  style='word-wrap: break-word'>Email</th>-->
+								<th class="tablecell" style="width: 35%">Title</th>
+								<th class="tablecell" style="width: 15%">ASIN</th>
+								<th class="tablecell" style="width: 25%">Category</th>
+								<th class="tablecell" style="width: 15%">Price</th>
+								<th class="tablecell" style="width: 12%">Import</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+					<!--<div class="form-group">
+						<input type="button" class="btn btn-warning btn-sm pull-right" value="Reset">
+						<div class="clearfix"></div>
+					</div>-->
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-default " data-dismiss="modal" onclick="redirectToPrevPage()">Cancel</button>
+					<button class="btn btn-primary" id="addcheckedfriends1" onclick="add_checked_friends()">Save Selected Items</button>
+					<!--<button type="button" class="btn btn-success" onclick="add_checked_friends() >Import Contacts</button>-->
+					</div>
+							
+				</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div>
 			
 			<!--Footer starts------------------------------------>
 			<nav class="navbar navbar-default navbar-fixed-bottom">
@@ -232,6 +274,7 @@
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
 			$("#inputTriggerButton").hide();
+			$("#opendiv").hide();
 			
 			
 			categoryCounter = 0;
@@ -298,9 +341,9 @@
 			if( document.getElementById("csvfile").files.length != 0){
 				//$('#myModalAlert').modal('hide');
 				//getWishlist(inputURL,userloggedin);
-				console.log("file selected ");
 				parse_csv();
-				
+				$('#myModalAlert').modal('toggle');
+				$("#opendiv").click();
 			}else{
 				console.log("No Input file Given: ");
 			}
@@ -308,7 +351,7 @@
 		
 		function parse_csv(){
 			var myfile = $("#csvfile").prop('files')[0];
-			console.log(myfile);
+			//console.log(myfile);
 			
 			var reader = new FileReader();
 	
@@ -319,15 +362,76 @@
 			}
 			
 			reader.readAsText(myfile);
-			//reader.readAsBinaryString(myfile);
 			
 			// Process CSV
 			var processCsv = function (csvData) {
 				console.log(csvData);
-				console.log(csvData[0]);
-				console.log(csvData[0].Title);
 				console.log(csvData.length);
+				var i,title,category,asin="-",cost="-";
+				for(i=0;i<csvData.length;i++){
+					
+					if(csvData[i]["Title"]){
+						title = csvData[i]["Title"];
+					}else{
+						title = "-";
+					}
+				    if(csvData[i]["Category"]){
+						category = csvData[i]["Category"];
+					}else{
+						category = "-";
+					}
+					if(csvData[i]["ASIN/ISBN"]){
+						asin = csvData[i]["ASIN/ISBN"];
+					}else{
+						asin = "-";
+					}
+					
+					if(csvData[i]["List Price Per Unit"]){
+						cost = csvData[i]["List Price Per Unit"];
+						cost = cost.replace("$", "");
+						cost = parseInt(cost);
+					}else{
+						cost = "-";
+					}
+					//console.log(title+" "+category+" "+asin+" "+cost);
+					addFriendOptionToPage(title,category,asin,cost,i); 
+				}
 			};
+		}
+		
+		function addFriendOptionToPage(title,category,asin,cost,i){
+			var table = document.getElementById("friendsoptionstable");
+				var row = table.insertRow(1);
+				var cell0 = row.insertCell(0);
+				var cell1 = row.insertCell(1);
+				var cell2 = row.insertCell(2);
+				var cell3 = row.insertCell(3);
+				var cell4 = row.insertCell(4);
+				
+				var inputgp = document.createElement("div");
+				var checkbox = document.createElement("input");
+				inputgp.className = "input-group";
+				checkbox.setAttribute("type","checkbox");
+				checkbox.checked= true;
+				inputgp.appendChild(checkbox);
+				checkbox.id = i;
+				
+				cell0.innerHTML = title;
+				cell1.innerHTML = asin;
+				cell2.innerHTML = category;
+				cell3.innerHTML = cost;
+				cell4.appendChild(inputgp);
+				
+				cell0.id = "title"+i;
+				cell1.id = "asin"+i;
+				cell2.id = "category"+i;
+				cell3.id = "cost"+i;
+				
+				cell0.className = "tablecelltitle";
+				cell1.className = "tablecellasin";
+				cell2.className = "tablecellcategory";
+				cell3.className = "tablecellcost";
+				cell4.className = "checkboxes";
 		}
 		
 		function loadCategoryFilter(){
