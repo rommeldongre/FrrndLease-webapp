@@ -33,6 +33,10 @@
 	<script src="js/logincheck.js"></script>
 	<!--Check whether user is logged in or not ends here  -->
 	
+	<!-- JavaScript Library to parse CSV file -->
+	<script src="js/d3.js"></script>
+	<!-- JavaScript Library to parse CSV file wnds here-->
+	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -73,6 +77,9 @@
 					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
 					</form>
 					
+					<div class="navbar-form navbar-right">
+						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+					</div>
 				</div>
 			</div>
 		</nav>
@@ -85,7 +92,8 @@
 				<div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 				</div>
 				<div id="topcolright" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-					<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+					<!--<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>-->
+					<span class="navbar-form navbar-right"><span class="glyphicon glyphicon-plus" onclick="add_haveitem()"></span></span>
 				</div>
 			</div>
 			<br />
@@ -148,7 +156,7 @@
 			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 			  Launch demo modal
 			</button>
-
+			
 			<!-- Confirmation Modal -->
 			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog" role="document">
@@ -162,6 +170,29 @@
 				  </div>
 				  <div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Div trigger Text Input Modal -->
+			<div id="inputTriggerButton" class="span4 proj-div" data-toggle="modal" data-target="#myModalAlert"></div>
+
+			<!-- Text Input Modal Modal -->
+			<div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabelInput">
+					</h4>
+				  </div>
+				  <div class="modal-body" id="modalMsgInput">
+					<input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control">
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="">Close</button>
+					<button type="button" class="btn btn-primary" onclick="import_havelist()">Submit CSV File</button>
 				  </div>
 				</div>
 			  </div>
@@ -200,6 +231,8 @@
 			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
+			$("#inputTriggerButton").hide();
+			
 			
 			categoryCounter = 0;
 			
@@ -252,6 +285,50 @@
 			
 			loadCarousel();					
 		});
+		
+		function add_haveitem(){
+		setPrevPage("mypostings.html");
+			var header = document.getElementById("myModalLabelInput");
+			header.innerHTML = "Import CSV file containing Amazon Orders Report";
+			$("#inputTriggerButton").click();
+		}
+		
+		function import_havelist(){
+		//var inputURL = document.getElementById("urlInput").value;
+			if( document.getElementById("csvfile").files.length != 0){
+				//$('#myModalAlert').modal('hide');
+				//getWishlist(inputURL,userloggedin);
+				console.log("file selected ");
+				parse_csv();
+				
+			}else{
+				console.log("No Input file Given: ");
+			}
+		}
+		
+		function parse_csv(){
+			var myfile = $("#csvfile").prop('files')[0];
+			console.log(myfile);
+			
+			var reader = new FileReader();
+	
+			reader.onload = function(e) {
+				//var text = reader.result;
+				//console.log(text);
+				processCsv(d3.csv.parse(reader.result));
+			}
+			
+			reader.readAsText(myfile);
+			//reader.readAsBinaryString(myfile);
+			
+			// Process CSV
+			var processCsv = function (csvData) {
+				console.log(csvData);
+				console.log(csvData[0]);
+				console.log(csvData[0].Title);
+				console.log(csvData.length);
+			};
+		}
 		
 		function loadCategoryFilter(){
 			var div = document.getElementById("categorybrowsing");
@@ -453,7 +530,7 @@
 				p.innerHTML = "Lease Term: "+obj.leaseTerm;
 				p.id = obj.itemId;
 				
-				console.log(obj);
+				//console.log(obj);
 				
 				if(obj.location){
 					var address = obj.location;
