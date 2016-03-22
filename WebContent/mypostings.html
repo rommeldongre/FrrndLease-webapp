@@ -139,7 +139,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					<!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
 				  </div>
 				  <div class="modal-body" id="alertModalMsg">
 					
@@ -233,7 +233,7 @@
 					</div>
 					<div class="modal-footer">
 					<button type="button" class="btn btn-default " data-dismiss="modal" onclick="redirectToPrevPage()">Cancel</button>
-					<button class="btn btn-primary" id="addcheckedfriends1" onclick="add_checked_friends()">Save Selected Items</button>
+					<button class="btn btn-primary" id="addcheckedfriends1" onclick="add_checked_items()">Save Selected Items</button>
 					<!--<button type="button" class="btn btn-success" onclick="add_checked_friends() >Import Contacts</button>-->
 					</div>
 							
@@ -266,7 +266,7 @@
 	
 	
 	<script type="text/javascript">
-		var counter, i, j, startingCarousel, carouselwidth, carouselheight, browsingCategory, imgheight, imgwidth, noOfImagesInCarousel, navigatingSide, span1, col1, row1, carouselinner, img1, item1, reasonForGetItem, userloggedin, objUserId, categoryCounter;
+		var counter, i, j, startingCarousel, carouselwidth, carouselheight, browsingCategory, imgheight, imgwidth, noOfImagesInCarousel, navigatingSide, span1, col1, row1, carouselinner, img1, item1, reasonForGetItem, userloggedin, objUserId, categoryCounter, checkcounter =0, amazon_counter=0, amazon_orders_counter=0;
 		
 		
 		function start(){
@@ -368,7 +368,8 @@
 				console.log(csvData);
 				console.log(csvData.length);
 				var i,title,category,asin="-",cost="-";
-				for(i=0;i<csvData.length;i++){
+				amazon_orders_counter = csvData.length;
+				for(i=0;i<amazon_orders_counter;i++){
 					
 					if(csvData[i]["Title"]){
 						title = csvData[i]["Title"];
@@ -376,7 +377,8 @@
 						title = "-";
 					}
 				    if(csvData[i]["Category"]){
-						category = csvData[i]["Category"];
+						//category = csvData[i]["Category"];
+						category = "Furniture";
 					}else{
 						category = "-";
 					}
@@ -432,6 +434,39 @@
 				cell2.className = "tablecellcategory";
 				cell3.className = "tablecellcost";
 				cell4.className = "checkboxes";
+		}
+		
+		function add_checked_items(){
+			//alert("noOfUsers: "+googleFriendsCounter);
+			//$("#myModalTable").hide();
+			 $('#myModalTable').modal('hide');
+			reasonForAddFriend = "importAmazonreport";
+			if(amazon_counter<amazon_orders_counter){
+				var ischecked = $("#"+amazon_counter).is(":checked");
+				console.log(amazon_counter+": "+ischecked);
+				
+				if(ischecked){
+					title = $("#title"+amazon_counter).text();
+					asin = $("#asin"+amazon_counter).text();
+					category = $("#category"+amazon_counter).text();
+					cost = $("#cost"+amazon_counter).text();
+					console.log("title: "+title+" asin: "+asin+" category: "+category+" cost: "+cost);
+					checkcounter++;
+					
+					//addFriendSetValues(name, mobile, email, userloggedin);
+					//addFriendDbCreate();
+					add_checked_items_continued();
+				}else{
+					add_checked_items_continued();		//basically just increment and call the same function again
+				}
+			}else{
+				confirmationIndex("Successful" , " Number of Amazon Ordered Items Imported : "+checkcounter);
+			}
+		}
+		
+		function add_checked_items_continued(){
+			amazon_counter++;
+			add_checked_items();
 		}
 		
 		function loadCategoryFilter(){
@@ -729,7 +764,9 @@
 		}
 
 
-		function confirmationIndex(msg){			//called from script_admin_v2.js
+		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
+			var header = document.getElementById("myModalLabel");
+			header.innerHTML = heading;
 			var div = document.getElementById("modalMsg");
 			div.innerHTML = msg;
 			
