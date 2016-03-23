@@ -337,10 +337,7 @@
 		}
 		
 		function import_havelist(){
-		//var inputURL = document.getElementById("urlInput").value;
 			if( document.getElementById("csvfile").files.length != 0){
-				//$('#myModalAlert').modal('hide');
-				//getWishlist(inputURL,userloggedin);
 				parse_csv();
 				$('#myModalAlert').modal('toggle');
 				$("#opendiv").click();
@@ -351,13 +348,10 @@
 		
 		function parse_csv(){
 			var myfile = $("#csvfile").prop('files')[0];
-			//console.log(myfile);
 			
 			var reader = new FileReader();
 	
 			reader.onload = function(e) {
-				//var text = reader.result;
-				//console.log(text);
 				processCsv(d3.csv.parse(reader.result));
 			}
 			
@@ -365,8 +359,6 @@
 			
 			// Process CSV
 			var processCsv = function (csvData) {
-				console.log(csvData);
-				console.log(csvData.length);
 				var i,title,category,asin="-",cost="-";
 				amazon_orders_counter = csvData.length;
 				for(i=0;i<amazon_orders_counter;i++){
@@ -377,7 +369,6 @@
 						title = "-";
 					}
 				    if(csvData[i]["Category"]){
-						//category = csvData[i]["Category"];
 						category = "Furniture";
 					}else{
 						category = "-";
@@ -395,7 +386,6 @@
 					}else{
 						cost = "-";
 					}
-					//console.log(title+" "+category+" "+asin+" "+cost);
 					addFriendOptionToPage(title,category,asin,cost,i); 
 				}
 			};
@@ -437,31 +427,26 @@
 		}
 		
 		function add_checked_items(){
-			//alert("noOfUsers: "+googleFriendsCounter);
-			//$("#myModalTable").hide();
-			 $('#myModalTable').modal('hide');
-			reasonForAddFriend = "importAmazonreport";
-			if(amazon_counter<amazon_orders_counter){
-				var ischecked = $("#"+amazon_counter).is(":checked");
-				console.log(amazon_counter+": "+ischecked);
-				
-				if(ischecked){
-					title = $("#title"+amazon_counter).text();
-					asin = $("#asin"+amazon_counter).text();
-					category = $("#category"+amazon_counter).text();
-					cost = $("#cost"+amazon_counter).text();
-					console.log("title: "+title+" asin: "+asin+" category: "+category+" cost: "+cost);
-					checkcounter++;
-					
-					//addFriendSetValues(name, mobile, email, userloggedin);
-					//addFriendDbCreate();
-					add_checked_items_continued();
-				}else{
-					add_checked_items_continued();		//basically just increment and call the same function again
-				}
-			}else{
-				confirmationIndex("Successful" , " Number of Amazon Ordered Items Imported : "+checkcounter);
+			if(amazon_counter==0){
+			$('#myModalTable').modal('toggle');
 			}
+				if(amazon_counter<amazon_orders_counter){
+					var ischecked = $("#"+amazon_counter).is(":checked");
+					
+					if(ischecked){
+						title = $("#title"+amazon_counter).text();
+						asin = $("#asin"+amazon_counter).text();
+						category = $("#category"+amazon_counter).text();
+						cost = $("#cost"+amazon_counter).text();
+						checkcounter++;
+						
+						add_checked_items_ajax(title,asin,category,cost);
+					}else{
+						add_checked_items_continued();		//basically just increment and call the same function again
+					}
+				}else{
+					confirmationIndex("Successful" , " Number of Amazon Ordered Items Imported : "+checkcounter);
+				}
 		}
 		
 		function add_checked_items_continued(){
@@ -469,6 +454,40 @@
 			add_checked_items();
 		}
 		
+		function add_checked_items_ajax(i_title,i_asin,i_category,i_cost){
+		
+			var req = {
+				id: 0,
+				title: i_title,
+				description: "External link of item is: "+"http://lead.to/ae/?key="+i_asin,
+				category: i_category,
+				userId: userloggedin,
+				leaseValue: i_cost,
+				leaseTerm: "Season",
+				status: "InStore",
+				image: ""
+			};
+			
+			$.ajax({
+			url: '/flsv2/PostItem',
+			type: 'post',
+			data: {req : JSON.stringify(req)},
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			
+			success: function(response) {
+                add_checked_items_continued();
+				//alert(response.Code+" "+response.Message);
+			},
+		
+			error: function() {
+				var heading = "Unsuccessful";
+				var msg = "Not Working";
+				confirmationIndex(heading ,msg);
+			}
+		});
+		
+		}
 		function loadCategoryFilter(){
 			var div = document.getElementById("categorybrowsing");
 			var button = document.createElement("button");
