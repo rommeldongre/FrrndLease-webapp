@@ -73,6 +73,10 @@
 					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
 					</form>
 					
+					<div class="navbar-form navbar-right">
+						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+					</div>
+					
 				</div>
 			</div>
 		</nav>
@@ -366,6 +370,12 @@
 			$("#modalTriggerButton").click();
 		}
 		
+		function storeYourStuff(){
+			storeCurrentFunction('storeYourStuff');
+			setPrevPage("myleasedoutitems.html");
+			
+			window.location.replace("mystore.html");
+		}
 		
 		function redirectToHomePage(){
 			window.location.replace("index.html");
