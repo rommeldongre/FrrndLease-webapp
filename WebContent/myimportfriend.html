@@ -75,6 +75,10 @@
 					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
 					</form>
 					
+					<div class="navbar-form navbar-right">
+						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+					</div>
+					
 				</div>
 			</div>
 		</nav>
@@ -509,6 +513,13 @@
 			$("#modalTriggerButton").click();
 		}
 		
+		function storeYourStuff(){
+			storeCurrentFunction('storeYourStuff');
+			setPrevPage("myimportfriend.html");
+			
+			window.location.replace("mystore.html");
+		}
+		
 		function redirectToHomePage(){
 			window.location.replace("index.html");
 		}
@@ -526,6 +537,7 @@
 	</script>	
 		
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/index.js"></script>
 	<script src="js/mystore.js"></script>
 	<script src="js/script_admin_v2.js"></script>	
     <script src="js/bootstrap.min.js"></script>

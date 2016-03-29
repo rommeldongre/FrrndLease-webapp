@@ -83,6 +83,10 @@
 					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
 					</form>
 					
+					<div class="navbar-form navbar-right">
+						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+					</div>
+					
 				</div>
 			</div>
 			
@@ -202,6 +206,13 @@
 			auth2.signOut().then(function () {
 				console.log('User signed out.');
 			});
+		}
+		
+		function storeYourStuff(){
+			storeCurrentFunction('storeYourStuff');
+			setPrevPage("mycredits.html");
+			
+			window.location.replace("mystore.html");
 		}
 		
 	</script>
