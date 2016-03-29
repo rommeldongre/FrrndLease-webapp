@@ -93,7 +93,7 @@
 				</div>
 				<div id="topcolright" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 					<!--<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>-->
-					<span class="navbar-form navbar-right"><span class="glyphicon glyphicon-plus" onclick="add_haveitem()"></span></span>
+					<span class="navbar-form navbar-right"><span class="btn btn-primary" onclick="add_haveitem()">Import Havelist</span></span>
 				</div>
 			</div>
 			<br />
@@ -217,8 +217,8 @@
 								<!--<th class="tablecell"  style='word-wrap: break-word'>Email</th>-->
 								<th class="tablecell" style="width: 35%">Title</th>
 								<th class="tablecell" style="width: 15%">ASIN</th>
-								<th class="tablecell" style="width: 25%">Category</th>
-								<th class="tablecell" style="width: 15%">Price</th>
+								<th class="tablecell" style="width: 20%">Category</th>
+								<th class="tablecell" style="width: 20%">Price(INR)</th>
 								<th class="tablecell" style="width: 12%">Import</th>
 							</tr>
 						</thead>
@@ -408,10 +408,17 @@
 				inputgp.appendChild(checkbox);
 				checkbox.id = i;
 				
+				var input_price = document.createElement("input"); 
+				input_price.setAttribute("type","number");
+				input_price.style.width="100%";
+				input_price.setAttribute("value",cost);
+				input_price.setAttribute("min","1000");
+				input_price.setAttribute("max","10000");
+				input_price.innerHTML = cost;
 				cell0.innerHTML = title;
 				cell1.innerHTML = asin;
 				cell2.innerHTML = category;
-				cell3.innerHTML = cost;
+				cell3.appendChild(input_price);
 				cell4.appendChild(inputgp);
 				
 				cell0.id = "title"+i;
