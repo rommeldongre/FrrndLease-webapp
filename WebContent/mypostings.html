@@ -9,11 +9,11 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script> 
     
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>My Incoming Requests</title>
+    <title>My Postings</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-1.11.3.min.js"></script>
-	
+    
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/myindex.css" rel="stylesheet">
@@ -241,6 +241,10 @@
 				</div><!-- /.modal-dialog -->
 			</div>
 			
+			<div id="tawk_widget">
+				<!--The tawk.to widget code will get populated here from file chatbox.html. Refer file dropdownlist.js-->
+			</div>
+	
 			<!--Footer starts------------------------------------>
 			<nav class="navbar navbar-default navbar-fixed-bottom">
 				<div class="container-fluid">
@@ -415,6 +419,7 @@
 				input_price.setAttribute("min","1000");
 				input_price.setAttribute("max","10000");
 				input_price.innerHTML = cost;
+				
 				cell0.innerHTML = title;
 				cell1.innerHTML = asin;
 				cell2.innerHTML = category;
@@ -816,6 +821,6 @@
 	<script src="js/index.js"></script>
 	<script src="js/script_admin_v2.js"></script>	
     <script src="js/bootstrap.min.js"></script>
-
+    
   </body>
 </html>
