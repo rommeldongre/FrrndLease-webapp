@@ -26,6 +26,15 @@ body{
 	
 }
 
+#heading{
+	position: relative;
+	text-align: center;
+	color: #0066ff;
+	font-size: 200%;
+	font-family: 'Happy Monkey', serif;
+	margin-top: 2%;
+}
+
 #button_top_right{
 	position: relative;
 	float: right;
