@@ -9,11 +9,11 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script> 
     
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>My Incoming Requests</title>
+    <title>My Postings</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-1.11.3.min.js"></script>
-	
+    
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/myindex.css" rel="stylesheet">
@@ -87,13 +87,14 @@
 		
 		
 		<div class="container-fluid" id="midcontainer" style="padding-top: 50px;">
-			<h2>My Postings</h2>
+			<div id="heading"><strong>My Postings</strong></div>
+			
 			<div class="row">
 				<div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 				</div>
 				<div id="topcolright" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 					<!--<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>-->
-					<span class="navbar-form navbar-right"><span class="btn btn-primary" onclick="add_haveitem()">Import Havelist</span></span>
+					<span class="navbar-form navbar-right"><span class="btn btn-primary" onclick="add_haveitem()">Import Items</span></span>
 				</div>
 			</div>
 			<br />
@@ -241,25 +242,14 @@
 				</div><!-- /.modal-dialog -->
 			</div>
 			
+			<div id="tawk_widget">
+				<!--The tawk.to widget code will get populated here-->
+			</div>
+	
 			<!--Footer starts------------------------------------>
-			<nav class="navbar navbar-default navbar-fixed-bottom">
-				<div class="container-fluid">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>                        
-					</button>
-					<div class="collapse navbar-collapse" id="myNavbarBottom">
-						<ul class="nav navbar-nav navbar-center">
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
-						</ul>
-					</div>
-				</div>
-			</nav>
+			<div id="footer_nav">
+				<!--The Footer nav will get populated here-->
+			</div>
 			<!--Footer ends--------------------------------------->
 		</div>
 	</div>
@@ -415,6 +405,7 @@
 				input_price.setAttribute("min","1000");
 				input_price.setAttribute("max","10000");
 				input_price.innerHTML = cost;
+				
 				cell0.innerHTML = title;
 				cell1.innerHTML = asin;
 				cell2.innerHTML = category;
@@ -816,6 +807,6 @@
 	<script src="js/index.js"></script>
 	<script src="js/script_admin_v2.js"></script>	
     <script src="js/bootstrap.min.js"></script>
-
-  </body>
+    
+ </body>
 </html>

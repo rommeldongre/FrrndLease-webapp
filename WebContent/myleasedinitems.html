@@ -84,7 +84,7 @@
 		
 		
 		<div class="container-fluid" id="midcontainer">
-			<h2>My Leased In Items</h2>
+			<div id="heading"><strong>My Leased In Items</strong></div>
 			
 			<table id="leasetable" class="table table-striped">
 				<thead>
@@ -151,24 +151,14 @@
 			  </div>
 			</div>			
 			
+			<div id="tawk_widget">
+				<!--The tawk.to widget code will get populated here-->
+			</div>
+			
 			<!--Footer starts------------------------------------>
-			<nav class="navbar navbar-default navbar-fixed-bottom">
-				<div class="container-fluid">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>                        
-					</button>
-					<div class="collapse navbar-collapse" id="myNavbarBottom">
-						<ul class="nav navbar-nav navbar-center">
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>						</ul>
-					</div>
-				</div>
-			</nav>
+			<div id="footer_nav">
+				<!--The Footer nav will get populated here-->
+			</div>
 			<!--Footer ends--------------------------------------->
 		</div>
 	</div>
@@ -245,6 +235,11 @@
 				var cell2 = row.insertCell(2);
 				var cell3 = row.insertCell(3);
 				
+				cell0.setAttribute("style", "width:15%;");
+				cell1.setAttribute("style", "width:40%;");
+				cell2.setAttribute("style", "width:25%;");
+				cell3.setAttribute("style", "width:20%;");
+				
 				var span1 = document.createElement("span");
 				var span2 = document.createElement("span");
 				var span3 = document.createElement("span");
@@ -253,8 +248,12 @@
 				span1.className = "remove";
 				span2.className = "renew";
 			
-				span3.className="glyphicon glyphicon-remove";
-				span4.className="glyphicon glyphicon-repeat";
+				span3.className="btn btn-primary";
+				span3.innerHTML="Remove";
+				span3.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
+				span4.className="btn btn-primary";
+				span4.innerHTML="Repeat";
+				span4.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
 				
 				span3.id = itemNextId;
 				span4.id = itemNextId;
@@ -323,7 +322,7 @@
 		
 		function look_good(){		//just for looks
 			$('.actionbutton').css("margin-left","10px");
-			$('.tablecell').css("text-align","center");
+			$('.tablecell').css("text-align","left");
 			$('.tablecellItem').css("text-align","center");
 			$('.tablecellFriend').css("text-align","center");
 			$('.tablecellAction').css("text-align","center");

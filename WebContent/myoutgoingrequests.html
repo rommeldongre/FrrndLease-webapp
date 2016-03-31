@@ -86,8 +86,7 @@
 		
 		
 		<div class="container-fluid" id="midcontainer">
-			<h2>My Outgoing Requests List</h2>
-			
+			<div id="heading"><strong>My Outgoing Requests List</strong></div>
 			<div class="row">
 				<div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 				</div>
@@ -162,26 +161,14 @@
 			  </div>
 			</div>
 			
+			<div id="tawk_widget">
+				<!--The tawk.to widget code will get populated here-->
+			</div>
 			
 			<!--Footer starts------------------------------------>
-			<nav class="navbar navbar-default navbar-fixed-bottom">
-				<div class="container-fluid">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>                        
-					</button>
-					<div class="collapse navbar-collapse" id="myNavbarBottom">
-						<ul class="nav navbar-nav navbar-center">
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
-						</ul>
-					</div>
-				</div>
-			</nav>
+			<div id="footer_nav">
+				<!--The Footer nav will get populated here-->
+			</div>
 			<!--Footer ends--------------------------------------->
 		</div>
 	</div>
@@ -278,11 +265,19 @@
 				var cell2 = row.insertCell(2);
 				var cell3 = row.insertCell(3);
 				
+				cell0.setAttribute("style", "width:15%;");
+				cell1.setAttribute("style", "width:40%;");
+				cell2.setAttribute("style", "width:25%;");
+				cell3.setAttribute("style", "width:20%;");
+				
 				var span2 = document.createElement("span");
 				var span5 = document.createElement("span");
 				
 				span2.className = "refuse";
-				span5.className="glyphicon glyphicon-remove";
+				//span5.className="glyphicon glyphicon-remove";
+				span5.className="btn btn-primary";
+				span5.innerHTML="Delete";
+				span5.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
 				span5.id = itemNextRequestId;			//here request id is taken, this is not a mistake.
 				
 				span2.appendChild(span5);
@@ -379,7 +374,7 @@
 		
 		function look_good(){		//just for looks
 			$('.actionbutton').css("margin-left","10px");
-			$('.tablecell').css("text-align","center");
+			$('.tablecell').css("text-align","left");
 			$('.tablecellItem').css("text-align","center");
 			$('.tablecellFriend').css("text-align","center");
 			$('.tablecellAction').css("text-align","center");

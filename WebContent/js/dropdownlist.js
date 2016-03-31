@@ -9,6 +9,14 @@ $(function(){
                   $('#navBarSearchForm').html(response);
             });
 			
+			$.get("chatbox.html", function(response) {
+                  $('#tawk_widget').html(response);
+            });
+			
+			$.get("footer.html", function(response) {
+                  $('#footer_nav').html(response);
+            });
+			
 			var link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
