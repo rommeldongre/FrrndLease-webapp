@@ -54,6 +54,15 @@ body{
 	min-width: 150px;
 }	
 
+#heading{
+	position: relative;
+	text-align: center;
+	color: #0066ff;
+	font-size: 200%;
+	font-family: 'Happy Monkey', serif;
+	margin-top: 2%;
+}
+
 .addImport:hover{
 	cursor: pointer;
 }
