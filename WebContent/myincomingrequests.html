@@ -238,11 +238,15 @@
 		
 				var table = document.getElementById("requesttable");
 				var row = table.insertRow(1);
-				row.setAttribute("style", "text-align: center;");
 				var cell0 = row.insertCell(0);
 				var cell1 = row.insertCell(1);
 				var cell2 = row.insertCell(2);
 				var cell3 = row.insertCell(3);
+				
+				cell0.setAttribute("style", "width:15%;");
+				cell1.setAttribute("style", "width:35%;");
+				cell2.setAttribute("style", "width:30%;");
+				cell3.setAttribute("style", "width:20%;");
 				
 				var span1 = document.createElement("span");
 				var span2 = document.createElement("span");
@@ -254,9 +258,15 @@
 				span1.className = "grant";
 				span2.className = "refuse";
 				span3.className = "think";
-				span4.className="glyphicon glyphicon-ok";
-				span5.className="glyphicon glyphicon-remove";
-				span6.className="glyphicon glyphicon-repeat";
+				span4.className="btn btn-primary";
+				span4.innerHTML="Accept";
+				span4.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
+				span5.className="btn btn-primary";
+				span5.innerHTML="Delete";
+				span5.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
+				span6.className="btn btn-primary";
+				span6.innerHTML="Renew";
+				span6.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
 				span4.id = itemNextId;
 				span5.id = itemNextRequestId;			//here request id is taken, this is not a mistake.
 				span6.id = itemNextId;
@@ -408,7 +418,7 @@
 		
 		function look_good(){		//just for looks
 			$('.actionbutton').css("margin-left","10px");
-			$('.tablecell').css("text-align","center");
+			$('.tablecell').css("text-align","left");
 			$('.tablecellItem').css("text-align","center");
 			$('.tablecellFriend').css("text-align","center");
 			$('.tablecellAction').css("text-align","center");
