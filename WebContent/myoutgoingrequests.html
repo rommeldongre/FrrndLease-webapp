@@ -260,6 +260,7 @@
 			 
 				var table = document.getElementById("requesttable");
 				var row = table.insertRow(1);
+				row.setAttribute("style", "text-align: center;");
 				var cell0 = row.insertCell(0);
 				var cell1 = row.insertCell(1);
 				var cell2 = row.insertCell(2);
@@ -269,7 +270,9 @@
 				var span5 = document.createElement("span");
 				
 				span2.className = "refuse";
-				span5.className="glyphicon glyphicon-remove";
+				//span5.className="glyphicon glyphicon-remove";
+				span5.className="btn btn-primary";
+				span5.innerHTML="Delete Request";
 				span5.id = itemNextRequestId;			//here request id is taken, this is not a mistake.
 				
 				span2.appendChild(span5);
