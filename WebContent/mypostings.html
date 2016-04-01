@@ -242,6 +242,25 @@
 				</div><!-- /.modal-dialog -->
 			</div>
 			
+			<!-- "Please Wait" Modal Start here-->
+			<div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait"></div>
+			<div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+				<div class="modal-header">
+					<h4 id="waitheading"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="progress">
+					<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			</div>
+			<!-- "Please Wait" Modal ends Here -->
+			
 			<div id="tawk_widget">
 				<!--The tawk.to widget code will get populated here-->
 			</div>
@@ -265,6 +284,7 @@
 			$("#alertModalTriggerButton").hide();
 			$("#inputTriggerButton").hide();
 			$("#opendiv").hide();
+			$("#opendivmyPleaseWait").hide();
 			
 			
 			categoryCounter = 0;
@@ -427,6 +447,7 @@
 		function add_checked_items(){
 			if(amazon_counter==0){
 			$('#myModalTable').modal('toggle');
+			process_dialog("Adding Items Please Wait");
 			}
 				if(amazon_counter<amazon_orders_counter){
 					var ischecked = $("#"+amazon_counter).is(":checked");
@@ -443,6 +464,7 @@
 						add_checked_items_continued();		//basically just increment and call the same function again
 					}
 				}else{
+				    $("#myPleaseWait").hide();
 					confirmationIndex("Successful" , " Number of Amazon Ordered Items Imported : "+checkcounter);
 				}
 		}
@@ -780,7 +802,12 @@
 			window.location.replace("mystore.html");
 		}
 
-
+        function process_dialog(heading){
+			var header = document.getElementById("waitheading");
+			header.innerHTML = heading;
+			$("#opendivmyPleaseWait").click();
+		}
+		
 		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
 			var header = document.getElementById("myModalLabel");
 			header.innerHTML = heading;
