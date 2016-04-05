@@ -154,7 +154,7 @@
 			</div>
 			
 			<!-- Button trigger Confirmation Modal -->
-			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
 			  Launch demo modal
 			</button>
 			
@@ -177,7 +177,7 @@
 			</div>
 			
 			<!-- Div trigger Text Input Modal -->
-			<div id="inputTriggerButton" class="span4 proj-div" data-toggle="modal" data-target="#myModalAlert"></div>
+			<div id="inputTriggerButton" class="span4 proj-div" data-toggle="modal" data-target="#myModalAlert" data-backdrop="static" data-keyboard="false"></div>
 
 			<!-- Text Input Modal Modal -->
 			<div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -201,7 +201,7 @@
 			
 			<!-- sample pop up starts here-->
 			<!--<button href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>-->
-			<div id="opendiv" class="span4 proj-div" data-toggle="modal" data-target="#myModalTable"></div>
+			<div id="opendiv" class="span4 proj-div" data-toggle="modal" data-target="#myModalTable" data-backdrop="static" data-keyboard="false"></div>
 
 			<div class="modal fade" id="myModalTable" style="overflow-y: auto;">
 			<div class="modal-dialog">
@@ -243,21 +243,7 @@
 			</div>
 			
 			<!-- "Please Wait" Modal Start here-->
-			<div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait"></div>
-			<div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-				<div class="modal-header">
-					<h4 id="waitheading"></h4>
-				</div>
-				<div class="modal-body">
-					<div class="progress">
-					<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-					</div>
-					</div>
-				</div>
-				</div>
-			</div>
+			<div id="wait_bar">
 			</div>
 			<!-- "Please Wait" Modal ends Here -->
 			
@@ -284,7 +270,6 @@
 			$("#alertModalTriggerButton").hide();
 			$("#inputTriggerButton").hide();
 			$("#opendiv").hide();
-			$("#opendivmyPleaseWait").hide();
 			
 			
 			categoryCounter = 0;
@@ -800,12 +785,6 @@
 				storeCurrentFunction("viewItemUser");
 			
 			window.location.replace("mystore.html");
-		}
-
-        function process_dialog(heading){
-			var header = document.getElementById("waitheading");
-			header.innerHTML = heading;
-			$("#opendivmyPleaseWait").click();
 		}
 		
 		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
