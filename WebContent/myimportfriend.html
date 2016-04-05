@@ -207,7 +207,7 @@
 			</div>
 			
 			<!-- Button trigger Confirmation Modal -->
-			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
 			  Launch demo modal
 			</button>
 
@@ -228,6 +228,11 @@
 				</div>
 			  </div>
 			</div>
+			
+			<!-- "Please Wait" Modal Start here-->
+			<div id="wait_bar">
+			</div>
+			<!-- "Please Wait" Modal ends Here -->
 			
 			<div id="tawk_widget">
 				<!--The tawk.to widget code will get populated here-->
@@ -415,7 +420,7 @@
 		function directImport(){
 			email = '';
 			reasonForAddFriend = "importEmail"
-			
+		
 			var value = $("#importemail").val();
 			var arrEmail = [];
 			var errCount = 0;
@@ -462,7 +467,10 @@
 		function add_checked_friends(){
 			//alert("noOfUsers: "+googleFriendsCounter);
 			//$("#myModalTable").hide();
-			 $('#myModalTable').modal('hide');
+			$('#myModalTable').modal('hide');
+			if(counter==0){
+			process_dialog("Adding Gmail friends Please Wait");
+			}
 			reasonForAddFriend = "importGoogle";
 			if(counter<googleFriendsCounter){
 				var ischecked = $("#"+counter).is(":checked");
@@ -481,6 +489,7 @@
 					add_checked_friends_continued();		//basically just increment and call the same function again
 				}
 			}else{
+				$("#myPleaseWait").hide();
 				confirmationIndex("Successful", " Number of Friends Imported : "+checkcounter);
 			}
 		}
