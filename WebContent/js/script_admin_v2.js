@@ -1568,6 +1568,7 @@ getWishlistRequest = function(req) {
 			dataType: "JSON",
 			success: function(response) {
 				//alert("working");
+					$("#myPleaseWait").hide();
 					confirmationIndex("Success",response.wishItemCount+" out of "+response.totalWishItemCount+" Amazon Wishlist Items Imported");
 					//getOutItemForRequest(response);
 					//alert(response.title);
