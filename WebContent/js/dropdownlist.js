@@ -17,6 +17,10 @@ $(function(){
                   $('#footer_nav').html(response);
             });
 			
+			$.get("waitbar.html", function(response) {
+                  $('#wait_bar').html(response);
+            });
+			
 			var link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';

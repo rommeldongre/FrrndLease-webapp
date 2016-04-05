@@ -96,6 +96,10 @@
 					</div>
 					</form>
 					
+					<div class="navbar-form navbar-right">
+						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+					</div>
+					
 				</div>
 			</div>
 		</nav>
@@ -579,7 +583,7 @@
 		
 		function storeYourStuff(){
 			storeCurrentFunction('storeYourStuff');
-			setPrevPage("index.html");
+			setPrevPage("myindex.html");
 			
 			window.location.replace("mystore.html");
 		}
