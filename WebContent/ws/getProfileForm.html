@@ -7,15 +7,15 @@
 <script type="text/javascript">
 	var UserId = null;
 	
-	getProfile = function() {
+	getProfileReq = function() {
 		UserId = document.getElementById("userId").value;
 		var req = {
 				userId: UserId
 		}
-		send(req);
+		getProfileSend(req);
 	};
 	
-	send = function(req) {
+	getProfileSend = function(req) {
 		$.ajax({
 			url: '/flsv2/GetProfile',
 			type:'post',
@@ -51,7 +51,7 @@
 	<h1>GET PROFILE FORM</h1>
 	<form>
 		User Id : <input type="text" name="userId" id="userId"><br/><br/>
-		<input type="button" value="Get Profile" onclick="getProfile()"><br/><br/>
+		<input type="button" value="Get Profile" onclick="getProfileReq()"><br/><br/>
 		
 		<h1>OUTPUT</h1>
 		Code : <input type="text" name="code" id="code"><br/><br/>

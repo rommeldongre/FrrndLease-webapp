@@ -13,8 +13,6 @@ import pojos.ResObj;
 
 public class GetProfileHandler extends Connect implements AppHandler{
 
-	private String fullname, mobile, location, message, check=null;
-	private int code;
 	private Response res = new Response();
 	
 	private static GetProfileHandler instance = null;
@@ -59,8 +57,7 @@ public class GetProfileHandler extends Connect implements AppHandler{
 					rs.setLocation(result.getString("user_location"));
 					rs.setCode(FLS_SUCCESS);
 				
-					message = rs.getFullName()+", "+rs.getMobile() +", "+rs.getLocation();
-					LOGGER.fine("Printing out ResultSet: " + message);
+					LOGGER.fine("Printing out ResultSet: " + rs.getFullName()+", "+rs.getMobile() +", "+rs.getLocation());
 			}else{
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);

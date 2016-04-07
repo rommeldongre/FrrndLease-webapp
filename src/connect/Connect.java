@@ -15,7 +15,7 @@ public class Connect extends ErrorCat{
 	//Local - Database 
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private static String name = "root";
-	private static String pass = "";
+	private static String pass = "root";
 
 	//Amazon RDS Database
 	//private static String url = "jdbc:mysql://greylabsdb.c2dfmnaqzg4x.ap-southeast-1.rds.amazonaws.com:3306/fls";
@@ -55,10 +55,10 @@ public class Connect extends ErrorCat{
 		
 		// Below code specifies the level of the logger. Change value in setLevel() function according to environment
 		   
-		    LOGGER.setLevel(Level.FINE);
+		    LOGGER.setLevel(Level.INFO);
 	        ConsoleHandler handler = new ConsoleHandler();
 	        // PUBLISH this level
-	        handler.setLevel(Level.FINE);
+	        handler.setLevel(Level.INFO);
 	       LOGGER.addHandler(handler);
 		//return connection;
 	}
