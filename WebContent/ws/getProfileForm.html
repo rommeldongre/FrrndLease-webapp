@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Get Profile Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var UserId = null;
+	
+	getProfileReq = function() {
+		UserId = document.getElementById("userId").value;
+		var req = {
+				userId: UserId
+		}
+		getProfileSend(req);
+	};
+	
+	getProfileSend = function(req) {
+		$.ajax({
+			url: '/flsv2/GetProfile',
+			type:'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType: "json",
+			
+			success: function(response) {
+				document.getElementById("code").value = response.code;
+				if(response.code == 0) {
+					document.getElementById("fullName").value = response.fullName;
+					document.getElementById("mobile").value = response.mobile;
+					document.getElementById("location").value = response.location;
+					document.getElementById("message").value = "";
+				}
+				else{
+					document.getElementById("fullName").value = "";
+					document.getElementById("mobile").value = "";
+					document.getElementById("location").value = "";
+					document.getElementById("message").value = response.message;	
+				}
+			},
+			
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+	<h1>GET PROFILE FORM</h1>
+	<form>
+		User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		<input type="button" value="Get Profile" onclick="getProfileReq()"><br/><br/>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+		
+		Full Name : <input type="text" name="fullName" id="fullName"><br/><br/>
+		Mobile : <input type="text" name="mobile" id="mobile"><br/><br/>
+		Location : <input type="text" name="location" id="location"><br/><br/>
+	</form>
+	
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
