@@ -92,25 +92,23 @@
 			</div>
 			<br />
 
-			<form>
-				<div class="form-group">
-					<label for="userId">User Id</label> <input type="text"
-						class="form-control" id="userId" placeholder="Email" disabled>
-				</div>
-				<div class="form-group">
-					<label for="fullname">Full Name</label> <input type="text"
-						class="form-control" id="fullname" placeholder="Full name">
-				</div>
-				<div class="form-group">
-					<label for="mobile">Mobile</label> <input type="text"
-						class="form-control" id="mobile" placeholder="Mobile">
-				</div>
-				<div class="form-group">
-					<label for="location">Location</label> <input type="text"
-						class="form-control" id="location" placeholder="Location">
-				</div>
-				<button class="btn btn-default" id="update" type="submit">Update</button>
-			</form>
+			<div class="form-group">
+				<label for="userId">User Id</label> <input type="text"
+					class="form-control" id="userId" placeholder="Email" disabled>
+			</div>
+			<div class="form-group">
+				<label for="fullname">Full Name</label> <input type="text"
+					class="form-control" id="fullname" placeholder="Full name">
+			</div>
+			<div class="form-group">
+				<label for="mobile">Mobile</label> <input type="text"
+					class="form-control" id="mobile" placeholder="Mobile">
+			</div>
+			<div class="form-group">
+				<label for="location">Location</label> <input type="text"
+					class="form-control" id="location" placeholder="Location">
+			</div>
+			<button class="btn btn-default" onclick="updateProfileData()">Update</button>
 
 			<h4 id="emptyText"></h4>
 
@@ -221,7 +219,6 @@
 
 	<script type="text/javascript">
 		var userloggedin, currentWork;
-		var req;
 
 		function start() {
 
@@ -238,10 +235,7 @@
 
 			itemNextId = 0;
 
-			req = {
-				userId : userloggedin
-			}
-			getProfileData(req);
+			getProfileData(); // getting the profile data at the start up
 
 			look_good();
 		}
@@ -282,12 +276,14 @@
 			//$('.addImport').css("margin-left", "75%");
 		}
 
-		function getProfileData(req) {
+		function getProfileData() {
 			$
 					.ajax({
 						url : '/flsv2/GetProfile',
 						type : 'post',
-						data : JSON.stringify(req),
+						data : JSON.stringify({
+							userId : userloggedin
+						}),
 						contentType : "application/json",
 						dataType : "json",
 
@@ -309,6 +305,46 @@
 							alert("not working");
 						}
 					});
+		};
+
+		// updating the profile when update is clicked in the profile form
+
+		function updateProfileData() {
+			var FullName, Mobile, Location;
+
+			FullName = document.getElementById("fullname").value;
+			Mobile = document.getElementById("mobile").value;
+			Location = document.getElementById("location").value;
+
+			var req = {
+				userId : userloggedin,
+				fullName : FullName,
+				mobile : Mobile,
+				location : Location
+			}
+			editProfileData(req);
+		}
+
+		function editProfileData(req) {
+			$.ajax({
+				url : '/flsv2/EditProfile',
+				type : 'post',
+				data : JSON.stringify(req),
+				contentType : "application/json",
+				dataType : "json",
+
+				success : function(response) {
+					if (response.code == 0) {
+						console.log('profile updated!!');
+					} else {
+						alert("please try after sometime");
+					}
+				},
+
+				error : function() {
+					alert("not working");
+				}
+			});
 		};
 	</script>
 
