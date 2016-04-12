@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Edit Profile Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var Verification = null;
+
+	verificationReq = function() {
+		Verification = document.getElementById("verification").value;
+
+		verificationSend();
+	};
+
+	verificationSend = function() {
+		$
+				.ajax({
+					url : '/flsv2/EmailVerification',
+					type : 'GET',
+					data : Verification,
+					contentType : "application/json",
+					dataType : "json",
+
+					success : function(response) {
+						document.getElementById("code").value = response.code;
+						document.getElementById("status").value = response.status;
+						if (response.code == 0) {
+							document.getElementById("message").value = "";
+						} else {
+							document.getElementById("message").value = response.message;
+						}
+					},
+
+					error : function() {
+						alert("not working");
+					}
+				});
+	};
+</script>
+</head>
+<body>
+	<h1>EMAIL VERIFICATION FORM</h1>
+	<form>
+		Verification Id : <input type="text" name="verification"
+			id="verification"><br /> <br /> <input type="button"
+			value="Submit" onclick="verificationReq()"><br /> <br />
+
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br /> <br />
+		Message : <input type="text" name="message" id="message"><br />
+		<br /> Status : <input type="text" name="status" id="status"><br />
+		<br />
+	</form>
+
+	<br />
+	<h3>
+		<A href="index.html">INDEX</A>
+	</h3>
+</body>
+</html>

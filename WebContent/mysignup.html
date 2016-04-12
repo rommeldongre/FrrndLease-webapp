@@ -217,7 +217,7 @@
 	</div>
 	
 	<script type="text/javascript">
-		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, latitude, longitude, coords, reasonforLogIn = '', friends;
+		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, signupstatus, latitude, longitude, coords, reasonforLogIn = '', friends;
 		
 		function start(){
 			$("#modalTriggerButton").hide();
@@ -241,6 +241,7 @@
 			signuplocation = $("#location").val();
 			signuppassword = $("#password").val();
 			signupretypepassword = $("#retypepassword").val();
+			signupstatus = "0";
 			
 			if(signupname == '') name = null;
 			if(signupmobile == '') mobile = null;
@@ -289,6 +290,7 @@
 			signupemail =  profile.getEmail();
 			signuplocation = "";
 			signupmobile = "";
+			signupstatus = "google";
 			
 			console.log("ID: " + profile.getId()); 
 			console.log("Name: " + profile.getName());
@@ -318,6 +320,7 @@
 					signupemail =  response.email;
 					signuplocation = "";
 					signupmobile = "";
+					signupstatus = "facebook";
 					
 					signUpDbCreate();	//this function is in the script_admin_v2.js
 				});

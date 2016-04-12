@@ -15,7 +15,7 @@ import util.FlsSendMail;
 import util.AwsSESEmail;
 
 public class Users extends Connect {
-	private String userId,fullName,mobile,location,auth,message,operation,Id=null,check=null,token;
+	private String userId,fullName,mobile,location,auth,status,message,operation,Id=null,check=null,token;
 	private int Code;
 	private UsersModel um;
 	private Response res = new Response();
@@ -88,8 +88,9 @@ public class Users extends Connect {
 		mobile = um.getMobile();
 		location = um.getLocation();
 		auth = um.getAuth();
+		status = um.getStatus();
 		
-		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth) values (?,?,?,?,?)";
+		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_status) values (?,?,?,?,?,?)";
 		getConnection();
 		
 		try {
@@ -102,6 +103,7 @@ public class Users extends Connect {
 			stmt.setString(3, mobile);
 			stmt.setString(4, location);
 			stmt.setString(5, auth);
+			stmt.setString(6, status);
 			stmt.executeUpdate();
 			LOGGER.fine("Entry added into users table");
 			
@@ -111,7 +113,10 @@ public class Users extends Connect {
 			
 			try{
 				AwsSESEmail newE = new AwsSESEmail();
-				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER,um);
+				if(status.equals("0"))
+					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION,um);
+				else
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER,um);
 				}catch(Exception e){
 				  e.printStackTrace();
 				}
