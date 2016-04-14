@@ -10,21 +10,24 @@
 	verificationReq = function() {
 		Verification = document.getElementById("verification").value;
 
-		verificationSend();
+		var req = {
+			verification : Verification
+		}
+
+		verificationSend(req);
 	};
 
-	verificationSend = function() {
+	verificationSend = function(req) {
 		$
 				.ajax({
 					url : '/flsv2/EmailVerification',
-					type : 'GET',
-					data : Verification,
+					type : 'post',
+					data : JSON.stringify(req),
 					contentType : "application/json",
 					dataType : "json",
 
 					success : function(response) {
 						document.getElementById("code").value = response.code;
-						document.getElementById("status").value = response.status;
 						if (response.code == 0) {
 							document.getElementById("message").value = "";
 						} else {
@@ -49,7 +52,6 @@
 		<h1>OUTPUT</h1>
 		Code : <input type="text" name="code" id="code"><br /> <br />
 		Message : <input type="text" name="message" id="message"><br />
-		<br /> Status : <input type="text" name="status" id="status"><br />
 		<br />
 	</form>
 

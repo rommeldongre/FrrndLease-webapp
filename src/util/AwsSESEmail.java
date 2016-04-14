@@ -76,7 +76,8 @@ public class AwsSESEmail {
 			BODY = "<body>Hello " + um.getFullName()
 					+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
 					+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
-					+ um.getActivation() + "<br/></body>";
+					+ "<a href='http://localhost:8080/flsv2/emailverification.html?token="+um.getActivation()+"'>http://localhost:8080/flsv2/emailverification.html?token="+um.getActivation()+"</a>"
+					+ "<br/></body>";
 			break;
 		case FLS_MAIL_REGISTER:
 			UsersModel uom = (UsersModel) obj;

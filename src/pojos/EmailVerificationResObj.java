@@ -5,8 +5,6 @@ public class EmailVerificationResObj extends ResObj {
 	int code;
 	String message;
 
-	String status;
-
 	public int getCode() {
 		return code;
 	}
@@ -21,14 +19,6 @@ public class EmailVerificationResObj extends ResObj {
 
 	public void setMessage(String message) {
 		this.message = message;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 }

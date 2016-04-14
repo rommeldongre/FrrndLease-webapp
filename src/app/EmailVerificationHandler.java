@@ -1,6 +1,7 @@
 package app;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import adminOps.Response;
@@ -40,25 +41,39 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 
 		try {
 			getConnection();
-			String sql = "UPDATE users SET user_status=? WHERE user_id=?";
-			LOGGER.fine("Creating Statement...");
-			PreparedStatement ps = connection.prepareStatement(sql);
-			ps.setString(1, "1");
-			ps.setString(2, rq.getVerification());
+			String select_status_sql = "Select user_status FROM users WHERE user_activation=?";
+			PreparedStatement ps1 = connection.prepareStatement(select_status_sql);
+			ps1.setString(1, rq.getVerification());
+			
+			ResultSet result1 = ps1.executeQuery();
+			
+			if(result1.next()){
+				if(result1.getString("user_status").equals("0")){
+					String update_status_sql = "UPDATE users SET user_status=? WHERE user_activation=?";
+					LOGGER.fine("Creating Statement...");
+					PreparedStatement ps2 = connection.prepareStatement(update_status_sql);
+					ps2.setString(1, "1");
+					ps2.setString(2, rq.getVerification());
 
-			LOGGER.fine("statement created...executing update to users query");
-			int result = ps.executeUpdate();
+					LOGGER.fine("statement created...executing update to users query");
+					int result2 = ps2.executeUpdate();
 
-			LOGGER.fine("Update Query Result : " + result);
-
-			if (result == 1) {
-				rs.setStatus("1");
-				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
-			} else {
-				rs.setStatus("");
+					LOGGER.fine("Update Query Result : " + result2);
+					
+					if (result2 == 1) {
+						rs.setCode(FLS_SUCCESS);
+						rs.setMessage("Your account has been activated!!");
+					} else {
+						rs.setCode(FLS_SQL_EXCEPTION);
+						rs.setMessage("Could not activate your account due to some internal problems!! Trying to fix it ASAP");
+					}
+				}else{
+					rs.setCode(FLS_END_OF_DB);
+					rs.setMessage("This account is already activated!! No point activating it again");
+				}
+			}else{
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				rs.setMessage("This account is not registered!! I wonder how you got this link");
 			}
 
 		} catch (SQLException e) {

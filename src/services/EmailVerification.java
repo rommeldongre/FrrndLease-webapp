@@ -24,23 +24,12 @@ import pojos.EmailVerificationResObj;
 public class EmailVerification extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		response.setContentType("application/json");
-		System.out.println("Inside GET Method");
-
-		doPost(request, response);
-	}
-
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse)
 			throws ServletException, IOException {
 		// HTTP request to Service request pojo
 
 		ObjectMapper mapper = new ObjectMapper();
-		
-		EmailVerificationReqObj request = new EmailVerificationReqObj();
-		request.setVerification(httprequest.getQueryString());
-		
+		EmailVerificationReqObj request = mapper.readValue(httprequest.getInputStream(), EmailVerificationReqObj.class);
 		httpresponse.setContentType("application/json");
 		// application logic from here..
 		EmailVerificationResObj response = null;
@@ -59,8 +48,8 @@ public class EmailVerification extends HttpServlet {
 
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			System.out.println("GetProfile process method not implemented");
-			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetProfile process method not implemented");
+			System.out.println("EmailVerification process method not implemented");
+			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "EmailVerification process method not implemented");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
