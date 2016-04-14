@@ -1464,7 +1464,8 @@ function loginDbCreate(){
 
 	var req = {
 		auth: loginpassword,
-		token: loginemail
+		token: loginemail,
+		signUpData: signupdata
 	}
 	
 	loginSend(req);
@@ -1490,6 +1491,7 @@ function loginSend(req){
 				}
 				else{
 					//alert("unsuccessful");
+					loginerrormsg = response.Message;
 					loginUnsuccessful(response.Message);	
 				}
 			},

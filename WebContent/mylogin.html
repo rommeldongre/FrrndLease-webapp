@@ -213,6 +213,8 @@
 	
 	<script type="text/javascript">
 		var loginemail, loginpassword, reasonforLogIn= '', friends;
+		var signupdata='';
+		var loginerrormsg;
 		
 		function start(){
 			$("#modalTriggerButton").hide();
@@ -235,6 +237,7 @@
 			
 			loginemail = $("#email").val();
 			loginpassword = $("#password").val();
+			signupdata='';
 			
 			loginDbCreate();
 		
@@ -247,6 +250,7 @@
 				var profile = googleUser.getBasicProfile();
 				loginpassword = profile.getId();
 				loginemail =  profile.getEmail();
+				signupdata = "google";
 				
 				// The ID token you need to pass to your backend:
 				//var id_token = googleUser.getAuthResponse().id_token;
@@ -268,6 +272,8 @@
 				FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
 					loginpassword = response.id;
 					loginemail =  response.email;
+					signupdata = "facebook";
+					
 					loginDbCreate();	//this function is in the script_admin_v2.js
 				});
             }, {scope: 'email,public_profile,user_friends'});    
@@ -322,7 +328,7 @@
 				heading.innerHTML = "Login Failed";
 				
 				var div = document.getElementById("modalMsg");
-				div.innerHTML = "Incorrect username or password";
+				div.innerHTML = loginerrormsg;
 			}else{
 				setPrevPage("index.html");
 				
