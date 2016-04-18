@@ -19,8 +19,10 @@ public class UsersModel {
 			mobile = obj.getString("mobile");
 			location = obj.getString("location");
 			auth = obj.getString("auth");
-			activation = obj.getString("activation");
-			status = obj.getString("status");
+			if(obj.has("activation") || obj.has("status")){
+				activation = obj.getString("activation");
+				status = obj.getString("status");
+			}
 		} catch (JSONException e) {
 			System.out.println("Couldn't parse json");
 			e.printStackTrace();
