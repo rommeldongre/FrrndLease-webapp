@@ -37,56 +37,78 @@ public class GetItemStoreHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 		GetItemStoreReqObj rq = (GetItemStoreReqObj) req;
 		GetItemStoreResObj rs = new GetItemStoreResObj();
+		
 		LOGGER.fine("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
 		//TODO: Core of the processing takes place here
 		check = null;
 		LOGGER.fine("Inside GetItemStore method");
 		
-		rs.setId(rq.getCookie());
-		//rs.setOwner_Id(rq.getUserId());
-		if (rq.getCategory().equals("All")) {
-			category = "empty";
-		}else{
-			category = rq.getCategory();
-		}
-		
-		if (rq.getUserId().equals("myindex")) {
-			user_name = "no name";
-		}else{
-			user_name =rq.getUserId();
-		}
-		rs.setOwner_name(user_name);
-		rs.setDesc(category);
-		/*
 		try {
 			getConnection();
-			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_id>? HAVING tb1.request_status=? ORDER by tb1.request_id ASC LIMIT 1";
-			LOGGER.fine("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+
+			//Prepare SQL
+			String sql = null;
+			PreparedStatement sql_stmt = null;
 			
-			LOGGER.fine("Statement created. Executing GetOutgoingrequests query...");
-			stmt.setString(1, rq.getUserId());
-			stmt.setInt(2, rq.getCookie());
-			stmt.setString(3, "Active");
+			//if (rq.getCategory() == null && rq.getUserId().equals("myindex")) {
+			//All category in index page
+			if (rq.getCategory() == null && rq.getUserId() == null) {
+				//sql = "SELECT * from items WHERE item_id > ? AND item_status = 'InStore' LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= 'InStore' ORDER BY item_id LIMIT 1";
+				
+				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt.setInt(1, rq.getCookie());
+			} 
+			// category selected in index page
+			if(rq.getCategory() != null && rq.getUserId() == null){
+				//sql = "SELECT * from items WHERE item_id > ? AND item_status = 'InStore' AND item_category=? LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status = 'InStore' AND tb1.item_category=? LIMIT 1";
+				
+				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt.setInt(1, rq.getCookie());
+				sql_stmt.setString(2, rq.getCategory());
+			}
+			//All category mypostings page
+			if(rq.getCategory() == null && rq.getUserId() != null){
+				//sql = "SELECT * from items WHERE item_id > ? AND item_status = 'InStore' AND item_user_id=? LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_user_id=? LIMIT 1";
+				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt.setInt(1, rq.getCookie());
+				sql_stmt.setString(2, rq.getUserId());
+			}
+			//category selected in mypostings page
+			if(rq.getCategory() != null && rq.getUserId() != null){
+				//sql = "SELECT * from items WHERE item_id > ? AND item_status = 'InStore' AND item_category=? AND item_user_id=? LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_category=? AND item_user_id=? LIMIT 1";
+				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt.setInt(1, rq.getCookie());
+				sql_stmt.setString(2, rq.getCategory());
+				sql_stmt.setString(3, rq.getUserId());
+			}
 			
-			ResultSet dbResponse = stmt.executeQuery();
-			
+			ResultSet dbResponse = sql_stmt.executeQuery();
 			if(dbResponse.next()){
-				check = dbResponse.getString("request_item_id");
+				check = dbResponse.getString("item_name");
 				
 				if (check!= null) {
 					//Populate the response
+
+					rs.setItemId(dbResponse.getInt("item_id"));
 					rs.setTitle(dbResponse.getString("item_name"));
+					rs.setCategory(dbResponse.getString("item_category"));
 					rs.setDesc(dbResponse.getString("item_desc"));
-					rs.setOwner_Id(dbResponse.getString("item_user_id"));
-					rs.setRequest_status(dbResponse.getString("request_status"));
-					rs.setRequest_id(dbResponse.getInt("request_id"));
-					rs.setRequest_item_id(dbResponse.getInt("request_item_id"));
-					rs.setRequest_date(dbResponse.getString("request_date"));
-					rs.setOwner_name(dbResponse.getString("user_full_name"));
+					rs.setFullName(dbResponse.getString("user_full_name"));
+					rs.setLeaseValue(dbResponse.getInt("item_lease_value"));
+					rs.setLeaseTerm(dbResponse.getString("item_lease_term"));
+					rs.setImage(dbResponse.getString("item_image"));
+					rs.setStatus(dbResponse.getString("item_status"));
 					
-					message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
-					LOGGER.fine("Printing out Resultset: "+message);
+					System.out.println(check);
+					if (check== null){
+						System.out.println("check value is null");
+					}
+					//message = rs.getTitle()+", "+rs.getDesc() +", "+rs.getOwner_Id() +", "+rs.getRequest_status() +", "+rs.getRequest_item_id()+", "+rs.getRequest_date();
+					//LOGGER.fine("Printing out Resultset: "+message);
 					Code = FLS_SUCCESS;
 					Id = check;
 				}
@@ -95,7 +117,11 @@ public class GetItemStoreHandler extends Connect implements AppHandler {
 					message = FLS_END_OF_DB_M;
 					Code = FLS_END_OF_DB;
 					rs.setErrorString("End of table reached");
+					
 				}
+			}else {
+				rs.setReturnCode(404);
+				System.out.println("End of DB");
 			}
 			
 			//res.setData(Code,Id,message);
@@ -106,7 +132,7 @@ public class GetItemStoreHandler extends Connect implements AppHandler {
 		}	
 		LOGGER.fine("Finished process method ");
 		//return the response
-		*/
+		
 		return rs;
 		
 	}
