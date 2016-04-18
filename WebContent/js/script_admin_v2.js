@@ -1644,6 +1644,7 @@ function getNextItemCarousel(i,user,cat){
 		category: itemCategory
 	};
 	
+	
 	getNextItemCarouselSend(req);
 }
 
