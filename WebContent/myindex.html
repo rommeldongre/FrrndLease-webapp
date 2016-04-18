@@ -462,8 +462,10 @@
 			
 			if(counter < noOfImagesInCarousel){				
 				$("#leftcarouselbutton").show();
-				getNextItem(itemNextId);
+				//getNextItem(itemNextId);
+				getNextItemCarousel(itemNextId,"myindex",browsingCategory);
 			}
+			
 		}
 		
 		function getNoOfImagesInCarousel(){

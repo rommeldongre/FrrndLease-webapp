@@ -1623,3 +1623,102 @@ function deleteRequestSend(req){
 	});	
 }
 //Delete Request ends here---------------------------------
+
+
+//Get Item Store starts here---------------------------------
+
+function getNextItemCarousel(i,user,cat){
+	itemToken = i;
+	if (itemToken === '') itemToken = -1;
+	
+	reqUserId = user;
+	if (reqUserId ==='') reqUserId = '';
+	if (reqUserId ==='myindex' || reqUserId ==='index') reqUserId = null;
+	
+	itemCategory = cat;
+	if (itemCategory ==='') itemCategory = '';
+	if (itemCategory ==='All') itemCategory = null;
+	var req = {
+		cookie: itemToken,
+		userId: reqUserId,
+		category: itemCategory
+	};
+	
+	getNextItemCarouselSend(req);
+}
+
+function getNextItemCarouselSend(req){
+	$.ajax({
+		url: '/flsv2/GetItemStoreC',
+		type:'POST',
+		data: JSON.stringify(req),
+		contentType:"application/json",
+		dataType: "json",
+		
+		success: function(response) {
+			
+				if(response.returnCode == 0){
+				itemNextId = response.itemId;
+				addItemToCarousel(response);
+				//console.log(response);
+			}
+			else{				//when end of the database is reached 
+				//alert(response.Message);
+				
+				if(reasonForGetItem == 'carousel'){
+					if(startingCarousel == 0 && counter == 0){		//empty carousel
+						
+						//categoryempty image begins
+						span1 = document.createElement("span");
+						span1.className = "items";
+					
+						src = "images/emptycategory.jpg";
+					
+						var img1 = document.createElement("img");
+						img1.src = src;
+						
+						$(img1).css("width", imgwidth);
+						$(img1).css("height", imgheight);
+						
+						var caption1 = document.createElement("div");
+						caption1.className = "carousel-caption";
+						caption1.style.backgroundColor = "black";
+						caption1.style.opacity = 0.6;
+						
+						var p = document.createElement("p");
+						p.innerHTML = "Try selecting another category";
+						
+						caption1.appendChild(p);
+						span1.appendChild(img1);
+						span1.appendChild(caption1);
+						col1.appendChild(span1);
+						row1.appendChild(col1);	
+						
+						item1.appendChild(row1);
+						carouselinner.appendChild(item1);
+						//categoryempty image ends
+					}
+
+					disableRightButton();
+					if(counter != 0){
+						item1.appendChild(row1);
+						carouselinner.appendChild(item1);
+						$("#carousel-example-generic").carousel('next');				//load next slide
+					}
+						
+					startingCarousel = 1;
+					
+					endOfCarousel = 1;
+				}else if(reasonForGetItem == 'getItemInfo'){
+						itemNextId = 0;
+				}		
+				
+			}
+		},
+		error: function() {
+			var msg = "Not Working";
+			confirmationIndex(msg);
+		}
+	});	
+}
+//Get Item Store ends here---------------------------------
