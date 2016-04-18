@@ -25,13 +25,13 @@ public class GetItemStoreResObj extends ResObj{
 	int quantity = 1;
 	
 	//Owner Name
-	String owner_name;
+	String fullName;
 	
 	// lease term of item
 	String leaseTerm;
 	
 	//id of item
-	int id;
+	int itemId;
 	
 	public int getReturnCode() {
 		return ReturnCode;
@@ -81,12 +81,14 @@ public class GetItemStoreResObj extends ResObj{
 		this.quantity = quantity;
 	}
 
-	public String getOwner_name() {
-		return owner_name;
+	
+	
+	public String getFullName() {
+		return fullName;
 	}
 
-	public void setOwner_name(String owner_name) {
-		this.owner_name = owner_name;
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public String getLeaseTerm() {
@@ -97,19 +99,20 @@ public class GetItemStoreResObj extends ResObj{
 		this.leaseTerm = leaseTerm;
 	}
 
-	public int getId() {
-		return id;
+	
+	public int getItemId() {
+		return itemId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
 	}
 
-	public String getLeaseValue() {
+	public int getLeaseValue() {
 		return leaseValue;
 	}
 
-	public void setLeaseValue(String leaseValue) {
+	public void setLeaseValue(int leaseValue) {
 		this.leaseValue = leaseValue;
 	}
 
@@ -130,7 +133,7 @@ public class GetItemStoreResObj extends ResObj{
 	}
 
 	//leaseValue of item
-	String leaseValue;
+	int leaseValue;
 	
 	//status of item
 	String status;
