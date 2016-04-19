@@ -1632,8 +1632,7 @@ function getNextItemCarousel(i,user,cat){
 	if (itemToken === '') itemToken = -1;
 	
 	reqUserId = user;
-	if (reqUserId ==='') reqUserId = '';
-	if (reqUserId ==='myindex' || reqUserId ==='index') reqUserId = null;
+	if (reqUserId ==='') reqUserId = null;
 	
 	itemCategory = cat;
 	if (itemCategory ==='') itemCategory = '';
