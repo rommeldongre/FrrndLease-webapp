@@ -71,7 +71,7 @@ public class LoginUser extends HttpServlet {
 			
 			else {
 				json.put("Code", res.getCode());
-				json.put("Message",e.FLS_LOGIN_USER_F);
+				json.put("Message",res.getMessage());
 				json.put("Id", res.getId());
 			}
 			
