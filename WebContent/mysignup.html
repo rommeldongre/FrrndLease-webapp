@@ -241,7 +241,7 @@
 			signuplocation = $("#location").val();
 			signuppassword = $("#password").val();
 			signupretypepassword = $("#retypepassword").val();
-			signupstatus = "0";
+			signupstatus = "pending";
 			
 			if(signupname == '') name = null;
 			if(signupmobile == '') mobile = null;
@@ -333,7 +333,7 @@
 		
 		function signupContinued(msg){
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
-			if(msg != 200 && signupstatus !== "0"){
+			if(msg != 200 && signupstatus !== "pending"){
 				localStorage.setItem("userloggedin", signupemail);				//set the "name" of the user who is loggedin	
 				localStorage.setItem("userLocation", $("#location").val());
 			}

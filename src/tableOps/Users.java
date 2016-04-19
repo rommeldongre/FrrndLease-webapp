@@ -16,7 +16,7 @@ import util.AwsSESEmail;
 
 public class Users extends Connect {
 	private String userId,fullName,mobile,location,auth,activation,status,message,operation,Id=null,check=null,token;
-	private String signUpData;
+	private String signUpStatus;
 	private int Code;
 	private UsersModel um;
 	private Response res = new Response();
@@ -68,7 +68,7 @@ public class Users extends Connect {
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
-				signUpData = obj.getString("signUpData");
+				signUpStatus = obj.getString("signUpStatus");
 				getUserInfo();
 			} catch (JSONException e) {
 				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
@@ -337,9 +337,9 @@ public class Users extends Connect {
 				
 				String status = result1.getString("user_status");
 				
-				if(status.equals("facebook") || status.equals("google") || status.equals("1")){
+				if(status.equals("facebook") || status.equals("google") || status.equals("activated")){
 					
-					if(status.equals(signUpData)){
+					if(status.equals(signUpStatus)){
 						String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 						
 						LOGGER.fine("Creating a statement .....");

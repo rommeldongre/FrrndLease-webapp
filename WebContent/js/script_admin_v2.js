@@ -1465,7 +1465,7 @@ function loginDbCreate(){
 	var req = {
 		auth: loginpassword,
 		token: loginemail,
-		signUpData: signupdata
+		signUpStatus: signupstatus
 	}
 	
 	loginSend(req);
