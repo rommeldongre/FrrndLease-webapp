@@ -7,15 +7,18 @@
 <script type="text/javascript">
 	var Token = null;
 	var Auth = null;
+	var SignUpData = null;
 	
 	login = function() {
 		alert("Inside get next function");
 		Token = document.getElementById("userId").value;
 		Auth = document.getElementById("auth").value;
+		SignUpData = document.getElementById("signUpData").value;
 		
 		var req = {
 				auth: Auth,
-				token: Token
+				token: Token,
+				signUpData: SignUpData
 		}
 		send(req);
 	};
@@ -58,6 +61,7 @@
 	<form>
 		User email id : <input type="text" name="userId" id="userId"><br/><br/>
 		Authorization : <input type="text" name="auth" id="auth"><br/><br/>
+		Signed Up Using : <input type="text" name="signUpData" id="signUpData"><br/><br/>
 		<input type="button" value="Login" onclick="login()"><br/><br/>
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>

@@ -1418,12 +1418,17 @@ function signUpDbCreate(){
 	signuppassword = CryptoJS.MD5(signuppassword);
 	signuppassword = signuppassword.toString();
 	
+	var signupactivation = CryptoJS.MD5(signupemail);
+	signupactivation = signupactivation.toString();
+	
 	var req = {
 		userId: signupemail,
 		fullName: signupname,
 		mobile: signupmobile,
 		location: signuplocation,
-		auth: signuppassword
+		auth: signuppassword,
+		activation: signupactivation,
+		status: signupstatus
 	};
 	
 	signUpSend(req);
@@ -1459,7 +1464,8 @@ function loginDbCreate(){
 
 	var req = {
 		auth: loginpassword,
-		token: loginemail
+		token: loginemail,
+		signUpStatus: signupstatus
 	}
 	
 	loginSend(req);
@@ -1485,6 +1491,7 @@ function loginSend(req){
 				}
 				else{
 					//alert("unsuccessful");
+					loginerrormsg = response.Message;
 					loginUnsuccessful(response.Message);	
 				}
 			},

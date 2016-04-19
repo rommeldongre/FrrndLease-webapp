@@ -15,7 +15,8 @@ import util.FlsSendMail;
 import util.AwsSESEmail;
 
 public class Users extends Connect {
-	private String userId,fullName,mobile,location,auth,message,operation,Id=null,check=null,token;
+	private String userId,fullName,mobile,location,auth,activation,status,message,operation,Id=null,check=null,token;
+	private String signUpStatus;
 	private int Code;
 	private UsersModel um;
 	private Response res = new Response();
@@ -67,6 +68,7 @@ public class Users extends Connect {
 			LOGGER.fine("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
+				signUpStatus = obj.getString("signUpStatus");
 				getUserInfo();
 			} catch (JSONException e) {
 				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
@@ -88,8 +90,10 @@ public class Users extends Connect {
 		mobile = um.getMobile();
 		location = um.getLocation();
 		auth = um.getAuth();
+		activation = um.getActivation();
+		status = um.getStatus();
 		
-		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth) values (?,?,?,?,?)";
+		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status) values (?,?,?,?,?,?,?)";
 		getConnection();
 		
 		try {
@@ -102,6 +106,8 @@ public class Users extends Connect {
 			stmt.setString(3, mobile);
 			stmt.setString(4, location);
 			stmt.setString(5, auth);
+			stmt.setString(6, activation);
+			stmt.setString(7, status);
 			stmt.executeUpdate();
 			LOGGER.fine("Entry added into users table");
 			
@@ -111,7 +117,10 @@ public class Users extends Connect {
 			
 			try{
 				AwsSESEmail newE = new AwsSESEmail();
-				newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER,um);
+				if(status.equals("email_pending"))
+					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION,um);
+				else
+					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER,um);
 				}catch(Exception e){
 				  e.printStackTrace();
 				}
@@ -314,39 +323,71 @@ public class Users extends Connect {
 		check = null;
 		auth = um.getAuth();
 		LOGGER.fine("Inside GetPrevious method");
-		String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 		
 		getConnection();
+		
 		try {
-			LOGGER.fine("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			String select_status_sql = "Select user_status FROM users WHERE user_id=?";
+			PreparedStatement ps1 = connection.prepareStatement(select_status_sql);
+			ps1.setString(1, token);
 			
-			LOGGER.fine("Statement created. Executing getPrevious query...");
-			stmt.setString(1, token);
-			stmt.setString(2, auth);
+			ResultSet result1 = ps1.executeQuery();
 			
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
-				JSONObject json = new JSONObject();
-				json.put("userId", rs.getString("user_id"));
-				json.put("fullName", rs.getString("user_full_name"));
-				json.put("mobile", rs.getString("user_mobile"));
-				json.put("location", rs.getString("user_location"));
+			if(result1.next()){
 				
-				message = json.toString();
-				System.out.println(message);
-				check = rs.getString("user_id");
-			}
-			
-			if(check != null ) {
-				Code = FLS_SUCCESS;
-				Id = check;
-			}
-			
-			else {
+				String status = result1.getString("user_status");
+				
+				if(status.equals("facebook") || status.equals("google") || status.equals("email_activated")){
+					
+					if(status.equals(signUpStatus)){
+						String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
+						
+						LOGGER.fine("Creating a statement .....");
+						PreparedStatement stmt = connection.prepareStatement(sql);
+						
+						LOGGER.fine("Statement created. Executing getPrevious query...");
+						stmt.setString(1, token);
+						stmt.setString(2, auth);
+						
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()) {
+							JSONObject json = new JSONObject();
+							json.put("userId", rs.getString("user_id"));
+							json.put("fullName", rs.getString("user_full_name"));
+							json.put("mobile", rs.getString("user_mobile"));
+							json.put("location", rs.getString("user_location"));
+							
+							message = json.toString();
+							System.out.println(message);
+							check = rs.getString("user_id");
+						}
+						
+						if(check != null ) {
+							Code = FLS_SUCCESS;
+							Id = check;
+						}else {
+							Id = "0";
+							message = FLS_LOGIN_USER_F;
+							Code = FLS_END_OF_DB;
+						}
+					}else{
+						Id = "0";
+						Code = FLS_END_OF_DB;
+						if(status.equals("facebook") || status.equals("google"))
+							message = "Signed up using " + status + "!! Please continue with " + status;
+						else
+							message = "Signed up using email!! Please login with email";
+					}
+					
+				}else{
+					Id = "0";
+					Code = FLS_INVALID_OPERATION;
+					message = "Please click on the link sent to your email to activate this account!!";
+				}
+			}else{
 				Id = "0";
-				message = FLS_END_OF_DB_M;
-				Code = FLS_END_OF_DB;
+				message = "Email does not exist!!";
+				Code = FLS_ENTRY_NOT_FOUND;
 			}
 			
 			res.setData(Code,Id,message);

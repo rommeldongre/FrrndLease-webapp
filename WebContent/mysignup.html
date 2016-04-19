@@ -217,7 +217,7 @@
 	</div>
 	
 	<script type="text/javascript">
-		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, latitude, longitude, coords, reasonforLogIn = '', friends;
+		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, signupstatus, latitude, longitude, coords, reasonforLogIn = '', friends;
 		
 		function start(){
 			$("#modalTriggerButton").hide();
@@ -241,6 +241,7 @@
 			signuplocation = $("#location").val();
 			signuppassword = $("#password").val();
 			signupretypepassword = $("#retypepassword").val();
+			signupstatus = "email_pending";
 			
 			if(signupname == '') name = null;
 			if(signupmobile == '') mobile = null;
@@ -289,6 +290,7 @@
 			signupemail =  profile.getEmail();
 			signuplocation = "";
 			signupmobile = "";
+			signupstatus = "google";
 			
 			console.log("ID: " + profile.getId()); 
 			console.log("Name: " + profile.getName());
@@ -318,6 +320,7 @@
 					signupemail =  response.email;
 					signuplocation = "";
 					signupmobile = "";
+					signupstatus = "facebook";
 					
 					signUpDbCreate();	//this function is in the script_admin_v2.js
 				});
@@ -329,8 +332,13 @@
 		// Facebook signup ends here----------------------------------------
 		
 		function signupContinued(msg){
+			// Alert user to check the email for the activation link if signupstatus is pending!!
+			if(signupstatus == "email_pending"){
+				alert("Please check your email to click on the link to activate your account!!");
+			}
+			
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
-			if(msg != 200){
+			if(msg != 200 && signupstatus !== "email_pending"){
 				localStorage.setItem("userloggedin", signupemail);				//set the "name" of the user who is loggedin	
 				localStorage.setItem("userLocation", $("#location").val());
 			}
