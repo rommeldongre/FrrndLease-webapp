@@ -108,7 +108,7 @@
 				<label for="location">Location</label> <input type="text"
 					class="form-control" id="location" placeholder="Location">
 			</div>
-			<button class="btn btn-default" onclick="updateProfileData()">Update</button>
+			<button class="btn btn-primary btn-lg" onclick="updateProfileData()">Update</button>
 
 			<h4 id="emptyText"></h4>
 
@@ -219,6 +219,9 @@
 
 	<script type="text/javascript">
 		var userloggedin, currentWork;
+		
+		// flag to check if form is being updated or not
+		var unsaved = false;  
 
 		function start() {
 
@@ -237,8 +240,20 @@
 
 			getProfileData(); // getting the profile data at the start up
 
-			look_good();
+			look_good(); 
+			
+			window.onbeforeunload = unloadPage;
+			
+			$(document).on('change keypress', 'input', function() {
+				unsaved = true;
+			});
 		}
+		
+		function unloadPage() {  
+			if (unsaved) {  
+			return "You have unsaved changes on this page.";  
+			}  
+		}  
 
 		function load_Gapi() { //for google
 			gapi.load('auth2', function() {
@@ -310,6 +325,9 @@
 		// updating the profile when update is clicked in the profile form
 
 		function updateProfileData() {
+			// to prevent alert dialog to show up
+			unsaved = false;  
+			
 			var FullName, Mobile, Location;
 
 			FullName = document.getElementById("fullname").value;
@@ -335,7 +353,7 @@
 
 				success : function(response) {
 					if (response.code == 0) {
-						console.log('profile updated!!');
+						alert('Your Profile Has Been Updated!!');
 					} else {
 						alert("please try after sometime");
 					}
@@ -346,6 +364,7 @@
 				}
 			});
 		};
+		
 	</script>
 
 
