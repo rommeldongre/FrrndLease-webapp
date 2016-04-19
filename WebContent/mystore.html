@@ -322,6 +322,7 @@
 				$("#cancel").css("margin-bottom","35%");
 				$("#edit_item_row").css("display","none");
 				$("#delete_item_row").css("display","none");
+				reasonForGetItem = 'store';
 				
 			}else if(prevfunc == "viewItemUser"){		//if arrived from the landing page by clicking an image from carousel
 				getItemInfo();
@@ -415,10 +416,11 @@
 				*/
 				
 				console.log(picOrientation);
-				/*if (picOrientation=3){
+				if(reasonForGetItem == 'store'){
+				if (picOrientation=3){
 				this.canvasCtx.transform(-1, 0, 0, -1,canvasCtx.width, canvasCtx.height);
-				}*/
-				
+				}
+				}
 				this.canvasCtx.drawImage(img,0,0,canvasCtx.width, canvasCtx.height);
 				url = canvasCtx.canvas.toDataURL();
 			}			
@@ -730,7 +732,6 @@
 			$("#lease_value").attr("disabled", true);
 			$("#dropdownbuttonlease_term").attr("disabled", true);
 			$("#quantity").attr("disabled", true);
-			//reasonForGetItem = 'getFromDB';
 		}	
 		
 	</script>
