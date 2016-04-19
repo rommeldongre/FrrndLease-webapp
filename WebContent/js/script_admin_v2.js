@@ -1650,7 +1650,7 @@ function getNextItemCarousel(i,user,cat){
 
 function getNextItemCarouselSend(req){
 	$.ajax({
-		url: '/flsv2/GetItemStoreC',
+		url: '/flsv2/GetItemStoreByX',
 		type:'POST',
 		data: JSON.stringify(req),
 		contentType:"application/json",
