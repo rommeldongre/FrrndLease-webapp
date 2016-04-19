@@ -6,24 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connect.Connect;
-import pojos.GetItemStoreReqObj;
-import pojos.GetItemStoreResObj;
+import pojos.GetItemStoreByXReqObj;
+import pojos.GetItemStoreByXResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import adminOps.Response;
 
 
-public class GetItemStoreHandler extends Connect implements AppHandler {
+public class GetItemStoreByXHandler extends Connect implements AppHandler {
 	
 	private String user_name, check=null,Id=null,token, message, category;
 	private int Code;
 	private Response res = new Response();
 	
-	private static GetItemStoreHandler instance = null;
+	private static GetItemStoreByXHandler instance = null;
 
-	public static GetItemStoreHandler getInstance() {
+	public static GetItemStoreByXHandler getInstance() {
 		if (instance == null)
-			instance = new GetItemStoreHandler();
+			instance = new GetItemStoreByXHandler();
 		return instance;
 	}
 	
@@ -35,8 +35,8 @@ public class GetItemStoreHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 		// TODO Auto-generated method stub
-		GetItemStoreReqObj rq = (GetItemStoreReqObj) req;
-		GetItemStoreResObj rs = new GetItemStoreResObj();
+		GetItemStoreByXReqObj rq = (GetItemStoreByXReqObj) req;
+		GetItemStoreByXResObj rs = new GetItemStoreByXResObj();
 		
 		LOGGER.fine("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
 		//TODO: Core of the processing takes place here

@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import java.util.Date;
 
-public class GetItemStoreResObj extends ResObj{
+public class GetItemStoreByXResObj extends ResObj{
 	
 	//Return code for GetRequestsByUser
 	int ReturnCode = 0;

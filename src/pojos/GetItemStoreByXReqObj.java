@@ -2,7 +2,7 @@ package pojos;
 
 import javax.validation.constraints.NotNull;
 
-public class GetItemStoreReqObj extends ReqObj {
+public class GetItemStoreByXReqObj extends ReqObj {
 	// title of item
 		// user posting item
 		@NotNull
