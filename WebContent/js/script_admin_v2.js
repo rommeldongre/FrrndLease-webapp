@@ -1628,21 +1628,30 @@ function deleteRequestSend(req){
 //Get Item Store starts here---------------------------------
 
 function getNextItemCarousel(i,user,cat){
-	itemToken = i;
-	if (itemToken === '') itemToken = -1;
 	
-	reqUserId = user;
-	if (reqUserId ==='') reqUserId = null;
+	if (i === ''){
+		itemToken = -1;
+	}else{
+		itemToken = i;
+	}
 	
-	itemCategory = cat;
-	if (itemCategory ==='') itemCategory = '';
-	if (itemCategory ==='All') itemCategory = null;
+	if (user ===''){
+		reqUserId = null;
+	}else{
+		reqUserId = user;
+	}
+	
+	if (cat ==='' || cat ==='All') {
+		itemCategory = null;
+	}else{
+		itemCategory = cat;
+	}
+	
 	var req = {
 		cookie: itemToken,
 		userId: reqUserId,
 		category: itemCategory
 	};
-	
 	
 	getNextItemCarouselSend(req);
 }
@@ -1657,13 +1666,11 @@ function getNextItemCarouselSend(req){
 		
 		success: function(response) {
 			
-				if(response.returnCode == 0){
+			if(response.returnCode == 0){
 				itemNextId = response.itemId;
 				addItemToCarousel(response);
 				//console.log(response);
-			}
-			else{				//when end of the database is reached 
-				//alert(response.Message);
+			}else{				//when end of the database is reached 
 				
 				if(reasonForGetItem == 'carousel'){
 					if(startingCarousel == 0 && counter == 0){		//empty carousel
