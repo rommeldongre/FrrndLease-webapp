@@ -241,7 +241,7 @@
 			signuplocation = $("#location").val();
 			signuppassword = $("#password").val();
 			signupretypepassword = $("#retypepassword").val();
-			signupstatus = "pending";
+			signupstatus = "email_pending";
 			
 			if(signupname == '') name = null;
 			if(signupmobile == '') mobile = null;
@@ -332,8 +332,13 @@
 		// Facebook signup ends here----------------------------------------
 		
 		function signupContinued(msg){
+			// Alert user to check the email for the activation link if signupstatus is pending!!
+			if(signupstatus == "email_pending"){
+				alert("Please check your email to click on the link to activate your account!!");
+			}
+			
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
-			if(msg != 200 && signupstatus !== "pending"){
+			if(msg != 200 && signupstatus !== "email_pending"){
 				localStorage.setItem("userloggedin", signupemail);				//set the "name" of the user who is loggedin	
 				localStorage.setItem("userLocation", $("#location").val());
 			}

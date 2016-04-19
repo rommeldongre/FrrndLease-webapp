@@ -41,18 +41,18 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 
 		try {
 			getConnection();
-			String select_status_sql = "Select user_status FROM users WHERE user_activation=?";
+			String select_status_sql = "Select user_status,user_id FROM users WHERE user_activation=?";
 			PreparedStatement ps1 = connection.prepareStatement(select_status_sql);
 			ps1.setString(1, rq.getVerification());
 			
 			ResultSet result1 = ps1.executeQuery();
 			
 			if(result1.next()){
-				if(result1.getString("user_status").equals("0")){
+				if(result1.getString("user_status").equals("email_pending")){
 					String update_status_sql = "UPDATE users SET user_status=? WHERE user_activation=?";
 					LOGGER.fine("Creating Statement...");
 					PreparedStatement ps2 = connection.prepareStatement(update_status_sql);
-					ps2.setString(1, "1");
+					ps2.setString(1, "email_activated");
 					ps2.setString(2, rq.getVerification());
 
 					LOGGER.fine("statement created...executing update to users query");
@@ -62,17 +62,21 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 					
 					if (result2 == 1) {
 						rs.setCode(FLS_SUCCESS);
+						rs.setUserId(result1.getString("user_id"));
 						rs.setMessage("Your account has been activated!!");
 					} else {
 						rs.setCode(FLS_SQL_EXCEPTION);
+						rs.setUserId("");
 						rs.setMessage("Could not activate your account due to some internal problems!! Trying to fix it ASAP");
 					}
 				}else{
 					rs.setCode(FLS_END_OF_DB);
+					rs.setUserId("");
 					rs.setMessage("This account is already activated!! No point activating it again");
 				}
 			}else{
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setUserId("");
 				rs.setMessage("This account is not registered!! I wonder how you got this link");
 			}
 

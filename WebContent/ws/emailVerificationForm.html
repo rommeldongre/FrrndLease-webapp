@@ -28,6 +28,7 @@
 
 					success : function(response) {
 						document.getElementById("code").value = response.code;
+						document.getElementById("userId").value = response.userId;
 						if (response.code == 0) {
 							document.getElementById("message").value = "";
 						} else {
@@ -45,14 +46,13 @@
 <body>
 	<h1>EMAIL VERIFICATION FORM</h1>
 	<form>
-		Verification Id : <input type="text" name="verification"
-			id="verification"><br /> <br /> <input type="button"
-			value="Submit" onclick="verificationReq()"><br /> <br />
+		Verification Id : <input type="text" name="verification" id="verification"><br /> <br /> 
+						  <input type="button" value="Submit" onclick="verificationReq()"><br /> <br />
 
 		<h1>OUTPUT</h1>
 		Code : <input type="text" name="code" id="code"><br /> <br />
-		Message : <input type="text" name="message" id="message"><br />
-		<br />
+		Message : <input type="text" name="message" id="message"><br /><br />
+		User Id : <input type="text" name="userId" id="userId"><br /><br />
 	</form>
 
 	<br />

@@ -1,22 +1,207 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="ISO-8859-1">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-signin-scope" content="profile email">
+<meta name="google-signin-client_id"
+	content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <title>Email Verification</title>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery-1.11.3.min.js"></script>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/mystore.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Happy+Monkey'
+	rel='stylesheet' type='text/css'>
+
+<!--Loading Animation code CSS & JS Links  -->
+<link href="css/animation.css" type="text/css" rel="stylesheet">
+<script src="js/jquery.backstretch.js"></script>
+<script src="js/animation.js"></script>
+<!--Loading Animation code CSS & JS Links ends here  -->
+
+<!-- DropDown list code-->
+<script src="js/dropdownlist.js"></script>
+<!-- DropDown list code ends-->
+
+<!--Check whether user is logged in or not  -->
+<script src="js/logincheck.js"></script>
+<!--Check whether user is logged in or not ends here  -->
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
-<body onLoad="verificationReq()">
 
-	<h1><strong>Frrndlease Sign up Email Verification</strong></h1>
+<body onload="start()">
+	<div id="loader"></div>
+	<div id="main">
 
-	<span id="message"></span>
+		<!--header starts---------------------------------------->
+		<nav class="navbar navbar-default navbar-fixed-top" id="header">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target="#myNavbar1">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
+				</div>
+			</div>
+
+		</nav>
+		<!--header ends----------------------------------------->
+
+		<div class="container-fluid" id="midcontainer">
+			<div id="heading">
+				<strong>Frrndlease Sign up Email Verification</strong>
+			</div>
+			<br /> 
+			
+			<div id="heading">
+				<span id="message"></span>
+			</div>
+
+			<h4 id="emptyText"></h4>
+
+			<!-- Button trigger Alert Modal -->
+			<button id="alertModalTriggerButton" type="button"
+				class="btn btn-primary btn-lg" data-toggle="modal"
+				data-target="#myAlertModal">Launch demo modal</button>
+
+			<!-- Alert Modal -->
+			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
+						</div>
+						<div class="modal-body" id="alertModalMsg"></div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal" onclick="continueWork()">Yes</button>
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">No</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Button trigger Confirmation Modal -->
+			<button id="modalTriggerButton" type="button"
+				class="btn btn-primary btn-lg" data-toggle="modal"
+				data-target="#myModal" data-backdrop="static" data-keyboard="false">
+				Launch demo modal</button>
+
+			<!-- Confirmation Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabel"></h4>
+						</div>
+						<div class="modal-body" id="modalMsg"></div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Button trigger Text Input Modal -->
+			<button id="inputTriggerButton" type="button"
+				class="btn btn-primary btn-lg" data-toggle="modal"
+				data-target="#myModalAlert" data-backdrop="static"
+				data-keyboard="false">Launch demo modal</button>
+
+			<!-- Text Input Modal Modal -->
+			<div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog"
+				aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+							<h4 class="modal-title" id="myModalLabelInput"></h4>
+						</div>
+						<div class="modal-body" id="modalMsgInput">
+							<input type="text" name="urlInput" id="urlInput"
+								class="form-control">
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal" onclick="">Close</button>
+							<button type="button" class="btn btn-primary"
+								onclick="import_wishlist()">Submit URL</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- "Please Wait" Modal Start here-->
+			<div id="wait_bar"></div>
+			<!-- "Please Wait" Modal ends Here -->
+
+			<div id="tawk_widget">
+				<!--The tawk.to widget code will get populated here-->
+			</div>
+
+			<!--Footer starts------------------------------------>
+			<div id="footer_nav">
+				<!--The Footer nav will get populated here-->
+			</div>
+			<!--Footer ends--------------------------------------->
+		</div>
+	</div>
+
 
 	<script type="text/javascript">
 		var Verification = null;
 
+		function start() {
+
+			$("#modalTriggerButton").hide();
+			$("#alertModalTriggerButton").hide();
+			$("#inputTriggerButton").hide();
+
+			look_good();
+			
+			verificationReq()
+		}
+
+		function look_good() { //just for looks
+
+			//$('.addImport').css("margin-left", "75%");
+		}
+
 		function verificationReq() {
 			Verification = getQueryVariable("token");
-			
+
 			var req = {
 				verification : Verification
 			}
@@ -25,31 +210,33 @@
 		};
 
 		function verificationSend(req) {
-			$
-					.ajax({
-						url : '/flsv2/EmailVerification',
-						type : 'post',
-						data : JSON.stringify(req),
-						contentType : "application/json",
-						dataType : "json",
+			$.ajax({
+				url : '/flsv2/EmailVerification',
+				type : 'post',
+				data : JSON.stringify(req),
+				contentType : "application/json",
+				dataType : "json",
 
-						success : function(response) {
-							
-							console.log(response.message);
-							
-							if (response.code == 0) {
-								$("#message").text(response.message);
-							} else {
-								$("#message").text(response.message);
-							}
-						},
+				success : function(response) {
 
-						error : function() {
-							alert("not working");
-						}
-					});
+					console.log(response.message);
+
+					if (response.code == 0) {
+						$("#message").text(response.message);
+						localStorage.setItem("userloggedin", response.userId);
+						alert("Welcome to fRRndLease!!");
+						window.location.replace("myindex.html");
+					} else {
+						$("#message").text(response.message);
+					}
+				},
+
+				error : function() {
+					alert("not working");
+				}
+			});
 		};
-		
+
 		function getQueryVariable(variable) {
 			var query = window.location.search.substring(1);
 			var vars = query.split("&");
@@ -62,6 +249,12 @@
 			alert('Query Variable ' + variable + ' not found');
 		};
 	</script>
+
+
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/index.js"></script>
+	<script src="js/script_admin_v2.js"></script>
+	<script src="js/bootstrap.min.js"></script>
 
 </body>
 </html>

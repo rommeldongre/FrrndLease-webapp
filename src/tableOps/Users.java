@@ -117,7 +117,7 @@ public class Users extends Connect {
 			
 			try{
 				AwsSESEmail newE = new AwsSESEmail();
-				if(status.equals("0"))
+				if(status.equals("email_pending"))
 					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION,um);
 				else
 					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER,um);
@@ -337,7 +337,7 @@ public class Users extends Connect {
 				
 				String status = result1.getString("user_status");
 				
-				if(status.equals("facebook") || status.equals("google") || status.equals("activated")){
+				if(status.equals("facebook") || status.equals("google") || status.equals("email_activated")){
 					
 					if(status.equals(signUpStatus)){
 						String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";

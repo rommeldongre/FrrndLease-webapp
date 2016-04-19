@@ -51,6 +51,10 @@ public class AwsSESEmail {
 	static String SUBJECT;
 
 	private static String user_id;
+	
+	private static String EMAIL_VERIFICATION_URL_DEVLOPMENT = "http://localhost:8080/flsv2/emailverification.html";
+	
+//	private static String EMAIL_VERIFICATION_URL_PRODUCTION = "";
 
 	/*
 	 * Before running the code: Fill in your AWS access credentials in the
@@ -76,7 +80,7 @@ public class AwsSESEmail {
 			BODY = "<body>Hello " + um.getFullName()
 					+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
 					+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
-					+ "<a href='http://localhost:8080/flsv2/emailverification.html?token="+um.getActivation()+"'>http://localhost:8080/flsv2/emailverification.html?token="+um.getActivation()+"</a>"
+					+ "<a href='"+EMAIL_VERIFICATION_URL_DEVLOPMENT+"?token="+um.getActivation()+"'>"+EMAIL_VERIFICATION_URL_DEVLOPMENT+"?token="+um.getActivation()+"</a>"
 					+ "<br/></body>";
 			break;
 		case FLS_MAIL_REGISTER:
@@ -103,7 +107,7 @@ public class AwsSESEmail {
 		case FLS_MAIL_POST_ITEM:
 			ItemsModel iom = (ItemsModel) obj;
 			SUBJECT = ("[fRRndLease] Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
-			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
+			BODY = ("<body  onload='start()'>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
 					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "</body>");

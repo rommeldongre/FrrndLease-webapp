@@ -3,7 +3,15 @@ package pojos;
 public class EmailVerificationResObj extends ResObj {
 
 	int code;
-	String message;
+	String message, userId;
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
 	public int getCode() {
 		return code;
