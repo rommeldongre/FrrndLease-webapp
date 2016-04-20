@@ -18,7 +18,11 @@ public class ItemsModel {
 			System.out.println("Extracting data from row object");
 			
 			title = obj.getString("title");
-			description = obj.getString("description");
+			if(obj.isNull("description")){
+				description = "";
+			}else{
+				description = obj.getString("description");
+			}
 			category = obj.getString("category");
 			userId = obj.getString("userId");
 			leaseTerm = obj.getString("leaseTerm");
