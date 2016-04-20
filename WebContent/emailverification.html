@@ -124,7 +124,7 @@
 						<div class="modal-body" id="modalMsg"></div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"
-								data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
+								data-dismiss="modal" onclick="redirectToMyIndexPage()">Close</button>
 						</div>
 					</div>
 				</div>
@@ -182,6 +182,11 @@
 
 	<script type="text/javascript">
 		var Verification = null;
+		
+		var div = document.getElementById("modalMsg");
+		
+		var heading = document.getElementById("myModalLabel");
+		heading.innerHTML = "Email Verification";
 
 		function start() {
 
@@ -222,10 +227,11 @@
 					console.log(response.message);
 
 					if (response.code == 0) {
-						$("#message").text(response.message);
+						$("#message").text("");
 						localStorage.setItem("userloggedin", response.userId);
-						alert("Welcome to fRRndLease!!");
-						window.location.replace("myindex.html");
+						div.innerHTML = response.message + ", Welcome to fRRndLease.";
+						
+						$("#modalTriggerButton").click();
 					} else {
 						$("#message").text(response.message);
 					}
@@ -235,6 +241,10 @@
 					alert("not working");
 				}
 			});
+		};
+		
+		function redirectToMyIndexPage(){
+			window.location.replace("myindex.html");
 		};
 
 		function getQueryVariable(variable) {
@@ -246,7 +256,7 @@
 					return pair[1];
 				}
 			}
-			alert('Query Variable ' + variable + ' not found');
+			alert('Token= ' + variable + ' not found');
 		};
 	</script>
 
