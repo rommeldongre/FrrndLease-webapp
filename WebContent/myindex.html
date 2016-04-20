@@ -257,7 +257,7 @@
 			
 			searchbar();				//called when page is loaded initially
 		}
-		
+			
 		function searchbar(){
 		
 			params = getParams();
@@ -289,11 +289,19 @@
 			}
 			return params;
 		}
+		
 		function load_Gapi(){						//for google
 			gapi.load('auth2', function() {
 				gapi.auth2.init();
 			});
 		}
+		
+		$("#wish_title").keypress(function(event){
+			if(event.keyCode == 13){
+				event.preventDefault();
+				$("#search_btn_home").click();
+			}
+		});
 		
 		$("#logoutoptionmenu").click(function(){					//when user logs out  
 			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
