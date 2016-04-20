@@ -40,7 +40,6 @@ public class PostItem extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		
 		String str = request.getParameter("req");
-		System.out.println(str);
 		//String str2 = request.getParameter("req2");
 		
 		try {
