@@ -188,6 +188,28 @@
 		  </div>
 		</div>
 		
+		<!-- "Please Wait" Modal Start here-->
+			<div id="wait_bar_myindex">
+				<div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait" data-backdrop="static" data-keyboard="false">..</div>
+			
+				<div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h4 id="waitheading"></h4>
+					</div>
+					<div class="modal-body">
+						<div class="progress">
+						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+		<!-- "Please Wait" Modal ends Here -->
+		
 		<div id="tawk_widget">
 				<!--The tawk.to widget code will get populated here-->
 		</div>
@@ -211,6 +233,7 @@
 			
 			$("#modalTriggerButton").hide();
 			$("#clearSearchButton").hide();
+			$("#opendivmyPleaseWait").hide();
 			
 			load_Gapi();	
 			
@@ -288,6 +311,12 @@
 				}
 			}
 			return params;
+		}
+		
+		function process_dialog(heading){
+			var header = document.getElementById("waitheading");
+			header.innerHTML = heading;
+			$("#opendivmyPleaseWait").click();
 		}
 		
 		function load_Gapi(){						//for google
@@ -468,7 +497,10 @@
 			
 			reasonForGetItem = "carousel";				//we are calling getNextItem/getPrevItem for the Carousel
 			
-			if(counter < noOfImagesInCarousel){				
+			if(counter < noOfImagesInCarousel){	
+				if(counter==0){
+				process_dialog("Loading Carousel");
+				}
 				$("#leftcarouselbutton").show();
 				getNextItemCarousel(itemNextId,"",browsingCategory);
 			}
@@ -574,6 +606,9 @@
 					$("#carousel-example-generic").carousel('next');				//load next slide
 					
 			}
+			if(counter==noOfImagesInCarousel){
+			$('#myPleaseWait').modal('toggle');
+			}
 			
 			if(reasonForSearchItem == "searchItem"){
 				getSearchedItem();
@@ -588,6 +623,7 @@
 		}
 		function disableRightButton(){
 			$("#rightcarouselbutton").hide();
+			$('#myPleaseWait').modal('toggle');
 		}
 		
 		function storeYourStuff(){

@@ -243,7 +243,24 @@
 			</div>
 			
 			<!-- "Please Wait" Modal Start here-->
-			<div id="wait_bar">
+			<div id="wait_bar_mypostings">
+				<div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait" data-backdrop="static" data-keyboard="false">..</div>
+			
+				<div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h4 id="waitheading"></h4>
+					</div>
+					<div class="modal-body">
+						<div class="progress">
+						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				</div>
 			</div>
 			<!-- "Please Wait" Modal ends Here -->
 			
@@ -270,6 +287,7 @@
 			$("#alertModalTriggerButton").hide();
 			$("#inputTriggerButton").hide();
 			$("#opendiv").hide();
+			$("#opendivmyPleaseWait").hide();
 			
 			
 			categoryCounter = 0;
@@ -294,6 +312,12 @@
 			getScreenType();
 			
 			loadCarousel();				//called when page is loaded initially
+		}
+		
+		function process_dialog(heading){
+			var header = document.getElementById("waitheading");
+			header.innerHTML = heading;
+			$("#opendivmyPleaseWait").click();
 		}
 		
 		function load_Gapi(){						//for google
@@ -629,7 +653,10 @@
 			
 			reasonForGetItem = "carousel";				//we are calling getNextItem/getPrevItem for the Carousel
 			
-			if(counter < noOfImagesInCarousel){				
+			if(counter < noOfImagesInCarousel){		
+				if(counter==0){
+				process_dialog("Loading Carousel");
+				}
 				$("#leftcarouselbutton").show();
 				getNextItemCarousel(itemNextId,userloggedin,browsingCategory);
 			}
@@ -723,7 +750,7 @@
 				col1.appendChild(span1);
 				row1.appendChild(col1);
 				
-				counter++;
+				counter++;		
 			}
 			
 			if(counter >= noOfImagesInCarousel){
@@ -736,16 +763,20 @@
 					$("#carousel-example-generic").carousel('next');				//load next slide
 					
 			}
+			if(counter==noOfImagesInCarousel){
+			$('#myPleaseWait').modal('toggle');
+			}
 		
 			getImg();
 		
 		}
 		
 		function disableLeftButton(){
-			$("#leftcarouselbutton").hide();			
+			$("#leftcarouselbutton").hide();          
 		}
 		function disableRightButton(){
 			$("#rightcarouselbutton").hide();
+			$('#myPleaseWait').modal('toggle');
 		}
 		
 		function storeYourStuff(){
