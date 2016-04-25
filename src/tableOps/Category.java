@@ -8,39 +8,42 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import pojos.CategoryModel;
+import util.FlsLogger;
 import adminOps.Response;
 import connect.Connect;
 
 public class Category extends Connect {
-	
-	private String name,description,parent,child,message,operation,Id=null,check=null,token;
+
+	private FlsLogger LOGGER = new FlsLogger(Category.class.getName());
+
+	private String name, description, parent, child, message, operation, Id = null, check = null, token;
 	private int Code;
 	private CategoryModel cm;
 	private Response res = new Response();
-	
+
 	public Response selectOp(String Operation, CategoryModel ctm, JSONObject obj) {
 		operation = Operation.toLowerCase();
 		cm = ctm;
-		
-		switch(operation) {
-		
-		case "add" :
-			LOGGER.fine("Add op is selected..");
+
+		switch (operation) {
+
+		case "add":
+			LOGGER.info("Add op is selected..");
 			Add();
 			break;
-			
-		case "delete" : 
-			LOGGER.fine("Delete operation is selected");
+
+		case "delete":
+			LOGGER.info("Delete operation is selected");
 			Delete();
 			break;
-			
-		case "edit" :
-			LOGGER.fine("Edit operation is selected.");
+
+		case "edit":
+			LOGGER.info("Edit operation is selected.");
 			Edit();
 			break;
-			
-		case "getnext" :
-			LOGGER.fine("Get Next operation is selected.");
+
+		case "getnext":
+			LOGGER.info("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getNext();
@@ -49,9 +52,9 @@ public class Category extends Connect {
 				e.printStackTrace();
 			}
 			break;
-			
-		case "getprevious" :
-			LOGGER.fine("Get Next operation is selected.");
+
+		case "getprevious":
+			LOGGER.info("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getPrevious();
@@ -60,126 +63,126 @@ public class Category extends Connect {
 				e.printStackTrace();
 			}
 			break;
-			
+
 		default:
-			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);;
+			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
+			;
 			break;
 		}
-		
+
 		return res;
 	}
-	
+
 	private void Add() {
 		name = cm.getName();
 		description = cm.getDescription();
 		parent = cm.getParent();
 		child = cm.getChild();
-		
+
 		String sql = "insert into category (cat_name,cat_desc,cat_parent,cat_child) values (?,?,?,?)";
 		getConnection();
-		
+
 		try {
-			LOGGER.fine("Creating statement.....");
+			LOGGER.info("Creating statement.....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing query.....");
+
+			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, name);
 			stmt.setString(2, description);
-			stmt.setString(3,parent);
-			stmt.setString(4,child);
+			stmt.setString(3, parent);
+			stmt.setString(4, child);
 			stmt.executeUpdate();
-			LOGGER.fine("Entry added into category table");
-			
 			message = "Entry added into category table";
+			LOGGER.warning(message);
 			Code = 005;
 			Id = name;
-			
-			res.setData(FLS_SUCCESS,Id,FLS_CATEGORY_ADD);
+
+			res.setData(FLS_SUCCESS, Id, FLS_CATEGORY_ADD);
 		} catch (SQLException e) {
-			System.out.println("Couldn't create statement");
+			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void Delete() {
 		name = cm.getName();
 		check = null;
-		LOGGER.fine("Inside delete method....");
-		
+		LOGGER.info("Inside delete method....");
+
 		getConnection();
 		String sql = "DELETE FROM category WHERE cat_name=?";
 		String sql2 = "SELECT * FROM category WHERE cat_name=?";
-		
+
 		try {
-			LOGGER.fine("Creating statement...");
-			
+			LOGGER.info("Creating statement...");
+
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				check = rs.getString("cat_name");
 			}
-			
-			if(check != null) {
+
+			if (check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
-				
-				LOGGER.fine("Statement created. Executing delete query on ..." + check);
+
+				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, name);
 				stmt.executeUpdate();
-				message = "operation successfull deleted category id : "+name;
+				message = "operation successfull deleted category id : " + name;
+				LOGGER.warning(message);
 				Code = 006;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_CATEGORY_DELETE);
-			}
-			else{
-				System.out.println("Entry not found in database!!");
+			} else {
+				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void Edit() {
 		name = cm.getName();
 		description = cm.getDescription();
 		parent = cm.getParent();
 		child = cm.getChild();
 		check = null;
-		
-		LOGGER.fine("inside edit method");
+
+		LOGGER.info("inside edit method");
 		getConnection();
 		String sql = "UPDATE category SET cat_desc=?, cat_parent=?, cat_child=? WHERE cat_name=?";
 		String sql2 = "SELECT * FROM category WHERE cat_name=?";
-		
+
 		try {
-			LOGGER.fine("Creating Statement....");
+			LOGGER.info("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				check = rs.getString("cat_name");
 			}
-			
-			if(check != null) {
+
+			if (check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
-				
-				LOGGER.fine("Statement created. Executing edit query on ..." + check);
+
+				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, description);
-				stmt.setString(2,parent);
-				stmt.setString(3,child);
+				stmt.setString(2, parent);
+				stmt.setString(3, child);
 				stmt.setString(4, name);
 				stmt.executeUpdate();
-				message = "operation successfull edited category id : "+name;
+				message = "operation successfull edited category id : " + name;
+				LOGGER.warning(message);
 				Code = 007;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-			}
-			else{
-				System.out.println("Entry not found in database!!");
+			} else {
+				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
@@ -187,98 +190,101 @@ public class Category extends Connect {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void getNext() {
 		check = null;
-		LOGGER.fine("Inside GetNext method");
+		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM category WHERE cat_name > ? ORDER BY cat_name LIMIT 1";
-		
+
 		getConnection();
 		try {
-			LOGGER.fine("Creating a statement .....");
+			LOGGER.info("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing getNext query...");
+
+			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
-			
+
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				JSONObject json = new JSONObject();
-				json.put("catName",rs.getString("cat_name"));
-				json.put("catDesc",rs.getString("cat_desc"));
-				json.put("catParent",rs.getString("cat_parent"));
-				
-				//message = "; catDesc: "+rs.getString("cat_desc")+"; catParent: "+rs.getString("cat_parent");
+				json.put("catName", rs.getString("cat_name"));
+				json.put("catDesc", rs.getString("cat_desc"));
+				json.put("catParent", rs.getString("cat_parent"));
+
+				// message = "; catDesc: "+rs.getString("cat_desc")+";
+				// catParent: "+rs.getString("cat_parent");
 				message = json.toString();
-				LOGGER.fine(message);
+				LOGGER.info(message);
 				check = rs.getString("cat_name");
 			}
-			
-			if(check != null ) {
+
+			if (check != null) {
 				Code = FLS_SUCCESS;
 				Id = check;
 			}
-			
+
 			else {
 				Id = "0";
 				message = FLS_END_OF_DB_M;
 				Code = FLS_END_OF_DB;
 			}
-			
-			res.setData(Code,Id,message);
+
+			res.setData(Code, Id, message);
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	private void getPrevious() {
 		check = null;
-		LOGGER.fine("Inside GetPrevious method");
+		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM category WHERE cat_name < ? ORDER BY cat_name DESC LIMIT 1";
-		
+
 		getConnection();
 		try {
-			LOGGER.fine("Creating a statement .....");
+			LOGGER.info("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing getPrevious query...");
+
+			LOGGER.info("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
-			
+
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				JSONObject json = new JSONObject();
-				json.put("catName",rs.getString("cat_name"));
-				json.put("catDesc",rs.getString("cat_desc"));
-				json.put("catParent",rs.getString("cat_parent"));
-				
-				//message = "catName: "+rs.getString("cat_name")+"; catDesc: "+rs.getString("cat_desc")+"; catParent: "+rs.getString("cat_parent");
+				json.put("catName", rs.getString("cat_name"));
+				json.put("catDesc", rs.getString("cat_desc"));
+				json.put("catParent", rs.getString("cat_parent"));
+
+				// message = "catName: "+rs.getString("cat_name")+"; catDesc:
+				// "+rs.getString("cat_desc")+"; catParent:
+				// "+rs.getString("cat_parent");
 				message = json.toString();
-				LOGGER.fine(message);
+				LOGGER.info(message);
 				check = rs.getString("cat_name");
 			}
-			
-			if(check != null ) {
+
+			if (check != null) {
 				Code = FLS_SUCCESS;
 				Id = check;
 			}
-			
+
 			else {
 				Id = "0";
 				message = FLS_END_OF_DB_M;
 				Code = FLS_END_OF_DB;
 			}
-			
-			res.setData(Code,Id,message);
+
+			res.setData(Code, Id, message);
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}	
+		}
 	}
 }

@@ -3,7 +3,12 @@ package pojos;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import util.FlsLogger;
+
 public class ItemsModel {
+	
+	private FlsLogger LOGGER = new FlsLogger(ItemsModel.class.getName());
+	
 	private String title, category, description,userId,leaseTerm,status,image;
 	int id, leaseValue;
 	private JSONObject obj;
@@ -15,7 +20,7 @@ public class ItemsModel {
 	
 	private void extractData() {
 		try {
-			System.out.println("Extracting data from row object");
+			LOGGER.info("Extracting data from row object");
 			
 			title = obj.getString("title");
 			description = obj.getString("description");
@@ -27,7 +32,7 @@ public class ItemsModel {
 			status = obj.getString("status");
 			image = obj.getString("image");
 		} catch (JSONException e) {
-			System.out.println("Couldn't parse row object of JSON");
+			LOGGER.warning("Couldn't parse row object of JSON");
 			e.printStackTrace();
 		}
 	}

@@ -9,8 +9,11 @@ import pojos.EditProfileReqObj;
 import pojos.EditProfileResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
+import util.FlsLogger;
 
 public class EditProfileHandler extends Connect implements AppHandler {
+
+	private FlsLogger LOGGER = new FlsLogger(EditProfileHandler.class.getName());
 
 	private Response res = new Response();
 
@@ -36,26 +39,27 @@ public class EditProfileHandler extends Connect implements AppHandler {
 
 		EditProfileResObj rs = new EditProfileResObj();
 
-		LOGGER.fine("Inside Process Method " + rq.getUserId());
+		LOGGER.info("Inside Process Method " + rq.getUserId());
 
 		try {
 			getConnection();
 			String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?  WHERE user_id=?";
-			LOGGER.fine("Creating Statement...");
+			LOGGER.info("Creating Statement...");
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, rq.getFullName());
 			ps.setString(2, rq.getMobile());
 			ps.setString(3, rq.getLocation());
 			ps.setString(4, rq.getUserId());
 
-			LOGGER.fine("statement created...executing update to users query");
+			LOGGER.info("statement created...executing update to users query");
 			int result = ps.executeUpdate();
 
-			LOGGER.fine("Update Query Result : " + result);
+			LOGGER.info("Update Query Result : " + result);
 
 			if (result == 1) {
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
+				LOGGER.warning("Profile Updated!!");
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
@@ -63,10 +67,10 @@ public class EditProfileHandler extends Connect implements AppHandler {
 
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-			System.out.println("Error Check Stacktrace");
+			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		}
-		LOGGER.fine("Finished process method ");
+		LOGGER.info("Finished process method ");
 		// return the response
 		return rs;
 	}

@@ -1,6 +1,7 @@
 package services;
 
 import errorCat.ErrorCat;
+import util.FlsLogger;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,36 +17,44 @@ import org.json.JSONObject;
 
 import adminOps.Response;
 import adminOps.AdminOpsHandler;
+
 /**
  * Servlet implementation class WishItem
  */
 @WebServlet("/WishItem")
 public class WishItem extends HttpServlet {
+
+	private FlsLogger LOGGER = new FlsLogger(WishItem.class.getName());
+
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh1 = new AdminOpsHandler();
 	private AdminOpsHandler aoh2 = new AdminOpsHandler();
-	
+
 	private Response res1 = new Response();
 	private Response res2 = new Response();
-	
+
 	private ErrorCat e = new ErrorCat();
-	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		/*System.out.println("Inside GET Method");
-		
-		doPost(request,response);*/
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		/*
+		 * System.out.println("Inside GET Method");
+		 * 
+		 * doPost(request,response);
+		 */
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		response.setContentType("application/json");
-		System.out.println("Inside POST Method");
+		LOGGER.info("Inside POST Method");
 		String table;
-		String Id="0", Message=e.FLS_WISH_ITEM_F_M, Code=String.valueOf(e.FLS_WISH_ITEM_F);
+		String Id = "0", Message = e.FLS_WISH_ITEM_F_M, Code = String.valueOf(e.FLS_WISH_ITEM_F);
 		PrintWriter out = response.getWriter();
-		
+
 		String str = request.getParameter("req");
-		
+
 		try {
 			JSONObject row = new JSONObject(str);
 			JSONObject obj1 = new JSONObject();
@@ -53,11 +62,11 @@ public class WishItem extends HttpServlet {
 			obj1.put("table", table);
 			obj1.put("operation", "add");
 			obj1.put("row", row);
-			
+
 			res1 = aoh1.getInfo(table, obj1);
-			System.out.println(res1.getCode());
-			if(res1.getIntCode() == e.FLS_SUCCESS){
-				System.out.println("Item added to items table..");
+			LOGGER.info(res1.getCode());
+			if (res1.getIntCode() == e.FLS_SUCCESS) {
+				LOGGER.warning("Item added to items table..");
 				JSONObject obj2 = new JSONObject();
 				row.put("itemId", Integer.parseInt(res1.getId()));
 				table = "wishlist";
@@ -65,34 +74,30 @@ public class WishItem extends HttpServlet {
 				obj2.put("operation", "add");
 				obj2.put("row", row);
 				res2 = aoh2.getInfo(table, obj2);
-				
-				if(res2.getIntCode() == e.FLS_SUCCESS) { 
-					System.out.println("Item added to store...");
+
+				if (res2.getIntCode() == e.FLS_SUCCESS) {
+					LOGGER.warning("Item added to store...");
 					Id = res2.getId();
 					Message = e.FLS_WISH_ITEM;
 					Code = "FLS_SUCCESS";
-				}
-				else{
-					System.out.println("Couldn't perform WishItem");
+				} else {
+					LOGGER.warning("Couldn't perform WishItem");
 				}
 			}
-			
-			else{
-				System.out.println("Couldn't perform WishItem");
+
+			else {
+				LOGGER.warning("Couldn't perform WishItem");
 			}
-			
+
 			JSONObject json = new JSONObject();
 			json.put("Code", Code);
 			json.put("Message", Message);
 			json.put("Id", Id);
 			out.print(json);
-			
-			
+
 		} catch (JSONException e) {
-			System.out.println("Couldn't parse/retrieve JSON");
+			LOGGER.warning("Couldn't parse/retrieve JSON");
 			e.printStackTrace();
 		}
 	}
 }
-
-

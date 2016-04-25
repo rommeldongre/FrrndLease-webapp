@@ -3,7 +3,12 @@ package pojos;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import util.FlsLogger;
+
 public class FriendsModel {
+	
+	private FlsLogger LOGGER = new FlsLogger(FriendsModel.class.getName());
+	
 	private String friendId, fullName, mobile, userId;
 	private JSONObject obj;
 	
@@ -19,7 +24,7 @@ public class FriendsModel {
 			mobile = obj.getString("mobile");
 			userId = obj.getString("userId");
 		} catch (JSONException e) {
-			System.out.println("Couldn't parse json");
+			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
 		}
 	}
