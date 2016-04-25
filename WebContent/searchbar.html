@@ -1,7 +1,8 @@
 					<div class="input-group" id ="searchA">
 						<input id="wish_title1" type="text" class="form-control" placeholder="Search Frrndlease" name="wish_title1"></input>
-								<span class="input-group-btn">-->
-									<button class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+								<span class="input-group-btn">
+									<button class="btn btn-primary" id="search_button"><i class="glyphicon glyphicon-search"></i></button>
+									<input type="submit" name="search_submit" id="search_submit" value="Submit"/>
 								</span>
 					</div>
 					
@@ -10,3 +11,11 @@
 						width: 100%;
 					}
 					</style>
+					
+					<script>
+					$(document).ready(function(){
+					$("#search_submit").hide();
+					});
+					</script>
+					
+					
