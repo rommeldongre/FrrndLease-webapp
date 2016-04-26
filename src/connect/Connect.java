@@ -4,67 +4,59 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import java.util.logging.*;
 import errorCat.ErrorCat;
+import util.FlsLogger;
 
-public class Connect extends ErrorCat{
-	
+public class Connect extends ErrorCat {
+
 	protected static Connection connection = null;
-	protected static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	
-	//Local - Database 
+
+	private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
+
+	// Local - Database
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private static String name = "root";
 	private static String pass = "root";
 
-	//Amazon RDS Database
-	//private static String url = "jdbc:mysql://greylabsdb.c2dfmnaqzg4x.ap-southeast-1.rds.amazonaws.com:3306/fls";
-	//private static String name = "awsuser";
-	//private static String pass = "greylabs123";
-	
-	//JDBC Driver
+	// Amazon RDS Database
+	// private static String url =
+	// "jdbc:mysql://greylabsdb.c2dfmnaqzg4x.ap-southeast-1.rds.amazonaws.com:3306/fls";
+	// private static String name = "awsuser";
+	// private static String pass = "greylabs123";
+
+	// JDBC Driver
 	private static String driver = "com.mysql.jdbc.Driver";
-	
-	protected static /*Connection*/void getConnection() {
-		
-		if (connection == null){
-			System.out.println("Registering driver....");
+
+	protected static /* Connection */void getConnection() {
+
+		if (connection == null) {
+			LOGGER.info("Registering driver....");
 			try {
-				//Driver Registration
+				// Driver Registration
 				Class.forName(driver).newInstance();
-				System.out.println("Driver Registered successfully!!.");
-				
-				//Initiate a connection
-				System.out.println("Connecting to database...");
+				LOGGER.info("Driver Registered successfully!!.");
+
+				// Initiate a connection
+				LOGGER.info("Connecting to database...");
 				connection = DriverManager.getConnection(url, name, pass);
-				System.out.println("Connected to database!!!");
-				
-			} catch (InstantiationException | IllegalAccessException
-					| ClassNotFoundException e) {
+				LOGGER.info("Connected to database!!!");
+
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
-				System.out.println("Couldnt register driver...");
+				LOGGER.info("Couldnt register driver...");
 			} catch (SQLException e) {
 				e.printStackTrace();
-				System.out.println("Couldnt connect to database...");
+				LOGGER.info("Couldnt connect to database...");
 			}
-		}else {
-			System.out.println("Connection exists....");
-			
+		} else {
+			LOGGER.info("Connection exists....");
+
 		}
-		
-		
-		// Below code specifies the level of the logger. Change value in setLevel() function according to environment
-		   
-		    LOGGER.setLevel(Level.INFO);
-	        ConsoleHandler handler = new ConsoleHandler();
-	        // PUBLISH this level
-	        handler.setLevel(Level.INFO);
-	       LOGGER.addHandler(handler);
-		//return connection;
 	}
-	
-	/*public static void main (String [] args){
-		Connection con = new Connect().getConnection();
-	}*/
+
+	/*
+	 * public static void main (String [] args){ Connection con = new
+	 * Connect().getConnection(); }
+	 */
 
 }

@@ -161,7 +161,7 @@
 						<div class="modal-body" id="modalMsg"></div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"
-								data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
+								data-dismiss="modal" >Close</button>
 						</div>
 					</div>
 				</div>
@@ -219,6 +219,11 @@
 
 	<script type="text/javascript">
 		var userloggedin, currentWork;
+		
+		var div = document.getElementById("modalMsg");
+		
+		var heading = document.getElementById("myModalLabel");
+		heading.innerHTML = "Update Profile";
 		
 		// flag to check if form is being updated or not
 		var unsaved = false;  
@@ -353,9 +358,13 @@
 
 				success : function(response) {
 					if (response.code == 0) {
-						alert('Your Profile Has Been Updated!!');
+						div.innerHTML = "Your Profile Has Been Updated!!";
+						
+						$("#modalTriggerButton").click();
 					} else {
-						alert("please try after sometime");
+						div.innerHTML = "please try after sometime";
+						
+						$("#modalTriggerButton").click();
 					}
 				},
 

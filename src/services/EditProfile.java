@@ -2,6 +2,8 @@ package services;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +12,7 @@ import app.EditProfileHandler;
 import app.NotImplementedException;
 import pojos.EditProfileReqObj;
 import pojos.EditProfileResObj;
+import util.FlsLogger;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletResponse;
@@ -24,11 +27,16 @@ import org.json.JSONObject;
 
 @WebServlet(description = "Edit Profile for a given UserId", urlPatterns = { "/EditProfile" })
 public class EditProfile extends HttpServlet {
+
+	private FlsLogger LOGGER = new FlsLogger(EditProfile.class.getName());
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse)
 			throws ServletException, IOException {
 		// HTTP request to Service request pojo
+
+		LOGGER.info("Inside Post of EditProfile Service");
 
 		ObjectMapper mapper = new ObjectMapper();
 		EditProfileReqObj request = mapper.readValue(httprequest.getInputStream(), EditProfileReqObj.class);
@@ -50,8 +58,9 @@ public class EditProfile extends HttpServlet {
 
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			System.out.println("GetProfile process method not implemented");
-			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetProfile process method not implemented");
+			LOGGER.warning("EditProfile process method not implemented");
+			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,
+					"EditProfile process method not implemented");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

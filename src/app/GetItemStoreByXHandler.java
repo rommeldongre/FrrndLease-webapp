@@ -10,10 +10,13 @@ import pojos.GetItemStoreByXReqObj;
 import pojos.GetItemStoreByXResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
+import util.FlsLogger;
 
 
 public class GetItemStoreByXHandler extends Connect implements AppHandler {
-		
+	
+	private FlsLogger LOGGER = new FlsLogger(GetItemStoreByXHandler.class.getName());
+	
 	private static GetItemStoreByXHandler instance = null;
 
 	public static GetItemStoreByXHandler getInstance() {
@@ -33,9 +36,9 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 		GetItemStoreByXReqObj rq = (GetItemStoreByXReqObj) req;
 		GetItemStoreByXResObj rs = new GetItemStoreByXResObj();
 		
-		LOGGER.fine("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
+		LOGGER.info("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
 		//TODO: Core of the processing takes place here
-		LOGGER.fine("Inside GetItemStore method");
+		LOGGER.info("Inside GetItemStore method");
 		
 		try {
 			getConnection();
@@ -95,7 +98,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			System.out.println("Error Check Stacktrace");
 			e.printStackTrace();
 		}	
-		LOGGER.fine("Finished process method ");
+		LOGGER.info("Finished process method ");
 		//return the response
 		
 		return rs;

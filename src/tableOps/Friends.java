@@ -12,10 +12,13 @@ import adminOps.Response;
 import connect.Connect;
 import util.FlsSendMail;
 import util.AwsSESEmail;
+import util.FlsLogger;
 
-public class Friends extends Connect{
-	
-	private String check=null, Id=null,token,friendId, fullName, mobile, userId,operation,message;
+public class Friends extends Connect {
+
+	private FlsLogger LOGGER = new FlsLogger(Friends.class.getName());
+
+	private String check = null, Id = null, token, friendId, fullName, mobile, userId, operation, message;
 	private int Code;
 	private FriendsModel fm;
 	private Response res = new Response();
@@ -23,26 +26,26 @@ public class Friends extends Connect{
 	public Response selectOp(String Operation, FriendsModel fdm, JSONObject obj) {
 		operation = Operation.toLowerCase();
 		fm = fdm;
-		
-		switch(operation) {
-		
-		case "add" :
-			LOGGER.fine("Add op is selected..");
+
+		switch (operation) {
+
+		case "add":
+			LOGGER.info("Add op is selected..");
 			Add();
 			break;
-			
-		case "delete" : 
-			LOGGER.fine("Delete operation is selected");
+
+		case "delete":
+			LOGGER.info("Delete operation is selected");
 			Delete();
 			break;
-			
-		case "edit" :
-			LOGGER.fine("Edit operation is selected.");
+
+		case "edit":
+			LOGGER.info("Edit operation is selected.");
 			Edit();
 			break;
-			
-		case "getnext" :
-			LOGGER.fine("Get Next operation is selected.");
+
+		case "getnext":
+			LOGGER.info("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getNext();
@@ -51,9 +54,9 @@ public class Friends extends Connect{
 				e.printStackTrace();
 			}
 			break;
-			
-		case "getprevious" :
-			LOGGER.fine("Get Next operation is selected.");
+
+		case "getprevious":
+			LOGGER.info("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getPrevious();
@@ -62,170 +65,169 @@ public class Friends extends Connect{
 				e.printStackTrace();
 			}
 			break;
-			
+
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
 		}
-		
+
 		return res;
 	}
-	
+
 	private void Add() {
 		friendId = fm.getFriendId();
 		fullName = fm.getFullName();
 		mobile = fm.getMobile();
 		userId = fm.getUserId();
-		
-		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id) values (?,?,?,?)";		 //
+
+		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id) values (?,?,?,?)"; //
 		String sql1 = "SELECT * FROM friends WHERE friend_user_id=? AND friend_id=?";
 		getConnection();
-		
+
 		try {
-			LOGGER.fine("Creating Select statement.....");
+			LOGGER.info("Creating Select statement.....");
 			PreparedStatement stmt1 = connection.prepareStatement(sql1);
 			stmt1.setString(1, userId);
 			stmt1.setString(2, friendId);
-			
+
 			ResultSet rs = stmt1.executeQuery();
-			
+
 			while (rs.next()) {
 				check = rs.getString("friend_id");
 			}
 			if (check == null) {
-				LOGGER.fine("Creating statement.....");
+				LOGGER.info("Creating statement.....");
 				PreparedStatement stmt = connection.prepareStatement(sql);
-				
-				LOGGER.fine("Statement created. Executing query.....");
+
+				LOGGER.info("Statement created. Executing query.....");
 				stmt.setString(1, friendId);
 				stmt.setString(2, fullName);
-				stmt.setString(3,mobile);
-				stmt.setString(4,userId);
+				stmt.setString(3, mobile);
+				stmt.setString(4, userId);
 				stmt.executeUpdate();
-				LOGGER.fine("Entry added into friends table");
-				
+
 				message = "Entry added into friends table";
+				LOGGER.warning(message);
 				Code = 10;
 				Id = friendId;
-				
-				try{
-						AwsSESEmail newE = new AwsSESEmail();
-						String source = "@api";
-						if (friendId.contains("@fb") || friendId.contains("@google")) {
-							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,source);
-						}else {
-							source = "@email";
-							newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM,fm,source);
-							newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO,fm);
-						}
-					}catch(Exception e){
-					  e.printStackTrace();
+
+				try {
+					AwsSESEmail newE = new AwsSESEmail();
+					String source = "@api";
+					if (friendId.contains("@fb") || friendId.contains("@google")) {
+						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
+					} else {
+						source = "@email";
+						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
+						newE.send(friendId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO, fm);
 					}
-			}else{
-				LOGGER.fine("Friend Already exists.....");
-				res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				LOGGER.warning("Friend Already exists.....");
+				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 			}
-			
-			
-			//res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
-			res.setData(Code,Id,message);
+
+			// res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
+			res.setData(Code, Id, message);
 		} catch (SQLException e) {
-			System.out.println("Couldn't create statement");
+			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void Delete() {
 		friendId = fm.getFriendId();
 		userId = fm.getUserId();
 		check = null;
-		LOGGER.fine("Inside delete method....");
-		
+		LOGGER.info("Inside delete method....");
+
 		getConnection();
-		String sql = "DELETE FROM friends WHERE friend_id=? AND friend_user_id=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";			//
-		
+		String sql = "DELETE FROM friends WHERE friend_id=? AND friend_user_id=?"; //
+		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?"; //
+
 		try {
-			LOGGER.fine("Creating statement...");
-			
+			LOGGER.info("Creating statement...");
+
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
 			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				check = rs.getString("friend_id");
 			}
-			
-			if(check != null) {
+
+			if (check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
-				
-				LOGGER.fine("Statement created. Executing delete query on ..." + check);
+
+				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, friendId);
 				stmt.setString(2, userId);
 				stmt.executeUpdate();
-				message = "operation successfull deleted friend id : "+friendId;
+				message = "operation successfull deleted friend id : " + friendId;
+				LOGGER.warning(message);
 				Code = 11;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-				
-				try{
+
+				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(friendId,FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_FROM,fm);
-					newE.send(userId,FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_TO,fm);
-					}catch(Exception e){
-					  e.printStackTrace();
-					}
-			}
-			else{
-				LOGGER.fine("Entry not found in database!!");
+					newE.send(friendId, FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_FROM, fm);
+					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_FRIEND_TO, fm);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void Edit() {
 		friendId = fm.getFriendId();
 		fullName = fm.getFullName();
 		mobile = fm.getMobile();
 		userId = fm.getUserId();
 		check = null;
-		
-		LOGGER.fine("inside edit method");
+
+		LOGGER.info("inside edit method");
 		getConnection();
-		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=? AND friend_user_id=?";			//
-		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?";								//
-		
+		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=? AND friend_user_id=?"; //
+		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?"; //
+
 		try {
-			LOGGER.fine("Creating Statement....");
+			LOGGER.info("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
 			stmt2.setString(2, userId);
 			ResultSet rs = stmt2.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				check = rs.getString("friend_id");
 			}
-			
-			if(check != null) {
+
+			if (check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
-				
-				LOGGER.fine("Statement created. Executing edit query on ..." + check);
+
+				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
-				stmt.setString(2,mobile);
-				stmt.setString(3,friendId);
+				stmt.setString(2, mobile);
+				stmt.setString(3, friendId);
 				stmt.setString(4, userId);
 				stmt.executeUpdate();
-				message = "operation successfull edited friends id : "+friendId;
+				message = "operation successfull edited friends id : " + friendId;
+				LOGGER.warning(message);
 				Code = 12;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-			}
-			else{
-				LOGGER.fine("Entry not found in database!!");
+			} else {
+				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
@@ -233,101 +235,100 @@ public class Friends extends Connect{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void getNext() {
 		check = null;
 		Id = fm.getFriendId();
-		LOGGER.fine("Inside GetNext method");
-		String sql = "SELECT * FROM friends WHERE friend_user_id = ? AND friend_id>? ORDER BY friend_id LIMIT 1";		//
-		
+		LOGGER.info("Inside GetNext method");
+		String sql = "SELECT * FROM friends WHERE friend_user_id = ? AND friend_id>? ORDER BY friend_id LIMIT 1"; //
+
 		getConnection();
 		try {
-			LOGGER.fine("Creating a statement .....");
+			LOGGER.info("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing getNext query...");
+
+			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, Id);
 			stmt.setString(2, token);
-			
+
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				JSONObject json = new JSONObject();
-				json.put("friendId",rs.getString("friend_id"));
-				json.put("fullName",rs.getString("friend_full_name"));
-				json.put("mobile",rs.getString("friend_mobile"));
-				json.put("userId",rs.getString("friend_user_id"));
-				
+				json.put("friendId", rs.getString("friend_id"));
+				json.put("fullName", rs.getString("friend_full_name"));
+				json.put("mobile", rs.getString("friend_mobile"));
+				json.put("userId", rs.getString("friend_user_id"));
+
 				message = json.toString();
-				LOGGER.fine(message);
+				LOGGER.info(message);
 				check = rs.getString("friend_id");
 			}
-			
-			if(check != null ) {
+
+			if (check != null) {
 				Code = FLS_SUCCESS;
 				Id = check;
 			}
-			
+
 			else {
 				Id = "0";
 				message = FLS_END_OF_DB_M;
 				Code = FLS_END_OF_DB;
 			}
-			
-			res.setData(Code,Id,message);
+
+			res.setData(Code, Id, message);
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	private void getPrevious() {
 		check = null;
 		Id = fm.getFriendId();
-		LOGGER.fine("Inside GetPrevious method");
-		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id<? ORDER BY friend_user_id DESC LIMIT 1";			//
-		
+		LOGGER.info("Inside GetPrevious method");
+		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id<? ORDER BY friend_user_id DESC LIMIT 1"; //
+
 		getConnection();
 		try {
-			LOGGER.fine("Creating a statement .....");
+			LOGGER.info("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			LOGGER.fine(message);
 			stmt.setString(1, Id);
 			stmt.setString(2, token);
-			
+
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				JSONObject json = new JSONObject();
-				json.put("friendId",rs.getString("friend_id"));
-				json.put("fullName",rs.getString("friend_full_name"));
-				json.put("mobile",rs.getString("friend_mobile"));
-				json.put("userId",rs.getString("friend_user_id"));
-				
+				json.put("friendId", rs.getString("friend_id"));
+				json.put("fullName", rs.getString("friend_full_name"));
+				json.put("mobile", rs.getString("friend_mobile"));
+				json.put("userId", rs.getString("friend_user_id"));
+
 				message = json.toString();
-				LOGGER.fine(message);
+				LOGGER.info(message);
 				check = rs.getString("friend_id");
 			}
-			
-			if(check != null ) {
+
+			if (check != null) {
 				Code = FLS_SUCCESS;
 				Id = check;
 			}
-			
+
 			else {
 				Id = "0";
 				message = FLS_END_OF_DB_M;
 				Code = FLS_END_OF_DB;
 			}
-			
-			res.setData(Code,Id,message);
+
+			res.setData(Code, Id, message);
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}	
+		}
 	}
 }

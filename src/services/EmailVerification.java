@@ -19,14 +19,20 @@ import app.EmailVerificationHandler;
 import app.NotImplementedException;
 import pojos.EmailVerificationReqObj;
 import pojos.EmailVerificationResObj;
+import util.FlsLogger;
 
 @WebServlet(description = "Email Verification", urlPatterns = { "/EmailVerification" })
 public class EmailVerification extends HttpServlet {
+
+	private FlsLogger LOGGER = new FlsLogger(EmailVerification.class.getName());
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse)
 			throws ServletException, IOException {
 		// HTTP request to Service request pojo
+
+		LOGGER.info("Inside Post Method");
 
 		ObjectMapper mapper = new ObjectMapper();
 		EmailVerificationReqObj request = mapper.readValue(httprequest.getInputStream(), EmailVerificationReqObj.class);
@@ -48,8 +54,9 @@ public class EmailVerification extends HttpServlet {
 
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			System.out.println("EmailVerification process method not implemented");
-			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "EmailVerification process method not implemented");
+			LOGGER.warning("EmailVerification process method not implemented");
+			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,
+					"EmailVerification process method not implemented");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

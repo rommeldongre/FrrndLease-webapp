@@ -332,10 +332,6 @@
 		// Facebook signup ends here----------------------------------------
 		
 		function signupContinued(msg){
-			// Alert user to check the email for the activation link if signupstatus is pending!!
-			if(signupstatus == "email_pending"){
-				alert("Please check your email to click on the link to activate your account!!");
-			}
 			
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
 			if(msg != 200 && signupstatus !== "email_pending"){
@@ -387,7 +383,10 @@
 				if(reasonforLogIn == "Facebook"){
 				div.innerHTML = "Welcome to fRRndLease, You have "+friends+" Facebook friends in your fRRndLease friendlist";
 				}else{
-				div.innerHTML = "Welcome to fRRndLease";
+					if(signupstatus == "email_pending")
+						div.innerHTML = "Please check your email to click on the link to activate your account!!";
+					else
+						div.innerHTML = "Welcome to fRRndLease";
 				}
 			}
 			

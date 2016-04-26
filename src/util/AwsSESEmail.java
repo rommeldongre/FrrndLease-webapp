@@ -23,6 +23,7 @@ import pojos.ItemsModel;
 import pojos.LeasesModel;
 import pojos.RequestsModel;
 import pojos.UsersModel;
+import tableOps.Wishlist;
 import util.FlsSendMail.Fls_Enum;
 
 import com.amazonaws.AmazonClientException;
@@ -39,6 +40,8 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.amazonaws.auth.BasicAWSCredentials;
 
 public class AwsSESEmail {
+	
+	private static FlsLogger LOGGER = new FlsLogger(AwsSESEmail.class.getName());
 
 	static final String FROM = "BlueMarble@frrndlease.com"; // Replace with your
 															// "From" address.
@@ -52,9 +55,9 @@ public class AwsSESEmail {
 
 	private static String user_id;
 	
-	private static String EMAIL_VERIFICATION_URL_DEVLOPMENT = "http://localhost:8080/flsv2/emailverification.html";
+	private static String EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
 	
-//	private static String EMAIL_VERIFICATION_URL_PRODUCTION = "";
+//	private static String EMAIL_VERIFICATION_URL = "";
 
 	/*
 	 * Before running the code: Fill in your AWS access credentials in the
@@ -80,7 +83,7 @@ public class AwsSESEmail {
 			BODY = "<body>Hello " + um.getFullName()
 					+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
 					+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
-					+ "<a href='"+EMAIL_VERIFICATION_URL_DEVLOPMENT+"?token="+um.getActivation()+"'>"+EMAIL_VERIFICATION_URL_DEVLOPMENT+"?token="+um.getActivation()+"</a>"
+					+ "<a href='"+EMAIL_VERIFICATION_URL+"?token="+um.getActivation()+"'>"+EMAIL_VERIFICATION_URL+"?token="+um.getActivation()+"</a>"
 					+ "<br/></body>";
 			break;
 		case FLS_MAIL_REGISTER:
@@ -101,7 +104,9 @@ public class AwsSESEmail {
 			BODY = ("<body>You have deleted the following item on fRRndLease<br/> <br/>" + " Title : " + idom.getTitle()
 					+ "<br/>" + " Category : " + idom.getCategory() + "<br/>" + " Description : "
 					+ idom.getDescription() + "<br/>" + " Lease Value : " + idom.getLeaseValue() + "<br/>"
-					+ " Lease Term : " + idom.getLeaseTerm() + "<br/>" + " Status : " + idom.getStatus() + "</body>");
+					+ " Lease Term : " + idom.getLeaseTerm() + "<br/>" + " Status : " + idom.getStatus() + "<br/>"
+					+ "<img src='" + idom.getImage() + "' alt='Just a pic' width='200' height='200'></img>"
+					+"</body>");
 			break;
 
 		case FLS_MAIL_POST_ITEM:
@@ -110,7 +115,9 @@ public class AwsSESEmail {
 			BODY = ("<body  onload='start()'>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
-					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "</body>");
+					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "<br/>"
+					+ "<img src=\"" + iom.getImage() + "\" alt=\"Just a pic\" width=\"200\" height=\"200\">"
+					+ "</body>");
 			break;
 
 		case FLS_MAIL_ADD_FRIEND_FROM:
@@ -240,7 +247,7 @@ public class AwsSESEmail {
 				.withMessage(message);
 
 		try {
-			System.out.println("====> Attempting to send an email through Amazon SES by using the AWS SDK for Java...");
+			LOGGER.info("====> Attempting to send an email through Amazon SES by using the AWS SDK for Java...");
 
 			try {
 				BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAITVFAR4O56SFRG6A",
@@ -248,7 +255,7 @@ public class AwsSESEmail {
 				// Instantiate an Amazon SES client, which will make the service
 				// call with the supplied AWS credentials.
 				AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(credentials);
-				System.out.println("=====> Created client" + client);
+				LOGGER.info("=====> Created client" + client);
 
 				// Choose the AWS region of the Amazon SES endpoint you want to
 				// connect to. Note that your production
@@ -263,23 +270,23 @@ public class AwsSESEmail {
 				// Region REGION = Region.getRegion(Regions.US_EAST_1);
 				Region REGION = Region.getRegion(Regions.US_WEST_2);
 				client.setRegion(REGION);
-				System.out.println("=====> got REGION" + REGION);
+				LOGGER.info("=====> got REGION" + REGION);
 
 				// Send the email.
 				client.sendEmail(request);
-				System.out.println("====> Email sent!");
+				LOGGER.warning("====> Email sent!");
 			} catch (Throwable e) {
 				// Catching throwable instead of Exception so that we also catch
 				// Errors. Not
 				// needed normally but since we're debugging we don't want to
 				// miss anything
-				System.out.println("====> " + e.getMessage());
+				LOGGER.warning("====> " + e.getMessage());
 				e.printStackTrace(System.out);
 			}
 
 		} catch (Exception ex) {
-			System.out.println("====> The email was not sent.");
-			System.out.println("====> Error message: " + ex.getMessage());
+			LOGGER.warning("====> The email was not sent.");
+			LOGGER.warning("====> Error message: " + ex.getMessage());
 		}
 	}
 }
