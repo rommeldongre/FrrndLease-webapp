@@ -9,172 +9,177 @@ import org.json.JSONObject;
 
 import connect.Connect;
 import pojos.LeaseTermsModel;
+import util.FlsLogger;
 import adminOps.Response;
 
 public class LeaseTerms extends Connect {
-	private String check=null, Id=null,token,name,description,operation,message;
-	private int Code,duration;
+
+	private FlsLogger LOGGER = new FlsLogger(LeaseTerms.class.getName());
+
+	private String check = null, Id = null, token, name, description, operation, message;
+	private int Code, duration;
 	private LeaseTermsModel ltm;
 	private Response res = new Response();
-	
+
 	public Response selectOp(String Operation, LeaseTermsModel ltml, JSONObject obj) {
 		operation = Operation.toLowerCase();
 		ltm = ltml;
-		
-		switch(operation) {
-		
-		case "add" :
-			LOGGER.fine("Add op is selected..");
+
+		switch (operation) {
+
+		case "add":
+			LOGGER.info("Add op is selected..");
 			Add();
 			break;
-			
-		case "delete" : 
-			LOGGER.fine("Delete operation is selected");
+
+		case "delete":
+			LOGGER.info("Delete operation is selected");
 			Delete();
 			break;
-			
-		case "edit" :
-			LOGGER.fine("Edit operation is selected.");
+
+		case "edit":
+			LOGGER.info("Edit operation is selected.");
 			Edit();
 			break;
-			
-		case "getnext" :
-			LOGGER.fine("Get Next operation is selected.");
+
+		case "getnext":
+			LOGGER.info("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getNext();
 			} catch (JSONException e) {
-				 res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			break;
-			
-		case "getprevious" :
-			LOGGER.fine("Get Next operation is selected.");
+
+		case "getprevious":
+			LOGGER.info("Get Next operation is selected.");
 			try {
 				token = obj.getString("token");
 				getPrevious();
 			} catch (JSONException e) {
-				 res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
+				res.setData(FLS_JSON_EXCEPTION, String.valueOf(token), FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
 			break;
-			
+
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
 		}
-		
+
 		return res;
 	}
-	
+
 	private void Add() {
 		name = ltm.getName();
 		description = ltm.getDescription();
 		duration = ltm.getDuration();
-		
-		String sql = "insert into leaseterms (term_name,term_desc,term_duration) values (?,?,?)";		 //
+
+		String sql = "insert into leaseterms (term_name,term_desc,term_duration) values (?,?,?)"; //
 		getConnection();
-		
+
 		try {
-			LOGGER.fine("Creating statement.....");
+			LOGGER.info("Creating statement.....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing query.....");
+
+			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, name);
 			stmt.setString(2, description);
 			stmt.setInt(3, duration);
 			stmt.executeUpdate();
-			LOGGER.fine("Entry added into leasetrems table");
-			
+			LOGGER.info("Entry added into leasetrems table");
+
 			message = "Entry added into leaseTerms table";
+			LOGGER.warning(message);
 			Code = 20;
 			Id = name;
-			
-			res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
+
+			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 		} catch (SQLException e) {
-			System.out.println("Couldn't create statement");
+			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void Delete() {
 		name = ltm.getName();
 		check = null;
-		LOGGER.fine("Inside delete method....");
-		
+		LOGGER.info("Inside delete method....");
+
 		getConnection();
-		String sql = "DELETE FROM leaseterms WHERE term_name=?";			//
-		String sql2 = "SELECT * FROM leaseterms WHERE term_name=?";			//
-		
+		String sql = "DELETE FROM leaseterms WHERE term_name=?"; //
+		String sql2 = "SELECT * FROM leaseterms WHERE term_name=?"; //
+
 		try {
-			LOGGER.fine("Creating statement...");
-			
+			LOGGER.info("Creating statement...");
+
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				check = rs.getString("term_name");
 			}
-			
-			if(check != null) {
+
+			if (check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
-				
-				LOGGER.fine("Statement created. Executing delete query on ..." + check);
+
+				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, name);
 				stmt.executeUpdate();
-				message = "operation successfull deleted leaseTerm Req User id : "+name;
+				message = "operation successfull deleted leaseTerm Req User id : " + name;
+				LOGGER.warning(message);
 				Code = 21;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-			}
-			else{
-				System.out.println("Entry not found in database!!");
+			} else {
+				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void Edit() {
 		name = ltm.getName();
 		description = ltm.getDescription();
 		duration = ltm.getDuration();
 		check = null;
-		
-		LOGGER.fine("inside edit method");
+
+		LOGGER.info("inside edit method");
 		getConnection();
-		String sql = "UPDATE leaseterms SET term_desc=?,term_duration=? WHERE term_name=?";			//
-		String sql2 = "SELECT * FROM leaseterms WHERE term_name=?";								//
-		
+		String sql = "UPDATE leaseterms SET term_desc=?,term_duration=? WHERE term_name=?"; //
+		String sql2 = "SELECT * FROM leaseterms WHERE term_name=?"; //
+
 		try {
-			LOGGER.fine("Creating Statement....");
+			LOGGER.info("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, name);
 			ResultSet rs = stmt2.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				check = rs.getString("term_name");
 			}
-			
-			if(check != null) {
+
+			if (check != null) {
 				PreparedStatement stmt = connection.prepareStatement(sql);
-				
-				LOGGER.fine("Statement created. Executing edit query on ..." + check);
+
+				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, description);
 				stmt.setInt(2, duration);
-				stmt.setString(3,name);
+				stmt.setString(3, name);
 				stmt.executeUpdate();
-				message = "operation successfull edited leaseterm Req User id : "+name;
+				message = "operation successfull edited leaseterm Req User id : " + name;
+				LOGGER.warning(message);
 				Code = 22;
 				Id = check;
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-			}
-			else{
-				System.out.println("Entry not found in database!!");
+			} else {
+				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
 		} catch (SQLException e) {
@@ -182,111 +187,111 @@ public class LeaseTerms extends Connect {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void getNext() {
 		check = null;
-		LOGGER.fine("Inside GetNext method");
-		String sql = "SELECT * FROM leaseterms WHERE term_name > ? ORDER BY term_name LIMIT 1";		//
-		
+		LOGGER.info("Inside GetNext method");
+		String sql = "SELECT * FROM leaseterms WHERE term_name > ? ORDER BY term_name LIMIT 1"; //
+
 		getConnection();
 		try {
-			LOGGER.fine("Creating a statement .....");
+			LOGGER.info("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing getNext query...");
+
+			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
-			
+
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("termName", rs.getString("term_name"));
 				json.put("termDesc", rs.getString("term_desc"));
 				json.put("termDuration", rs.getInt("term_duration"));
-				
+
 				message = json.toString();
-				System.out.println(message);
+				LOGGER.warning(message);
 				check = rs.getString("term_name");
 			}
-			
-			if(check != null ) {
+
+			if (check != null) {
 				Code = FLS_SUCCESS;
 				Id = check;
 			}
-			
+
 			else {
 				Id = "0";
 				message = FLS_END_OF_DB_M;
 				Code = FLS_END_OF_DB;
 			}
-			
-			res.setData(Code,Id,message);
+
+			res.setData(Code, Id, message);
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	private void getPrevious() {
 		check = null;
-		LOGGER.fine("Inside GetPrevious method");
-		String sql = "SELECT * FROM leaseterms WHERE term_name < ? ORDER BY term_name DESC LIMIT 1";			//
-		
+		LOGGER.info("Inside GetPrevious method");
+		String sql = "SELECT * FROM leaseterms WHERE term_name < ? ORDER BY term_name DESC LIMIT 1"; //
+
 		getConnection();
 		try {
-			LOGGER.fine("Creating a statement .....");
+			LOGGER.info("Creating a statement .....");
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			
-			LOGGER.fine("Statement created. Executing getPrevious query...");
+
+			LOGGER.info("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
-			
+
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("termName", rs.getString("term_name"));
 				json.put("termDesc", rs.getString("term_desc"));
 				json.put("termDuration", rs.getInt("term_duration"));
-				
+
 				message = json.toString();
-				LOGGER.fine(message);
+				LOGGER.info(message);
 				check = rs.getString("term_name");
 			}
-			
-			if(check != null ) {
+
+			if (check != null) {
 				Code = FLS_SUCCESS;
 				Id = check;
 			}
-			
+
 			else {
 				Id = "0";
 				message = FLS_END_OF_DB_M;
 				Code = FLS_END_OF_DB;
 			}
-			
-			res.setData(Code,Id,message);
+
+			res.setData(Code, Id, message);
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (JSONException e) {
-			res.setData(FLS_JSON_EXCEPTION,"0",FLS_JSON_EXCEPTION_M);
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}	
+		}
 	}
-	
-	public int getDuration (String term) {
-		int days=0;
-		LOGGER.fine("Inside getDuration");
+
+	public int getDuration(String term) {
+		int days = 0;
+		LOGGER.info("Inside getDuration");
 		String sql = "SELECT term_duration FROM leaseterms WHERE term_name=?";
 		getConnection();
-		
+
 		try {
-			LOGGER.fine("executing getDuration query...");
+			LOGGER.info("executing getDuration query...");
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, term);
 			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				days = rs.getInt("term_duration");
 			}
 		} catch (SQLException e) {

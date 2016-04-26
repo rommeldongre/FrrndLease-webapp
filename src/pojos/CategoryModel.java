@@ -3,7 +3,12 @@ package pojos;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import util.FlsLogger;
+
 public class CategoryModel {
+	
+	private FlsLogger LOGGER = new FlsLogger(CategoryModel.class.getName());
+	
 	private String name,description,parent,child;
 	private JSONObject obj;
 	
@@ -19,7 +24,7 @@ public class CategoryModel {
 			parent = obj.getString("parent");
 			child = obj.getString("child");
 		} catch (JSONException e) {
-			System.out.println("Couldn't parse json");
+			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
 		}
 	}

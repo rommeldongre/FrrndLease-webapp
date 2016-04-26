@@ -1,6 +1,7 @@
 package services;
 
 import errorCat.ErrorCat;
+import util.FlsLogger;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,6 +23,9 @@ import adminOps.Response;
  */
 @WebServlet("/GetCategoryList")
 public class GetCategoryList extends HttpServlet {
+	
+	private FlsLogger LOGGER = new FlsLogger(GetCategoryList.class.getName());
+	
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh = new AdminOpsHandler();
 	private Response res = new Response();  
@@ -29,14 +33,14 @@ public class GetCategoryList extends HttpServlet {
    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json");
-		System.out.println("Inside GET Method");
+		LOGGER.info("Inside GET Method");
 		
 		doPost(request,response);
 	}
 
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Inside POST Method");
+		LOGGER.info("Inside POST Method");
 		String table;
 		PrintWriter out = response.getWriter();
 
@@ -73,7 +77,7 @@ public class GetCategoryList extends HttpServlet {
 			out.print(json);
 			
 		} catch (JSONException e) {
-			System.out.println("Couldn't parse/retrieve JSON");
+			LOGGER.warning("Couldn't parse/retrieve JSON");
 			res.setData(204, "0", "JSON request couldn't be parsed/retrieved (JSON Exception)");
 			e.printStackTrace();
 		}
