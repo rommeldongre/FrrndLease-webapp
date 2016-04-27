@@ -86,7 +86,7 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-			System.out.println("Error Check Stacktrace");
+			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		}
 		LOGGER.info("Finished process method ");

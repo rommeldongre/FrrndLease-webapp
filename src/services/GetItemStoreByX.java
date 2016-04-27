@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import pojos.GetItemStoreByXReqObj;
 import pojos.GetItemStoreByXResObj;
+import util.FlsLogger;
 import app.GetItemStoreByXHandler;
 import app.NotImplementedException;
 
@@ -25,13 +26,16 @@ import app.NotImplementedException;
  */
 @WebServlet(description = "List Item Requests for a given UserId", urlPatterns = { "/GetItemStoreByX" })
 public class GetItemStoreByX extends HttpServlet {
+	
+	private FlsLogger LOGGER = new FlsLogger(GetItemStoreByX.class.getName());
+	
 	private static final long serialVersionUID = 1L;
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-			System.out.println("Inside POST method");
+			LOGGER.info("Inside POST method");
 			//HTTP request to Service request pojo 
 			ObjectMapper mapper = new ObjectMapper();
 			GetItemStoreByXReqObj request = mapper.readValue(httprequest.getInputStream(), GetItemStoreByXReqObj.class);
@@ -49,11 +53,11 @@ public class GetItemStoreByX extends HttpServlet {
 				httpresponse.setContentType("text/json");				
 				httpresponse.setContentType("application/json; charset=UTF-8");	
 				mapper.writeValue(out, Response);
-				System.out.println("Finished POST method " + Response.getTitle());
+				LOGGER.info("Finished POST method " + Response.getTitle());
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
-				System.out.println("GetItemStore process method not implemented");
+				LOGGER.warning("GetItemStore process method not implemented");
 				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetItemStore process method not implemented");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
