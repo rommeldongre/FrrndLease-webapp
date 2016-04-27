@@ -45,6 +45,7 @@ import pojos.RequestsModel;
 import pojos.UsersModel;
 import tableOps.Wishlist;
 import util.FlsSendMail.Fls_Enum;
+import util.FlsConfig;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
@@ -74,10 +75,8 @@ public class AwsSESEmail {
 	static String SUBJECT;
 
 	private static String user_id;
-
-	private static String EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
-
-	// private static String EMAIL_VERIFICATION_URL = "";
+	static String env_config  =  FlsConfig.env;
+	
 
 	/*
 	 * Before running the code: Fill in your AWS access credentials in the
@@ -98,6 +97,13 @@ public class AwsSESEmail {
 		// this variable is used to store the image
 		File imageFile = null;
 
+		if(env_config.equals("dev")){
+			EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
+		} else {
+			EMAIL_VERIFICATION_URL = "http://www.frrndlease.com/emailverification.html";
+
+		}
+		
 		// Build Email Subject and Body
 		switch (fls_enum) {
 		case FLS_MAIL_SIGNUP_VALIDATION:
