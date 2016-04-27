@@ -27,15 +27,10 @@ public class FlsConfig extends Connect{
 			sql_stmt = connection.prepareStatement(sql);
 			
 			ResultSet dbResponse = sql_stmt.executeQuery();
-			System.out.println("executed query");
 			
 			if(dbResponse.next()){
 				env = dbResponse.getString("value");
-				
-			}else {
-				env ="Env is null";
 			}
-			
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -44,7 +39,7 @@ public class FlsConfig extends Connect{
 		if(env== null){
 			System.out.println("env variable is null");
 		}else{
-		System.out.println(env);
+			System.out.println(env);
 		}
 		
 		//env return
@@ -54,25 +49,16 @@ public class FlsConfig extends Connect{
 	public boolean setEnv () {
 		
 		env = getEnv();
-		//env = env.toString();
 		
-		/*if (env.equals("dev")) {
-			//TODO: set up dev properties
-			System.out.println("valid env: "+env);
+		if (env !=null){
 			return true;
-		} else if (env == "live") {
-			//TODO: set up live properties
-			return true;
-		} else {
-			System.out.println("Invalid env: "+env);
+		}else{
 			return false;
-		}*/
-		return true;
+		}	
 	}
 	
 	int getDbBuild() {
 		
-		//TODO select value from config where option = "build"
 		try {
 			getConnection();
 			String build = null;
@@ -82,18 +68,11 @@ public class FlsConfig extends Connect{
 			sql_stmt = connection.prepareStatement(sql);
 			
 			ResultSet dbResponse = sql_stmt.executeQuery();
-			//System.out.println("executed build query");
 			
 			if(dbResponse.next()){
 				build = dbResponse.getString("value");
 				dbBuild = Integer.parseInt(build);
-				
-				//System.out.println(dbBuild);
-				
-			}else {
-				//env ="Env is null";
 			}
-			
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -106,16 +85,21 @@ public class FlsConfig extends Connect{
 		
 		dbBuild = getDbBuild();
 		
+		if(dbBuild== 0){
+			System.out.println("DB BUILD is 0");
+			return;
+		}
+		
+		if(dbBuild == appBuild){
+			System.out.println("dbBuild in sync");
+		}
+		
 		if (dbBuild < 2001) {
 			//do new things - noop for this build
 			
 			//TODO: update config set value = 2001 where option = "build"
 			dbBuild = 2001;
 		}
-		if(dbBuild == 2001){
-			System.out.println("dbBuild in sync");
-		}
-		
 		// add new build hooks one after the other in increasing order
 		
 		

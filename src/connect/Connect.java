@@ -30,16 +30,12 @@ public class Connect extends ErrorCat {
 	protected static /* Connection */void getConnection() {
 
 		if (connection == null) {
-			System.out.println("Registering driver....");
 			try {
 				// Driver Registration
 				Class.forName(driver).newInstance();
-				System.out.println("Driver Registered successfully!!.");
 
 				// Initiate a connection
 				connection = DriverManager.getConnection(url, name, pass);
-				System.out.println("Connected to database!!!");
-
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				System.out.println("Couldnt register driver...");
 				e.printStackTrace();
