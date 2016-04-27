@@ -5,13 +5,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import errorCat.ErrorCat;
-import util.FlsLogger;
 
 public class Connect extends ErrorCat {
 
 	protected static Connection connection = null;
 
-	private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
+	//Cannot use LOGGER class because it is being used on startup 
+	//private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
 
 	// Local - Database
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
@@ -30,26 +30,25 @@ public class Connect extends ErrorCat {
 	protected static /* Connection */void getConnection() {
 
 		if (connection == null) {
-			LOGGER.info("Registering driver....");
+			System.out.println("Registering driver....");
 			try {
 				// Driver Registration
 				Class.forName(driver).newInstance();
-				LOGGER.info("Driver Registered successfully!!.");
+				System.out.println("Driver Registered successfully!!.");
 
 				// Initiate a connection
-				LOGGER.info("Connecting to database...");
 				connection = DriverManager.getConnection(url, name, pass);
-				LOGGER.info("Connected to database!!!");
+				System.out.println("Connected to database!!!");
 
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				System.out.println("Couldnt register driver...");
 				e.printStackTrace();
-				LOGGER.info("Couldnt register driver...");
 			} catch (SQLException e) {
+				System.out.println("Couldnt connect to database...");
 				e.printStackTrace();
-				LOGGER.info("Couldnt connect to database...");
 			}
 		} else {
-			LOGGER.info("Connection exists....");
+			System.out.println("Connection exists....");
 
 		}
 	}
