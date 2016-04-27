@@ -73,8 +73,6 @@ public class AwsSESEmail {
 	static String BODY;
 	static String SUBJECT;
 
-	private static File imageFile = null;
-
 	private static String user_id;
 
 	private static String EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
@@ -96,6 +94,9 @@ public class AwsSESEmail {
 		// Fls_Enum = fls_enum;
 		user_id = userId;
 		TO = userId;
+		
+		// this variable is used to store the image
+		File imageFile = null;
 
 		// Build Email Subject and Body
 		switch (fls_enum) {
@@ -128,7 +129,7 @@ public class AwsSESEmail {
 					+ idom.getDescription() + "<br/>" + " Lease Value : " + idom.getLeaseValue() + "<br/>"
 					+ " Lease Term : " + idom.getLeaseTerm() + "<br/>" + " Status : " + idom.getStatus() + "<br/>"
 					+ "<img src=\"cid:image\" alt=" + idom.getTitle() + " ></img>" + "</body>");
-			convertBinaryToImage(idom.getImage());
+			imageFile = convertBinaryToImage(idom.getImage());
 			break;
 
 		case FLS_MAIL_POST_ITEM:
@@ -139,7 +140,7 @@ public class AwsSESEmail {
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
 					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "<br/>"
 					+ "<img src=\"cid:image\" alt=" + iom.getTitle() + " ></img>" + "</body>");
-			convertBinaryToImage(iom.getImage());
+			imageFile = convertBinaryToImage(iom.getImage());
 			break;
 
 		case FLS_MAIL_ADD_FRIEND_FROM:
@@ -274,7 +275,7 @@ public class AwsSESEmail {
 			bodyPart.setContent(BODY, "text/html");
 			multipart.addBodyPart(bodyPart);
 			
-			// Image part of the email if it contains an email
+			// Image part if the message has an image
 			if (imageFile != null) {
 				MimeBodyPart imagePart = new MimeBodyPart();
 				LOGGER.warning("Sending Image!!");
@@ -339,7 +340,7 @@ public class AwsSESEmail {
 		}
 	}
 
-	private static void convertBinaryToImage(String imageString) {
+	private static File convertBinaryToImage(String imageString) {
 		// TODO Auto-generated method stub
 
 		try {
@@ -355,11 +356,14 @@ public class AwsSESEmail {
 			bis.close();
 
 			// write the image to a file
-			imageFile = new File("image.png");
-			ImageIO.write(image, "png", imageFile);
+			File file = new File("ItemImage.png");
+			ImageIO.write(image, "png", file);
+			
+			return file;
 		} catch (IOException e) {
 			LOGGER.warning("Not able to decode the image");
 			e.printStackTrace();
 		}
+		return null;
 	}
 }
