@@ -97,7 +97,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 				im.getData(obj1);
 			} catch (JSONException e) {
-				System.out.println("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
+				LOGGER.warning("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
 				e.printStackTrace();
 			}
 			LOGGER.info("Calling Amazon Wishlist Function ");

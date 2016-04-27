@@ -15,8 +15,28 @@ package util;
  */
 
 import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.Properties;
+
+import javax.mail.Address;
+import javax.mail.Session;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.imageio.ImageIO;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.xml.bind.DatatypeConverter;
 
 import pojos.FriendsModel;
 import pojos.ItemsModel;
@@ -35,12 +55,12 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
 import com.amazonaws.services.simpleemail.model.Body;
 import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
-import com.amazonaws.services.simpleemail.model.Message;
-import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.amazonaws.services.simpleemail.model.RawMessage;
+import com.amazonaws.services.simpleemail.model.SendRawEmailRequest;
 import com.amazonaws.auth.BasicAWSCredentials;
 
 public class AwsSESEmail {
-	
+
 	private static FlsLogger LOGGER = new FlsLogger(AwsSESEmail.class.getName());
 
 	static final String FROM = "BlueMarble@frrndlease.com"; // Replace with your
@@ -54,10 +74,10 @@ public class AwsSESEmail {
 	static String SUBJECT;
 
 	private static String user_id;
-	
+
 	private static String EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
-	
-//	private static String EMAIL_VERIFICATION_URL = "";
+
+	// private static String EMAIL_VERIFICATION_URL = "";
 
 	/*
 	 * Before running the code: Fill in your AWS access credentials in the
@@ -74,6 +94,9 @@ public class AwsSESEmail {
 		// Fls_Enum = fls_enum;
 		user_id = userId;
 		TO = userId;
+		
+		// this variable is used to store the image
+		File imageFile = null;
 
 		// Build Email Subject and Body
 		switch (fls_enum) {
@@ -83,8 +106,8 @@ public class AwsSESEmail {
 			BODY = "<body>Hello " + um.getFullName()
 					+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
 					+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
-					+ "<a href='"+EMAIL_VERIFICATION_URL+"?token="+um.getActivation()+"'>"+EMAIL_VERIFICATION_URL+"?token="+um.getActivation()+"</a>"
-					+ "<br/></body>";
+					+ "<a href='" + EMAIL_VERIFICATION_URL + "?token=" + um.getActivation() + "'>"
+					+ EMAIL_VERIFICATION_URL + "?token=" + um.getActivation() + "</a>" + "<br/></body>";
 			break;
 		case FLS_MAIL_REGISTER:
 			UsersModel uom = (UsersModel) obj;
@@ -105,19 +128,19 @@ public class AwsSESEmail {
 					+ "<br/>" + " Category : " + idom.getCategory() + "<br/>" + " Description : "
 					+ idom.getDescription() + "<br/>" + " Lease Value : " + idom.getLeaseValue() + "<br/>"
 					+ " Lease Term : " + idom.getLeaseTerm() + "<br/>" + " Status : " + idom.getStatus() + "<br/>"
-					+ "<img src='" + idom.getImage() + "' alt='Just a pic' width='200' height='200'></img>"
-					+"</body>");
+					+ "<img src=\"cid:image\" alt=" + idom.getTitle() + " ></img>" + "</body>");
+			imageFile = convertBinaryToImage(idom.getImage());
 			break;
 
 		case FLS_MAIL_POST_ITEM:
 			ItemsModel iom = (ItemsModel) obj;
 			SUBJECT = ("[fRRndLease] Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
-			BODY = ("<body  onload='start()'>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
+			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
 					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "<br/>"
-					+ "<img src=\"" + iom.getImage() + "\" alt=\"Just a pic\" width=\"200\" height=\"200\">"
-					+ "</body>");
+					+ "<img src=\"cid:image\" alt=" + iom.getTitle() + " ></img>" + "</body>");
+			imageFile = convertBinaryToImage(iom.getImage());
 			break;
 
 		case FLS_MAIL_ADD_FRIEND_FROM:
@@ -231,22 +254,48 @@ public class AwsSESEmail {
 			break;
 		}
 
-		// Construct an object to contain the recipient address.
-		Destination destination = new Destination().withToAddresses(new String[] { TO });
-
-		// Create the subject and body of the message.
-		Content subject = new Content().withData(SUBJECT);
-		Content textHtml = new Content().withData(BODY);
-		Body body = new Body().withHtml(textHtml);
-
-		// Create a message with the specified subject and body.
-		Message message = new Message().withSubject(subject).withBody(body);
-
-		// Assemble the email.
-		SendEmailRequest request = new SendEmailRequest().withSource(FROM).withDestination(destination)
-				.withMessage(message);
-
 		try {
+
+			// getting a default session
+			Session session = Session.getDefaultInstance(new Properties());
+
+			// mime message type from javax.mail library
+			MimeMessage message = new MimeMessage(session);
+			message.setSubject(SUBJECT, "UTF-8");
+
+			// setting the basic properties of the email message
+			message.setFrom(new InternetAddress(FROM));
+			message.setReplyTo(new Address[] { new InternetAddress(FROM) });
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
+
+			Multipart multipart = new MimeMultipart("related");
+			
+			// Body part of the email
+			MimeBodyPart bodyPart = new MimeBodyPart();
+			bodyPart.setContent(BODY, "text/html");
+			multipart.addBodyPart(bodyPart);
+			
+			// Image part if the message has an image
+			if (imageFile != null) {
+				MimeBodyPart imagePart = new MimeBodyPart();
+				LOGGER.warning("Sending Image!!");
+				imagePart.attachFile(imageFile);
+				imagePart.setContentID("<image>");
+				imagePart.setDisposition(MimeBodyPart.INLINE);
+				multipart.addBodyPart(imagePart);
+				imageFile = null;
+			}
+
+			message.setContent(multipart);
+
+			// converting the mime message into ram message
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			message.writeTo(outputStream);
+			RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
+
+			// Assemble the email.
+			SendRawEmailRequest request = new SendRawEmailRequest(rawMessage);
+
 			LOGGER.info("====> Attempting to send an email through Amazon SES by using the AWS SDK for Java...");
 
 			try {
@@ -273,7 +322,7 @@ public class AwsSESEmail {
 				LOGGER.info("=====> got REGION" + REGION);
 
 				// Send the email.
-				client.sendEmail(request);
+				client.sendRawEmail(request);
 				LOGGER.warning("====> Email sent!");
 			} catch (Throwable e) {
 				// Catching throwable instead of Exception so that we also catch
@@ -287,6 +336,34 @@ public class AwsSESEmail {
 		} catch (Exception ex) {
 			LOGGER.warning("====> The email was not sent.");
 			LOGGER.warning("====> Error message: " + ex.getMessage());
+			ex.printStackTrace(System.out);
 		}
+	}
+
+	private static File convertBinaryToImage(String imageString) {
+		// TODO Auto-generated method stub
+
+		try {
+			String[] i = imageString.split(",");
+			String binary = i[1];
+
+			BufferedImage image = null;
+			byte[] imageByte;
+
+			imageByte = DatatypeConverter.parseBase64Binary(binary);
+			ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+			image = ImageIO.read(bis);
+			bis.close();
+
+			// write the image to a file
+			File file = new File("ItemImage.png");
+			ImageIO.write(image, "png", file);
+			
+			return file;
+		} catch (IOException e) {
+			LOGGER.warning("Not able to decode the image");
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

@@ -4,24 +4,28 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
 
 import util.FlsConfig;
+import util.FlsLogger;
 
 public class FlsServletContextListener implements ServletContextListener {
 
-	  @Override
-	  public void contextDestroyed(ServletContextEvent arg0) {
-	    //Notification that the servlet context is about to be shut down.   
-	  }
+	private FlsLogger LOGGER = new FlsLogger(FlsServletContextListener.class.getName());
 
-	  @Override
-	  public void contextInitialized(ServletContextEvent arg0) {
-	    // do all the tasks that you need to perform just after the server starts
-		  FlsConfig c = new FlsConfig();
-		  c.setEnv();
-		  c.setDbBuild();
-		  System.out.println("=====> Startup code called");
+	@Override
+	public void contextDestroyed(ServletContextEvent arg0) {
+		// Notification that the servlet context is about to be shut down.
+	}
 
-	    //Notification that the web application initialization process is starting
-	  }
+	@Override
+	public void contextInitialized(ServletContextEvent arg0) {
+		// do all the tasks that you need to perform just after the server
+		// starts
+		FlsConfig c = new FlsConfig();
+		c.setEnv();
+		c.setDbBuild();
+		LOGGER.warning("=====> Startup code called");
+
+		// Notification that the web application initialization process is
+		// starting
+	}
 
 }
-	
