@@ -93,6 +93,7 @@ public class AwsSESEmail {
 		// Fls_Enum = fls_enum;
 		user_id = userId;
 		TO = userId;
+		String EMAIL_VERIFICATION_URL;
 		
 		// this variable is used to store the image
 		File imageFile = null;
