@@ -16,11 +16,17 @@ public class FlsLogger{
 		// Below code specifies the level of the logger. Change value in
 		// setLevel() function according to environment
 				
-		if(FlsConfig.env.equals("dev")){
-			this.logger.setLevel(Level.INFO);
-		}else {
-			this.logger.setLevel(Level.WARNING);
+		try {
+			if(FlsConfig.env.equals("dev")){
+				this.logger.setLevel(Level.INFO);
+			}else {
+				this.logger.setLevel(Level.WARNING);
+			}
+		} catch (Exception e) {
+		 e.printStackTrace();
+			// TODO: handle exception
 		}
+		
 		
 	}
 	
