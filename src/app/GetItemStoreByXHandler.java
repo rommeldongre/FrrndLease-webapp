@@ -92,10 +92,10 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					
 			}else {
 				rs.setReturnCode(404);
-				System.out.println("End of DB");
+				LOGGER.warning("End of DB");
 			}
 		} catch (SQLException e) {
-			System.out.println("Error Check Stacktrace");
+			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		}	
 		LOGGER.info("Finished process method ");
