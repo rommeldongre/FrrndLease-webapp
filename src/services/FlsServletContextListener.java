@@ -8,8 +8,6 @@ import util.FlsLogger;
 
 public class FlsServletContextListener implements ServletContextListener {
 
-	private FlsLogger LOGGER = new FlsLogger(FlsServletContextListener.class.getName());
-
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// Notification that the servlet context is about to be shut down.
@@ -22,7 +20,8 @@ public class FlsServletContextListener implements ServletContextListener {
 		FlsConfig c = new FlsConfig();
 		c.setEnv();
 		c.setDbBuild();
-		LOGGER.warning("=====> Startup code called");
+		//Can't use logger in startup code.
+		System.out.println("=====> Startup code called");
 
 		// Notification that the web application initialization process is
 		// starting
