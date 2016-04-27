@@ -4,7 +4,6 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
 
 import util.FlsConfig;
-import util.FlsLogger;
 
 public class FlsServletContextListener implements ServletContextListener {
 
