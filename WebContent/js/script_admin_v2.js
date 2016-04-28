@@ -1575,7 +1575,7 @@ getWishlistRequest = function(req) {
 			dataType: "JSON",
 			success: function(response) {
 				//alert("working");
-					$("#myPleaseWait").hide();
+					$('#myPleaseWait').modal('toggle');
 					confirmationIndex("Success",response.wishItemCount+" out of "+response.totalWishItemCount+" Amazon Wishlist Items Imported");
 					//getOutItemForRequest(response);
 					//alert(response.title);
@@ -1676,7 +1676,7 @@ function getNextItemCarouselSend(req){
 			if(response.returnCode == 0){
 				itemNextId = response.itemId;
 				addItemToCarousel(response);
-				//console.log(response);
+				
 			}else{				//when end of the database is reached 
 				
 				if(reasonForGetItem == 'carousel'){
@@ -1712,7 +1712,7 @@ function getNextItemCarouselSend(req){
 						carouselinner.appendChild(item1);
 						//categoryempty image ends
 					}
-
+					
 					disableRightButton();
 					if(counter != 0){
 						item1.appendChild(row1);

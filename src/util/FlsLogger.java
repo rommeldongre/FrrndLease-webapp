@@ -2,6 +2,7 @@ package util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import util.FlsConfig;
 
 public class FlsLogger{
 	
@@ -14,8 +15,19 @@ public class FlsLogger{
 		
 		// Below code specifies the level of the logger. Change value in
 		// setLevel() function according to environment
+				
+		try {
+			if(FlsConfig.env.equals("dev")){
+				this.logger.setLevel(Level.INFO);
+			}else {
+				this.logger.setLevel(Level.WARNING);
+			}
+		} catch (Exception e) {
+		 e.printStackTrace();
+			// TODO: handle exception
+		}
 		
-		this.logger.setLevel(Level.WARNING);
+		
 	}
 	
 	public void warning(String msg){
