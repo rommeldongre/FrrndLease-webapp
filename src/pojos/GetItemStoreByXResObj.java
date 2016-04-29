@@ -33,6 +33,17 @@ public class GetItemStoreByXResObj extends ResObj{
 	//id of item
 	int itemId;
 	
+	// uid of the item
+	String uid;
+	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 	public int getReturnCode() {
 		return ReturnCode;
 	}

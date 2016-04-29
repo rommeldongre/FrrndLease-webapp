@@ -2,23 +2,14 @@ package pojos;
 
 public class ItemDetailsReqObj extends ReqObj {
 
-	int id;
-	String title;
+	String uid;
 
-	public int getId() {
-		return id;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 }

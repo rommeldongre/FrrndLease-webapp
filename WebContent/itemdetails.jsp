@@ -88,7 +88,12 @@
 		</nav>
 
 		<div class="container-fluid" id="midcontainer">
-			<div class="row">
+			<div class="row" id="errorRow">
+				<div id="heading">
+					<span id="message"></span>
+				</div>
+			</div>
+			<div class="row" id="itemRow">
 				<div class="col-md-6" id="outertable">
 					<div class="row">
 						<div class="col-md-12">
@@ -314,6 +319,14 @@
 
 		function start() {
 
+			$("#errorRow").hide();
+			
+			if("${code}" != 0){
+				$("#itemRow").hide();
+				$("#errorRow").show();
+				$("#message").text("${title}");
+			}
+			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
 

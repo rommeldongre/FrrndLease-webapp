@@ -45,12 +45,11 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 
 			getConnection();
 
-			String itemDetailsSql = "SELECT * FROM items WHERE item_id=? AND item_name=?";
+			String itemDetailsSql = "SELECT * FROM items WHERE item_uid=?";
 			LOGGER.info("Creating Statement");
 
 			PreparedStatement ps = connection.prepareStatement(itemDetailsSql);
-			ps.setInt(1, rq.getId());
-			ps.setString(2, rq.getTitle());
+			ps.setString(1, rq.getUid());
 			LOGGER.info("Created statement...executing select from items query");
 
 			ResultSet result = ps.executeQuery();
@@ -67,6 +66,7 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setStatus(result.getString("item_status"));
 				rs.setImage(result.getString("item_image"));
 				rs.setLeaseValue(Integer.parseInt(result.getString("item_lease_value")));
+				rs.setUid(result.getString("item_uid"));
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);

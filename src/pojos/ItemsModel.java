@@ -9,7 +9,8 @@ public class ItemsModel {
 	
 	private FlsLogger LOGGER = new FlsLogger(ItemsModel.class.getName());
 	
-	private String title, category, description,userId,leaseTerm,status,image;
+	private String title, category, description,userId,leaseTerm,status,image, uid;
+
 	int id, leaseValue;
 	private JSONObject obj;
 	
@@ -75,5 +76,9 @@ public class ItemsModel {
 	
 	public String getImage() {
 		return this.image;
+	}
+	
+	public String getUid() {
+		return uid;
 	}
 }

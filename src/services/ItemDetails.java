@@ -27,8 +27,7 @@ public class ItemDetails extends HttpServlet {
 		LOGGER.info("Inside GET Method");
 
 		ItemDetailsReqObj request = new ItemDetailsReqObj();
-		request.setId(Integer.parseInt(httprequest.getParameter("id")));
-		request.setTitle(httprequest.getParameter("title"));
+		request.setUid(httprequest.getParameter("uid"));
 
 		ItemDetailsResObj response = null;
 
@@ -39,6 +38,7 @@ public class ItemDetails extends HttpServlet {
 			httpresponse.setContentType("text/html;charset=UTF-8");
 
 			if (response.getCode() == 0) {
+				httprequest.setAttribute("code", 0);
 				httprequest.setAttribute("title", response.getTitle());
 				httprequest.setAttribute("category", response.getCategory());
 				httprequest.setAttribute("description", response.getDescription());
@@ -47,9 +47,10 @@ public class ItemDetails extends HttpServlet {
 				httprequest.setAttribute("image", response.getImage());
 				httprequest.setAttribute("userId", response.getUserId());
 				httprequest.setAttribute("itemId", response.getId());
+				httprequest.setAttribute("uid", response.getUid());
 			} else {
-				httprequest.setAttribute("id", "Not Found");
-				httprequest.setAttribute("title", "Please Try Again Later!!");
+				httprequest.setAttribute("code", 201);
+				httprequest.setAttribute("title", "Item Not Found");
 			}
 
 			httprequest.getRequestDispatcher("/itemdetails.jsp").forward(httprequest, httpresponse);

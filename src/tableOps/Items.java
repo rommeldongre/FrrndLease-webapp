@@ -143,7 +143,7 @@ public class Items extends Connect {
 		getConnection();
 		try {
 			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, title);
@@ -155,6 +155,21 @@ public class Items extends Connect {
 			stmt.setString(7, status);
 			stmt.setString(8, image);
 			stmt.executeUpdate();
+			
+			// getting the last item inserted id and appending it with the title to generate a uid
+			ResultSet keys = stmt.getGeneratedKeys();
+			keys.next();
+			int itemId = keys.getInt(1);
+			
+			String uid = title + " " + itemId;
+			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
+			
+			// updating the item_uid value of the last item inserted
+			String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
+			PreparedStatement s = connection.prepareStatement(sqlUpdateUID);
+			s.setString(1, uid);
+			s.setInt(2, itemId);
+			s.executeUpdate();
 
 			status = "operation successfull!!!";
 			message = "Item added into table";
@@ -281,8 +296,18 @@ public class Items extends Connect {
 				stmt.setInt(7, id);
 				stmt.setString(8, userId);
 				stmt.setString(9, status);
-
 				stmt.executeUpdate();
+				
+				String uid = title + " " + check;
+				uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
+				
+				// updating the item_uid value of the last item inserted
+				String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
+				PreparedStatement s = connection.prepareStatement(sqlUpdateUID);
+				s.setString(1, uid);
+				s.setInt(2, check);
+				s.executeUpdate();
+				
 				message = "operation successfull edited item id : " + id;
 				LOGGER.warning(message);
 				Id = String.valueOf(check);
@@ -375,6 +400,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs.getInt("item_lease_value"));
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
+				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();
 				LOGGER.info(message);
@@ -428,6 +454,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs.getInt("item_lease_value"));
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
+				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();
 				LOGGER.info(message);
@@ -487,6 +514,7 @@ public class Items extends Connect {
 				json.put("image", rs.getString("item_image"));
 				json.put("fullName", rs.getString("user_full_name"));
 				json.put("location", rs.getString("user_location"));
+				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();
 				LOGGER.info(message);
@@ -544,6 +572,7 @@ public class Items extends Connect {
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
 				json.put("image", rs.getString("item_image"));
+				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();
 				LOGGER.info(message);
@@ -760,6 +789,7 @@ public class Items extends Connect {
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
 				json.put("image", rs.getString("item_image"));
+				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();
 				LOGGER.info(message);
