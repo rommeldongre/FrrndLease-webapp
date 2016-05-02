@@ -13,7 +13,6 @@
     <title>Item Details</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -117,6 +116,9 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="category">Category</label><br />
+										<div id="dropdownbuttoncategory_div"></div>
+										<select id="dropdownmenucategory_select" onChange="getCategory(this);">
+										</select>
 										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span></button>
 										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
 
@@ -289,6 +291,8 @@
 			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
+			$("#dropdownbuttoncategory_div").hide();
+			$("#dropdownmenucategory_select").hide();
 			
 			load_Gapi();
 			
@@ -326,6 +330,12 @@
 				$("#cancel").css("margin-bottom","35%");
 				$("#edit_item_row").css("display","none");
 				$("#delete_item_row").css("display","none");
+				
+				if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+					$("#dropdownmenucategory_select").show();
+					$("#dropdownbuttoncategory").hide();
+					$("#dropdownmenucategory").hide();
+				}
 				
 			}else if(prevfunc == "viewItemUser"){		//if arrived from the landing page by clicking an image from carousel
 				getItemInfo();
@@ -466,7 +476,7 @@
 			//end of image display
 			
 		}
-		
+			
 		function load_Gapi(){						//for google
 			gapi.load('auth2', function() {
 				gapi.auth2.init();
@@ -492,19 +502,31 @@
 		}
 		
 		function loadCategoryDropdownContinued(obj){
-			var ul = document.getElementById("dropdownmenucategory");
+				
+			if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+				var ul = document.getElementById("dropdownmenucategory_select");
+				var li = document.createElement("option");
+				li.id = catName;
+				li.className = "category";
+				li.value =catName;
+				
+				li.innerHTML = obj.catName;
+				
+				ul.appendChild(li);
+			}else{
+				var ul = document.getElementById("dropdownmenucategory");
+				var li = document.createElement("li");
+				li.id = catName;
+				li.className = "category";
+				
+				li.innerHTML = obj.catName;
 			
-			var li = document.createElement("li");
-			li.id = catName;
-			li.className = "category";
+				var lidivider = document.createElement("li");
+				lidivider.className = "divider";
 			
-			li.innerHTML = obj.catName;
-		
-			var lidivider = document.createElement("li");
-			lidivider.className = "divider";
-		
-			ul.appendChild(lidivider);
-			ul.appendChild(li);
+				ul.appendChild(lidivider);
+				ul.appendChild(li);
+			}
 			
 			getNextCategory(catName);
 		}
@@ -551,6 +573,12 @@
 			document.getElementById("dropdownbuttoncategory").innerHTML = text;				
 
 		});
+		
+		function getCategory(category){
+		var text = category.value;
+		document.getElementById("dropdownbuttoncategory").innerHTML = text;
+		alert(category.value);
+		}
 		
 		$(document).on("click",".leaseterm",function(event){		//to see which option is selected from dropdown lease term
 			var text = document.getElementById(event.target.id).innerHTML;
@@ -752,6 +780,6 @@
 	<script src="js/mystore.js"></script>
 	<script src="js/script_admin_v2.js"></script>	
     <script src="js/bootstrap.min.js"></script>
-
+    
   </body>
 </html>
