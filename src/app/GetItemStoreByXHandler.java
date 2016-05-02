@@ -89,6 +89,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs.setLeaseTerm(dbResponse.getString("item_lease_term"));
 					rs.setImage(dbResponse.getString("item_image"));
 					rs.setStatus(dbResponse.getString("item_status"));
+					rs.setUid(dbResponse.getString("item_uid"));
 					
 			}else {
 				rs.setReturnCode(404);
