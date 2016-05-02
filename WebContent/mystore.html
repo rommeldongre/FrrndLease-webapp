@@ -363,6 +363,18 @@
 				$("#add_item_row").css("display","none");
 				$("#edit_item_row").css("display","none");
 				$("#delete_item_row").css("display","none");
+				
+				if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+					//category drop down
+					$("#dropdownmenucategory_select").show();
+					$("#dropdownbuttoncategory").hide();
+					$("#dropdownmenucategory").hide();
+					
+					//lease term drop down
+					$("#dropdownmenulease_term_select").show();
+					$("#dropdownbuttonlease_term").hide();
+					$("#dropdownmenulease_term").hide();
+				}
 			
 			}else if(prevfunc == "viewItemOwner"){		//if arrived from the myincomingrequests page by clicking an item	
 				getItemInfo();
@@ -385,6 +397,18 @@
 				$("#edit_item").css("margin-bottom","5px");
 				$("#delete_item").css("margin-bottom","5px");
 				$("#cancel").css("margin-bottom","35%");
+				
+				if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+					//category drop down
+					$("#dropdownmenucategory_select").show();
+					$("#dropdownbuttoncategory").hide();
+					$("#dropdownmenucategory").hide();
+					
+					//lease term drop down
+					$("#dropdownmenulease_term_select").show();
+					$("#dropdownbuttonlease_term").hide();
+					$("#dropdownmenulease_term").hide();
+				}
 			}
 			
 			//beginning of image display
@@ -796,6 +820,10 @@
 		function makeFormReadOnly(){
 			$("#title").attr("disabled", true);
 			$("#dropdownbuttoncategory").attr("disabled", true);
+			if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+				$("#dropdownmenucategory_select").attr("disabled", true);
+				$("#dropdownmenulease_term_select").attr("disabled", true);
+			}
 			$("#location").attr("disabled", true);
 			$("#description").attr("disabled", true);
 			$("#lease_value").attr("disabled", true);
