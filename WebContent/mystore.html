@@ -144,6 +144,9 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="lease_term">Lease Term</label><br />
+										<div id="dropdownbuttonlease_term_div"></div>
+										<select id="dropdownmenulease_term_select" onChange="getLeaseTerm(this);">
+										</select>
 										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
 										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
 
@@ -291,8 +294,14 @@
 			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
+			
+			//Code for displaying 2 different drop drown for Safari
 			$("#dropdownbuttoncategory_div").hide();
 			$("#dropdownmenucategory_select").hide();
+			
+			$("#dropdownbuttonlease_term_div").hide();
+			$("#dropdownmenulease_term_select").hide();
+			
 			
 			load_Gapi();
 			
@@ -332,9 +341,15 @@
 				$("#delete_item_row").css("display","none");
 				
 				if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+					//category drop down
 					$("#dropdownmenucategory_select").show();
 					$("#dropdownbuttoncategory").hide();
 					$("#dropdownmenucategory").hide();
+					
+					//lease term drop down
+					$("#dropdownmenulease_term_select").show();
+					$("#dropdownbuttonlease_term").hide();
+					$("#dropdownmenulease_term").hide();
 				}
 				
 			}else if(prevfunc == "viewItemUser"){		//if arrived from the landing page by clicking an image from carousel
@@ -539,20 +554,32 @@
 		}
 		
 		function loadLeaseTermDropdownContinued(obj){
-			var ul = document.getElementById("dropdownmenulease_term");
 			
-			var li = document.createElement("li");
-			li.id = leaseTermName;
-			li.className = "leaseterm";
-		
-			li.innerHTML = obj.termName;
+			if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+				var ul = document.getElementById("dropdownmenulease_term_select");
+				var li = document.createElement("option");
+				li.id = leaseTermName;
+				li.className = "leaseterm";
+				//li.value =catName;
+				
+				li.innerHTML = obj.termName;
+				
+				ul.appendChild(li);
+			}else{
+				var ul = document.getElementById("dropdownmenulease_term");
+				
+				var li = document.createElement("li");
+				li.id = leaseTermName;
+				li.className = "leaseterm";
 			
-			var lidivider = document.createElement("li");
-			lidivider.className = "divider";
-			
-			ul.appendChild(lidivider);
-			ul.appendChild(li);
-
+				li.innerHTML = obj.termName;
+				
+				var lidivider = document.createElement("li");
+				lidivider.className = "divider";
+				
+				ul.appendChild(lidivider);
+				ul.appendChild(li);
+			}
 			getNextLeaseTerm(leaseTermName);	
 		}
 		
@@ -575,9 +602,8 @@
 		});
 		
 		function getCategory(category){
-		var text = category.value;
-		document.getElementById("dropdownbuttoncategory").innerHTML = text;
-		alert(category.value);
+			var text = category.value;
+			document.getElementById("dropdownbuttoncategory").innerHTML = text;
 		}
 		
 		$(document).on("click",".leaseterm",function(event){		//to see which option is selected from dropdown lease term
@@ -585,6 +611,10 @@
 			document.getElementById("dropdownbuttonlease_term").innerHTML = text;
 		});
 		
+		function getLeaseTerm(term){
+			var text = term.value;
+			document.getElementById("dropdownbuttonlease_term").innerHTML = text;
+		}
 		
 		function add_item(){				//called when Add Item is clicked then add the item to Items table and to Store table
 			currentWork = 'addItem';
