@@ -324,7 +324,7 @@
 			if("${code}" != 0){
 				$("#itemRow").hide();
 				$("#errorRow").show();
-				$("#message").text("${title}");
+				$("#message").text("${message}");
 			}
 			
 			$("#modalTriggerButton").hide();

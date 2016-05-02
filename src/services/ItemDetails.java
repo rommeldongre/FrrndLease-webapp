@@ -38,7 +38,7 @@ public class ItemDetails extends HttpServlet {
 			httpresponse.setContentType("text/html;charset=UTF-8");
 
 			if (response.getCode() == 0) {
-				httprequest.setAttribute("code", 0);
+				httprequest.setAttribute("code", response.getCode());
 				httprequest.setAttribute("title", response.getTitle());
 				httprequest.setAttribute("category", response.getCategory());
 				httprequest.setAttribute("description", response.getDescription());
@@ -49,8 +49,8 @@ public class ItemDetails extends HttpServlet {
 				httprequest.setAttribute("itemId", response.getId());
 				httprequest.setAttribute("uid", response.getUid());
 			} else {
-				httprequest.setAttribute("code", 201);
-				httprequest.setAttribute("title", "Item Not Found");
+				httprequest.setAttribute("code", response.getCode());
+				httprequest.setAttribute("message", "This item does not exist");
 			}
 
 			httprequest.getRequestDispatcher("/itemdetails.jsp").forward(httprequest, httpresponse);
