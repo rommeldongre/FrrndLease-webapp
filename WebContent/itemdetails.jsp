@@ -251,7 +251,7 @@
 			<!-- Button trigger Alert Modal -->
 			<button id="alertModalTriggerButton" type="button"
 				class="btn btn-default btn-lg" data-toggle="modal"
-				data-target="#myAlertModal">Launch demo modal</button>
+				data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">Launch demo modal</button>
 
 			<!-- Alert Modal -->
 			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog"
@@ -279,7 +279,7 @@
 			<!-- Button trigger Confirmation Modal -->
 			<button id="modalTriggerButton" type="button"
 				class="btn btn-default btn-lg" data-toggle="modal"
-				data-target="#myModal">Launch demo modal</button>
+				data-target="#myModal" data-backdrop="static" data-keyboard="false">Launch demo modal</button>
 
 			<!-- Confirmation Modal -->
 			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"

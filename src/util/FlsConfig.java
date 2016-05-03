@@ -139,7 +139,7 @@ public class FlsConfig extends Connect{
 			// The dbBuild version value is changed in the database
 			dbBuild = 2002;
 			
-			String sqlUpdateDBBuild = "UPDATE config set value = "+ dbBuild +" where option = 'build'";
+			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
 			try{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();

@@ -13,7 +13,6 @@
     <title>Item Details</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -117,6 +116,9 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="category">Category</label><br />
+										<div id="dropdownbuttoncategory_div"></div>
+										<select id="dropdownmenucategory_select" onChange="getCategory(this);">
+										</select>
 										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span></button>
 										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
 
@@ -142,6 +144,9 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="lease_term">Lease Term</label><br />
+										<div id="dropdownbuttonlease_term_div"></div>
+										<select id="dropdownmenulease_term_select" onChange="getLeaseTerm(this);">
+										</select>
 										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
 										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
 
@@ -222,7 +227,7 @@
 			
 			
 			<!-- Button trigger Alert Modal -->
-			<button id="alertModalTriggerButton" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myAlertModal">
+			<button id="alertModalTriggerButton" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">
 			  Launch demo modal
 			</button>
 
@@ -246,7 +251,7 @@
 			</div>
 			
 			<!-- Button trigger Confirmation Modal -->
-			<button id="modalTriggerButton" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal">
+			<button id="modalTriggerButton" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
 			  Launch demo modal
 			</button>
 
@@ -290,6 +295,14 @@
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
 			
+			//Code for displaying 2 different drop drown for Safari
+			$("#dropdownbuttoncategory_div").hide();
+			$("#dropdownmenucategory_select").hide();
+			
+			$("#dropdownbuttonlease_term_div").hide();
+			$("#dropdownmenulease_term_select").hide();
+			
+			
 			load_Gapi();
 			
 			$('#error_row').hide();
@@ -327,6 +340,18 @@
 				$("#edit_item_row").css("display","none");
 				$("#delete_item_row").css("display","none");
 				
+				if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+					//category drop down
+					$("#dropdownmenucategory_select").show();
+					$("#dropdownbuttoncategory").hide();
+					$("#dropdownmenucategory").hide();
+					
+					//lease term drop down
+					$("#dropdownmenulease_term_select").show();
+					$("#dropdownbuttonlease_term").hide();
+					$("#dropdownmenulease_term").hide();
+				}
+				
 			}else if(prevfunc == "viewItemUser"){		//if arrived from the landing page by clicking an image from carousel
 				getItemInfo();
 				makeFormReadOnly();
@@ -338,7 +363,7 @@
 				$("#add_item_row").css("display","none");
 				$("#edit_item_row").css("display","none");
 				$("#delete_item_row").css("display","none");
-			
+						
 			}else if(prevfunc == "viewItemOwner"){		//if arrived from the myincomingrequests page by clicking an item	
 				getItemInfo();
 				
@@ -360,6 +385,7 @@
 				$("#edit_item").css("margin-bottom","5px");
 				$("#delete_item").css("margin-bottom","5px");
 				$("#cancel").css("margin-bottom","35%");
+				
 			}
 			
 			//beginning of image display
@@ -466,7 +492,7 @@
 			//end of image display
 			
 		}
-		
+			
 		function load_Gapi(){						//for google
 			gapi.load('auth2', function() {
 				gapi.auth2.init();
@@ -492,19 +518,31 @@
 		}
 		
 		function loadCategoryDropdownContinued(obj){
-			var ul = document.getElementById("dropdownmenucategory");
+				
+			if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+				var ul = document.getElementById("dropdownmenucategory_select");
+				var li = document.createElement("option");
+				li.id = catName;
+				li.className = "category";
+				li.value =catName;
+				
+				li.innerHTML = obj.catName;
+				
+				ul.appendChild(li);
+			}else{
+				var ul = document.getElementById("dropdownmenucategory");
+				var li = document.createElement("li");
+				li.id = catName;
+				li.className = "category";
+				
+				li.innerHTML = obj.catName;
 			
-			var li = document.createElement("li");
-			li.id = catName;
-			li.className = "category";
+				var lidivider = document.createElement("li");
+				lidivider.className = "divider";
 			
-			li.innerHTML = obj.catName;
-		
-			var lidivider = document.createElement("li");
-			lidivider.className = "divider";
-		
-			ul.appendChild(lidivider);
-			ul.appendChild(li);
+				ul.appendChild(lidivider);
+				ul.appendChild(li);
+			}
 			
 			getNextCategory(catName);
 		}
@@ -517,20 +555,32 @@
 		}
 		
 		function loadLeaseTermDropdownContinued(obj){
-			var ul = document.getElementById("dropdownmenulease_term");
 			
-			var li = document.createElement("li");
-			li.id = leaseTermName;
-			li.className = "leaseterm";
-		
-			li.innerHTML = obj.termName;
+			if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+				var ul = document.getElementById("dropdownmenulease_term_select");
+				var li = document.createElement("option");
+				li.id = leaseTermName;
+				li.className = "leaseterm";
+				//li.value =catName;
+				
+				li.innerHTML = obj.termName;
+				
+				ul.appendChild(li);
+			}else{
+				var ul = document.getElementById("dropdownmenulease_term");
+				
+				var li = document.createElement("li");
+				li.id = leaseTermName;
+				li.className = "leaseterm";
 			
-			var lidivider = document.createElement("li");
-			lidivider.className = "divider";
-			
-			ul.appendChild(lidivider);
-			ul.appendChild(li);
-
+				li.innerHTML = obj.termName;
+				
+				var lidivider = document.createElement("li");
+				lidivider.className = "divider";
+				
+				ul.appendChild(lidivider);
+				ul.appendChild(li);
+			}
 			getNextLeaseTerm(leaseTermName);	
 		}
 		
@@ -552,11 +602,20 @@
 
 		});
 		
+		function getCategory(category){
+			var text = category.value;
+			document.getElementById("dropdownbuttoncategory").innerHTML = text;
+		}
+		
 		$(document).on("click",".leaseterm",function(event){		//to see which option is selected from dropdown lease term
 			var text = document.getElementById(event.target.id).innerHTML;
 			document.getElementById("dropdownbuttonlease_term").innerHTML = text;
 		});
 		
+		function getLeaseTerm(term){
+			var text = term.value;
+			document.getElementById("dropdownbuttonlease_term").innerHTML = text;
+		}
 		
 		function add_item(){				//called when Add Item is clicked then add the item to Items table and to Store table
 			currentWork = 'addItem';
@@ -744,7 +803,6 @@
 			$("#dropdownbuttonlease_term").attr("disabled", true);
 			$("#quantity").attr("disabled", true);
 		}	
-		
 	</script>
 	
 	
@@ -752,6 +810,6 @@
 	<script src="js/mystore.js"></script>
 	<script src="js/script_admin_v2.js"></script>	
     <script src="js/bootstrap.min.js"></script>
-
+    
   </body>
 </html>
