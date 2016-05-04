@@ -1,6 +1,6 @@
-var emailVerificationApp = angular.module("emailVerificationApp", []);
+var emailVerificationApp = angular.module('emailVerificationApp', ['ui.bootstrap']);
 
-emailVerificationApp.controller("verificationCtrl", function($scope, $http){
+emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$location', 'modalService', function($scope, $http, $location, modalService){
     $scope.title = "Frrndlease Sign up Email Verification";
     
     $http.post('/flsv2/EmailVerification', JSON.stringify({verification : getQueryVariable("token")})).then(
@@ -9,16 +9,26 @@ emailVerificationApp.controller("verificationCtrl", function($scope, $http){
             
             if(data.data.code == 0){
                 localStorage.setItem("userloggedin", data.data.userId);
-                div.innerHTML = data.data.message + ", Welcome to fRRndLease.";
-						
-				$("#modalTriggerButton").click();
+                
+                var modalOptions = {
+                    closeButtonText: 'Cancel',
+                    actionButtonText: '',
+                    headerText: 'Email Verification',
+                    bodyText: data.data.message + ', Welcome to fRRndLease.'
+                };
+                
+                modalService.showModal({}, modalOptions).then(function(result){
+                    $location.path('/flsv2/myindex.html');
+                }, function(){
+                    
+                });
             }
         }, 
         function(data, status, headers, config){
             console.log(data);
         }
     );
-});
+}]);
 
 var getQueryVariable = function (variable) {
     var query = window.location.search.substring(1);

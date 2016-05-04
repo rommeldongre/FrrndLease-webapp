@@ -11,7 +11,9 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 
     <!-- Angularjs api -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>\
+    <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+    <!-- Angularjs api ends -->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-1.11.3.min.js"></script>
@@ -19,22 +21,14 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/mystore.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Happy+Monkey'
-        rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+    
 
     <!--Loading Animation code CSS & JS Links  -->
     <link href="css/animation.css" type="text/css" rel="stylesheet">
     <script src="js/jquery.backstretch.js"></script>
     <script src="js/animation.js"></script>
     <!--Loading Animation code CSS & JS Links ends here  -->
-
-    <!-- DropDown list code-->
-    <script src="js/dropdownlist.js"></script>
-    <!-- DropDown list code ends-->
-
-    <!--Check whether user is logged in or not  -->
-    <script src="js/logincheck.js"></script>
-    <!--Check whether user is logged in or not ends here  -->
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Email Verification</title>
@@ -75,94 +69,6 @@
 
                 <h4 id="emptyText"></h4>
 
-                <!-- Button trigger Alert Modal -->
-                <button id="alertModalTriggerButton" type="button"
-                    class="btn btn-primary btn-lg" data-toggle="modal"
-                    data-target="#myAlertModal">Launch demo modal</button>
-
-                <!-- Alert Modal -->
-                <div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog"
-                    aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                <!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
-                            </div>
-                            <div class="modal-body" id="alertModalMsg"></div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default"
-                                    data-dismiss="modal" onclick="continueWork()">Yes</button>
-                                <button type="button" class="btn btn-default"
-                                    data-dismiss="modal">No</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Button trigger Confirmation Modal -->
-                <button id="modalTriggerButton" type="button"
-                    class="btn btn-primary btn-lg" data-toggle="modal"
-                    data-target="#myModal" data-backdrop="static" data-keyboard="false">
-                    Launch demo modal</button>
-
-                <!-- Confirmation Modal -->
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-                    aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                <h4 class="modal-title" id="myModalLabel"></h4>
-                            </div>
-                            <div class="modal-body" id="modalMsg"></div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default"
-                                    data-dismiss="modal" onclick="redirectToMyIndexPage()">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Button trigger Text Input Modal -->
-                <button id="inputTriggerButton" type="button"
-                    class="btn btn-primary btn-lg" data-toggle="modal"
-                    data-target="#myModalAlert" data-backdrop="static"
-                    data-keyboard="false">Launch demo modal</button>
-
-                <!-- Text Input Modal Modal -->
-                <div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog"
-                    aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"
-                                    aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                                <h4 class="modal-title" id="myModalLabelInput"></h4>
-                            </div>
-                            <div class="modal-body" id="modalMsgInput">
-                                <input type="text" name="urlInput" id="urlInput"
-                                    class="form-control">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default"
-                                    data-dismiss="modal" onclick="">Close</button>
-                                <button type="button" class="btn btn-primary"
-                                    onclick="import_wishlist()">Submit URL</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- "Please Wait" Modal Start here-->
                 <div id="wait_bar"></div>
                 <!-- "Please Wait" Modal ends Here -->
@@ -180,31 +86,9 @@
         </div>
 
 
-        <script type="text/javascript">
-
-            var div = document.getElementById("modalMsg");
-
-            var heading = document.getElementById("myModalLabel");
-            heading.innerHTML = "Email Verification";
-
-            function start() {
-
-                $("#modalTriggerButton").hide();
-                $("#alertModalTriggerButton").hide();
-                $("#inputTriggerButton").hide();
-            }
-
-            function redirectToMyIndexPage(){
-                window.location.replace("myindex.html");
-            };
-
-        </script>
-
-
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/emailverification.js"></script>
-        <script src="js/index.js"></script>
-        <script src="js/script_admin_v2.js"></script>
+        <script src="js/modalService.js"></script>
         <script src="js/bootstrap.min.js"></script>
 
     </body>
