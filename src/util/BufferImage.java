@@ -24,6 +24,7 @@ public class BufferImage {
 		 URL url = new URL(Img_URL);
 		
 		 FileUtils.copyURLToFile(url, imageFile);
+		 
 		BufferedImage img = null;
 	     img = ImageIO.read(imageFile); // eventually C:\\ImageTest\\pic2.jpg
 	     image_string = encodeToString(img, "jpg");
