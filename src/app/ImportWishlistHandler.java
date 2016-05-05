@@ -91,10 +91,9 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		for (int i = 0; i < links.size(); i++) {
 			LOGGER.info("\ntext : " + links.get(i).text());
 			String imgSrc, final_img = null;
-			//String imgSrc = imglink.get(i).attr("src");
 			imgSrc = BI.URLtoImage(imglink.get(i).attr("src"));
 			final_img = "data:image/png;base64,"+imgSrc;
-	       // System.out.println(i+ " img Url : "+imgSrc);
+			
 			// Populate the response
 			try {
 				JSONObject obj1 = new JSONObject();
