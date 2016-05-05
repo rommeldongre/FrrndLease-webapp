@@ -17,6 +17,7 @@ import adminOps.Response;
 import tableOps.Items;
 import tableOps.Wishlist;
 import util.FlsLogger;
+import util.BufferImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 	private int newItemCount = 0;
 	Response res = new Response();
 	WishlistModel wm = new WishlistModel();
+	BufferImage BI = new BufferImage();
 
 	private static ImportWishlistHandler instance = null;
 
@@ -70,6 +72,11 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		Elements links = doc.select("a[id*=itemName]");
 		LOGGER.info("Total number of elements: " + links.size());
 		LOGGER.info("Value before for loop: " + newItemCount);
+		
+		Elements imglink = doc.select("div[id*=itemImage] > a > img[src]");
+		LOGGER.info("Total number of images: " + imglink.size());
+		LOGGER.info("Value before for loop: " + newItemCount);
+		
 
 		Element links2 = doc.select("div[class*=selected] > a > span > span").first();
 		LOGGER.info("selected Wishlist count: " + links2.text());
@@ -82,6 +89,10 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 		for (int i = 0; i < links.size(); i++) {
 			LOGGER.info("\ntext : " + links.get(i).text());
+			String imgSrc = null;
+			//String imgSrc = imglink.get(i).attr("src");
+			imgSrc = BI.URLtoImage(imglink.get(i).attr("src"));
+	        System.out.println(i+ " img Url : "+imgSrc);
 			// Populate the response
 			try {
 				JSONObject obj1 = new JSONObject();
