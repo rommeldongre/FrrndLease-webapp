@@ -39,6 +39,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 	private int newItemCount = 0;
 	Response res = new Response();
 	WishlistModel wm = new WishlistModel();
+	ItemsModel im = new ItemsModel();
 	BufferImage BI = new BufferImage();
 
 	private static ImportWishlistHandler instance = null;
@@ -60,7 +61,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 		ImportWishlistReqObj rq = (ImportWishlistReqObj) req;
 		ImportWishlistResObj rs = new ImportWishlistResObj();
-		ItemsModel im = new ItemsModel();
+		
 
 		LOGGER.info("Inside process method " + rq.getUrl());
 		// TODO: Core of the processing takes place here
@@ -89,10 +90,11 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 		for (int i = 0; i < links.size(); i++) {
 			LOGGER.info("\ntext : " + links.get(i).text());
-			String imgSrc = null;
+			String imgSrc, final_img = null;
 			//String imgSrc = imglink.get(i).attr("src");
 			imgSrc = BI.URLtoImage(imglink.get(i).attr("src"));
-	        System.out.println(i+ " img Url : "+imgSrc);
+			final_img = "data:image/png;base64,"+imgSrc;
+	       // System.out.println(i+ " img Url : "+imgSrc);
 			// Populate the response
 			try {
 				JSONObject obj1 = new JSONObject();
@@ -104,7 +106,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				obj1.put("id", 0);
 				obj1.put("leaseValue", 0);
 				obj1.put("status", "Wished");
-				obj1.put("image", " ");
+				obj1.put("image", final_img);
 
 				im.getData(obj1);
 			} catch (JSONException e) {
@@ -135,10 +137,11 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 	private void AmazonWishlist(String URL, String name) {
 
-		String Iname, User;
+		String Iname, User, Image;
 		Integer insertcount = 0;
 		Iname = URL;
 		User = name;
+		Image = im.getImage();
 
 		try {
 			getConnection();
@@ -168,7 +171,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				stmt1.setInt(5, 0);
 				stmt1.setString(6, "");
 				stmt1.setString(7, "Wished");
-				stmt1.setString(8, "");
+				stmt1.setString(8, Image);
 				insertcount = stmt1.executeUpdate();
 				// System.out.println("Entry added into items table:
 				// "+insertcount);
