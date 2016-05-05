@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
     
-<html lang="en">
+<html lang="en" ng-app="itemDetailsApp">
     
 <head>
 <meta charset="utf-8">
@@ -14,6 +14,11 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
 <!-- Google Api End -->
+    
+<!-- Angularjs api -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+<!-- Angularjs api ends -->
 
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <title>Item Details</title>
@@ -33,10 +38,6 @@
 <script src="js/animation.js"></script>
 <!--Loading Animation code CSS & JS Links ends here  -->
 
-<!-- DropDown list code-->
-<script src="js/dropdownlist.js"></script>
-<!-- DropDown list code ends-->
-
 <!--Check whether user is logged in or not  -->
 <script src="js/logincheck.js"></script>
 <!--Check whether user is logged in or not ends here  -->
@@ -51,185 +52,151 @@
 	<div id="loader"></div>
 	<div id="main">
 
-		<nav class="navbar navbar-default navbar-fixed-top" id="header">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target="#myNavbar1">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
-					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar1">
+		<!--header starts---------------------------------------->
+        <div ng-controller="headerCtrl">
+		  <div ng-include="'header.html'"></div>
+        </div>
+		<!--header ends----------------------------------------->
 
-					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						<li class="dropdown" id="subheader"><a
-							class="dropdown-toggle" data-toggle="dropdown" role="button"
-							aria-haspopup="true" aria-expanded="false"> <span
-								id="salutation"></span> <span class="caret"></span></a>
-							<ul class="dropdown-menu" id="dropA">
-								<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
-							</ul></li>
-					</ul>
-
-					<form class="navbar-form navbar-right" role="search"
-						id="navBarSearchForm" type=get action="myindex.html">
-						<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
-					</form>
-
-				</div>
-			</div>
-		</nav>
-
-		<div class="container-fluid" id="midcontainer">
-			<div class="row" id="errorRow">
+		<div class="container-fluid" id="midcontainer" ng-controller="itemDetailsCtrl">
+            
+            <!-- Error Message Display starts -->
+			<div class="row" ng-if="errorCheck()">
 				<div id="heading">
-					<span id="message"></span>
+					<span>{{message}}</span>
 				</div>
 			</div>
-			<div class="row" id="itemRow">
+            <!-- Error Message Display ends -->
+            
+            <!-- Item Details starts -->
+			<div class="row" ng-if="itemDetailsCheck()">
 				<div class="col-md-6" id="outertable">
+                    
 					<div class="row">
 						<div class="col-md-12">
 							<form>
 								<div class="form-group" id="ifile_div">
-									<!-- http://www.syntaxxx.com/accessing-user-device-photos-with-the-html5-camera-api/ -->
-									<!--http://www.codeproject.com/Articles/589445/JavaScript-Modal-Popup-Window-->
-									<label for="item_image" id="image_label">Add Picture</label> <input
-										type="file" id="ifile">
+									<label for="item_image" id="image_label">Add Picture</label> <input type="file" id="ifile">
 								</div>
 							</form>
 						</div>
 					</div>
 					<br />
+                    
 					<div class="row">
 						<div class="col-md-12">
 							<canvas id="panel"></canvas>
 						</div>
 					</div>
+                    
 					<form id="itemform">
+                        
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
-									<label for="title">Title</label> <input type="text"
-										class="form-control" id="title" placeholder="Enter Title"
-										required>
+									<label for="title">Title</label>
+                                    <input type="text" class="form-control" id="title" placeholder="Enter Title" required>
 								</div>
 							</div>
 						</div>
+                        
 						<div class="row">
 							<div class="col-md-6">
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory"
-											class="btn btn-default dropdown-toggle"
-											data-toggle="dropdown" aria-expanded="false" required>
-											Category <span class="caret"></span>
+										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
 										</button>
-										<ul id="dropdownmenucategory" class="dropdown-menu"
-											role="menu">
-
-										</ul>
+										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu"></ul>
 									</div>
 								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="location">Location</label> <input type="text"
-										class="form-control" id="location" placeholder="Location">
+									<label for="location">Location</label>
+                                    <input type="text" class="form-control" id="location" placeholder="Location">
 								</div>
 							</div>
 						</div>
+                        
 						<div class="row">
 							<div class="col-md-4">
 								<div class="form-group">
-									<label for="lease_value">Lease Value</label> <input
-										type="number" class="form-control" id="lease_value"
-										placeholder="Lease Value">
+									<label for="lease_value">Lease Value</label>
+                                    <input type="number" class="form-control" id="lease_value" placeholder="Lease Value">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="lease_term">Lease Term</label><br />
-										<button id="dropdownbuttonlease_term"
-											class="btn btn-default dropdown-toggle"
-											data-toggle="dropdown" aria-expanded="false">
-											Lease Term <span class="caret"></span>
+										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
 										</button>
-										<ul id="dropdownmenulease_term" class="dropdown-menu"
-											role="menu">
-
-										</ul>
+										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu"></ul>
 									</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
-									<label for="quantity">Quantity</label> <input type="number"
-										class="form-control" id="quantity" placeholder="Quantity">
+									<label for="quantity">Quantity</label>
+                                    <input type="number" class="form-control" id="quantity" placeholder="Quantity">
 								</div>
 							</div>
 						</div>
+                        
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="description">Description</label>
-									<textarea rows="3" class="form-control" id="description"
-										placeholder="Add Description"></textarea>
+									<textarea rows="3" class="form-control" id="description" placeholder="Add Description"></textarea>
 								</div>
 							</div>
 						</div>
-						<button class="btn btn-default" id="submit" type="submit">
-							Submit</button>
+                        
+						<button class="btn btn-default" id="submit" type="submit">Submit</button>
 
 					</form>
+                    
 				</div>
+                
 				<div class="col-md-6">
 					<br />
 					<div id="error_row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
 							<div class="alert alert-danger fade in">
-								<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>
-								Operation failed.
+								<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>Operation failed.
 							</div>
 						</div>
 					</div>
 					<br />
+                    
 					<div id="lease_item_row" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="lease_item" class="btn btn-primary"
-								onclick="lease_item()">Lease Item</button>
+							<button id="lease_item" class="btn btn-primary" onclick="lease_item()">Lease Item</button>
 						</div>
 					</div>
 
 					<div id="request_item_row" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="request_item" class="btn btn-primary"
-								onclick="request_item()">Request Item</button>
+							<button id="request_item" class="btn btn-primary" onclick="request_item()">Request Item</button>
 						</div>
 					</div>
 
 					<div id="add_item_row" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_item" class="btn btn-primary"
-								onclick="add_item()">Add Item</button>
+							<button id="add_item" class="btn btn-primary" onclick="add_item()">Add Item</button>
 						</div>
 					</div>
 
 					<div id="edit_item_row" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_item" class="btn btn-primary"
-								onclick="edit_item()">Edit Item</button>
+							<button id="edit_item" class="btn btn-primary" onclick="edit_item()">Edit Item</button>
 						</div>
 					</div>
 
 					<div id="delete_item_row" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_item" class="btn btn-primary"
-								onclick="delete_item()">Delete Item</button>
+							<button id="delete_item" class="btn btn-primary" onclick="delete_item()">Delete Item</button>
 						</div>
 					</div>
 
@@ -241,6 +208,7 @@
 				</div>
 
 			</div>
+            <!-- Item Details ends -->
 
 
 			<!-- Button trigger Alert Modal -->
@@ -297,30 +265,23 @@
 				</div>
 			</div>
 
-			<div id="tawk_widget">
-				<!--The tawk.to widget code will get populated here from file chatbox.html. Refer file dropdownlist.js-->
-			</div>
+            <!--The tawk.to widget code will get populated here from file chatbox.html.-->
+            <div id="tawk_widget"></div>
 
-			<!--Footer starts------------------------------------>
-			<div id="footer_nav">
-				<!--The Footer nav will get populated here-->
-			</div>
+			<!--Footer starts here-->
+			<div ng-include="'footer.html'"></div>
+            <!--Footer ends here-->
 
 		</div>
 	</div>
 
 	<script type="text/javascript">
 		var userloggedin, userLocation, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, picOrientation = null;
+        
+        var code = "${code}";
+        var message = "${message}";
 
 		function start() {
-
-			$("#errorRow").hide();
-			
-			if("${code}" != 0){
-				$("#itemRow").hide();
-				$("#errorRow").show();
-				$("#message").text("${message}");
-			}
 			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
@@ -340,11 +301,6 @@
 			//checking if user is logged in or not
 			userloggedin = localStorage.getItem("userloggedin");
 			//userLocation = localStorage.getItem("userLocation"); 
-
-			if (userloggedin == "" || userloggedin == null || userloggedin == "anonymous")
-				$("#subheader").hide();
-			else
-				logInCheck(); //refer file logincheck.js 
 
 			if(userloggedin == "${userId}") {
 				getItemInfo();
@@ -445,13 +401,6 @@
 		function load_Gapi() { //for google
 			gapi.load('auth2', function() {
 				gapi.auth2.init();
-			});
-		}
-
-		function signOutFromGoogle() { //signout from google
-			var auth2 = gapi.auth2.getAuthInstance();
-			auth2.signOut().then(function() {
-				console.log('User signed out.');
 			});
 		}
 
@@ -664,10 +613,6 @@
 			$("#modalTriggerButton").click();
 		}
 
-		function redirectToHomePage() {
-			window.location.replace("index.html");
-		}
-
 		function redirectToPrevPage() {
 			prevPage = getPrevPage("prevPage");
 			window.location.replace(prevPage);
@@ -749,6 +694,8 @@
 
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/mystore.js"></script>
+    <script src="js/itemdetails.js"></script>
+    <script src="js/tawk.js"></script>
 	<script src="js/script_admin_v2.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 
