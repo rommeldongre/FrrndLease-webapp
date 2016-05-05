@@ -11,14 +11,12 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
                 localStorage.setItem("userloggedin", data.data.userId);
                 
                 var modalOptions = {
-                    closeButtonText: 'Cancel',
-                    actionButtonText: '',
-                    headerText: 'Email Verification',
                     bodyText: data.data.message + ', Welcome to fRRndLease.'
                 };
                 
                 modalService.showModal({}, modalOptions).then(function(result){
-                    $location.path('/flsv2/myindex.html');
+                
+                window.location.replace("/flsv2/myindex.html");
                 }, function(){
                     
                 });
@@ -29,6 +27,53 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
         }
     );
 }]);
+
+emailVerificationApp.service('modalService', ['$uibModal',
+    function ($uibModal) {
+
+        var modalDefaults = {
+            animation: true,
+            backdrop: true,
+            keyboard: true,
+            templateUrl: '/flsv2/modal.html'
+        };
+
+        var modalOptions = {
+            actionButtonText: 'OK',
+            headerText: 'Email Verification',
+            bodyText: 'Perform this action?'
+        };
+
+        this.showModal = function (customModalDefaults, customModalOptions) {
+            if (!customModalDefaults) customModalDefaults = {};
+            customModalDefaults.backdrop = 'static';
+            return this.show(customModalDefaults, customModalOptions);
+        };
+
+        this.show = function (customModalDefaults, customModalOptions) {
+            //Create temp objects to work with since we're in a singleton service
+            var tempModalDefaults = {};
+            var tempModalOptions = {};
+
+            //Map angular-ui modal custom defaults to modal defaults defined in service
+            angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
+
+            //Map modal.html $scope custom properties to defaults defined in service
+            angular.extend(tempModalOptions, modalOptions, customModalOptions);
+
+            if (!tempModalDefaults.controller) {
+                tempModalDefaults.controller = function ($scope, $uibModalInstance) {
+                    $scope.modalOptions = tempModalOptions;
+                    $scope.modalOptions.ok = function (result) {
+                        $uibModalInstance.close(result);
+                    };
+                }
+            }
+
+            return $uibModal.open(tempModalDefaults).result;
+        };
+
+    }]);
 
 var getQueryVariable = function (variable) {
     var query = window.location.search.substring(1);
