@@ -48,8 +48,17 @@ public class PostItem extends HttpServlet {
 
 		String str = request.getParameter("req");
 		
-		LOGGER.info(str);
-		// String str2 = request.getParameter("req2");
+		 String data = str;
+		    String[] rows = data.split(",");
+
+		    String[][] matrix = new String[rows.length][]; 
+		    int r = 0;
+		    for (String row : rows) {
+		        matrix[r++] = row.split(":");
+		    }
+		    LOGGER.info(matrix[0][1]+" "+matrix[1][1]+" "+matrix[2][1]+" "+matrix[3][1]+" "+matrix[4][1]+" "+matrix[5][1]+" "+matrix[6][1]+" "+matrix[7][1]);
+		
+		    // String str2 = request.getParameter("req2");
 		
 		try {
 			JSONObject row = new JSONObject(str);
