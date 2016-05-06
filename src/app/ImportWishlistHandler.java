@@ -75,10 +75,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		LOGGER.info("Value before for loop: " + newItemCount);
 		
 		Elements imglink = doc.select("div[id*=itemImage] > a > img[src]");
-		LOGGER.info("Total number of images: " + imglink.size());
-		LOGGER.info("Value before for loop: " + newItemCount);
 		
-
 		Element links2 = doc.select("div[class*=selected] > a > span > span").first();
 		LOGGER.info("selected Wishlist count: " + links2.text());
 		Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(links2.text());
@@ -90,7 +87,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 		for (int i = 0; i < links.size(); i++) {
 			LOGGER.info("\ntext : " + links.get(i).text());
-			String imgSrc, final_img = null;
+			String imgSrc= null, final_img = null;
 			imgSrc = BI.URLtoImage(imglink.get(i).attr("src"));
 			final_img = "data:image/png;base64,"+imgSrc;
 			
