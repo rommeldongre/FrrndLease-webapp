@@ -61,7 +61,7 @@
 		<div class="container-fluid" id="midcontainer" ng-controller="itemDetailsCtrl">
             
             <!-- Error Message Display starts -->
-			<div class="row" ng-if="errorCheck()">
+			<div class="row" ng-if="showError">
 				<div id="heading">
 					<span>{{message}}</span>
 				</div>
@@ -69,7 +69,7 @@
             <!-- Error Message Display ends -->
             
             <!-- Item Details starts -->
-			<div class="row" ng-if="itemDetailsCheck()">
+			<div class="row" ng-if="!showError">
 				<div class="col-md-6" id="outertable">
                     
 					<div class="row">
@@ -95,7 +95,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" placeholder="Enter Title" required>
+                                    <input type="text" class="form-control" ng-model="title" ng-disabled="!userMatch" placeholder="Enter Title" required>
 								</div>
 							</div>
 						</div>
@@ -105,9 +105,10 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
+										<button id="dropdownbuttoncategory" ng-disabled="!userMatch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
 										</button>
-										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu"></ul>
+										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
+                                        </ul>
 									</div>
 								</div>
 							</div>
@@ -123,14 +124,14 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="lease_value">Lease Value</label>
-                                    <input type="number" class="form-control" id="lease_value" placeholder="Lease Value">
+                                    <input type="number" class="form-control" ng-model="leaseValue" ng-disabled="!userMatch" placeholder="Lease Value">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="lease_term">Lease Term</label><br />
-										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
+										<button id="dropdownbuttonlease_term" ng-disabled="!userMatch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
 										</button>
 										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu"></ul>
 									</div>
@@ -148,7 +149,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="description">Description</label>
-									<textarea rows="3" class="form-control" id="description" placeholder="Add Description"></textarea>
+									<textarea rows="3" class="form-control" ng-model="description" ng-disabled="!userMatch" style="margin-bottom:35%;" placeholder="Add Description"></textarea>
 								</div>
 							</div>
 						</div>
@@ -169,101 +170,28 @@
 						</div>
 					</div>
 					<br />
-                    
-					<div id="lease_item_row" class="row">
+
+					<div ng-if="!userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="lease_item" class="btn btn-primary" onclick="lease_item()">Lease Item</button>
+							<button id="request_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="requestItem()">Request Item</button>
 						</div>
 					</div>
 
-					<div id="request_item_row" class="row">
+					<div ng-if="userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="request_item" class="btn btn-primary" onclick="request_item()">Request Item</button>
+							<button id="edit_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="editItem()">Edit Item</button>
 						</div>
 					</div>
 
-					<div id="add_item_row" class="row">
+					<div ng-if="userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_item" class="btn btn-primary" onclick="add_item()">Add Item</button>
-						</div>
-					</div>
-
-					<div id="edit_item_row" class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_item" class="btn btn-primary" onclick="edit_item()">Edit Item</button>
-						</div>
-					</div>
-
-					<div id="delete_item_row" class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_item" class="btn btn-primary" onclick="delete_item()">Delete Item</button>
-						</div>
-					</div>
-
-					<div id="cancel_row" class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="cancel" class="btn btn-primary" onclick="cancel()">Cancel</button>
+							<button id="delete_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="deleteItem()">Delete Item</button>
 						</div>
 					</div>
 				</div>
 
 			</div>
             <!-- Item Details ends -->
-
-
-			<!-- Button trigger Alert Modal -->
-			<button id="alertModalTriggerButton" type="button"
-				class="btn btn-default btn-lg" data-toggle="modal"
-				data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">Launch demo modal</button>
-
-			<!-- Alert Modal -->
-			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
-						</div>
-						<div class="modal-body" id="alertModalMsg"></div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal" onclick="continueWork()">Yes</button>
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">No</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Button trigger Confirmation Modal -->
-			<button id="modalTriggerButton" type="button"
-				class="btn btn-default btn-lg" data-toggle="modal"
-				data-target="#myModal" data-backdrop="static" data-keyboard="false">Launch demo modal</button>
-
-			<!-- Confirmation Modal -->
-			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-				aria-labelledby="myModalLabel">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-							<h4 class="modal-title" id="myModalLabel"></h4>
-						</div>
-						<div class="modal-body" id="modalMsg"></div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
 
             <!--The tawk.to widget code will get populated here from file chatbox.html.-->
             <div id="tawk_widget"></div>
@@ -280,11 +208,16 @@
         
         var code = "${code}";
         var message = "${message}";
+        var userId = "${userId}";
+        
+        var item_id = "${itemId}";
+        var title = "${title}";
+        var category = "${category}";
+        var description = "${description}";
+        var leaseValue = "${leaseValue}";
+        var leaseTerm = "${leaseTerm}";
 
 		function start() {
-			
-			$("#modalTriggerButton").hide();
-			$("#alertModalTriggerButton").hide();
 
 			load_Gapi();
 
@@ -300,31 +233,7 @@
 
 			//checking if user is logged in or not
 			userloggedin = localStorage.getItem("userloggedin");
-			//userLocation = localStorage.getItem("userLocation"); 
-
-			if(userloggedin == "${userId}") {
-				getItemInfo();
-
-				$("#description").css("margin-bottom", "35%");
-				$("#lease_item").css("display", "none");
-				$("#request_item_row").css("display", "none");
-				$("#add_item_row").css("display", "none");
-				$("#edit_item").css("margin-bottom", "5px");
-				$("#delete_item").css("margin-bottom", "5px");
-				$("#cancel").css("margin-bottom", "35%");
-			} else{
-				getItemInfo();
-				makeFormReadOnly();
-				
-				$("#ifile_div").hide();
-				$("#description").css("margin-bottom", "35%");
-				$("#lease_item_row").css("display", "none");
-				$("#request_item").css("margin-bottom", "5px");
-				$("#cancel").css("margin-bottom", "35%");
-				$("#add_item_row").css("display", "none");
-				$("#edit_item_row").css("display", "none");
-				$("#delete_item_row").css("display", "none");
-			}
+			//userLocation = localStorage.getItem("userLocation");
 
 			document.getElementById("ifile").onchange = function(event) {
 
@@ -476,69 +385,19 @@
 
 		});
 
-		$(document)
-				.on(
-						"click",
-						".leaseterm",
-						function(event) { //to see which option is selected from dropdown lease term
-							var text = document.getElementById(event.target.id).innerHTML;
-							document.getElementById("dropdownbuttonlease_term").innerHTML = text;
-						});
-
-		function add_item() { //called when Add Item is clicked then add the item to Items table and to Store table
-			currentWork = 'addItem';
-			$('#submit').click();
-		}
-
-		function request_item() {
-			currentWork = 'requestItem';
-
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to request the Item?";
-
-			$("#alertModalTriggerButton").click();
-
-		}
-
-		function lease_item() {
-			currentWork = 'leaseItem';
-
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to lease the Item?";
-
-			$("#alertModalTriggerButton").click();
-		}
+		$(document).on("click", ".leaseterm", function(event) { //to see which option is selected from dropdown lease term
+            var text = document.getElementById(event.target.id).innerHTML;
+            document.getElementById("dropdownbuttonlease_term").innerHTML = text;
+        });
 
 		function edit_item() { //editting the item-----------------------------------------------			
 			currentWork = 'editItem';
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to save the edited values?";
-
-			$("#alertModalTriggerButton").click();
 		}
 
 		function delete_item() { //deleting the item-----------------------------------------------
 			currentWork = 'deleteItem';
 
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to delete this Item?";
-
-			$("#alertModalTriggerButton").click();
-
 		}
-
-		function cancel() {
-			redirectToPrevPage();
-		}
-
-		$("#itemform").submit(function(event) {
-			event.preventDefault();
-
-			if (currentWork == 'addItem') {
-				itemSetValues();
-				itemDbCreate();
-			}
-		});
 
 		function continueWork() {
 			if (currentWork == 'editItem') {
@@ -555,64 +414,10 @@
 					userId = null;
 
 				deleteItemDbCreate();
-			} else if (currentWork == 'requestItem') {
-				itemId = itemUserId = null;
-
-				if (userloggedin == "" || userloggedin == null || userloggedin == "anonymous")
-					logInCheck(); //refer file logincheck.js 
-				else
-					requestItem();
-			} else if (currentWork == 'leaseItem') {
-
-				reqUserId = getRequestingUser();
-				leaseItemSetValues(reqUserId);
 			}
 
 		}
-		
-		function requestItem(){
-			var req = {
-				itemId: "${itemId}",
-				userId: userloggedin
-			};
-
-			reqItemSend(req);
-		}
-
-		function reqItemSend(req){
-			
-			$.ajax({
-				url: '/flsv2/RequestItem',
-				type:'get',
-				data: {req: JSON.stringify(req)},
-				contentType:"application/json",
-				dataType: "json",
-				
-				success: function(response) {
-					var heading = "Successful";
-					
-					var msg = response.Message;
-					var objOwner = getItemOwner();
-					
-					confirmationIndex(heading, msg);
-				},
-				
-				error: function() {
-					var msg = "Not Working";
-					confirmationIndex(msg);
-				}
-			});
-		}
-
-		function confirmationIndex(heading, msg) { //called from script_admin_v2.js
-			var header = document.getElementById("myModalLabel");
-			header.innerHTML = heading;
-			var div = document.getElementById("modalMsg");
-			div.innerHTML = msg;
-
-			$("#modalTriggerButton").click();
-		}
-
+        
 		function redirectToPrevPage() {
 			prevPage = getPrevPage("prevPage");
 			window.location.replace(prevPage);
@@ -623,13 +428,7 @@
 
 			storeItemOwner("${userId}");
 
-			$("#title").val("${title}");
-
 			$("#dropdownbuttoncategory").text("${category}");
-
-			$("#description").val("${description}");
-
-			$("#lease_value").val("${leaseValue}");
 
 			$("#dropdownbuttonlease_term").text("${leaseTerm}");
 
@@ -678,16 +477,6 @@
 											.log("Geocode was unsucessfull in detecting your current location");
 								}
 							});
-		}
-
-		function makeFormReadOnly() {
-			$("#title").attr("disabled", true);
-			$("#dropdownbuttoncategory").attr("disabled", true);
-			$("#location").attr("disabled", true);
-			$("#description").attr("disabled", true);
-			$("#lease_value").attr("disabled", true);
-			$("#dropdownbuttonlease_term").attr("disabled", true);
-			$("#quantity").attr("disabled", true);
 		}
 	</script>
 

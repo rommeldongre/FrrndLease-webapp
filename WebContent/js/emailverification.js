@@ -1,6 +1,7 @@
 var emailVerificationApp = angular.module('emailVerificationApp', ['ui.bootstrap']);
 
 emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$location', 'modalService', function($scope, $http, $location, modalService){
+    
     $scope.title = "Frrndlease Sign up Email Verification";
     
     $http.post('/flsv2/EmailVerification', JSON.stringify({verification : getQueryVariable("token")})).then(
@@ -40,6 +41,8 @@ emailVerificationApp.service('modalService', ['$uibModal',
 
         var modalOptions = {
             actionButtonText: 'OK',
+            showCancel: false,
+            cancelButtonText: 'CANCEL',
             headerText: 'Email Verification',
             bodyText: 'Perform this action?'
         };
@@ -66,6 +69,9 @@ emailVerificationApp.service('modalService', ['$uibModal',
                     $scope.modalOptions = tempModalOptions;
                     $scope.modalOptions.ok = function (result) {
                         $uibModalInstance.close(result);
+                    };
+                    $scope.modalOptions.cancel = function () {
+                        $modalInstance.dismiss('cancel');
                     };
                 }
             }
