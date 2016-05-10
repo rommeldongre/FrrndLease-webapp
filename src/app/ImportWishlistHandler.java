@@ -17,6 +17,7 @@ import adminOps.Response;
 import tableOps.Items;
 import tableOps.Wishlist;
 import util.FlsLogger;
+import util.BufferImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +39,8 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 	private int newItemCount = 0;
 	Response res = new Response();
 	WishlistModel wm = new WishlistModel();
+	ItemsModel im = new ItemsModel();
+	BufferImage BI = new BufferImage();
 
 	private static ImportWishlistHandler instance = null;
 
@@ -58,7 +61,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 		ImportWishlistReqObj rq = (ImportWishlistReqObj) req;
 		ImportWishlistResObj rs = new ImportWishlistResObj();
-		ItemsModel im = new ItemsModel();
+		
 
 		LOGGER.info("Inside process method " + rq.getUrl());
 		// TODO: Core of the processing takes place here
@@ -70,7 +73,9 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		Elements links = doc.select("a[id*=itemName]");
 		LOGGER.info("Total number of elements: " + links.size());
 		LOGGER.info("Value before for loop: " + newItemCount);
-
+		
+		Elements imglink = doc.select("div[id*=itemImage] > a > img[src]");
+		
 		Element links2 = doc.select("div[class*=selected] > a > span > span").first();
 		LOGGER.info("selected Wishlist count: " + links2.text());
 		Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(links2.text());
@@ -82,6 +87,10 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 		for (int i = 0; i < links.size(); i++) {
 			LOGGER.info("\ntext : " + links.get(i).text());
+			String imgSrc= null, final_img = null;
+			imgSrc = BI.URLtoImage(imglink.get(i).attr("src"));
+			final_img = "data:image/png;base64,"+imgSrc;
+			
 			// Populate the response
 			try {
 				JSONObject obj1 = new JSONObject();
@@ -93,7 +102,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				obj1.put("id", 0);
 				obj1.put("leaseValue", 0);
 				obj1.put("status", "Wished");
-				obj1.put("image", " ");
+				obj1.put("image", final_img);
 
 				im.getData(obj1);
 			} catch (JSONException e) {
@@ -124,10 +133,11 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 	private void AmazonWishlist(String URL, String name) {
 
-		String Iname, User;
+		String Iname, User, Image;
 		Integer insertcount = 0;
 		Iname = URL;
 		User = name;
+		Image = im.getImage();
 
 		try {
 			getConnection();
@@ -157,7 +167,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				stmt1.setInt(5, 0);
 				stmt1.setString(6, "");
 				stmt1.setString(7, "Wished");
-				stmt1.setString(8, "");
+				stmt1.setString(8, Image);
 				insertcount = stmt1.executeUpdate();
 				// System.out.println("Entry added into items table:
 				// "+insertcount);
