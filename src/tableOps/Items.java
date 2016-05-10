@@ -517,7 +517,6 @@ public class Items extends Connect {
 				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();
-				LOGGER.info(message);
 				check = rs.getInt("item_id");
 			}
 			if (check != 0) { // checks if result Set is empty
