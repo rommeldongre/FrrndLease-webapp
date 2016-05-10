@@ -71,22 +71,12 @@
             <!-- Item Details starts -->
 			<div class="row" ng-if="!showError">
 				<div class="col-md-6" id="outertable">
-                    
-					<div class="row">
-						<div class="col-md-12">
-							<form>
-								<div class="form-group" id="ifile_div">
-									<label for="item_image" id="image_label">Add Picture</label> <input type="file" id="ifile">
-								</div>
-							</form>
-						</div>
-					</div>
 					<br />
-                    
-					<div class="row">
-						<div class="col-md-12">
-							<canvas id="panel"></canvas>
-						</div>
+					<div class="row" ng-if="userMatch">
+                        <div class="col-md-12">
+                            <input type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" />
+                            <img ng-src="{{image}}" width="300" height="300"/>
+                        </div>
 					</div>
                     
 					<form id="itemform">
@@ -173,19 +163,19 @@
 
 					<div ng-if="!userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="request_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="requestItem()">Request Item</button>
+							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="requestItem()">Request Item</button>
 						</div>
 					</div>
 
 					<div ng-if="userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="editItem()">Edit Item</button>
+							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="editItem()">Edit Item</button>
 						</div>
 					</div>
 
 					<div ng-if="userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="deleteItem()">Delete Item</button>
+							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="deleteItem()">Delete Item</button>
 						</div>
 					</div>
 				</div>
@@ -216,6 +206,7 @@
         var description = "${description}";
         var leaseValue = "${leaseValue}";
         var leaseTerm = "${leaseTerm}";
+        var image = "${image}";
 
 		function start() {
 
@@ -235,77 +226,7 @@
 			userloggedin = localStorage.getItem("userloggedin");
 			//userLocation = localStorage.getItem("userLocation");
 
-			document.getElementById("ifile").onchange = function(event) {
-
-				EXIF.getData(event.target.files[0], function() {
-					exif = EXIF.getAllTags(this);
-
-					picOrientation = exif.Orientation;
-				});
-
-				this.imageFile = event.target.files[0];
-
-				var reader = new FileReader();
-				reader.onload = function(event) {
-					var img = new Image();
-					//img.style.width = "300px";
-					//img.style.height = "300px";
-
-					img.onload = function() {
-						drawImage(img);
-					}
-					img.src = event.target.result;
-
-				}
-				reader.readAsDataURL(this.imageFile);
-			}
-
 		}
-
-		function drawImage(img) {
-			//beginning of image display
-			canvasCtx = document.getElementById("panel").getContext("2d");
-
-			this.canvasCtx.canvas.width = 300;//img.width;
-			this.canvasCtx.canvas.height = 300;//img.height;
-
-			if (img.width > img.height) { //Landscape Image 
-				canvasCtx.width = 300;
-				canvasCtx.height = 300 / img.width * img.height;
-			} else { //Portrait Image
-				canvasCtx.width = 300 / img.height * img.width;
-				canvasCtx.height = 300;
-			}
-
-			if (picOrientation == 2) {
-				this.canvasCtx.transform(-1, 0, 0, 1, canvasCtx.width, 0);
-			}
-			if (picOrientation == 3) {
-				this.canvasCtx.transform(-1, 0, 0, -1, canvasCtx.width,
-						canvasCtx.height);
-			}
-			if (picOrientation == 4) {
-				this.canvasCtx.transform(1, 0, 0, -1, 0, canvasCtx.height);
-			}
-			if (picOrientation == 5) {
-				this.canvasCtx.transform(0, 1, 1, 0, 0, 0);
-			}
-			if (picOrientation == 6) {
-				this.canvasCtx.transform(0, 1, -1, 0, canvasCtx.height, 0);
-			}
-			if (picOrientation == 7) {
-				this.canvasCtx.transform(0, -1, -1, 0, canvasCtx.height,
-						canvasCtx.width);
-			}
-			if (picOrientation == 8) {
-				this.canvasCtx.transform(0, -1, 1, 0, 0, canvasCtx.width);
-			}
-
-			this.canvasCtx.drawImage(img, 0, 0, canvasCtx.width,
-					canvasCtx.height);
-			url = canvasCtx.canvas.toDataURL();
-		}
-		//end of image display
 
 		function load_Gapi() { //for google
 			gapi.load('auth2', function() {
@@ -389,34 +310,6 @@
             var text = document.getElementById(event.target.id).innerHTML;
             document.getElementById("dropdownbuttonlease_term").innerHTML = text;
         });
-
-		function edit_item() { //editting the item-----------------------------------------------			
-			currentWork = 'editItem';
-		}
-
-		function delete_item() { //deleting the item-----------------------------------------------
-			currentWork = 'deleteItem';
-
-		}
-
-		function continueWork() {
-			if (currentWork == 'editItem') {
-				editItemSetValues();
-				editItemDbCreate();
-
-			} else if (currentWork == 'deleteItem') {
-				itemId = getItemToShow();
-				userId = userloggedin;
-
-				if (itemId == '')
-					itemId = 0;
-				if (userId == '')
-					userId = null;
-
-				deleteItemDbCreate();
-			}
-
-		}
         
 		function redirectToPrevPage() {
 			prevPage = getPrevPage("prevPage");
@@ -431,16 +324,6 @@
 			$("#dropdownbuttoncategory").text("${category}");
 
 			$("#dropdownbuttonlease_term").text("${leaseTerm}");
-
-			//display the picture of the item begins here
-
-			url = "${image}";
-			var img = new Image();
-
-			img.src = url;
-			if (img.src != null && img.src != "null")
-				drawImage(img);
-			//display the picture of the item ends here	
 		}
 
 		//to get current location of the user and show it in the location by default

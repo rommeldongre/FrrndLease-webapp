@@ -55,6 +55,19 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
     $scope.description = $window.description;
     $scope.leaseValue = parseInt($window.leaseValue);
     $scope.leaseTerm = $window.leaseTerm;
+    $scope.image = $window.image;
+    
+    $scope.uploadImage = function(file){
+        console.log(file);
+                
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            $scope.$apply(function() {
+                $scope.image = event.target.result;
+            });
+        }
+        reader.readAsDataURL(file);
+    }
     
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){
@@ -72,7 +85,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
     }
     
     $scope.requestItem = function(){
-        modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(function(result){
+        modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
+            function(result){
                 if (user == "" || user == null || user == "anonymous")
 					logInCheck();
 				else
@@ -80,24 +94,91 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
                         url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:user}),
                         method:"GET"
                     }).then(function success(response){
-                        console.log(response);
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
                     },
                     function error(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
                     });
-        }, 
-        function(){
-                    
-        });
+            }, 
+            function(){
+
+            });
     }
     
     $scope.editItem = function(){
         
+        var item_title = $scope.title;
+        if(item_title === '')
+            item_title = null;
+        
+        var item_id = $scope.item_id;
+        if(item_id === '')
+            item_id = 0;
+        
+        var item_description = $scope.description;
+        if (item_description === '') 
+		  item_description = null;
+        
+        var item_category = $scope.category;
+        if (item_category === '' || item_category == 'Category') 
+		  item_category = null;
+        
+        var item_user_id = user;
+        if (item_user_id === '') 
+		  item_user_id = "anonymous";
+        
+        var item_lease_value = $scope.leaseValue;
+        if (item_lease_value === '') 
+		  item_lease_value = 0;
+        
+        var item_lease_term = $scope.leaseTerm;
+        if (item_lease_term === '' || item_lease_term == 'Lease Term') 
+		  item_lease_term = null;
+        
+        var req = {
+            id:item_id,
+            title:item_title,
+            description:item_description,
+            category: item_category,
+            userId: item_user_id,
+            leaseValue: item_lease_value,
+            leaseTerm: item_lease_term,
+            image: $scope.image
+        }
+        
+        modalService.showModal({}, {bodyText: 'Are you sure you want to update the Item?'}).then(
+            function(result){
+                $http({
+                    url:'/flsv2/EditPosting?req'+JSON.stringify(req),
+                    method:"GET"
+                }).then(function success(response){
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    },
+                    function error(response){
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    });
+            },
+            function(){
+
+            });
     }
     
     $scope.deleteItem = function(){
-        
+        modalService.showModal({}, {bodyText: 'Are you sure you want to delete the Item?'}).then(
+            function(result){
+                    $http({
+                        url:'/flsv2/DeletePosting?req='+JSON.stringify({id:$scope.item_id,userId:user}),
+                        method:"GET"
+                    }).then(function success(response){
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    },
+                    function error(response){
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    });
+            }, 
+            function(){
+
+            });
     }
     
 }]);
@@ -153,34 +234,3 @@ itemDetailsApp.service('modalService', ['$uibModal',
         };
 
     }]);
-
-//function requestItem(i, u){
-//			var req = {
-//				itemId: i,
-//				userId: u
-//			};
-//
-//			reqItemSend(req);
-//		}
-//
-//		function reqItemSend(req){
-//			
-//			$.ajax({
-//				url: '/flsv2/RequestItem',
-//				type:'get',
-//				data: {req: JSON.stringify(req)},
-//				contentType:"application/json",
-//				dataType: "json",
-//				
-//				success: function(response) {
-//					var heading = "Successful";
-//					
-//					var msg = response.Message;
-//					var objOwner = getItemOwner();
-//				},
-//				
-//				error: function() {
-//					var msg = "Not Working";
-//				}
-//			});
-//		}
