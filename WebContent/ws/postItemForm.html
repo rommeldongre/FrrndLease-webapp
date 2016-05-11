@@ -91,8 +91,7 @@
 				//image: JSON.stringify(url.replace(/^data:image\/(png|jpg);base64,/, ""))
 				image: url
 		};
-		console.log(JSON.stringify(req));
-		//var Req = JSON.parse(JOSNObject);
+		
 		send(req);
 	};
 	
@@ -101,7 +100,7 @@
 		$.ajax({
 			url: '/flsv2/PostItem',
 			type: 'post',
-			data: {req : JSON.stringify(req)},
+			data: JSON.stringify(req),
 			//contentType: false,
 			contentType: "application/x-www-form-urlencoded",
 			//Content-transfer-encoding: base64,
@@ -109,9 +108,10 @@
 			
 			success: function(response) {
 				alert('Working');
-				document.getElementById("Id").value = response.Id;
-				document.getElementById("Code").value = response.Code;
-				document.getElementById("Message").value = response.Message;
+				console.log(response);
+				document.getElementById("Id").value = response.itemId;
+				document.getElementById("uid").value = response.uid;
+				document.getElementById("Message").value = response.ErrorString;
 				//if(parseInt(response.Code) === 3 || parseInt(response.Code) === 4) Token = parseInt(response.Id);
 				console.log(Token);
 			},
@@ -139,7 +139,7 @@
 		
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>
-		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Uid: <input type="text" name="uid" id="uid"><br/><br/>
 		Message : <input type="text" name="message" id="Message">
 	</form>
 	<br/>
