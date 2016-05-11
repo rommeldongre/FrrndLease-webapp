@@ -83,7 +83,9 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
                         url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:user}),
                         method:"GET"
                     }).then(function success(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                            window.location.replace("/flsv2/index.html");
+                        },function(){});
                     },
                     function error(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
@@ -160,7 +162,9 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
                         url:'/flsv2/DeletePosting?req='+JSON.stringify({id:$scope.item_id,userId:user}),
                         method:"GET"
                     }).then(function success(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                            window.location.replace("/flsv2/index.html");
+                        },function(){});
                     },
                     function error(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});

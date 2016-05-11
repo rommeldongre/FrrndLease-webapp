@@ -1,4 +1,4 @@
-var emailVerificationApp = angular.module('emailVerificationApp', ['ui.bootstrap']);
+var emailVerificationApp = angular.module('emailVerificationApp', ['headerApp']);
 
 emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$location', 'modalService', function($scope, $http, $location, modalService){
     
@@ -28,58 +28,6 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
         }
     );
 }]);
-
-emailVerificationApp.service('modalService', ['$uibModal',
-    function ($uibModal) {
-
-        var modalDefaults = {
-            animation: true,
-            backdrop: true,
-            keyboard: true,
-            templateUrl: '/flsv2/modal.html'
-        };
-
-        var modalOptions = {
-            actionButtonText: 'OK',
-            showCancel: false,
-            cancelButtonText: 'CANCEL',
-            headerText: 'Email Verification',
-            bodyText: 'Perform this action?'
-        };
-
-        this.showModal = function (customModalDefaults, customModalOptions) {
-            if (!customModalDefaults) customModalDefaults = {};
-            customModalDefaults.backdrop = 'static';
-            return this.show(customModalDefaults, customModalOptions);
-        };
-
-        this.show = function (customModalDefaults, customModalOptions) {
-            //Create temp objects to work with since we're in a singleton service
-            var tempModalDefaults = {};
-            var tempModalOptions = {};
-
-            //Map angular-ui modal custom defaults to modal defaults defined in service
-            angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
-
-            //Map modal.html $scope custom properties to defaults defined in service
-            angular.extend(tempModalOptions, modalOptions, customModalOptions);
-
-            if (!tempModalDefaults.controller) {
-                tempModalDefaults.controller = function ($scope, $uibModalInstance) {
-                    $scope.modalOptions = tempModalOptions;
-                    $scope.modalOptions.ok = function (result) {
-                        $uibModalInstance.close(result);
-                    };
-                    $scope.modalOptions.cancel = function () {
-                        $modalInstance.dismiss('cancel');
-                    };
-                }
-            }
-
-            return $uibModal.open(tempModalDefaults).result;
-        };
-
-    }]);
 
 var getQueryVariable = function (variable) {
     var query = window.location.search.substring(1);
