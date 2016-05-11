@@ -35,7 +35,7 @@ public class RequestItem extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("application/json");
 		LOGGER.info("Inside GET Method");
-
+		
 		doPost(request, response);
 	}
 
@@ -44,7 +44,7 @@ public class RequestItem extends HttpServlet {
 		LOGGER.info("Inside POST Method");
 		String table;
 		PrintWriter out = response.getWriter();
-
+		
 		String str = request.getParameter("req");
 
 		try {
