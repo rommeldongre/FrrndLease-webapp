@@ -18,6 +18,7 @@
 <!-- Angularjs api -->
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+<script src="js/header.js"></script>
 <!-- Angularjs api ends -->
 
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -53,7 +54,7 @@
 	<div id="main">
 
 		<!--header starts---------------------------------------->
-        <div ng-controller="headerCtrl">
+        <div>
 		  <div ng-include="'header.html'"></div>
         </div>
 		<!--header ends----------------------------------------->
@@ -63,7 +64,7 @@
             <!-- Error Message Display starts -->
 			<div class="row" ng-if="showError">
 				<div id="heading">
-					<span>{{message}}</span>
+					<span>${message}</span>
 				</div>
 			</div>
             <!-- Error Message Display ends -->
@@ -72,9 +73,9 @@
 			<div class="row" ng-if="!showError">
 				<div class="col-md-6" id="outertable">
 					<br />
-					<div class="row" ng-if="userMatch">
+					<div class="row">
                         <div class="col-md-12">
-                            <input type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" />
+                            <input type="file" ng-if="userMatch" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" />
                             <img ng-src="{{image}}" width="300" height="300"/>
                         </div>
 					</div>
@@ -105,7 +106,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="location">Location</label>
-                                    <input type="text" class="form-control" id="location" placeholder="Location">
+                                    <input type="text" class="form-control" ng-model="location" placeholder="Location">
 								</div>
 							</div>
 						</div>
@@ -194,7 +195,7 @@
 	</div>
 
 	<script type="text/javascript">
-		var userloggedin, userLocation, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, picOrientation = null;
+		var reasonForGetItem, itemObj, reqObj, itemNo, leaseObj;
         
         var code = "${code}";
         var message = "${message}";
@@ -210,8 +211,6 @@
 
 		function start() {
 
-			load_Gapi();
-
 			$('#error_row').hide();
 			$('#submit').hide();
 
@@ -219,19 +218,9 @@
 			getLeaseValueWidth();
 			loadCategoryDropdown();
 			loadLeaseTermDropdown();
+            
+            getItemInfo();
 
-			getLocation(); //to show default location of the user
-
-			//checking if user is logged in or not
-			userloggedin = localStorage.getItem("userloggedin");
-			//userLocation = localStorage.getItem("userLocation");
-
-		}
-
-		function load_Gapi() { //for google
-			gapi.load('auth2', function() {
-				gapi.auth2.init();
-			});
 		}
 
 		$(window).resize(function() {
@@ -310,57 +299,15 @@
             var text = document.getElementById(event.target.id).innerHTML;
             document.getElementById("dropdownbuttonlease_term").innerHTML = text;
         });
-        
-		function redirectToPrevPage() {
-			prevPage = getPrevPage("prevPage");
-			window.location.replace(prevPage);
-		}
 
 		//getting item info when user wants to view an existing item--------------------------------------------------------------------		
 		function getItemInfo() {
-
-			storeItemOwner("${userId}");
 
 			$("#dropdownbuttoncategory").text("${category}");
 
 			$("#dropdownbuttonlease_term").text("${leaseTerm}");
 		}
 
-		//to get current location of the user and show it in the location by default
-		function getLocation() {
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(showPosition);
-			} else {
-				console.log("Geolocation is not supported by this browser.");
-			}
-		}
-
-		function showPosition(position) {
-			console.log("Latitude: " + position.coords.latitude
-					+ "<br>Longitude: " + position.coords.longitude);
-
-			latitude = position.coords.latitude;
-			longitude = position.coords.longitude;
-			coords = new google.maps.LatLng(latitude, longitude);
-
-			var geocoder = new google.maps.Geocoder();
-			var latLng = new google.maps.LatLng(latitude, longitude);
-			geocoder
-					.geocode(
-							{
-								'latLng' : latLng
-							},
-							function(results, status) {
-								if (status == google.maps.GeocoderStatus.OK) {
-									console.log(results[4].formatted_address);
-									$("#location").val(
-											results[4].formatted_address);
-								} else {
-									console
-											.log("Geocode was unsucessfull in detecting your current location");
-								}
-							});
-		}
 	</script>
 
 
