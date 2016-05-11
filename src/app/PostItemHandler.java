@@ -154,6 +154,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs.setItemId(id);
 			rs.setReturnCode(0);
 			rs.setUid(uid);
+			rs.setErrorString(message);
 			
 		} catch (SQLException e) {
 			LOGGER.warning("Couldnt create a statement");
