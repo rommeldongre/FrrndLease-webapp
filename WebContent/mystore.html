@@ -238,7 +238,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
+					<h4 class="modal-title" id="myModalLabel"></h4>
 				  </div>
 				  <div class="modal-body" id="alertModalMsg">
 					
@@ -716,6 +716,10 @@
 			
 			currentWork = 'shareItem';
 			uidTitle = obj.uid;
+			
+			var heading = document.getElementById("myModalLabel");
+			heading.innerHTML = "Sucess! Item Posted on Frrndlease";
+			
 			var div = document.getElementById("alertModalMsg");
 			div.innerHTML = "Do you want to share this item on Facebook?";
 			
@@ -724,27 +728,22 @@
 		}
 		function shareOnFb(uid){
 			
-			var wishlist= 'gp/registry/wishlist/KETUJF0W5ZI3/ref=cm_wl_list_o_0?'
-			var link= 'http://www.amazon.in/'+wishlist;
-			var link2 = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
-			console.log('http://localhost:8080/flsv2/ItemDetails?uid='+uid);
+			var link = null;
 			
-			FB.login(function(response) {
-				// handle the response
-				
-				// check whether user is logged in or not and ask for credentials if not.
-				/*
-				FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
-					console.log('Successful login for: ' + response.name+" "+response.id+" "+response.email);
-					loginpassword = response.id;
-					loginemail =  response.email;
-				});
-				{"error_code":4201,"error_message":"User canceled the Dialog flow"}
-				*/
+			if(window.location.href.indexOf("frrndlease.com") > -1){
+				link = 'http://www.frrndlease.com/ItemDetails?uid='+uid;
+			}else{
+				link = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
+				console.log('http://localhost:8080/flsv2/ItemDetails?uid='+uid);
+			}
+			
+			FB.login(function(response) {		
+				// Facebook checks whether user is logged in or not and asks for credentials if not.
+		
 				// Share item listing with facebook friends using share dialog
 				FB.ui({
 					method: 'share',
-					href: link2,
+					href: link,
 				},function(response){
 					console.log(response);
 					if (response && !response.error) {
