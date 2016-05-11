@@ -93,7 +93,7 @@ itemDbCreate = function(){									//for storing in db/localstorage
 function postItemSend(req) {
 	
 		$.ajax({
-			url: '/flsv2/PostItemC',
+			url: '/flsv2/PostItem',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",
