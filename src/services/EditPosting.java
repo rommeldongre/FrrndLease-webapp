@@ -49,7 +49,7 @@ public class EditPosting extends HttpServlet {
 		LOGGER.info("Inside POST Method");
 		String table;
 		PrintWriter out = response.getWriter();
-
+		
 		String str = request.getParameter("req");
 
 		try {
