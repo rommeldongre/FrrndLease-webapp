@@ -120,6 +120,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		LOGGER.info("Printing out Resultset: " + message);
 		Code = FLS_SUCCESS;
 		Id = check;
+		
 		LOGGER.info("Finished process method ");
 		// return the response
 		return rs;
@@ -171,6 +172,12 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				insertcount = stmt1.executeUpdate();
 				// System.out.println("Entry added into items table:
 				// "+insertcount);
+				
+				// to add credit in user_credit
+				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+				PreparedStatement s1 = connection.prepareStatement(sqlAddCredit);
+				s1.setString(1, User);
+				s1.executeUpdate();
 
 				// returning the new id
 				String sql2 = "SELECT MAX(item_id) FROM items";

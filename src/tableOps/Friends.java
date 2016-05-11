@@ -110,6 +110,12 @@ public class Friends extends Connect {
 				LOGGER.warning(message);
 				Code = 10;
 				Id = friendId;
+				
+				// to add credit in user_credit
+				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+				PreparedStatement s1 = connection.prepareStatement(sqlAddCredit);
+				s1.setString(1, userId);
+				s1.executeUpdate();
 
 				try {
 					AwsSESEmail newE = new AwsSESEmail();

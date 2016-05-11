@@ -131,29 +131,55 @@ public class Leases extends Connect {
 		getConnection();
 
 		try {
-			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
-
-			LOGGER.info("Statement created. Executing query.....");
-			stmt.setString(1, reqUserId);
-			stmt.setString(2, itemId);
-			stmt.setString(3, userId);
-			stmt.setString(4, date);
-			stmt.executeUpdate();
-			message = "Entry added into leases table";
-			LOGGER.warning(message);
-			Code = 15;
-			Id = reqUserId;
-
-			try {
-				AwsSESEmail newE = new AwsSESEmail();
-				newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, lm);
-				newE.send(reqUserId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, lm);
-			} catch (Exception e) {
-				e.printStackTrace();
+			// check if there are credits in the users account
+			int credit = 0;
+			String sqlCheckCredit = "SELECT user_credit FROM users WHERE user_id=?";
+			PreparedStatement s1 = connection.prepareStatement(sqlCheckCredit);
+			s1.setString(1, reqUserId);
+			ResultSet rs1 = s1.executeQuery();
+			if (rs1.next()) {
+				credit = rs1.getInt("user_credit");
 			}
 
-			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			if (credit >= 10) {
+
+				LOGGER.info("Creating statement.....");
+				PreparedStatement stmt = connection.prepareStatement(sql);
+
+				LOGGER.info("Statement created. Executing query.....");
+				stmt.setString(1, reqUserId);
+				stmt.setString(2, itemId);
+				stmt.setString(3, userId);
+				stmt.setString(4, date);
+				stmt.executeUpdate();
+				message = "Entry added into leases table";
+				LOGGER.warning(message);
+				Code = 15;
+				Id = reqUserId;
+
+				// add credit to user giving item on lease
+				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
+				PreparedStatement s2 = connection.prepareStatement(sqlAddCredit);
+				s2.setString(1, userId);
+				s2.executeUpdate();
+
+				// subtract credit from user getting a lease
+				String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
+				PreparedStatement s3 = connection.prepareStatement(sqlSubCredit);
+				s3.setString(1, reqUserId);
+				s3.executeUpdate();
+
+				try {
+					AwsSESEmail newE = new AwsSESEmail();
+					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, lm);
+					newE.send(reqUserId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, lm);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			} else {
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", "Atleast 10 credits required by the requester");
+			}
 		} catch (SQLException e) {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
