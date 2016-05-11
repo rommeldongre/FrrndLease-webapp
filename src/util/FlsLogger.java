@@ -18,7 +18,7 @@ public class FlsLogger{
 				
 		try {
 			if(FlsConfig.env.equals("dev")){
-				this.logger.setLevel(Level.WARNING);
+				this.logger.setLevel(Level.INFO);
 			}else {
 				this.logger.setLevel(Level.WARNING);
 			}

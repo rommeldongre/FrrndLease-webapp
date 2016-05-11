@@ -16,7 +16,7 @@ public class Connect extends ErrorCat {
 	// Local - Database
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private static String name = "root";
-	private static String pass = "";
+	private static String pass = "root";
 
 	// Amazon RDS Database
 	// private static String url =
