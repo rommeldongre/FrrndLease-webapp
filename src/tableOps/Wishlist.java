@@ -84,7 +84,20 @@ public class Wishlist extends Connect {
 			LOGGER.warning(message);
 			Code = 33;
 			Id = String.valueOf(itemId);
-
+			
+			// to add credit in user_credit
+			String sqlUserId = "SELECT item_user_id FROM items WHERE item_id=?";
+			PreparedStatement s1 = connection.prepareStatement(sqlUserId);
+			s1.setString(1, String.valueOf(itemId));
+			ResultSet rs1 = s1.executeQuery();
+			
+			if(rs1.next()){
+				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+				PreparedStatement s2 = connection.prepareStatement(sqlAddCredit);
+				s2.setString(1, rs1.getString("item_user_id"));
+				s2.executeUpdate();
+			}
+			
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 		} catch (SQLException e) {
 			LOGGER.warning("Couldn't create statement");

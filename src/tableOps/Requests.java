@@ -198,20 +198,26 @@ public class Requests extends Connect {
 					}
 					// code for populating item pojo for sending owner email
 					// ends here
-
+					
+					// add credit to user reuesting item
+					String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+					PreparedStatement s1 = connection.prepareStatement(sqlAddCredit);
+					s1.setString(1, userId);
+					s1.executeUpdate();
+					
 					PreparedStatement stmt = connection.prepareStatement(sql);
-
+	
 					LOGGER.info("Statement created. Executing query.....");
 					stmt.setString(1, userId);
 					stmt.setString(2, itemId);
 					stmt.setString(3, date);
 					stmt.executeUpdate();
 					LOGGER.warning("Entry added into requests table");
-
+	
 					message = FLS_SUCCESS_M;
 					Code = FLS_SUCCESS;
 					Id = itemId;
-
+	
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
 						ownerUserId = im.getUserId();
@@ -233,11 +239,14 @@ public class Requests extends Connect {
 				Id = "0";
 			}
 			res.setData(Code, Id, message);
-		} catch (SQLException e) {
-			LOGGER.warning("Couldn't create statement");
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-			e.printStackTrace();
-		}
+		}catch(
+
+	SQLException e)
+	{
+		LOGGER.warning("Couldn't create statement");
+		res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		e.printStackTrace();
+	}
 	}
 
 	private void Delete() {

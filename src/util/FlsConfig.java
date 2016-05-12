@@ -10,7 +10,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2002;			
+	public final int appBuild = 2003;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -148,6 +148,29 @@ public class FlsConfig extends Connect{
 				e.printStackTrace();
 			}
 			
+		}
+		
+		if(dbBuild < 2003){
+			String sqlAddUserCredit = "ALTER TABLE `users` ADD `user_credit` INT(255) NOT NULL DEFAULT '10' AFTER `user_status`";
+			try {
+				PreparedStatement ps1 = connection.prepareStatement(sqlAddUserCredit);
+				ps1.executeUpdate();
+				ps1.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			dbBuild = 2003;
+			
+			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
+			try{
+				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
+				ps.executeUpdate();
+				ps.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
 		}
 		
 	}
