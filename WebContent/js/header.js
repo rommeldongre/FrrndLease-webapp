@@ -11,6 +11,24 @@ headerApp.controller('headerCtrl', function($scope){
         $scope.salutation = localStorage.getItem("userloggedinName");
     }
     
+    $.ajax({
+        url : '/flsv2/GetProfile',
+        type : 'post',
+        data : JSON.stringify({userId : user}),
+        contentType : "application/json",
+        dataType : "json",
+        success : function(response) {
+            if (response.code == 0) {
+                $scope.credits = response.credit + " credits";
+            } else {
+                $scope.credits = "";
+            }
+        },
+        error : function() {
+            alert("Connection Problem!!");
+        }
+    });
+    
     $scope.isAdmin = function(){
         if(user == 'frrndlease@greylabs.org')
             return true;
