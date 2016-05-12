@@ -262,7 +262,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel"></h4>
+					<h4 class="modal-title" id="myconfirmationLabel"></h4>
 				  </div>
 				  <div class="modal-body" id="modalMsg">
 					
@@ -758,7 +758,7 @@
 		}
 		
 		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
-			var header = document.getElementById("myModalLabel");
+			var header = document.getElementById("myconfirmationLabel");
 			header.innerHTML = heading;
 			var div = document.getElementById("modalMsg");
 			div.innerHTML = msg;
