@@ -262,7 +262,7 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel"></h4>
+					<h4 class="modal-title" id="myconfirmationLabel"></h4>
 				  </div>
 				  <div class="modal-body" id="modalMsg">
 					
@@ -273,6 +273,11 @@
 				</div>
 			  </div>
 			</div>
+			
+			<!-- "Please Wait" Modal Start here-->
+			<div id="wait_bar">
+			</div>
+			<!-- "Please Wait" Modal ends Here -->
 			
 			<div id="tawk_widget">
 				<!--The tawk.to widget code will get populated here from file chatbox.html. Refer file dropdownlist.js-->
@@ -620,6 +625,7 @@
 		
 		function add_item(){				//called when Add Item is clicked then add the item to Items table and to Store table
 			currentWork = 'addItem';
+			process_dialog("Posting Item Please Wait");
 			$('#submit').click();
 		}
 		
@@ -723,6 +729,7 @@
 			var div = document.getElementById("alertModalMsg");
 			div.innerHTML = "Do you want to share this item on Facebook?";
 			
+			$('#myPleaseWait').modal('hide');
 			$("#alertModalTriggerButton").click();
 		
 		}
@@ -758,7 +765,7 @@
 		}
 		
 		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
-			var header = document.getElementById("myModalLabel");
+			var header = document.getElementById("myconfirmationLabel");
 			header.innerHTML = heading;
 			var div = document.getElementById("modalMsg");
 			div.innerHTML = msg;
