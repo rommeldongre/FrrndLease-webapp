@@ -274,6 +274,11 @@
 			  </div>
 			</div>
 			
+			<!-- "Please Wait" Modal Start here-->
+			<div id="wait_bar">
+			</div>
+			<!-- "Please Wait" Modal ends Here -->
+			
 			<div id="tawk_widget">
 				<!--The tawk.to widget code will get populated here from file chatbox.html. Refer file dropdownlist.js-->
 			</div>
@@ -620,6 +625,7 @@
 		
 		function add_item(){				//called when Add Item is clicked then add the item to Items table and to Store table
 			currentWork = 'addItem';
+			process_dialog("Posting Item Please Wait");
 			$('#submit').click();
 		}
 		
@@ -723,6 +729,7 @@
 			var div = document.getElementById("alertModalMsg");
 			div.innerHTML = "Do you want to share this item on Facebook?";
 			
+			$('#myPleaseWait').modal('hide');
 			$("#alertModalTriggerButton").click();
 		
 		}

@@ -105,6 +105,7 @@ function postItemSend(req) {
 				}else{
 					var heading = "Unsuccessful";
 					var msg = response.errorString;
+					$('#myPleaseWait').modal('hide');
 					confirmationIndex(heading ,msg);
 				}
 			},
