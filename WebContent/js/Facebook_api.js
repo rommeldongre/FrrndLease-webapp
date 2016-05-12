@@ -1,6 +1,13 @@
+var fbId = null;
+if(window.location.href.indexOf("frrndlease.com") > -1){
+				fbId = '107934726217988';
+			}else{
+				fbId = '256875104657282';
+			}
+
 window.fbAsyncInit = function() {
                 FB.init({
-                appId: '107934726217988',
+                appId: fbId,
                 status: true,
                 cookie: true,
                 xfbml: true

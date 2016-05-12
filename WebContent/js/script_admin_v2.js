@@ -95,16 +95,13 @@ function postItemSend(req) {
 		$.ajax({
 			url: '/flsv2/PostItem',
 			type: 'post',
-			data: {req : JSON.stringify(req)},
+			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",
 			dataType: "json",
 			
 			success: function(response) {
-
-				//alert(response.Code+" "+response.Message);
-				var heading = "Successful";
-				var msg = response.Message;
-				confirmationIndex(heading, msg);
+				
+				shareOrNot(response);
 			},
 		
 			error: function() {
@@ -1719,7 +1716,7 @@ function getNextItemCarouselSend(req){
 						carouselinner.appendChild(item1);
 						$("#carousel-example-generic").carousel('next');				//load next slide
 					}
-						
+					
 					startingCarousel = 1;
 					
 					endOfCarousel = 1;
