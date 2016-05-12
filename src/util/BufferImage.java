@@ -27,7 +27,7 @@ public class BufferImage {
 		 
 		BufferedImage img = null;
 	     img = ImageIO.read(imageFile); // eventually C:\\ImageTest\\pic2.jpg
-	     image_string = encodeToString(img, "jpg");
+	     image_string = encodeToString(img, "png");
 	    //System.out.println(image_string);
 	    
 	     if(imageFile.delete()){

@@ -8,6 +8,7 @@
     <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js" async defer></script>    
 	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>		<!--google geolocation api-->
+	<script src="js/Facebook_api.js"></script>
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Item Details</title>
@@ -237,14 +238,14 @@
 				<div class="modal-content">
 				  <div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
+					<h4 class="modal-title" id="myModalLabel"></h4>
 				  </div>
 				  <div class="modal-body" id="alertModalMsg">
 					
 				  </div>
 				  <div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="continueWork()">Yes</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="discontinueWork()">No</button>
 				  </div>
 				</div>
 			  </div>
@@ -287,7 +288,7 @@
 	
 	
 	<script type="text/javascript">
-		var userloggedin, userLocation, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, picOrientation=null;
+		var userloggedin, userLocation, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, picOrientation=null, uidTitle=null;
 		
 		function start(){
 			prevPage = getPrevPage();
@@ -666,7 +667,7 @@
 		$("#itemform").submit(function(event){
 			event.preventDefault();				
 			
-			if(currentWork == 'addItem'){				
+			if(currentWork == 'addItem'){
 				itemSetValues();
 				itemDbCreate();
 			}		
@@ -696,8 +697,64 @@
 			
 				reqUserId = getRequestingUser();
 				leaseItemSetValues(reqUserId);
+			}else if(currentWork == 'shareItem'){
+				shareOnFb(uidTitle);
 			}
 			
+		}
+		
+		function discontinueWork(){
+			if(currentWork == 'shareItem'){
+				$('#myAlertModal').modal('hide');
+				confirmationIndex("Sucessful" ,"Item sucessfully posted");
+			}else{
+				$('#myAlertModal').modal('hide');
+			}
+		}
+		
+		function shareOrNot(obj){
+			
+			currentWork = 'shareItem';
+			uidTitle = obj.uid;
+			
+			var heading = document.getElementById("myModalLabel");
+			heading.innerHTML = "Sucess! Item Posted on Frrndlease";
+			
+			var div = document.getElementById("alertModalMsg");
+			div.innerHTML = "Do you want to share this item on Facebook?";
+			
+			$("#alertModalTriggerButton").click();
+		
+		}
+		function shareOnFb(uid){
+			
+			var link = null;
+			
+			if(window.location.href.indexOf("frrndlease.com") > -1){
+				link = 'http://www.frrndlease.com/ItemDetails?uid='+uid;
+			}else{
+				link = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
+				console.log('http://localhost:8080/flsv2/ItemDetails?uid='+uid);
+			}
+			
+			FB.login(function(response) {		
+				// Facebook checks whether user is logged in or not and asks for credentials if not.
+		
+				// Share item listing with facebook friends using share dialog
+				FB.ui({
+					method: 'share',
+					href: link,
+				},function(response){
+					console.log(response);
+					if (response && !response.error) {
+						//check 'response' to see if call was successful
+						console.log(JSON.stringify(response));
+						confirmationIndex("Success","Item sucessfully posted on Frrndlease and shared on Facebook");
+						}else{
+							confirmationIndex("Success","Item sucessfully posted on Frrndlease");
+						}
+				});
+            }, {scope: 'email,public_profile,user_friends'});
 		}
 		
 		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
