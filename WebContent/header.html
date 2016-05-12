@@ -19,6 +19,8 @@
                 
 				<li ng-if="isAnonymous()"><a id="headerfooteroptions" href="mysignup.html"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
                 
+                <li ng-if="isLoggedIn()" class="navbar-brand" style="color:#337ab7;font-size:14px;"><strong>{{credits}}</strong></li>
+                
                 <li ng-if="isLoggedIn()" class="dropdown" id="subheader">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
                         <span>{{salutation}}</span>

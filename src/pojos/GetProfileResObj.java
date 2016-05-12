@@ -5,6 +5,7 @@ public class GetProfileResObj extends ResObj{
 	int code;
 	String message;
 
+	int credit;
 	String fullName, mobile, location;
 
 	public int getCode() {
@@ -45,5 +46,13 @@ public class GetProfileResObj extends ResObj{
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public void setCredit(int credit) {
+		this.credit = credit;
+	}
+	
+	public int getCredit(){
+		return this.credit;
 	}
 }

@@ -29,12 +29,14 @@
 					document.getElementById("fullName").value = response.fullName;
 					document.getElementById("mobile").value = response.mobile;
 					document.getElementById("location").value = response.location;
+					document.getElementById("credit").value = response.credit;
 					document.getElementById("message").value = "";
 				}
 				else{
 					document.getElementById("fullName").value = "";
 					document.getElementById("mobile").value = "";
 					document.getElementById("location").value = "";
+					document.getElementById("credit").value = "";
 					document.getElementById("message").value = response.message;	
 				}
 			},
@@ -60,6 +62,7 @@
 		Full Name : <input type="text" name="fullName" id="fullName"><br/><br/>
 		Mobile : <input type="text" name="mobile" id="mobile"><br/><br/>
 		Location : <input type="text" name="location" id="location"><br/><br/>
+		Credit : <input type="text" name="credit" id="credit"><br/><br/>
 	</form>
 	
 	<br/>

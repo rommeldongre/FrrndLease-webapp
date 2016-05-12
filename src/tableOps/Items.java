@@ -174,6 +174,12 @@ public class Items extends Connect {
 			status = "operation successfull!!!";
 			message = "Item added into table";
 			LOGGER.warning(message);
+			
+			// to add credit in user_credit
+			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+			PreparedStatement s1 = connection.prepareStatement(sqlAddCredit);
+			s1.setString(1, userId);
+			s1.executeUpdate();
 
 			Code = 000;
 

@@ -98,7 +98,7 @@ public class Users extends Connect {
 		activation = um.getActivation();
 		status = um.getStatus();
 
-		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status) values (?,?,?,?,?,?,?)";
+		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit) values (?,?,?,?,?,?,?,?)";
 		getConnection();
 
 		try {
@@ -113,6 +113,7 @@ public class Users extends Connect {
 			stmt.setString(5, auth);
 			stmt.setString(6, activation);
 			stmt.setString(7, status);
+			stmt.setInt(8, 10);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);

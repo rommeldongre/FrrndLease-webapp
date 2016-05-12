@@ -22,6 +22,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -40,7 +43,6 @@ import javax.xml.bind.DatatypeConverter;
 
 import pojos.FriendsModel;
 import pojos.ItemsModel;
-import pojos.PostItemReqObj;
 import pojos.LeasesModel;
 import pojos.RequestsModel;
 import pojos.UsersModel;
@@ -59,9 +61,12 @@ import com.amazonaws.services.simpleemail.model.Content;
 import com.amazonaws.services.simpleemail.model.Destination;
 import com.amazonaws.services.simpleemail.model.RawMessage;
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest;
+
+import connect.Connect;
+
 import com.amazonaws.auth.BasicAWSCredentials;
 
-public class AwsSESEmail {
+public class AwsSESEmail extends Connect{
 
 	private static FlsLogger LOGGER = new FlsLogger(AwsSESEmail.class.getName());
 
@@ -106,6 +111,23 @@ public class AwsSESEmail {
 
 		}
 		
+		getConnection();
+		
+		int credit = 0;
+		
+		try{
+			// getting the credits of the user
+			String sqlGetCredit = "SELECT user_credit FROM users WHERE user_id=?";
+			PreparedStatement s1 = connection.prepareStatement(sqlGetCredit);
+			s1.setString(1, user_id);
+			ResultSet rs1 = s1.executeQuery();
+			if (rs1.next()) {
+				credit = rs1.getInt("user_credit");
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
 		// Build Email Subject and Body
 		switch (fls_enum) {
 		case FLS_MAIL_SIGNUP_VALIDATION:
@@ -141,9 +163,10 @@ public class AwsSESEmail {
 			break;
 
 		case FLS_MAIL_POST_ITEM:
-			PostItemReqObj iom = (PostItemReqObj) obj;
+			ItemsModel iom = (ItemsModel) obj;
 			SUBJECT = ("[fRRndLease] Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
-			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
+			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>"
+					+ " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
 					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "<br/>"
@@ -280,7 +303,7 @@ public class AwsSESEmail {
 			
 			// Body part of the email
 			MimeBodyPart bodyPart = new MimeBodyPart();
-			bodyPart.setContent(BODY, "text/html");
+			bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit + " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY, "text/html");
 			multipart.addBodyPart(bodyPart);
 			
 			// Image part if the message has an image
