@@ -101,13 +101,6 @@ function postItemSend(req) {
 			
 			success: function(response) {
 				
-				console.log(response);
-				//alert(response.Code+" "+response.Message);
-				var heading = "Successful";
-				//var msg = response.Message;
-				var msg = "Item added into table";
-				//confirmationIndex(heading, msg);
-				//shareOnFb(response);
 				shareOrNot(response);
 			},
 		
