@@ -58,31 +58,12 @@ public class PostItemHandler extends Connect implements AppHandler {
 		check = null;
 		LOGGER.info("Inside process method of Post Item");
 		
-		// Populate the input
-					try {
-						JSONObject obj1 = new JSONObject();
-						obj1.put("title", rq.getTitle());
-						obj1.put("description", rq.getDescription());
-						obj1.put("category", rq.getCategory());
-						obj1.put("userId", rq.getUserId());
-						obj1.put("leaseTerm", rq.getLeaseTerm());
-						obj1.put("id", rq.getId());
-						obj1.put("leaseValue", rq.getLeaseValue());
-						obj1.put("status", rq.getStatus());
-						obj1.put("image", rq.getImage());
-
-						im.getData(obj1);
-					} catch (JSONException e) {
-						LOGGER.warning("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
-						e.printStackTrace();
-					}
-					
 		String desciption = null,uid=null;
-		if(im.getDescription() == null){
+		if(rq.getDescription() == null){
 			desciption = "";
 		}
 		int id=0,uidAction=0,storeAction=0;
-		userId = im.getUserId();
+		userId = rq.getUserId();
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 
 		getConnection();
@@ -91,14 +72,14 @@ public class PostItemHandler extends Connect implements AppHandler {
 			PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			LOGGER.info("Statement created. Executing query.....");
-			stmt.setString(1, im.getTitle());
-			stmt.setString(2, im.getCategory());
+			stmt.setString(1, rq.getTitle());
+			stmt.setString(2, rq.getCategory());
 			stmt.setString(3, desciption);
-			stmt.setString(4, im.getUserId());
-			stmt.setInt(5, im.getLeaseValue());
-			stmt.setString(6, im.getLeaseTerm());
-			stmt.setString(7, im.getStatus());
-			stmt.setString(8, im.getImage());
+			stmt.setString(4, rq.getUserId());
+			stmt.setInt(5, rq.getLeaseValue());
+			stmt.setString(6, rq.getLeaseTerm());
+			stmt.setString(7, rq.getStatus());
+			stmt.setString(8, rq.getImage());
 			stmt.executeUpdate();
 			
 			// getting the last item inserted id and appending it with the title to generate a uid
@@ -130,12 +111,12 @@ public class PostItemHandler extends Connect implements AppHandler {
 
 			Code = 000;
 
-			String status_W = im.getStatus(); // To be used to check if Request
+			String status_W = rq.getStatus(); // To be used to check if Request
 												// is from WishItem API.
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM, im);
+					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM, rq);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
