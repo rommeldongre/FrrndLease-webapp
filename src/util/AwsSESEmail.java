@@ -40,6 +40,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import pojos.FriendsModel;
 import pojos.ItemsModel;
+import pojos.PostItemReqObj;
 import pojos.LeasesModel;
 import pojos.RequestsModel;
 import pojos.UsersModel;
@@ -140,7 +141,7 @@ public class AwsSESEmail {
 			break;
 
 		case FLS_MAIL_POST_ITEM:
-			ItemsModel iom = (ItemsModel) obj;
+			PostItemReqObj iom = (PostItemReqObj) obj;
 			SUBJECT = ("[fRRndLease] Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
 			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
