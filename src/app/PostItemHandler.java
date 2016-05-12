@@ -6,13 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.mysql.jdbc.MysqlErrorNumbers;
 
 import connect.Connect;
-import pojos.ItemsModel;
 import pojos.PostItemReqObj;
 import pojos.PostItemResObj;
 import pojos.ReqObj;
@@ -20,17 +16,10 @@ import pojos.ResObj;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
-import adminOps.Response;
 
 public class PostItemHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(PostItemHandler.class.getName());
-
-	private String user_name,status, check = null, Id = null, token, message;
-	static String userId;
-	private int Code;
-	private Response res = new Response();
-	ItemsModel im = new ItemsModel();
 
 	private static PostItemHandler instance = null;
 
@@ -55,14 +44,14 @@ public class PostItemHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getId());
 		
 		// TODO: Core of the processing takes place here
-		check = null;
+
 		LOGGER.info("Inside process method of Post Item");
 		
-		String desciption = null,uid=null;
+		final String userId;
+		String desciption = null;
 		if(rq.getDescription() == null){
 			desciption = "";
 		}
-		int id=0,uidAction=0,storeAction=0;
 		userId = rq.getUserId();
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 
@@ -87,10 +76,12 @@ public class PostItemHandler extends Connect implements AppHandler {
 			keys.next();
 			int itemId = keys.getInt(1);
 			
+			String uid= null;
 			uid = rq.getTitle()+ " " + itemId;
 			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
 			
 			// updating the item_uid value of the last item inserted
+			int uidAction=0,storeAction=0;
 			String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
 			PreparedStatement s = connection.prepareStatement(sqlUpdateUID);
 			s.setString(1, uid);
@@ -105,11 +96,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 					LOGGER.info("Value in store table after UID query excecution: "+uidAction+" "+itemId);	
 				}
 			}
-			status = "operation successfull!!!";
+			String message;
 			message = "Item added into table";
 			LOGGER.warning(message);
-
-			Code = 000;
 
 			String status_W = rq.getStatus(); // To be used to check if Request
 												// is from WishItem API.
@@ -123,14 +112,13 @@ public class PostItemHandler extends Connect implements AppHandler {
 			}
 
 			// returning the new id
+			int id=0;
 			sql = "SELECT MAX(item_id) FROM items";
 			Statement stmt1 = connection.createStatement();
 			ResultSet resultset = stmt1.executeQuery(sql);
 			while (resultset.next()) {
 				id = resultset.getInt(1);
 			}
-			Id = String.valueOf(id);
-			res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
 			
 			rs.setItemId(id);
 			rs.setReturnCode(0);
@@ -142,10 +130,16 @@ public class PostItemHandler extends Connect implements AppHandler {
 			if (e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG
 					&& e.getMessage().matches(".*\\bitem_image\\b.*")) {
 				LOGGER.warning("The image size is too large. Please select image less than 16MB");
-				res.setData(FLS_SQL_EXCEPTION_I, String.valueOf(FLS_SQL_EXCEPTION_I), FLS_SQL_EXCEPTION_IMAGE);
+				rs.setItemId(FLS_SQL_EXCEPTION_I);
+				rs.setReturnCode(FLS_SQL_EXCEPTION_I);
+				rs.setUid("Error");
+				rs.setErrorString(FLS_SQL_EXCEPTION_IMAGE);
 				LOGGER.warning(e.getErrorCode() + " " + e.getMessage());
 			} else {
-				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+				rs.setItemId(0);
+				rs.setReturnCode(FLS_SQL_EXCEPTION);
+				rs.setUid("Error");
+				rs.setErrorString(FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
 		}
