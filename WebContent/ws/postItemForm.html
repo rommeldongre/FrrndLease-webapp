@@ -111,7 +111,8 @@
 				console.log(response);
 				document.getElementById("Id").value = response.itemId;
 				document.getElementById("uid").value = response.uid;
-				document.getElementById("Message").value = response.ErrorString;
+				document.getElementById("Code").value = response.returnCode;
+				document.getElementById("Message").value = response.errorString;
 				//if(parseInt(response.Code) === 3 || parseInt(response.Code) === 4) Token = parseInt(response.Id);
 				console.log(Token);
 			},
@@ -140,6 +141,7 @@
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>
 		Uid: <input type="text" name="uid" id="uid"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
 		Message : <input type="text" name="message" id="Message">
 	</form>
 	<br/>
