@@ -100,8 +100,13 @@ function postItemSend(req) {
 			dataType: "json",
 			
 			success: function(response) {
-				
-				shareOrNot(response);
+				if(response.returnCode==0){
+					shareOrNot(response);
+				}else{
+					var heading = "Unsuccessful";
+					var msg = response.errorString;
+					confirmationIndex(heading ,msg);
+				}
 			},
 		
 			error: function() {
