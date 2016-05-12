@@ -44,6 +44,7 @@ import javax.xml.bind.DatatypeConverter;
 import pojos.FriendsModel;
 import pojos.ItemsModel;
 import pojos.LeasesModel;
+import pojos.PostItemReqObj;
 import pojos.RequestsModel;
 import pojos.UsersModel;
 import tableOps.Wishlist;
@@ -163,7 +164,7 @@ public class AwsSESEmail extends Connect{
 			break;
 
 		case FLS_MAIL_POST_ITEM:
-			ItemsModel iom = (ItemsModel) obj;
+			PostItemReqObj iom = (PostItemReqObj) obj;
 			SUBJECT = ("[fRRndLease] Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
 			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>"
 					+ " Title : " + iom.getTitle()
