@@ -174,6 +174,18 @@ public class AwsSESEmail extends Connect{
 					+ "<img src=\"cid:image\" alt=" + iom.getTitle() + " ></img>" + "</body>");
 			imageFile = convertBinaryToImage(iom.getImage());
 			break;
+			
+		case FLS_MAIL_MATCH_POST_WISHLIST_ITEM:
+			PostItemReqObj itemObj = (PostItemReqObj) obj;
+			SUBJECT = ("[fRRndLease] Item [" + itemObj.getTitle() + "] has been added to the Friend Store");
+			BODY = ("<body>This item matches your wishlist and is available now!! <br/> <br/>"
+					+ " Title : " + itemObj.getTitle()
+					+ "<br/>" + " Category : " + itemObj.getCategory() + "<br/>" + " Description : " + itemObj.getDescription()
+					+ "<br/>" + " Lease Value : " + itemObj.getLeaseValue() + "<br/>" + " Lease Term : "
+					+ itemObj.getLeaseTerm() + "<br/>" + " Status : " + itemObj.getStatus() + "<br/>"
+					+ "<img src=\"cid:image\" alt=" + itemObj.getTitle() + " ></img>" + "</body>");
+			imageFile = convertBinaryToImage(itemObj.getImage());
+			break;
 
 		case FLS_MAIL_ADD_FRIEND_FROM:
 			FriendsModel affm = (FriendsModel) obj;

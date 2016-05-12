@@ -16,6 +16,7 @@ import pojos.ResObj;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
+import util.MatchItems;
 
 public class PostItemHandler extends Connect implements AppHandler {
 
@@ -99,6 +100,10 @@ public class PostItemHandler extends Connect implements AppHandler {
 			String message;
 			message = "Item added into table";
 			LOGGER.warning(message);
+			
+			// checking the wish list if this posted item matches someone's requirements
+			MatchItems matchItems = new MatchItems(rq);
+			matchItems.checkWishlist();
 
 			String status_W = rq.getStatus(); // To be used to check if Request
 												// is from WishItem API.
