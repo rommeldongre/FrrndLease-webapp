@@ -150,7 +150,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
 							dataType: "json",
 							success:function(response){
 								modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-									 window.location.replace("/flsv2/index.html");
+									 window.location.replace("/flsv2/mywishlists.html");
 								},function(){});
 							},
 							error: function(){
