@@ -11,12 +11,12 @@
 <!-- Google Apis Start -->
 <meta name="google-signin-scope" content="profile email">
 <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://apis.google.com/js/platform.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
 <!-- Google Api End -->
     
 <!-- Angularjs api -->
-<script src="js/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
 <script src="js/header.js"></script>
 <!-- Angularjs api ends -->
@@ -106,7 +106,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="location">Location</label>
-                                    <input type="text" class="form-control" ng-model="location" placeholder="Location">
+                                    <input type="text" class="form-control" id="location" ng-model="location" placeholder="Location">
 								</div>
 							</div>
 						</div>
@@ -115,7 +115,7 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="lease_value">Lease Value</label>
-                                    <input type="number" class="form-control" ng-model="leaseValue" ng-disabled="!userMatch" placeholder="Lease Value">
+                                    <input type="number" class="form-control" id="lease_value" ng-model="leaseValue" ng-disabled="!userMatch" placeholder="Lease Value">
 								</div>
 							</div>
 							<div class="col-md-4">
@@ -164,25 +164,31 @@
 
 					<div ng-if="!userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="requestItem()">Request Item</button>
+							<button id="request_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="requestItem()">Request Item</button>
 						</div>
 					</div>
 					
 					<div ng-if="!userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="wishItem()">Add to Wishlist</button>
+							<button id="wish_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="wishItem()">Add to Wishlist</button>
 						</div>
 					</div>
 
 					<div ng-if="userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="editItem()">Edit Item</button>
+							<button id="edit_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="editItem()">Edit Item</button>
 						</div>
 					</div>
 
 					<div ng-if="userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="deleteItem()">Delete Item</button>
+							<button id="delete_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="deleteItem()">Delete Item</button>
+						</div>
+					</div>
+					
+					<div  id="cancel_row" class="row">	
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<button id="cancel" style="margin-bottom:35%;" class="btn btn-primary" onclick="cancel()">Cancel</button>
 						</div>
 					</div>
 				</div>
@@ -312,6 +318,15 @@
 			$("#dropdownbuttoncategory").text("${category}");
 
 			$("#dropdownbuttonlease_term").text("${leaseTerm}");
+		}
+		
+		function cancel(){
+			redirectToPrevPage();
+		}
+		
+		function redirectToPrevPage(){
+			prevPage = getPrevPage("prevPage");
+			window.location.replace(prevPage);
 		}
 			
 	</script>

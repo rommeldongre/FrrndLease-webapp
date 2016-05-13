@@ -107,6 +107,11 @@ body{
 	min-width: 150px;
 }
 
+#wish_item{
+	margin-left: 40%;
+	min-width: 150px;
+}
+
 #cancel{
 	margin-left: 40%;
 	min-width: 150px;
