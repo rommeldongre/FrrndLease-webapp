@@ -46,6 +46,15 @@ public class PostItemHandler extends Connect implements AppHandler {
 		// TODO: Core of the processing takes place here
 
 		LOGGER.info("Inside process method of Post Item");
+		if(rq.getCategory().contains("Category")){
+			
+			//if user does not select a category
+			
+			rs.setItemId(0);
+			rs.setReturnCode(200);
+			rs.setUid("Error");
+			rs.setErrorString("Item Not Posted as no Valid Category was selected");
+		}else{
 		
 		final String userId;
 		String desciption = null;
@@ -153,9 +162,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 		}
 		
 		LOGGER.info("Finished process method ");
+	}
 		// return the response
 		return rs;
-
 	}
 
 	@Override
