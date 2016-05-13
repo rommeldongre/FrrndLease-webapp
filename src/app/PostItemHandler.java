@@ -16,7 +16,6 @@ import pojos.ResObj;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
-import util.MatchItems;
 
 public class PostItemHandler extends Connect implements AppHandler {
 

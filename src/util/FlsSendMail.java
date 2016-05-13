@@ -13,8 +13,6 @@ public class FlsSendMail {
 		FLS_MAIL_REGISTER, // done
 		FLS_MAIL_SIGNUP_VALIDATION, // done
 		FLS_MAIL_POST_ITEM, // done
-		FLS_MAIL_MATCH_WISHLIST_ITEM, // done
-		FLS_MAIL_MATCH_POST_ITEM, // done
 		FLS_MAIL_DELETE_ITEM, // done
 		FLS_MAIL_MAKE_REQUEST_FROM, // done
 		FLS_MAIL_MAKE_REQUEST_TO, // done
