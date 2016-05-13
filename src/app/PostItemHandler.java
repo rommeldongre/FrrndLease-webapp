@@ -100,10 +100,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 			String message;
 			message = "Item added into table";
 			LOGGER.warning(message);
-			
-			// checking the wish list if this posted item matches someone's requirements
-			MatchItems matchItems = new MatchItems(rq);
-			matchItems.checkWishlist();
 
 			String status_W = rq.getStatus(); // To be used to check if Request
 												// is from WishItem API.
@@ -148,6 +144,15 @@ public class PostItemHandler extends Connect implements AppHandler {
 				e.printStackTrace();
 			}
 		}
+		
+		try{
+			// checking the wish list if this posted item matches someone's requirements
+			MatchItems matchItems = new MatchItems(rq);
+			matchItems.checkWishlist();
+		}catch(Exception e){
+			LOGGER.warning(e.getMessage());
+		}
+		
 		LOGGER.info("Finished process method ");
 		// return the response
 		return rs;

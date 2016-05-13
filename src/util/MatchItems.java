@@ -36,31 +36,25 @@ public class MatchItems extends Connect {
 
 		// posted items user id
 		String itemUserId = itemObj.getUserId();
+		
+		String longestWord = getLongestString(userItemTitle);
 
-		String sqlGetWishlistNames = "SELECT items.item_name,items.item_user_id FROM items INNER JOIN wishlist ON items.item_id=wishlist.wishlist_item_id  AND items.item_user_id<>'"
-				+ itemUserId + "'";
+		String sqlGetWishlistNames = "SELECT item_user_id FROM items WHERE item_name LIKE ? AND item_status='Wished' AND item_user_id<>? LIMIT 3";
 
 		try {
 
-			PreparedStatement ps1 = connection.prepareStatement(sqlGetWishlistNames);
 			LOGGER.info("Creating getwishlistnames sql statement");
+			PreparedStatement ps1 = connection.prepareStatement(sqlGetWishlistNames);
+			ps1.setString(1, "%" + longestWord + "%");
+			ps1.setString(2, itemUserId);
 			ResultSet rs1 = ps1.executeQuery();
 
 			while (rs1.next()) {
-				String wlItemTitle[] = rs1.getString("item_name").toLowerCase().split(" ");
-
-				// comparing the title of the wish list items and the posted
-				// items.
-				// If there is a match then an email is sent to the wish list
-				// item's user.
-				if (compareTitles(userItemTitle, wlItemTitle)) {
-					try {
-						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_WISHLIST_ITEM,
-								itemObj);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				try {
+					AwsSESEmail newE = new AwsSESEmail();
+					newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 
@@ -82,15 +76,13 @@ public class MatchItems extends Connect {
 
 		try {
 
-			PreparedStatement ps1 = connection.prepareStatement(sqlGetWishedItemTitle);
 			LOGGER.info("creating get wishlist item title query");
+			PreparedStatement ps1 = connection.prepareStatement(sqlGetWishedItemTitle);
 			ps1.setInt(1, wishedItemId);
 			ResultSet rs1 = ps1.executeQuery();
 
 			if (rs1.next()) {
 				String wishedItemTitle[] = rs1.getString("item_name").toLowerCase().split(" ");
-
-				int len = wishedItemTitle.length;
 				
 				String longestWord = getLongestString(wishedItemTitle);
 

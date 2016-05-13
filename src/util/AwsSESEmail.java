@@ -191,7 +191,7 @@ public class AwsSESEmail extends Connect {
 			break;
 
 		case FLS_MAIL_MATCH_POST_ITEM:
-			List<PostItemReqObj> listItems = (List<PostItemReqObj>)obj;
+			List<PostItemReqObj> listItems = (List<PostItemReqObj>) obj;
 			SUBJECT = ("[fRRndLease] Items present in the Friend Store match your wishlist");
 			BODY = ("<body>These items match your wishlist. <br/> <br/>");
 
@@ -203,8 +203,8 @@ public class AwsSESEmail extends Connect {
 						+ listItems.get(i).getDescription() + "<br/>" + " Lease Value : "
 						+ listItems.get(i).getLeaseValue() + "<br/>" + " Lease Term : "
 						+ listItems.get(i).getLeaseTerm() + "<br/>" + " Status : " + listItems.get(i).getStatus()
-						+ "<br/>" + "<img src=\"cid:image" + i+1 + "\" alt=" + listItems.get(i).getTitle()
-						+ " ></img><br/><br/>");
+						+ "<br/>" + "<img src=\"cid:image" + Integer.toString(i) + "\" alt="
+						+ listItems.get(i).getTitle() + " ></img><br/><br/>");
 				imageFiles.add(convertBinaryToImage(listItems.get(i).getImage()));
 			}
 
@@ -339,38 +339,44 @@ public class AwsSESEmail extends Connect {
 
 			Multipart multipart = new MimeMultipart("related");
 
-			// Body part of the email
-			MimeBodyPart bodyPart = new MimeBodyPart();
-			bodyPart.setContent(
-					"<u>Account Status</u>: <br/>You have <strong>" + credit
-							+ " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY,
-					"text/html");
-			multipart.addBodyPart(bodyPart);
+			if (imageFiles.isEmpty()) {
+				// Body part of the email
+				MimeBodyPart bodyPart = new MimeBodyPart();
+				bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit
+						+ " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY,
+						"text/html");
+				multipart.addBodyPart(bodyPart);
 
-			// for sending multiple images in body
-			if (!imageFiles.isEmpty()) {
-				int i = 0;
-				for (File f : imageFiles) {
+				if (imageFile != null) {
+					MimeBodyPart imagePart = new MimeBodyPart();
+					LOGGER.warning("Sending Image!!");
+					imagePart.attachFile(imageFile);
+					imagePart.setContentID("<image>");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+					multipart.addBodyPart(imagePart);
+					imageFile = null;
+				}
+			} else {
+
+				// Body part of the email
+				MimeBodyPart bodyPart = new MimeBodyPart();
+				bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit
+						+ " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY,
+						"text/html");
+				multipart.addBodyPart(bodyPart);
+
+				int len = imageFiles.size();
+				for (int j = 0; j < len; j++) {
 					// Image part if the message has an image
 					MimeBodyPart imagePart = new MimeBodyPart();
 					LOGGER.warning("Sending Image!!");
-					imagePart.attachFile(f);
-					imagePart.setContentID("<image" + i+1 + ">");
+					imagePart.attachFile(imageFiles.get(j));
+					imagePart.setContentID("<image" + Integer.toString(j) + ">");
 					imagePart.setDisposition(MimeBodyPart.INLINE);
 					multipart.addBodyPart(imagePart);
-					i++;
+					imageFile = null;
+
 				}
-
-			}
-
-			if (imageFile != null) {
-				MimeBodyPart imagePart = new MimeBodyPart();
-				LOGGER.warning("Sending Image!!");
-				imagePart.attachFile(imageFile);
-				imagePart.setContentID("<image>");
-				imagePart.setDisposition(MimeBodyPart.INLINE);
-				multipart.addBodyPart(imagePart);
-				imageFile = null;
 			}
 
 			message.setContent(multipart);
