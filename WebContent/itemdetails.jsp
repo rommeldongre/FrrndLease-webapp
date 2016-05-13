@@ -16,7 +16,7 @@
 <!-- Google Api End -->
     
 <!-- Angularjs api -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="js/angular.min.js"></script>
 <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
 <script src="js/header.js"></script>
 <!-- Angularjs api ends -->
@@ -167,6 +167,12 @@
 							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="requestItem()">Request Item</button>
 						</div>
 					</div>
+					
+					<div ng-if="!userMatch" class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<button style="margin-bottom:5px;" class="btn btn-primary" ng-click="wishItem()">Add to Wishlist</button>
+						</div>
+					</div>
 
 					<div ng-if="userMatch" class="row">
 						<div class="col-md-12 col-sm-12 col-xs-12">
@@ -307,7 +313,7 @@
 
 			$("#dropdownbuttonlease_term").text("${leaseTerm}");
 		}
-
+			
 	</script>
 
 

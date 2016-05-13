@@ -95,6 +95,73 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
 
             });
     }
+	
+	$scope.wishItem = function(){
+        
+        var item_title = $scope.title;
+        if(item_title == '')
+            item_title = null;
+        
+        var item_id = $scope.item_id;
+        if(item_id == '')
+            item_id = 0;
+        
+        var item_description = $scope.description;
+        if (item_description == '') 
+		  item_description = null;
+        
+        var item_category = $scope.category;
+        if (item_category == '' || item_category == 'Category') 
+		  item_category = null;
+        
+        var item_user_id = user;
+        if (item_user_id == '') 
+		  item_user_id = "anonymous";
+        
+        var item_lease_value = $scope.leaseValue;
+        if (item_lease_value == '') 
+		  item_lease_value = 0;
+        
+        var item_lease_term = $scope.leaseTerm;
+        if (item_lease_term == '' || item_lease_term == 'Lease Term') 
+		  item_lease_term = null;
+	
+		var item_status = "Wished";
+        
+        req = {id:item_id,
+                        title:item_title,
+                        description:item_description,
+                        category: item_category,
+                        userId: item_user_id,
+                        leaseValue: item_lease_value,
+                        leaseTerm: item_lease_term,
+						status: item_status,
+                        image: $scope.image};
+        
+        modalService.showModal({}, {bodyText: 'Are you sure you want to add this Item to your Wishlist?'}).then(
+            function(result){
+				if (user == "" || user == null || user == "anonymous")
+					logInCheck();
+				else
+					$.ajax({ url: '/flsv2/WishItem',
+							type: 'post',
+							data: {req : JSON.stringify(req)},
+							contentType: "application/x-www-form-urlencoded",
+							dataType: "json",
+							success:function(response){
+								modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+									 window.location.replace("/flsv2/index.html");
+								},function(){});
+							},
+							error: function(){
+								modalService.showModal({}, {bodyText: "Not Working",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+							}
+						});
+            },
+            function(){
+
+            });
+    }
     
     $scope.editItem = function(){
         
@@ -143,7 +210,9 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
 			             contentType: "application/x-www-form-urlencoded",
 			             dataType: "json",
                          success:function(response){
-                            modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                            modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+								window.location.replace("/flsv2/index.html");
+							},function(){});
                          },
                          error: function(){
                             modalService.showModal({}, {bodyText: "Not Working",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
