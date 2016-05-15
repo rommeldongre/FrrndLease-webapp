@@ -41,7 +41,6 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside GetItemStore method");
 		
 		try {
-			getConnection();
 
 			//Prepare SQL
 			String sql = null;
@@ -51,28 +50,28 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			if (rq.getCategory() == null && rq.getUserId() == null) {
 				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= 'InStore' ORDER BY item_id LIMIT 1";
 				
-				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt = getConnectionFromPool().prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 			} 
 			// Category selected in index page
 			if(rq.getCategory() != null && rq.getUserId() == null){
 				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status = 'InStore' AND tb1.item_category=? LIMIT 1";
 				
-				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt = getConnectionFromPool().prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getCategory());
 			}
 			//All Category mypostings page
 			if(rq.getCategory() == null && rq.getUserId() != null){
 				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_user_id=? LIMIT 1";
-				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt = getConnectionFromPool().prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getUserId());
 			}
 			//Category selected in mypostings page
 			if(rq.getCategory() != null && rq.getUserId() != null){
 				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_category=? AND item_user_id=? LIMIT 1";
-				sql_stmt = connection.prepareStatement(sql);
+				sql_stmt = getConnectionFromPool().prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getCategory());
 				sql_stmt.setString(3, rq.getUserId());

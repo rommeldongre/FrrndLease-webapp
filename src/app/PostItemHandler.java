@@ -64,10 +64,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 		userId = rq.getUserId();
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 
-		getConnection();
 		try {
 			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, rq.getTitle());
@@ -92,13 +91,13 @@ public class PostItemHandler extends Connect implements AppHandler {
 			// updating the item_uid value of the last item inserted
 			int uidAction=0,storeAction=0;
 			String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
-			PreparedStatement s = connection.prepareStatement(sqlUpdateUID);
+			PreparedStatement s = getConnectionFromPool().prepareStatement(sqlUpdateUID);
 			s.setString(1, uid);
 			s.setInt(2, itemId);
 			uidAction = s.executeUpdate();
 			if(uidAction> 0){
 				String sqlInsertStoreID = "insert into store (store_item_id) values (?)";
-				PreparedStatement storeID = connection.prepareStatement(sqlInsertStoreID);
+				PreparedStatement storeID = getConnectionFromPool().prepareStatement(sqlInsertStoreID);
 				storeID.setInt(1, itemId);
 				storeAction =storeID.executeUpdate();
 				if(storeAction> 0){
@@ -123,7 +122,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			// returning the new id
 			int id=0;
 			sql = "SELECT MAX(item_id) FROM items";
-			Statement stmt1 = connection.createStatement();
+			Statement stmt1 = getConnectionFromPool().createStatement();
 			ResultSet resultset = stmt1.executeQuery(sql);
 			while (resultset.next()) {
 				id = resultset.getInt(1);

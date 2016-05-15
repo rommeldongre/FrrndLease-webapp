@@ -53,12 +53,11 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		// TODO: Core of the processing takes place here
 
 		LOGGER.info("inside DeleteRequestHandler method");
-		getConnection();
 		String sql2 = "SELECT * FROM requests WHERE request_id=?"; //
 
 		try {
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			PreparedStatement stmt2 = getConnectionFromPool().prepareStatement(sql2);
 			stmt2.setInt(1, rq.getRequest_Id());
 			ResultSet rs1 = stmt2.executeQuery();
 			while (rs1.next()) {
@@ -72,7 +71,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				ItemsModel im = new ItemsModel();
 				String sql1 = "SELECT * FROM items WHERE item_id=?";
 				LOGGER.info("Creating a statement .....");
-				PreparedStatement stmt1 = connection.prepareStatement(sql1);
+				PreparedStatement stmt1 = getConnectionFromPool().prepareStatement(sql1);
 
 				LOGGER.info("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
 				stmt1.setString(1, item_Id);
@@ -111,7 +110,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 
 				String sql = "UPDATE requests SET request_status=? WHERE request_id=?"; //
 				String status = "Archived";
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + rq.getRequest_Id());
 				stmt.setString(1, status);

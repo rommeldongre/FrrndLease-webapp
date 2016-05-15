@@ -46,10 +46,9 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside GetOutgoingrequests method");
 
 		try {
-			getConnection();
 			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_id>? HAVING tb1.request_status=? ORDER by tb1.request_id ASC LIMIT 1";
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing GetOutgoingrequests query...");
 			stmt.setString(1, rq.getUserId());
