@@ -161,10 +161,9 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		Image = im.getImage();
 
 		try {
-			getConnection();
 			String sql = "SELECT * FROM items WHERE item_name=? AND item_user_id=? AND item_status=? LIMIT 1";
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing ImportWishlistHandler select query...");
 			stmt.setString(1, Iname);
@@ -178,7 +177,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				LOGGER.info("Item: " + Iname + "for user: " + User + " does not exist");
 				String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 				LOGGER.info("Creating Insert statement of ImportWishlistHandler.....");
-				PreparedStatement stmt1 = connection.prepareStatement(sql1);
+				PreparedStatement stmt1 = getConnectionFromPool().prepareStatement(sql1);
 
 				LOGGER.info("Statement created. Executing query.....");
 				stmt1.setString(1, Iname);
@@ -195,13 +194,13 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				
 				// to add credit in user_credit
 				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-				PreparedStatement s1 = connection.prepareStatement(sqlAddCredit);
+				PreparedStatement s1 = getConnectionFromPool().prepareStatement(sqlAddCredit);
 				s1.setString(1, User);
 				s1.executeUpdate();
 
 				// returning the new id
 				String sql2 = "SELECT MAX(item_id) FROM items";
-				PreparedStatement stmt2 = connection.prepareStatement(sql2);
+				PreparedStatement stmt2 = getConnectionFromPool().prepareStatement(sql2);
 				ResultSet rs = stmt2.executeQuery();
 				while (rs.next()) {
 					try {
@@ -241,10 +240,9 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			String sql3 = "insert into wishlist (wishlist_item_id) values (?)"; //
 
 			try {
-				getConnection();
 				// System.out.println("Creating statement.....");
 				LOGGER.info("Creating statement.....");
-				PreparedStatement stmt3 = connection.prepareStatement(sql3);
+				PreparedStatement stmt3 = getConnectionFromPool().prepareStatement(sql3);
 
 				// System.out.println("Statement created. Executing
 				// query.....");

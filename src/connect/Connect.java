@@ -1,5 +1,10 @@
 package connect;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import org.h2.jdbcx.JdbcDataSource;
+import javax.sql.DataSource;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -54,4 +59,25 @@ public class Connect extends ErrorCat {
 	 * Connect().getConnection(); }
 	 */
 
+
+    public Connection getConnectionFromPool() {
+    	
+    	Connection conn = null;
+    	try {
+    		DataSource ds = getDataSource();
+    		conn = ds.getConnection();
+            	System.out.println("===> Got a pooled connection to the database!");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    	return conn;
+    }
+
+    private DataSource getDataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
+        config.setUsername("root");
+        config.setPassword("root");
+        return new HikariDataSource(config);
+    }
 }
