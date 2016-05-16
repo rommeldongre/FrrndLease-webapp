@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -95,7 +96,7 @@ public class AwsSESEmail extends Connect{
 	 * WANRNING: To avoid accidental leakage of your credentials, DO NOT keep
 	 * the credentials file in your source directory.
 	 */
-	public static void send(String userId, Fls_Enum fls_enum, Object obj, String... apiflag) throws IOException {
+	public void send(String userId, Fls_Enum fls_enum, Object obj, String... apiflag) throws IOException {
 
 		// Fls_Enum = fls_enum;
 		user_id = userId;
@@ -112,14 +113,14 @@ public class AwsSESEmail extends Connect{
 
 		}
 		
-		getConnection();
 		
 		int credit = 0;
+		Connection hcp = getConnectionFromPool();
 		
 		try{
 			// getting the credits of the user
 			String sqlGetCredit = "SELECT user_credit FROM users WHERE user_id=?";
-			PreparedStatement s1 = connection.prepareStatement(sqlGetCredit);
+			PreparedStatement s1 = hcp.prepareStatement(sqlGetCredit);
 			s1.setString(1, user_id);
 			ResultSet rs1 = s1.executeQuery();
 			if (rs1.next()) {
@@ -127,6 +128,8 @@ public class AwsSESEmail extends Connect{
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
+		} finally {
+			try { hcp.close(); } catch(SQLException e) {}
 		}
 		
 		// Build Email Subject and Body

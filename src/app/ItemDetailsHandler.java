@@ -70,6 +70,7 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 			}
+			ps.close();
 
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);

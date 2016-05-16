@@ -1,5 +1,6 @@
 package app;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,28 +38,30 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 
 		EmailVerificationReqObj rq = (EmailVerificationReqObj) req;
-
 		EmailVerificationResObj rs = new EmailVerificationResObj();
+		Connection hcp = getConnectionFromPool();
 
 		LOGGER.info("Inside Process Method " + rq.getVerification());
 
 		try {
 			String select_status_sql = "Select user_status,user_id FROM users WHERE user_activation=?";
-			PreparedStatement ps1 = getConnectionFromPool().prepareStatement(select_status_sql);
+			PreparedStatement ps1 = hcp.prepareStatement(select_status_sql);
 			ps1.setString(1, rq.getVerification());
 
 			ResultSet result1 = ps1.executeQuery();
+			ps1.close();
 
 			if (result1.next()) {
 				if (result1.getString("user_status").equals("email_pending")) {
 					String update_status_sql = "UPDATE users SET user_status=? WHERE user_activation=?";
 					LOGGER.info("Creating Statement...");
-					PreparedStatement ps2 = getConnectionFromPool().prepareStatement(update_status_sql);
+					PreparedStatement ps2 = hcp.prepareStatement(update_status_sql);
 					ps2.setString(1, "email_activated");
 					ps2.setString(2, rq.getVerification());
 
 					LOGGER.info("statement created...executing update to users query");
 					int result2 = ps2.executeUpdate();
+					ps2.close();
 
 					LOGGER.info("Update Query Result : " + result2);
 
@@ -87,6 +90,8 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
+		} finally {
+			hcp.close();
 		}
 		LOGGER.info("Finished process method ");
 		// return the response

@@ -31,17 +31,27 @@ public class FlsConfig extends Connect{
 			if(dbResponse.next()){
 				env = dbResponse.getString("value");
 			}
+			sql_stmt.close();
+
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
-		} 
+		} finally {
+			try {
+				// close and reset connection to null
+				connection.close();
+				connection = null;
+			} catch (SQLException e){
+				e.printStackTrace();
+			}
+		}
 		
-		if(env== null){
+		if(env == null){
 			System.out.println("env variable is null");
 		}else{
 			System.out.println(env);
 		}
-		
+
 		//env return
 		return env;
 	}
@@ -73,9 +83,19 @@ public class FlsConfig extends Connect{
 				build = dbResponse.getString("value");
 				dbBuild = Integer.parseInt(build);
 			}
+			sql_stmt.close();
+			
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
+		} finally {
+			try {
+				// close and reset connection to null
+				connection.close();
+				connection = null;
+			} catch (SQLException e){
+				e.printStackTrace();
+			}
 		} 
 			
 		return dbBuild;
@@ -106,17 +126,27 @@ public class FlsConfig extends Connect{
 			// New column created to store the uid of the item
 			String sqlAddUid = "ALTER TABLE `items` ADD `item_uid` VARCHAR(255) NULL DEFAULT NULL AFTER `item_status`";
 			try {
+				getConnection();
 				PreparedStatement ps1 = connection.prepareStatement(sqlAddUid);
 				ps1.executeUpdate();
 				ps1.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
 			}
 			
 			// These queries are updating items table to add item_uid
 			String getAllItemIdAndItemName = "SELECT item_id, item_name FROM `items`";
 			try{
+				getConnection();
 				PreparedStatement ps2 = connection.prepareStatement(getAllItemIdAndItemName);
 				ResultSet rs = ps2.executeQuery();
 				
@@ -132,8 +162,16 @@ public class FlsConfig extends Connect{
 				}
 				
 				ps2.close();
-			}catch(SQLException e){
+			} catch(SQLException e){
 				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
 			}
 			
 			// The dbBuild version value is changed in the database
@@ -144,10 +182,17 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
-			}catch(SQLException e){
+			} catch(SQLException e){
 				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
 			}
-			
 		}
 		
 		if(dbBuild < 2003){
@@ -159,6 +204,14 @@ public class FlsConfig extends Connect{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
 			}
 			
 			dbBuild = 2003;
@@ -168,11 +221,18 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
-			}catch(SQLException e){
+			} catch(SQLException e){
 				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
 			}
 		}
-		
 	}
 	
 	
