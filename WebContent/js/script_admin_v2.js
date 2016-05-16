@@ -37,6 +37,8 @@ var itemId = 0,
 	addFriendAPICall = 0;
 	WishlistUrl = null;
 	
+var itemNextIdArray = [];
+	
 //item functions starts-----------------------------------------------------------------------------------------------------------------------
 //postItem begins here--------------------------------------------------------
 function itemSetValues(){			//setting values for item object from the form
@@ -1637,13 +1639,15 @@ function deleteRequestSend(req){
 
 //Get Item Store starts here---------------------------------
 
-function getNextItemCarousel(i,user,cat){
+function getNextItemCarousel(i,user,cat,Limit){
 	
 	if (i === ''){
 		itemToken = -1;
 	}else{
 		itemToken = i;
 	}
+
+	itemNextIdArray.push(itemToken);
 	
 	if (user ===''){
 		reqUserId = null;
@@ -1660,7 +1664,8 @@ function getNextItemCarousel(i,user,cat){
 	var req = {
 		cookie: itemToken,
 		userId: reqUserId,
-		category: itemCategory
+		category: itemCategory,
+		limit: Limit
 	};
 	
 	getNextItemCarouselSend(req);
@@ -1677,7 +1682,8 @@ function getNextItemCarouselSend(req){
 		success: function(response) {
 			
 			if(response.returnCode == 0){
-				itemNextId = response.itemId;
+				console.log(response);
+				itemNextId = response.lastItemId;
 				addItemToCarousel(response);
 				
 			}else{				//when end of the database is reached 

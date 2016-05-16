@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connect.Connect;
+import pojos.GetItemStoreByXListResObj;
 import pojos.GetItemStoreByXReqObj;
 import pojos.GetItemStoreByXResObj;
 import pojos.ReqObj;
@@ -34,7 +35,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 	public ResObj process(ReqObj req) throws Exception {
 		// TODO Auto-generated method stub
 		GetItemStoreByXReqObj rq = (GetItemStoreByXReqObj) req;
-		GetItemStoreByXResObj rs = new GetItemStoreByXResObj();
+		GetItemStoreByXListResObj rs = new GetItemStoreByXListResObj();
 		
 		LOGGER.info("Inside process method "+ rq.getUserId()+", "+ rq.getCookie());
 		//TODO: Core of the processing takes place here
@@ -49,48 +50,57 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			
 			//All Category in index page
 			if (rq.getCategory() == null && rq.getUserId() == null) {
-				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= 'InStore' ORDER BY item_id LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= 'InStore' ORDER BY item_id LIMIT ?";
 				
 				sql_stmt = connection.prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
+				sql_stmt.setInt(2, rq.getLimit());
 			} 
 			// Category selected in index page
 			if(rq.getCategory() != null && rq.getUserId() == null){
-				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status = 'InStore' AND tb1.item_category=? LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status = 'InStore' AND tb1.item_category=? LIMIT ?";
 				
 				sql_stmt = connection.prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getCategory());
+				sql_stmt.setInt(3, rq.getLimit());
 			}
 			//All Category mypostings page
 			if(rq.getCategory() == null && rq.getUserId() != null){
-				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_user_id=? LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_user_id=? LIMIT ?";
 				sql_stmt = connection.prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getUserId());
+				sql_stmt.setInt(3, rq.getLimit());
 			}
 			//Category selected in mypostings page
 			if(rq.getCategory() != null && rq.getUserId() != null){
-				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_category=? AND item_user_id=? LIMIT 1";
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_category=? AND item_user_id=? LIMIT ?";
 				sql_stmt = connection.prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getCategory());
 				sql_stmt.setString(3, rq.getUserId());
+				sql_stmt.setInt(4, rq.getLimit());
 			}
 			
 			ResultSet dbResponse = sql_stmt.executeQuery();
 			if(dbResponse.next()){
-					rs.setItemId(dbResponse.getInt("item_id"));
-					rs.setTitle(dbResponse.getString("item_name"));
-					rs.setCategory(dbResponse.getString("item_category"));
-					rs.setDesc(dbResponse.getString("item_desc"));
-					rs.setFullName(dbResponse.getString("user_full_name"));
-					rs.setLeaseValue(dbResponse.getInt("item_lease_value"));
-					rs.setLeaseTerm(dbResponse.getString("item_lease_term"));
-					rs.setImage(dbResponse.getString("item_image"));
-					rs.setStatus(dbResponse.getString("item_status"));
-					rs.setUid(dbResponse.getString("item_uid"));
-					
+				dbResponse.previous();
+				while(dbResponse.next()){
+					GetItemStoreByXResObj rs1 = new GetItemStoreByXResObj();
+					rs1.setItemId(dbResponse.getInt("item_id"));
+					rs1.setTitle(dbResponse.getString("item_name"));
+					rs1.setCategory(dbResponse.getString("item_category"));
+					rs1.setDesc(dbResponse.getString("item_desc"));
+					rs1.setFullName(dbResponse.getString("user_full_name"));
+					rs1.setLeaseValue(dbResponse.getInt("item_lease_value"));
+					rs1.setLeaseTerm(dbResponse.getString("item_lease_term"));
+					rs1.setImage(dbResponse.getString("item_image"));
+					rs1.setStatus(dbResponse.getString("item_status"));
+					rs1.setUid(dbResponse.getString("item_uid"));
+					rs.addResList(rs1);
+					rs.setLastItemId(dbResponse.getInt("item_id"));
+				}
 			}else {
 				rs.setReturnCode(404);
 				LOGGER.warning("End of DB");

@@ -14,6 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
+import pojos.GetItemStoreByXListResObj;
 import pojos.GetItemStoreByXReqObj;
 import pojos.GetItemStoreByXResObj;
 import util.FlsLogger;
@@ -42,18 +43,18 @@ public class GetItemStoreByX extends HttpServlet {
 			httpresponse.setContentType("application/json");
 			
 			// application logic comes here --------		
-			GetItemStoreByXResObj Response = null;
+			GetItemStoreByXListResObj Response = null;
 		
 			try {
 				//App handler to process request and create Service response pojo
-				Response = (GetItemStoreByXResObj) GetItemStoreByXHandler.getInstance().process(request);
+				Response = (GetItemStoreByXListResObj) GetItemStoreByXHandler.getInstance().process(request);
 				
 				//Service response pojo to JSON
 				PrintWriter out = httpresponse.getWriter();
 				httpresponse.setContentType("text/json");				
 				httpresponse.setContentType("application/json; charset=UTF-8");	
 				mapper.writeValue(out, Response);
-				LOGGER.info("Finished POST method " + Response.getTitle());
+				LOGGER.info("Finished POST method");
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
