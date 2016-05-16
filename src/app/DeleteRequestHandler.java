@@ -1,6 +1,7 @@
 package app;
 
 //import com.mysql.jdbc.PreparedStatement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,11 +56,15 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		LOGGER.info("inside DeleteRequestHandler method");
 		String sql2 = "SELECT * FROM requests WHERE request_id=?"; //
 
+		Connection hcp = getConnectionFromPool();
+
 		try {
+
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmt2 = getConnectionFromPool().prepareStatement(sql2);
+			PreparedStatement stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, rq.getRequest_Id());
 			ResultSet rs1 = stmt2.executeQuery();
+			stmt2.close();
 			while (rs1.next()) {
 				item_Id = rs1.getString("request_item_id");
 			}
@@ -71,12 +76,14 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				ItemsModel im = new ItemsModel();
 				String sql1 = "SELECT * FROM items WHERE item_id=?";
 				LOGGER.info("Creating a statement .....");
-				PreparedStatement stmt1 = getConnectionFromPool().prepareStatement(sql1);
+				PreparedStatement stmt1 = hcp.prepareStatement(sql1);
 
 				LOGGER.info("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
 				stmt1.setString(1, item_Id);
 
 				ResultSet dbResponse = stmt1.executeQuery();
+				stmt1.close();
+
 				LOGGER.info("Query to request pojos fired into requests table");
 				if (dbResponse.next()) {
 
@@ -110,13 +117,14 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 
 				String sql = "UPDATE requests SET request_status=? WHERE request_id=?"; //
 				String status = "Archived";
-				PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql);
+				PreparedStatement stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + rq.getRequest_Id());
 				stmt.setString(1, status);
 				stmt.setInt(2, rq.getRequest_Id());
 				stmt.executeUpdate();
 				message = "operation successfull edited request id : " + rq.getRequest_Id();
+				stmt.close();
 				LOGGER.warning(message);
 				Code = 56;
 				Id = rq.getRequest_Id() + "";
@@ -141,6 +149,8 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		} finally {
+			hcp.close();
 		}
 
 		LOGGER.info("Finished process method ");

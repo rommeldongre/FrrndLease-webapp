@@ -14,6 +14,8 @@ import errorCat.ErrorCat;
 public class Connect extends ErrorCat {
 
 	protected static Connection connection = null;
+	protected static HikariDataSource HikariDS = null;
+
 
 	//Cannot use LOGGER class because it is being used on startup 
 	//private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
@@ -66,7 +68,7 @@ public class Connect extends ErrorCat {
     	try {
     		DataSource ds = getDataSource();
     		conn = ds.getConnection();
-            	System.out.println("===> Got a pooled connection to the database!");
+            	System.out.println("===> Got a pooled connection to the database! " + conn +  " Conn = "  + conn.isValid(0) );
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -74,10 +76,20 @@ public class Connect extends ErrorCat {
     }
 
     private DataSource getDataSource() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
-        config.setUsername("root");
-        config.setPassword("root");
-        return new HikariDataSource(config);
+    	if (HikariDS == null) {
+    		HikariConfig config = new HikariConfig();
+    		config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
+    		config.setUsername("root");
+    		config.setPassword("root");
+    		config.setMaximumPoolSize(10);
+    		config.setMinimumIdle(2);
+    		config.setIdleTimeout(10);
+    		config.setConnectionTimeout(5000);
+    		config.setValidationTimeout(1000);
+    		
+    		HikariDS = new HikariDataSource(config);
+        	System.out.println("===> Initialized Data Source");
+    	}
+    	return HikariDS;
     }
 }
