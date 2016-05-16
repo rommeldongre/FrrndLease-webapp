@@ -42,10 +42,9 @@ public class GetProfileHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside process method " + rq.getUserId());
 
 		try {
-			getConnection();
 			String sql = "SELECT * FROM users WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
-			PreparedStatement ps = connection.prepareStatement(sql);
+			PreparedStatement ps = getConnectionFromPool().prepareStatement(sql);
 			ps.setString(1, rq.getUserId());
 
 			LOGGER.info("statement created...executing select from users query");

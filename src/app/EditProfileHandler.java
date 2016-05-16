@@ -42,10 +42,9 @@ public class EditProfileHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside Process Method " + rq.getUserId());
 
 		try {
-			getConnection();
 			String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?  WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
-			PreparedStatement ps = connection.prepareStatement(sql);
+			PreparedStatement ps = getConnectionFromPool().prepareStatement(sql);
 			ps.setString(1, rq.getFullName());
 			ps.setString(2, rq.getMobile());
 			ps.setString(3, rq.getLocation());
