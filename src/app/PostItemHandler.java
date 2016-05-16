@@ -1,6 +1,6 @@
 package app;
 
-//import com.mysql.jdbc.PreparedStatement;
+import java.sql.Connection;;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,6 +42,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 		PostItemReqObj rq = (PostItemReqObj) req;
 		PostItemResObj rs = new PostItemResObj();
+		Connection hcp = getConnectionFromPool();
+
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getId());
 		
 		// TODO: Core of the processing takes place here
@@ -67,7 +69,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 
 		try {
 			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, rq.getTitle());
@@ -79,6 +81,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			stmt.setString(7, rq.getStatus());
 			stmt.setString(8, rq.getImage());
 			stmt.executeUpdate();
+			stmt.close();
 			
 			// getting the last item inserted id and appending it with the title to generate a uid
 			ResultSet keys = stmt.getGeneratedKeys();
@@ -92,15 +95,17 @@ public class PostItemHandler extends Connect implements AppHandler {
 			// updating the item_uid value of the last item inserted
 			int uidAction=0,storeAction=0;
 			String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
-			PreparedStatement s = getConnectionFromPool().prepareStatement(sqlUpdateUID);
+			PreparedStatement s = hcp.prepareStatement(sqlUpdateUID);
 			s.setString(1, uid);
 			s.setInt(2, itemId);
 			uidAction = s.executeUpdate();
+			s.close();
 			if(uidAction> 0){
 				String sqlInsertStoreID = "insert into store (store_item_id) values (?)";
-				PreparedStatement storeID = getConnectionFromPool().prepareStatement(sqlInsertStoreID);
+				PreparedStatement storeID = hcp.prepareStatement(sqlInsertStoreID);
 				storeID.setInt(1, itemId);
 				storeAction =storeID.executeUpdate();
+				storeID.close();
 				if(storeAction> 0){
 					LOGGER.info("Value in store table after UID query excecution: "+uidAction+" "+itemId);	
 				}
@@ -123,8 +128,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 			// returning the new id
 			int id=0;
 			sql = "SELECT MAX(item_id) FROM items";
-			Statement stmt1 = getConnectionFromPool().createStatement();
+			Statement stmt1 = hcp.createStatement();
 			ResultSet resultset = stmt1.executeQuery(sql);
+			stmt1.close();
 			while (resultset.next()) {
 				id = resultset.getInt(1);
 			}
@@ -151,6 +157,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 				rs.setErrorString(FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
+		} finally {
+			hcp.close();
 		}
 		
 		try{

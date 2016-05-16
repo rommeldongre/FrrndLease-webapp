@@ -1,5 +1,6 @@
 package app;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -36,15 +37,16 @@ public class EditProfileHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 
 		EditProfileReqObj rq = (EditProfileReqObj) req;
-
 		EditProfileResObj rs = new EditProfileResObj();
+		Connection hcp = getConnectionFromPool();
 
 		LOGGER.info("Inside Process Method " + rq.getUserId());
+
 
 		try {
 			String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?  WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
-			PreparedStatement ps = getConnectionFromPool().prepareStatement(sql);
+			PreparedStatement ps = hcp.prepareStatement(sql);
 			ps.setString(1, rq.getFullName());
 			ps.setString(2, rq.getMobile());
 			ps.setString(3, rq.getLocation());
@@ -52,6 +54,7 @@ public class EditProfileHandler extends Connect implements AppHandler {
 
 			LOGGER.info("statement created...executing update to users query");
 			int result = ps.executeUpdate();
+			ps.close();
 
 			LOGGER.info("Update Query Result : " + result);
 
@@ -68,6 +71,8 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
+		} finally {
+			hcp.close();
 		}
 		LOGGER.info("Finished process method ");
 		// return the response
