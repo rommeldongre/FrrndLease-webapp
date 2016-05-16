@@ -68,59 +68,74 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		check = null;
 		LOGGER.info("Inside ImportWishlist method");
 		newItemCount = 0;
-		Document doc = Jsoup.connect(rq.getUrl()).timeout(10 * 1000).post();
-
-		Elements links = doc.select("a[id*=itemName]");
-		LOGGER.info("Total number of elements: " + links.size());
-		LOGGER.info("Value before for loop: " + newItemCount);
 		
-		Elements imglink = doc.select("div[id*=itemImage] > a > img[src]");
-		
-		Element links2 = doc.select("div[class*=selected] > a > span > span").first();
-		LOGGER.info("selected Wishlist count: " + links2.text());
-		Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(links2.text());
-		while (m.find()) {
-			LOGGER.info(m.group(1));
-			int foo = Integer.parseInt(m.group(1));
-			rs.setTotalWishItemCount(foo);
-		}
-
-		for (int i = 0; i < links.size(); i++) {
-			LOGGER.info("\ntext : " + links.get(i).text());
-			String imgSrc= null, final_img = null;
-			imgSrc = BI.URLtoImage(imglink.get(i).attr("src"));
-			final_img = "data:image/png;base64,"+imgSrc;
+		String url[] = rq.getUrl().split("/");
+		String part1= "/ref=cm_wl_sortbar_v_page_";
+		String part2 = "?ie=UTF8&page=";
+		Integer num =1;
+		System.out.println("http://"+url[2]+"/gp/registry/wishlist/"+url[6]+part1+num+part2+num);
+		rs.setTotalWishItemCount(10);
+		rs.setWishItemCount(10);
+		for (int page= 1;page<20; page++){
+			String nthUrl = "http://"+url[2]+"/gp/registry/wishlist/"+url[6]+part1+page+part2+page;
+			//ImportnthPage(nthUrl);
 			
-			// Populate the response
-			try {
-				JSONObject obj1 = new JSONObject();
-				obj1.put("title", links.get(i).text());
-				obj1.put("description", "");
-				obj1.put("category", "");
-				obj1.put("userId", rq.getUserId());
-				obj1.put("leaseTerm", "");
-				obj1.put("id", 0);
-				obj1.put("leaseValue", 0);
-				obj1.put("status", "Wished");
-				obj1.put("image", final_img);
+			Document doc = Jsoup.connect(nthUrl).timeout(10 * 1000).post();
 
-				im.getData(obj1);
-			} catch (JSONException e) {
-				LOGGER.warning("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
-				e.printStackTrace();
+			Elements links = doc.select("a[id*=itemName]");
+			LOGGER.info("Total number of elements: " + links.size());
+			LOGGER.info("Value before for loop: " + newItemCount);
+			
+			Elements imglink = doc.select("div[id*=itemImage] > a > img[src]");
+			
+			if (page ==1){
+			Element links2 = doc.select("div[class*=selected] > a > span > span").first();
+			LOGGER.info("selected Wishlist count: " + links2.text());
+			Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(links2.text());
+			while (m.find()) {
+				LOGGER.info(m.group(1));
+				int foo = Integer.parseInt(m.group(1));
+				rs.setTotalWishItemCount(foo);
 			}
-			LOGGER.info("Calling Amazon Wishlist Function ");
-			AmazonWishlist(links.get(i).text(), rq.getUserId());
-		}
-		LOGGER.info("Value after for loop: " + newItemCount);
+			}
+			
+			for (int i = 0; i < links.size(); i++) {
+				LOGGER.info("\ntext : " + links.get(i).text());
+				String imgSrc= null, final_img = null;
+				imgSrc = BI.URLtoImage(imglink.get(i).attr("src"));
+				final_img = "data:image/png;base64,"+imgSrc;
+				
+				// Populate the response
+				try {
+					JSONObject obj1 = new JSONObject();
+					obj1.put("title", links.get(i).text());
+					obj1.put("description", "");
+					obj1.put("category", "");
+					obj1.put("userId", rq.getUserId());
+					obj1.put("leaseTerm", "");
+					obj1.put("id", 0);
+					obj1.put("leaseValue", 0);
+					obj1.put("status", "Wished");
+					obj1.put("image", final_img);
 
+					im.getData(obj1);
+				} catch (JSONException e) {
+					LOGGER.warning("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
+					e.printStackTrace();
+				}
+				LOGGER.info("Calling Amazon Wishlist Function ");
+				AmazonWishlist(links.get(i).text(), rq.getUserId());
+			}
+			LOGGER.info("Value after for loop: " + newItemCount);
+		}
+		
 		// rs.setWishItemCount(rq.getUrl().length());
 		rs.setWishItemCount(newItemCount);
 		message = rs.getWishItemCount().toString();
 		LOGGER.info("Printing out Resultset: " + message);
 		Code = FLS_SUCCESS;
 		Id = check;
-		
+	
 		LOGGER.info("Finished process method ");
 		// return the response
 		return rs;
@@ -131,6 +146,11 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 	public void cleanup() {
 		// TODO Auto-generated method stub
 	}
+	
+	private void ImportnthPage(String nthURL){
+		
+		
+	} 
 
 	private void AmazonWishlist(String URL, String name) {
 
