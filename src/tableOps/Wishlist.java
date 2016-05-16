@@ -11,6 +11,7 @@ import adminOps.Response;
 import connect.Connect;
 import pojos.WishlistModel;
 import util.FlsLogger;
+import util.MatchItems;
 
 public class Wishlist extends Connect {
 
@@ -97,6 +98,9 @@ public class Wishlist extends Connect {
 				s2.setString(1, rs1.getString("item_user_id"));
 				s2.executeUpdate();
 			}
+			
+			MatchItems matchItems = new MatchItems(itemId);
+			matchItems.checkPostedItems();
 			
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 		} catch (SQLException e) {

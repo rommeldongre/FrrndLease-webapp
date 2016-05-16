@@ -25,6 +25,8 @@ import java.nio.ByteBuffer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -67,7 +69,7 @@ import connect.Connect;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 
-public class AwsSESEmail extends Connect{
+public class AwsSESEmail extends Connect {
 
 	private static FlsLogger LOGGER = new FlsLogger(AwsSESEmail.class.getName());
 
@@ -82,8 +84,7 @@ public class AwsSESEmail extends Connect{
 	static String SUBJECT;
 
 	private static String user_id;
-	static String env_config  =  FlsConfig.env;
-	
+	static String env_config = FlsConfig.env;
 
 	/*
 	 * Before running the code: Fill in your AWS access credentials in the
@@ -101,22 +102,25 @@ public class AwsSESEmail extends Connect{
 		user_id = userId;
 		TO = userId;
 		String EMAIL_VERIFICATION_URL;
-		
+
 		// this variable is used to store the image
 		File imageFile = null;
 
-		if(env_config.equals("dev")){
+		// this variable is used to store list of files
+		List<File> imageFiles = new ArrayList<>();
+
+		if (env_config.equals("dev")) {
 			EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
 		} else {
 			EMAIL_VERIFICATION_URL = "http://www.frrndlease.com/emailverification.html";
 
 		}
-		
+
 		getConnection();
-		
+
 		int credit = 0;
-		
-		try{
+
+		try {
 			// getting the credits of the user
 			String sqlGetCredit = "SELECT user_credit FROM users WHERE user_id=?";
 			PreparedStatement s1 = connection.prepareStatement(sqlGetCredit);
@@ -125,10 +129,10 @@ public class AwsSESEmail extends Connect{
 			if (rs1.next()) {
 				credit = rs1.getInt("user_credit");
 			}
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		// Build Email Subject and Body
 		switch (fls_enum) {
 		case FLS_MAIL_SIGNUP_VALIDATION:
@@ -166,13 +170,46 @@ public class AwsSESEmail extends Connect{
 		case FLS_MAIL_POST_ITEM:
 			PostItemReqObj iom = (PostItemReqObj) obj;
 			SUBJECT = ("[fRRndLease] Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
-			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>"
-					+ " Title : " + iom.getTitle()
+			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
 					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "<br/>"
 					+ "<img src=\"cid:image\" alt=" + iom.getTitle() + " ></img>" + "</body>");
 			imageFile = convertBinaryToImage(iom.getImage());
+			break;
+
+		case FLS_MAIL_MATCH_WISHLIST_ITEM:
+			PostItemReqObj itemObj = (PostItemReqObj) obj;
+			SUBJECT = ("[fRRndLease] Item [" + itemObj.getTitle() + "] has been added to the Friend Store");
+			BODY = ("<body>Someone has posted this item that matches your wishlist. <br/> <br/>" + " Title : "
+					+ itemObj.getTitle() + "<br/>" + " Category : " + itemObj.getCategory() + "<br/>"
+					+ " Description : " + itemObj.getDescription() + "<br/>" + " Lease Value : "
+					+ itemObj.getLeaseValue() + "<br/>" + " Lease Term : " + itemObj.getLeaseTerm() + "<br/>"
+					+ " Status : " + itemObj.getStatus() + "<br/>" + "<img src=\"cid:image\" alt=" + itemObj.getTitle()
+					+ " ></img>" + "</body>");
+			imageFile = convertBinaryToImage(itemObj.getImage());
+			break;
+
+		case FLS_MAIL_MATCH_POST_ITEM:
+			List<PostItemReqObj> listItems = (List<PostItemReqObj>) obj;
+			SUBJECT = ("[fRRndLease] Items present in the Friend Store match your wishlist");
+			BODY = ("<body>These items match your wishlist. <br/> <br/>");
+
+			int len = listItems.size();
+
+			for (int i = 0; i < len; i++) {
+				BODY = BODY + (" Title : " + listItems.get(i).getTitle() + "<br/>" + " Category : "
+						+ listItems.get(i).getCategory() + "<br/>" + " Description : "
+						+ listItems.get(i).getDescription() + "<br/>" + " Lease Value : "
+						+ listItems.get(i).getLeaseValue() + "<br/>" + " Lease Term : "
+						+ listItems.get(i).getLeaseTerm() + "<br/>" + " Status : " + listItems.get(i).getStatus()
+						+ "<br/>" + "<img src=\"cid:image" + Integer.toString(i) + "\" alt="
+						+ listItems.get(i).getTitle() + " ></img><br/><br/>");
+				imageFiles.add(convertBinaryToImage(listItems.get(i).getImage()));
+			}
+
+			BODY = BODY + ("</body>");
+
 			break;
 
 		case FLS_MAIL_ADD_FRIEND_FROM:
@@ -301,21 +338,45 @@ public class AwsSESEmail extends Connect{
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
 
 			Multipart multipart = new MimeMultipart("related");
-			
-			// Body part of the email
-			MimeBodyPart bodyPart = new MimeBodyPart();
-			bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit + " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY, "text/html");
-			multipart.addBodyPart(bodyPart);
-			
-			// Image part if the message has an image
-			if (imageFile != null) {
-				MimeBodyPart imagePart = new MimeBodyPart();
-				LOGGER.warning("Sending Image!!");
-				imagePart.attachFile(imageFile);
-				imagePart.setContentID("<image>");
-				imagePart.setDisposition(MimeBodyPart.INLINE);
-				multipart.addBodyPart(imagePart);
-				imageFile = null;
+
+			if (imageFiles.isEmpty()) {
+				// Body part of the email
+				MimeBodyPart bodyPart = new MimeBodyPart();
+				bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit
+						+ " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY,
+						"text/html");
+				multipart.addBodyPart(bodyPart);
+
+				if (imageFile != null) {
+					MimeBodyPart imagePart = new MimeBodyPart();
+					LOGGER.warning("Sending Image!!");
+					imagePart.attachFile(imageFile);
+					imagePart.setContentID("<image>");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+					multipart.addBodyPart(imagePart);
+					imageFile = null;
+				}
+			} else {
+
+				// Body part of the email
+				MimeBodyPart bodyPart = new MimeBodyPart();
+				bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit
+						+ " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY,
+						"text/html");
+				multipart.addBodyPart(bodyPart);
+
+				int len = imageFiles.size();
+				for (int j = 0; j < len; j++) {
+					// Image part if the message has an image
+					MimeBodyPart imagePart = new MimeBodyPart();
+					LOGGER.warning("Sending Image!!");
+					imagePart.attachFile(imageFiles.get(j));
+					imagePart.setContentID("<image" + Integer.toString(j) + ">");
+					imagePart.setDisposition(MimeBodyPart.INLINE);
+					multipart.addBodyPart(imagePart);
+					imageFile = null;
+
+				}
 			}
 
 			message.setContent(multipart);
@@ -390,7 +451,7 @@ public class AwsSESEmail extends Connect{
 			// write the image to a file
 			File file = new File("ItemImage.png");
 			ImageIO.write(image, "png", file);
-			
+
 			return file;
 		} catch (IOException e) {
 			LOGGER.warning("Not able to decode the image");
