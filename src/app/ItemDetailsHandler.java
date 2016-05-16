@@ -1,6 +1,7 @@
 package app;
 
 import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -43,12 +44,10 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 
 		try {
 
-			getConnection();
-
 			String itemDetailsSql = "SELECT * FROM items WHERE item_uid=?";
 			LOGGER.info("Creating Statement");
 
-			PreparedStatement ps = connection.prepareStatement(itemDetailsSql);
+			PreparedStatement ps = getConnectionFromPool().prepareStatement(itemDetailsSql);
 			ps.setString(1, rq.getUid());
 			LOGGER.info("Created statement...executing select from items query");
 
