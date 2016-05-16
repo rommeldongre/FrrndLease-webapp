@@ -74,8 +74,8 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		String part2 = "?ie=UTF8&page=";
 		Integer num =1;
 		System.out.println("http://"+url[2]+"/gp/registry/wishlist/"+url[6]+part1+num+part2+num);
-		rs.setTotalWishItemCount(10);
-		rs.setWishItemCount(10);
+		//rs.setTotalWishItemCount(10);
+		//rs.setWishItemCount(10);
 		for (int page= 1;page<20; page++){
 			String nthUrl = "http://"+url[2]+"/gp/registry/wishlist/"+url[6]+part1+page+part2+page;
 			//ImportnthPage(nthUrl);
