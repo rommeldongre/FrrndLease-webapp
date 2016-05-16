@@ -1,6 +1,6 @@
 package app;
 
-//import com.mysql.jdbc.PreparedStatement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,6 +40,8 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 		GetRequestsByUserReqObj rq = (GetRequestsByUserReqObj) req;
 		GetRequestsByUserResObj rs = new GetRequestsByUserResObj();
+		Connection hcp = getConnectionFromPool();
+
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
 		check = null;
@@ -48,7 +50,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		try {
 			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_id>? HAVING tb1.request_status=? ORDER by tb1.request_id ASC LIMIT 1";
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql);
+			PreparedStatement stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing GetOutgoingrequests query...");
 			stmt.setString(1, rq.getUserId());
@@ -84,12 +86,16 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 				}
 			}
 
+			stmt.close();
 			// res.setData(Code,Id,message);
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
+		} finally {
+			hcp.close();
 		}
+
 		LOGGER.info("Finished process method ");
 		// return the response
 		return rs;

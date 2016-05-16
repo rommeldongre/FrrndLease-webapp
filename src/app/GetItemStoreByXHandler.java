@@ -1,6 +1,7 @@
 package app;
 
 //import com.mysql.jdbc.PreparedStatement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,7 +36,9 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 	public ResObj process(ReqObj req) throws Exception {
 		// TODO Auto-generated method stub
 		GetItemStoreByXReqObj rq = (GetItemStoreByXReqObj) req;
+
 		GetItemStoreByXListResObj rs = new GetItemStoreByXListResObj();
+		Connection hcp = getConnectionFromPool();
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
@@ -49,35 +52,39 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 
 			// All Category in index page
 			if (rq.getCategory() == null && rq.getUserId() == null) {
-				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= 'InStore' ORDER BY item_id LIMIT ?";
 
-				sql_stmt = getConnectionFromPool().prepareStatement(sql);
+				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= 'InStore' ORDER BY item_id LIMIT ?";
+				sql_stmt = hcp.prepareStatement(sql);
+
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setInt(2, rq.getLimit());
 			}
 			// Category selected in index page
+
 			if (rq.getCategory() != null && rq.getUserId() == null) {
 				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status = 'InStore' AND tb1.item_category=? LIMIT ?";
+				sql_stmt = hcp.prepareStatement(sql);
 
-				sql_stmt = getConnectionFromPool().prepareStatement(sql);
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getCategory());
 				sql_stmt.setInt(3, rq.getLimit());
 			}
+
 			// All Category mypostings page
 			if (rq.getCategory() == null && rq.getUserId() != null) {
 				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_user_id=? LIMIT ?";
-				sql_stmt = getConnectionFromPool().prepareStatement(sql);
+				sql_stmt = hcp.prepareStatement(sql);
 
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getUserId());
 				sql_stmt.setInt(3, rq.getLimit());
 			}
+
 			// Category selected in mypostings page
 			if (rq.getCategory() != null && rq.getUserId() != null) {
 
 				sql = "SELECT tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE item_id > ? AND item_status = 'InStore' AND item_category=? AND item_user_id=? LIMIT ?";
-				sql_stmt = getConnectionFromPool().prepareStatement(sql);
+				sql_stmt = hcp.prepareStatement(sql);
 
 				sql_stmt.setInt(1, rq.getCookie());
 				sql_stmt.setString(2, rq.getCategory());
@@ -86,6 +93,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			}
 
 			ResultSet dbResponse = sql_stmt.executeQuery();
+
 			if (dbResponse.next()) {
 				dbResponse.previous();
 				while (dbResponse.next()) {
@@ -107,9 +115,15 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 				rs.setReturnCode(404);
 				LOGGER.warning("End of DB");
 			}
+			dbResponse.close();
+			sql_stmt.close();
+			hcp.close();
+
 		} catch (SQLException e) {
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
+		} finally {
+			hcp.close();
 		}
 		LOGGER.info("Finished process method ");
 		// return the response

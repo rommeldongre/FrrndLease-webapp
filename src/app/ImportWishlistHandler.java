@@ -1,6 +1,6 @@
 package app;
 
-//import com.mysql.jdbc.PreparedStatement;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -139,11 +139,12 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		Iname = URL;
 		User = name;
 		Image = im.getImage();
+		Connection hcp = getConnectionFromPool();
 
 		try {
 			String sql = "SELECT * FROM items WHERE item_name=? AND item_user_id=? AND item_status=? LIMIT 1";
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = getConnectionFromPool().prepareStatement(sql);
+			PreparedStatement stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing ImportWishlistHandler select query...");
 			stmt.setString(1, Iname);
@@ -151,13 +152,14 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			stmt.setString(3, "Wished");
 
 			ResultSet dbResponse = stmt.executeQuery();
+			stmt.close();
 			LOGGER.info("ImportWishlistHandler select query executed...");
 
 			if (dbResponse.next() == false) {
 				LOGGER.info("Item: " + Iname + "for user: " + User + " does not exist");
 				String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 				LOGGER.info("Creating Insert statement of ImportWishlistHandler.....");
-				PreparedStatement stmt1 = getConnectionFromPool().prepareStatement(sql1);
+				PreparedStatement stmt1 = hcp.prepareStatement(sql1);
 
 				LOGGER.info("Statement created. Executing query.....");
 				stmt1.setString(1, Iname);
@@ -169,19 +171,22 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				stmt1.setString(7, "Wished");
 				stmt1.setString(8, Image);
 				insertcount = stmt1.executeUpdate();
+				stmt1.close();
+
 				// System.out.println("Entry added into items table:
 				// "+insertcount);
 				
 				// to add credit in user_credit
 				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-				PreparedStatement s1 = getConnectionFromPool().prepareStatement(sqlAddCredit);
+				PreparedStatement s1 = hcp.prepareStatement(sqlAddCredit);
 				s1.setString(1, User);
 				s1.executeUpdate();
 
 				// returning the new id
 				String sql2 = "SELECT MAX(item_id) FROM items";
-				PreparedStatement stmt2 = getConnectionFromPool().prepareStatement(sql2);
+				PreparedStatement stmt2 = hcp.prepareStatement(sql2);
 				ResultSet rs = stmt2.executeQuery();
+				stmt2.close();
 				while (rs.next()) {
 					try {
 						JSONObject obj2 = new JSONObject();
@@ -207,46 +212,48 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			}
 
 			// res.setData(Code,Id,message);
+		    	if (insertcount == 1) {
+
+				Integer itemId = wm.getItemId();
+
+				String sql3 = "insert into wishlist (wishlist_item_id) values (?)"; //
+
+				try {
+					// System.out.println("Creating statement.....");
+					LOGGER.info("Creating statement.....");
+					PreparedStatement stmt3 = hcp.prepareStatement(sql3);
+
+					// System.out.println("Statement created. Executing
+					// query.....");
+					LOGGER.info("Statement created. Executing query.....");
+					stmt3.setInt(1, itemId);
+					stmt3.executeUpdate();
+					stmt3.close();
+					// System.out.println("Entry added into wishlist table:
+					// "+insertcount);
+					LOGGER.info("Entry added into wishlist table: " + insertcount);
+					newItemCount = newItemCount + 1;
+					// message = "Entry added into wishlist table";
+					// Code = 33;
+					// Id = String.valueOf(itemId);
+					// res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
+				} catch (SQLException e) {
+					LOGGER.warning("Couldn't create statement");
+					res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+					e.printStackTrace();
+				}
+			} else {
+				// System.out.println("Wishlist op not performed as Add item not
+				// performed");
+				LOGGER.info("Wishlist op not performed as Add item not performed");
+			}
+
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
+		} finally {
+			try { hcp.close(); } catch (SQLException e) {} 
 		}
-
-		if (insertcount == 1) {
-
-			Integer itemId = wm.getItemId();
-
-			String sql3 = "insert into wishlist (wishlist_item_id) values (?)"; //
-
-			try {
-				// System.out.println("Creating statement.....");
-				LOGGER.info("Creating statement.....");
-				PreparedStatement stmt3 = getConnectionFromPool().prepareStatement(sql3);
-
-				// System.out.println("Statement created. Executing
-				// query.....");
-				LOGGER.info("Statement created. Executing query.....");
-				stmt3.setInt(1, itemId);
-				stmt3.executeUpdate();
-				// System.out.println("Entry added into wishlist table:
-				// "+insertcount);
-				LOGGER.info("Entry added into wishlist table: " + insertcount);
-				newItemCount = newItemCount + 1;
-				// message = "Entry added into wishlist table";
-				// Code = 33;
-				// Id = String.valueOf(itemId);
-				// res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
-			} catch (SQLException e) {
-				LOGGER.warning("Couldn't create statement");
-				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-				e.printStackTrace();
-			}
-		} else {
-			// System.out.println("Wishlist op not performed as Add item not
-			// performed");
-			LOGGER.info("Wishlist op not performed as Add item not performed");
-		}
-
 	}
 }

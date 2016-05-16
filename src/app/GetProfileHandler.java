@@ -1,5 +1,6 @@
 package app;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,15 +37,15 @@ public class GetProfileHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 
 		GetProfileReqObj rq = (GetProfileReqObj) req;
-
 		GetProfileResObj rs = new GetProfileResObj();
+		Connection hcp = getConnectionFromPool();
 
 		LOGGER.info("Inside process method " + rq.getUserId());
 
 		try {
 			String sql = "SELECT * FROM users WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
-			PreparedStatement ps = getConnectionFromPool().prepareStatement(sql);
+			PreparedStatement ps = hcp.prepareStatement(sql);
 			ps.setString(1, rq.getUserId());
 
 			LOGGER.info("statement created...executing select from users query");
@@ -66,10 +67,14 @@ public class GetProfileHandler extends Connect implements AppHandler {
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 			}
 
+			ps.close();
+
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
+		} finally {
+			hcp.close();
 		}
 		LOGGER.info("Finished process method ");
 		// return the response
