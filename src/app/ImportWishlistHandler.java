@@ -187,7 +187,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			stmt.setString(3, "Wished");
 
 			ResultSet dbResponse = stmt.executeQuery();
-			stmt.close();
+			
 			LOGGER.info("ImportWishlistHandler select query executed...");
 
 			execution_count = execution_count + 1;
@@ -208,7 +208,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				stmt1.setString(8, Image);
 				insertcount = stmt1.executeUpdate();
 				stmt1.close();
-
+				
 				// System.out.println("Entry added into items table:
 				// "+insertcount);
 				
@@ -222,7 +222,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				String sql2 = "SELECT MAX(item_id) FROM items";
 				PreparedStatement stmt2 = hcp.prepareStatement(sql2);
 				ResultSet rs = stmt2.executeQuery();
-				stmt2.close();
+				
 				while (rs.next()) {
 					try {
 						JSONObject obj2 = new JSONObject();
@@ -234,7 +234,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 						e.printStackTrace();
 					}
 				}
-
+				stmt2.close();
 			} else {
 				// System.out.println("Amazon Wishlist Item Already exists");
 				LOGGER.info("Amazon Wishlist Item Already exists");
@@ -246,7 +246,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				// Code = FLS_END_OF_DB;
 				// rs.setErrorString("End of table reached");
 			}
-
+			
 			// res.setData(Code,Id,message);
 		    	if (insertcount == 1) {
 
@@ -283,7 +283,8 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				// performed");
 				LOGGER.info("Wishlist op not performed as Add item not performed");
 			}
-
+		    	
+		    	stmt.close();
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
