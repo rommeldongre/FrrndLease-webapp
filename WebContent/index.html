@@ -218,7 +218,7 @@
 	</div>
 	
 	<script type="text/javascript">
-		var counter, i, j, startingCarousel, carouselwidth, carouselheight, browsingCategory, imgheight, imgwidth, noOfImagesInCarousel, navigatingSide, span1, col1, row1, carouselinner, img1, item1, reasonForGetItem, userloggedin, footerFlag, categoryCounter;
+		var counter, i, j, startingCarousel, carouselwidth, carouselheight, browsingCategory, imgheight, imgwidth, noOfImagesInCarousel, navigatingSide, row1, carouselinner, img1, item1, reasonForGetItem, userloggedin, footerFlag, categoryCounter;
 		
 		function start(){
 		
@@ -448,6 +448,7 @@
 			else{
 				$("#rightcarouselbutton").show();
 				$("#carousel-example-generic").carousel('prev');				//load previous slide
+				itemNextId = itemNextIdArray.pop();
 			}
 		}
 		
@@ -491,97 +492,111 @@
 				process_dialog("Loading Carousel");
 				}
 				$("#leftcarouselbutton").show();
-				getNextItemCarousel(itemNextId,"",browsingCategory);
+				getNextItemCarousel(itemNextId,"",browsingCategory,noOfImagesInCarousel);
 			}
 		}
 		
 		function getNoOfImagesInCarousel(){
-			col1 = document.createElement("div");
-			
 			if($(window).width()>=991){
 				noOfImagesInCarousel = 3;				//for desktops	
-				col1.className = "col-md-4 col-sm-4 col-xs-4 col-lg-4";
 				imgwidth = carouselwidth/3;
 				imgheight = carouselheight;
 			
 			}else if($(window).width()<=500){
 				noOfImagesInCarousel = 1;				//for mobiles
-				col1.className = "col-md-12 col-sm-12 col-xs-12 col-lg-12";
 				imgwidth = carouselwidth;
 				imgheight = carouselheight;
 				
 			}else{
 				noOfImagesInCarousel = 2;				//for tablets
-				col1.className = "col-md-6 col-sm-6 col-xs-6 col-lg-6";
 				imgwidth = carouselwidth/2;
 				imgheight = carouselheight;
 			}
 		}
 		
-		function addItemToCarousel(obj){					//called from script_admin_v2.js
+		function addItemToCarousel(listObj){					//called from script_admin_v2.js
 			//getNoOfImagesInCarousel();	
-			
-			if((obj.status == 'InStore') && ((browsingCategory == 'All') || (obj.category == browsingCategory))){
+		
+			for(var key in listObj.resList){
 				
-				span1 = document.createElement("span");
-				span1.className = "items";
+				var obj = listObj.resList[key];
 				
-				var src = obj.image;
-				
-				if (src == null || src == '' || src=="null"){		//if no image of the object is stored then show default image
-					src = "images/imgplaceholder.png";
-				}
-				
-				var img1 = document.createElement("img");
-				img1.src = src;
-				img1.id = obj.itemId;
-				
-				$(img1).css("width", imgwidth);
-				$(img1).css("height", imgheight);
-				
-				var caption1 = document.createElement("div");
-				caption1.className = "carousel-caption";
-				caption1.id = obj.itemId;
-				caption1.style.backgroundColor = "black";
-				caption1.style.opacity = 0.6;
-				
-				var h4 = document.createElement("h4");
-				h4.innerHTML ='<b>' +obj.title+ '</b>';
-				h4.id = obj.itemId;
-				
-				var p = document.createElement("p");
-				p.innerHTML = "Lease Term: "+obj.leaseTerm;
-				p.id = obj.itemId;
-				
-				if(obj.location){
-					var address = obj.location;
-					var locationArr = address.split(',');
-					var cityName = locationArr[0];
-					var cityLocation = locationArr[1];
-					var pinCode = locationArr[1].match(/\d+/)[0];
-					var properLocation = cityName+" - "+ pinCode;
+				if((obj.status == 'InStore') && ((browsingCategory == 'All') || (obj.category == browsingCategory))){
 					
-					var userLocation = document.createElement("p");
-					userLocation.innerHTML = " "+properLocation;
-					userLocation.id = obj.itemId;
+					var col1 = document.createElement("div");
+					
+					switch(noOfImagesInCarousel){
+						case 1:
+							col1.className = "col-md-12 col-sm-12 col-xs-12 col-lg-12";
+							break;
+						case 2:
+							col1.className = "col-md-6 col-sm-6 col-xs-6 col-lg-6";
+							break;
+						case 3:
+							col1.className = "col-md-4 col-sm-4 col-xs-4 col-lg-4";
+							break;
+					}
+					
+					var span1 = document.createElement("span");
+					span1.className = "items";
+					
+					var src = obj.image;
+					
+					if (src == null || src == '' || src=="null"){		//if no image of the object is stored then show default image
+						src = "images/imgplaceholder.png";
+					}
+					
+					var img1 = document.createElement("img");
+					img1.src = src;
+					img1.id = obj.itemId;
+					
+					$(img1).css("width", imgwidth);
+					$(img1).css("height", imgheight);
+					
+					var caption1 = document.createElement("div");
+					caption1.className = "carousel-caption";
+					caption1.id = obj.itemId;
+					caption1.style.backgroundColor = "black";
+					caption1.style.opacity = 0.6;
+					
+					var h4 = document.createElement("h4");
+					h4.innerHTML ='<b>' +obj.title+ '</b>';
+					h4.id = obj.itemId;
+					
+					var p = document.createElement("p");
+					p.innerHTML = "Lease Term: "+obj.leaseTerm;
+					p.id = obj.itemId;
+					
+					if(obj.location){
+						var address = obj.location;
+						var locationArr = address.split(',');
+						var cityName = locationArr[0];
+						var cityLocation = locationArr[1];
+						var pinCode = locationArr[1].match(/\d+/)[0];
+						var properLocation = cityName+" - "+ pinCode;
+						
+						var userLocation = document.createElement("p");
+						userLocation.innerHTML = " "+properLocation;
+						userLocation.id = obj.itemId;
+					}
+					
+					var full_Name = document.createElement("p");
+					full_Name.innerHTML = obj.fullName;
+					full_Name.id = obj.itemId;
+					
+					caption1.appendChild(h4);
+					caption1.appendChild(p);
+					if(obj.location){
+						caption1.appendChild(userLocation);
+					}
+					caption1.appendChild(full_Name);
+					span1.appendChild(img1);
+					span1.appendChild(caption1);
+					col1.appendChild(span1);
+					row1.appendChild(col1);
+					
+					counter++;
 				}
-				
-				var full_Name = document.createElement("p");
-				full_Name.innerHTML = obj.fullName;
-				full_Name.id = obj.itemId;
-				
-				caption1.appendChild(h4);
-				caption1.appendChild(p);
-				if(obj.location){
-					caption1.appendChild(userLocation);
-				}
-				caption1.appendChild(full_Name);
-				span1.appendChild(img1);
-				span1.appendChild(caption1);
-				col1.appendChild(span1);
-				row1.appendChild(col1);
-				
-				counter++;
 			}
 			
 			if(counter >= noOfImagesInCarousel){

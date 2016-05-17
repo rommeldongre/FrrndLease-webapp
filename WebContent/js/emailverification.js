@@ -11,11 +11,7 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
             if(data.data.code == 0){
                 localStorage.setItem("userloggedin", data.data.userId);
                 
-                var modalOptions = {
-                    bodyText: data.data.message + ', Welcome to fRRndLease.'
-                };
-                
-                modalService.showModal({}, modalOptions).then(function(result){
+                modalService.showModal({}, {bodyText: data.data.message + ', Welcome to fRRndLease.',showCancel: false,actionButtonText: 'OK'}).then(function(result){
                 
                 window.location.replace("/flsv2/myindex.html");
                 }, function(){
