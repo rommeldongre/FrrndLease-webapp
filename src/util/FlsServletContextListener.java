@@ -1,9 +1,7 @@
-package services;
+package util;
 
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
-
-import util.FlsConfig;
 
 public class FlsServletContextListener implements ServletContextListener {
 
