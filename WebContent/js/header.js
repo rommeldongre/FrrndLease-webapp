@@ -11,7 +11,6 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
     var displayCredits = function(){
         profileFactory.getProfile(userFactory.user).then(
         function(response){
-            console.log(response);
             if (response.data.code == 0) {
                 $scope.credits = response.data.credit + " credits";
             } else {
@@ -66,13 +65,17 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
 }]);
 
 
-// factory to get profile from the backend service
+// factory for getting and updating profile from the backend service
 headerApp.factory('profileFactory', ['$http', function($http){
     
     var dataFactory = {};
     
     dataFactory.getProfile = function(user){
         return $http.post('/flsv2/GetProfile', JSON.stringify({userId : user}));
+    }
+    
+    dataFactory.updateProfile = function(req){
+        return $http.post('/flsv2/EditProfile', JSON.stringify(req));
     }
     
     return dataFactory;
