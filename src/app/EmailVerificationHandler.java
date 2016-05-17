@@ -49,8 +49,7 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 			ps1.setString(1, rq.getVerification());
 
 			ResultSet result1 = ps1.executeQuery();
-			ps1.close();
-
+			
 			if (result1.next()) {
 				if (result1.getString("user_status").equals("email_pending")) {
 					String update_status_sql = "UPDATE users SET user_status=? WHERE user_activation=?";
@@ -61,7 +60,6 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 
 					LOGGER.info("statement created...executing update to users query");
 					int result2 = ps2.executeUpdate();
-					ps2.close();
 
 					LOGGER.info("Update Query Result : " + result2);
 
@@ -75,6 +73,7 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 						rs.setMessage(
 								"Could not activate your account due to some internal problems!! Trying to fix it ASAP");
 					}
+					ps2.close();
 				} else {
 					rs.setCode(FLS_END_OF_DB);
 					rs.setUserId("");
@@ -85,6 +84,7 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 				rs.setUserId("");
 				rs.setMessage("This account is not registered!! I wonder how you got this link");
 			}
+			ps1.close();
 
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);

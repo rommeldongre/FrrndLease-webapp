@@ -61,6 +61,11 @@
             </form>
             <!-- Searchbar ends here -->
         
+            <!-- Store Your Stuff button -->
+            <div ng-if="isLoggedIn()" class="navbar-form navbar-right">
+                <button ng-click="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
+            </div>
+        
         </div>
     </div>
 </nav>
