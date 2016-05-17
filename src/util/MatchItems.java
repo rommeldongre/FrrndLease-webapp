@@ -107,11 +107,13 @@ public class MatchItems extends Connect {
 					listItems.add(item);
 				}
 
-				try {
-					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_POST_ITEM, listItems);
-				} catch (Exception e) {
-					e.printStackTrace();
+				if(!listItems.isEmpty()){
+					try {
+						AwsSESEmail newE = new AwsSESEmail();
+						newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_POST_ITEM, listItems);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
