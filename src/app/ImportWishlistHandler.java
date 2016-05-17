@@ -36,7 +36,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 
 	private String user_name, check = null, Id = null, token, message;
 	private int Code;
-	private int newItemCount = 0;
+	private int newItemCount = 0, execution_count=0;
 	Response res = new Response();
 	WishlistModel wm = new WishlistModel();
 	ItemsModel im = new ItemsModel();
@@ -68,6 +68,20 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		check = null;
 		LOGGER.info("Inside ImportWishlist method");
 		newItemCount = 0;
+		int wishlist_pages=0;
+		Document doc1 = Jsoup.connect(rq.getUrl()).timeout(10 * 1000).post();
+		if(doc1.select("li[class*=a-last]").size() > 0){
+				Element pages = doc1.select("li[data-action=pag-trigger]").last();
+				wishlist_pages = Integer.parseInt(pages.text());
+				System.out.println("Value of List Item: "+wishlist_pages);
+			if(wishlist_pages > 9){
+				wishlist_pages= 9;
+				System.out.println("Value of List Item: "+wishlist_pages);
+			}
+			}else{
+				wishlist_pages= 1;
+				System.out.println("Value of List Item: "+wishlist_pages);
+			}
 		
 		String url[] = rq.getUrl().split("/");
 		String part1= "/ref=cm_wl_sortbar_v_page_";
@@ -76,7 +90,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		System.out.println("http://"+url[2]+"/gp/registry/wishlist/"+url[6]+part1+num+part2+num);
 		//rs.setTotalWishItemCount(10);
 		//rs.setWishItemCount(10);
-		for (int page= 1;page<20; page++){
+		for (int page= 1;page<=wishlist_pages; page++){
 			String nthUrl = "http://"+url[2]+"/gp/registry/wishlist/"+url[6]+part1+page+part2+page;
 			//ImportnthPage(nthUrl);
 			
@@ -136,6 +150,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		Code = FLS_SUCCESS;
 		Id = check;
 	
+		System.out.println("Total times executed: "+execution_count);
 		LOGGER.info("Finished process method ");
 		// return the response
 		return rs;
@@ -175,6 +190,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			stmt.close();
 			LOGGER.info("ImportWishlistHandler select query executed...");
 
+			execution_count = execution_count + 1;
 			if (dbResponse.next() == false) {
 				LOGGER.info("Item: " + Iname + "for user: " + User + " does not exist");
 				String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
