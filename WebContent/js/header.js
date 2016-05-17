@@ -1,50 +1,47 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap']);
 
-headerApp.controller('headerCtrl', function($scope){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', function($scope, userFactory, profileFactory){
     
-    var user = localStorage.getItem("userloggedin");
-    
-    if(user == "" || user == null){
-        user = "anonymous";
-        localStorage.setItem("userloggedin", user);	
+    if(userFactory.user == "" || userFactory.user == null){
+        localStorage.setItem("userloggedin", "anonymous");	
     }else{
-        $scope.salutation = localStorage.getItem("userloggedinName");
+        $scope.salutation = userFactory.userName;
     }
     
-    $.ajax({
-        url : '/flsv2/GetProfile',
-        type : 'post',
-        data : JSON.stringify({userId : user}),
-        contentType : "application/json",
-        dataType : "json",
-        success : function(response) {
-            if (response.code == 0) {
-                $scope.credits = response.credit + " credits";
+    var displayCredits = function(){
+        profileFactory.getProfile(userFactory.user).then(
+        function(response){
+            console.log(response);
+            if (response.data.code == 0) {
+                $scope.credits = response.data.credit + " credits";
             } else {
                 $scope.credits = "";
             }
         },
-        error : function() {
-            alert("Connection Problem!!");
-        }
-    });
+        function(error){
+            console.log("unable to get credits: " + error.message);
+        });
+    }
+    
+    // populating the credits
+    displayCredits();
     
     $scope.isAdmin = function(){
-        if(user == 'frrndlease@greylabs.org')
+        if(userFactory.user == 'frrndlease@greylabs.org')
             return true;
         else
             return false;
     }
     
     $scope.isAnonymous = function(){
-        if(user == "anonymous")
+        if(userFactory.user == "anonymous")
             return true;
         else
             return false;
     }
     
     $scope.isLoggedIn = function(){
-        if(user != "anonymous")
+        if(userFactory.user != "anonymous")
             return true;
         else
             return false;
@@ -59,8 +56,40 @@ headerApp.controller('headerCtrl', function($scope){
 											
         window.location.replace("index.html");
     }
+    
+    $scope.storeYourStuff = function(){
+        storeCurrentFunction('storeYourStuff');
+		setPrevPage("myindex.html");
+			
+		window.location.replace("mystore.html");
+    }
+}]);
+
+
+// factory to get profile from the backend service
+headerApp.factory('profileFactory', ['$http', function($http){
+    
+    var dataFactory = {};
+    
+    dataFactory.getProfile = function(user){
+        return $http.post('/flsv2/GetProfile', JSON.stringify({userId : user}));
+    }
+    
+    return dataFactory;
+}]);
+
+headerApp.factory('userFactory', function(){
+    
+    var dataFactory = {};
+    
+    dataFactory.user = localStorage.getItem("userloggedin");
+    
+    dataFactory.userName = localStorage.getItem("userloggedinName");
+    
+    return dataFactory;
 });
 
+// services to implement modala
 headerApp.service('modalService', ['$uibModal',
     function ($uibModal) {
 

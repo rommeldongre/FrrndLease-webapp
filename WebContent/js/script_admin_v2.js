@@ -1682,7 +1682,6 @@ function getNextItemCarouselSend(req){
 		success: function(response) {
 			
 			if(response.returnCode == 0){
-				console.log(response);
 				itemNextId = response.lastItemId;
 				addItemToCarousel(response);
 				

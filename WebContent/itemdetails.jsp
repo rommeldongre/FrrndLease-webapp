@@ -338,6 +338,7 @@
     <script src="js/tawk.js"></script>
 	<script src="js/script_admin_v2.js"></script>
 	<script src="js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
 
 </body>
 </html>

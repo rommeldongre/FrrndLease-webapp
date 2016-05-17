@@ -115,9 +115,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 				rs.setReturnCode(404);
 				LOGGER.warning("End of DB");
 			}
-			dbResponse.close();
 			sql_stmt.close();
-			hcp.close();
 
 		} catch (SQLException e) {
 			LOGGER.warning("Error Check Stacktrace");
