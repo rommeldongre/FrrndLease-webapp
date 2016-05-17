@@ -20,6 +20,8 @@
 <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
 <script src="js/header.js"></script>
 <!-- Angularjs api ends -->
+    
+<link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
 
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <title>Item Details</title>
