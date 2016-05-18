@@ -1,6 +1,15 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', function($scope, userFactory, profileFactory){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory',function($scope, userFactory, profileFactory){
+    
+    if(window.location.pathname == '/flsv2/index.html' || window.location.pathname == '/flsv2/'){
+        $scope.navClassValue = "navbar navbar-static";
+        $scope.showSearch = false;
+    }
+    else{
+        $scope.navClassValue = "navbar navbar-default navbar-fixed-top";
+        $scope.showSearch = true;
+    }
     
     if(userFactory.user == "" || userFactory.user == null){
         localStorage.setItem("userloggedin", "anonymous");	
@@ -63,7 +72,6 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
 		window.location.replace("mystore.html");
     }
 }]);
-
 
 // factory for getting and updating profile from the backend service
 headerApp.factory('profileFactory', ['$http', function($http){
