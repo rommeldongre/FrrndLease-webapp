@@ -12,7 +12,7 @@
 
 <listener>
     <listener-class>
-        services.FlsServletContextListener
+        util.FlsServletContextListener
     </listener-class>
 </listener>
 
