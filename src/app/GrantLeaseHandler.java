@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import adminOps.Response;
 import connect.Connect;
 import pojos.GrantLeaseReqObj;
 import pojos.GrantLeaseResObj;
@@ -20,8 +19,6 @@ import util.FlsSendMail;
 public class GrantLeaseHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(GrantLeaseHandler.class.getName());
-
-	private Response res = new Response();
 
 	private static GrantLeaseHandler instance = null;
 
