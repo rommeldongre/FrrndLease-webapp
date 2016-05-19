@@ -67,7 +67,6 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory',fu
     
     $scope.storeYourStuff = function(){
         storeCurrentFunction('storeYourStuff');
-		setPrevPage("myindex.html");
 			
 		window.location.replace("mystore.html");
     }
