@@ -49,6 +49,7 @@ import pojos.GrantLeaseReqObj;
 import pojos.ItemsModel;
 import pojos.LeasesModel;
 import pojos.PostItemReqObj;
+import pojos.RenewLeaseReqObj;
 import pojos.RequestsModel;
 import pojos.UsersModel;
 import tableOps.Wishlist;
@@ -293,14 +294,14 @@ public class AwsSESEmail extends Connect {
 			break;
 
 		case FLS_MAIL_REJECT_LEASE_FROM:
-			LeasesModel rflm = (LeasesModel) obj;
+			RenewLeaseReqObj rflm = (RenewLeaseReqObj) obj;
 			SUBJECT = ("[fRRndLease] Lease Cancelled to user [" + rflm.getReqUserId() + "]");
 			BODY = ("<body>You have closed leased of item having id [" + rflm.getItemId() + "] and leasee ["
 					+ rflm.getReqUserId() + "] on Friend Lease - <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_REJECT_LEASE_TO:
-			LeasesModel rtlm = (LeasesModel) obj;
+			RenewLeaseReqObj rtlm = (RenewLeaseReqObj) obj;
 			SUBJECT = ("[fRRndLease] Lease Closed by the Owner");
 			BODY = ("<body>Lease has been closed by the Owner for the item having id [" + rtlm.getItemId()
 					+ "] <br/> <br/></body>");
