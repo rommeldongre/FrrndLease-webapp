@@ -56,8 +56,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			break;
 			
 		case "close":
-			//closeLease();
-			String status = "Archived";
+		
 			int leaseAction = 0, itemAction = 0, storeAction = 0;
 			PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null;
 			ResultSet dbResponseLease =  null, dbResponseitems = null;
@@ -78,7 +77,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				if (!dbResponseLease.next()) {
 					System.out.println("Empty result while firing select query on 1st table(leases)");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("404");
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
 					return rs;
@@ -89,7 +87,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				psLeaseUpdate = hcp.prepareStatement(sql);
 		
 				LOGGER.info("Statement created. Executing edit query on lease table...");
-				psLeaseUpdate.setString(1, status);
+				psLeaseUpdate.setString(1, "Archived");
 				psLeaseUpdate.setString(2, rq.getReqUserId());
 				psLeaseUpdate.setInt(3, rq.getItemId());
 				psLeaseUpdate.setString(4, "Active");
@@ -98,7 +96,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				if(leaseAction == 0){
 					System.out.println("Error occured while firing edit query on lease table");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
 					return rs;
@@ -114,25 +111,22 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				if(!dbResponseitems.next()) {
 					System.out.println("Empty result while firing select query on 2nd table(items)");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("404");
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
 					return rs;
 				}
 				
-				status = "InStore";
 				String updateItemsSql = "UPDATE items SET item_status=? WHERE item_id=?";
 				psItemUpdate = hcp.prepareStatement(updateItemsSql);
 
 				LOGGER.info("Statement created. Executing update query on items table...");
-				psItemUpdate.setString(1, status);
+				psItemUpdate.setString(1, "InStore");
 				psItemUpdate.setInt(2, rq.getItemId());
 				itemAction= psItemUpdate.executeUpdate();
 				
 				if(itemAction == 0){
 					System.out.println("Error occured while firing update query on items table");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
 					return rs;
@@ -149,7 +143,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				if(storeAction == 0){
 					System.out.println("Error occured while firing update query on store table");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
 					return rs;
@@ -160,7 +153,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, rq);
 				
 				rs.setCode(FLS_SUCCESS);
-				rs.setError("0");
 				rs.setMessage(FLS_SUCCESS_M);
 				hcp.commit();
 				//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
@@ -168,7 +160,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			} catch (SQLException e) {
 				LOGGER.info("SQL Exception encountered....");
 				rs.setCode(FLS_SQL_EXCEPTION);
-				rs.setError("0");
 				rs.setMessage(FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}catch (Exception e) {
@@ -197,10 +188,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		return rs;
 	}
 
-	private void closeLease() throws SQLException {
-		
-	}
-
 	private void renewLease() throws SQLException {
 		
 		String date1 = null;
@@ -226,7 +213,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			if (!result1.next()) {
 				System.out.println("Empty result while firing select query on lease table for Renew Lease");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("404");
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
 			}else{
@@ -258,7 +244,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				if(renewAction == 0 ){
 					System.out.println("Error occured while firing Update query on lease table for Renew Lease");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
 				}else{
