@@ -45,6 +45,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.xml.bind.DatatypeConverter;
 
 import pojos.FriendsModel;
+import pojos.GrantLeaseReqObj;
 import pojos.ItemsModel;
 import pojos.LeasesModel;
 import pojos.PostItemReqObj;
@@ -278,14 +279,14 @@ public class AwsSESEmail extends Connect {
 			break;
 
 		case FLS_MAIL_GRANT_LEASE_FROM:
-			LeasesModel gflm = (LeasesModel) obj;
+			GrantLeaseReqObj gflm = (GrantLeaseReqObj) obj;
 			SUBJECT = ("[fRRndLease] Lease granted to user [" + gflm.getReqUserId() + "]");
 			BODY = ("<body>You have sucessfully leased an item to [" + gflm.getReqUserId()
 					+ "] on Friend Lease - <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_GRANT_LEASE_TO:
-			LeasesModel gtlm = (LeasesModel) obj;
+			GrantLeaseReqObj gtlm = (GrantLeaseReqObj) obj;
 			SUBJECT = ("[fRRndLease] Lease granted to you by [" + gtlm.getUserId() + "]");
 			BODY = ("<body>An item has been leased by [" + gtlm.getUserId()
 					+ "] to you on Friend Lease - <br/> <br/></body>");

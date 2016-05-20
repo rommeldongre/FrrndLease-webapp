@@ -1,6 +1,6 @@
 package app;
 
-import java.sql.Connection;;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -81,7 +81,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			stmt.setString(7, rq.getStatus());
 			stmt.setString(8, rq.getImage());
 			stmt.executeUpdate();
-			stmt.close();
+			
 			
 			// getting the last item inserted id and appending it with the title to generate a uid
 			ResultSet keys = stmt.getGeneratedKeys();
@@ -99,7 +99,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			s.setString(1, uid);
 			s.setInt(2, itemId);
 			uidAction = s.executeUpdate();
-			s.close();
+			
 			if(uidAction> 0){
 				String sqlInsertStoreID = "insert into store (store_item_id) values (?)";
 				PreparedStatement storeID = hcp.prepareStatement(sqlInsertStoreID);
@@ -130,7 +130,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			sql = "SELECT MAX(item_id) FROM items";
 			Statement stmt1 = hcp.createStatement();
 			ResultSet resultset = stmt1.executeQuery(sql);
-			stmt1.close();
+			
 			while (resultset.next()) {
 				id = resultset.getInt(1);
 			}
@@ -139,7 +139,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs.setReturnCode(0);
 			rs.setUid(uid);
 			rs.setErrorString(message);
-			
+			stmt.close();
+			stmt1.close();
+			s.close();
 		} catch (SQLException e) {
 			LOGGER.warning("Couldnt create a statement");
 			if (e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG

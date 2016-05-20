@@ -511,10 +511,11 @@ function leaseItemSetValues(reqUser){
 function leaseItemDbCreate(){
 	var req = {
 		reqUserId: reqUserId.toString(),
-		itemId: itemId.toString(),
+		itemId: itemId,
 		userId: itemUserId.toString()
 	};
 	
+	console.log(JSON.stringify(req));
 	leaseItemSend(req);
 }
 
@@ -522,15 +523,15 @@ function leaseItemSend(req){
 		
 		$.ajax({
 			url: '/flsv2/GrantLease',
-			type:'get',
-			data: {req: JSON.stringify(req)},
+			type:'post',
+			data: JSON.stringify(req),
 			contentType:"application/json",
 			dataType: "json",
 			
 			success: function(response) {
 				//alert(response.Id+" "+response.Code+" "+response.Message);
 				var heading = "Successful";
-				var msg = response.Message;
+				var msg = response.message;
 				confirmationIndex(heading, msg);	
 			},
 			error: function() {
@@ -565,7 +566,7 @@ function getLeaseItemSend(req){
 		dataType: "json",
 		
 		success: function(response) {
-			
+		
 			if(response.Code == "FLS_SUCCESS") {
 				//alert(response.Id+" "+response.Code);
 				obj = JSON.parse(response.Message);
@@ -726,7 +727,7 @@ function searchItemSend(req){
 		success: function(response) {	
 			if(response.Code == "FLS_SUCCESS") {
 				itemObj = JSON.parse(response.Message);
-				
+ 
 				if(reasonForSearchItem == "getLeasedItemInfo"){
 					showLeaseItemContinued(itemObj);
 					
@@ -1689,7 +1690,7 @@ function getNextItemCarouselSend(req){
 				
 				if(reasonForGetItem == 'carousel'){
 					if(startingCarousel == 0 && counter == 0){		//empty carousel
-						
+					
 						//categoryempty image begins
 						span1 = document.createElement("span");
 						span1.className = "items";
