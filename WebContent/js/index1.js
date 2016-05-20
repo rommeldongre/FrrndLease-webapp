@@ -14,22 +14,39 @@ indexApp.controller('storeYourStuffCtrl', ['$scope', 'userFactory', function($sc
     
 }]);
 
-indexApp.controller('indexCtrl', ['$scope', 'userFactory', 'getItemsForCarousel', function($scope, userFactory, getItemsForCarousel){
+indexApp.controller('indexCtrl', ['$scope', '$timeout','userFactory', 'getItemsForCarousel', function($scope, $timeout, userFactory, getItemsForCarousel){
     
     if(userFactory.user != "" && userFactory.user != null && userFactory.user != 'anonymous')
         window.location.replace("myindex.html");
     
-    $scope.carouselWidth = angular.element(document.querySelector('#carouselObject'))[0].clientWidth;
-    $scope.carouselHeight = angular.element(document.querySelector('#carouselObject'))[0].clientHeight;
+    // lastItem is used to store the id of the last retrieved item from the database
+    var lastItem = 0;
+    // selected category is stored in this variable
+    var category = '';
     
+    // Initialising the categories
+    $scope.categories = [{label:'ALL',active:true}];
+    
+    // getting the width and height of the carousel when page gets loaded
+    var getCarouselWidthHeight = function(){
+        $scope.carouselWidth = angular.element(document.querySelector('#carouselObject'))[0].clientWidth;
+        $scope.carouselHeight = angular.element(document.querySelector('#carouselObject'))[0].clientHeight;
+    }
+    
+    // called on page load
+    getCarouselWidthHeight();
+    
+    // getting the width and height of the carousel when window is resized
     $(window).resize(function(){
         checkItemsLimit();
         $scope.$apply(function(){
-            $scope.carouselWidth = angular.element(document.querySelector('#carouselObject'))[0].clientWidth;
-            $scope.carouselHeight = angular.element(document.querySelector('#carouselObject'))[0].clientHeight;
+            getCarouselWidthHeight();
         });
+        // loading carousel from start
+        initPopulate();
     });
     
+    // get number of items to display in carousel based on the size of the screen
     var checkItemsLimit = function(){
         if($(window).width()>=991){
             $scope.itemsLimit = 3;	        //for desktops
@@ -43,37 +60,49 @@ indexApp.controller('indexCtrl', ['$scope', 'userFactory', 'getItemsForCarousel'
         }
     }
     
+    // called on page load
     checkItemsLimit();
     
-    var lastItems = [];
+    // populate the carousel with initital array
+    var initPopulate = function(){
+        lastItem = 0;
+        
+        // called twice to get two arrays of data initially for smooth carousel experience
+        populateCarousel();
+        populateCarousel();
+    }
     
-    var lastItem = 0;
-    
-    var itemsArray = [];
-    
-    var req = {
-		cookie: lastItem,
-		userId: null,
-		category: null,
-		limit: $scope.itemsLimit
-	};
+    var populateCarousel = function(){
+        
+        if(category == '' || category == 'ALL')
+            category = null;
+        
+        var req = {
+            cookie: lastItem,
+            userId: null,
+            category: category,
+            limit: $scope.itemsLimit
+	    };
+        
+        displayItems(req);
+    }
     
     var displayItems = function(req){
         getItemsForCarousel.getItems(req).then(
             function(response){
                 if(response.data.returnCode == 0){
+                    if(lastItem == 0){
+                        $scope.itemsArray = [response.data.resList];
+                    }
+                    else{
+                        $timeout(function(){
+                            $scope.itemsArray.push(response.data.resList);
+                        }, 1000);
+                    }
                     lastItem = response.data.lastItemId;
-                    itemsArray.push(response.data.resList);
-                    $scope.itemsArray = itemsArray;
                 }else{
-                    var i = [];
-
-                    i.push({
-                        image: 'images/emptycategory.jpg',
-                        text: 'Try selecting another category'
-                    });
-
-                    $scope.items = i;
+                    if(lastItem == 0)
+                        $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
                 }
             },
             function(error){
@@ -81,30 +110,65 @@ indexApp.controller('indexCtrl', ['$scope', 'userFactory', 'getItemsForCarousel'
             });
     }
     
-    displayItems(req);
+    // called on the page load
+    initPopulate();
     
-    $scope.loadPrevSlide = function(){
-        var req = {
-            cookie: lastItems.pop(),
-            userId: null,
-            category: null,
-            limit: $scope.itemsLimit
-        };
-        
-        getItemsForCarousel.getItems(req);
+    // called when next carousel button is clicked
+    $scope.loadNextSlide = function(){
+        populateCarousel();
     }
     
-    $scope.loadNextSlide = function(){
-        console.log(lastItem);
-        lastItems.push(lastItem);
+    var populateCategory = function(id){
         var req = {
-            cookie: lastItem,
-            userId: null,
-            category: null,
-            limit: $scope.itemsLimit
-        };
+            operation:"getNext",
+            token: id
+        }
         
-        displayItems(req);
+        displayCategory(req);
+    }
+    
+    var displayCategory = function(req){
+        $.ajax({
+            url: '/flsv2/GetCategoryList',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                if(response.Code === "FLS_SUCCESS") {
+                    $scope.categories.push({label:JSON.parse(response.Message).catName,active:false});
+                    populateCategory(response.Id);
+                }
+                else{
+                    //all categories are loaded
+                }
+            },
+            error:function() {
+            }
+        });	
+    }
+    
+    // called on the page load
+    populateCategory('');
+    
+    // called when category is selected from the category filter
+    $scope.categorySelected = function(index){
+        
+        // turn all button class btn-default
+        angular.forEach($scope.categories, function(c){c.active = false});
+        
+        // turn clicked button's class btn-primary
+        $scope.categories[index].active = true;
+        
+        // store category which is clicked
+        category = $scope.categories[index].label;
+        
+        initPopulate();
+    }
+    
+    // called when item from carousel is clicked
+    $scope.itemClicked = function(uid){
+        window.location.replace("ItemDetails?uid="+uid);
     }
 
 }]);
