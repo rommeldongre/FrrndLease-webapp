@@ -9,15 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import javax.mail.Store;
-
 import connect.Connect;
 import pojos.RenewLeaseReqObj;
 import pojos.RenewLeaseResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
-import tableOps.Items;
-import tableOps.LeaseTerms;
 import app.GrantLeaseHandler;
 import util.AwsSESEmail;
 import util.FlsLogger;
@@ -63,8 +59,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			//closeLease();
 			String status = "Archived";
 			int leaseAction = 0, itemAction = 0, storeAction = 0;
-			PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreSelect = null, psStoreUpdate = null;
-			ResultSet dbResponseLease =  null, dbResponseitems;
+			PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null;
+			ResultSet dbResponseLease =  null, dbResponseitems = null;
 			Connection hcp = getConnectionFromPool();
 			hcp.setAutoCommit(false);
 			
@@ -181,9 +177,13 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			}finally{
 				
 				dbResponseLease.close();
+				dbResponseitems.close();
 				
 				psLeaseSelect.close();
 				psLeaseUpdate.close();
+				psItemSelect.close();
+				psItemUpdate.close();
+				psStoreUpdate.close();
 				
 				hcp.close();
 			}
