@@ -1692,7 +1692,8 @@ function getNextItemCarouselSend(req){
 					if(startingCarousel == 0 && counter == 0){		//empty carousel
 					
 						//categoryempty image begins
-						span1 = document.createElement("span");
+						var col1 = document.createElement("div");
+						var span1 = document.createElement("span");
 						span1.className = "items";
 					
 						src = "images/emptycategory.jpg";
