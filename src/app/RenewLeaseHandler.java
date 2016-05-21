@@ -239,6 +239,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				psRenewUpdate.setString(1, date);
 				psRenewUpdate.setString(2, rq.getReqUserId());
 				psRenewUpdate.setInt(3, rq.getItemId());
+				
 				int renewAction =0;
 				renewAction = psRenewUpdate.executeUpdate();
 				
