@@ -188,17 +188,14 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		return rs;
 	}
 
-	private void renewLease() throws SQLException {
+	private ResObj renewLease() throws SQLException {
 		
-		String date1 = null;
-		int renewAction =0;
 		PreparedStatement psRenewSelect = null,psRenewUpdate = null;
 		ResultSet result1 = null;
 		Connection hcp = getConnectionFromPool();
 		
 		Calendar cal = new GregorianCalendar();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		// String date = sdf.format(cal.getTime());
 
 		LOGGER.info("inside Renew method of RenewLease App Handler");
 
@@ -215,8 +212,10 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
-			}else{
+				return rs;
+			}
 				
+				String date1 = null;
 				date1 = result1.getString("lease_expiry_date");
 				LOGGER.warning(date1);
 				GrantLeaseHandler GLH = new GrantLeaseHandler();
@@ -240,18 +239,20 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				psRenewUpdate.setString(1, date);
 				psRenewUpdate.setString(2, rq.getReqUserId());
 				psRenewUpdate.setInt(3, rq.getItemId());
+				int renewAction =0;
 				renewAction = psRenewUpdate.executeUpdate();
+				
 				if(renewAction == 0 ){
 					System.out.println("Error occured while firing Update query on lease table for Renew Lease");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
-				}else{
+					return rs;
+				}
 					rs.setCode(FLS_SUCCESS);
 					rs.setId(rq.getReqUserId());
 					rs.setMessage(FLS_SUCCESS_M);
-				}
-			}
+			
 		} catch (SQLException e1) {
 			// TODO: handle exception
 		}finally{
@@ -260,6 +261,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			psRenewUpdate.close();
 			hcp.close();
 		}
+		return rs;
 	}
 
 	@Override
