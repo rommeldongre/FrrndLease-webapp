@@ -10,7 +10,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2003;			
+	public final int appBuild = 2004;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -198,6 +198,7 @@ public class FlsConfig extends Connect{
 		if(dbBuild < 2003){
 			String sqlAddUserCredit = "ALTER TABLE `users` ADD `user_credit` INT(255) NOT NULL DEFAULT '10' AFTER `user_status`";
 			try {
+				getConnection();
 				PreparedStatement ps1 = connection.prepareStatement(sqlAddUserCredit);
 				ps1.executeUpdate();
 				ps1.close();
@@ -218,6 +219,48 @@ public class FlsConfig extends Connect{
 			
 			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
 			try{
+				getConnection();
+				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
+				ps.executeUpdate();
+				ps.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		if(dbBuild < 2004){
+			String sqlAddLeasePrimaryKey = "ALTER TABLE leases DROP PRIMARY KEY, ADD PRIMARY KEY(lease_id, lease_requser_id, lease_item_id);";
+			try {
+				getConnection();
+				PreparedStatement ps1 = connection.prepareStatement(sqlAddLeasePrimaryKey);
+				ps1.executeUpdate();
+				ps1.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+			
+			dbBuild = 2004;
+			
+			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
+			try{
+				getConnection();
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
@@ -234,7 +277,5 @@ public class FlsConfig extends Connect{
 			}
 		}
 	}
-	
-	
 	
 }
