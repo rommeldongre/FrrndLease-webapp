@@ -57,13 +57,17 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs.setReturnCode(200);
 			rs.setUid("Error");
 			rs.setErrorString("Item Not Posted as no Valid Category was selected");
-		}else{
+			return rs;
+		}
 		
 		final String userId;
 		String desciption = null;
+		desciption = rq.getDescription();
+		
 		if(rq.getDescription() == null){
 			desciption = "";
 		}
+		
 		userId = rq.getUserId();
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 
@@ -172,7 +176,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 		}
 		
 		LOGGER.info("Finished process method ");
-	}
+	
 		// return the response
 		return rs;
 	}
