@@ -67,9 +67,9 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         geocoder.geocode({'latLng' : latLng},function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
                 $scope.$apply(function(){
-                    $scope.location = results[4].formatted_address;
+                    $scope.item.location = results[4].formatted_address;
                 });
-                console.log($scope.location);
+                console.log($scope.item.location);
             } else {
                 console.log("Geocode was unsucessfull in detecting your current location");
             }
