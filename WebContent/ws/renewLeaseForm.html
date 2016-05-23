@@ -6,11 +6,13 @@
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var ItemId = null;
+	var UserId = null;
 	var ReqUserId = null;
 	var userloggedin = localStorage.getItem("userloggedin");
 	
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
+		UserId = document.getElementById("userId").value;
 		ReqUserId = document.getElementById("reqUserId").value;
 	};
 	
@@ -20,7 +22,7 @@
 		
 		var req = {
 					itemId: ItemId,
-					userId: userloggedin,
+					userId: UserId,
 					reqUserId: ReqUserId.toString(),
 					flag: "renew"
 		};
@@ -35,7 +37,7 @@
 		
 		var req = {
 				itemId: ItemId,
-				userId: userloggedin,
+				userId: UserId,
 				reqUserId: ReqUserId.toString(),
 				flag: "close"
 		};
@@ -73,6 +75,7 @@
 	<form>
 		Request User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>
 		Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		User Id : <input type="text" name="userId" id="userId"><br/><br/>
 		<input type="button" value="Renew Lease" onclick="grant()">
 		<input type="button" value="Close Lease" onclick="closeLease()"><br/><br/>
 		<h1>OUTPUT</h1>
