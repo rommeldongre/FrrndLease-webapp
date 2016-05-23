@@ -11,6 +11,7 @@
 	
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
+		ItemId = parseInt(ItemId);
 		if (ItemId === '') ItemId = null;
 		
 		UserId = document.getElementById("userId").value;
@@ -110,6 +111,41 @@
 		});
 	};
 	
+	getRequests = function() {
+		alert("inside get Requests function.");
+		getData();
+		
+		var req = {
+				cookie: ItemId,
+				userId: UserId,
+		};
+		console.log(JSON.stringify(req))
+		requestsend(req);
+	}
+	
+	requestsend = function(req) {
+		alert("Inside send function.");
+		$.ajax({
+			url: '/flsv2/GetRequestsC',
+			type:'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType: "json",
+			
+			success: function(response) {
+				alert("working");
+				console.log(response);
+				document.getElementById("Id").value = response.id;
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message
+			},
+			
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
 </script>
 </head>
 <body>
@@ -119,7 +155,8 @@
 		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
 		<input type="button" value="Add" onclick="add()">
 		<input type="button" value="Delete" onclick="deleteD()">
-		<input type="button" value="Get Next" onclick="getNext()">
+		<!--<input type="button" value="Get Next" onclick="getNext()">-->
+		<input type="button" value="Get Next" onclick="getRequests()">
 		<input type="button" value="Get Previous" onclick="getPrevious()"><br/><br/>
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>
