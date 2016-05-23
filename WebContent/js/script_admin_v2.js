@@ -609,7 +609,8 @@ function getLeaseItemSend(req){
 
 function renewLeaseDbCreate(){
 	var req = {
-		itemId: itemId.toString(),
+		itemId: itemId,
+		userId: userloggedin,
 		reqUserId: reqUserId.toString(),
 		flag: "renew"
 	};
@@ -621,8 +622,8 @@ function renewLeaseSend(req){
 	
 	$.ajax({
 		url: '/flsv2/RenewLease',
-		type:'get',
-		data: {req: JSON.stringify(req)},
+		type:'post',
+		data: JSON.stringify(req),
 		contentType:"application/json",
 		dataType: "json",
 		
@@ -630,7 +631,7 @@ function renewLeaseSend(req){
 			
 			//alert(response.Id+" "+response.Code+" "+response.Message);
 			var heading = "Successful";
-			var msg = response.Message;
+			var msg = response.message;
 			confirmationIndex(heading, msg);
 		},
 		
@@ -645,25 +646,25 @@ function renewLeaseSend(req){
 //closeLease begins here------------------------------------------------
 function closeLeaseDbCreate(){
 	var req = {
-		itemId: itemId.toString(),
+		itemId: itemId,
+		userId: userloggedin,
 		reqUserId: reqUserId.toString(),
 		flag: "close"
 	};
-	
 	closeLeaseSend(req);
 }
 
 function closeLeaseSend(req){
 	$.ajax({
 		url: '/flsv2/RenewLease',
-		type:'get',
-		data: {req: JSON.stringify(req)},
+		type:'post',
+		data: JSON.stringify(req),
 		contentType:"application/json",
 		dataType: "json",
 		
 		success: function(response) {
 			var heading = "Successful";
-			var msg = response.Message;
+			var msg = response.message;
 			confirmationIndex(heading, msg);
 		},
 		
@@ -1692,7 +1693,8 @@ function getNextItemCarouselSend(req){
 					if(startingCarousel == 0 && counter == 0){		//empty carousel
 					
 						//categoryempty image begins
-						span1 = document.createElement("span");
+						var col1 = document.createElement("div");
+						var span1 = document.createElement("span");
 						span1.className = "items";
 					
 						src = "images/emptycategory.jpg";
