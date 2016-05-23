@@ -15,7 +15,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
     <script src="js/header.js"></script>
+    <script src="js/carousel.js"></script>
     <!-- Angularjs api ends -->
+      
+    <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-1.11.3.min.js"></script>
@@ -35,10 +38,6 @@
 	<!-- DropDown list code-->
     <script src="js/dropdownlist.js"></script>
     <!-- DropDown list code ends-->
-	
-	<!--Check whether user is logged in or not  -->
-	<script src="js/logincheck.js"></script>
-	<!--Check whether user is logged in or not ends here  -->
   </head>
   
   <body onload="start()">
@@ -52,12 +51,13 @@
 		<div id="marketingheading"><strong>MAKE SPACE FOR LIFE</strong></div>
 		<div id="marketingline"><strong>Because the world is too small for all of our stuff</strong></div>
 		
-		<div id="marketingstore" ng-controller="storeYourStuffCtrl">
+		<div id="marketingstore" ng-controller="indexCtrl">
 			<button ng-click="storeYourStuff()" id="storebutton" class="btn btn-primary">StoreYourStuff</button>
 		</div>
 		
 		<div id="marketingsearch">
 		</div>
+        
 		<div id="wishbox">
 			<div id="searchbox" class="input-group">
 				<input id="wish_title" type="text" class="form-control" placeholder="Search from over 100 useful items in your Friend's Store"></input>
@@ -70,113 +70,22 @@
 	</div>
 	
 	
-	
-	
-	
-	<div id="main" style="background-image: url('images/bluebackground.jpg')" ng-controller="indexCtrl">
+	<div id="main" style="background-image: url('images/bluebackground.jpg')">
 		<br /><br />
 		<div id="friendstoreline"><strong>The Friend Store</strong></div>
 		<br />
         
         <button id="clearSearchButton" class="btn btn-default" onclick="clearSearchBox()">Clear Search</button>
 		
-		<div id="categoryfilters" class="container-fluid">
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="btn-group" id="categorybrowsing">
-                        <span class="categoryfilters" ng-repeat="c in categories" ng-click="categorySelected($index)">
-                            <button class="btn ng-class:{'btn-default': !c.active, 'btn-primary': c.active}" id="All">{{c.label}}</button>
-                        </span>
-                    </div>
-				</div>
-			</div>
-		</div>
-		
         <!-- Carousel Start -->
-		<br />
-		<div id="carouselObject">
-			<div id="carousel-example-generic" class="carousel slide" data-pause="true" data-wrap="false" data-interval="5000000">
-				<div class="carousel-inner" role="listbox" id="carouselinner">
-                    <div class="item ng-class:{'active':$first}" ng-repeat="items in itemsArray">
-                        <div class="row">
-                            <div class="{{colClass}}" ng-repeat="item in items">
-                                <span class="items" ng-click="itemClicked(item.uid)">
-                                    <img ng-src="{{item.image}}" id="{{item.itemId}}" style="width: {{carouselWidth/itemsLimit}}px; height: {{carouselHeight}}px;">
-                                    <div class="carousel-caption" id="{{item.itemId}}" style="opacity: 0.6; background-color: black;">
-                                        <h4 id="{{item.itemId}}"><b>{{item.title}}</b></h4>
-                                        <p id="{{item.itemId}}">{{item.fullName}}</p>
-                                        <p id="{{item.itemId}}">{{'lease term: ' + item.leaseTerm}}</p>
-                                    </div>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-				</div>
-				
-				<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true" id="leftcarouselbutton"></span>
-                    <span class="sr-only">Previous</span>
-				</a>
-				<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click="loadNextSlide()" id="rightcarouselbutton"></span><span class="sr-only">Next</span>
-				</a>
-			</div>
-		</div>
-		<br />
+        <div>
+		  <div ng-include="'carousel.html'"></div>
+        </div>
         <!-- Carousel End -->
-		
-		
-		<!-- Button trigger modal -->
-		<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
-		  Launch demo modal
-		</button>
-
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog" role="document">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">
-				</h4>
-			  </div>
-			  <div class="modal-body" id="modalMsg">
-				
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearSearchBox()">Close</button>
-			  </div>
-			</div>
-		  </div>
-		</div>
-
 	</div>
 	
-	<!-- "Please Wait" Modal Start here-->
-			<div id="wait_bar_index">
-				<div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait" data-backdrop="static" data-keyboard="false">..</div>
-			
-				<div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					<div class="modal-header">
-						<h4 id="waitheading"></h4>
-					</div>
-					<div class="modal-body">
-						<div class="progress">
-						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-						</div>
-						</div>
-					</div>
-					</div>
-				</div>
-				</div>
-			</div>
-	<!-- "Please Wait" Modal ends Here -->
-	
-	<div id="tawk_widget">
-				<!--The tawk.to widget code will get populated here-->
-	</div>
+	<!--The tawk.to widget code will get populated here from file chatbox.html.-->
+    <div id="tawk_widget"></div>
 			
 	<div id="footerpanel">
 		<br />
@@ -216,28 +125,7 @@
 			categoryCounter = 0;	
 			look_good();
 			
-			$("#modalTriggerButton").hide();
-			$("#clearSearchButton").hide();
-			$("#opendivmyPleaseWait").hide();
-			
-			load_Gapi();		
-			
-			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
-			userloggedin = localStorage.getItem("userloggedin");
-			
-			if(userloggedin == "" || userloggedin == null){
-				userloggedin = "anonymous";
-				localStorage.setItem("userloggedin", "anonymous");	
-			}
-			
-//			startingCarousel = 0;
-//			navigatingSide = 'next';
-			
-			setBrowsingCategory('All');								//initially category is all, so all items will be browsed
-			
-//			loadCategoryFilter();
-			
-//			getScreenType();
+			load_Gapi();
 			
 //			searchbar();				//called when page is loaded initially
 		}
@@ -274,211 +162,12 @@
 			return params;
 		}
 		
-		function process_dialog(heading){
-			var header = document.getElementById("waitheading");
-			header.innerHTML = heading;
-			$("#opendivmyPleaseWait").click();
-		}
-		
 		function load_Gapi(){						//for google
 			gapi.load('auth2', function() {
 				gapi.auth2.init();
 			});
 		}
-		
-		function signOutFromGoogle() {					//signout from google
-			var auth2 = gapi.auth2.getAuthInstance();
-			auth2.signOut().then(function () {
-				console.log('User signed out.');
-			});
-		}
-		
-		function getScreenType(){
-			emptyCarousel();			//first empty carousel
-		}
-		
-		function emptyCarousel(){					//empty the carousel i.e. when restarting the carousel from beginning
-			$("#carouselinner").empty();
-		}
-		
-		function loadCarousel(){
-			counter = 0;
-			
-			browsingCategory = getBrowsingCategory();
-			
-			carouselwidth = getCarouselWidth();						//getting carousel width and height for better look
-			carouselheight = getCarouselHeight();
-			
-			carouselinner = document.getElementById("carouselinner");
-			item1 = document.createElement("div");
-			
-			if(startingCarousel==0){
-				itemNextId = 0;
-				item1.className = "item active";
-			}else{
-				item1.className = "item";
-			}
-			
-			row1 = document.createElement("div");
-			row1.className = "row";
-
-			if(reasonForSearchItem == "searchItem"){
-				getSearchedItem();
-			}
-			else{
-				getImg();
-			}
-			
-		}
-		
-		function getImg(){			
-			getNoOfImagesInCarousel();					//to get no of images to be shown in carousel based on different screen sizes
-			
-			reasonForGetItem = "carousel";				//we are calling getNextItem/getPrevItem for the Carousel
-			
-			if(counter < noOfImagesInCarousel){		
-				if(counter==0){
-				//process_dialog("Loading Carousel");
-				}
-				$("#leftcarouselbutton").show();
-				getNextItemCarousel(itemNextId,"",browsingCategory,noOfImagesInCarousel);
-			}
-		}
-		
-		function getNoOfImagesInCarousel(){
-			if($(window).width()>=991){
-				noOfImagesInCarousel = 3;				//for desktops	
-				imgwidth = carouselwidth/3;
-				imgheight = carouselheight;
-			
-			}else if($(window).width()<=500){
-				noOfImagesInCarousel = 1;				//for mobiles
-				imgwidth = carouselwidth;
-				imgheight = carouselheight;
-				
-			}else{
-				noOfImagesInCarousel = 2;				//for tablets
-				imgwidth = carouselwidth/2;
-				imgheight = carouselheight;
-			}
-		}
-		
-		function addItemToCarousel(listObj){					//called from script_admin_v2.js
-			//getNoOfImagesInCarousel();	
-		
-			for(var key in listObj.resList){
-				
-				var obj = listObj.resList[key];
-				
-				if((obj.status == 'InStore') && ((browsingCategory == 'All') || (obj.category == browsingCategory))){
-					
-					var col1 = document.createElement("div");
-					
-					switch(noOfImagesInCarousel){
-						case 1:
-							col1.className = "col-md-12 col-sm-12 col-xs-12 col-lg-12";
-							break;
-						case 2:
-							col1.className = "col-md-6 col-sm-6 col-xs-6 col-lg-6";
-							break;
-						case 3:
-							col1.className = "col-md-4 col-sm-4 col-xs-4 col-lg-4";
-							break;
-					}
-					
-					var span1 = document.createElement("span");
-					span1.className = "items";
-					
-					var src = obj.image;
-					
-					if (src == null || src == '' || src=="null"){		//if no image of the object is stored then show default image
-						src = "images/imgplaceholder.png";
-					}
-					
-					var img1 = document.createElement("img");
-					img1.src = src;
-					img1.id = obj.itemId;
-					
-					$(img1).css("width", imgwidth);
-					$(img1).css("height", imgheight);
-					
-					var caption1 = document.createElement("div");
-					caption1.className = "carousel-caption";
-					caption1.id = obj.itemId;
-					caption1.style.backgroundColor = "black";
-					caption1.style.opacity = 0.6;
-					
-					var h4 = document.createElement("h4");
-					h4.innerHTML ='<b>' +obj.title+ '</b>';
-					h4.id = obj.itemId;
-					
-					var p = document.createElement("p");
-					p.innerHTML = "Lease Term: "+obj.leaseTerm;
-					p.id = obj.itemId;
-					
-					if(obj.location){
-						var address = obj.location;
-						var locationArr = address.split(',');
-						var cityName = locationArr[0];
-						var cityLocation = locationArr[1];
-						var pinCode = locationArr[1].match(/\d+/)[0];
-						var properLocation = cityName+" - "+ pinCode;
-						
-						var userLocation = document.createElement("p");
-						userLocation.innerHTML = " "+properLocation;
-						userLocation.id = obj.itemId;
-					}
-					
-					var full_Name = document.createElement("p");
-					full_Name.innerHTML = obj.fullName;
-					full_Name.id = obj.itemId;
-					
-					caption1.appendChild(h4);
-					caption1.appendChild(p);
-					if(obj.location){
-						caption1.appendChild(userLocation);
-					}
-					caption1.appendChild(full_Name);
-					span1.appendChild(img1);
-					span1.appendChild(caption1);
-					col1.appendChild(span1);
-					row1.appendChild(col1);
-					
-					counter++;
-				}
-			}
-			
-			if(counter >= noOfImagesInCarousel){
-				item1.appendChild(row1);
-				carouselinner.appendChild(item1);
-				
-				startingCarousel = 1;
-				
-				if(navigatingSide == "next")
-					$("#carousel-example-generic").carousel('next');				//load next slide
-					
-			}
-			
-			if(counter==noOfImagesInCarousel){
-			$('#myPleaseWait').modal('hide');
-			}
-			
-			if(reasonForSearchItem == "searchItem"){
-				getSearchedItem();
-			}
-			else{
-				getImg();
-			}
-		}
-		
-		function disableLeftButton(){
-			$("#leftcarouselbutton").hide();			
-		}
-		function disableRightButton(){
-			$("#rightcarouselbutton").hide();
-			$('#myPleaseWait').modal('hide');
-		}
-	
+        
 		function searchItem(){				//when user types something in the search box and presses search button
 			
 			if($("#wish_title").val() == '' || $("#wish_title").val() == ' '){
@@ -543,25 +232,6 @@
 			//location.reload();	
 		}
 		
-		function getCarouselWidth(){
-			carouselwidth = $('#carouselObject').width();
-			return carouselwidth;
-		}
-		function getCarouselHeight(){
-			carouselheight = $('#carouselObject').height();
-			return carouselheight;
-		}
-		
-		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
-			var header = document.getElementById("myModalLabel");
-			header.innerHTML = heading;
-				
-			var div = document.getElementById("modalMsg");
-			div.innerHTML = msg;
-			
-			$("#modalTriggerButton").click();
-		}
-		
 		function increaseSizeOfFooter(){
 			if(footerFlag == 'collapsed'){
 				$('#footerpanel').height('50%');
@@ -611,6 +281,7 @@
 	<script src="js/index.js"></script>
 	<script type="text/javascript" src="js/script_admin_v2.js"></script>
     <script src="js/index1.js"></script>
+    <script src="js/tawk.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </body>
 </html>

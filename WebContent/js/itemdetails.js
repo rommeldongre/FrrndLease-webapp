@@ -1,17 +1,19 @@
 var itemDetailsApp = angular.module('itemDetailsApp', ['headerApp']);
 
-itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','modalService', function($scope, $window, $http, modalService){
+itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'userFactory', 'modalService', function($scope, $window, $http, userFactory, modalService){
     
     var user = localStorage.getItem("userloggedin");
     
     $scope.message = $window.message;
     
+    $scope.item = {};
+    
     $scope.image = $window.image;
     $scope.item_id = $window.item_id;
-    $scope.title = $window.title;
+    $scope.item.title = $window.title;
     $scope.category = $window.category;
-    $scope.description = $window.description;
-    $scope.leaseValue = parseInt($window.leaseValue);
+    $scope.item.description = $window.description;
+    $scope.item.leaseValue = parseInt($window.leaseValue);
     $scope.leaseTerm = $window.leaseTerm;
     
     $scope.uploadImage = function(file){
@@ -24,7 +26,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
         reader.readAsDataURL(file);
         
     }
-    
+        
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){
         $scope.showError = true;
@@ -34,7 +36,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
     }
     
     // checking if the loggedIn user matches with the items userId
-    if(user == $window.userId){
+    if(userFactory.user == $window.userId){
         $scope.userMatch = true;
     }else{
         $scope.userMatch = false;
@@ -58,14 +60,15 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
     var showPosition = function(position) {
         latitude = position.coords.latitude;
         longitude = position.coords.longitude;
-        console.log("Latitude: " + latitude + "<br>Longitude: " + longitude);
         coords = new google.maps.LatLng(latitude, longitude);
 
         var geocoder = new google.maps.Geocoder();
         var latLng = new google.maps.LatLng(latitude, longitude);
         geocoder.geocode({'latLng' : latLng},function(results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-                $scope.location = results[4].formatted_address;
+                $scope.$apply(function(){
+                    $scope.location = results[4].formatted_address;
+                });
                 console.log($scope.location);
             } else {
                 console.log("Geocode was unsucessfull in detecting your current location");
@@ -76,11 +79,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
     $scope.requestItem = function(){
         modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
             function(result){
-                if (user == "" || user == null || user == "anonymous")
-					logInCheck();
+                if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
+					window.location.replace("/flsv2/mylogin.html");
 				else
                     $http({
-                        url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:user}),
+                        url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
                         method:"GET"
                     }).then(function success(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
@@ -98,7 +101,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
 	
 	$scope.wishItem = function(){
         
-        var item_title = $scope.title;
+        var item_title = $scope.item.title;
         if(item_title == '')
             item_title = null;
         
@@ -106,7 +109,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
         if(item_id == '')
             item_id = 0;
         
-        var item_description = $scope.description;
+        var item_description = $scope.item.description;
         if (item_description == '') 
 		  item_description = null;
         
@@ -114,11 +117,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
         if (item_category == '' || item_category == 'Category') 
 		  item_category = null;
         
-        var item_user_id = user;
+        var item_user_id = userFactory.user;
         if (item_user_id == '') 
 		  item_user_id = "anonymous";
         
-        var item_lease_value = $scope.leaseValue;
+        var item_lease_value = $scope.item.leaseValue;
         if (item_lease_value == '') 
 		  item_lease_value = 0;
         
@@ -140,8 +143,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to add this Item to your Wishlist?'}).then(
             function(result){
-				if (user == "" || user == null || user == "anonymous")
-					logInCheck();
+				if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
+					window.location.replace("/flsv2/mylogin.html");
 				else
 					$.ajax({ url: '/flsv2/WishItem',
 							type: 'post',
@@ -165,7 +168,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
     
     $scope.editItem = function(){
         
-        var item_title = $scope.title;
+        var item_title = $scope.item.title;
         if(item_title == '')
             item_title = null;
         
@@ -173,7 +176,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
         if(item_id == '')
             item_id = 0;
         
-        var item_description = $scope.description;
+        var item_description = $scope.item.description;
         if (item_description == '') 
 		  item_description = null;
         
@@ -181,11 +184,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
         if (item_category == '' || item_category == 'Category') 
 		  item_category = null;
         
-        var item_user_id = user;
+        var item_user_id = userFactory.user;
         if (item_user_id == '') 
 		  item_user_id = "anonymous";
         
-        var item_lease_value = $scope.leaseValue;
+        var item_lease_value = $scope.item.leaseValue;
         if (item_lease_value == '') 
 		  item_lease_value = 0;
         
@@ -228,7 +231,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
         modalService.showModal({}, {bodyText: 'Are you sure you want to delete the Item?'}).then(
             function(result){
                     $http({
-                        url:'/flsv2/DeletePosting?req='+JSON.stringify({id:$scope.item_id,userId:user}),
+                        url:'/flsv2/DeletePosting?req='+JSON.stringify({id:$scope.item_id,userId:userFactory.user}),
                         method:"GET"
                     }).then(function success(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
@@ -242,6 +245,84 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http','moda
             function(){
 
             });
+    }
+    
+    $scope.categories = [];
+    
+    var populateCategory = function(id){
+        var req = {
+            operation:"getNext",
+            token: id
+        }
+        
+        displayCategory(req);
+    }
+    
+    var displayCategory = function(req){
+        $.ajax({
+            url: '/flsv2/GetCategoryList',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                if(response.Code === "FLS_SUCCESS") {
+                    $scope.categories.push(JSON.parse(response.Message).catName);
+                    populateCategory(response.Id);
+                }
+                else{
+                    //all categories are loaded
+                }
+            },
+            error:function() {
+            }
+        });	
+    }
+    
+    // called on the page load
+    populateCategory('');
+    
+    $scope.categorySelected = function(c){
+        $scope.category = c;
+    }
+    
+    $scope.leaseTerms = [];
+    
+    var populateLeaseTerm = function(id){
+        var req = {
+            operation:"getNext",
+            token: id
+        }
+        
+        displayLeaseTerm(req);
+    }
+    
+    var displayLeaseTerm = function(req){
+        $.ajax({
+            url: '/flsv2/GetLeaseTerms',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                if(response.Code === "FLS_SUCCESS") {
+                    $scope.leaseTerms.push(JSON.parse(response.Message).termName);
+                    populateLeaseTerm(response.Id);
+                }
+                else{
+                    //all categories are loaded
+                }
+            },
+            error:function() {
+            }
+        });	
+    }
+    
+    // called on the page load
+    populateLeaseTerm('');
+    
+    $scope.leaseTermSelected = function(l){
+        $scope.leaseTerm = l;
     }
     
     load_Gapi();
