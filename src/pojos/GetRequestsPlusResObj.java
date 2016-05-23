@@ -3,7 +3,7 @@ package pojos;
 public class GetRequestsPlusResObj extends ResObj{
 	
 	int Code, RequestItemId,requestId;
-	String Id,Message, RequestUserId, RequestDate, Title;
+	String Id,Message,RequestorId,RequestUserName,RequestUserId,RequestDate, Title;
 	public int getCode() {
 		return Code;
 	}
@@ -28,12 +28,23 @@ public class GetRequestsPlusResObj extends ResObj{
 	public void setMessage(String message) {
 		Message = message;
 	}
-	
 	public int getRequestItemId() {
 		return RequestItemId;
 	}
 	public void setRequestItemId(int requestItemId) {
 		RequestItemId = requestItemId;
+	}
+	public String getRequestorId() {
+		return RequestorId;
+	}
+	public void setRequestorId(String requestorId) {
+		RequestorId = requestorId;
+	}
+	public String getRequestUserName() {
+		return RequestUserName;
+	}
+	public void setRequestUserName(String requestUserName) {
+		RequestUserName = requestUserName;
 	}
 	public String getRequestUserId() {
 		return RequestUserId;
