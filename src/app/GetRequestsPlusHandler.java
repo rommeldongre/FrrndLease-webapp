@@ -6,21 +6,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connect.Connect;
-import pojos.GetRequestsReqObj;
-import pojos.GetRequestsResObj;
+import pojos.GetRequestsPlusReqObj;
+import pojos.GetRequestsPlusResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 
-public class GetRequestsHandler extends Connect implements AppHandler {
+public class GetRequestsPlusHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(GetRequestsHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(GetRequestsPlusHandler.class.getName());
 
-	private static GetRequestsHandler instance = null;
+	private static GetRequestsPlusHandler instance = null;
 
-	public static GetRequestsHandler getInstance() {
+	public static GetRequestsPlusHandler getInstance() {
 		if (instance == null)
-			return new GetRequestsHandler();
+			return new GetRequestsPlusHandler();
 		return instance;
 	}
 
@@ -35,9 +35,9 @@ public class GetRequestsHandler extends Connect implements AppHandler {
 
 		LOGGER.info("Inside Post Method");
 
-		GetRequestsReqObj rq = (GetRequestsReqObj) req;
+		GetRequestsPlusReqObj rq = (GetRequestsPlusReqObj) req;
 
-		GetRequestsResObj rs = new GetRequestsResObj();
+		GetRequestsPlusResObj rs = new GetRequestsPlusResObj();
 		Connection hcp = getConnectionFromPool();
 		hcp.setAutoCommit(false);
 

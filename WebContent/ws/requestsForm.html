@@ -126,7 +126,7 @@
 	requestsend = function(req) {
 		alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/GetRequestsC',
+			url: '/flsv2/GetRequestsPlus',
 			type:'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",

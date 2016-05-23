@@ -1,6 +1,6 @@
 package pojos;
 
-public class GetRequestsReqObj extends ReqObj{
+public class GetRequestsPlusReqObj extends ReqObj{
 	
 	// user posting item
 			//@NotNull

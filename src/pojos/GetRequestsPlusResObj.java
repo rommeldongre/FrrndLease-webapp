@@ -1,6 +1,6 @@
 package pojos;
 
-public class GetRequestsResObj extends ResObj{
+public class GetRequestsPlusResObj extends ResObj{
 	
 	int Code, RequestItemId,requestId;
 	String Id,Message, RequestUserId, RequestDate, Title;
