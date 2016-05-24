@@ -70,7 +70,9 @@
 				document.getElementById("size").value = response.resList.length;
 				document.getElementById("Code").value = response.returnCode;
 				document.getElementById("itemId").value = response.lastItemId;
-				document.getElementById("Message").value = "Success! Check console for Detailed Output";
+				document.getElementById("Message").value = "Success!";
+				var div = document.getElementById("output");
+				div.innerHTML = JSON.stringify(response.resList);
 			},
 		
 			error: function() {
@@ -93,9 +95,13 @@
 		<h1>OUTPUT</h1>
 		Output Array Size : <input type="text" name="size" id="size"><br/><br/>
 		Code : <input type="text" name="code" id="Code"><br/><br/>
-		Message : <input type="text" name="message" id="Message" size="35"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
 		
 		Last Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		
+		<div id="output">
+		
+		</div>
 	</form>
 	
 	<br/>
