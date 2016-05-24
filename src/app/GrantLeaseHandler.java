@@ -50,6 +50,30 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		int RequestAction = 0, StoreAction = 0, ItemAction = 0, LeaseAction = 0, addCredit = 0, subCredit = 0;
 		
 		try {
+			
+			int credit = 0;
+			String sqlCheckCredit = "SELECT user_credit FROM users WHERE user_id=?";
+			psLeaseSelect = hcp.prepareStatement(sqlCheckCredit);
+			psLeaseSelect.setString(1, rq.getReqUserId());
+			result4 = psLeaseSelect.executeQuery();
+									
+			if (!result4.next()) {
+				System.out.println("Empty result while firing select query on 4th table(leases)");
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setError("404");
+				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				hcp.rollback();
+				return rs;						
+			}
+			
+			credit = result4.getInt("user_credit");
+			
+			if (credit < 10) {
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+			    rs.setId("0");
+				rs.setMessage("Atleast 10 credits required by the requester");
+				return rs;
+			}
 
 			String SelectRequestItemIdSql = "SELECT * FROM requests WHERE request_item_id=?";
 			LOGGER.info("Creating 1st Statement of Grant Lease");
@@ -170,94 +194,69 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String date = sdf.format(cal.getTime());
 
-			int credit = 0;
-			String sqlCheckCredit = "SELECT user_credit FROM users WHERE user_id=?";
-			psLeaseSelect = hcp.prepareStatement(sqlCheckCredit);
-			psLeaseSelect.setString(1, rq.getReqUserId());
-			result4 = psLeaseSelect.executeQuery();
+			String AddLeasesql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date) values (?,?,?,?)"; //
+			LOGGER.info("Creating final statement.....");
+			psLeaseUpdate = hcp.prepareStatement(AddLeasesql);
+
+			LOGGER.info("Statement created. Executing insert query in lease table.....");
+			psLeaseUpdate.setString(1, rq.getReqUserId());
+			psLeaseUpdate.setInt(2, rq.getItemId());
+			psLeaseUpdate.setString(3, rq.getUserId());
+			psLeaseUpdate.setString(4, date);
 									
-			if (!result4.next()) {
-				System.out.println("Empty result while firing select query on 4th table(leases)");
+			LeaseAction = psLeaseUpdate.executeUpdate();
+				
+			if(LeaseAction == 0){
+				System.out.println("Error occured while firing update query on 4th table(leases)");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("404");
+				rs.setError("500");
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
-				return rs;						
-			}
-			
-			credit = result4.getInt("user_credit");
-			
-			if (credit >= 10) {
-				String AddLeasesql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date) values (?,?,?,?)"; //
-				LOGGER.info("Creating final statement.....");
-				psLeaseUpdate = hcp.prepareStatement(AddLeasesql);
-
-				LOGGER.info("Statement created. Executing insert query in lease table.....");
-				psLeaseUpdate.setString(1, rq.getReqUserId());
-				psLeaseUpdate.setInt(2, rq.getItemId());
-				psLeaseUpdate.setString(3, rq.getUserId());
-				psLeaseUpdate.setString(4, date);
-										
-				LeaseAction = psLeaseUpdate.executeUpdate();
-					
-				if(LeaseAction == 0){
-					System.out.println("Error occured while firing update query on 4th table(leases)");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					return rs;
-				}
-				
-				// add credit to user giving item on lease
-				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
-				psAddCredit = hcp.prepareStatement(sqlAddCredit);
-				psAddCredit.setString(1, rq.getUserId());
-				addCredit = psAddCredit.executeUpdate();
-				
-				if(addCredit == 0){
-					System.out.println("Error occured while firing 1st update credit query on 5th table(users)");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					return rs;
-				}
-
-				// subtract credit from user getting a lease
-			    String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
-				psDebitCredit = hcp.prepareStatement(sqlSubCredit);
-				psDebitCredit.setString(1, rq.getReqUserId());
-				subCredit = psDebitCredit.executeUpdate();
-
-				if(subCredit == 0){
-					System.out.println("Error occured while firing 2nd update credit query on 5th table(users)");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					return rs;
-				}
-				
-				try {
-					AwsSESEmail newE = new AwsSESEmail();
-				    newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, rq);
-					newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, rq);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-										
-				rs.setCode(FLS_SUCCESS);
-				rs.setId(rq.getReqUserId());
-				rs.setMessage(FLS_SUCCESS_M);
-				hcp.commit();
-				
-			} else {
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-			    rs.setId("0");
-				rs.setMessage("Atleast 10 credits required by the requester");
 				return rs;
 			}
+			
+			// add credit to user giving item on lease
+			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
+			psAddCredit = hcp.prepareStatement(sqlAddCredit);
+			psAddCredit.setString(1, rq.getUserId());
+			addCredit = psAddCredit.executeUpdate();
+			
+			if(addCredit == 0){
+				System.out.println("Error occured while firing 1st update credit query on 5th table(users)");
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setError("500");
+				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				hcp.rollback();
+				return rs;
+			}
+
+			// subtract credit from user getting a lease
+			   String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
+			psDebitCredit = hcp.prepareStatement(sqlSubCredit);
+			psDebitCredit.setString(1, rq.getReqUserId());
+			subCredit = psDebitCredit.executeUpdate();
+
+			if(subCredit == 0){
+				System.out.println("Error occured while firing 2nd update credit query on 5th table(users)");
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setError("500");
+				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				hcp.rollback();
+				return rs;
+			}
+			
+			try {
+				AwsSESEmail newE = new AwsSESEmail();
+			    newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, rq);
+				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, rq);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+									
+			rs.setCode(FLS_SUCCESS);
+			rs.setId(rq.getReqUserId());
+			rs.setMessage(FLS_SUCCESS_M);
+			hcp.commit();
 		} catch (SQLException e) {
 			//res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			rs.setCode(FLS_SQL_EXCEPTION);
