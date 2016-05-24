@@ -374,15 +374,17 @@ public class Requests extends Connect {
 		LOGGER.info("inside edit method");
 		getConnection();
 		String sql = "UPDATE requests SET request_status=? WHERE request_item_id=? AND request_requser_id=?"; //
-		String sql2 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=?"; //
+		String sql2 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=? AND request_status=?"; //
 
 		try {
 			LOGGER.info("Creating Statement....");
 			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, itemId);
+			stmt2.setString(2, userId);
+			stmt2.setString(3, "Active");
 			ResultSet rs = stmt2.executeQuery();
 			while (rs.next()) {
-				check = rs.getString("item_id");
+				check = rs.getString("request_id");
 			}
 
 			if (check != null) {
@@ -396,13 +398,12 @@ public class Requests extends Connect {
 
 				LOGGER.info("Statement created. Executing select row query of FLS_MAIL_REJECT_REQUEST_TO...");
 				stmt1.setString(1, itemId);
-				stmt1.setString(2, "Active");
 
 				ResultSet dbResponse = stmt1.executeQuery();
 				LOGGER.info("Query to request pojos fired into requests table");
 				if (dbResponse.next()) {
 
-					if (dbResponse.getString("request_item_id") != null) {
+					if (dbResponse.getString("item_id") != null) {
 						LOGGER.info("Inside Nested check1 statement of FLS_MAIL_REJECT_REQUEST_TO");
 
 						// Populate the response

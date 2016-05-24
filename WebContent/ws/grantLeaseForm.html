@@ -21,11 +21,12 @@
 		
 		var req = {
 					reqUserId: ReqUserId.toString(),
-					itemId: ItemId.toString(),
+					itemId: ItemId,
 					userId: UserId.toString()
 		};
 		
 		alert("got data");
+		console.log(JSON.stringify(req));
 		send(req);
 	};
 	
@@ -33,16 +34,17 @@
 		alert("Inside send function.");
 		$.ajax({
 			url: '/flsv2/GrantLease',
-			type:'get',
-			data: {req: JSON.stringify(req)},
+			type:'POST',
+			data: JSON.stringify(req),
 			contentType:"application/json",
 			dataType: "json",
 			
 			success: function(response) {
 				alert("working");
-				document.getElementById("Id").value = response.Id;
-				document.getElementById("Code").value = response.Code;
-				document.getElementById("Message").value = response.Message
+				console.log(response);
+				//document.getElementById("Id").value = response.id;
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message
 			},
 			
 			error: function() {
