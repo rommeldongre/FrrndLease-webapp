@@ -6,10 +6,13 @@
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var ItemId = null;
+	var UserId = null;
 	var ReqUserId = null;
+	var userloggedin = localStorage.getItem("userloggedin");
 	
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
+		UserId = document.getElementById("userId").value;
 		ReqUserId = document.getElementById("reqUserId").value;
 	};
 	
@@ -18,7 +21,8 @@
 		getData();
 		
 		var req = {
-					itemId: ItemId.toString(),
+					itemId: ItemId,
+					userId: UserId,
 					reqUserId: ReqUserId.toString(),
 					flag: "renew"
 		};
@@ -32,7 +36,8 @@
 		getData();
 		
 		var req = {
-				itemId: ItemId.toString(),
+				itemId: ItemId,
+				userId: UserId,
 				reqUserId: ReqUserId.toString(),
 				flag: "close"
 		};
@@ -44,16 +49,17 @@
 		alert("Inside send function.");
 		$.ajax({
 			url: '/flsv2/RenewLease',
-			type:'get',
-			data: {req: JSON.stringify(req)},
+			type:'post',
+			data: JSON.stringify(req),
 			contentType:"application/json",
 			dataType: "json",
 			
 			success: function(response) {
 				alert("working");
-				document.getElementById("Id").value = response.Id;
-				document.getElementById("Code").value = response.Code;
-				document.getElementById("Message").value = response.Message
+				console.log(response);
+				document.getElementById("Id").value = response.id;
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message
 			},
 			
 			error: function() {
@@ -69,6 +75,7 @@
 	<form>
 		Request User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>
 		Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+		User Id : <input type="text" name="userId" id="userId"><br/><br/>
 		<input type="button" value="Renew Lease" onclick="grant()">
 		<input type="button" value="Close Lease" onclick="closeLease()"><br/><br/>
 		<h1>OUTPUT</h1>
