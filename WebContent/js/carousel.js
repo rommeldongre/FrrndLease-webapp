@@ -14,16 +14,17 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         searchString = data;
         $scope.itemsArray = [[]];
         initPopulate();
+//        addToWishList(data);
     });
     
     // Initialising the categories
     $scope.categories = [{label:'ALL',active:true}];
     
     // checking in which page carousel is being loaded
-    var u = localStorage.getItem("userloggedin");
-    if(u != "" || u != null || u != 'anonymous')
+    var user = localStorage.getItem("userloggedin");
+    if(user != "" || user != null || user != 'anonymous')
         if(window.location.pathname == '/flsv2/mypostings.html')
-            userId = u;
+            userId = user;
     
     // getting the width and height of the carousel when page gets loaded
     var getCarouselWidthHeight = function(){
@@ -218,6 +219,37 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     // called when item from carousel is clicked
     $scope.itemClicked = function(uid){
         window.location.replace("ItemDetails?uid="+uid);
+    }
+    
+    var addToWishList = function(data){
+        var req = {
+            id: 0,
+            title: data,
+            description: '',
+            category: '',
+            userId: user,
+            leaseValue: '',
+            leaseTerm: '',
+            status: "Wished",
+            image: ''
+        };
+        
+        sendToWishList(req);
+    }
+    
+    var sendToWishList = function(req){
+        $.ajax({
+			url: '/flsv2/WishItem',
+			type: 'post',
+			data: {req : JSON.stringify(req)},
+			contentType: "application/x-www-form-urlencoded",
+			dataType:"json",
+			success: function(response) {
+                console.log("item added to the wish list");
+			},
+			error: function() {
+			}
+		});
     }
 }]);
                                         
