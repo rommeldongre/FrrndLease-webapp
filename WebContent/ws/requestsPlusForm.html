@@ -18,99 +18,6 @@
 		if (UserId ==='') UserId = null;
 	};
 	
-	add = function() {
-		alert("inside add function.");
-		getData();
-		var req = {
-				table: "requests",
-				operation: "add",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: null
-		};
-		alert("got data");
-		send(req);
-	};
-	
-	deleteD = function () {
-		alert("Inside delete function");
-		getData();
-		var req = {
-				table: "requests",
-				operation: "delete",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: null
-		};
-		alert("got data");
-		send(req);
-	};
-	
-	getNext = function() {
-		alert("Inside get next function");
-		Token = document.getElementById("itemId").value;
-		var req = {
-				table: "requests",
-				operation: "getNext",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: Token
-		}
-		send(req);
-	};
-	
-	getPrevious = function() {
-		alert("Inside get next function");
-		Token = document.getElementById("itemId").value;
-		var req = {
-				table: "requests",
-				operation: "getPrevious",
-				row: {
-					itemId: ItemId,
-					userId: UserId
-				},
-				token: Token
-		}
-		send(req);
-	};
-	
-	send = function(req) {
-		alert("Inside send function.");
-		$.ajax({
-			url: '/flsv2/AdminOps',
-			type:'get',
-			data: {req: JSON.stringify(req)},
-			contentType:"application/json",
-			dataType: "json",
-			
-			success: function(response) {
-				alert("working");
-				document.getElementById("Id").value = response.Id;
-				document.getElementById("Code").value = response.Code;
-				
-				if(parseInt(response.Code) === 27 || parseInt(response.Code) === 28) {
-					obj = JSON.parse(response.Message);
-					document.getElementById("itemId1").value = obj.itemId;
-					document.getElementById("userId1").value = obj.userId;
-					document.getElementById("date").value = obj.date
-				}
-				else{
-					document.getElementById("Message").value = response.Message
-				}
-			},
-			
-			error: function() {
-				alert("not working");
-			}
-		});
-	};
-	
 	getRequests = function() {
 		alert("inside get Requests function.");
 		getData();
@@ -119,7 +26,6 @@
 				cookie: ItemId,
 				userId: UserId,
 		};
-		console.log(JSON.stringify(req))
 		requestsend(req);
 	}
 	
@@ -159,11 +65,7 @@
 	<form>
 		Request Id : <input type="text" name="itemId" id="itemId"><br/><br/>
 		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
-		<!--<input type="button" value="Add" onclick="add()">
-		<input type="button" value="Delete" onclick="deleteD()">-->
-		<!--<input type="button" value="Get Next" onclick="getNext()">-->
 		<input type="button" value="Get Next" onclick="getRequests()">
-		<!--<input type="button" value="Get Previous" onclick="getPrevious()">--><br/><br/>
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>
 		Code : <input type="text" name="code" id="Code"><br/><br/>
