@@ -216,26 +216,27 @@
 			reasonForGetRequestItem = 'showRequestTable';
 			reasonForGetItem = 'showRequestTable';
 			
-			getRequestItem(itemNextRequestId);
+			getRequestPlusItem(itemNextRequestId,userloggedin);
 		}
 		
 		function getItemForRequest(obj){
-			var itemno = obj.itemId;
-			reqUserId = obj.userId;
-			reqUserName = obj.requser_name;
 			
-			reqDate = obj.date;	
+			reqUserId = obj.requestorId;
+			var request_id = obj.requestId;
 			
-			itemno--;
+			showRequestItem(obj.requestItemId,request_id,obj.requestDate,obj.title,obj.requestUserName);
+			itemNextRequestId = request_id;
 			
-			getNextItem(itemno);
-			
+			getRequestPlusItem(itemNextRequestId,userloggedin);
 		}
 		
-		function showRequestItem(obj){
-			userloggedin = localStorage.getItem("userloggedin");
-			if(obj.userId == userloggedin){
-		
+		function showRequestItem(i,j,k,l,m){
+				itemNextId = i;
+				itemNextRequestId = j;
+				reqDate = k;
+				var reqTitle = l;
+				reqUserName =m;
+				
 				var table = document.getElementById("requesttable");
 				var row = table.insertRow(1);
 				var cell0 = row.insertCell(0);
@@ -277,23 +278,20 @@
 				
 				cell0.innerHTML = reqDate;
 				//cell1.innerHTML = obj.itemId;
-				cell1.innerHTML = obj.title;
+				cell1.innerHTML = reqTitle;
 				cell2.innerHTML = reqUserName;
 				
 				cell3.appendChild(span1);
 				cell3.appendChild(span2);
 				cell3.appendChild(span3);
 				
-				cell1.id = obj.itemId;
-				cell2.id = obj.itemId;
+				cell1.id = itemNextId;
+				cell2.id = itemNextId;
 				
 				cell0.className = "tablecell";
 				cell1.className = "tablecellItem";
 				cell2.className = "tablecellFriend";
-				cell3.className = "tablecellAction";
-			}
-				
-				request_read();	
+				cell3.className = "tablecellAction";		
 		}
 			
 		function showEmptyText(){

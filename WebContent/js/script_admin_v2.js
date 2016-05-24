@@ -1747,3 +1747,44 @@ function getNextItemCarouselSend(req){
 	});	
 }
 //Get Item Store ends here---------------------------------
+
+//MyIncomingRequests(Plus) starts here---------------------------------
+
+function getRequestPlusItem(i,j){
+	//alert("Inside getNextOutItem function.");
+	if(i == '' || i == undefined){
+		itemToken = 0;
+	}
+	itemToken = i;
+	userName = j;
+	
+	var req = {
+		userId: userName,
+		cookie: itemToken
+	}
+	getInRequest(req);
+}
+
+getInRequest = function(req) {
+		//alert("Inside send function.");
+		$.ajax({
+			url: '/flsv2/GetRequestsPlus',
+			type:'POST',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType: "JSON",
+			success: function(response) {
+				//alert("working");
+				if(!response.title){
+				}else{
+					getItemForRequest(response);
+					//alert(response.title);
+				}
+			},
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+//MyIncomingRequests(Plus) ends here---------------------------------
