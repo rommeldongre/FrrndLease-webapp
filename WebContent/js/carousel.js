@@ -1,12 +1,20 @@
 var carouselApp = angular.module('carouselApp', []);
 
-carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', function($scope, $timeout, getItemsForCarousel){
+carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', 'search', function($scope, $timeout, getItemsForCarousel, search){
     // lastItem is used to store the id of the last retrieved item from the database
     var lastItem = 0;
     // selected category is stored in this variable
     var category = '';
     // if this carousel is loaded in myPostings then userId in req var is set to current userId from local storage
     var userId = null;
+    // searchString is used to display items which are being searched
+    var searchString = '';
+    
+    $scope.$on('searchStringChanged', function(event, data){
+        searchString = data;
+        $scope.itemsArray = [[]];
+        initPopulate();
+    });
     
     // Initialising the categories
     $scope.categories = [{label:'ALL',active:true}];
@@ -65,14 +73,26 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         if(category == '' || category == 'ALL')
             category = null;
         
-        var req = {
-            cookie: token,
-            userId: userId,
-            category: category,
-            limit: $scope.itemsLimit
-	    };
+        if(searchString == ''){
+            var req = {
+                cookie: token,
+                userId: userId,
+                category: category,
+                limit: $scope.itemsLimit
+            };
+            displayItems(req);
+        }else{
+            var req = {
+                token: token,
+                title: searchString,
+                description: "",
+                category: "",
+                leaseValue: 0,
+                leaseTerm: ""
+            };
+            displaySearchedItems(req);
+        }
         
-        displayItems(req);
     }
     
     var displayItems = function(req){
@@ -97,6 +117,43 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             function(error){
                 console.log("Not able to get items " + error.message);
             });
+    }
+    
+    var displaySearchedItems = function(req){
+        $.ajax({
+            url: '/flsv2/SearchItem',
+            type: 'post',
+            data: {req : JSON.stringify(req)},
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            success: function(response) {
+                if(response.Code == "FLS_SUCCESS"){
+                    var obj = JSON.parse(response.Message);
+                    var item = {itemId:obj.itemId, image:obj.image, title:obj.title, fullName:obj.category, leaseTerm:obj.leaseTerm, uid:obj.uid};
+                    if(lastItem == 0){
+                        $scope.itemsArray = [[item]];
+                        lastItem = obj.itemId;
+                        populateCarousel(lastItem);
+                    }
+                    else{
+                        lastItem = obj.itemId;
+                        $timeout(function(){
+                            $scope.itemsArray.push([item]);
+                            populateCarousel(lastItem);
+                        }, 1000);
+                        
+                    }
+                }else{
+                    if(lastItem == 0)
+                        $scope.$apply(function(){
+                            $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
+                        });
+                }
+            },
+            error: function() {
+                console.log("Not able to get items " + error.message);
+            }
+	   });
     }
     
     // called on the page load
@@ -152,6 +209,9 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         // store category which is clicked
         category = $scope.categories[index].label;
         
+        // when category is selected then search string is set to empty
+        searchString = '';
+        
         initPopulate();
     }
     
@@ -170,4 +230,12 @@ carouselApp.factory('getItemsForCarousel', ['$http', function($http){
     }
     
     return getItems;
+}]);
+
+carouselApp.service('search', ['$rootScope', function($rootScope){
+    
+    this.changeSearchString = function(searchString){
+        $rootScope.$broadcast('searchStringChanged', searchString);
+    }
+    
 }]);

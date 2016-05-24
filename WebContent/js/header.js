@@ -1,6 +1,6 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory',function($scope, userFactory, profileFactory){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', function($scope, userFactory, profileFactory){
     
     if(window.location.pathname == '/flsv2/index.html' || window.location.pathname == '/flsv2/'){
         $scope.navClassValue = "navbar navbar-static";
@@ -70,6 +70,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory',fu
 			
 		window.location.replace("mystore.html");
     }
+    
 }]);
 
 // factory for getting and updating profile from the backend service

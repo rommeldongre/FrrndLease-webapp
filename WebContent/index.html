@@ -48,24 +48,26 @@
 		<div ng-include="'header.html'"></div>
 		<!--header ends----------------------------------------->
 		
-		<div id="marketingheading"><strong>MAKE SPACE FOR LIFE</strong></div>
-		<div id="marketingline"><strong>Because the world is too small for all of our stuff</strong></div>
-		
-		<div id="marketingstore" ng-controller="indexCtrl">
-			<button ng-click="storeYourStuff()" id="storebutton" class="btn btn-primary">StoreYourStuff</button>
-		</div>
-		
-		<div id="marketingsearch">
-		</div>
-        
-		<div id="wishbox">
-			<div id="searchbox" class="input-group">
-				<input id="wish_title" type="text" class="form-control" placeholder="Search from over 100 useful items in your Friend's Store"></input>
-				<span class="input-group-btn">
-					<button class="btn btn-primary" onclick="searchItem()" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
-				</span>
-			</div>
-		</div>
+        <div ng-controller="indexCtrl">
+            <div id="marketingheading"><strong>MAKE SPACE FOR LIFE</strong></div>
+            <div id="marketingline"><strong>Because the world is too small for all of our stuff</strong></div>
+
+            <div id="marketingstore">
+                <button ng-click="storeYourStuff()" id="storebutton" class="btn btn-primary">StoreYourStuff</button>
+            </div>
+
+            <div id="marketingsearch">
+            </div>
+
+            <div id="wishbox">
+                <div id="searchbox" class="input-group">
+                    <input id="wish_title" type="text" class="form-control" ng-model="search.string" placeholder="Search from over 100 useful items in your Friend's Store">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" ng-click="searchItem(search.string)" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
 		
 	</div>
 	
@@ -74,8 +76,6 @@
 		<br /><br />
 		<div id="friendstoreline"><strong>The Friend Store</strong></div>
 		<br />
-        
-        <button id="clearSearchButton" class="btn btn-default" onclick="clearSearchBox()">Clear Search</button>
 		
         <!-- Carousel Start -->
         <div>
@@ -117,120 +117,20 @@
 	</div>
 	
 	<script type="text/javascript">
-		var counter, i, j, startingCarousel, carouselwidth, carouselheight, browsingCategory, imgheight, imgwidth, noOfImagesInCarousel, navigatingSide, row1, carouselinner, img1, item1, reasonForGetItem, userloggedin, footerFlag, categoryCounter;
 		
 		function start(){
 		
 			footerFlag = 'collapsed';
-			categoryCounter = 0;	
 			look_good();
-			
-			load_Gapi();
-			
-//			searchbar();				//called when page is loaded initially
-		}
-		
-		function searchbar(){
-		
-			params = getParams();
-			var search_item = unescape(params["wish_title1"]);
-			if (search_item != "undefined" ) {
-				search_item = search_item.replace(/\+/g, " ");
-				document.getElementById("wish_title").value = search_item;
-				//$("#search_btn_home").click();
-				document.getElementById("search_btn_home").click();
-				//searchItem()
-				console.log("not undefined");
-				window.location.hash = '#wishbox';
-			}else{
-				loadCarousel();
-			}
-			
-			//console.log(search_item);
-		}
-		
-		 function getParams(){
-			var idx = document.URL.indexOf('?');
-			var params = new Array();
-			if (idx != -1) {
-				var pairs = document.URL.substring(idx+1, document.URL.length).split('&');
-			for (var i=0; i<pairs.length; i++){
-				nameVal = pairs[i].split('=');
-				params[nameVal[0]] = nameVal[1];
-				}
-			}
-			return params;
-		}
-		
-		function load_Gapi(){						//for google
-			gapi.load('auth2', function() {
-				gapi.auth2.init();
-			});
+            
+            load_Gapi();
 		}
         
-		function searchItem(){				//when user types something in the search box and presses search button
-			
-			if($("#wish_title").val() == '' || $("#wish_title").val() == ' '){
-				var heading = "Search Failed";
-				var msg = "Nothing entered";
-				confirmationIndex(heading, msg);
-			}else{
-				$("#clearSearchButton").show();
-				$("#categorybrowsing").hide();
-				
-				reasonForWishItem ='searchFromHome';
-				wishItemSetValues($("#wish_title").val(),'','',userloggedin,'','','');
-				wishItemDbCreate();
-				
-				itemId = 0;
-				reasonForSearchItem = "searchItem";
-				setBrowsingCategory("All");
-				
-				startingCarousel = 0;
-				counter = 0;
-				endOfCarousel = 0;
-				navigatingSide = 'next';
-				$("#leftcarouselbutton").show();
-				$("#rightcarouselbutton").show();
-				
-				getScreenType();
-				loadCarousel();
-			}			
-		}
-		
-		function getSearchedItem(){
-			var title = $("#wish_title").val();
-			
-			getNoOfImagesInCarousel();					//to get no of images to be shown in carousel based on different screen sizes
-			
-			reasonForSearchItem = "searchItem";
-			
-			if(counter < noOfImagesInCarousel){				
-				$("#leftcarouselbutton").show();
-				searchItemSetValues(itemId, title, '', '', 0, '');
-				searchItemDbCreate();	
-			}	
-		}
-	
-		function clearSearchBox(){		//called when close button in Modal is clicked			
-			//clears textbox when data is submitted
-			$("#wish_title").val("");
-	
-			reasonForSearchItem = null;
-			$("#clearSearchButton").hide();
-			$("#categorybrowsing").show();
-			
-			setBrowsingCategory("All");
-			startingCarousel = 0;
-			counter = 0;
-			endOfCarousel = 0;
-			navigatingSide = 'next';
-			getScreenType();
-			
-			loadCarousel();
-			
-			//location.reload();	
-		}
+        function load_Gapi(){						//for google
+            gapi.load('auth2', function() {
+                gapi.auth2.init();
+            });
+        }
 		
 		function increaseSizeOfFooter(){
 			if(footerFlag == 'collapsed'){
@@ -278,8 +178,6 @@
 	</script>
     
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/index.js"></script>
-	<script type="text/javascript" src="js/script_admin_v2.js"></script>
     <script src="js/index1.js"></script>
     <script src="js/tawk.js"></script>
     <script src="js/bootstrap.min.js"></script>
