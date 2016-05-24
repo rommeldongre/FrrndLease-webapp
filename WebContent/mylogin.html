@@ -28,13 +28,6 @@
     <script src="js/jquery.backstretch.js"></script>
 	<script src="js/animation.js"></script>
 	<!--Loading Animation code CSS & JS Links ends here  -->
-	
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
   
   <body onload="start()">
@@ -45,72 +38,41 @@
 		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
 					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
 				</div>
-				<div class="collapse navbar-collapse" id="myNavbar1">
-					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						
-						
-						<li class="dropdown" id="subheader">
-							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-							<span id="salutation"></span> <span class="caret"></span></a>
-							
-							<ul class="dropdown-menu">
-								<li><a href="mypostings.html"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="mywishlists.html"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myincomingrequests.html"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myleasedoutitems.html"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myleasedinitems.html"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="myfriendslist.html"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-								<li role="separator" class="divider"></li>
-								<li id="logoutoptionmenu"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
-							</ul>
-						</li>
-						
-					</ul>
-				</div>
 			</div>
-		</nav>	
+		</nav>
 		
 		<div class="container">
 			
 			<div class ="google">
-			<div style="float:left;" class="g-signin2" data-onsuccess="onSignIn"></div>	                 <!--Google login button-->
+                <div style="float:left;" class="g-signin2" data-onsuccess="onSignIn"></div>	                 <!--Google login button-->
 			</div>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			
 		    <!--FB signup button-->
 			<div class="facebook" style="float:left;padding-left: 20px">
-			<a class="btn btn-block btn-social btn-facebook" onclick="facebookSignIn();" style="width:220px;;height: 37px">
-            <span class="fa fa-facebook"></span> Connect with Facebook
-			</a>
+                <a class="btn btn-block btn-social btn-facebook" onclick="facebookSignIn();" style="width:220px;;height: 37px">
+                <span class="fa fa-facebook"></span> Connect with Facebook
+                </a>
 			</div>
 			
-		<form class="form-signin" id="loginform">
-				<!--<h2 class="form-signin-heading">Please Log in</h2>-->
+            <!--Form starts here-->
+            <form class="form-signin" id="loginform">
 				<div id="heading" class="form-signin-heading"><strong>Please Log in</strong></div><br/>
 				
 				<input type="email" id="email" class="form-control" placeholder="Email address" required autofocus><br />
 				<input type="password" id="password" class="form-control" placeholder="Password" required><br />
 				
 				<span id="newuser">
-				New User? <a href="mysignup.html" id="signup">Signup</a>
+				    New User? <a href="mysignup.html" id="signup">Signup</a>
 				</span>
 				<br /><br />
 				<button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
 			</form>
 			<br />
 			<!--Form ends here-->
+            
 			<!--Displaying error of the form-->
 			<div id="error_row">
 				<div class="col-md-12 col-sm-12 col-xs-12">
@@ -120,7 +82,7 @@
 					</div>
 				</div>
 			</div>	
-		</div> <!-- /container -->
+		</div>
 		
 		<!-- Button trigger Alert Modal -->
 		<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">
@@ -133,9 +95,7 @@
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<!--<h4 class="modal-title" id="myModalLabel">-->
 				
-				</h4>
 			  </div>
 			  <div class="modal-body" id="alertModalMsg">
 				
@@ -173,40 +133,30 @@
 		  </div>
 		</div>
 	
-		<!--Start of Tawk.to Script-->
-		<script type="text/javascript">
-		var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-		(function(){
-		var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-		s1.async=true;
-		s1.src='https://embed.tawk.to/56fa72915de6a2ac05c997fa/default';
-		s1.charset='UTF-8';
-		s1.setAttribute('crossorigin','*');
-		s0.parentNode.insertBefore(s1,s0);
-		})();
-		</script>
-		<!--End of Tawk.to Script-->
+		<!--The tawk.to widget code will get populated here from file chatbox.html.-->
+        <div id="tawk_widget"></div>
 		
 		<!--Footer starts------------------------------------>
-		<nav class="navbar navbar-default navbar-fixed-bottom">
-			<div class="container-fluid">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-				</button>
-				<div class="collapse navbar-collapse" id="myNavbarBottom">
-					<ul class="nav navbar-nav navbar-center">
-						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-						<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-						<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-						<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
-						<li><a href="https://www.surveymonkey.com/r/Y9GSGLJ" target="_blank"><span class="glyphicon glyphicon-comment"></span><b style="color:blue;"> Survey</b></a></li>
-					</ul>
+			<nav class="navbar navbar-default navbar-fixed-bottom">
+				<div class="container-fluid">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom">
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>                        
+					</button>
+					<div class="collapse navbar-collapse" id="myNavbarBottom">
+						<ul class="nav navbar-nav navbar-center">
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
+							<li><a href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
+							<li><a href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
+							<li><a href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
+							<li><a href="https://www.surveymonkey.com/r/Y9GSGLJ" target="_blank"><span class="glyphicon glyphicon-comment"></span><b style="color:blue;"> Survey</b></a></li>
+						</ul>
+					</div>
 				</div>
-			</div>
-		</nav>
+			</nav>
+        <!--Footer ends--------------------------------------->
 		
 	</div>
 	
@@ -242,6 +192,51 @@
 			loginDbCreate();
 		
 		});
+        
+        function loginDbCreate(){
+            loginpassword = CryptoJS.MD5(loginpassword);
+            loginpassword = loginpassword.toString();
+
+            var req = {
+                auth: loginpassword,
+                token: loginemail,
+                signUpStatus: signupstatus
+            }
+
+            loginSend(req);
+
+        }
+
+        function loginSend(req){	
+            //alert("loginSend called");
+            $.ajax({
+                    url: '/flsv2/LoginUser',
+                    type:'get',
+                    data: {req: JSON.stringify(req)},
+                    contentType:"application/json",
+                    dataType: "json",
+
+                    success: function(response) {
+
+                        if(response.Code === "FLS_SUCCESS") {
+                            //alert("Success");
+                            obj = JSON.parse(response.Message);
+
+                            loginSuccessful(obj);
+                        }
+                        else{
+                            //alert("unsuccessful");
+                            loginerrormsg = response.Message;
+                            loginUnsuccessful(response.Message);	
+                        }
+                    },
+
+                    error: function() {
+                        var msg = "Not Working";
+                        confirmationIndex(msg);
+                    }
+                });
+        };
 
 		//google login starts here--------------------------------------------------	
 		
@@ -346,6 +341,73 @@
 			
 			$("#modalTriggerButton").click();
 		}
+        
+        function addFriendSetValues(name, mobile, email, user){
+            friendName = name;
+            friendEmail = email;
+            friendMobile = mobile;
+            userId = user;
+
+            if(friendName == '')
+                friendName = null;
+            if(friendEmail == '')
+                friendEmail = null;
+            if(friendMobile == '')
+                friendMobile = 0;
+
+        }
+
+        function addFriendDbCreate(){
+
+            var req = {
+                id: friendEmail,
+                fullName: friendName,
+                mobile: friendMobile,
+                userId: userId
+            };
+
+            addFriendSend(req);
+        }
+
+        function addFriendSend(req){
+            $.ajax({
+                url: '/flsv2/AddFriend',
+                type:'get',
+                data: {req: JSON.stringify(req)},
+                contentType:"application/json",
+                dataType: "json",
+
+                success: function(response) {
+                    //alert(response.Id+" "+response.Code+" "+response.Message);
+                    //setPrevPage("myfriendslist.html");
+
+                    if(reasonForAddFriend == "importGoogle"){
+                        add_checked_friends_continued();
+                    }else if(reasonForAddFriend == "importEmail"){
+                        var header = "Congrats";
+                        var msg = response.Message;
+                        confirmationIndex(header, msg);
+                    }else if(reasonForAddFriend == "importFacebook"){
+                        var header = "Congrats";
+                        addFriendAPICall--;
+                        var msg = 1;
+                        if(addFriendAPICall==0){
+                            confirmationIndex(msg);
+                        }
+                    }else{
+                        var header = "Friend Added";
+                        var msg = "You can now lease items from "+friendName;
+                        confirmationIndex(header, msg);	
+                    }
+                },
+
+                error: function() {
+                    var msg = "Not Working";
+                    confirmationIndex(msg);
+                }
+            });
+
+        }
 		
 		function redirectToPrevPage(){
 			prevPage = getPrevPage();
@@ -362,7 +424,7 @@
     
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="js/index.js"></script>
-	<script type="text/javascript" src="js/script_admin_v2.js"></script>
+    <script src="js/tawk.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </body>
 </html>

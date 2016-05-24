@@ -82,13 +82,13 @@
                         </div>
 					</div>
                     
-					<form id="itemform">
+					<div id="itemform" ng-cloak>
                         
 						<div class="row">
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="title">Title</label>
-                                    <input type="text" class="form-control" ng-model="title" ng-disabled="!userMatch" placeholder="Enter Title" required>
+                                    <input type="text" class="form-control" ng-model="item.title" ng-disabled="!userMatch" placeholder="Enter Title" required>
 								</div>
 							</div>
 						</div>
@@ -98,9 +98,13 @@
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory" ng-disabled="!userMatch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
+										<button id="dropdownbuttoncategory" ng-disabled="!userMatch" ng-bind="category" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
 										</button>
 										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
+                                            <span ng-repeat="c in categories" ng-click="categorySelected(c)">
+                                                <li id="{{c}}" class="category">{{c}}</li>
+                                                <li class="divider"></li>
+                                            </span>
                                         </ul>
 									</div>
 								</div>
@@ -108,7 +112,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="location">Location</label>
-                                    <input type="text" class="form-control" id="location" ng-model="location" placeholder="Location">
+                                    <input type="text" class="form-control" id="location" ng-model="item.location" placeholder="Location">
 								</div>
 							</div>
 						</div>
@@ -117,16 +121,21 @@
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="lease_value">Lease Value</label>
-                                    <input type="number" class="form-control" id="lease_value" ng-model="leaseValue" ng-disabled="!userMatch" placeholder="Lease Value">
+                                    <input type="number" class="form-control" id="lease_value" ng-model="item.leaseValue" ng-disabled="!userMatch" placeholder="Lease Value">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="input-group">
 									<div class="input-group-button">
 										<label for="lease_term">Lease Term</label><br />
-										<button id="dropdownbuttonlease_term" ng-disabled="!userMatch" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
+										<button id="dropdownbuttonlease_term" ng-disabled="!userMatch" ng-bind="leaseTerm" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
 										</button>
-										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu"></ul>
+										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
+                                            <span ng-repeat="l in leaseTerms" ng-click="leaseTermSelected(l)">
+                                                <li id="{{l}}" class="leaseterm">{{l}}</li>
+                                                <li class="divider"></li>
+                                            </span>
+                                        </ul>
 									</div>
 								</div>
 							</div>
@@ -142,14 +151,14 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label for="description">Description</label>
-									<textarea rows="3" class="form-control" ng-model="description" ng-disabled="!userMatch" style="margin-bottom:35%;" placeholder="Add Description"></textarea>
+									<textarea rows="3" class="form-control" ng-model="item.description" ng-disabled="!userMatch" style="margin-bottom:35%;" placeholder="Add Description"></textarea>
 								</div>
 							</div>
 						</div>
                         
-						<button class="btn btn-default" id="submit" type="submit">Submit</button>
+<!--						<button class="btn btn-default" id="submit" type="submit">Submit</button>-->
 
-					</form>
+					</div>
                     
 				</div>
                 
@@ -226,14 +235,10 @@
 		function start() {
 
 			$('#error_row').hide();
-			$('#submit').hide();
+//			$('#submit').hide();
 
 			getLocationWidth();
 			getLeaseValueWidth();
-			loadCategoryDropdown();
-			loadLeaseTermDropdown();
-            
-            getItemInfo();
 
 		}
 
@@ -241,55 +246,6 @@
 			getLocationWidth();
 			getLeaseValueWidth();
 		});
-
-		function loadCategoryDropdown() { //for category dropdown
-			catName = '';
-			reasonForGetCategory = 'categoryDropdown';
-			getNextCategory(catName);
-		}
-
-		function loadCategoryDropdownContinued(obj) {
-			var ul = document.getElementById("dropdownmenucategory");
-
-			var li = document.createElement("li");
-			li.id = catName;
-			li.className = "category";
-
-			li.innerHTML = obj.catName;
-
-			var lidivider = document.createElement("li");
-			lidivider.className = "divider";
-
-			ul.appendChild(lidivider);
-			ul.appendChild(li);
-
-			getNextCategory(catName);
-		}
-
-		function loadLeaseTermDropdown() { //for leaseterm dropdown
-			leaseTermName = '';
-
-			getNextLeaseTerm(leaseTermName);
-
-		}
-
-		function loadLeaseTermDropdownContinued(obj) {
-			var ul = document.getElementById("dropdownmenulease_term");
-
-			var li = document.createElement("li");
-			li.id = leaseTermName;
-			li.className = "leaseterm";
-
-			li.innerHTML = obj.termName;
-
-			var lidivider = document.createElement("li");
-			lidivider.className = "divider";
-
-			ul.appendChild(lidivider);
-			ul.appendChild(li);
-
-			getNextLeaseTerm(leaseTermName);
-		}
 
 		function getLocationWidth() { //just for a symmetrical look, to set width of dropdown button and menu equal to Location input field
 			var width = $("#location").width();
@@ -301,25 +257,6 @@
 			var width = $("#lease_value").width();
 			$("#dropdownbuttonlease_term").width(width);
 			$("#dropdownmenulease_term").width(width);
-		}
-
-		$(document).on("click", ".category", function(event) { //to see which option is selected from dropdown category
-			var text = document.getElementById(event.target.id).innerHTML;
-			document.getElementById("dropdownbuttoncategory").innerHTML = text;
-
-		});
-
-		$(document).on("click", ".leaseterm", function(event) { //to see which option is selected from dropdown lease term
-            var text = document.getElementById(event.target.id).innerHTML;
-            document.getElementById("dropdownbuttonlease_term").innerHTML = text;
-        });
-
-		//getting item info when user wants to view an existing item--------------------------------------------------------------------		
-		function getItemInfo() {
-
-			$("#dropdownbuttoncategory").text("${category}");
-
-			$("#dropdownbuttonlease_term").text("${leaseTerm}");
 		}
 		
 		function cancel(){
