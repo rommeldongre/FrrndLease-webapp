@@ -100,7 +100,7 @@ headerApp.factory('userFactory', function(){
     return dataFactory;
 });
 
-// services to implement modala
+// service to implement modal
 headerApp.service('modalService', ['$uibModal',
     function ($uibModal) {
 
