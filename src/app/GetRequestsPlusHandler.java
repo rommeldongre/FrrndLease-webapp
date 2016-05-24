@@ -77,6 +77,7 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 			rs.setRequestUserId(dbResponse.getString("item_user_id"));
 			rs.setRequestUserName(dbResponse.getString("user_full_name"));
 			rs.setTitle(dbResponse.getString("item_name"));
+			rs.setDescription(dbResponse.getString("item_desc"));
 			rs.setRequestId(dbResponse.getInt("request_id"));
 			rs.setRequestItemId(dbResponse.getInt("request_item_id"));
 			hcp.commit();

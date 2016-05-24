@@ -3,7 +3,7 @@ package pojos;
 public class GetRequestsPlusResObj extends ResObj{
 	
 	int Code, RequestItemId,requestId;
-	String Id,Message,RequestorId,RequestUserName,RequestUserId,RequestDate, Title;
+	String Id,Message,RequestorId,RequestUserName,RequestUserId,RequestDate, Title, Description;
 	public int getCode() {
 		return Code;
 	}
@@ -63,5 +63,11 @@ public class GetRequestsPlusResObj extends ResObj{
 	}
 	public void setTitle(String title) {
 		Title = title;
+	}
+	public String getDescription() {
+		return Description;
+	}
+	public void setDescription(String description) {
+		Description = description;
 	}
 }
