@@ -1,6 +1,10 @@
 var myIndexApp = angular.module('myIndexApp', ['headerApp', 'carouselApp']);
 
-myIndexApp.run(['search', '$timeout', function(search, $timeout){
+myIndexApp.run(['search', '$timeout', 'userFactory', function(search, $timeout, userFactory){
+    
+    if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
+        window.location.replace("mylogin.html");
+    
     var idx = document.URL.indexOf('?');
 			var params = new Array();
 			if (idx != -1) {
