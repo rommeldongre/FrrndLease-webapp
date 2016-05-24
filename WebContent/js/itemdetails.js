@@ -4,23 +4,17 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
     
     var user = localStorage.getItem("userloggedin");
     
-    $scope.message = $window.message;
-    
     $scope.item = {};
     
-    $scope.image = $window.image;
+    $scope.item.image = $window.image;
+    
     $scope.item_id = $window.item_id;
-    $scope.item.title = $window.title;
-    $scope.category = $window.category;
-    $scope.item.description = $window.description;
-    $scope.item.leaseValue = parseInt($window.leaseValue);
-    $scope.leaseTerm = $window.leaseTerm;
     
     $scope.uploadImage = function(file){
         var reader = new FileReader();
         reader.onload = function(event) {
             $scope.$apply(function() {
-                $scope.image = reader.result;
+                $scope.item.image = reader.result;
             });
         }
         reader.readAsDataURL(file);
@@ -113,7 +107,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         if (item_description == '') 
 		  item_description = null;
         
-        var item_category = $scope.category;
+        var item_category = $scope.item.category;
         if (item_category == '' || item_category == 'Category') 
 		  item_category = null;
         
@@ -125,7 +119,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         if (item_lease_value == '') 
 		  item_lease_value = 0;
         
-        var item_lease_term = $scope.leaseTerm;
+        var item_lease_term = $scope.item.leaseTerm;
         if (item_lease_term == '' || item_lease_term == 'Lease Term') 
 		  item_lease_term = null;
 	
@@ -139,7 +133,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
                         leaseValue: item_lease_value,
                         leaseTerm: item_lease_term,
 						status: item_status,
-                        image: $scope.image};
+                        image: $scope.item.image};
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to add this Item to your Wishlist?'}).then(
             function(result){
@@ -180,7 +174,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         if (item_description == '') 
 		  item_description = null;
         
-        var item_category = $scope.category;
+        var item_category = $scope.item.category;
         if (item_category == '' || item_category == 'Category') 
 		  item_category = null;
         
@@ -192,7 +186,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         if (item_lease_value == '') 
 		  item_lease_value = 0;
         
-        var item_lease_term = $scope.leaseTerm;
+        var item_lease_term = $scope.item.leaseTerm;
         if (item_lease_term == '' || item_lease_term == 'Lease Term') 
 		  item_lease_term = null;
         
@@ -203,7 +197,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
                         userId: item_user_id,
                         leaseValue: item_lease_value,
                         leaseTerm: item_lease_term,
-                        image: $scope.image};
+                        image: $scope.item.image};
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to update the Item?'}).then(
             function(result){
@@ -283,7 +277,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
     populateCategory('');
     
     $scope.categorySelected = function(c){
-        $scope.category = c;
+        $scope.item.category = c;
     }
     
     $scope.leaseTerms = [];
@@ -322,7 +316,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
     populateLeaseTerm('');
     
     $scope.leaseTermSelected = function(l){
-        $scope.leaseTerm = l;
+        $scope.item.leaseTerm = l;
     }
     
     load_Gapi();

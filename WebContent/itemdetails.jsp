@@ -78,7 +78,7 @@
 					<div class="row">
                         <div class="col-md-12">
                             <input type="file" ng-if="userMatch" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" />
-                            <img ng-src="{{image}}" width="300" height="300"/>
+                            <img ng-src="{{item.image}}" width="300" height="300"/>
                         </div>
 					</div>
                     
@@ -86,7 +86,7 @@
                         
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" ng-init="item.title='${title}'">
 									<label for="title">Title</label>
                                     <input type="text" class="form-control" ng-model="item.title" ng-disabled="!userMatch" placeholder="Enter Title" required>
 								</div>
@@ -96,9 +96,9 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="input-group">
-									<div class="input-group-button">
+									<div class="input-group-button" ng-init="item.category='${category}'">
 										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory" ng-disabled="!userMatch" ng-bind="category" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
+										<button id="dropdownbuttoncategory" ng-disabled="!userMatch" ng-bind="item.category" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
 										</button>
 										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
                                             <span ng-repeat="c in categories" ng-click="categorySelected(c)">
@@ -119,16 +119,16 @@
                         
 						<div class="row">
 							<div class="col-md-4">
-								<div class="form-group">
+								<div class="form-group" ng-init="item.leaseValue=${leaseValue}">
 									<label for="lease_value">Lease Value</label>
                                     <input type="number" class="form-control" id="lease_value" ng-model="item.leaseValue" ng-disabled="!userMatch" placeholder="Lease Value">
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="input-group">
-									<div class="input-group-button">
+									<div class="input-group-button" ng-init="item.leaseTerm='${leaseTerm}'">
 										<label for="lease_term">Lease Term</label><br />
-										<button id="dropdownbuttonlease_term" ng-disabled="!userMatch" ng-bind="leaseTerm" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
+										<button id="dropdownbuttonlease_term" ng-disabled="!userMatch" ng-bind="item.leaseTerm" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
 										</button>
 										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
                                             <span ng-repeat="l in leaseTerms" ng-click="leaseTermSelected(l)">
@@ -149,14 +149,12 @@
                         
 						<div class="row">
 							<div class="col-md-12">
-								<div class="form-group">
+								<div class="form-group" ng-init="item.description='${description}'">
 									<label for="description">Description</label>
 									<textarea rows="3" class="form-control" ng-model="item.description" ng-disabled="!userMatch" style="margin-bottom:35%;" placeholder="Add Description"></textarea>
 								</div>
 							</div>
 						</div>
-                        
-<!--						<button class="btn btn-default" id="submit" type="submit">Submit</button>-->
 
 					</div>
                     
@@ -221,21 +219,14 @@
 		var reasonForGetItem, itemObj, reqObj, itemNo, leaseObj;
         
         var code = "${code}";
-        var message = "${message}";
         var userId = "${userId}";
+        var image = "${image}";
         
         var item_id = "${itemId}";
-        var title = "${title}";
-        var category = "${category}";
-        var description = "${description}";
-        var leaseValue = "${leaseValue}";
-        var leaseTerm = "${leaseTerm}";
-        var image = "${image}";
 
 		function start() {
 
 			$('#error_row').hide();
-//			$('#submit').hide();
 
 			getLocationWidth();
 			getLeaseValueWidth();
