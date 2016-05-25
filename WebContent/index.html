@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="indexApp">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,6 +10,15 @@
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>fRRndLease - Make Space for Life</title>
+      
+    <!-- Angularjs api -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/carousel.js"></script>
+    <!-- Angularjs api ends -->
+      
+    <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-1.11.3.min.js"></script>
@@ -18,12 +27,6 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/index.css" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>		
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 	
 	<!--Loading Animation code CSS & JS Links  -->
 	<link href="css/animation.css" type="text/css" rel="stylesheet">
@@ -35,70 +38,38 @@
 	<!-- DropDown list code-->
     <script src="js/dropdownlist.js"></script>
     <!-- DropDown list code ends-->
-	
-	<!--Check whether user is logged in or not  -->
-	<script src="js/logincheck.js"></script>
-	<!--Check whether user is logged in or not ends here  -->
   </head>
   
   <body onload="start()">
     <div id="loader">
 	</div>
 	<div id="marketingpanel">
-		<nav class="navbar navbar-static" id="header">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button id="collapsebutton" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-						<span id="collapseline" class="icon-bar"></span>
-						<span id="collapseline" class="icon-bar"></span>
-						<span id="collapseline" class="icon-bar"></span>                        
-					</button>
-					<a class="navbar-brand" id="icon"><b>frrndLease</b></a>
-				</div>
-				
-				<div class="collapse navbar-collapse" id="myNavbar1">
-					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						<li id="admin"><a id="headerfooteroptions" href="adminPage.html"><span class="glyphicon glyphicon-home"></span> Admin</a></li>
-						<li id="loginoptionmenu"><a id="headerfooteroptions" href="mylogin.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-						<li id="signupoptionmenu"><a id="headerfooteroptions" href="mysignup.html"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
-						
-						
-						<li class="dropdown" id="subheader">
-							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-							<span id="salutation"></span> <span class="caret"></span></a>
-							
-							<ul class="dropdown-menu" id="dropA">
-								<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
-							</ul>
-						</li>
-						
-					</ul>
-				</div>
-			</div>
-		</nav>
+		<!--header starts---------------------------------------->
+		<div ng-include="'header.html'"></div>
+		<!--header ends----------------------------------------->
 		
-		<div id="marketingheading"><strong>MAKE SPACE FOR LIFE</strong></div>
-		<div id="marketingline"><strong>Because the world is too small for all of our stuff</strong></div>
-		
-		<div id="marketingstore">
-			<button onclick="storeYourStuff()" id="storebutton" class="btn btn-primary">StoreYourStuff</button>
-		</div>
-		
-		<div id="marketingsearch">
-		</div>
-		<div id="wishbox">
-			<div id="searchbox" class="input-group">
-				<input id="wish_title" type="text" class="form-control" placeholder="Search from over 100 useful items in your Friend's Store"></input>
-				<span class="input-group-btn">
-					<button class="btn btn-primary" onclick="searchItem()" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
-				</span>
-			</div>
-		</div>
+        <div ng-controller="indexCtrl">
+            <div id="marketingheading"><strong>MAKE SPACE FOR LIFE</strong></div>
+            <div id="marketingline"><strong>Because the world is too small for all of our stuff</strong></div>
+
+            <div id="marketingstore">
+                <button ng-click="storeYourStuff()" id="storebutton" class="btn btn-primary">StoreYourStuff</button>
+            </div>
+
+            <div id="marketingsearch">
+            </div>
+
+            <div id="wishbox">
+                <div id="searchbox" class="input-group">
+                    <input id="wish_title" type="text" class="form-control" ng-model="search.string" placeholder="Search from over 100 useful items in your Friend's Store">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" ng-click="searchItem(search.string)" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </div>
 		
 	</div>
-	
-	
-	
 	
 	
 	<div id="main" style="background-image: url('images/bluebackground.jpg')">
@@ -106,87 +77,15 @@
 		<div id="friendstoreline"><strong>The Friend Store</strong></div>
 		<br />
 		
-		<div id="categoryfilters" class="container-fluid">
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div class="btn-group" id="categorybrowsing">
-					</div> 
-					<button id="clearSearchButton" class="btn btn-default" onclick="clearSearchBox()">Clear Search</button>
-				</div>
-			</div>
-		</div>
-		
-		<br />
-		<div id="carouselObject">
-			<div id="carousel-example-generic" class="carousel slide" data-pause="true" data-interval="5000000">	<!--data-interval= 5000 seconds-->	
-				<div class="carousel-inner" role="listbox" id="carouselinner">
-												
-				</div>
-				
-				<a class="left carousel-control" href="#/carousel-example-generic" role="button">				<!--data-slide="prev"-->
-					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true" onclick="loadPrevSlide()" id="leftcarouselbutton"></span>
-					<span class="sr-only">Previous</span>
-				</a>
-				<a class="right carousel-control" href="#/carousel-example-generic" role="button">				<!--data-slide="next"-->
-					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true" onclick="loadNextSlide()" id="rightcarouselbutton"></span>
-					<span class="sr-only">Next</span>
-				</a>
-			</div>
-		</div>
-		<br />
-		
-		
-		<!-- Button trigger modal -->
-		<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
-		  Launch demo modal
-		</button>
-
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog" role="document">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">
-				</h4>
-			  </div>
-			  <div class="modal-body" id="modalMsg">
-				
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearSearchBox()">Close</button>
-			  </div>
-			</div>
-		  </div>
-		</div>
-
+        <!-- Carousel Start -->
+        <div>
+		  <div ng-include="'carousel.html'"></div>
+        </div>
+        <!-- Carousel End -->
 	</div>
 	
-	<!-- "Please Wait" Modal Start here-->
-			<div id="wait_bar_index">
-				<div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait" data-backdrop="static" data-keyboard="false">..</div>
-			
-				<div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					<div class="modal-header">
-						<h4 id="waitheading"></h4>
-					</div>
-					<div class="modal-body">
-						<div class="progress">
-						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-						</div>
-						</div>
-					</div>
-					</div>
-				</div>
-				</div>
-			</div>
-	<!-- "Please Wait" Modal ends Here -->
-	
-	<div id="tawk_widget">
-				<!--The tawk.to widget code will get populated here-->
-	</div>
+	<!--The tawk.to widget code will get populated here from file chatbox.html.-->
+    <div id="tawk_widget"></div>
 			
 	<div id="footerpanel">
 		<br />
@@ -218,532 +117,20 @@
 	</div>
 	
 	<script type="text/javascript">
-		var counter, i, j, startingCarousel, carouselwidth, carouselheight, browsingCategory, imgheight, imgwidth, noOfImagesInCarousel, navigatingSide, row1, carouselinner, img1, item1, reasonForGetItem, userloggedin, footerFlag, categoryCounter;
 		
 		function start(){
 		
 			footerFlag = 'collapsed';
-			categoryCounter = 0;	
 			look_good();
-			
-			$("#modalTriggerButton").hide();
-			$("#clearSearchButton").hide();
-			$("#opendivmyPleaseWait").hide();
-			
-			load_Gapi();		
-			
-			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
-			userloggedin = localStorage.getItem("userloggedin");
-			
-			if(userloggedin == "" || userloggedin == null){
-				userloggedin = "anonymous";
-				localStorage.setItem("userloggedin", "anonymous");	
-			}
-			
-			if(userloggedin == "frrndlease@greylabs.org"){		//if admin is logged in(i.e. frrndlease@greylabs.org)
-				$("#admin").show();
-				$('#subheader').show();			
-				$("#loginoptionmenu").hide();
-				$("#signupoptionmenu").hide();
-			}else if(userloggedin == "anonymous"){	//if logged in as anonymous then don't display subheader
-				$('#subheader').hide();
-				$("#admin").hide();	
-			}else{							//else show the subheader, and hide login and signup buttons	
-				$("#admin").hide();
-				$('#subheader').show();			
-				$("#loginoptionmenu").hide();
-				$("#signupoptionmenu").hide();
-				
-				//show "username"
-				var salutation = document.getElementById("salutation");
-				var span = document.createElement("span");
-				span.style.color = "white";
-				userloggedinName = localStorage.getItem("userloggedinName");
-				span.innerHTML = userloggedinName;
-				salutation.appendChild(span);
-				
-				window.location.replace("myindex.html");
-			}
-			
-			startingCarousel = 0;
-			navigatingSide = 'next';
-			
-			setBrowsingCategory('All');								//initially category is all, so all items will be browsed
-			
-			loadCategoryFilter();
-			
-			getScreenType();
-			
-			searchbar();				//called when page is loaded initially
+            
+            load_Gapi();
 		}
-		
-		function searchbar(){
-		
-			params = getParams();
-			var search_item = unescape(params["wish_title1"]);
-			if (search_item != "undefined" ) {
-				search_item = search_item.replace(/\+/g, " ");
-				document.getElementById("wish_title").value = search_item;
-				//$("#search_btn_home").click();
-				document.getElementById("search_btn_home").click();
-				//searchItem()
-				console.log("not undefined");
-				window.location.hash = '#wishbox';
-			}else{
-				loadCarousel();
-			}
-			
-			//console.log(search_item);
-		}
-		
-		 function getParams(){
-			var idx = document.URL.indexOf('?');
-			var params = new Array();
-			if (idx != -1) {
-				var pairs = document.URL.substring(idx+1, document.URL.length).split('&');
-			for (var i=0; i<pairs.length; i++){
-				nameVal = pairs[i].split('=');
-				params[nameVal[0]] = nameVal[1];
-				}
-			}
-			return params;
-		}
-		
-		function process_dialog(heading){
-			var header = document.getElementById("waitheading");
-			header.innerHTML = heading;
-			$("#opendivmyPleaseWait").click();
-		}
-		
-		function load_Gapi(){						//for google
-			gapi.load('auth2', function() {
-				gapi.auth2.init();
-			});
-		}
-		
-		$("#logoutoptionmenu").click(function(){					//when user logs out  
-			localStorage.setItem("userloggedin", "anonymous");			//userloggedin-> anonymous
-			signOutFromGoogle();
-			
-			location.reload();
-		});
-		
-		function signOutFromGoogle() {					//signout from google
-			var auth2 = gapi.auth2.getAuthInstance();
-			auth2.signOut().then(function () {
-				console.log('User signed out.');
-			});
-		}
-		
-		
-		
-		$(window).resize(function(){		//called everytime screen is resized
-			startingCarousel = 0;
-			navigatingSide = 'next';
-			getScreenType();
-			
-			loadCarousel();					
-		});
-		
-		function loadCategoryFilter(){
-			var div = document.getElementById("categorybrowsing");
-			var button = document.createElement("button");
-			var span = document.createElement("span");
-			span.className = "categoryfilters";
-			
-			button.className = "btn btn-primary";
-			button.id = "All";
-			button.innerHTML = "All";
-			
-			span.appendChild(button);
-			div.appendChild(span);
-			
-			catName = '';
-			reasonForGetCategory = 'categoryFilter';
-			
-			categoryCounter++;
-			localStorage.setItem("categoryFilter"+categoryCounter, "All");
-			
-			getNextCategory(catName);
-		}
-		
-		function loadCategoryFilterContinued(obj){
-			
-			var div = document.getElementById("categorybrowsing");
-			var button = document.createElement("button");
-			var span = document.createElement("span");
-			span.className = "categoryfilters";
-			
-			button.className = "btn btn-default";
-			button.id = obj.catName;
-			button.innerHTML = obj.catName;
-			
-			span.appendChild(button);
-			div.appendChild(span);
-			
-			categoryCounter++;
-			localStorage.setItem("categoryFilter"+categoryCounter, obj.catName);
-			
-			getNextCategory(catName);
-		}
-		
-		$(document).on("click",".categoryfilters",function(event){
-			for(k=1;k<=categoryCounter;k++){						//this is to highlight the category button clicked
-				var cat = localStorage.getItem("categoryFilter"+k);
-				var btn = document.getElementById(cat);
-				
-				if(event.target.id == cat){
-					btn.className = "btn btn-primary";	
-				}else{
-					btn.className = "btn btn-default";
-				}
-				
-			}
-			
-			setBrowsingCategory(event.target.id);
-			startingCarousel = 0;
-			counter = 0;
-			endOfCarousel = 0;
-			navigatingSide = 'next';
-			$("#leftcarouselbutton").show();
-			$("#rightcarouselbutton").show();
-			getScreenType();
-			
-			loadCarousel();
-		});
-		
-		function getScreenType(){
-			emptyCarousel();			//first empty carousel
-		}
-		
-		function emptyCarousel(){					//empty the carousel i.e. when restarting the carousel from beginning
-			$("#carouselinner").empty();
-		}
-		
-		function loadNextSlide(){							//called when right button of carousel is clicked
-			reasonForGetItem = "carousel";				//we are calling getNextItem/getPrevItem for the Carousel
-			navigatingSide = 'next';
-			if(endOfCarousel == 0)
-				loadCarousel();
-			else if(endOfCarousel == 1){
-				if($('.carousel-inner .item:last').hasClass('active')) {
-					//alert("last");
-					disableRightButton();
-					$("#leftcarouselbutton").show();
-				}
-				else{
-					$("#leftcarouselbutton").show();
-					$("#carousel-example-generic").carousel('next');
-				}
-			}
-		}
-		
-		function loadPrevSlide(){							//called when left button of carousel is clicked	
-			navigatingSide = 'prev';
-			
-			if($('.carousel-inner .item:first').hasClass('active')) {
-				disableLeftButton();
-				$("#rightcarouselbutton").show();
-			}
-			else{
-				$("#rightcarouselbutton").show();
-				$("#carousel-example-generic").carousel('prev');				//load previous slide
-				itemNextId = itemNextIdArray.pop();
-			}
-		}
-		
-		function loadCarousel(){
-			counter = 0;
-			
-			browsingCategory = getBrowsingCategory();
-			
-			carouselwidth = getCarouselWidth();						//getting carousel width and height for better look
-			carouselheight = getCarouselHeight();
-			
-			carouselinner = document.getElementById("carouselinner");
-			item1 = document.createElement("div");
-			
-			if(startingCarousel==0){
-				itemNextId = 0;
-				item1.className = "item active";
-			}else{
-				item1.className = "item";
-			}
-			
-			row1 = document.createElement("div");
-			row1.className = "row";
-
-			if(reasonForSearchItem == "searchItem"){
-				getSearchedItem();
-			}
-			else{
-				getImg();
-			}
-			
-		}
-		
-		function getImg(){			
-			getNoOfImagesInCarousel();					//to get no of images to be shown in carousel based on different screen sizes
-			
-			reasonForGetItem = "carousel";				//we are calling getNextItem/getPrevItem for the Carousel
-			
-			if(counter < noOfImagesInCarousel){		
-				if(counter==0){
-				process_dialog("Loading Carousel");
-				}
-				$("#leftcarouselbutton").show();
-				getNextItemCarousel(itemNextId,"",browsingCategory,noOfImagesInCarousel);
-			}
-		}
-		
-		function getNoOfImagesInCarousel(){
-			if($(window).width()>=991){
-				noOfImagesInCarousel = 3;				//for desktops	
-				imgwidth = carouselwidth/3;
-				imgheight = carouselheight;
-			
-			}else if($(window).width()<=500){
-				noOfImagesInCarousel = 1;				//for mobiles
-				imgwidth = carouselwidth;
-				imgheight = carouselheight;
-				
-			}else{
-				noOfImagesInCarousel = 2;				//for tablets
-				imgwidth = carouselwidth/2;
-				imgheight = carouselheight;
-			}
-		}
-		
-		function addItemToCarousel(listObj){					//called from script_admin_v2.js
-			//getNoOfImagesInCarousel();	
-		
-			for(var key in listObj.resList){
-				
-				var obj = listObj.resList[key];
-				
-				if((obj.status == 'InStore') && ((browsingCategory == 'All') || (obj.category == browsingCategory))){
-					
-					var col1 = document.createElement("div");
-					
-					switch(noOfImagesInCarousel){
-						case 1:
-							col1.className = "col-md-12 col-sm-12 col-xs-12 col-lg-12";
-							break;
-						case 2:
-							col1.className = "col-md-6 col-sm-6 col-xs-6 col-lg-6";
-							break;
-						case 3:
-							col1.className = "col-md-4 col-sm-4 col-xs-4 col-lg-4";
-							break;
-					}
-					
-					var span1 = document.createElement("span");
-					span1.className = "items";
-					
-					var src = obj.image;
-					
-					if (src == null || src == '' || src=="null"){		//if no image of the object is stored then show default image
-						src = "images/imgplaceholder.png";
-					}
-					
-					var img1 = document.createElement("img");
-					img1.src = src;
-					img1.id = obj.itemId;
-					
-					$(img1).css("width", imgwidth);
-					$(img1).css("height", imgheight);
-					
-					var caption1 = document.createElement("div");
-					caption1.className = "carousel-caption";
-					caption1.id = obj.itemId;
-					caption1.style.backgroundColor = "black";
-					caption1.style.opacity = 0.6;
-					
-					var h4 = document.createElement("h4");
-					h4.innerHTML ='<b>' +obj.title+ '</b>';
-					h4.id = obj.itemId;
-					
-					var p = document.createElement("p");
-					p.innerHTML = "Lease Term: "+obj.leaseTerm;
-					p.id = obj.itemId;
-					
-					if(obj.location){
-						var address = obj.location;
-						var locationArr = address.split(',');
-						var cityName = locationArr[0];
-						var cityLocation = locationArr[1];
-						var pinCode = locationArr[1].match(/\d+/)[0];
-						var properLocation = cityName+" - "+ pinCode;
-						
-						var userLocation = document.createElement("p");
-						userLocation.innerHTML = " "+properLocation;
-						userLocation.id = obj.itemId;
-					}
-					
-					var full_Name = document.createElement("p");
-					full_Name.innerHTML = obj.fullName;
-					full_Name.id = obj.itemId;
-					
-					caption1.appendChild(h4);
-					caption1.appendChild(p);
-					if(obj.location){
-						caption1.appendChild(userLocation);
-					}
-					caption1.appendChild(full_Name);
-					span1.appendChild(img1);
-					span1.appendChild(caption1);
-					col1.appendChild(span1);
-					row1.appendChild(col1);
-					
-					counter++;
-				}
-			}
-			
-			if(counter >= noOfImagesInCarousel){
-				item1.appendChild(row1);
-				carouselinner.appendChild(item1);
-				
-				startingCarousel = 1;
-				
-				if(navigatingSide == "next")
-					$("#carousel-example-generic").carousel('next');				//load next slide
-					
-			}
-			
-			if(counter==noOfImagesInCarousel){
-			$('#myPleaseWait').modal('hide');
-			}
-			
-			if(reasonForSearchItem == "searchItem"){
-				getSearchedItem();
-			}
-			else{
-				getImg();
-			}
-		}
-		
-		function disableLeftButton(){
-			$("#leftcarouselbutton").hide();			
-		}
-		function disableRightButton(){
-			$("#rightcarouselbutton").hide();
-			$('#myPleaseWait').modal('hide');
-		}
-		
-		function storeYourStuff(){
-			storeCurrentFunction('storeYourStuff');
-			setPrevPage("index.html");
-			
-			window.location.replace("mystore.html");
-		}
-	
-	
-		function searchItem(){				//when user types something in the search box and presses search button
-			
-			if($("#wish_title").val() == '' || $("#wish_title").val() == ' '){
-				var heading = "Search Failed";
-				var msg = "Nothing entered";
-				confirmationIndex(heading, msg);
-			}else{
-				$("#clearSearchButton").show();
-				$("#categorybrowsing").hide();
-				
-				reasonForWishItem ='searchFromHome';
-				wishItemSetValues($("#wish_title").val(),'','',userloggedin,'','','');
-				wishItemDbCreate();
-				
-				itemId = 0;
-				reasonForSearchItem = "searchItem";
-				setBrowsingCategory("All");
-				
-				startingCarousel = 0;
-				counter = 0;
-				endOfCarousel = 0;
-				navigatingSide = 'next';
-				$("#leftcarouselbutton").show();
-				$("#rightcarouselbutton").show();
-				
-				getScreenType();
-				loadCarousel();
-			}			
-		}
-		
-		function getSearchedItem(){
-			var title = $("#wish_title").val();
-			
-			getNoOfImagesInCarousel();					//to get no of images to be shown in carousel based on different screen sizes
-			
-			reasonForSearchItem = "searchItem";
-			
-			if(counter < noOfImagesInCarousel){				
-				$("#leftcarouselbutton").show();
-				searchItemSetValues(itemId, title, '', '', 0, '');
-				searchItemDbCreate();	
-			}	
-		}
-	
-		function clearSearchBox(){		//called when close button in Modal is clicked			
-			//clears textbox when data is submitted
-			$("#wish_title").val("");
-	
-			reasonForSearchItem = null;
-			$("#clearSearchButton").hide();
-			$("#categorybrowsing").show();
-			
-			setBrowsingCategory("All");
-			startingCarousel = 0;
-			counter = 0;
-			endOfCarousel = 0;
-			navigatingSide = 'next';
-			getScreenType();
-			
-			loadCarousel();
-			
-			//location.reload();	
-		}
-		
-		function getCarouselWidth(){
-			carouselwidth = $('#carouselObject').width();
-			return carouselwidth;
-		}
-		function getCarouselHeight(){
-			carouselheight = $('#carouselObject').height();
-			return carouselheight;
-		}
-		
-		$(document).on("click",".items",function(event){		//when an item in carousel is clicked, then show details in mystore.html
-			setPrevPage("index.html");
-			
-			var k = event.target.id;
-			storeItemToShow(k);
-			k--;
-			
-			reasonForGetItem = 'viewItem';
-			
-			getNextItem(k);
-							
-		});
-		
-		function viewClickedItem(obj){
-			setPrevPage("index.html");
-
-			if((obj.userId == userloggedin) && (userloggedin != 'anonymous'))
-				storeCurrentFunction("viewItemOwnerNoLease");
-			else 
-				storeCurrentFunction("viewItemUser");
-			
-			window.location.replace("ItemDetails?uid="+obj.uid);
-		}
-		
-		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
-			var header = document.getElementById("myModalLabel");
-			header.innerHTML = heading;
-				
-			var div = document.getElementById("modalMsg");
-			div.innerHTML = msg;
-			
-			$("#modalTriggerButton").click();
-		}
+        
+        function load_Gapi(){						//for google
+            gapi.load('auth2', function() {
+                gapi.auth2.init();
+            });
+        }
 		
 		function increaseSizeOfFooter(){
 			if(footerFlag == 'collapsed'){
@@ -791,8 +178,8 @@
 	</script>
     
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/index.js"></script>
-	<script type="text/javascript" src="js/script_admin_v2.js"></script>
+    <script src="js/index1.js"></script>
+    <script src="js/tawk.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </body>
 </html>
