@@ -1,91 +1,27 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="myProfileApp">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title>My Profile</title>
-    
-<!-- Angularjs api -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-<script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
-<script src="js/header.js"></script>
-<!-- Angularjs api ends -->
-    
-<link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/jquery-1.11.3.min.js"></script>
-
-<!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/mystore.css" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
-    
-<!--Loading Animation code CSS & JS Links  -->
-<link href="css/animation.css" type="text/css" rel="stylesheet">
-<script src="js/jquery.backstretch.js"></script>
-<script src="js/animation.js"></script>
-<!--Loading Animation code CSS & JS Links ends here  -->
-
-</head>
-
-<body onload="start()">
-	<div id="main">
-
-		<!--header starts---------------------------------------->
-        <div>
-		  <div ng-include="'header.html'"></div>
-        </div>
-		<!--header ends----------------------------------------->
-
-		<div class="container-fluid" id="midcontainer" ng-controller="myProfileCtrl">
-			<div id="heading">
-				<strong>My Profile</strong>
-			</div>
-			<br />
-
-			<div class="form-group">
-				<label for="userId">User Id</label>
-                <input type="text" class="form-control" id="userId" ng-model="userId" placeholder="Email" disabled>
-			</div>
-			<div class="form-group">
-				<label for="fullname">Full Name</label>
-                <input type="text" class="form-control" id="fullname" ng-change="isChanged()" ng-model="fullname" placeholder="Full name">
-			</div>
-			<div class="form-group">
-				<label for="mobile">Mobile</label>
-                <input type="text" class="form-control" id="mobile" ng-change="isChanged()" ng-model="mobile" placeholder="Mobile">
-			</div>
-			<div class="form-group">
-				<label for="location">Location</label>
-                <input type="text" class="form-control" id="location" ng-change="isChanged()" ng-model="location" placeholder="Location">
-			</div>
-			<div class="form-group">
-				<label for="userId">Credit</label>
-                <input type="text" class="form-control" id="credit" ng-model="credit" placeholder="Credits" disabled>
-			</div>
-			<button class="btn btn-primary btn-lg" ng-click="updateProfile()">Update</button>
-
-			<!--The tawk.to widget code will get populated here from file chatbox.html.-->
-            <div id="tawk_widget"></div>
-
-			<!--Footer starts here-->
-			<div ng-include="'footer.html'"></div>
-            <!--Footer ends here-->
-		</div>
+<div class="container-fluid" id="midcontainer" ng-controller="myProfileCtrl">
+    <div id="heading">
+        <strong>My Profile</strong>
 	</div>
-
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/index.js"></script>
-    <script src="js/myprofile.js"></script>
-	<script src="js/script_admin_v2.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-
-</body>
-</html>
+	<br />
+	<div class="form-group">
+        <label for="userId">User Id</label>
+        <input type="text" class="form-control" id="userId" ng-model="userId" placeholder="Email" disabled>
+    </div>
+	<div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" class="form-control" id="fullname" ng-change="isChanged()" ng-model="fullname" placeholder="Full name">
+	</div>
+	<div class="form-group">
+        <label for="mobile">Mobile</label>
+        <input type="text" class="form-control" id="mobile" ng-change="isChanged()" ng-model="mobile" placeholder="Mobile">
+	</div>
+	<div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" ng-change="isChanged()" ng-model="location" placeholder="Location">
+    </div>
+	<div class="form-group">
+		<label for="userId">Credit</label>
+        <input type="text" class="form-control" id="credit" ng-model="credit" placeholder="Credits" disabled>
+	</div>
+	<button class="btn btn-primary btn-lg" ng-click="updateProfile()">Update</button>
+</div>

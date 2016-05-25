@@ -1,6 +1,9 @@
-var myProfileApp = angular.module('myProfileApp', ['headerApp']);
+var myProfile = angular.module('myApp');
 
-myProfileApp.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory', 'modalService', function($scope, userFactory, profileFactory, modalService){
+myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory', 'modalService', function($scope, userFactory, profileFactory, modalService){
+    
+    if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
+        window.location.replace("myapp.html");
     
     var unsaved = false; 
     
@@ -64,13 +67,5 @@ myProfileApp.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFacto
 			return "You have unsaved changes on this page.";
         }
     }
-    
-    var load_Gapi = function() { //for google
-        gapi.load('auth2', function() {
-            gapi.auth2.init();
-        });
-    }
-    
-    load_Gapi();
     
 }]);
