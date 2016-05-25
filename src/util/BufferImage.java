@@ -9,8 +9,9 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
+import javax.xml.bind.DatatypeConverter;
 
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
 
 public class BufferImage {
 	
@@ -28,7 +29,6 @@ public class BufferImage {
 		BufferedImage img = null;
 	     img = ImageIO.read(imageFile); // eventually C:\\ImageTest\\pic2.jpg
 	     image_string = encodeToString(img, "png");
-	    //System.out.println(image_string);
 	    
 	     if(imageFile.delete()){
 				System.out.println(imageFile.getName() + " is deleted!");
@@ -50,8 +50,7 @@ public class BufferImage {
 		try {
 		ImageIO.write(image, type, bos);
 		byte[] imageBytes = bos.toByteArray();
-		BASE64Encoder encoder = new BASE64Encoder();
-		base64String = encoder.encode(imageBytes);
+		base64String = DatatypeConverter.printBase64Binary(imageBytes);
 		bos.close();
 		} catch (IOException e) {
 		e.printStackTrace();
