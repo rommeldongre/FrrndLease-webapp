@@ -11,7 +11,6 @@ import org.apache.commons.io.FileUtils;
 import javax.imageio.ImageIO;
 import javax.xml.bind.DatatypeConverter;
 
-//import sun.misc.BASE64Encoder;
 
 public class BufferImage {
 	
