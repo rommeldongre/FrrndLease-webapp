@@ -398,60 +398,7 @@ function requestItemSend(req){
 
 
 //requestItem ends here---------------------------------------------------
-//getRequestItem begins here---------------------------------------------------
 
-
-function getRequestItem(i){
-	itemToken = i;
-	var req = {
-		operation: "getNextR",
-		token: itemToken
-	}
-	getRequestItemSend(req);
-}
-
-function getRequestItemSend(req){
-	$.ajax({
-		url: '/flsv2/GetRequests',
-		type:'GET',
-		data: {req : JSON.stringify(req)},
-		contentType:"application/json",
-		dataType: "JSON",
-		
-		success: function(response) {
-			
-			if(response.Code == "FLS_SUCCESS") {
-				obj = JSON.parse(response.Message);
-				itemNextRequestId = response.Id;
-				
-				if(reasonForGetRequestItem == 'showRequestTable')	
-					getItemForRequest(obj);		//function is in the myincomingrequests.html	
-				else if(reasonForGetRequestItem == 'leaseItem')	
-					setRequestingUserInLease(obj);		//function is in the script_admin_v2.js
-				else if(reasonForGetRequestItem == 'rejectRequest'){
-					rejectRequest(obj);			//function is in the myincomingrequests.html	
-				}else if(reasonForGetRequestItem == 'leaseItemFromRequest'){
-					leaseItemFromRequest(obj);	//function is in the myincomingrequests.html
-				}
-				
-			}
-			else{
-				//confirmationIndex(response.Message);
-				if(itemNextRequestId == 0){
-					showEmptyText();		//function is in myincomingrequests.html
-				}
-			}
-		},
-		
-		error: function() {
-			var msg = "Not Working";
-			confirmationIndex(msg);
-		}
-	});
-	
-}
-
-//getRequestItem ends here---------------------------------------------------
 //rejectRequest begins here------------------------------------------------
 
 function rejectRequestSetValues(i, req){
