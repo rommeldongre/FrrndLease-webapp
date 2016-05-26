@@ -1,5 +1,6 @@
 package tableOps;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -80,11 +81,14 @@ public class Category extends Connect {
 		child = cm.getChild();
 
 		String sql = "insert into category (cat_name,cat_desc,cat_parent,cat_child) values (?,?,?,?)";
-		getConnection();
+		
+		PreparedStatement stmt = null;
+		Connection hcp = getConnectionFromPool();
+		
 
 		try {
 			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, name);
@@ -102,6 +106,14 @@ public class Category extends Connect {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -110,22 +122,25 @@ public class Category extends Connect {
 		check = null;
 		LOGGER.info("Inside delete method....");
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
+		
 		String sql = "DELETE FROM category WHERE cat_name=?";
 		String sql2 = "SELECT * FROM category WHERE cat_name=?";
 
 		try {
 			LOGGER.info("Creating statement...");
 
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, name);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("cat_name");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, name);
@@ -142,6 +157,16 @@ public class Category extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -154,21 +179,25 @@ public class Category extends Connect {
 		check = null;
 
 		LOGGER.info("inside edit method");
-		getConnection();
+		
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
+		
 		String sql = "UPDATE category SET cat_desc=?, cat_parent=?, cat_child=? WHERE cat_name=?";
 		String sql2 = "SELECT * FROM category WHERE cat_name=?";
 
 		try {
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, name);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("cat_name");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = connection.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, description);
@@ -188,6 +217,16 @@ public class Category extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -196,15 +235,17 @@ public class Category extends Connect {
 		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM category WHERE cat_name > ? ORDER BY cat_name LIMIT 1";
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("catName", rs.getString("cat_name"));
@@ -236,6 +277,15 @@ public class Category extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -244,15 +294,17 @@ public class Category extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM category WHERE cat_name < ? ORDER BY cat_name DESC LIMIT 1";
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("catName", rs.getString("cat_name"));
@@ -285,6 +337,15 @@ public class Category extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
