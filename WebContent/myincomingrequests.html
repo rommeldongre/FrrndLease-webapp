@@ -223,8 +223,8 @@
 			
 			reqUserId = obj.requestorId;
 			var request_id = obj.requestId;
-			
-			showRequestItem(obj.requestItemId,request_id,obj.requestDate,obj.title,obj.requestUserName);
+			var string_id = obj.requestItemId+","+reqUserId;
+			showRequestItem(obj.requestItemId,string_id,obj.requestDate,obj.title,obj.requestUserName);
 			itemNextRequestId = request_id;
 			
 			getRequestPlusItem(itemNextRequestId,userloggedin);
@@ -340,9 +340,11 @@
 		//reject request---------------------------
 		$(document).on("click",".refuse",function(event){		//refust request
 			setPrevPage("myincomingrequests.html");
-			itemNextId = event.target.id;
-			itemNextId--;
-			itemNextId = itemNextId.toString();
+			var str = event.target.id;
+			var total_string = new Array(2);
+			total_string = str.split(",");
+			itemNextId = total_string[0];
+			reqUserId = total_string[1];
 			reasonForGetRequestItem = 'rejectRequest';
 			
 			currentWork = 'rejectRequest';
@@ -353,12 +355,6 @@
 			$("#alertModalTriggerButton").click();
 		});
 		
-		
-		
-		function rejectRequest(obj){
-			setPrevPage("myincomingrequests.html");
-			rejectRequestSetValues(obj.itemId, obj.userId);
-		}
 		
 		//----------------------------------------
 	
@@ -390,7 +386,7 @@
 			}else if(currentWork == 'leaseItem'){
 				leaseItemSetValues(reqUserId);
 			}else if(currentWork == 'rejectRequest'){
-				getRequestItem(itemNextId);
+				rejectRequestSetValues(itemNextId,reqUserId);
 			}
 			
 		}
