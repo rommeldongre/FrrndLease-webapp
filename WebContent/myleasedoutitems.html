@@ -1,4 +1,4 @@
-<div class="container-fluid" id="midcontainer">
+<div class="container-fluid" id="midcontainer" ng-cloak>
     <div id="heading"><strong>My Leased Out Items</strong></div>
     <table id="leasetable" class="table table-striped">
         <thead>
@@ -25,7 +25,7 @@
             </tr>
         </tbody>
     </table>
-    <h4 ng-if="hasItems">You have no items leased out to friends. 
+    <h4 ng-if="leases.length == 0">You have no items leased out to friends. 
         <a href="#/myincomingrequests">Check your Incoming Requests to lease them out.</a>
     </h4>
 </div>

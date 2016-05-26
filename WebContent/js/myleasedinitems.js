@@ -1,7 +1,7 @@
 var myLeasedInItemsApp = angular.module('myApp');
 
 myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', function($scope, userFactory){
-    
+
     var itemNextId = 0;
     
     $scope.leases = [];
@@ -56,11 +56,11 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', f
                 leaseTerm: ""
             };
         
-        searchItemSend(objUserId, leaseExpiry, req, leaseReqOwnerName);
+        searchItemSend(leaseReqUser, leaseExpiry, req, leaseReqOwnerName);
 
     }
 
-    var searchItemSend = function(objUserId, leaseExpiry, req, leaseReqOwnerName){
+    var searchItemSend = function(leaseReqUser, leaseExpiry, req, leaseReqOwnerName){
         $.ajax({
             url: '/flsv2/SearchItem',
             type: 'post',
@@ -71,7 +71,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', f
                 if(response.Code == "FLS_SUCCESS") {
                     var itemObj = JSON.parse(response.Message);
                     var lease = {expiry:leaseExpiry, ownerName:leaseReqOwnerName, itemTitle:itemObj.title, itemId:itemObj.itemId, itemNextId:itemNextId};
-                    if(objUserId == userFactory.user)
+                    if(leaseReqUser == userFactory.user)
                         $scope.$apply(function(){
                             $scope.leases.push(lease);
                         });
@@ -84,12 +84,5 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', f
     }
     
     getLeaseItem(itemNextId);
-    
-    $scope.$watch('leases', function(){
-        if($scope.leases.length == 0)
-            $scope.hasItems = true;
-        else
-            $scope.hasItems = false;
-    });
     
 }]);
