@@ -1,5 +1,6 @@
 package tableOps;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -70,12 +71,13 @@ public class Store extends Connect {
 	private void Add() {
 		itemId = sm.getItemId();
 
-		String sql = "insert into store (store_item_id) values (?)"; //
-		getConnection();
-
+		String sql = "insert into store (store_item_id) values (?)"; 
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setInt(1, itemId);
@@ -90,6 +92,14 @@ public class Store extends Connect {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -98,22 +108,24 @@ public class Store extends Connect {
 		check = 0;
 		LOGGER.info("Inside delete method....");
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		String sql = "DELETE FROM store WHERE store_item_id=?"; //
 		String sql2 = "SELECT * FROM store WHERE store_item_id=?"; //
 
 		try {
 			LOGGER.info("Creating statement...");
 
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, itemId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("store_item_id");
 			}
 
 			if (check != 0) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setInt(1, itemId);
@@ -130,8 +142,17 @@ public class Store extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	private void getNext() {
@@ -139,15 +160,17 @@ public class Store extends Connect {
 		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM store WHERE store_item_id > ? ORDER BY store_item_id LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setInt(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getInt("store_item_id"));
@@ -175,6 +198,15 @@ public class Store extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -183,15 +215,17 @@ public class Store extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM store WHERE store_item_id < ? ORDER BY store_item_id DESC LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setInt(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getInt("store_item_id"));
@@ -219,6 +253,15 @@ public class Store extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -226,21 +269,23 @@ public class Store extends Connect {
 		check = 0;
 		LOGGER.info("Inside deleteP method of store....");
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		String sql = "DELETE FROM store WHERE store_item_id=?"; //
 		String sql2 = "SELECT * FROM store WHERE store_item_id=?"; //
 
 		try {
 			LOGGER.info("Creating statement...");
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, id);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("store_item_id");
 			}
 
 			if (check != 0) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setInt(1, id);
@@ -252,6 +297,16 @@ public class Store extends Connect {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

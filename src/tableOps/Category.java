@@ -294,7 +294,7 @@ public class Category extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM category WHERE cat_name < ? ORDER BY cat_name DESC LIMIT 1";
 
-		PreparedStatement stmt = null, stmt2 = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		Connection hcp = getConnectionFromPool();
 		try {
