@@ -26,6 +26,11 @@ myApp.config(function($routeProvider){
         controller : 'myFriendsListCtrl'
     })
     
+    .when('/myleasedinitems', {
+        templateUrl : 'myleasedinitems.html',
+        controller : 'myLeasedInItemsCtrl'
+    })
+    
     .otherwise({redirectTo : '/'});
     
 });
