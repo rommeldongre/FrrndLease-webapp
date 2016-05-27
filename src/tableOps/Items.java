@@ -1,9 +1,11 @@
 package tableOps;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import com.mysql.jdbc.MysqlErrorNumbers;
 
 import org.json.JSONException;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 
 import connect.Connect;
 import adminOps.Response;
+import tableOps.Store;
 import pojos.ItemsModel;
 import util.FlsSendMail;
 import util.AwsSESEmail;
@@ -138,12 +141,16 @@ public class Items extends Connect {
 		image = im.getImage();
 
 		LOGGER.info("Inside add method...");
-		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
-
-		getConnection();
+		
+		PreparedStatement stmt = null,s = null, s1 =null; 
+		Statement stmt1 = null;
+		ResultSet keys = null, rs = null;
+		Connection hcp = getConnectionFromPool();
+		
 		try {
 			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
+			stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, title);
@@ -157,7 +164,7 @@ public class Items extends Connect {
 			stmt.executeUpdate();
 			
 			// getting the last item inserted id and appending it with the title to generate a uid
-			ResultSet keys = stmt.getGeneratedKeys();
+			keys = stmt.getGeneratedKeys();
 			keys.next();
 			int itemId = keys.getInt(1);
 			
@@ -166,7 +173,7 @@ public class Items extends Connect {
 			
 			// updating the item_uid value of the last item inserted
 			String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
-			PreparedStatement s = connection.prepareStatement(sqlUpdateUID);
+			s = hcp.prepareStatement(sqlUpdateUID);
 			s.setString(1, uid);
 			s.setInt(2, itemId);
 			s.executeUpdate();
@@ -177,7 +184,7 @@ public class Items extends Connect {
 			
 			// to add credit in user_credit
 			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-			PreparedStatement s1 = connection.prepareStatement(sqlAddCredit);
+			s1 = hcp.prepareStatement(sqlAddCredit);
 			s1.setString(1, userId);
 			s1.executeUpdate();
 
@@ -196,8 +203,8 @@ public class Items extends Connect {
 
 			// returning the new id
 			sql = "SELECT MAX(item_id) FROM items";
-			Statement stmt1 = connection.createStatement();
-			ResultSet rs = stmt1.executeQuery(sql);
+			stmt1 = hcp.createStatement();
+			rs = stmt1.executeQuery(sql);
 			while (rs.next()) {
 				id = rs.getInt(1);
 			}
@@ -215,6 +222,22 @@ public class Items extends Connect {
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
+		}finally{
+				try {
+					keys.close();
+					rs.close();
+					
+					stmt.close();
+					stmt1.close();
+					s.close();
+					s1.close();
+					
+					hcp.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 		}
 	}
 
@@ -224,21 +247,23 @@ public class Items extends Connect {
 		LOGGER.info("Inside delete method....");
 		String sql = "DELETE FROM items WHERE item_id = ?";
 
-		getConnection();
+		PreparedStatement stmt2 = null, stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating statement...");
 
 			// checking whether the input id is present in table
 			String sql2 = "SELECT * FROM items WHERE item_id=?";
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, id);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 			}
 
 			if (check != 0) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query..." + check);
 				stmt.setInt(1, id);
@@ -257,6 +282,18 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try {
+				rs.close();
+				
+				stmt.close();
+				stmt2.close();
+				
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -275,22 +312,24 @@ public class Items extends Connect {
 		LOGGER.info("Inside edit method...");
 		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=?, item_image=? WHERE item_id=? AND item_user_id=? AND item_status=?";
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null, s = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating statement...");
 
 			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, id);
 			stmt2.setString(2, userId);
 			stmt2.setString(3, status);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 			}
 
 			if (check != 0) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query...");
 				stmt.setString(1, title);
@@ -309,7 +348,7 @@ public class Items extends Connect {
 				
 				// updating the item_uid value of the last item inserted
 				String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
-				PreparedStatement s = connection.prepareStatement(sqlUpdateUID);
+				s = hcp.prepareStatement(sqlUpdateUID);
 				s.setString(1, uid);
 				s.setInt(2, check);
 				s.executeUpdate();
@@ -335,6 +374,19 @@ public class Items extends Connect {
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
+		}finally{
+			try {
+				rs.close();
+				
+				stmt.close();
+				stmt2.close();
+				s.close();
+				
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -346,20 +398,22 @@ public class Items extends Connect {
 		LOGGER.info("Inside edit stat method...");
 		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
 
-		getConnection();
+		PreparedStatement stmt2 = null ,stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating statement...");
 
 			String sql2 = "SELECT * FROM items WHERE item_id=?";
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, id);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 			}
 
 			if (check != 0) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit stat query...");
 				stmt.setString(1, status);
@@ -379,6 +433,18 @@ public class Items extends Connect {
 			LOGGER.warning("Couldnt create a statement");
 			e.printStackTrace();
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try {
+				rs.close();
+				
+				stmt.close();
+				stmt2.close();
+				
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -386,15 +452,18 @@ public class Items extends Connect {
 		check = 0;
 		LOGGER.info("Inside GetNext Method..");
 		String sql = "SELECT * FROM items WHERE item_id > ? ORDER BY item_id LIMIT 1";
-		getConnection();
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setInt(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
@@ -431,6 +500,15 @@ public class Items extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -438,16 +516,18 @@ public class Items extends Connect {
 		check = 0;
 		LOGGER.info("Inside getPrevious method");
 		String sql = "SELECT * FROM items WHERE item_id < ? ORDER BY item_id DESC LIMIT 1";
-		getConnection();
-
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getprevious query...");
 			stmt.setInt(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			LOGGER.info("itemId\tName\tDescription\tQuantity");
 			while (rs.next()) {
@@ -485,6 +565,15 @@ public class Items extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -494,17 +583,19 @@ public class Items extends Connect {
 
 		LOGGER.info("Inside Browse N method");
 		String sql = "SELECT  tb1.*, tb2.user_full_name, tb2.user_location FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= ? ORDER BY item_id LIMIT 1";
-		getConnection();
-
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing Browse P query...");
 			stmt.setInt(1, token);
 			stmt.setString(2, status);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			LOGGER.info("itemId\tName\tDescription\tQuantity");
 			while (rs.next()) {
@@ -544,6 +635,15 @@ public class Items extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -553,17 +653,20 @@ public class Items extends Connect {
 
 		LOGGER.info("Inside Browse P method");
 		String sql = "SELECT * FROM items WHERE item_id < ? AND item_status= ? ORDER BY item_id DESC LIMIT 1";
-		getConnection();
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing BrowseP query...");
 			stmt.setInt(1, token);
 			stmt.setString(2, status);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			LOGGER.info("itemId\tName\tDescription\tQuantity");
 			while (rs.next()) {
@@ -602,6 +705,15 @@ public class Items extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -609,20 +721,31 @@ public class Items extends Connect {
 		String term = null;
 		LOGGER.info("Inside getItemLeaseTerm");
 		String sql = "SELECT item_lease_term FROM items WHERE item_id=?";
-		getConnection();
-
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("executing getItemLesae Term query");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 			stmt.setInt(1, itemId);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				term = rs.getString("item_lease_term");
 				LOGGER.warning(term);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return term;
 	}
@@ -633,16 +756,18 @@ public class Items extends Connect {
 		String check2 = null;
 		LOGGER.info("Inside delete posting method....");
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating statement...");
 
 			// checking whether the input id is present in table
 			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, id);
 			stmt2.setString(2, userId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 				check2 = rs.getString("item_status");
@@ -658,7 +783,7 @@ public class Items extends Connect {
 					st.DeleteP(id);// deletes entry from store table
 
 					String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
-					PreparedStatement stmt = connection.prepareStatement(sql);
+					stmt = hcp.prepareStatement(sql);
 
 					// deletes entry from items table
 
@@ -697,6 +822,16 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -706,17 +841,19 @@ public class Items extends Connect {
 		String check2 = null;
 		LOGGER.info("Inside delete wishlist method....");
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating statement...");
 
 			// checking whether the input id is present in table
 			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, id);
 			stmt2.setString(2, userId);
 			stmt2.setString(3, "Wished");
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 				check2 = rs.getString("item_status");
@@ -728,7 +865,7 @@ public class Items extends Connect {
 				wish.DeleteW(id);
 
 				String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				// deletes entry from items table
 
@@ -750,6 +887,16 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -765,11 +912,13 @@ public class Items extends Connect {
 
 		LOGGER.info("Inside Search Item method");
 		String sql = "SELECT * FROM items WHERE item_id > ? AND item_name LIKE ? AND item_desc LIKE ? AND item_category LIKE ? AND item_lease_term LIKE ? ORDER BY item_id LIMIT 1";
-		getConnection();
-
+		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing BrowseP query...");
 			stmt.setInt(1, token);
@@ -779,7 +928,7 @@ public class Items extends Connect {
 			// stmt.setInt(5, leaseValue);
 			stmt.setString(5, leaseTerm);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			LOGGER.info("itemId\tName\tDescription\tQuantity");
 			while (rs.next()) {
@@ -820,6 +969,15 @@ public class Items extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	/*
