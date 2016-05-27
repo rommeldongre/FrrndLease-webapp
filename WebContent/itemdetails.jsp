@@ -258,7 +258,6 @@
 
 
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/mystore.js"></script>
     <script src="js/itemdetails.js"></script>
     <script src="js/tawk.js"></script>
 	<script src="js/bootstrap.min.js"></script>

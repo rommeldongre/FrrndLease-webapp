@@ -21,7 +21,7 @@
                             <div class="row">
                                 <div class="{{colClass}}" ng-repeat="item in items">
                                     <span class="items" ng-click="itemClicked(item.uid)">
-                                        <img ng-src="{{item.image}}" id="{{item.itemId}}" style="width: {{carouselWidth/itemsLimit}}px; height: {{carouselHeight}}px;">
+                                        <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}" style="width: {{carouselWidth/itemsLimit}}px; height: {{carouselHeight}}px;">
                                         <div class="carousel-caption" id="{{item.itemId}}" style="opacity: 0.6; background-color: black;">
                                             <h4 id="{{item.itemId}}"><b>{{item.title}}</b></h4>
                                             <p id="{{item.itemId}}">{{item.fullName}}</p>
