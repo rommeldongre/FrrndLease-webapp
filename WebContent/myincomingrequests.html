@@ -1,89 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    
-	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>My Incoming Requests</title>
 
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-1.11.3.min.js"></script>
-	
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-	<link href="css/mystore.css" rel="stylesheet">
-	<link href="css/myindex.css" rel="stylesheet">
-	
-	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
-	
-	<!--Loading Animation code CSS & JS Links  -->
-	<link href="css/animation.css" type="text/css" rel="stylesheet">
-	<script src="js/jquery.backstretch.js"></script>
-	<script src="js/animation.js"></script>
-	<!--Loading Animation code CSS & JS Links ends here  -->    
-	
-	<!-- DropDown list code-->
-	<script src="js/dropdownlist.js"></script>
-	<!-- DropDown list code ends-->
-	
-	<!--Check whether user is logged in or not  -->
-	<script src="js/logincheck.js"></script>
-	<!--Check whether user is logged in or not ends here  -->
-	
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  
-  <body onload="start()">
-  <div id="loader">
-</div>
-	<div id="main">
 		
-		<!--header starts---------------------------------------->
-		<nav class="navbar navbar-default navbar-fixed-top" id="header">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
-				</div>
-				<div class="collapse navbar-collapse" id="myNavbar1">
-	
-					<ul class="nav navbar-nav navbar-right" id="navbar1right">
-						<li class="dropdown" id="subheader">
-							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-							<span id="salutation"></span> <span class="caret"></span></a>
-							
-							<ul class="dropdown-menu" id="dropA">
-							<!-- Dynamic Binding for the Drop Down List. Refer file dropdownlist.js-->
-							</ul>
-						</li>
-					</ul>
-					
-					<form class="navbar-form navbar-right" role="search" id="navBarSearchForm" type=get action="myindex.html">
-					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
-					</form>
-					
-					<div class="navbar-form navbar-right">
-						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
-					</div>
-					
-				</div>
-			</div>
-		</nav>
-		<!--header ends----------------------------------------->
+		
 		
 		
 		<div class="container-fluid" id="midcontainer">
@@ -92,88 +9,40 @@
 			<div class="row">
 				<div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 				</div>
-				<!--<div id="topcolright" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-					<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
-				</div>-->
 			</div>
 			<br />
 			
 			<table id="requesttable" class="table table-striped">
 				<thead>
-					<tr>
-						<th class="tablecell">Date</th>
-						<th class="tablecell">Item</th>
-						<th class="tablecell">Friend</th>
-						<th class="tablecell">Action</th>
-					</tr>
-				</thead>
+                    <tr>
+                        <th class="tablecell" style="text-align:left;">Date</th>
+                        <th class="tablecell" style="text-align:center;">Item</th>
+                        <th class="tablecell" style="text-align:center;">Friend</th>
+                        <th class="tablecell" style="text-align:center;">Action</th>
+                    </tr>
+                </thead>
 				<tbody>
-					
+                    <tr ng-repeat="request in requests">
+                        <td style="width:15%;text-align:left;" class="tablecell">{{request.expiry}}</td>
+                        <td style="width:40%;text-align:center;" id="{{request.itemNextId}}" class="tablecellItem">{{request.title}}</td>
+                        <td style="width:25%;text-align:center;" id="{{request.itemNextId}}" class="tablecellFriend">{{request.reqUserName}}</td>
+                        <td style="width:20%;text-align:center;" class="tablecellAction">
+                            <span class="grant">
+                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.itemNextId}}">Accept</span>
+                            </span>
+                            <span class="refuse">
+                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.stringId}}">Delete</span>
+                            </span>
+                            <span class="think">
+                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.itemNextId}}">Renew</span>
+                            </span>
+                        </td>
+                    </tr>
 				</tbody>
 			</table>
-			<h4 id="emptyText">
+			<h4 ng-if="requests.length == 0">You have no Incoming Requests. Post more items to the Store</h4>
 			
-			</h4>
-			
-			
-			<!-- Button trigger Alert Modal -->
-			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">
-			  Launch demo modal
-			</button>
-
-			<!-- Alert Modal -->
-			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			  <div class="modal-dialog" role="document">
-				<div class="modal-content">
-				  <div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<!--<h4 class="modal-title" id="myModalLabel"></h4>-->
-				  </div>
-				  <div class="modal-body" id="alertModalMsg">
-					
-				  </div>
-				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="continueWork()">Yes</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-				  </div>
-				</div>
-			  </div>
-			</div>
-			
-			<!-- Button trigger Confirmation Modal -->
-			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
-			  Launch demo modal
-			</button>
-
-			<!-- Confirmation Modal -->
-			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			  <div class="modal-dialog" role="document">
-				<div class="modal-content">
-				  <div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel"></h4>
-				  </div>
-				  <div class="modal-body" id="modalMsg">
-					
-				  </div>
-				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
-				  </div>
-				</div>
-			  </div>
-			</div>
-			
-			<div id="tawk_widget">
-				<!--The tawk.to widget code will get populated here-->
-			</div>
-			
-			<!--Footer starts------------------------------------>
-			<div id="footer_nav">
-				<!--The Footer nav will get populated here-->
-			</div>
-			<!--Footer ends--------------------------------------->
 		</div>
-	</div>
 	
 	
 	<script type="text/javascript">
@@ -181,129 +50,8 @@
 		
 		function start(){
 			
-			$("#modalTriggerButton").hide();
-			$("#alertModalTriggerButton").hide();
-			
-			load_Gapi();
-			
-			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
-			userloggedin = localStorage.getItem("userloggedin");
-			
-			logInCheck();
-			
 			itemNextId = "0";
 			itemNextRequestId = "0";
-			request_read();
-			
-			look_good();
-		}
-		
-		function load_Gapi(){						//for google
-			gapi.load('auth2', function() {
-				gapi.auth2.init();
-			});
-		}
-		
-		function signOutFromGoogle() {					//signout from google
-			var auth2 = gapi.auth2.getAuthInstance();
-			auth2.signOut().then(function () {
-				console.log('User signed out.');
-			});
-		}
-		
-		function request_read(){
-			
-			reasonForGetRequestItem = 'showRequestTable';
-			reasonForGetItem = 'showRequestTable';
-			
-			getRequestPlusItem(itemNextRequestId,userloggedin);
-		}
-		
-		function getItemForRequest(obj){
-			
-			reqUserId = obj.requestorId;
-			var request_id = obj.requestId;
-			var string_id = obj.requestItemId+","+reqUserId;
-			showRequestItem(obj.requestItemId,string_id,obj.requestDate,obj.title,obj.requestUserName);
-			itemNextRequestId = request_id;
-			
-			getRequestPlusItem(itemNextRequestId,userloggedin);
-		}
-		
-		function showRequestItem(i,j,k,l,m){
-				itemNextId = i;
-				itemNextRequestId = j;
-				reqDate = k;
-				var reqTitle = l;
-				reqUserName =m;
-				
-				var table = document.getElementById("requesttable");
-				var row = table.insertRow(1);
-				var cell0 = row.insertCell(0);
-				var cell1 = row.insertCell(1);
-				var cell2 = row.insertCell(2);
-				var cell3 = row.insertCell(3);
-				
-				cell0.setAttribute("style", "width:15%;");
-				cell1.setAttribute("style", "width:40%;");
-				cell2.setAttribute("style", "width:25%;");
-				cell3.setAttribute("style", "width:20%;");
-				
-				var span1 = document.createElement("span");
-				var span2 = document.createElement("span");
-				var span3 = document.createElement("span");
-				var span4 = document.createElement("span");
-				var span5 = document.createElement("span");
-				var span6 = document.createElement("span");
-				
-				span1.className = "grant";
-				span2.className = "refuse";
-				span3.className = "think";
-				span4.className="btn btn-primary";
-				span4.innerHTML="Accept";
-				span4.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
-				span5.className="btn btn-primary";
-				span5.innerHTML="Delete";
-				span5.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
-				span6.className="btn btn-primary";
-				span6.innerHTML="Renew";
-				span6.setAttribute("style", "margin-top: 5px;margin-left: 10px;");
-				span4.id = itemNextId;
-				span5.id = itemNextRequestId;			//here request id is taken, this is not a mistake.
-				span6.id = itemNextId;
-				
-				span1.appendChild(span4);
-				span2.appendChild(span5);
-				span3.appendChild(span6);
-				
-				cell0.innerHTML = reqDate;
-				//cell1.innerHTML = obj.itemId;
-				cell1.innerHTML = reqTitle;
-				cell2.innerHTML = reqUserName;
-				
-				cell3.appendChild(span1);
-				cell3.appendChild(span2);
-				cell3.appendChild(span3);
-				
-				cell1.id = itemNextId;
-				cell2.id = itemNextId;
-				
-				cell0.className = "tablecell";
-				cell1.className = "tablecellItem";
-				cell2.className = "tablecellFriend";
-				cell3.className = "tablecellAction";		
-		}
-			
-		function showEmptyText(){
-			var h4 = document.getElementById("emptyText");
-			h4.innerHTML = "You have no Incoming Requests. Post more items to the Store";
-		}
-		
-		function storeYourStuff(){
-			storeCurrentFunction('storeYourStuff');
-			setPrevPage("myincomingrequests.html");
-			
-			window.location.replace("mystore.html");
 		}
 		
 		//grant request to lease---------------------------------
@@ -390,40 +138,4 @@
 			}
 			
 		}
-		
-		function confirmationIndex(heading, msg){			//called from script_admin_v2.js
-			var header = document.getElementById("myModalLabel");
-			header.innerHTML = heading;
-			var div = document.getElementById("modalMsg");
-			div.innerHTML = msg;
-			
-			$("#modalTriggerButton").click();
-		}
-		
-		
-		function redirectToHomePage(){
-			window.location.replace("index.html");
-		}
-
-		function redirectToPrevPage(){
-			prevPage = getPrevPage("prevPage");
-			window.location.replace(prevPage);
-		}
-		
-		function look_good(){		//just for looks
-			$('.actionbutton').css("margin-left","10px");
-			$('.tablecell').css("text-align","left");
-			$('.tablecellItem').css("text-align","center");
-			$('.tablecellFriend').css("text-align","center");
-			$('.tablecellAction').css("text-align","center");
-		}
 	</script>
-	
-	
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/index.js"></script>
-	<script src="js/script_admin_v2.js"></script>	
-    <script src="js/bootstrap.min.js"></script>
-
-  </body>
-</html>

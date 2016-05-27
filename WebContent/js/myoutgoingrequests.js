@@ -79,8 +79,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
                 if(response.errorString == "No Error"){
                     modalService.showModal({}, {bodyText: "Request Deleted successfully", showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        $scope.requests = [];
-                        initialPopulate();
+                        window.location.replace('myapp.html#/myoutgoingrequests');
                     },function(){});
                 }
             },

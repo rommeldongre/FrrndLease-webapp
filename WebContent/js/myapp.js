@@ -41,6 +41,11 @@ myApp.config(function($routeProvider){
         controller : 'myOutGoingRequestsCtrl'
     })
     
+    .when('/myincomingrequests', {
+        templateUrl : 'myincomingrequests.html',
+        controller : 'myInComingRequestsCtrl'
+    })
+    
     .otherwise({redirectTo : '/'});
     
 });
