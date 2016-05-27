@@ -34,10 +34,10 @@
                     </div>
 
                     <a class="left carousel-control" href="#carousel-example-generic" target="_self" role="button" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" id="leftcarouselbutton"></span>
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click="loadPrevSlide()" id="leftcarouselbutton"></span>
                         <span class="sr-only">Previous</span>
                     </a>
-                    <a class="right carousel-control" href="#carousel-example-generic" target="_self" role="button" data-slide="next">
+                    <a class="right carousel-control" href="#carousel-example-generic" target="_self" ng-if="showNext" role="button" data-slide="next">
                         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click="loadNextSlide()" id="rightcarouselbutton"></span><span class="sr-only">Next</span>
                     </a>
                 </div>

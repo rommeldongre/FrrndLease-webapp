@@ -9,6 +9,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var userId = null;
     // searchString is used to display items which are being searched
     var searchString = '';
+    // to display the next button or not
+    var lastSavedItemId = 0;
     
     $scope.$on('searchStringChanged', function(event, data){
         searchString = data;
@@ -66,6 +68,10 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var initPopulate = function(){
         lastItem = 0;
         
+        lastSavedItemId = 0;
+        
+        $scope.showNext = true;
+        
         populateCarousel(lastItem);
     }
     
@@ -110,9 +116,14 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                         }, 1000);
                     }
                     lastItem = response.data.lastItemId;
+                    lastSavedItemId = 0;
                 }else{
                     if(lastItem == 0)
                         $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
+                    if(lastSavedItemId == 2){
+                        $scope.showNext = false;
+                    }
+                    lastSavedItemId++;
                 }
             },
             function(error){
@@ -144,11 +155,16 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                         }, 1000);
                         
                     }
+                    lastSavedItemId = 0;
                 }else{
                     if(lastItem == 0)
                         $scope.$apply(function(){
                             $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
                         });
+                    if(lastSavedItemId == 2){
+                        $scope.showNext = false;
+                    }
+                    lastSavedItemId++;
                 }
             },
             error: function() {
@@ -159,6 +175,11 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     // called on the page load
     initPopulate();
+    
+    $scope.loadPrevSlide = function(){
+        $scope.showNext = true;
+        lastSavedItemId--;
+    }
     
     // called when next carousel button is clicked
     $scope.loadNextSlide = function(){
