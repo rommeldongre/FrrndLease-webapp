@@ -1,6 +1,5 @@
 package tableOps;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +10,7 @@ import org.json.JSONObject;
 import adminOps.Response;
 import connect.Connect;
 import pojos.UsersModel;
+
 import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
@@ -99,12 +99,11 @@ public class Users extends Connect {
 		status = um.getStatus();
 
 		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit) values (?,?,?,?,?,?,?,?)";
-		PreparedStatement stmt = null;
-		Connection hcp = getConnectionFromPool();
+		getConnection();
 
 		try {
 			LOGGER.info("Creating statement.....");
-			stmt = hcp.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, userId);
@@ -129,14 +128,6 @@ public class Users extends Connect {
 					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER, um);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}finally{
-				try {
-					stmt.close();
-					hcp.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
@@ -152,24 +143,22 @@ public class Users extends Connect {
 		check = null;
 		LOGGER.info("Inside delete method....");
 
-		PreparedStatement stmt = null,stmt2 = null ;
-		ResultSet rs = null;
-		Connection hcp = getConnectionFromPool();
+		getConnection();
 		String sql = "DELETE FROM users WHERE user_id=?";
 		String sql2 = "SELECT * FROM users WHERE user_id=?";
 
 		try {
 			LOGGER.info("Creating statement...");
 
-			stmt2 = hcp.prepareStatement(sql2);
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, userId);
-			rs = stmt2.executeQuery();
+			ResultSet rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("user_id");
 			}
 
 			if (check != null) {
-				stmt = hcp.prepareStatement(sql);
+				PreparedStatement stmt = connection.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, userId);
@@ -186,16 +175,6 @@ public class Users extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
-		}finally{
-			try {
-				rs.close();
-				stmt.close();
-				stmt2.close();
-				hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 	}
@@ -209,23 +188,21 @@ public class Users extends Connect {
 		check = null;
 
 		LOGGER.info("inside edit method");
-		PreparedStatement stmt = null,stmt2 = null ;
-		ResultSet rs = null;
-		Connection hcp = getConnectionFromPool();
+		getConnection();
 		String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_auth=?  WHERE user_id=?";
 		String sql2 = "SELECT * FROM users WHERE user_id=?";
 
 		try {
 			LOGGER.info("Creating Statement....");
-			stmt2 = hcp.prepareStatement(sql2);
+			PreparedStatement stmt2 = connection.prepareStatement(sql2);
 			stmt2.setString(1, userId);
-			rs = stmt2.executeQuery();
+			ResultSet rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("user_id");
 			}
 
 			if (check != null) {
-				stmt = hcp.prepareStatement(sql);
+				PreparedStatement stmt = connection.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
@@ -246,16 +223,6 @@ public class Users extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
-		}finally{
-			try {
-				rs.close();
-				stmt.close();
-				stmt2.close();
-				hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -264,17 +231,15 @@ public class Users extends Connect {
 		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM users WHERE user_id > ? ORDER BY user_id LIMIT 1";
 
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		Connection hcp = getConnectionFromPool();
+		getConnection();
 		try {
 			LOGGER.info("Creating a statement .....");
-			stmt = hcp.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
 
-			rs = stmt.executeQuery();
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("userId", rs.getString("user_id"));
@@ -306,15 +271,6 @@ public class Users extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}finally{
-			try {
-				rs.close();
-				stmt.close();
-				hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -323,17 +279,15 @@ public class Users extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM users WHERE user_id < ? ORDER BY user_id DESC LIMIT 1";
 
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		Connection hcp = getConnectionFromPool();
+		getConnection();
 		try {
 			LOGGER.info("Creating a statement .....");
-			stmt = hcp.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
 
-			rs = stmt.executeQuery();
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("userId", rs.getString("user_id"));
@@ -365,15 +319,6 @@ public class Users extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}finally{
-			try {
-				rs.close();
-				stmt.close();
-				hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -382,16 +327,14 @@ public class Users extends Connect {
 		auth = um.getAuth();
 		LOGGER.info("Inside GetPrevious method");
 
-		PreparedStatement stmt = null,stmt1 = null,stmt2 = null, ps1 = null;
-		ResultSet rs = null,rs1 = null,result1 = null;
-		Connection hcp = getConnectionFromPool();
+		getConnection();
 
 		try {
 			String select_status_sql = "Select user_status FROM users WHERE user_id=?";
-			ps1 = hcp.prepareStatement(select_status_sql);
+			PreparedStatement ps1 = connection.prepareStatement(select_status_sql);
 			ps1.setString(1, token);
 
-			result1 = ps1.executeQuery();
+			ResultSet result1 = ps1.executeQuery();
 
 			if (result1.next()) {
 
@@ -403,13 +346,13 @@ public class Users extends Connect {
 						String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 
 						LOGGER.info("Creating a statement .....");
-						stmt = hcp.prepareStatement(sql);
+						PreparedStatement stmt = connection.prepareStatement(sql);
 
 						LOGGER.info("Statement created. Executing getPrevious query...");
 						stmt.setString(1, token);
 						stmt.setString(2, auth);
 
-						rs = stmt.executeQuery();
+						ResultSet rs = stmt.executeQuery();
 						while (rs.next()) {
 							JSONObject json = new JSONObject();
 							json.put("userId", rs.getString("user_id"));
@@ -449,19 +392,19 @@ public class Users extends Connect {
 							String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 
 							LOGGER.info("Creating a statement .....");
-							stmt2 = hcp.prepareStatement(sql);
+							PreparedStatement stmt = connection.prepareStatement(sql);
 
 							LOGGER.info("Statement created. Executing getPrevious query...");
-							stmt2.setString(1, token);
-							stmt2.setString(2, auth);
+							stmt.setString(1, token);
+							stmt.setString(2, auth);
 
-							rs1 = stmt2.executeQuery();
+							ResultSet rs = stmt.executeQuery();
 							while (rs.next()) {
 								JSONObject json = new JSONObject();
-								json.put("userId", rs1.getString("user_id"));
-								json.put("fullName", rs1.getString("user_full_name"));
-								json.put("mobile", rs1.getString("user_mobile"));
-								json.put("location", rs1.getString("user_location"));
+								json.put("userId", rs.getString("user_id"));
+								json.put("fullName", rs.getString("user_full_name"));
+								json.put("mobile", rs.getString("user_mobile"));
+								json.put("location", rs.getString("user_location"));
 
 								message = json.toString();
 								LOGGER.warning(message);
@@ -470,7 +413,7 @@ public class Users extends Connect {
 
 							if (check != null) {
 								String update_status = "UPDATE users SET user_status=? WHERE user_id=?";
-								stmt1 = hcp.prepareStatement(update_status);
+								PreparedStatement stmt1 = connection.prepareStatement(update_status);
 
 								stmt1.setString(1, signUpStatus);
 								stmt1.setString(2, token);
@@ -504,21 +447,6 @@ public class Users extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
-		}finally{
-			try {
-				rs.close();
-				rs1.close();
-				result1.close();
-				
-				stmt1.close();
-				stmt.close();
-				stmt2.close();
-				
-				hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 }
