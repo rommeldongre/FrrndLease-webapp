@@ -1,5 +1,6 @@
 package tableOps;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 import connect.Connect;
 import pojos.LeasesModel;
 import adminOps.Response;
+import tableOps.LeaseTerms;
 import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
@@ -128,15 +130,17 @@ public class Leases extends Connect {
 		String date = sdf.format(cal.getTime());
 
 		String sql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date) values (?,?,?,?)"; //
-		getConnection();
+		PreparedStatement stmt = null,s3 = null,s1 = null,s2 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
 
 		try {
 			// check if there are credits in the users account
 			int credit = 0;
 			String sqlCheckCredit = "SELECT user_credit FROM users WHERE user_id=?";
-			PreparedStatement s1 = connection.prepareStatement(sqlCheckCredit);
+			s1 = hcp.prepareStatement(sqlCheckCredit);
 			s1.setString(1, reqUserId);
-			ResultSet rs1 = s1.executeQuery();
+			rs1 = s1.executeQuery();
 			if (rs1.next()) {
 				credit = rs1.getInt("user_credit");
 			}
@@ -144,7 +148,7 @@ public class Leases extends Connect {
 			if (credit >= 10) {
 
 				LOGGER.info("Creating statement.....");
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing query.....");
 				stmt.setString(1, reqUserId);
@@ -159,13 +163,13 @@ public class Leases extends Connect {
 
 				// add credit to user giving item on lease
 				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
-				PreparedStatement s2 = connection.prepareStatement(sqlAddCredit);
+				s2 = hcp.prepareStatement(sqlAddCredit);
 				s2.setString(1, userId);
 				s2.executeUpdate();
 
 				// subtract credit from user getting a lease
 				String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
-				PreparedStatement s3 = connection.prepareStatement(sqlSubCredit);
+				s3 = hcp.prepareStatement(sqlSubCredit);
 				s3.setString(1, reqUserId);
 				s3.executeUpdate();
 
@@ -184,6 +188,20 @@ public class Leases extends Connect {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs1.close();
+				
+				stmt.close();
+				s1.close();
+				s2.close();
+				s3.close();
+				
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -193,23 +211,25 @@ public class Leases extends Connect {
 		check = null;
 		LOGGER.info("Inside delete method....");
 
-		getConnection();
+		PreparedStatement stmt = null,stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		String sql = "DELETE FROM leases WHERE lease_requser_id=?,lease_item_id=?"; //
 		String sql2 = "SELECT * FROM leases WHERE lease_requser_id=?,lease_item_id=?"; //
 
 		try {
 			LOGGER.info("Creating statement...");
 
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, reqUserId);
 			stmt2.setString(2, itemId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("lease_requser_id");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, reqUserId);
@@ -227,6 +247,16 @@ public class Leases extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -242,22 +272,24 @@ public class Leases extends Connect {
 		String date = sdf.format(cal.getTime());
 
 		LOGGER.info("inside edit method");
-		getConnection();
+		PreparedStatement stmt = null,stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		String sql = "UPDATE leases SET lease_user_id=?,lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=?"; //
 		String sql2 = "SELECT * FROM leases WHERE lease_requser_id=? AND lease_item_id=?"; //
 
 		try {
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, reqUserId);
 			stmt2.setString(2, itemId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("lease_requser_id");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, userId);
@@ -277,6 +309,16 @@ public class Leases extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt2.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -286,7 +328,9 @@ public class Leases extends Connect {
 		status = lm.getStatus();
 
 		LOGGER.info("inside edit method");
-		getConnection();
+		PreparedStatement stmt = null,stmtrf = null ;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?"; //
 
 		// code for populating lease pojo for sending owner email...
@@ -294,7 +338,7 @@ public class Leases extends Connect {
 		String sqlrf = "SELECT * FROM leases WHERE lease_item_id=?";
 		try {
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmtrf = connection.prepareStatement(sqlrf);
+			stmtrf = hcp.prepareStatement(sqlrf);
 			stmtrf.setString(1, itemId);
 
 			LOGGER.info("Statement created. Executing select query on ..." + check);
@@ -329,7 +373,7 @@ public class Leases extends Connect {
 
 		try {
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing edit query on ..." + check);
 			stmt.setString(1, status);
@@ -355,6 +399,16 @@ public class Leases extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmtrf.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -363,15 +417,17 @@ public class Leases extends Connect {
 		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM leases WHERE lease_requser_id > ? ORDER BY lease_requser_id LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("reqUserId", rs.getString("lease_requser_id"));
@@ -402,6 +458,15 @@ public class Leases extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -410,15 +475,17 @@ public class Leases extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM leases WHERE lease_requser_id < ? ORDER BY lease_requser_id DESC LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("reqUserId", rs.getString("lease_requser_id"));
@@ -449,6 +516,15 @@ public class Leases extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -458,16 +534,18 @@ public class Leases extends Connect {
 		LOGGER.info("Inside GetNext Active method");
 		String sql = "SELECT tb1.*, tb2.user_full_name, tb3.user_full_name AS Owner FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id WHERE lease_id > ? AND lease_status=? ORDER BY lease_id LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("reqUserId", rs.getString("lease_requser_id"));
@@ -500,6 +578,15 @@ public class Leases extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -509,16 +596,18 @@ public class Leases extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM leases WHERE lease_id < ? AND lease_status=? ORDER BY lease_id DESC LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getPrevious query...");
 			stmt.setInt(1, t);
 			stmt.setString(2, "Active");
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("reqUserId", rs.getString("lease_requser_id"));
@@ -549,6 +638,15 @@ public class Leases extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -563,16 +661,18 @@ public class Leases extends Connect {
 		// String date = sdf.format(cal.getTime());
 
 		LOGGER.info("inside edit method");
-		getConnection();
+		PreparedStatement stmt = null,stmt1 = null ;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 
 		String sql1 = "SELECT lease_expiry_date,lease_id FROM leases WHERE lease_requser_id=? AND lease_item_id=?";
 
 		try {
-			PreparedStatement stmt1 = connection.prepareStatement(sql1);
+			stmt1 = hcp.prepareStatement(sql1);
 			stmt1.setString(1, reqUserId);
 			stmt1.setString(2, itemId);
 
-			ResultSet rs = stmt1.executeQuery();
+			rs = stmt1.executeQuery();
 			while (rs.next()) {
 				date1 = rs.getString("lease_expiry_date");
 				check = String.valueOf(rs.getInt("lease_id"));
@@ -600,7 +700,7 @@ public class Leases extends Connect {
 		String sql = "UPDATE leases SET lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=?"; //
 
 		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing renew query ...");
 			stmt.setString(1, date);
@@ -616,6 +716,16 @@ public class Leases extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt.close();
+				stmt1.close();
+				hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
