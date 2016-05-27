@@ -79,6 +79,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
+					hcp.close();
 					return rs;
 				}
 				
@@ -98,6 +99,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
+					hcp.close();
 					return rs;
 				}
 						
@@ -113,6 +115,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
+					hcp.close();
 					return rs;
 				}
 				
@@ -129,6 +132,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
+					hcp.close();
 					return rs;
 				}
 				
@@ -145,6 +149,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
+					hcp.close();
 					return rs;
 				}
 
@@ -212,6 +217,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
+				hcp.close();
 				return rs;
 			}
 				
@@ -248,6 +254,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
+					hcp.close();
 					return rs;
 				}
 					rs.setCode(FLS_SUCCESS);
