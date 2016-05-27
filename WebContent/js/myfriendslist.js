@@ -51,10 +51,6 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', funct
                         friendIdArray.push(response.Id);
                         getFriendsList();
                     }
-                    else{
-                        if(lastFriendId == '')
-                            $scope.empty.text = "You have not connected with your friends on fRRndLease. Add or import your contacts to have access to their posted items.";
-                    }
                 },
 
                 error: function() {
