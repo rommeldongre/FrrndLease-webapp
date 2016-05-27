@@ -15,12 +15,12 @@
                 <td style="width:40%;text-align:center;" id="{{lease.itemId}}" ng-click="showItemDetails(lease.uid)" class="tablecellItem">{{lease.itemTitle}}</td>
                 <td style="width:25%;text-align:center;" id="{{lease.itemId}}" class="tablecellFriend">{{lease.ownerName}}</td>
                 <td style="width:20%;text-align:center;" class="tablecellAction">
-                <span class="remove" ng-click="closeLease(lease.itemNextId)">
-                    <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{lease.itemNextId}}">Close</span>
-                </span>
-                <span class="renew" ng-click="renewLease(lease.itemNextId)">
-                    <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{lease.itemNextId}}">Renew</span>
-                </span>
+                    <span class="remove" ng-click="closeLease(lease.itemNextId)">
+                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{lease.itemNextId}}">Close</span>
+                    </span>
+                    <span class="renew" ng-click="renewLease(lease.itemNextId)">
+                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{lease.itemNextId}}">Renew</span>
+                    </span>
                 </td>
             </tr>
         </tbody>

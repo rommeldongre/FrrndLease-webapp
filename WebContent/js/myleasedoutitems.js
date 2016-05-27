@@ -89,7 +89,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
             dataType: "json",
             success: function(response) {
                 
-                modalService.showModal({}, {bodyText: response.message,actionButtonText: 'OK'}).then(
+                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                 function(result){
                     currentFlag = '';
                     itemNextId = 0;

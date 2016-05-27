@@ -64,11 +64,11 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 			PreparedStatement stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, rq.getRequest_Id());
 			ResultSet rs1 = stmt2.executeQuery();
-			stmt2.close();
 			while (rs1.next()) {
 				item_Id = rs1.getString("request_item_id");
 			}
-
+			stmt2.close();
+			
 			if (item_Id != null) {
 
 				// code for populating item pojo for sending requester email
@@ -82,7 +82,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				stmt1.setString(1, item_Id);
 
 				ResultSet dbResponse = stmt1.executeQuery();
-				stmt1.close();
+				
 
 				LOGGER.info("Query to request pojos fired into requests table");
 				if (dbResponse.next()) {
@@ -140,6 +140,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				stmt1.close();
 			} else {
 				rs.setErrorString(FLS_ENTRY_NOT_FOUND_M);
 				rs.setReturnCode(FLS_ENTRY_NOT_FOUND);
