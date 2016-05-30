@@ -9,6 +9,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var userId = null;
     // searchString is used to display items which are being searched
     var searchString = '';
+    // to display the next button or not
+    var lastSavedItemId = 0;
     
     $scope.$on('searchStringChanged', function(event, data){
         searchString = data;
@@ -66,6 +68,10 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var initPopulate = function(){
         lastItem = 0;
         
+        lastSavedItemId = 0;
+        
+        $scope.showNext = true;
+        
         populateCarousel(lastItem);
     }
     
@@ -110,9 +116,14 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                         }, 1000);
                     }
                     lastItem = response.data.lastItemId;
+                    lastSavedItemId = 0;
                 }else{
                     if(lastItem == 0)
                         $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
+                    if(lastSavedItemId == 2){
+                        $scope.showNext = false;
+                    }
+                    lastSavedItemId++;
                 }
             },
             function(error){
@@ -131,6 +142,12 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                 if(response.Code == "FLS_SUCCESS"){
                     var obj = JSON.parse(response.Message);
                     var item = {itemId:obj.itemId, image:obj.image, title:obj.title, fullName:obj.category, leaseTerm:obj.leaseTerm, uid:obj.uid};
+                    var src = obj.image;
+                    if(src == '' || src == 'null' || src == null){
+                        src = 'images/imgplaceholder.png';
+                        item.image = src;
+                    }
+                    
                     if(lastItem == 0){
                         $scope.itemsArray = [[item]];
                         lastItem = obj.itemId;
@@ -144,11 +161,16 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                         }, 1000);
                         
                     }
+                    lastSavedItemId = 0;
                 }else{
                     if(lastItem == 0)
                         $scope.$apply(function(){
                             $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
                         });
+                    if(lastSavedItemId == 2){
+                        $scope.showNext = false;
+                    }
+                    lastSavedItemId++;
                 }
             },
             error: function() {
@@ -159,6 +181,11 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     // called on the page load
     initPopulate();
+    
+    $scope.loadPrevSlide = function(){
+        $scope.showNext = true;
+        lastSavedItemId--;
+    }
     
     // called when next carousel button is clicked
     $scope.loadNextSlide = function(){
@@ -228,7 +255,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             description: '',
             category: '',
             userId: user,
-            leaseValue: '',
+            leaseValue: 0,
             leaseTerm: '',
             status: "Wished",
             image: ''
@@ -245,7 +272,10 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
 			contentType: "application/x-www-form-urlencoded",
 			dataType:"json",
 			success: function(response) {
-                console.log("item added to the wish list");
+                if(response.Code == "FLS_SUCCESS")
+                    console.log("item added to the wish list");
+                else
+                    console.log("wished item already exists");
 			},
 			error: function() {
 			}

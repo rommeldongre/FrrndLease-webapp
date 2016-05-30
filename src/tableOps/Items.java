@@ -142,74 +142,86 @@ public class Items extends Connect {
 
 		LOGGER.info("Inside add method...");
 		
-		PreparedStatement stmt = null,s = null, s1 =null; 
+		PreparedStatement stmt = null,s = null, s1 =null, checkWishItem_ps = null; 
 		Statement stmt1 = null;
-		ResultSet keys = null, rs = null;
+		ResultSet keys = null, rs = null, checkWishItem_rs = null;
 		Connection hcp = getConnectionFromPool();
 		
 		try {
-			LOGGER.info("Creating statement.....");
-			String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
-			stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-			LOGGER.info("Statement created. Executing query.....");
-			stmt.setString(1, title);
-			stmt.setString(2, category);
-			stmt.setString(3, description);
-			stmt.setString(4, userId);
-			stmt.setInt(5, leaseValue);
-			stmt.setString(6, leaseTerm);
-			stmt.setString(7, status);
-			stmt.setString(8, image);
-			stmt.executeUpdate();
+			String checkWishItem_sql = "SELECT * FROM items WHERE item_name=? AND item_user_id=? AND item_status=?";
+			checkWishItem_ps = hcp.prepareStatement(checkWishItem_sql);
+			checkWishItem_ps.setString(1, title);
+			checkWishItem_ps.setString(2, userId);
+			checkWishItem_ps.setString(3, status);
 			
-			// getting the last item inserted id and appending it with the title to generate a uid
-			keys = stmt.getGeneratedKeys();
-			keys.next();
-			int itemId = keys.getInt(1);
-			
-			String uid = title + " " + itemId;
-			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
-			
-			// updating the item_uid value of the last item inserted
-			String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
-			s = hcp.prepareStatement(sqlUpdateUID);
-			s.setString(1, uid);
-			s.setInt(2, itemId);
-			s.executeUpdate();
-
-			status = "operation successfull!!!";
-			message = "Item added into table";
-			LOGGER.warning(message);
-			
-			// to add credit in user_credit
-			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-			s1 = hcp.prepareStatement(sqlAddCredit);
-			s1.setString(1, userId);
-			s1.executeUpdate();
-
-			Code = 000;
-
-			String status_W = im.getStatus(); // To be used to check if Request
-												// is from WishItem API.
-			if (!FLS_WISHLIST_ADD.equals(status_W)) {
-				try {
-					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM, im);
-				} catch (Exception e) {
-					e.printStackTrace();
+			checkWishItem_rs = checkWishItem_ps.executeQuery();
+			if(!checkWishItem_rs.next()){
+				
+				LOGGER.info("Creating statement.....");
+				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
+				stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	
+				LOGGER.info("Statement created. Executing query.....");
+				stmt.setString(1, title);
+				stmt.setString(2, category);
+				stmt.setString(3, description);
+				stmt.setString(4, userId);
+				stmt.setInt(5, leaseValue);
+				stmt.setString(6, leaseTerm);
+				stmt.setString(7, status);
+				stmt.setString(8, image);
+				stmt.executeUpdate();
+				
+				// getting the last item inserted id and appending it with the title to generate a uid
+				keys = stmt.getGeneratedKeys();
+				keys.next();
+				int itemId = keys.getInt(1);
+				
+				String uid = title + " " + itemId;
+				uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
+				
+				// updating the item_uid value of the last item inserted
+				String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
+				s = hcp.prepareStatement(sqlUpdateUID);
+				s.setString(1, uid);
+				s.setInt(2, itemId);
+				s.executeUpdate();
+	
+				status = "operation successfull!!!";
+				message = "Item added into table";
+				LOGGER.warning(message);
+				
+				// to add credit in user_credit
+				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+				s1 = hcp.prepareStatement(sqlAddCredit);
+				s1.setString(1, userId);
+				s1.executeUpdate();
+	
+				Code = 000;
+	
+				String status_W = im.getStatus(); // To be used to check if Request
+													// is from WishItem API.
+				if (!FLS_WISHLIST_ADD.equals(status_W)) {
+					try {
+						AwsSESEmail newE = new AwsSESEmail();
+						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM, im);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
+	
+				// returning the new id
+				sql = "SELECT MAX(item_id) FROM items";
+				stmt1 = hcp.createStatement();
+				rs = stmt1.executeQuery(sql);
+				while (rs.next()) {
+					id = rs.getInt(1);
+				}
+				Id = String.valueOf(id);
+				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
+			}else{
+				res.setData(FLS_DUPLICATE_ENTRY, null, FLS_POST_ITEM_F_M);
 			}
-
-			// returning the new id
-			sql = "SELECT MAX(item_id) FROM items";
-			stmt1 = hcp.createStatement();
-			rs = stmt1.executeQuery(sql);
-			while (rs.next()) {
-				id = rs.getInt(1);
-			}
-			Id = String.valueOf(id);
-			res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
 
 		} catch (SQLException e) {
 			LOGGER.warning("Couldnt create a statement");
@@ -224,6 +236,8 @@ public class Items extends Connect {
 			}
 		}finally{
 				try {
+					checkWishItem_rs.close();
+					checkWishItem_ps.close();
 					keys.close();
 					rs.close();
 					
