@@ -1,226 +1,36 @@
-
-		
-		
-		
-		
-		<div class="container-fluid" id="midcontainer">
-			<div id="heading"><strong>My Incoming Requests List</strong></div>
-			
-			<div class="row">
-				<div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-				</div>
-			</div>
-			<br />
-			
-			<table id="requesttable" class="table table-striped">
-				<thead>
-                    <tr>
-                        <th class="tablecell" style="text-align:left;">Date</th>
-                        <th class="tablecell" style="text-align:center;">Item</th>
-                        <th class="tablecell" style="text-align:center;">Friend</th>
-                        <th class="tablecell" style="text-align:center;">Action</th>
-                    </tr>
-                </thead>
-				<tbody>
-                    <tr ng-repeat="request in requests">
-                        <td style="width:15%;text-align:left;" class="tablecell">{{request.requestDate}}</td>
-                        <td style="width:40%;text-align:center;" id="{{request.itemNextId}}" ng-click="showItemDetails(request.uid)" class="tablecellItem">{{request.title}}</td>
-                        <td style="width:25%;text-align:center;" id="{{request.itemNextId}}" class="tablecellFriend">{{request.requestUserName}}</td>
-                        <td style="width:20%;text-align:center;" class="tablecellAction">
-                            <span ng-click="grantLease(request.itemNextId,request.requestorId)">
-                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="">Accept</span>
-                            </span>
-                            <span ng-click="rejectLease(request.requestItemId,request.requestorId)">
-                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
-                            </span>
-                            <span class="think">
-                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.itemNextId}}">Renew</span>
-                            </span>
-                        </td>
-                    </tr>
-				</tbody>
-			</table>
-			<h4 ng-if="requests.length == 0">You have no Incoming Requests. Post more items to the Store</h4>
-			
-		</div>
-	
-	
-	<script type="text/javascript">
-		var userloggedin, reqUserId, objUserId, reqDate,itemNextId,itemNextRequestId, reqUserName ;
-		
-		function start(){
-			
-			itemNextId = "0";
-			itemNextRequestId = "0";
-		}
-		
-		//grant request to lease---------------------------------
-		$(document).on("click",".grant",function(event){		//grant lease	
-			setPrevPage("myincomingrequests.html");
-			currentWork = 'leaseItem';
-			storeItemToShow(event.target.id);
-			
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to lease the Item?";
-			
-			$("#alertModalTriggerButton").click();	
-			
-		});
-        
-        function leaseItemSetValues(reqUser){
-            itemId = itemUserId = reqUserId = null;
-
-            itemId = getItemToShow();
-            itemUserId = userloggedin;
-            reqUserId = reqUser;
-
-            if(itemId == ''){
-                itemId = null;
-            }
-            if(itemUserId == ''){
-                itemUserId = null;
-            }
-            leaseItemDbCreate();
-        }
-
-        function leaseItemDbCreate(){
-            var req = {
-                reqUserId: reqUserId.toString(),
-                itemId: itemId,
-                userId: itemUserId.toString()
-            };
-
-            console.log(JSON.stringify(req));
-            leaseItemSend(req);
-        }
-
-        function leaseItemSend(req){
-
-                $.ajax({
-                    url: '/flsv2/GrantLease',
-                    type:'post',
-                    data: JSON.stringify(req),
-                    contentType:"application/json",
-                    dataType: "json",
-
-                    success: function(response) {
-                        //alert(response.Id+" "+response.Code+" "+response.Message);
-                        var heading = "Successful";
-                        var msg = response.message;
-                        confirmationIndex(heading, msg);	
-                    },
-                    error: function() {
-                        var msg = "Not Working";
-                        confirmationIndex(msg);
-                    }
-                });
-
-        }
-		
-		function leaseItemFromRequest(obj){
-			setPrevPage("myincomingrequests.html");
-			itemNextId = obj.itemId;
-			itemNextId--;
-			
-			reasonForGetItem = 'leaseItem';
-			getNextItem(itemNextId);
-		}
-		
-		function lease_requestedItem(obj){
-			setPrevPage("myincomingrequests.html");
-			storeItemToShow(obj.itemId);
-			
-			leaseItemSetValues();
-		}
-		
-		//---------------------------------------
-		
-		//reject request---------------------------
-		$(document).on("click",".refuse",function(event){		//refust request
-			setPrevPage("myincomingrequests.html");
-			var str = event.target.id;
-			var total_string = new Array(2);
-			total_string = str.split(",");
-			itemNextId = total_string[0];
-			reqUserId = total_string[1];
-			reasonForGetRequestItem = 'rejectRequest';
-			
-			currentWork = 'rejectRequest';
-			
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "Are you sure you want to refuse this request?";
-			
-			$("#alertModalTriggerButton").click();
-		});
-        
-        function rejectRequestSetValues(i, req){
-            itemId = i;
-            if (itemId === '') itemId = null;
-
-            reqUserId = req;
-            if (reqUserId ==='') reqUserId = null;
-
-            var req = {
-                itemId: itemId,
-                userId: reqUserId,
-            };
-            rejectRequestSend(req);
-        }
-
-        function rejectRequestSend(req){
-            $.ajax({
-                url: '/flsv2/RejectRequest',
-                type:'get',
-                data: {req: JSON.stringify(req)},
-                contentType:"application/json",
-                dataType: "json",
-
-                success: function(response) {
-                    //alert(response.Id+" "+response.Code+" "+response.Message);
-                    var heading = "Successful";
-                    var msg = response.Message;
-                    confirmationIndex(heading, msg);
-                },
-                error: function() {
-                    var msg = "Not Working";
-                    confirmationIndex(msg);
-                }
-            });	
-        }
-		
-		
-		//----------------------------------------
-	
-		$(document).on("click",".tablecellItem",function(event){
-			setPrevPage("myincomingrequests.html");
-			storeCurrentFunction("viewItemOwner");
-			storeRequestingUser(reqUserId);
-			
-			var k = event.target.id;			//when itemname is clicked
-			
-			storeItemToShow(k);
-			
-			window.location.replace("mystore.html");
-		});
-		
-		function continueWork(){
-			setPrevPage("myincomingrequests.html");
-			
-			if(currentWork == 'deleteItem'){
-				itemId = itemObj.itemId;
-				userId = userloggedin;
-				
-				if(itemId == '')
-					itemId = 0;
-				if(userId == '')
-					userId = null;
-					
-				deleteItemDbCreate();
-			}else if(currentWork == 'leaseItem'){
-				leaseItemSetValues(reqUserId);
-			}else if(currentWork == 'rejectRequest'){
-				rejectRequestSetValues(itemNextId,reqUserId);
-			}
-			
-		}
-	</script>
+<div class="container-fluid" id="midcontainer">
+    <div id="heading"><strong>My Incoming Requests List</strong></div>
+    <div class="row">
+        <div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>
+    </div>
+    <br />
+    <table id="requesttable" class="table table-striped">
+        <thead>
+            <tr>
+                <th class="tablecell" style="text-align:left;">Date</th>
+                <th class="tablecell" style="text-align:center;">Item</th>
+                <th class="tablecell" style="text-align:center;">Friend</th>
+                <th class="tablecell" style="text-align:center;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="request in requests">
+                <td style="width:15%;text-align:left;" class="tablecell">{{request.requestDate}}</td>
+                <td style="width:40%;text-align:center;" id="{{request.itemNextId}}" ng-click="showItemDetails(request.uid)" class="tablecellItem">{{request.title}}</td>
+                <td style="width:25%;text-align:center;" id="{{request.itemNextId}}" class="tablecellFriend">{{request.requestUserName}}</td>
+                <td style="width:20%;text-align:center;" class="tablecellAction">
+                    <span ng-click="grantLease(request.itemNextId,request.requestorId)">
+                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="">Accept</span>
+                    </span>
+                    <span ng-click="rejectLease(request.requestItemId,request.requestorId)">
+                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
+                    </span>
+                    <span class="think">
+                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.itemNextId}}">Renew</span>
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 ng-if="requests.length == 0">You have no Incoming Requests. Post more items to the Store</h4>
+</div>
