@@ -1,175 +1,33 @@
-		<div class="container-fluid" id="midcontainer">
-			<div id="heading"><strong>My WishList</strong></div>
-			<div class="row">
-				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-					
-				</div>
-				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-					<span class="addImport"><span class="btn btn-primary" ng-click="addWishItem()">Add Item</span></span>
-				</div>
-				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-					<span class="addImport"><span class="btn btn-primary" ng-click="importWishList()">Import Items</span></span>
-				</div>
-				
-			</div>
-			<br />
-			<table id="wishlisttable" class="table table-striped">
-				<thead>
-					<tr>
-						<th class="tablecell">Item</th>
-						<th class="tablecell">Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="wish in wishList">
-					    <td style="width:80%;" id="{{wish.itemId}}" ng-click="showItemDetails(wish.itemId)" class="tablecellItem">{{wish.title}}</td>
-					    <td style="width:20%;" id="{{wish.itemId}}" class="tablecellAction">
-                            <span class="remove" ng-click="deleteWishItem(wish.itemId)">
-					            <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
-					        </span>
-					   </td>
-				</tr>
-				</tbody>
-			</table>
-
-			<h4 ng-if="wishList.length == 0">You have not wished any item. You can add the items you wish. </h4>
-			
-		</div>
-	
-	
-	<script type="text/javascript">
-		var userloggedin, currentWork;
-		
-		function import_wishitem(){
-			setPrevPage("mywishlists.html");
-			//alert("importbutton clicked");
-			var header = document.getElementById("myModalLabelInput");
-			header.innerHTML = "Input URL of Public Amazon Wishlist";
-			$("#inputTriggerButton").click();
-			
-			
-		}
-		
-		function import_wishlist(){
-            var inputURL = document.getElementById("urlInput").value;
-            if(inputURL!=null || inputURL!=' '){
-                process_dialog("Importing Wish list Please Wait");
-                $('#myModalAlert').modal('hide');
-                getWishlist(inputURL,userloggedin);
-
-            }else{
-                console.log("No Input Given: ");
-            }
-		}
-        
-        function getWishlist(i,j){
-            //alert("Inside getNextOutItem function.");
-            if(i == '' || i == undefined)
-                WishlistUrl = "";
-
-            WishlistUrl = i;
-            userName = j;
-
-            var req = {
-                userId: userName,
-                url: WishlistUrl
-            }
-
-            getWishlistRequest(req);
-        }
-
-        getWishlistRequest = function(req) {
-                //alert("Inside send function.");
-                $.ajax({
-                    url: '/flsv2/ImportWishlist',
-                    type:'POST',
-                    data: JSON.stringify(req),
-                    contentType:"application/json",
-                    dataType: "JSON",
-                    success: function(response) {
-                        //alert("working");
-                            $('#myPleaseWait').modal('toggle');
-                            confirmationIndex("Success",response.wishItemCount+" out of "+response.totalWishItemCount+" Amazon Wishlist Items Imported");
-                            //getOutItemForRequest(response);
-                            //alert(response.title);
-
-                    },
-                    error: function() {
-                        alert("not working");
-                    }
-                });
-            };
-
-		$(document).on("click",".remove",function(event){			//when X button is pressed
-			currentWork = 'deleteWishItem';	
-			itemId = event.target.id;
-			itemUserId = userloggedin;
-			
-			if(itemId == '')
-				itemId = 0;
-			if(itemUserId == '')
-				itemUserId = null;
-					
-			var div = document.getElementById("alertModalMsg");
-			div.innerHTML = "";
-			
-			$("#alertModalTriggerButton").click();
-			
-		});	
-				
-		function continueWork(){
-			if(currentWork == 'deleteWishItem'){
-				
-				deleteWishItemDbCreate();
-			}
-		}
-        
-        function deleteWishItemDbCreate(){
-            var req = {
-                id: itemId,
-                userId: itemUserId
-            }
-
-            deleteWishItemSend(req);
-
-        }
-
-        function deleteWishItemSend(req){
-
-            $.ajax({
-                url: '/flsv2/DeleteWishlist',
-                type: 'get',
-                data: {req : JSON.stringify(req)},
-                contentType:"application/json",
-                dataType:"json",
-
-                success: function(response) {
-                    //alert(response.Id+" "+response.Code+" "+response.Message);
-                    setPrevPage("mywishlists.html");
-                    heading = "Successful";
-
-                    msg = response.Message;
-                    confirmationIndex(heading, msg);			//mywishitemdetails.html
-                },
-
-                error: function() {
-                    var msg = "Not Working";
-                    confirmationIndex(msg);
-                }
-            });	
-
-        }
-
-		
-		$(document).on("click",".tablecellItem",function(event){
-			
-			storeCurrentFunction("viewItemOwner");
-			
-			var k = event.target.id;			//when itemname is clicked
-			
-			storeItemToShow(k);
-			
-			setPrevPage("mywishlists.html");
-			window.location.replace('mywishitemDetails.html');
-		});
-	</script>
+<div class="container-fluid" id="midcontainer">\
+    <div id="heading"><strong>My WishList</strong></div>
+	<div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <span class="addImport"><span class="btn btn-primary" ng-click="addWishItem()">Add Item</span></span>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <span class="addImport"><span class="btn btn-primary" ng-click="importWishList()">Import Items</span></span>
+        </div>
+	</div>
+    <br />
+	<table id="wishlisttable" class="table table-striped">
+	    <thead>
+			<tr>
+				<th class="tablecell">Item</th>
+				<th class="tablecell">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="wish in wishList">
+			    <td style="width:80%;" id="{{wish.itemId}}" ng-click="showItemDetails(wish.itemId)" class="tablecellItem">{{wish.title}}</td>
+			    <td style="width:20%;" id="{{wish.itemId}}" class="tablecellAction">
+                    <span class="remove" ng-click="deleteWishItem(wish.itemId)">
+			            <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
+			        </span>
+			   </td>
+		    </tr>
+        </tbody>
+    </table>
+    <h4 ng-if="wishList.length == 0">You have not wished any item. You can add the items you wish. </h4>
+</div>
