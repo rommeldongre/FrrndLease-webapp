@@ -23,15 +23,15 @@
                 </thead>
 				<tbody>
                     <tr ng-repeat="request in requests">
-                        <td style="width:15%;text-align:left;" class="tablecell">{{request.expiry}}</td>
-                        <td style="width:40%;text-align:center;" id="{{request.itemNextId}}" class="tablecellItem">{{request.title}}</td>
-                        <td style="width:25%;text-align:center;" id="{{request.itemNextId}}" class="tablecellFriend">{{request.reqUserName}}</td>
+                        <td style="width:15%;text-align:left;" class="tablecell">{{request.requestDate}}</td>
+                        <td style="width:40%;text-align:center;" id="{{request.itemNextId}}" ng-click="showItemDetails(request.uid)" class="tablecellItem">{{request.title}}</td>
+                        <td style="width:25%;text-align:center;" id="{{request.itemNextId}}" class="tablecellFriend">{{request.requestUserName}}</td>
                         <td style="width:20%;text-align:center;" class="tablecellAction">
-                            <span class="grant">
-                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.itemNextId}}">Accept</span>
+                            <span ng-click="grantLease(request.itemNextId,request.requestorId)">
+                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="">Accept</span>
                             </span>
-                            <span class="refuse">
-                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.stringId}}">Delete</span>
+                            <span ng-click="rejectLease(request.requestItemId,request.requestorId)">
+                                <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
                             </span>
                             <span class="think">
                                 <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.itemNextId}}">Renew</span>
@@ -66,6 +66,56 @@
 			$("#alertModalTriggerButton").click();	
 			
 		});
+        
+        function leaseItemSetValues(reqUser){
+            itemId = itemUserId = reqUserId = null;
+
+            itemId = getItemToShow();
+            itemUserId = userloggedin;
+            reqUserId = reqUser;
+
+            if(itemId == ''){
+                itemId = null;
+            }
+            if(itemUserId == ''){
+                itemUserId = null;
+            }
+            leaseItemDbCreate();
+        }
+
+        function leaseItemDbCreate(){
+            var req = {
+                reqUserId: reqUserId.toString(),
+                itemId: itemId,
+                userId: itemUserId.toString()
+            };
+
+            console.log(JSON.stringify(req));
+            leaseItemSend(req);
+        }
+
+        function leaseItemSend(req){
+
+                $.ajax({
+                    url: '/flsv2/GrantLease',
+                    type:'post',
+                    data: JSON.stringify(req),
+                    contentType:"application/json",
+                    dataType: "json",
+
+                    success: function(response) {
+                        //alert(response.Id+" "+response.Code+" "+response.Message);
+                        var heading = "Successful";
+                        var msg = response.message;
+                        confirmationIndex(heading, msg);	
+                    },
+                    error: function() {
+                        var msg = "Not Working";
+                        confirmationIndex(msg);
+                    }
+                });
+
+        }
 		
 		function leaseItemFromRequest(obj){
 			setPrevPage("myincomingrequests.html");
@@ -102,6 +152,41 @@
 			
 			$("#alertModalTriggerButton").click();
 		});
+        
+        function rejectRequestSetValues(i, req){
+            itemId = i;
+            if (itemId === '') itemId = null;
+
+            reqUserId = req;
+            if (reqUserId ==='') reqUserId = null;
+
+            var req = {
+                itemId: itemId,
+                userId: reqUserId,
+            };
+            rejectRequestSend(req);
+        }
+
+        function rejectRequestSend(req){
+            $.ajax({
+                url: '/flsv2/RejectRequest',
+                type:'get',
+                data: {req: JSON.stringify(req)},
+                contentType:"application/json",
+                dataType: "json",
+
+                success: function(response) {
+                    //alert(response.Id+" "+response.Code+" "+response.Message);
+                    var heading = "Successful";
+                    var msg = response.Message;
+                    confirmationIndex(heading, msg);
+                },
+                error: function() {
+                    var msg = "Not Working";
+                    confirmationIndex(msg);
+                }
+            });	
+        }
 		
 		
 		//----------------------------------------

@@ -43,9 +43,11 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
 		var objUserId = obj.userId;
 		var leaseReqOwnerName= obj.OwnerFullName;
         
+        var req;
+        
         switch(currentFlag){
             case 'renew':
-                var req = {
+                req = {
                     itemId: leaseItemId,
                     userId: userFactory.user,
                     reqUserId: leaseReqUser+"",
@@ -54,7 +56,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
                 renewLeaseSend(req);
                 break;
             case 'close':
-                var req = {
+                req = {
                     itemId: leaseItemId,
                     userId: userFactory.user,
                     reqUserId: leaseReqUser+"",
@@ -66,7 +68,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
                 leaseItemId--;
                 if(leaseItemId == null || leaseItemId == '' || leaseItemId == 'null')
                     leaseItemId = 0;
-                var req = {
+                req = {
                     token: leaseItemId,
                     title: "",
                     description: "",
@@ -93,9 +95,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
                 function(result){
                     currentFlag = '';
                     itemNextId = 0;
-                    $scope.$apply(function(){
-                        $scope.leases = [];
-                    });
+                    $scope.leases = [];
                     getLeaseItem(itemNextId);
                 },function(){});
                 
@@ -114,13 +114,11 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
             dataType: "json",
             success: function(response) {
                 
-                modalService.showModal({}, {bodyText: response.message,actionButtonText: 'OK'}).then(
+                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                 function(result){
                     currentFlag = '';
                     itemNextId = 0;
-                    $scope.$apply(function(){
-                        $scope.leases = [];
-                    });
+                    $scope.leases = [];
                     getLeaseItem(itemNextId);
                 },function(){});
                 
