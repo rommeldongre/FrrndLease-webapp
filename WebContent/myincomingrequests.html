@@ -19,7 +19,7 @@
                 <td style="width:40%;text-align:center;" id="{{request.itemNextId}}" ng-click="showItemDetails(request.uid)" class="tablecellItem">{{request.title}}</td>
                 <td style="width:25%;text-align:center;" id="{{request.itemNextId}}" class="tablecellFriend">{{request.requestUserName}}</td>
                 <td style="width:20%;text-align:center;" class="tablecellAction">
-                    <span ng-click="grantLease(request.itemNextId,request.requestorId)">
+                    <span ng-click="grantLease(request.requestItemId,request.requestorId)">
                         <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="">Accept</span>
                     </span>
                     <span ng-click="rejectLease(request.requestItemId,request.requestorId)">
