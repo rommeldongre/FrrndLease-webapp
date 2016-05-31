@@ -51,6 +51,11 @@ myApp.config(function($routeProvider){
         controller : 'myWishListsCtrl'
     })
     
+    .when('/mypostings', {
+        templateUrl : 'mypostings.html',
+        controller : 'myPostingsCtrl'
+    })
+    
     .otherwise({redirectTo : '/'});
     
 });
