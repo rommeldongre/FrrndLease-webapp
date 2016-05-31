@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import connect.Connect;
@@ -23,9 +24,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(RenewLeaseHandler.class.getName());
 
-	RenewLeaseReqObj rq = null;
-	RenewLeaseResObj rs = null;
-	
 	private static RenewLeaseHandler instance = null;
 
 	public static RenewLeaseHandler getInstance() {
@@ -45,14 +43,14 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 
 		LOGGER.info("Inside Post Method");
 
-		 rq = (RenewLeaseReqObj) req;
-		 rs = new RenewLeaseResObj();
+		RenewLeaseReqObj rq = (RenewLeaseReqObj) req;
+		RenewLeaseResObj rs = new RenewLeaseResObj();
 		
 		String flag = rq.getFlag();
 		
 		switch (flag) {
 		case "renew":
-			renewLease();
+			renewLease(rq, rs);
 			break;
 			
 		case "close":
@@ -193,32 +191,34 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		return rs;
 	}
 
-	private ResObj renewLease() throws SQLException {
+	private boolean renewLease(RenewLeaseReqObj rq, RenewLeaseResObj rs) throws SQLException {
 		
+		//RenewLeaseResObj rs = new RenewLeaseResObj();
+		//RenewLeaseResObj rs = null;
 		PreparedStatement psRenewSelect = null,psRenewUpdate = null;
 		ResultSet result1 = null;
-		Connection hcp = getConnectionFromPool();
+		Connection Renewhcp = getConnectionFromPool();
 		
 		Calendar cal = new GregorianCalendar();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		LOGGER.info("inside Renew method of RenewLease App Handler");
 
-		String SelectRenewLeasesql = "SELECT lease_expiry_date,lease_id FROM leases WHERE lease_requser_id=? AND lease_item_id=?";
+		String SelectRenewLeasesql = "SELECT lease_expiry_date,lease_id FROM leases WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?";
 		
 		try {
-			psRenewSelect = hcp.prepareStatement(SelectRenewLeasesql);
+			psRenewSelect = Renewhcp.prepareStatement(SelectRenewLeasesql);
 			psRenewSelect.setString(1, rq.getReqUserId());
 			psRenewSelect.setInt(2, rq.getItemId());
+			psRenewSelect.setString(3, "Active");
 
 			result1 = psRenewSelect.executeQuery();
 			if (!result1.next()) {
 				System.out.println("Empty result while firing select query on lease table for Renew Lease");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				hcp.rollback();
-				hcp.close();
-				return rs;
+				Renewhcp.close();
+				return false;
 			}
 				
 				String date1 = null;
@@ -228,23 +228,36 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				String term = GLH.getLeaseTerm(rq.getItemId());
 				int days = GLH.getDuration(term);
 				
+				/*LOGGER.info("Executing Check Grace Period Method ..."+date1+" "+term);
+				if(!checkGracePeroid(date1,term)){
+					System.out.println("Renew Lease not done as lease not in grace period");
+					rs.setCode(FLS_ENTRY_NOT_FOUND);
+					//rs.setId("Error");
+					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+					//Renewhcp.close();
+					//return false;
+				}*/
+				
+				LOGGER.info(" After Executing Check Grace Period Method ...");
 				try {
 					cal.setTime(sdf.parse(date1));
 				} catch (ParseException e2) {
 					e2.printStackTrace();
+					LOGGER.info("Error parsing Date info inside Renew Lease ...");
 				}
 				cal.add(Calendar.DATE, days);
 				String date = sdf.format(cal.getTime());
 				LOGGER.warning(date);
 				
-				String UpdateRenewLeasesql = "UPDATE leases SET lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=?"; //
+				String UpdateRenewLeasesql = "UPDATE`leases` SET lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status =?"; //
 				
-				psRenewUpdate = hcp.prepareStatement(UpdateRenewLeasesql);
+				psRenewUpdate = Renewhcp.prepareStatement(UpdateRenewLeasesql);
 	
 				LOGGER.info("Statement created. Executing renew query ...");
 				psRenewUpdate.setString(1, date);
 				psRenewUpdate.setString(2, rq.getReqUserId());
 				psRenewUpdate.setInt(3, rq.getItemId());
+				psRenewUpdate.setString(4, "Active");
 				
 				int renewAction =0;
 				renewAction = psRenewUpdate.executeUpdate();
@@ -253,24 +266,76 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					System.out.println("Error occured while firing Update query on lease table for Renew Lease");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					hcp.close();
-					return rs;
+					Renewhcp.close();
+					return false;
 				}
+					LOGGER.info("renew Lease query executed successfully...");
 					rs.setCode(FLS_SUCCESS);
 					rs.setId(rq.getReqUserId());
 					rs.setMessage(FLS_SUCCESS_M);
-			
+					//hcp.commit();
 		} catch (SQLException e1) {
 			// TODO: handle exception
+		}catch(NullPointerException e) {
+		   e.printStackTrace();
 		}finally{
 			result1.close();
 			psRenewSelect.close();
 			psRenewUpdate.close();
-			hcp.close();
+			Renewhcp.close();
 		}
-		return rs;
+		return true;
 	}
+	/*
+	private boolean checkGracePeroid(String ExpDate, String lTerm){
+		
+		System.out.println("Inside Method to check Grace Peroid...");
+		Calendar gracePeroidCal = Calendar.getInstance();
+		SimpleDateFormat sdfCal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		int gracedays = 0;
+		String graceDays = lTerm;
+		String expDate = ExpDate;
+		boolean condition = false;
+		switch (graceDays) {
+		case "Annual":
+			gracedays = -37;
+			break;
+		case "Season":
+			gracedays = -10;
+			break;
+		case "Month":
+			gracedays = -3;
+			break;
+		default:
+			break;
+		}
+		try {
+			gracePeroidCal.setTime(sdfCal.parse(expDate));
+		} catch (ParseException e2) {
+			System.out.println("Can't parse calender time...");
+			e2.printStackTrace();
+		}
+		gracePeroidCal.add(Calendar.DATE, gracedays);
+		
+		String startDate = sdfCal.format(gracePeroidCal.getTime());
+		Calendar currentCal = Calendar.getInstance();
+		 SimpleDateFormat currentSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String currentDate = currentSdf.format(currentCal.getTime());
+		try {
+			if(sdfCal.parse(startDate).before(sdfCal.parse(currentDate))){
+				condition=  true;
+				System.out.println("Grace Condition is true ...");
+				
+			}else{
+				condition = false;
+				System.out.println("Grace Condition is false ...");
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return condition;
+	}*/
 
 	@Override
 	public void cleanup() {
