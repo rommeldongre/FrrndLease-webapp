@@ -24,9 +24,10 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     // checking in which page carousel is being loaded
     var user = localStorage.getItem("userloggedin");
-    if(user != "" || user != null || user != 'anonymous')
-        if(window.location.pathname == '/flsv2/mypostings.html')
+    if(user != "" || user != null || user != 'anonymous'){
+        if(window.location.hash == '#/mypostings')
             userId = user;
+    }
     
     // getting the width and height of the carousel when page gets loaded
     var getCarouselWidthHeight = function(){
