@@ -625,7 +625,6 @@
 		
 		function add_item(){				//called when Add Item is clicked then add the item to Items table and to Store table
 			currentWork = 'addItem';
-			setPrevPage("mypostings.html");
 			process_dialog("Posting Item Please Wait");
 			$('#submit').click();
 		}
@@ -780,8 +779,7 @@
 		}
 		
 		function redirectToPrevPage(){
-			prevPage = getPrevPage("prevPage");
-			window.location.replace(prevPage);
+			window.history.back();
 		}
 		
 		//getting item info when user wants to view an existing item--------------------------------------------------------------------		

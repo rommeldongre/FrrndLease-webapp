@@ -38,7 +38,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
                     
                     if(obj.userId == userFactory.user)
                         $scope.$apply(function(){
-                           $scope.wishList.push(obj); 
+                           $scope.wishList.unshift(obj); 
                         });
                     
                     itemNextId = obj.itemId;
@@ -53,7 +53,6 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
     initialPopulate();
     
     $scope.addWishItem = function(){
-        localStorage.setItem("prevPage","mywishlists.html");
         localStorage.setItem("prevFunc", "addWishItem");
 			
         window.location.replace("mywishitemDetails.html");
@@ -125,7 +124,6 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
     
     $scope.showItemDetails = function(itemId){
         localStorage.setItem("itemToShow", itemId);
-        localStorage.setItem("prevPage","mywishlists.html");
         localStorage.setItem("prevFunc", "viewItemOwner");
         window.location.replace('mywishitemDetails.html');
     }
