@@ -42,13 +42,13 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', funct
                             });
                         else
                             $scope.$apply(function(){
-                                $scope.friends.push(obj);
+                                $scope.friends.unshift(obj);
                             });
                             
                         console.log(obj);
                         
                         lastFriendId = response.Id;
-                        friendIdArray.push(response.Id);
+                        friendIdArray.unshift(response.Id);
                         getFriendsList();
                     }
                 },

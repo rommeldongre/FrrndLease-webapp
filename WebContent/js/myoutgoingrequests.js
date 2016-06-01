@@ -39,7 +39,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
             success: function(response) {
                 if(response.title){
                     $scope.$apply(function(){
-                        $scope.requests.push(response);
+                        $scope.requests.unshift(response);
                     });
                     itemNextRequestId = response.request_id;
                     getOutRequests(itemNextRequestId);

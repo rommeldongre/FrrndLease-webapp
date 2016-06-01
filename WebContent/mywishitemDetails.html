@@ -271,7 +271,6 @@
 		var userloggedin, reasonForGetItem, itemObj, reqObj, itemNo, leaseObj, storeObj, currentWork;
 		
 		function start(){
-			prevPage = getPrevPage();
 			
 			$("#modalTriggerButton").hide();
 			$("#alertModalTriggerButton").hide();
@@ -532,8 +531,7 @@
 		}	
 		
 		function redirectToPrevPage(){
-			prevPage = getPrevPage("prevPage");
-			window.location.replace(prevPage);
+			window.history.back();
 		}
 			
 		//getting item info when user wants to view an existing item--------------------------------------------------------------------		

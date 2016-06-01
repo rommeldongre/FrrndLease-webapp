@@ -77,7 +77,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
     }
     
     $scope.storeYourStuff = function(){
-        storeCurrentFunction('storeYourStuff');
+        localStorage.setItem("prevFunc", 'storeYourStuff');
 			
 		window.location.replace("mystore.html");
     }

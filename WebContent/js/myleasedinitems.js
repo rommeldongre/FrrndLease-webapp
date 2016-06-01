@@ -73,7 +73,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', f
                     var lease = {expiry:leaseExpiry, ownerName:leaseReqOwnerName, itemTitle:itemObj.title, itemId:itemObj.itemId, itemNextId:itemNextId};
                     if(leaseReqUser == userFactory.user)
                         $scope.$apply(function(){
-                            $scope.leases.push(lease);
+                            $scope.leases.unshift(lease);
                         });
                     getLeaseItem(itemNextId);
                 }

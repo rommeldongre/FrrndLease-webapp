@@ -43,7 +43,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
                     itemNextRequestId = response.requestId;
                     itemNextId = response.requestItemId;
                     $scope.$apply(function(){
-                        $scope.requests.push(response);
+                        $scope.requests.unshift(response);
                     });
                     
                     getInRequests(itemNextRequestId);
