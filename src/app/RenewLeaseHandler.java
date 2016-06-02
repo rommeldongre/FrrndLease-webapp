@@ -286,7 +286,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					hcp.close();
 					return false;
 				}
-
+				LOGGER.info("Add Credit query executed successfully...");
+				
 				// subtract credit from user getting a lease
 				   String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
 				psDebitCredit = hcp.prepareStatement(sqlSubCredit);
@@ -301,10 +302,11 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					hcp.rollback();
 					return false;
 				}
-					LOGGER.info("renew Lease query executed successfully...");
+					LOGGER.info("Debit Credit query executed successfully...");
 					rs.setCode(FLS_SUCCESS);
 					rs.setId(rq.getReqUserId());
 					rs.setMessage(FLS_SUCCESS_M);
+					LOGGER.info("renew Lease query executed successfully...");
 					hcp.commit();
 		} catch (SQLException e1) {
 			// TODO: handle exception
