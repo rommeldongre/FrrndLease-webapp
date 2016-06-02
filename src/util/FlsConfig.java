@@ -10,7 +10,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2004;			
+	public final int appBuild = 2005;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -257,6 +257,66 @@ public class FlsConfig extends Connect{
 			}
 			
 			dbBuild = 2004;
+			
+			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
+			try{
+				getConnection();
+				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
+				ps.executeUpdate();
+				ps.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		if(dbBuild < 2005){
+			// updating users table for location data
+			String sql_users_location_columns = "ALTER TABLE `users` ADD `user_lat` FLOAT(10,6) NOT NULL AFTER `user_credit`, ADD `user_lng` FLOAT(10,6) NOT NULL AFTER `user_lat`, ADD `user_address` VARCHAR(255) NOT NULL AFTER `user_long`, ADD `user_locality` VARCHAR(255) NOT NULL AFTER `user_address`, ADD `user_sublocality` VARCHAR(255) NOT NULL AFTER `user_locality`";
+			try{
+				getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql_users_location_columns);
+				ps.executeUpdate();
+				ps.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}finally{
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+			
+			// updating items table for location data
+			String sql_items_location_columns = "ALTER TABLE `items` ADD `item_lat` FLOAT(10,6) NOT NULL AFTER `item_uid`, ADD `item_long` FLOAT(10,6) NOT NULL AFTER `item_lat`";
+			try{
+				getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql_items_location_columns);
+				ps.executeUpdate();
+				ps.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}finally{
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+			
+			dbBuild = 2005;
 			
 			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
 			try{

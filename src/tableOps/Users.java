@@ -20,7 +20,8 @@ public class Users extends Connect {
 	private FlsLogger LOGGER = new FlsLogger(Users.class.getName());
 
 	private String userId, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
-			check = null, token;
+			check = null, token, address, locality, sublocality;
+	private float lat, lng;
 	private String signUpStatus;
 	private int Code;
 	private UsersModel um;
@@ -97,8 +98,13 @@ public class Users extends Connect {
 		auth = um.getAuth();
 		activation = um.getActivation();
 		status = um.getStatus();
+		address = um.getAddress();
+		locality = um.getLocality();
+		sublocality = um.getSublocality();
+		lat = um.getLat();
+		lng = um.getLng();
 
-		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit) values (?,?,?,?,?,?,?,?)";
+		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		getConnection();
 
 		try {
@@ -114,6 +120,11 @@ public class Users extends Connect {
 			stmt.setString(6, activation);
 			stmt.setString(7, status);
 			stmt.setInt(8, 10);
+			stmt.setFloat(9, lat);
+			stmt.setFloat(10, lng);
+			stmt.setString(11, address);
+			stmt.setString(12, locality);
+			stmt.setString(13, sublocality);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);
