@@ -61,9 +61,8 @@
                     Lat = response.results[0].geometry.location.lat;
                     Lng = response.results[0].geometry.location.lng;
                     
-                    sendAddData();
                 }
-                
+                sendAddData();
             },
             error: function(){
                 alert("not able to get location data");
