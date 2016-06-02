@@ -58,10 +58,15 @@ public class GetProfileHandler extends Connect implements AppHandler {
 				rs.setMobile(result.getString("user_mobile"));
 				rs.setLocation(result.getString("user_location"));
 				rs.setCredit(result.getInt("user_credit"));
+				rs.setAddress(result.getString("user_address"));
+				rs.setLocality(result.getString("user_locality"));
+				rs.setSublocality(result.getString("user_sublocality"));
+				rs.setLat(result.getFloat("user_lat"));
+				rs.setLng(result.getFloat("user_lng"));
 				rs.setCode(FLS_SUCCESS);
 
 				LOGGER.info("Printing out ResultSet: " + rs.getFullName() + ", " + rs.getMobile() + ", "
-						+ rs.getLocation() + rs.getCredit());
+						+ rs.getLocation() + ", " + rs.getCredit() + ", " + rs.getAddress());
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);

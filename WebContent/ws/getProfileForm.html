@@ -30,6 +30,11 @@
 					document.getElementById("mobile").value = response.mobile;
 					document.getElementById("location").value = response.location;
 					document.getElementById("credit").value = response.credit;
+                    document.getElementById("address").value = response.address;
+                    document.getElementById("locality").value = response.locality;
+                    document.getElementById("sublocality").value = response.sublocality;
+                    document.getElementById("latitude").value = response.lat;
+                    document.getElementById("longitude").value = response.lng;
 					document.getElementById("message").value = "";
 				}
 				else{
@@ -37,6 +42,11 @@
 					document.getElementById("mobile").value = "";
 					document.getElementById("location").value = "";
 					document.getElementById("credit").value = "";
+                    document.getElementById("address").value = "";
+                    document.getElementById("locality").value = "";
+                    document.getElementById("sublocality").value = "";
+                    document.getElementById("latitude").value = "";
+                    document.getElementById("longitude").value = "";
 					document.getElementById("message").value = response.message;	
 				}
 			},
@@ -63,6 +73,11 @@
 		Mobile : <input type="text" name="mobile" id="mobile"><br/><br/>
 		Location : <input type="text" name="location" id="location"><br/><br/>
 		Credit : <input type="text" name="credit" id="credit"><br/><br/>
+		Address : <input type="text" name="address" id="address"><br/><br/>
+		Locality : <input type="text" name="locality" id="locality"><br/><br/>
+		Sublocality : <input type="text" name="sublocality" id="sublocality"><br/><br/>
+		Latitude : <input type="text" name="latitude" id="latitude"><br/><br/>
+		Longitude : <input type="text" name="longitude" id="longitude"><br/><br/>
 	</form>
 	
 	<br/>

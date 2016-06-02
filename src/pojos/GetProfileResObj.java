@@ -6,7 +6,8 @@ public class GetProfileResObj extends ResObj{
 	String message;
 
 	int credit;
-	String fullName, mobile, location;
+	String fullName, mobile, location, address, locality, sublocality;
+	float lat, lng;
 
 	public int getCode() {
 		return code;
@@ -54,5 +55,45 @@ public class GetProfileResObj extends ResObj{
 	
 	public int getCredit(){
 		return this.credit;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getSublocality() {
+		return sublocality;
+	}
+
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
+	}
+
+	public float getLat() {
+		return lat;
+	}
+
+	public void setLat(float lat) {
+		this.lat = lat;
+	}
+
+	public float getLng() {
+		return lng;
+	}
+
+	public void setLng(float lng) {
+		this.lng = lng;
 	}
 }
