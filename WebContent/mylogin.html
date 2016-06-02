@@ -317,7 +317,6 @@
 		
 		function confirmationIndex(msg){			//called from script_admin_v2.js
 			if(msg == -1){
-				setPrevPage("mylogin.html");
 				
 				var heading = document.getElementById("myModalLabel");
 				heading.innerHTML = "Login Failed";
@@ -325,7 +324,6 @@
 				var div = document.getElementById("modalMsg");
 				div.innerHTML = loginerrormsg;
 			}else{
-				setPrevPage("index.html");
 				
 				var heading = document.getElementById("myModalLabel");
 				heading.innerHTML = "Login Successful";
@@ -410,11 +408,7 @@
         }
 		
 		function redirectToPrevPage(){
-			prevPage = getPrevPage();
-			
-			if(prevPage != "mylogin.html"){
-				window.location.replace(prevPage);
-			}
+			window.history.back();
 		}
 		
 		function redirectToHomePage(){

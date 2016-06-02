@@ -358,7 +358,6 @@
 	
 		function confirmationIndex(msg){			//called from script_admin_v2.js
 			if(msg == 200){
-				setPrevPage("mysignup.html");
 				
 				var heading = document.getElementById("myModalLabel");
 				heading.innerHTML = "Signup Failed";
@@ -366,7 +365,6 @@
 				var div = document.getElementById("modalMsg");
 				div.innerHTML = "User Already Exists";
 			}else{
-				setPrevPage("index.html");
 				
 				var heading = document.getElementById("myModalLabel");
 				heading.innerHTML = "Signup Successful";
@@ -387,10 +385,7 @@
 		}
 		
 		function redirectToPrevPage(){
-			prevPage = getPrevPage();
-			
-			if(prevPage != "mysignup.html")
-				window.location.replace(prevPage);
+			window.history.back();
 		}
 		
 		function redirectToHomePage(){

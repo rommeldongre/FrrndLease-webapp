@@ -3,7 +3,7 @@ var indexApp = angular.module('indexApp', ['headerApp', 'carouselApp']);
 indexApp.controller('indexCtrl', ['$scope', 'search', 'userFactory', 'getItemsForCarousel', function($scope, search, userFactory, getItemsForCarousel){
     
     if(userFactory.user != "" && userFactory.user != null && userFactory.user != 'anonymous')
-        window.location.replace("myindex.html");
+        window.location.replace("myapp.html");
 
     $scope.storeYourStuff = function(){
         if(userFactory.user == "" || userFactory.user == null || userFactory.user == 'anonymous'){

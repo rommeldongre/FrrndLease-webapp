@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+	
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>fRRndLease - Make Space for Life</title>
+      
+    <!-- Angularjs api -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-route.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+    <!-- Angularjs api ends -->
+      
+    <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+    
+    <!-- JavaScript Library to parse CSV file -->
+	<script src="js/d3.min.js"></script>
+	<!-- JavaScript Library to parse CSV file wnds here-->
+    
+	<!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/index.css" rel="stylesheet">
+	<link href="css/mystore.css" rel="stylesheet">
+	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+	
+	<!--Loading Animation code CSS & JS Links  -->
+	<link href="css/animation.css" type="text/css" rel="stylesheet">
+	<script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/jquery.backstretch.js"></script>
+	<script src="js/animation.js"></script>
+	<!--Loading Animation code CSS & JS Links ends here  -->
+  </head>
+    
+    <body onload="start()">
+        <div id="loader"></div>
+        <div>
+            
+        <!--header starts---------------------------------------->
+        <div>
+          <div ng-include="'header.html'"></div>
+        </div>
+        <!--header ends----------------------------------------->
+        
+        <div ng-view></div>
+        
+        <!--The tawk.to widget code will get populated here from file chatbox.html.-->
+        <div id="tawk_widget"></div>
+            
+        <!--Footer starts here-->
+		<div ng-include="'footer.html'"></div>
+        <!--Footer ends here-->
+        </div>
+        
+        <!-- Button trigger Alert Modal -->
+			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">
+			  Launch demo modal
+			</button>
+
+			<!-- Alert Modal -->
+			<div class="modal fade" id="myAlertModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<!--<h4 class="modal-title" id="myModalLabel">Modal title</h4>-->
+				  </div>
+				  <div class="modal-body" id="alertModalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="continueWork()">Yes</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Button trigger Confirmation Modal -->
+			<button id="modalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" data-backdrop="static" data-keyboard="false">
+			  Launch demo modal
+			</button>
+			
+			<!-- Confirmation Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+				  </div>
+				  <div class="modal-body" id="modalMsg">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="redirectToPrevPage()">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Div trigger Text Input Modal -->
+			<div id="inputTriggerButton" class="span4 proj-div" data-toggle="modal" data-target="#myModalAlert" data-backdrop="static" data-keyboard="false" data-backdrop="static" data-keyboard="false"></div>
+
+			<!-- Text Input Modal Modal -->
+			<div class="modal fade" id="myModalAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabelInput">
+					</h4>
+				  </div>
+				  <div class="modal-body" id="modalMsgInput">
+					<input type="file" name="csvfile" id="csvfile" accept=".csv" class="form-control">
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="">Close</button>
+					<button type="button" class="btn btn-primary" onclick="import_havelist()">Submit CSV File</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- sample pop up starts here-->
+			<!--<button href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>-->
+			<div id="opendiv" class="span4 proj-div" data-toggle="modal" data-target="#myModalTable" data-backdrop="static" data-keyboard="false"></div>
+
+			<div class="modal fade" id="myModalTable" style="overflow-y: auto;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 class="modal-title">Import Amazon Orders</h3>
+					</div>
+					<div class="modal-body">
+					<h5 class="text-center">Please Select the Amazon Orders you want to Import</h5>
+					<table id="friendsoptionstable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
+						<thead>
+							<tr>
+								<!--<th class="tablecell"  style='word-wrap: break-word'>Email</th>-->
+								<th class="tablecell" style="width: 35%">Title</th>
+								<th class="tablecell" style="width: 15%">ASIN</th>
+								<th class="tablecell" style="width: 20%">Category</th>
+								<th class="tablecell" style="width: 20%">Price(INR)</th>
+								<th class="tablecell" style="width: 12%">Import</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+					<!--<div class="form-group">
+						<input type="button" class="btn btn-warning btn-sm pull-right" value="Reset">
+						<div class="clearfix"></div>
+					</div>-->
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-default " data-dismiss="modal" onclick="redirectToPrevPage()">Cancel</button>
+					<button class="btn btn-primary" id="addcheckedfriends1" onclick="add_checked_items()">Save Selected Items</button>
+					<!--<button type="button" class="btn btn-success" onclick="add_checked_friends() >Import Contacts</button>-->
+					</div>
+							
+				</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div>
+			
+			<!-- "Please Wait" Modal Start here-->
+			<div id="wait_bar_mypostings">
+				<div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait" data-backdrop="static" data-keyboard="false">..</div>
+			
+				<div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h4 id="waitheading"></h4>
+					</div>
+					<div class="modal-body">
+						<div class="progress">
+						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+						</div>
+						</div>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			<!-- "Please Wait" Modal ends Here -->
+        
+        <script type="text/javascript">
+
+            var checkcounter =0, amazon_counter=0, amazon_orders_counter=0;
+            
+            function start(){	
+                
+                $("#modalTriggerButton").hide();
+                $("#alertModalTriggerButton").hide();
+                $("#inputTriggerButton").hide();
+                $("#opendiv").hide();
+                $("#opendivmyPleaseWait").hide();
+                
+                look_good();
+
+                load_Gapi();
+            }
+
+            function load_Gapi(){						//for google
+                gapi.load('auth2', function() {
+                    gapi.auth2.init();
+                });
+            }
+            
+            function process_dialog(heading){
+                var header = document.getElementById("waitheading");
+                header.innerHTML = heading;
+                $("#opendivmyPleaseWait").click();
+            }
+
+            function add_haveitem(){
+                var header = document.getElementById("myModalLabelInput");
+                header.innerHTML = "Import CSV file containing Amazon Orders Report";
+                $("#inputTriggerButton").click();
+            }
+
+            function import_havelist(){
+                if( document.getElementById("csvfile").files.length != 0){
+                    parse_csv();
+                    $('#myModalAlert').modal('toggle');
+                    $("#opendiv").click();
+                }else{
+                    console.log("No Input file Given: ");
+                }
+            }
+
+            function parse_csv(){
+                var myfile = $("#csvfile").prop('files')[0];
+
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    processCsv(d3.csv.parse(reader.result));
+                }
+
+                reader.readAsText(myfile);
+
+                // Process CSV
+                var processCsv = function (csvData) {
+                    var i,title,category,asin="-",cost="-";
+                    amazon_orders_counter = csvData.length;
+                    for(i=0;i<amazon_orders_counter;i++){
+
+                        if(csvData[i]["Title"]){
+                            title = csvData[i]["Title"];
+                        }else{
+                            title = "-";
+                        }
+                        if(csvData[i]["Category"]){
+                            category = "Furniture";
+                        }else{
+                            category = "-";
+                        }
+                        if(csvData[i]["ASIN/ISBN"]){
+                            asin = csvData[i]["ASIN/ISBN"];
+                        }else{
+                            asin = "-";
+                        }
+
+                        if(csvData[i]["List Price Per Unit"]){
+                            cost = csvData[i]["List Price Per Unit"];
+                            cost = cost.replace("$", "");
+                            cost = parseInt(cost);
+                        }else{
+                            cost = "-";
+                        }
+                        addFriendOptionToPage(title,category,asin,cost,i); 
+                    }
+                };
+            }
+
+            function addFriendOptionToPage(title,category,asin,cost,i){
+                var table = document.getElementById("friendsoptionstable");
+                    var row = table.insertRow(1);
+                    var cell0 = row.insertCell(0);
+                    var cell1 = row.insertCell(1);
+                    var cell2 = row.insertCell(2);
+                    var cell3 = row.insertCell(3);
+                    var cell4 = row.insertCell(4);
+
+                    var inputgp = document.createElement("div");
+                    var checkbox = document.createElement("input");
+                    inputgp.className = "input-group";
+                    checkbox.setAttribute("type","checkbox");
+                    checkbox.checked= true;
+                    inputgp.appendChild(checkbox);
+                    checkbox.id = i;
+
+                    var input_price = document.createElement("input"); 
+                    input_price.setAttribute("type","number");
+                    input_price.style.width="100%";
+                    input_price.setAttribute("value",cost);
+                    input_price.setAttribute("min","1000");
+                    input_price.setAttribute("max","10000");
+                    input_price.innerHTML = cost;
+
+                    cell0.innerHTML = title;
+                    cell1.innerHTML = asin;
+                    cell2.innerHTML = category;
+                    cell3.appendChild(input_price);
+                    cell4.appendChild(inputgp);
+
+                    cell0.id = "title"+i;
+                    cell1.id = "asin"+i;
+                    cell2.id = "category"+i;
+                    cell3.id = "cost"+i;
+
+                    cell0.className = "tablecelltitle";
+                    cell1.className = "tablecellasin";
+                    cell2.className = "tablecellcategory";
+                    cell3.className = "tablecellcost";
+                    cell4.className = "checkboxes";
+            }
+
+            function add_checked_items(){
+                if(amazon_counter==0){
+                $('#myModalTable').modal('toggle');
+                process_dialog("Adding Items Please Wait");
+                }
+                    if(amazon_counter<amazon_orders_counter){
+                        var ischecked = $("#"+amazon_counter).is(":checked");
+
+                        if(ischecked){
+                            title = $("#title"+amazon_counter).text();
+                            asin = $("#asin"+amazon_counter).text();
+                            category = $("#category"+amazon_counter).text();
+                            cost = $("#cost"+amazon_counter).text();
+                            checkcounter++;
+
+                            add_checked_items_ajax(title,asin,category,cost);
+                        }else{
+                            add_checked_items_continued();		//basically just increment and call the same function again
+                        }
+                    }else{
+                        $("#myPleaseWait").hide();
+                        confirmationIndex("Successful" , " Number of Amazon Ordered Items Imported : "+checkcounter);
+                    }
+            }
+
+            function add_checked_items_continued(){
+                amazon_counter++;
+                add_checked_items();
+            }
+
+            function add_checked_items_ajax(i_title,i_asin,i_category,i_cost){
+
+                var req = {
+                    id: 0,
+                    title: i_title,
+                    description: "External link of item is: "+"http://lead.to/ae/?key="+i_asin,
+                    category: i_category,
+                    userId: userloggedin,
+                    leaseValue: i_cost,
+                    leaseTerm: "Season",
+                    status: "InStore",
+                    image: ""
+                };
+
+                    $.ajax({
+                    url: '/flsv2/PostItem',
+                    type: 'post',
+                    data: {req : JSON.stringify(req)},
+                    contentType: "application/x-www-form-urlencoded",
+                    dataType: "json",
+
+                    success: function(response) {
+                        add_checked_items_continued();
+                        //alert(response.Code+" "+response.Message);
+                    },
+
+                    error: function() {
+                        var heading = "Unsuccessful";
+                        var msg = "Not Working";
+                        confirmationIndex(heading ,msg);
+                    }
+                });
+            }
+                
+            function confirmationIndex(heading, msg){			
+                var header = document.getElementById("myModalLabel");
+                header.innerHTML = heading;
+                var div = document.getElementById("modalMsg");
+                div.innerHTML = msg;
+
+                $("#modalTriggerButton").click();
+            }
+
+            function look_good(){
+                var height = $(window).height();
+                var width = $(window).height();
+
+                $("#marketingheading").css({
+                    'position': 'relative',
+                    'margin-top': (height*0.2)+"px",			//20% of height
+                    'font-size': (width*0.6)+"%",				//10% of width
+                });		
+
+                $("#marketingline").css({
+                    'position': 'relative',
+                    'font-size': (width*0.3)+"%",				//30% of width
+                });
+
+                $("#marketingstore").css({
+                    'position': 'relative',
+                    'margin-top': (height*0.03)+"px",		//3% of height	
+                });		//2% of height
+
+                $("#footerpanel").css({
+                    'position': 'relative',
+                    'margin-top': -(height*0.15)+'px',		//-10% of height
+                });
+
+                $("#footerpanel").css({
+                    'position': 'relative',
+                    'margin-top': -(height*0.05)+'px',		//5% of height
+                    'bottom': '0',
+                });
+            }	
+
+        </script>
+        
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/header.js"></script>
+        <script src="js/carousel.js"></script>
+        <script src="js/myapp.js"></script>
+        <script src="js/myindex.js"></script>
+        <script src="js/myprofile.js"></script>
+        <script src="js/myfriendslist.js"></script>
+        <script src="js/myleasedinitems.js"></script>
+        <script src="js/myleasedoutitems.js"></script>
+        <script src="js/myoutgoingrequests.js"></script>
+        <script src="js/myincomingrequests.js"></script>
+        <script src="js/mywishlists.js"></script>
+        <script src="js/mypostings.js"></script>
+        <script src="js/tawk.js"></script>
+    </body>
+</html>

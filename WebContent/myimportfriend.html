@@ -257,7 +257,6 @@
 			$("#alertModalTriggerButton").hide();
 			$("#addcheckedfriends").hide();
 			$("#openBtn").hide();
-			setPrevPage("myimportfriend.html");
 			load_Gapi();
 			
 			// I am using localStorage here in this file instead of the model file because multiple users will need to be logged in simultaneously at different devices
@@ -439,12 +438,10 @@
 						
 					}
 					if(errCount!=0){
-						setPrevPage("myimportfriend.html");
 						var validEmail = len-errCount;
 						confirmationIndex("Success", "Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount);	
 					}
 				}else{
-					setPrevPage("myimportfriend.html");
 					confirmationIndex("Sorry", "Please enter emails less than or equal to 20");
 				}
 			}	
@@ -512,7 +509,6 @@
 		
 		function storeYourStuff(){
 			storeCurrentFunction('storeYourStuff');
-			setPrevPage("myimportfriend.html");
 			
 			window.location.replace("mystore.html");
 		}
@@ -522,8 +518,7 @@
 		}
 
 		function redirectToPrevPage(){
-			prevPage = getPrevPage("prevPage");
-			window.location.replace(prevPage);
+			window.history.back();
 		}		
 		
 		function look_good(){

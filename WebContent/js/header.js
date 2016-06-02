@@ -77,7 +77,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
     }
     
     $scope.storeYourStuff = function(){
-        storeCurrentFunction('storeYourStuff');
+        localStorage.setItem("prevFunc", 'storeYourStuff');
 			
 		window.location.replace("mystore.html");
     }
@@ -114,7 +114,7 @@ headerApp.factory('userFactory', function(){
 // service to implement modal
 headerApp.service('modalService', ['$uibModal',
     function ($uibModal) {
-
+        
         var modalDefaults = {
             animation: true,
             backdrop: true,
@@ -125,8 +125,9 @@ headerApp.service('modalService', ['$uibModal',
         var modalOptions = {
             actionButtonText: 'YES',
             showCancel: true,
-            cancelButtonText: 'NO',
-            headerText: 'Item Details Page Says',
+            submitting: false,
+            cancelButtonText: 'CANCEL',
+            headerText: 'Frrndlease Says',
             bodyText: 'Perform this action?'
         };
 
@@ -149,9 +150,10 @@ headerApp.service('modalService', ['$uibModal',
 
             if (!tempModalDefaults.controller) {
                 tempModalDefaults.controller = function ($scope, $uibModalInstance) {
+                    $scope.submit = {};
                     $scope.modalOptions = tempModalOptions;
                     $scope.modalOptions.ok = function (result) {
-                        $uibModalInstance.close(result);
+                        $uibModalInstance.close($scope.submit.url);
                     };
                     $scope.modalOptions.cancel = function () {
                         $uibModalInstance.dismiss('cancel');

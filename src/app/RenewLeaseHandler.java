@@ -136,7 +136,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				
 				String insertStoreSql = "insert into store (store_item_id) values (?)"; //
 				LOGGER.info("Creating insert statement store table.....");
-				psStoreUpdate = connection.prepareStatement(insertStoreSql);
+				psStoreUpdate = hcp.prepareStatement(insertStoreSql);
 
 				LOGGER.info("Statement created. Executing update query on store table.....");
 				psStoreUpdate.setInt(1, rq.getItemId());
