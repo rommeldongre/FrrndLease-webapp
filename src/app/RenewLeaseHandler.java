@@ -193,9 +193,10 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 
 	private boolean renewLease(RenewLeaseReqObj rq, RenewLeaseResObj rs) throws SQLException {
 		
-		PreparedStatement psRenewSelect = null,psRenewUpdate = null;
+		PreparedStatement psRenewSelect = null,psRenewUpdate = null, psAddCredit = null, psDebitCredit = null;
 		ResultSet result1 = null;
-		Connection Renewhcp = getConnectionFromPool();
+		Connection hcp = getConnectionFromPool();
+		int addCredit = 0, subCredit = 0;
 		
 		Calendar cal = new GregorianCalendar();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -205,7 +206,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		String SelectRenewLeasesql = "SELECT lease_expiry_date,lease_id FROM leases WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?";
 		
 		try {
-			psRenewSelect = Renewhcp.prepareStatement(SelectRenewLeasesql);
+			psRenewSelect = hcp.prepareStatement(SelectRenewLeasesql);
 			psRenewSelect.setString(1, rq.getReqUserId());
 			psRenewSelect.setInt(2, rq.getItemId());
 			psRenewSelect.setString(3, "Active");
@@ -215,7 +216,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				System.out.println("Empty result while firing select query on lease table for Renew Lease");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				Renewhcp.close();
+				hcp.close();
 				return false;
 			}
 				
@@ -232,7 +233,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					//rs.setId("Error");
 					rs.setMessage("Renewal Failed as Item not in Grace Peroid");
-					Renewhcp.close();
+					hcp.close();
 					return false;
 				}
 				
@@ -247,9 +248,10 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				String date = sdf.format(cal.getTime());
 				LOGGER.warning(date);
 				
+				hcp.setAutoCommit(false);
 				String UpdateRenewLeasesql = "UPDATE`leases` SET lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status =?"; //
 				
-				psRenewUpdate = Renewhcp.prepareStatement(UpdateRenewLeasesql);
+				psRenewUpdate = hcp.prepareStatement(UpdateRenewLeasesql);
 	
 				LOGGER.info("Statement created. Executing renew query ...");
 				psRenewUpdate.setString(1, date);
@@ -264,14 +266,46 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					System.out.println("Error occured while firing Update query on lease table for Renew Lease");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					Renewhcp.close();
+					hcp.rollback();
+					hcp.close();
+					return false;
+				}
+				
+				// add credit to user giving item on lease
+				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
+				psAddCredit = hcp.prepareStatement(sqlAddCredit);
+				psAddCredit.setString(1, rq.getUserId());
+				addCredit = psAddCredit.executeUpdate();
+				
+				if(addCredit == 0){
+					System.out.println("Error occured while firing 1st update credit query on 5th table(users)");
+					rs.setCode(FLS_ENTRY_NOT_FOUND);
+					rs.setError("500");
+					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+					hcp.rollback();
+					hcp.close();
+					return false;
+				}
+
+				// subtract credit from user getting a lease
+				   String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
+				psDebitCredit = hcp.prepareStatement(sqlSubCredit);
+				psDebitCredit.setString(1, rq.getReqUserId());
+				subCredit = psDebitCredit.executeUpdate();
+
+				if(subCredit == 0){
+					System.out.println("Error occured while firing 2nd update credit query on 5th table(users)");
+					rs.setCode(FLS_ENTRY_NOT_FOUND);
+					rs.setError("500");
+					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+					hcp.rollback();
 					return false;
 				}
 					LOGGER.info("renew Lease query executed successfully...");
 					rs.setCode(FLS_SUCCESS);
 					rs.setId(rq.getReqUserId());
 					rs.setMessage(FLS_SUCCESS_M);
-					//hcp.commit();
+					hcp.commit();
 		} catch (SQLException e1) {
 			// TODO: handle exception
 		}catch(NullPointerException e) {
@@ -281,7 +315,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				result1.close();
 				psRenewSelect.close();
 				if(psRenewUpdate!=null) psRenewUpdate.close();	
-				Renewhcp.close();
+				hcp.close();
 			} catch (Exception e2) {
 				// TODO: handle exception
 				e2.printStackTrace();
