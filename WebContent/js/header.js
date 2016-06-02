@@ -130,7 +130,7 @@ headerApp.service('modalService', ['$uibModal',
             headerText: 'Frrndlease Says',
             bodyText: 'Perform this action?'
         };
-
+        
         this.showModal = function (customModalDefaults, customModalOptions) {
             if (!customModalDefaults) customModalDefaults = {};
             customModalDefaults.backdrop = 'static';
