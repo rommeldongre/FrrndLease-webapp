@@ -1,5 +1,6 @@
 package tableOps;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +11,6 @@ import org.json.JSONObject;
 import adminOps.Response;
 import connect.Connect;
 import pojos.UsersModel;
-
 import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
@@ -327,14 +327,16 @@ public class Users extends Connect {
 		auth = um.getAuth();
 		LOGGER.info("Inside GetPrevious method");
 
-		getConnection();
+		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null;
+		ResultSet result1 = null, rs = null;
+		Connection hcp = getConnectionFromPool();
 
 		try {
 			String select_status_sql = "Select user_status FROM users WHERE user_id=?";
-			PreparedStatement ps1 = connection.prepareStatement(select_status_sql);
+			ps1 = hcp.prepareStatement(select_status_sql);
 			ps1.setString(1, token);
 
-			ResultSet result1 = ps1.executeQuery();
+			result1 = ps1.executeQuery();
 
 			if (result1.next()) {
 
@@ -346,13 +348,13 @@ public class Users extends Connect {
 						String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 
 						LOGGER.info("Creating a statement .....");
-						PreparedStatement stmt = connection.prepareStatement(sql);
+						stmt = hcp.prepareStatement(sql);
 
 						LOGGER.info("Statement created. Executing getPrevious query...");
 						stmt.setString(1, token);
 						stmt.setString(2, auth);
 
-						ResultSet rs = stmt.executeQuery();
+						rs = stmt.executeQuery();
 						while (rs.next()) {
 							JSONObject json = new JSONObject();
 							json.put("userId", rs.getString("user_id"));
@@ -392,13 +394,13 @@ public class Users extends Connect {
 							String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 
 							LOGGER.info("Creating a statement .....");
-							PreparedStatement stmt = connection.prepareStatement(sql);
+							stmt = hcp.prepareStatement(sql);
 
 							LOGGER.info("Statement created. Executing getPrevious query...");
 							stmt.setString(1, token);
 							stmt.setString(2, auth);
 
-							ResultSet rs = stmt.executeQuery();
+							rs = stmt.executeQuery();
 							while (rs.next()) {
 								JSONObject json = new JSONObject();
 								json.put("userId", rs.getString("user_id"));
@@ -413,7 +415,7 @@ public class Users extends Connect {
 
 							if (check != null) {
 								String update_status = "UPDATE users SET user_status=? WHERE user_id=?";
-								PreparedStatement stmt1 = connection.prepareStatement(update_status);
+								stmt1 = hcp.prepareStatement(update_status);
 
 								stmt1.setString(1, signUpStatus);
 								stmt1.setString(2, token);
@@ -447,6 +449,19 @@ public class Users extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				result1.close();
+				ps1.close();
+				if(rs!=null) rs.close();
+				if(s1!=null) s1.close();
+				if(stmt!=null) stmt.close();
+				if(stmt1!=null) stmt1.close();
+				hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
