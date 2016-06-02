@@ -193,8 +193,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 
 	private boolean renewLease(RenewLeaseReqObj rq, RenewLeaseResObj rs) throws SQLException {
 		
-		//RenewLeaseResObj rs = new RenewLeaseResObj();
-		//RenewLeaseResObj rs = null;
 		PreparedStatement psRenewSelect = null,psRenewUpdate = null;
 		ResultSet result1 = null;
 		Connection Renewhcp = getConnectionFromPool();
@@ -228,15 +226,15 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				String term = GLH.getLeaseTerm(rq.getItemId());
 				int days = GLH.getDuration(term);
 				
-				/*LOGGER.info("Executing Check Grace Period Method ..."+date1+" "+term);
+				LOGGER.info("Executing Check Grace Period Method ..."+date1+" "+term);
 				if(!checkGracePeroid(date1,term)){
-					System.out.println("Renew Lease not done as lease not in grace period");
+					LOGGER.info("Renew Lease not done as lease not in grace period");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					//rs.setId("Error");
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					//Renewhcp.close();
-					//return false;
-				}*/
+					rs.setMessage("Renewal Failed as Item not in Grace Peroid");
+					Renewhcp.close();
+					return false;
+				}
 				
 				LOGGER.info(" After Executing Check Grace Period Method ...");
 				try {
@@ -279,14 +277,19 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		}catch(NullPointerException e) {
 		   e.printStackTrace();
 		}finally{
-			result1.close();
-			psRenewSelect.close();
-			psRenewUpdate.close();
-			Renewhcp.close();
+			try {
+				result1.close();
+				psRenewSelect.close();
+				if(psRenewUpdate!=null) psRenewUpdate.close();	
+				Renewhcp.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
 		}
 		return true;
 	}
-	/*
+	
 	private boolean checkGracePeroid(String ExpDate, String lTerm){
 		
 		System.out.println("Inside Method to check Grace Peroid...");
@@ -335,7 +338,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 		}
 		return condition;
-	}*/
+	}
 
 	@Override
 	public void cleanup() {
