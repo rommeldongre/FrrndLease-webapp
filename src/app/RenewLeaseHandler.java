@@ -315,6 +315,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				result1.close();
 				psRenewSelect.close();
 				if(psRenewUpdate!=null) psRenewUpdate.close();	
+				if(psAddCredit!=null) psAddCredit.close();
+				if(psDebitCredit!=null) psDebitCredit.close();
 				hcp.close();
 			} catch (Exception e2) {
 				// TODO: handle exception
