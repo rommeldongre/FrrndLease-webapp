@@ -1,6 +1,6 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', function($scope, userFactory, profileFactory){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'statsFactory', function($scope, userFactory, profileFactory, statsFactory){
     
     if(window.location.href.indexOf("frrndlease.com") > -1){
         if(window.location.pathname == '/index.html' || window.location.pathname == '/'){
@@ -28,6 +28,20 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
         $scope.salutation = userFactory.userName;
     }
     
+	var displayStats = function(){
+        statsFactory.getStats().then(
+        function(response){
+            if (response.data.message == "Success") {
+                $scope.count = response.data.itemCount;
+            } else {
+                $scope.count = "";
+            }
+        },
+        function(error){
+            console.log("unable to get count: " + error.message);
+        });
+    }
+	
     var displayCredits = function(){
         profileFactory.getProfile(userFactory.user).then(
         function(response){
@@ -44,7 +58,10 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
     
     // populating the credits
     displayCredits();
-    
+	
+	// populating the credits
+	displayStats();
+	
     $scope.isAdmin = function(){
         if(userFactory.user == 'frrndlease@greylabs.org')
             return true;
@@ -82,6 +99,17 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', f
 		window.location.replace("mystore.html");
     }
     
+}]);
+
+// factory for getting Site Stats from the backend service
+headerApp.factory('statsFactory', ['$http', function($http){
+    
+    var dataFactory = {};
+    
+    dataFactory.getStats = function(){
+        return $http.post('/flsv2/GetSiteStats', JSON.stringify({empty_pojo: ""}));
+    }
+    return dataFactory;
 }]);
 
 // factory for getting and updating profile from the backend service
