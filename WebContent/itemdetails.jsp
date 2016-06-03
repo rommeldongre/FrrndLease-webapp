@@ -7,7 +7,15 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--Meta tags For Facebook start here-->
+	<meta property="og:title" content="New Item Posted on Frrndlease"/>
+	<meta property="og:type" content="website" />
+	<meta property="og:image" content="images/fls-logo.png" />
+	<meta property="og:url" content="http://www.frrndlease.com/ItemDetails?uid=${uid}" />
+	<meta property="og:description" content="${title}" />
+<!--Meta tags For Facebook end here-->
     
+
 <!-- Google Apis Start -->
 <meta name="google-signin-scope" content="profile email">
 <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">

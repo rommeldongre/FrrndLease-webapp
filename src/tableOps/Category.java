@@ -279,10 +279,10 @@ public class Category extends Connect {
 			e.printStackTrace();
 		}finally{
 			try {
-				rs.close();
-				stmt.close();
-				hcp.close();
-			} catch (SQLException e) {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

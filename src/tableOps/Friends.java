@@ -1,5 +1,6 @@
 package tableOps;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -82,22 +83,26 @@ public class Friends extends Connect {
 
 		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id) values (?,?,?,?)"; //
 		String sql1 = "SELECT * FROM friends WHERE friend_user_id=? AND friend_id=?";
-		getConnection();
+		PreparedStatement stmt1 = null,s1 = null, stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 
 		try {
 			LOGGER.info("Creating Select statement.....");
-			PreparedStatement stmt1 = connection.prepareStatement(sql1);
+			stmt1 = hcp.prepareStatement(sql1);
 			stmt1.setString(1, userId);
 			stmt1.setString(2, friendId);
 
-			ResultSet rs = stmt1.executeQuery();
-
+			rs = stmt1.executeQuery();
+			
 			while (rs.next()) {
 				check = rs.getString("friend_id");
+				LOGGER.info("Printing check val: "+check+" "+rs.getString("friend_full_name"));
 			}
+			
 			if (check == null) {
 				LOGGER.info("Creating statement.....");
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing query.....");
 				stmt.setString(1, friendId);
@@ -110,10 +115,11 @@ public class Friends extends Connect {
 				LOGGER.warning(message);
 				Code = 10;
 				Id = friendId;
+				res.setData(FLS_SUCCESS, Id, message);
 				
 				// to add credit in user_credit
 				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-				PreparedStatement s1 = connection.prepareStatement(sqlAddCredit);
+				s1 = hcp.prepareStatement(sqlAddCredit);
 				s1.setString(1, userId);
 				s1.executeUpdate();
 
@@ -132,15 +138,23 @@ public class Friends extends Connect {
 				}
 			} else {
 				LOGGER.warning("Friend Already exists.....");
-				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-			}
-
-			// res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
-			res.setData(Code, Id, message);
+				res.setData(FLS_SUCCESS, check, FLS_SUCCESS_M);
+			}		
 		} catch (SQLException e) {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				rs.close();
+				stmt1.close();
+				if(stmt!=null) stmt.close();	
+				if(s1!= null)  s1.close();
+				hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
