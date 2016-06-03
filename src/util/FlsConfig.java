@@ -298,7 +298,7 @@ public class FlsConfig extends Connect{
 			}
 			
 			// updating items table for location data
-			String sql_items_location_columns = "ALTER TABLE `items` ADD `item_lat` FLOAT(10,6) NOT NULL AFTER `item_uid`, ADD `item_long` FLOAT(10,6) NOT NULL AFTER `item_lat`";
+			String sql_items_location_columns = "ALTER TABLE `items` ADD `item_lat` FLOAT(10,6) NOT NULL AFTER `item_uid`, ADD `item_lng` FLOAT(10,6) NOT NULL AFTER `item_lat`";
 			try{
 				getConnection();
 				PreparedStatement ps = connection.prepareStatement(sql_items_location_columns);

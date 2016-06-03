@@ -48,6 +48,8 @@ public class ItemDetails extends HttpServlet {
 				httprequest.setAttribute("userId", response.getUserId());
 				httprequest.setAttribute("itemId", response.getId());
 				httprequest.setAttribute("uid", response.getUid());
+				httprequest.setAttribute("locality", response.getLocality());
+				httprequest.setAttribute("sublocality", response.getSublocality());
 			} else {
 				httprequest.setAttribute("code", response.getCode());
 				httprequest.setAttribute("message", "This item does not exist");

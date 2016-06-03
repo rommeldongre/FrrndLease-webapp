@@ -112,7 +112,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="location">Location</label>
-                                    <input type="text" class="form-control" id="location" ng-model="item.location" placeholder="Location">
+                                    <input type="text" class="form-control" id="location" value="${sublocality},${locality}" placeholder="Location" disabled>
 								</div>
 							</div>
 						</div>

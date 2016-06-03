@@ -62,6 +62,19 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			ps.close();
 
 			LOGGER.info("Update Query Result : " + result);
+			
+			// updating items table with lat lng
+			String updateItemsLatLng = "UPDATE items SET item_lat=?, item_lng=? WHERE item_user_id=?";
+			LOGGER.info("Creating statement for updating items table with lat lng.....");
+			
+			PreparedStatement ps1 = hcp.prepareStatement(updateItemsLatLng);
+			ps1.setFloat(1, rq.getLat());
+			ps1.setFloat(2, rq.getLng());
+			ps1.setString(3, rq.getUserId());
+			
+			LOGGER.info("statement created...executing update to items query");
+			ps1.executeUpdate();
+			ps1.close();
 
 			if (result == 1) {
 				rs.setCode(FLS_SUCCESS);

@@ -68,10 +68,29 @@ public class PostItemHandler extends Connect implements AppHandler {
 			desciption = "";
 		}
 		
+		String sqlUserLatLng = "SELECT user_lat, user_lng FROM users WHERE user_id=?";
+		
 		userId = rq.getUserId();
-		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
+		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image, item_lat, item_lng) values (?,?,?,?,?,?,?,?,?,?)";
 
 		try {
+			float lat = 0, lng = 0;
+			
+			LOGGER.info("Creating statement for selecting users lat lng.....");
+			PreparedStatement s1 = hcp.prepareStatement(sqlUserLatLng);
+			
+			LOGGER.info("Statement created. Executing query.....");
+			s1.setString(1, rq.getUserId());
+			ResultSet r1 = s1.executeQuery();
+			
+			if(r1.next()){
+				lat = r1.getFloat("user_lat");
+				lng = r1.getFloat("user_lng");
+			}
+			
+			r1.close();
+			s1.close();
+			
 			LOGGER.info("Creating statement.....");
 			PreparedStatement stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
@@ -84,6 +103,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 			stmt.setString(6, rq.getLeaseTerm());
 			stmt.setString(7, rq.getStatus());
 			stmt.setString(8, rq.getImage());
+			stmt.setFloat(9, lat);
+			stmt.setFloat(10, lng);
 			stmt.executeUpdate();
 			
 			
