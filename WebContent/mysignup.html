@@ -170,6 +170,9 @@
 	
 	<script type="text/javascript">
 		var signupname, signupemail, signupmobile, signuplocation, signuppassword, signupretypepassword, signupstatus, latitude, longitude, coords, reasonforLogIn = '', friends;
+        
+        // variables for storing the location data
+        var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0;
 		
 		function start(){
 			$("#modalTriggerButton").hide();
@@ -237,9 +240,24 @@
             signuppassword = CryptoJS.MD5(signuppassword);
             signuppassword = signuppassword.toString();
 
+            Address = '';
+            Sublocality = '';
+            Locality = '';
+            Lat = 0.0;
+            Lng = 0.0;
+
+            signuplocation = $("#location").val();
+            if(signuplocation != '')
+                getLocationData(signuplocation);
+            else
+                sendAddData();
+            
+        }
+        
+        sendAddData = function(){
             var signupactivation = CryptoJS.MD5(signupemail);
             signupactivation = signupactivation.toString();
-
+            
             var req = {
                 userId: signupemail,
                 fullName: signupname,
@@ -247,10 +265,40 @@
                 location: signuplocation,
                 auth: signuppassword,
                 activation: signupactivation,
-                status: signupstatus
-            };
-
+                status: signupstatus,
+                address: Address,
+                locality: Locality,
+                sublocality: Sublocality,
+                lat: Lat+"",
+                lng: Lng+""
+                }
             signUpSend(req);
+        }
+        
+        getLocationData = function(location){
+            $.ajax({
+                url: 'https://maps.googleapis.com/maps/api/geocode/json',
+                type: 'get',
+                data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
+                success: function(response){
+                    if(response.status == 'OK'){
+                        Address = response.results[0].formatted_address;
+                        response.results[0].address_components.forEach(function(component){
+                            if(component.types[0] == 'sublocality_level_1')
+                                Sublocality = component.long_name;
+                            if(component.types[0] == 'locality')
+                                Locality = component.long_name;
+                        });
+                        Lat = response.results[0].geometry.location.lat;
+                        Lng = response.results[0].geometry.location.lng;
+
+                    }
+                    sendAddData();
+                },
+                error: function(){
+                    console.log("not able to get location data");
+                }
+            });
         }
 
         function signUpSend(req){
