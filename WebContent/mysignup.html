@@ -265,7 +265,11 @@
 
                 success: function(response) {
                     //alert(response.Id+" "+response.Code+" "+response.Message);
+					if(response.Code === "FLS_SUCCESS") {
                     signupContinued(response.Code);			//this function is in signup.html
+					}else{
+						confirmationIndex(response.Id);
+					}
                 },		
                 error: function() {
                     var msg = "Not Working";

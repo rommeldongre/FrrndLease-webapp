@@ -98,12 +98,24 @@ public class Users extends Connect {
 		activation = um.getActivation();
 		status = um.getStatus();
 
-		String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit) values (?,?,?,?,?,?,?,?)";
-		getConnection();
+		PreparedStatement stmt = null, stmt1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
 
 		try {
+			String checkUserSql = "SELECT * FROM `users` WHERE user_id=?";
+			
+			LOGGER.info("Creating select statement to check existing users.....");
+			stmt1 = hcp.prepareStatement(checkUserSql);
+			
+			LOGGER.info("Statement created. Executing query.....");
+			stmt1.setString(1, userId);
+			rs1 = stmt1.executeQuery();
+			
+			if(!rs1.next()){
 			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit) values (?,?,?,?,?,?,?,?)";
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, userId);
@@ -131,10 +143,23 @@ public class Users extends Connect {
 			}
 
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			}else{
+				res.setData(FLS_DUPLICATE_ENTRY, "200", "Account with this Email Id already exists");	
+			}
 		} catch (SQLException e) {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				if(rs1!=null) rs1.close();
+				if(stmt!=null) stmt.close();
+				if(stmt1!=null) stmt1.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -451,13 +476,13 @@ public class Users extends Connect {
 			e.printStackTrace();
 		}finally{
 			try {
-				result1.close();
-				ps1.close();
+				if(result1!=null) result1.close();
+				if(ps1!=null) ps1.close();
 				if(rs!=null) rs.close();
 				if(s1!=null) s1.close();
 				if(stmt!=null) stmt.close();
 				if(stmt1!=null) stmt1.close();
-				hcp.close();
+				if(hcp!=null) hcp.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
