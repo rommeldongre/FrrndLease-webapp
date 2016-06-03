@@ -19,6 +19,12 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
 //        addToWishList(data);
     });
     
+    $scope.$on('locationStringChanged', function(event, lat, lng){
+        // called on the page load
+        console.log(lat + "::::" + lng);
+        initPopulate();
+    });
+    
     // Initialising the categories
     $scope.categories = [{label:'ALL',active:true}];
     
@@ -179,9 +185,6 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             }
 	   });
     }
-    
-    // called on the page load
-    initPopulate();
     
     $scope.loadPrevSlide = function(){
         $scope.showNext = true;
