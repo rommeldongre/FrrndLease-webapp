@@ -269,6 +269,8 @@
     <script src="js/itemdetails.js"></script>
     <script src="js/tawk.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-
+    <!-- For Autocomplete Feature -->
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
+    <script src="js/ngAutocomplete.js"></script>
 </body>
 </html>

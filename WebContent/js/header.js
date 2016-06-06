@@ -1,8 +1,14 @@
-var headerApp = angular.module('headerApp', ['ui.bootstrap']);
+var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
 headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'getLocation', function($scope, userFactory, profileFactory, getLocation){
     
     $scope.search = {};
+    
+    $scope.options = {
+        country: 'in'
+    };
+    
+    $scope.details = '';
     
     if(window.location.href.indexOf("frrndlease.com") > -1){
         if(window.location.pathname == '/index.html' || window.location.pathname == '/'){
