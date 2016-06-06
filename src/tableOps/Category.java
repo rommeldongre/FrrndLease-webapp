@@ -189,7 +189,7 @@ public class Category extends Connect {
 
 		try {
 			LOGGER.info("Creating Statement....");
-			stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, name);
 			rs = stmt2.executeQuery();
 			while (rs.next()) {
@@ -197,7 +197,7 @@ public class Category extends Connect {
 			}
 
 			if (check != null) {
-				stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, description);
