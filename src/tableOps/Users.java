@@ -168,22 +168,24 @@ public class Users extends Connect {
 		check = null;
 		LOGGER.info("Inside delete method....");
 
-		getConnection();
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		String sql = "DELETE FROM users WHERE user_id=?";
 		String sql2 = "SELECT * FROM users WHERE user_id=?";
 
 		try {
 			LOGGER.info("Creating statement...");
 
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, userId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("user_id");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, userId);
@@ -200,8 +202,18 @@ public class Users extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(stmt2!=null) stmt2.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	private void Edit() {
@@ -212,22 +224,24 @@ public class Users extends Connect {
 		auth = um.getAuth();
 		check = null;
 
+		PreparedStatement stmt = null, stmt2 = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		LOGGER.info("inside edit method");
-		getConnection();
 		String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_auth=?  WHERE user_id=?";
 		String sql2 = "SELECT * FROM users WHERE user_id=?";
 
 		try {
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, userId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("user_id");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
@@ -248,6 +262,17 @@ public class Users extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(stmt2!=null) stmt2.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -256,15 +281,17 @@ public class Users extends Connect {
 		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM users WHERE user_id > ? ORDER BY user_id LIMIT 1";
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("userId", rs.getString("user_id"));
@@ -296,6 +323,15 @@ public class Users extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -304,15 +340,17 @@ public class Users extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM users WHERE user_id < ? ORDER BY user_id DESC LIMIT 1";
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getPrevious query...");
 			stmt.setString(1, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("userId", rs.getString("user_id"));
@@ -344,6 +382,15 @@ public class Users extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -164,23 +164,25 @@ public class Friends extends Connect {
 		check = null;
 		LOGGER.info("Inside delete method....");
 
-		getConnection();
+		PreparedStatement stmt2 = null, stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		String sql = "DELETE FROM friends WHERE friend_id=? AND friend_user_id=?"; //
 		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?"; //
 
 		try {
 			LOGGER.info("Creating statement...");
 
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
 			stmt2.setString(2, userId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("friend_id");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
 				stmt.setString(1, friendId);
@@ -206,8 +208,18 @@ public class Friends extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(stmt2!=null) stmt2.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	private void Edit() {
@@ -217,23 +229,25 @@ public class Friends extends Connect {
 		userId = fm.getUserId();
 		check = null;
 
+		PreparedStatement stmt2 = null, stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		LOGGER.info("inside edit method");
-		getConnection();
 		String sql = "UPDATE friends SET friend_full_name=?, friend_mobile=? WHERE friend_id=? AND friend_user_id=?"; //
 		String sql2 = "SELECT * FROM friends WHERE friend_id=? AND friend_user_id=?"; //
 
 		try {
 			LOGGER.info("Creating Statement....");
-			PreparedStatement stmt2 = connection.prepareStatement(sql2);
+			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setString(1, friendId);
 			stmt2.setString(2, userId);
-			ResultSet rs = stmt2.executeQuery();
+			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("friend_id");
 			}
 
 			if (check != null) {
-				PreparedStatement stmt = connection.prepareStatement(sql);
+				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
@@ -253,6 +267,17 @@ public class Friends extends Connect {
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(stmt2!=null) stmt2.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -262,16 +287,18 @@ public class Friends extends Connect {
 		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM friends WHERE friend_user_id = ? AND friend_id>? ORDER BY friend_id LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
 			stmt.setString(1, Id);
 			stmt.setString(2, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("friendId", rs.getString("friend_id"));
@@ -302,6 +329,15 @@ public class Friends extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -311,14 +347,16 @@ public class Friends extends Connect {
 		LOGGER.info("Inside GetPrevious method");
 		String sql = "SELECT * FROM friends WHERE friend_id = ? AND friend_user_id<? ORDER BY friend_user_id DESC LIMIT 1"; //
 
-		getConnection();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
-			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt = hcp.prepareStatement(sql);
 			stmt.setString(1, Id);
 			stmt.setString(2, token);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while (rs.next()) {
 				JSONObject json = new JSONObject();
 				json.put("friendId", rs.getString("friend_id"));
@@ -349,6 +387,15 @@ public class Friends extends Connect {
 		} catch (JSONException e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
+		}finally{
+			try {
+				if(rs!=null) rs.close();
+				if(stmt!=null) stmt.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
