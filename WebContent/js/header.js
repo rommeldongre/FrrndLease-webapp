@@ -32,9 +32,11 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         statsFactory.getStats().then(
         function(response){
             if (response.data.message == "Success") {
-                $scope.count = response.data.itemCount;
+                $scope.item_count = response.data.itemCount;
+				$scope.user_count = response.data.userCount;
             } else {
-                $scope.count = "";
+                $scope.item_count = "";
+				$scope.user_count = "";
             }
         },
         function(error){
