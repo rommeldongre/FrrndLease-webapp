@@ -1,6 +1,6 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'getLocation', function($scope, userFactory, profileFactory, getLocation){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'getLocation', 'statsFactory', function($scope, userFactory, profileFactory, getLocation, statsFactory){
     
     $scope.search = {};
     
@@ -36,6 +36,22 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         $scope.salutation = userFactory.userName;
     }
     
+	var displayStats = function(){
+        statsFactory.getStats().then(
+        function(response){
+            if (response.data.message == "Success") {
+                $scope.item_count = response.data.itemCount;
+				$scope.user_count = response.data.userCount;
+            } else {
+                $scope.item_count = "";
+				$scope.user_count = "";
+            }
+        },
+        function(error){
+            console.log("unable to get count: " + error.message);
+        });
+    }
+	
     var displayCredits = function(){
         profileFactory.getProfile(userFactory.user).then(
         function(response){
@@ -74,7 +90,10 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     
     // populating the credits
     displayCredits();
-    
+	
+	// populating the credits
+	displayStats();
+	
     $scope.isAdmin = function(){
         if(userFactory.user == 'frrndlease@greylabs.org')
             return true;
@@ -112,6 +131,17 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
 		window.location.replace("mystore.html");
     }
     
+}]);
+
+// factory for getting Site Stats from the backend service
+headerApp.factory('statsFactory', ['$http', function($http){
+    
+    var dataFactory = {};
+    
+    dataFactory.getStats = function(){
+        return $http.post('/flsv2/GetSiteStats', JSON.stringify({empty_pojo: ""}));
+    }
+    return dataFactory;
 }]);
 
 // factory for getting and updating profile from the backend service

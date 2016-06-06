@@ -1,5 +1,6 @@
 package util;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,13 +21,11 @@ public class MatchItems extends Connect {
 	// being called from post items handler
 	public MatchItems(PostItemReqObj rq) {
 		this.itemObj = (PostItemReqObj) rq;
-		getConnection();
 	}
 
 	// being called when item is added to the wish list
 	public MatchItems(int id) {
 		this.wishedItemId = id;
-		getConnection();
 	}
 
 	public void checkWishlist() {
@@ -40,14 +39,17 @@ public class MatchItems extends Connect {
 		String longestWord = getLongestString(userItemTitle);
 
 		String sqlGetWishlistNames = "SELECT item_user_id FROM items WHERE item_name LIKE ? AND item_status='Wished' AND item_user_id<>? LIMIT 3";
-
+		
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 
 			LOGGER.info("Creating getwishlistnames sql statement");
-			PreparedStatement ps1 = connection.prepareStatement(sqlGetWishlistNames);
+			ps1 = hcp.prepareStatement(sqlGetWishlistNames);
 			ps1.setString(1, "%" + longestWord + "%");
 			ps1.setString(2, itemUserId);
-			ResultSet rs1 = ps1.executeQuery();
+			rs1 = ps1.executeQuery();
 
 			while (rs1.next()) {
 				try {
@@ -60,8 +62,16 @@ public class MatchItems extends Connect {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				if(rs1!=null) rs1.close();
+				if(ps1!=null) ps1.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	public void checkPostedItems() {
@@ -73,24 +83,27 @@ public class MatchItems extends Connect {
 		String sqlGetPostedItemObjs = "SELECT * FROM items WHERE item_name LIKE ? AND item_status='InStore' AND item_user_id<>? LIMIT 3";
 
 		List<PostItemReqObj> listItems = new ArrayList<>();
-
+		
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null, rs2 = null;
+		Connection hcp = getConnectionFromPool();
 		try {
 
 			LOGGER.info("creating get wishlist item title query");
-			PreparedStatement ps1 = connection.prepareStatement(sqlGetWishedItemTitle);
+			ps1 = hcp.prepareStatement(sqlGetWishedItemTitle);
 			ps1.setInt(1, wishedItemId);
-			ResultSet rs1 = ps1.executeQuery();
+			rs1 = ps1.executeQuery();
 
 			if (rs1.next()) {
 				String wishedItemTitle[] = rs1.getString("item_name").toLowerCase().split(" ");
 				
 				String longestWord = getLongestString(wishedItemTitle);
 
-				PreparedStatement ps2 = connection.prepareStatement(sqlGetPostedItemObjs);
+				ps2 = hcp.prepareStatement(sqlGetPostedItemObjs);
 				LOGGER.info("creating get posted items obj query");
 				ps2.setString(1, "%" + longestWord + "%");
 				ps2.setString(2, rs1.getString("item_user_id"));
-				ResultSet rs2 = ps2.executeQuery();
+				rs2 = ps2.executeQuery();
 
 				while (rs2.next()) {
 					PostItemReqObj item = new PostItemReqObj();
@@ -120,8 +133,18 @@ public class MatchItems extends Connect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			LOGGER.warning(e.getMessage());
+		}finally{
+			if(rs1!=null)
+				try {
+					if(rs1!=null) rs1.close();
+					if(rs2!=null) rs2.close();
+					if(ps1!=null) ps1.close();
+					if(ps2!=null) ps2.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		}
-
 	}
 	
 	private String getLongestString(String[] array) {
@@ -155,5 +178,4 @@ public class MatchItems extends Connect {
 		}
 		return false;
 	}
-
 }
