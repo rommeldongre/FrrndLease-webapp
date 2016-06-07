@@ -60,7 +60,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			if (rq.getCategory() == null && rq.getUserId() == null) {
 
 				if(lat == 0.0 || lng == 0.0 || lat == null || lng == null){
-					sql = "SELECT tb1.*, 0 AS distance, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_id > ? AND tb1.item_status= 'InStore' ORDER BY item_id LIMIT ?";
+					sql = "SELECT tb1.*, 0 AS distance, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_status= 'InStore' ORDER BY item_id LIMIT ?, ?";
 					sql_stmt = hcp.prepareStatement(sql);
 
 					sql_stmt.setInt(1, rq.getCookie());
@@ -95,8 +95,8 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					sql_stmt.setFloat(1, lat);
 					sql_stmt.setFloat(2, lng);
 					sql_stmt.setFloat(3, lat);
-					sql_stmt.setInt(4, rq.getCookie());
-					sql_stmt.setString(5, rq.getCategory());
+					sql_stmt.setString(4, rq.getCategory());
+					sql_stmt.setInt(5, rq.getCookie());
 					sql_stmt.setInt(6, rq.getLimit());
 				}
 				
@@ -119,8 +119,8 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					sql_stmt.setFloat(1, lat);
 					sql_stmt.setFloat(2, lng);
 					sql_stmt.setFloat(3, lat);
-					sql_stmt.setInt(4, rq.getCookie());
-					sql_stmt.setString(5, rq.getUserId());
+					sql_stmt.setString(4, rq.getUserId());
+					sql_stmt.setInt(5, rq.getCookie());
 					sql_stmt.setInt(6, rq.getLimit());
 				}
 				
@@ -144,9 +144,9 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					sql_stmt.setFloat(1, lat);
 					sql_stmt.setFloat(2, lng);
 					sql_stmt.setFloat(3, lat);
-					sql_stmt.setInt(4, rq.getCookie());
-					sql_stmt.setString(5, rq.getCategory());
-					sql_stmt.setString(6, rq.getUserId());
+					sql_stmt.setString(4, rq.getCategory());
+					sql_stmt.setString(5, rq.getUserId());
+					sql_stmt.setInt(6, rq.getCookie());
 					sql_stmt.setInt(7, rq.getLimit());
 				}
 				

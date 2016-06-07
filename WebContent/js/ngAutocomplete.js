@@ -28,7 +28,7 @@
 **/
 
 angular.module( "ngAutocomplete", [])
-  .directive('ngAutocomplete', function() {
+  .directive('ngAutocomplete', ['getLocation', function(getLocation) {
     return {
       require: 'ngModel',
       scope: {
@@ -94,7 +94,8 @@ angular.module( "ngAutocomplete", [])
 
                 controller.$setViewValue(element.val());
                   
-                  console.log(result.geometry.location.lat()+", "+result.geometry.location.lng());
+                  getLocation.saveCurrentLocation(result.geometry.location.lat(),result.geometry.location.lng());
+                  getLocation.sendLocationToCarousel();
               });
             }
             else {
@@ -165,4 +166,4 @@ angular.module( "ngAutocomplete", [])
 
       }
     };
-  });
+  }]);
