@@ -11,12 +11,21 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var searchString = '';
     // to display the next button or not
     var lastSavedItemId = 0;
+    // to store the lat lng from the search bar
+    var latitude = 0.0, longitude = 0.0;
     
     $scope.$on('searchStringChanged', function(event, data){
         searchString = data;
         $scope.itemsArray = [[]];
         initPopulate();
 //        addToWishList(data);
+    });
+    
+    $scope.$on('locationStringChanged', function(event, lat, lng){
+        // called on the page load
+        latitude = lat;
+        longitude = lng;
+        initPopulate();
     });
     
     // Initialising the categories
@@ -86,7 +95,9 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                 cookie: token,
                 userId: userId,
                 category: category,
-                limit: $scope.itemsLimit
+                limit: $scope.itemsLimit,
+                lat: latitude,
+                lng: longitude
             };
             displayItems(req);
         }else{
@@ -96,7 +107,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                 description: "",
                 category: "",
                 leaseValue: 0,
-                leaseTerm: ""
+                leaseTerm: "",
             };
             displaySearchedItems(req);
         }
@@ -179,9 +190,6 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             }
 	   });
     }
-    
-    // called on the page load
-    initPopulate();
     
     $scope.loadPrevSlide = function(){
         $scope.showNext = true;

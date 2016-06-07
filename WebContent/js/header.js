@@ -1,6 +1,14 @@
-var headerApp = angular.module('headerApp', ['ui.bootstrap']);
+var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'statsFactory', function($scope, userFactory, profileFactory, statsFactory){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'getLocation', 'statsFactory', function($scope, userFactory, profileFactory, getLocation, statsFactory){
+    
+    $scope.search = {};
+    
+    $scope.options = {
+        country: 'in'
+    };
+    
+    $scope.details = '';
     
     if(window.location.href.indexOf("frrndlease.com") > -1){
         if(window.location.pathname == '/index.html' || window.location.pathname == '/'){
@@ -48,13 +56,35 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         profileFactory.getProfile(userFactory.user).then(
         function(response){
             if (response.data.code == 0) {
+                $scope.search.location = response.data.sublocality+","+response.data.locality;
                 $scope.credits = response.data.credit + " credits";
+                getLocation.saveCurrentLocation(response.data.lat,response.data.lng);
             } else {
                 $scope.credits = "";
             }
         },
         function(error){
             console.log("unable to get credits: " + error.message);
+        });
+    }
+    
+    getLocationData = function(location){
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json',
+            type: 'get',
+            data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
+            success: function(response){
+                var Lat = 0.0, lng = 0.0;
+                if(response.status == 'OK'){
+                    console.log("Searching in this address : " + response.results[0].formatted_address);
+                    Lat = response.results[0].geometry.location.lat;
+                    Lng = response.results[0].geometry.location.lng;
+                }
+                sendLocation.changedLocationString(Lat, Lng);
+            },
+            error: function(){
+                console.log("not able to get location data");
+            }
         });
     }
     
@@ -160,7 +190,7 @@ headerApp.service('modalService', ['$uibModal',
             headerText: 'Frrndlease Says',
             bodyText: 'Perform this action?'
         };
-
+        
         this.showModal = function (customModalDefaults, customModalOptions) {
             if (!customModalDefaults) customModalDefaults = {};
             customModalDefaults.backdrop = 'static';
@@ -195,3 +225,19 @@ headerApp.service('modalService', ['$uibModal',
         };
 
     }]);
+
+headerApp.service('getLocation', ['$rootScope', function($rootScope){
+    
+    this.lat = 0.0;
+    this.lng = 0.0;
+    
+    this.saveCurrentLocation = function(lat, lng){
+        this.lat = lat;
+        this.lng = lng;
+    }
+    
+    this.sendLocationToCarousel = function(){
+        $rootScope.$broadcast('locationStringChanged', this.lat, this.lng);
+    }
+    
+}]);

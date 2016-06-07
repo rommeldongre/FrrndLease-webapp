@@ -42,34 +42,6 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         });
     }
     
-    //to get current location of the user and show it in the location by default
-    var getLocation = function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
-    }
-
-    var showPosition = function(position) {
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
-        coords = new google.maps.LatLng(latitude, longitude);
-
-        var geocoder = new google.maps.Geocoder();
-        var latLng = new google.maps.LatLng(latitude, longitude);
-        geocoder.geocode({'latLng' : latLng},function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                $scope.$apply(function(){
-                    $scope.item.location = results[4].formatted_address;
-                });
-                console.log($scope.item.location);
-            } else {
-                console.log("Geocode was unsucessfull in detecting your current location");
-            }
-        });
-    }
-    
     $scope.requestItem = function(){
         modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
             function(result){
@@ -320,7 +292,5 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
     }
     
     load_Gapi();
-    
-    getLocation();
     
 }]);

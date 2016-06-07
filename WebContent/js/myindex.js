@@ -1,9 +1,13 @@
 var myIndex = angular.module('myApp');
 
-myIndex.controller('myIndexCtrl', ['userFactory', 'search', '$timeout', function(userFactory, search, $timeout){
+myIndex.controller('myIndexCtrl', ['userFactory', 'search', '$timeout', 'getLocation', function(userFactory, search, $timeout, getLocation){
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
+    
+    $timeout(function(){
+        getLocation.sendLocationToCarousel();
+    }, 2000);
     
     var idx = document.URL.indexOf('?');
     var params = new Array();

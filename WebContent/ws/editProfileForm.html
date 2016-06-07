@@ -9,20 +9,74 @@
 	var FullName = null;
 	var Mobile = null;
 	var Location = null;
+    var Address = '';
+    var Sublocality = '';
+    var Locality = '';
+    var Lat = 0.0;
+    var Lng = 0.0;
 
 	editProfileReq = function() {
 		UserId = document.getElementById("userId").value;
 		FullName = document.getElementById("fullName").value;
 		Mobile = document.getElementById("mobile").value;
+        
+        Address = '';
+        Sublocality = '';
+        Locality = '';
+        Lat = 0.0;
+        Lng = 0.0;
+        
 		Location = document.getElementById("location").value;
-		var req = {
+        
+        if(Location != '')
+            getLocationData(Location);
+        else
+            editProfileData();
+        
+		
+	};
+    
+    getLocationData = function(location){
+        alert("getting location data");
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json',
+            type: 'get',
+            data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
+            success: function(response){
+                if(response.status == 'OK'){
+                    Address = response.results[0].formatted_address;
+                    response.results[0].address_components.forEach(function(component){
+                        if(component.types[0] == 'sublocality_level_1')
+                            Sublocality = component.long_name;
+                        if(component.types[0] == 'locality')
+                            Locality = component.long_name;
+                    });
+                    Lat = response.results[0].geometry.location.lat;
+                    Lng = response.results[0].geometry.location.lng;
+                    
+                }
+                editProfileData();
+            },
+            error: function(){
+                alert("not able to get location data");
+            }
+        });
+    }
+    
+    editProfileData = function(){
+        var req = {
 			userId : UserId,
 			fullName : FullName,
 			mobile : Mobile,
-			location : Location
+			location : Location,
+            address: Address,
+            locality: Locality,
+            sublocality: Sublocality,
+            lat: Lat,
+            lng: Lng
 		}
 		editProfileSend(req);
-	};
+    }
 
 	editProfileSend = function(req) {
 		$

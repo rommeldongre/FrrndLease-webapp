@@ -9,7 +9,8 @@ public class UsersModel {
 
 	private FlsLogger LOGGER = new FlsLogger(UsersModel.class.getName());
 
-	private String userId, fullName, mobile, location, auth, activation, status;
+	private String userId, fullName, mobile, location, auth, activation, status, address, locality, sublocality;
+	private float lat, lng;
 	private JSONObject obj;
 
 	public void getData(JSONObject ob) {
@@ -28,6 +29,11 @@ public class UsersModel {
 				activation = obj.getString("activation");
 				status = obj.getString("status");
 			}
+			address = obj.getString("address");
+			locality = obj.getString("locality");
+			sublocality = obj.getString("sublocality");
+			lat = Float.parseFloat(obj.getString("lat"));
+			lng = Float.parseFloat(obj.getString("lng"));
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
@@ -60,5 +66,45 @@ public class UsersModel {
 
 	public String getStatus() {
 		return this.status;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getSublocality() {
+		return sublocality;
+	}
+
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
+	}
+
+	public float getLat() {
+		return lat;
+	}
+
+	public void setLat(float lat) {
+		this.lat = lat;
+	}
+
+	public float getLng() {
+		return lng;
+	}
+
+	public void setLng(float lng) {
+		this.lng = lng;
 	}
 }
