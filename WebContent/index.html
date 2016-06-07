@@ -68,7 +68,11 @@
 
             <div id="wishbox">
                 <div id="searchbox" class="input-group">
-                    <input id="wish_title" type="text" class="form-control" ng-model="search.string" placeholder="Search from over 100 useful items in your Friend's Store">
+                    <div>
+                        <input id="wish_title" type="text" ng-model="search.string" class="form-control" placeholder="Search from over 100 useful items in your Friend's Store" name="wish_title1" size="45" style="width:70%">
+                        <input class="form-control" style="width:30%" ng-autocomplete ng-model="search.location" options="options" details="details" />
+                    </div>
+                    
                     <span class="input-group-btn">
                         <button class="btn btn-primary" ng-click="searchItem(search.string)" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
                     </span>
@@ -188,5 +192,8 @@
     <script src="js/index1.js"></script>
     <script src="js/tawk.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <!-- For Autocomplete Feature -->
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
+    <script src="js/ngAutocomplete.js"></script>
   </body>
 </html>

@@ -25,6 +25,8 @@
                                         <div class="carousel-caption" id="{{item.itemId}}" style="opacity: 0.6; background-color: black;">
                                             <h4 id="{{item.itemId}}"><b>{{item.title}}</b></h4>
                                             <p id="{{item.itemId}}">{{item.fullName}}</p>
+                                            <p id="{{item.itemId}}" >{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</p>
+                                            <p id="{{item.itemId}}">{{item.sublocality}},{{item.locality}}</p>
                                             <p id="{{item.itemId}}">{{'lease term: ' + item.leaseTerm}}</p>
                                         </div>
                                     </span>

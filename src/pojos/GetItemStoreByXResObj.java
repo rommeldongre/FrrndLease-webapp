@@ -36,6 +36,42 @@ public class GetItemStoreByXResObj extends ResObj{
 	// uid of the item
 	String uid;
 	
+	// locality of user
+	String locality;
+	
+	// sublocality of user
+	String sublocality;
+	
+	// distance of item from current searched location
+	String distance;
+	
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getSublocality() {
+		return sublocality;
+	}
+
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(float distance) {
+		if(distance < 1)
+			this.distance = Math.round(distance*1000)+"m";
+		else
+			this.distance = Math.round(distance)+"km";
+	}
+
 	public String getUid() {
 		return uid;
 	}

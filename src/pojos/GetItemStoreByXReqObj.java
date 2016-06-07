@@ -15,6 +15,25 @@ public class GetItemStoreByXReqObj extends ReqObj {
 
 	// limit till which to get the items
 	int limit;
+	
+	// lat lng from the search bar's location
+	float lat, lng;
+
+	public float getLat() {
+		return lat;
+	}
+
+	public void setLat(float lat) {
+		this.lat = lat;
+	}
+
+	public float getLng() {
+		return lng;
+	}
+
+	public void setLng(float lng) {
+		this.lng = lng;
+	}
 
 	public int getLimit() {
 		return limit;

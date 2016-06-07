@@ -2,6 +2,8 @@ var myProfile = angular.module('myApp');
 
 myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory', 'modalService', function($scope, userFactory, profileFactory, modalService){
     
+    var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0;
+    
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
     
@@ -14,7 +16,7 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
                 $scope.userId = userFactory.user;
                 $scope.fullname = response.data.fullName;
 				$scope.mobile = response.data.mobile;
-				$scope.location = response.data.location;
+				$scope.location = response.data.address;
 				$scope.credit = response.data.credit;
             } else {
                 $scope.userId = "";
@@ -33,14 +35,57 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
     displayProfile();
     
     $scope.updateProfile = function(){
+        
+        if($scope.location != '')
+            getLocationData($scope.location);
+        else
+            editProfileData();
+        
         unsaved = false;
+    }
+    
+    var getLocationData = function(location){
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json',
+            type: 'get',
+            data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
+            success: function(response){
+                if(response.status == 'OK'){
+                    Address = response.results[0].formatted_address;
+                    $scope.$apply(function(){
+                        $scope.location = Address;
+                    });
+                    response.results[0].address_components.forEach(function(component){
+                        if(component.types[0] == 'sublocality_level_1')
+                            Sublocality = component.long_name;
+                        if(component.types[0] == 'locality')
+                            Locality = component.long_name;
+                    });
+                    Lat = response.results[0].geometry.location.lat;
+                    Lng = response.results[0].geometry.location.lng;
+                    
+                }
+                editProfileData();
+            },
+            error: function(){
+                console.log("not able to get location data");
+            }
+        });
+    }
+    
+    editProfileData = function(){
         var req = {
-            userId : userFactory.user,
+			userId : userFactory.user,
 			fullName : $scope.fullname,
 			mobile : $scope.mobile,
-			location : $scope.location
-        }
-        editProfile(req);
+			location : $scope.location,
+            address: Address,
+            locality: Locality,
+            sublocality: Sublocality,
+            lat: Lat,
+            lng: Lng
+		}
+		editProfile(req);
     }
     
     var editProfile = function(req){

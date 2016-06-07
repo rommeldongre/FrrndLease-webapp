@@ -120,7 +120,7 @@
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="location">Location</label>
-                                    <input type="text" class="form-control" id="location" ng-model="item.location" placeholder="Location">
+                                    <input type="text" class="form-control" id="location" value="${sublocality},${locality}" placeholder="Location" disabled>
 								</div>
 							</div>
 						</div>
@@ -269,6 +269,8 @@
     <script src="js/itemdetails.js"></script>
     <script src="js/tawk.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-
+    <!-- For Autocomplete Feature -->
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
+    <script src="js/ngAutocomplete.js"></script>
 </body>
 </html>

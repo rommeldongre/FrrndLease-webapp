@@ -70,6 +70,33 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 			}
+			
+			
+			String locality = "", sublocality = "";
+			
+			if(rs.getUserId() != "" || rs.getUserId() != null){
+				LOGGER.info("Creating statement to select user location data.....");
+				String userLocationData = "SELECT user_locality, user_sublocality FROM users WHERE user_id=?";
+				
+				LOGGER.info("Created statement...executing select from items query");
+				PreparedStatement ps1 = getConnectionFromPool().prepareStatement(userLocationData);
+				ps1.setString(1, rs.getUserId());
+				
+				ResultSet r1 = ps1.executeQuery();
+				
+				if(r1.next()){
+					locality = r1.getString("user_locality");
+					sublocality = r1.getString("user_sublocality");
+				}
+				
+				rs.setLocality(locality);
+				rs.setSublocality(sublocality);
+				
+				r1.close();
+				ps1.close();
+			}
+			
+			result.close();
 			ps.close();
 
 		} catch (SQLException e) {

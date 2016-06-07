@@ -2,7 +2,7 @@ package pojos;
 
 public class ItemDetailsResObj extends ResObj {
 
-	private String title, category, description, userId, leaseTerm, status, image, message,uid;
+	private String title, category, description, userId, leaseTerm, status, image, message,uid, locality, sublocality;
 	int id, leaseValue, code;
 
 	public String getTitle() {
@@ -99,6 +99,22 @@ public class ItemDetailsResObj extends ResObj {
 
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getSublocality() {
+		return sublocality;
+	}
+
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
 	}
 
 }

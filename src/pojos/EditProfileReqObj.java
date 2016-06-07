@@ -2,7 +2,8 @@ package pojos;
 
 public class EditProfileReqObj extends ReqObj {
 
-	String userId, fullName, mobile, location;
+	String userId, fullName, mobile, location, address, locality, sublocality;
+	float lat, lng;
 
 	public String getUserId() {
 		return userId;
@@ -34,6 +35,46 @@ public class EditProfileReqObj extends ReqObj {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getSublocality() {
+		return sublocality;
+	}
+
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
+	}
+
+	public float getLat() {
+		return lat;
+	}
+
+	public void setLat(float lat) {
+		this.lat = lat;
+	}
+
+	public float getLng() {
+		return lng;
+	}
+
+	public void setLng(float lng) {
+		this.lng = lng;
 	}
 
 }
