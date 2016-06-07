@@ -33,6 +33,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     // checking in which page carousel is being loaded
     var user = localStorage.getItem("userloggedin");
+	$scope.user_status = user;
     if(user != "" || user != null || user != 'anonymous'){
         if(window.location.hash == '#/mypostings')
             userId = user;
