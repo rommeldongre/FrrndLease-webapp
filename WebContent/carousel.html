@@ -24,10 +24,16 @@
                                         <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}" style="width: {{carouselWidth/itemsLimit}}px; height: {{carouselHeight}}px;">
                                         <div class="carousel-caption" id="{{item.itemId}}" style="opacity: 0.6; background-color: black;">
                                             <h4 id="{{item.itemId}}"><b>{{item.title}}</b></h4>
-                                            <p id="{{item.itemId}}">{{item.fullName}}</p>
+											<!-- Below line will be used in the future
+                                            <p id="{{item.itemId}}">{{item.fullName}}</p>-->
                                             <p id="{{item.itemId}}" >{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</p>
-                                            <p id="{{item.itemId}}">{{item.sublocality}},{{item.locality}}</p>
                                             <p id="{{item.itemId}}">{{'lease term: ' + item.leaseTerm}}</p>
+											<div ng-switch="user_status">
+												<p ng-switch-when="''" id="{{item.itemId}}">{{'Location: ' + item.locality}}</p>
+												<p ng-switch-when="null" id="{{item.itemId}}">{{'Location: ' + item.locality}}</p>
+												<p ng-switch-when="anonymous" id="{{item.itemId}}">{{'Location: ' + item.locality}}</p>
+												<p ng-switch-default id="{{item.itemId}}">{{'Location: ' + item.sublocality}}</p>
+											</div>
                                         </div>
                                     </span>
                                 </div>
