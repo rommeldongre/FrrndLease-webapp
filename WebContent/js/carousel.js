@@ -14,13 +14,16 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     // to store the lat lng from the search bar
     var latitude = 0.0, longitude = 0.0;
     
-    $scope.$on('searchDataChanged', function(event, lat, lng, searchString){
+    $scope.$on('searchDataChanged', function(event, lat, lng, s){
         // called on the page load
         latitude = lat;
         longitude = lng;
-        console.log("Search String :" + searchString);
+        s = s.toLowerCase();
+        if(s.match(/^[0-9a-zA-Z\s]+$/) && s != "undefined")
+            searchString = s;
+        else
+            searchString = '';
         initPopulate();
-//        searchString = data;
 //        addToWishList(data);
     });
     
@@ -87,27 +90,16 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         if(category == '' || category == 'ALL')
             category = null;
         
-        if(searchString == ''){
-            var req = {
-                cookie: token,
-                userId: userId,
-                category: category,
-                limit: $scope.itemsLimit,
-                lat: latitude,
-                lng: longitude
-            };
-            displayItems(req);
-        }else{
-            var req = {
-                token: token,
-                title: searchString,
-                description: "",
-                category: "",
-                leaseValue: 0,
-                leaseTerm: "",
-            };
-            displaySearchedItems(req);
-        }
+        var req = {
+            cookie: token,
+            userId: userId,
+            category: category,
+            limit: $scope.itemsLimit,
+            lat: latitude,
+            lng: longitude,
+            searchString: searchString
+        };
+        displayItems(req);
         
     }
     
@@ -138,54 +130,6 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             function(error){
                 console.log("Not able to get items " + error.message);
             });
-    }
-    
-    var displaySearchedItems = function(req){
-        $.ajax({
-            url: '/flsv2/SearchItem',
-            type: 'post',
-            data: {req : JSON.stringify(req)},
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "json",
-            success: function(response) {
-                if(response.Code == "FLS_SUCCESS"){
-                    var obj = JSON.parse(response.Message);
-                    var item = {itemId:obj.itemId, image:obj.image, title:obj.title, fullName:obj.category, leaseTerm:obj.leaseTerm, uid:obj.uid};
-                    var src = obj.image;
-                    if(src == '' || src == 'null' || src == null){
-                        src = 'images/imgplaceholder.png';
-                        item.image = src;
-                    }
-                    
-                    if(lastItem == 0){
-                        $scope.itemsArray = [[item]];
-                        lastItem = obj.itemId;
-                        populateCarousel(lastItem);
-                    }
-                    else{
-                        lastItem = obj.itemId;
-                        $timeout(function(){
-                            $scope.itemsArray.push([item]);
-                            populateCarousel(lastItem);
-                        }, 1000);
-                        
-                    }
-                    lastSavedItemId = 0;
-                }else{
-                    if(lastItem == 0)
-                        $scope.$apply(function(){
-                            $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
-                        });
-                    if(lastSavedItemId == 2){
-                        $scope.showNext = false;
-                    }
-                    lastSavedItemId++;
-                }
-            },
-            error: function() {
-                console.log("Not able to get items " + error.message);
-            }
-	   });
     }
     
     $scope.loadPrevSlide = function(){
@@ -242,9 +186,6 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         
         // store category which is clicked
         category = $scope.categories[index].label;
-        
-        // when category is selected then search string is set to empty
-        searchString = '';
         
         initPopulate();
     }

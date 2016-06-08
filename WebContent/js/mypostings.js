@@ -1,9 +1,9 @@
 var myPostings = angular.module('myApp');
 
-myPostings.controller('myPostingsCtrl', ['$scope', '$timeout', 'getLocation', function($scope, $timeout, getLocation){
+myPostings.controller('myPostingsCtrl', ['$scope', '$timeout', 'searchService', function($scope, $timeout, searchService){
     
     $timeout(function(){
-        getLocation.sendLocationToCarousel();
+        searchService.sendDataToCarousel();
     }, 2000);
     
 }]);
