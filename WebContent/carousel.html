@@ -4,6 +4,9 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="btn-group" id="categorybrowsing">
+                            <span class="categoryfilters" ng-if="search.string != ''" ng-click="clearSearch()">
+                                <button class="btn btn-primary">{{search.string}}  X</button>
+                            </span>
                             <span class="categoryfilters" ng-repeat="c in categories" ng-click="categorySelected($index)">
                                 <button class="btn ng-class:{'btn-default': !c.active, 'btn-primary': c.active}" id="All">{{c.label}}</button>
                             </span>

@@ -65,4 +65,8 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
         searchService.saveSearchTitle(searchString);
     }
     
+    $scope.$on('searchDataEmpty', function(event, data){
+        $scope.search.string = data;
+    });
+    
 }]);

@@ -50,6 +50,10 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         $scope.search.location = data;
     });
     
+    $scope.$on('searchDataEmpty', function(event, data){
+        $scope.search.string = data;
+    });
+    
 	var displayStats = function(){
         statsFactory.getStats().then(
         function(response){
@@ -238,6 +242,7 @@ headerApp.service('searchService', ['$rootScope', function($rootScope){
     
     this.clearSearchTitle = function(){
         this.searchTitle = '';
+        $rootScope.$broadcast('searchDataEmpty', this.searchTitle);
     }
     
     this.updateHeaderLocation = function(data){

@@ -1,6 +1,6 @@
 var carouselApp = angular.module('carouselApp', []);
 
-carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', function($scope, $timeout, getItemsForCarousel){
+carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', 'searchService', function($scope, $timeout, getItemsForCarousel, searchService){
     // lastItem is used to store the id of the last retrieved item from the database
     var lastItem = 0;
     // selected category is stored in this variable
@@ -13,19 +13,28 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var lastSavedItemId = 0;
     // to store the lat lng from the search bar
     var latitude = 0.0, longitude = 0.0;
+    $scope.search = {};
     
     $scope.$on('searchDataChanged', function(event, lat, lng, s){
         // called on the page load
         latitude = lat;
         longitude = lng;
         s = s.toLowerCase();
-        if(s.match(/^[0-9a-zA-Z\s]+$/) && s != "undefined")
+        if(s.match(/^[0-9a-zA-Z\s]+$/) && s != "undefined"){
             searchString = s;
-        else
+        }
+        else{
             searchString = '';
+        }
+        $scope.search.string = searchString;
         initPopulate();
 //        addToWishList(data);
     });
+    
+    $scope.clearSearch = function(){
+        searchService.clearSearchTitle();
+        searchService.sendDataToCarousel();
+    }
     
     // Initialising the categories
     $scope.categories = [{label:'ALL',active:true}];
