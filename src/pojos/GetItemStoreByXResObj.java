@@ -67,7 +67,7 @@ public class GetItemStoreByXResObj extends ResObj{
 
 	public void setDistance(float distance) {
 		if(distance < 1)
-			this.distance = Math.round(distance*1000)+"m";
+			this.distance = "0m";
 		else
 			this.distance = Math.round(distance)+"km";
 	}

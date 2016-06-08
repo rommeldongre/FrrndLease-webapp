@@ -53,15 +53,15 @@
                     <!-- Dropdown ends here -->
 
                     <!-- Searchbar starts here -->
-                    <form class="navbar-form navbar-right" ng-if="showSearch" type=get action="myapp.html">
+                    <form class="navbar-form navbar-right" ng-if="showSearch">
                         <div class="input-group" style="width: 100%">
                             <div>
-                                <input id="wish_title1" type="text" class="form-control" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" name="wish_title1" size="45" style="width:70%">
+                                <input id="wish_title1" type="text" ng-change="searchStringChanged(search.string)" ng-model="search.string" class="form-control" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" name="wish_title1" size="45" style="width:70%">
                                 <input class="form-control" style="width:30%" ng-autocomplete ng-model="search.location" options="options" details="details" />
                             </div>
 
                             <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                <a href="myapp.html#/"><button class="btn btn-primary" ng-click="search()"><i class="glyphicon glyphicon-search"></i></button></a>
                             </span>
                         </div>
                     </form>

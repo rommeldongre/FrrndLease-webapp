@@ -1,11 +1,12 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'getLocation', 'statsFactory', function($scope, userFactory, profileFactory, getLocation, statsFactory){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'searchService', 'statsFactory', function($scope, userFactory, profileFactory, searchService, statsFactory){
     
     $scope.search = {};
     
     $scope.options = {
-        country: 'in'
+        country: 'in',
+        sendToCarousel: true
     };
     
     $scope.details = '';
@@ -36,6 +37,19 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         $scope.salutation = userFactory.userName;
     }
     
+    $scope.search = function(){
+        if(window.location.hash == '#/')
+            searchService.sendDataToCarousel();
+    }
+    
+    $scope.searchStringChanged = function(searchString){
+        searchService.saveSearchTitle(searchString);
+    }
+    
+    $scope.$on('headerLocationChanged', function(event, data){
+        $scope.search.location = data;
+    });
+    
 	var displayStats = function(){
         statsFactory.getStats().then(
         function(response){
@@ -58,33 +72,13 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             if (response.data.code == 0) {
                 $scope.search.location = response.data.sublocality+","+response.data.locality;
                 $scope.credits = response.data.credit + " credits";
-                getLocation.saveCurrentLocation(response.data.lat,response.data.lng);
+                searchService.saveCurrentLocation(response.data.lat,response.data.lng);
             } else {
                 $scope.credits = "";
             }
         },
         function(error){
             console.log("unable to get credits: " + error.message);
-        });
-    }
-    
-    getLocationData = function(location){
-        $.ajax({
-            url: 'https://maps.googleapis.com/maps/api/geocode/json',
-            type: 'get',
-            data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
-            success: function(response){
-                var Lat = 0.0, lng = 0.0;
-                if(response.status == 'OK'){
-                    console.log("Searching in this address : " + response.results[0].formatted_address);
-                    Lat = response.results[0].geometry.location.lat;
-                    Lng = response.results[0].geometry.location.lng;
-                }
-                sendLocation.changedLocationString(Lat, Lng);
-            },
-            error: function(){
-                console.log("not able to get location data");
-            }
         });
     }
     
@@ -226,18 +220,32 @@ headerApp.service('modalService', ['$uibModal',
 
     }]);
 
-headerApp.service('getLocation', ['$rootScope', function($rootScope){
+headerApp.service('searchService', ['$rootScope', function($rootScope){
     
     this.lat = 0.0;
     this.lng = 0.0;
+    
+    this.searchTitle = '';
     
     this.saveCurrentLocation = function(lat, lng){
         this.lat = lat;
         this.lng = lng;
     }
     
-    this.sendLocationToCarousel = function(){
-        $rootScope.$broadcast('locationStringChanged', this.lat, this.lng);
+    this.saveSearchTitle = function(searchTitle){
+        this.searchTitle = searchTitle;
+    }
+    
+    this.clearSearchTitle = function(){
+        this.searchTitle = '';
+    }
+    
+    this.updateHeaderLocation = function(data){
+        $rootScope.$broadcast('headerLocationChanged', data);
+    }
+    
+    this.sendDataToCarousel = function(){
+        $rootScope.$broadcast('searchDataChanged', this.lat, this.lng, this.searchTitle);
     }
     
 }]);
