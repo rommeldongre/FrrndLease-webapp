@@ -65,16 +65,16 @@
 
             <div id="marketingsearch">
             </div>
-
+            
             <div id="wishbox">
                 <div id="searchbox" class="input-group">
                     <div>
-                        <input id="wish_title" type="text" ng-model="search.string" class="form-control" placeholder="Search from over 100 useful items in your Friend's Store" name="wish_title1" size="45" style="width:70%">
-                        <input class="form-control" style="width:30%" ng-autocomplete ng-model="search.location" options="options" details="details" />
+                        <input class="form-control" style="width:30%;" ng-autocomplete ng-model="search.location" options="options" details="details" />
+                        <input id="wish_title" style="width:70%;" type="text" ng-change="searchStringChanged(search.string)" ng-model="search.string" class="form-control" placeholder="Search from over 100 useful items in your Friend's Store" name="wish_title1" size="45">
                     </div>
                     
                     <span class="input-group-btn">
-                        <button class="btn btn-primary" ng-click="searchItem(search.string)" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
+                        <button class="btn btn-primary" ng-click="search()" id="search_btn_home"><i class="glyphicon glyphicon-search"></i></button>
                     </span>
                 </div>
             </div>

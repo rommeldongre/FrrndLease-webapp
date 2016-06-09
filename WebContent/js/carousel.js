@@ -1,6 +1,6 @@
 var carouselApp = angular.module('carouselApp', []);
 
-carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', 'search', function($scope, $timeout, getItemsForCarousel, search){
+carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', 'searchService', function($scope, $timeout, getItemsForCarousel, searchService){
     // lastItem is used to store the id of the last retrieved item from the database
     var lastItem = 0;
     // selected category is stored in this variable
@@ -13,20 +13,28 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var lastSavedItemId = 0;
     // to store the lat lng from the search bar
     var latitude = 0.0, longitude = 0.0;
+    $scope.search = {};
     
-    $scope.$on('searchStringChanged', function(event, data){
-        searchString = data;
-        $scope.itemsArray = [[]];
+    $scope.$on('searchDataChanged', function(event, lat, lng, s){
+        // called on the page load
+        latitude = lat;
+        longitude = lng;
+        s = s.toLowerCase();
+        if(s.match(/^[0-9a-zA-Z\s]+$/) && s != "undefined"){
+            searchString = s;
+        }
+        else{
+            searchString = '';
+        }
+        $scope.search.string = searchString;
         initPopulate();
 //        addToWishList(data);
     });
     
-    $scope.$on('locationStringChanged', function(event, lat, lng){
-        // called on the page load
-        latitude = lat;
-        longitude = lng;
-        initPopulate();
-    });
+    $scope.clearSearch = function(){
+        searchService.clearSearchTitle();
+        searchService.sendDataToCarousel();
+    }
     
     // Initialising the categories
     $scope.categories = [{label:'ALL',active:true}];
@@ -91,27 +99,16 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         if(category == '' || category == 'ALL')
             category = null;
         
-        if(searchString == ''){
-            var req = {
-                cookie: token,
-                userId: userId,
-                category: category,
-                limit: $scope.itemsLimit,
-                lat: latitude,
-                lng: longitude
-            };
-            displayItems(req);
-        }else{
-            var req = {
-                token: token,
-                title: searchString,
-                description: "",
-                category: "",
-                leaseValue: 0,
-                leaseTerm: "",
-            };
-            displaySearchedItems(req);
-        }
+        var req = {
+            cookie: token,
+            userId: userId,
+            category: category,
+            limit: $scope.itemsLimit,
+            lat: latitude,
+            lng: longitude,
+            searchString: searchString
+        };
+        displayItems(req);
         
     }
     
@@ -142,54 +139,6 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             function(error){
                 console.log("Not able to get items " + error.message);
             });
-    }
-    
-    var displaySearchedItems = function(req){
-        $.ajax({
-            url: '/flsv2/SearchItem',
-            type: 'post',
-            data: {req : JSON.stringify(req)},
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "json",
-            success: function(response) {
-                if(response.Code == "FLS_SUCCESS"){
-                    var obj = JSON.parse(response.Message);
-                    var item = {itemId:obj.itemId, image:obj.image, title:obj.title, fullName:obj.category, leaseTerm:obj.leaseTerm, uid:obj.uid};
-                    var src = obj.image;
-                    if(src == '' || src == 'null' || src == null){
-                        src = 'images/imgplaceholder.png';
-                        item.image = src;
-                    }
-                    
-                    if(lastItem == 0){
-                        $scope.itemsArray = [[item]];
-                        lastItem = obj.itemId;
-                        populateCarousel(lastItem);
-                    }
-                    else{
-                        lastItem = obj.itemId;
-                        $timeout(function(){
-                            $scope.itemsArray.push([item]);
-                            populateCarousel(lastItem);
-                        }, 1000);
-                        
-                    }
-                    lastSavedItemId = 0;
-                }else{
-                    if(lastItem == 0)
-                        $scope.$apply(function(){
-                            $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
-                        });
-                    if(lastSavedItemId == 2){
-                        $scope.showNext = false;
-                    }
-                    lastSavedItemId++;
-                }
-            },
-            error: function() {
-                console.log("Not able to get items " + error.message);
-            }
-	   });
     }
     
     $scope.loadPrevSlide = function(){
@@ -247,9 +196,6 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         // store category which is clicked
         category = $scope.categories[index].label;
         
-        // when category is selected then search string is set to empty
-        searchString = '';
-        
         initPopulate();
     }
     
@@ -302,12 +248,4 @@ carouselApp.factory('getItemsForCarousel', ['$http', function($http){
     }
     
     return getItems;
-}]);
-
-carouselApp.service('search', ['$rootScope', function($rootScope){
-    
-    this.changeSearchString = function(searchString){
-        $rootScope.$broadcast('searchStringChanged', searchString);
-    }
-    
 }]);

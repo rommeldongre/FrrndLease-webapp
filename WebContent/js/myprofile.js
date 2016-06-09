@@ -4,6 +4,13 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
     
     var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0;
     
+    $scope.options = {
+        country: 'in',
+        sendToCarousel: false
+    };
+    
+    $scope.details = '';
+    
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
     
