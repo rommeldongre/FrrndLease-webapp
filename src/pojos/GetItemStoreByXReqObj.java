@@ -18,6 +18,17 @@ public class GetItemStoreByXReqObj extends ReqObj {
 	
 	// lat lng from the search bar's location
 	float lat, lng;
+	
+	// storing the search string
+	String searchString;
+
+	public String getSearchString() {
+		return searchString;
+	}
+
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
+	}
 
 	public float getLat() {
 		return lat;

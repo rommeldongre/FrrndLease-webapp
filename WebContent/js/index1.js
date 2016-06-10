@@ -1,11 +1,12 @@
 var indexApp = angular.module('indexApp', ['headerApp', 'carouselApp', 'ngAutocomplete']);
 
-indexApp.controller('indexCtrl', ['$scope', '$timeout', 'search', 'userFactory', 'getItemsForCarousel', 'getLocation', function($scope, $timeout, search, userFactory, getItemsForCarousel, getLocation){
+indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItemsForCarousel', 'searchService', function($scope, $timeout, userFactory, getItemsForCarousel, searchService){
     
     $scope.search = {};
     
     $scope.options = {
-        country: 'in'
+        country: 'in',
+        sendToCarousel: true
     };
     
     $scope.details = '';
@@ -26,9 +27,9 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'search', 'userFactory',
         longitude = position.coords.longitude;
 		coords = new google.maps.LatLng(latitude, longitude);
         
-        getLocation.saveCurrentLocation(latitude, longitude);
+        searchService.saveCurrentLocation(latitude, longitude);
         $timeout(function(){
-            getLocation.sendLocationToCarousel();
+            searchService.sendDataToCarousel();
         }, 2000);
 		
 		var geocoder = new google.maps.Geocoder();
@@ -56,12 +57,16 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'search', 'userFactory',
         }
     }
     
-    $scope.searchItem = function(s){
-        if(s != undefined || s!= '' || s!= null){
-            s = s.replace(/\+/g, " ");
-            search.changeSearchString(s);
-            $scope.search.string = '';
-        }
+    $scope.search = function(){
+        searchService.sendDataToCarousel();
     }
+    
+    $scope.searchStringChanged = function(searchString){
+        searchService.saveSearchTitle(searchString);
+    }
+    
+    $scope.$on('searchDataEmpty', function(event, data){
+        $scope.search.string = data;
+    });
     
 }]);
