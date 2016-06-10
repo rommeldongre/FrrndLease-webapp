@@ -1,6 +1,6 @@
 <div ng-app="headerApp">
     <div ng-controller="headerCtrl" id="navbar">
-        <nav class="{{navClassValue}} navbar-transparent" role="navigation">
+        <nav class="{{navClassValue}}" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
@@ -13,25 +13,25 @@
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar1">
 
+                    <!-- Store Your Stuff button -->
+                    <li class="nav navbar-nav" ng-if="isLoggedIn()">
+                        <a ng-click="storeYourStuff()" class="btn btn-primary btn-fill">StoreYourStuff</a>
+                    </li>
+                    
+                    <!-- Searchbar starts here -->
+                    <li class="nav navbar-nav" ng-if="showSearch">
+                        <input class="form-control" style="margin-left:3px;margin-top:15px;margin-bottom:15px;margin-right:3px;" type="text" ng-autocomplete ng-model="search.location" options="options" details="details" />
+                    </li>
+                    <li class="nav navbar-nav" ng-if="showSearch">
+                        <input class="form-control" style="margin-top:15px;margin-bottom:15px" type="text" ng-change="searchStringChanged(search.string)" ng-model="search.string" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" size="45">
+                    </li>
+                    <li class="nav navbar-nav" ng-if="showSearch">
+                        <a href="myapp.html#/" class="btn btn-primary btn-fill" ng-click="search()"><span class="glyphicon glyphicon-search"></span></a>
+                    </li>
+                    <!-- Searchbar ends here -->
+                    
                     <!-- Dropdown starts here -->
                     <ul class="nav navbar-nav navbar-right">
-                        
-                        <!-- Store Your Stuff button -->
-                        <li ng-if="isLoggedIn()">
-                            <a ng-click="storeYourStuff()" class="btn btn-primary">StoreYourStuff</a>
-                        </li>
-                        
-                        <!-- Searchbar starts here -->
-                        <li ng-if="showSearch">
-                            <input class="btn" ng-autocomplete ng-model="search.location" options="options" details="details" />
-                        </li>
-                        <li ng-if="showSearch">
-                            <input class="btn" type="text" ng-change="searchStringChanged(search.string)" ng-model="search.string" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" size="45">
-                        </li>
-                        <li ng-if="showSearch">
-                            <a href="myapp.html#/" class="btn btn-primary" ng-click="search()"><span class="glyphicon glyphicon-search"></span></a>
-                        </li>
-                        <!-- Searchbar ends here -->
                         
                         <li ng-if="isAdmin()"><a id="headerfooteroptions" href="adminPage.html"><span class="glyphicon glyphicon-home"></span> Admin</a></li>
 
