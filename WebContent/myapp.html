@@ -57,7 +57,6 @@
     
     <body onload="start()">
         <div id="loader"></div>
-        <div>
             
         <!--header starts---------------------------------------->
         <div>
@@ -65,7 +64,7 @@
         </div>
         <!--header ends----------------------------------------->
         
-        <div ng-view></div>
+        <div class="card" style="margin-left:30px;margin-top:10px;margin-bottom:20px;margin-right:30px;" ng-view></div>
         
         <!--The tawk.to widget code will get populated here from file chatbox.html.-->
         <div id="tawk_widget"></div>
@@ -73,7 +72,6 @@
         <!--Footer starts here-->
 		<div ng-include="'footer.html'"></div>
         <!--Footer ends here-->
-        </div>
         
         <!-- Button trigger Alert Modal -->
 			<button id="alertModalTriggerButton" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">
