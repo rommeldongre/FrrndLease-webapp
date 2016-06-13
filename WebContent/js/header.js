@@ -40,6 +40,8 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     $scope.search = function(){
         if(window.location.hash == '#/')
             searchService.sendDataToCarousel();
+        else
+            window.location.replace('myapp.html#/');
     }
     
     $scope.searchStringChanged = function(searchString){
