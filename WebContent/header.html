@@ -1,9 +1,10 @@
 <div ng-app="headerApp">
-    <div ng-controller="headerCtrl" id="indexHeader">
-        <nav class="{{navClassValue}}">
+    <div ng-controller="headerCtrl" id="navbar">
+        <nav class="{{navClassValue}}" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button id="collapsebutton" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+                        <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span> 
                         <span class="icon-bar"></span> 
                         <span class="icon-bar"></span>
@@ -12,9 +13,29 @@
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar1">
 
+                    <!-- Store Your Stuff button -->
+                    <li class="nav navbar-nav" ng-if="isLoggedIn()">
+                        <a ng-click="storeYourStuff()" class="btn btn-primary btn-fill">StoreYourStuff</a>
+                    </li>
+                    
+                    <!-- Searchbar starts here -->
+                    <li class="nav navbar-nav" ng-if="showSearch" style="margin-left:3px;margin-top:15px;margin-bottom:15px;">
+                        <input class="form-control" type="text" ng-autocomplete ng-model="search.location" options="options" details="details" />
+                    </li>
+                    
+                    <div class="nav navbar-nav col-sm-5 col-md-5">
+                        <div class="input-group" style="margin-left:5px;">
+                            <input type="text" class="form-control" style="margin-top:15px;margin-bottom:15px;" ng-keypress="($event.charCode==13)?search():return" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" ng-change="searchStringChanged(search.string)" ng-model="search.string">
+                            <div class="input-group-btn">
+                                <a class="btn btn-primary btn-fill" ng-click="search()"><i class="glyphicon glyphicon-search"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Searchbar ends here -->
+                    
                     <!-- Dropdown starts here -->
                     <ul class="nav navbar-nav navbar-right">
-
+                        
                         <li ng-if="isAdmin()"><a id="headerfooteroptions" href="adminPage.html"><span class="glyphicon glyphicon-home"></span> Admin</a></li>
 
                         <li ng-if="isAnonymous()"><a id="headerfooteroptions" href="mylogin.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -23,55 +44,27 @@
 
                         <li ng-if="isLoggedIn()" class="navbar-brand" style="color:#337ab7;font-size:14px;"><strong>{{credits}}</strong></li>
 
-                        <li ng-if="isLoggedIn()" class="dropdown" id="subheader">
-                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> 
-                                <span>{{salutation}}</span>
+                        <li ng-if="isLoggedIn()" class="dropdown">
+                            <a href="" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"> 
+                                <b>{{salutation}}</b>
                                 <span class="caret"></span>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="myapp.html#/mypostings"><span class="glyphicon glyphicon-phone"></span> MyPostings </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="myapp.html#/mywishlists"><span class="glyphicon glyphicon-heart-empty"></span> MyWishList </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="myapp.html#/myincomingrequests"><span class="glyphicon glyphicon-inbox"></span> MyIncomingRequests </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="myapp.html#/myoutgoingrequests"><span class="glyphicon glyphicon-road"></span> MyOutgoingRequests </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="myapp.html#/myleasedoutitems"><span class="glyphicon glyphicon-gift"></span> MyLeasedOutItems </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="myapp.html#/myleasedinitems"><span class="glyphicon glyphicon-shopping-cart"></span> MyLeasedInItems </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="myapp.html#/myfriendslist"><span class="glyphicon glyphicon-user"></span> MyFriends </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="myapp.html#/myprofile"><span class="glyphicon glyphicon-list-alt"></span> MyProfile </a></li>
-                                <li role="separator" class="divider"></li>
-                                <li ng-click="logout()"><a href="#"><span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li><a href="myapp.html#/mypostings"><i class="glyphicon glyphicon-phone"></i> MyPostings </a></li>
+                                <li><a href="myapp.html#/mywishlists"><i class="glyphicon glyphicon-heart-empty"></i> MyWishList </a></li>
+                                <li><a href="myapp.html#/myincomingrequests"><i class="glyphicon glyphicon-inbox"></i> MyIncomingRequests </a></li>
+                                <li><a href="myapp.html#/myoutgoingrequests"><i class="glyphicon glyphicon-road"></i> MyOutgoingRequests </a></li>
+                                <li><a href="myapp.html#/myleasedoutitems"><i class="glyphicon glyphicon-gift"></i> MyLeasedOutItems </a></li>
+                                <li><a href="myapp.html#/myleasedinitems"><i class="glyphicon glyphicon-shopping-cart"></i> MyLeasedInItems </a></li>
+                                <li><a href="myapp.html#/myfriendslist"><i class="glyphicon glyphicon-user"></i> MyFriends </a></li>
+                                <li><a href="myapp.html#/myprofile"><i class="glyphicon glyphicon-list-alt"></i> MyProfile </a></li>
+                                <li ng-click="logout()"><a href="#"><i class="glyphicon glyphicon-log-out"></i> Logout </a></li>
                             </ul>
                         </li>
 
                     </ul>
                     <!-- Dropdown ends here -->
-
-                    <!-- Searchbar starts here -->
-                    <form class="navbar-form navbar-right" ng-if="showSearch">
-                        <div class="input-group" style="width: 100%">
-                            <div>
-                                <input class="form-control" style="width:30%;" ng-autocomplete ng-model="search.location" options="options" details="details" />
-                                <input id="wish_title1" style="width:70%;" type="text" ng-change="searchStringChanged(search.string)" ng-model="search.string" class="form-control" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" name="wish_title1" size="45">
-                            </div>
-
-                            <span class="input-group-btn">
-                                <a href="myapp.html#/"><button class="btn btn-primary" ng-click="search()"><i class="glyphicon glyphicon-search"></i></button></a>
-                            </span>
-                        </div>
-                    </form>
-                    <!-- Searchbar ends here -->
-
-                    <!-- Store Your Stuff button -->
-                    <div ng-if="isLoggedIn()" class="navbar-form navbar-right">
-                        <button ng-click="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
-                    </div>
-
+                    
                 </div>
             </div>
         </nav>
