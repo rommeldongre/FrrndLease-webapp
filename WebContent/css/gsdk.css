@@ -5699,6 +5699,7 @@ body > .navbar-collapse.collapse {
 }
 /*          Changes for small display      */
 @media (max-width: 767px) {
+/*
   .navbar-transparent {
     padding-top: 15px;
     background-color: rgba(0, 0, 0, 0.45);
@@ -6086,6 +6087,7 @@ body > .navbar-collapse.collapse {
   .navbar-fixed-top {
     -webkit-backface-visibility: hidden;
   }
+*/
 
   .social-line .btn {
     margin: 0 0 10px 0;

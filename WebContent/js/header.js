@@ -17,7 +17,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             $scope.showSearch = false;
         }
         else{
-            $scope.navClassValue = "navbar navbar-default navbar-fixed-top";
+            $scope.navClassValue = "navbar navbar-default";
             $scope.showSearch = true;
         }
     }else{
@@ -26,7 +26,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             $scope.showSearch = false;
         }
         else{
-            $scope.navClassValue = "navbar navbar-default navbar-fixed-top";
+            $scope.navClassValue = "navbar navbar-default";
             $scope.showSearch = true;
         }
     }
