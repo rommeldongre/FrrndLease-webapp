@@ -59,16 +59,17 @@
 </div>
 	<div id="main">	
 		
-		<nav class="navbar navbar-default navbar-fixed-top" id="header">
+		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
-				</div>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="myapp.html#/" class="navbar-brand" id="icon"><b>frrndLease</b></a>
+                </div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
 				
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
@@ -83,13 +84,15 @@
 						<!--</span>-->
 					</ul>
 					
+                    <li class="nav navbar-nav navbar-right">
+                        <button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary btn-fill">StoreYourStuff</button>
+                    </li>
+                    
+<!--
 					<form class="navbar-form navbar-right" role="search" id="navBarSearchForm" type=get action="myindex.html">
-					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+					 Search Bar is displayed here. Refer file dropdownlist.js
 					</form>
-					
-					<div class="navbar-form navbar-right">
-						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
-					</div>
+-->
 					
 				</div>
 			</div>
@@ -152,24 +155,24 @@
 					<br />
 					<div id="add_friend_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_friend" class="btn btn-primary" onclick="add_friend()">Add</button>
+							<button id="add_friend" class="btn btn-primary btn-fill" onclick="add_friend()">Add</button>
 						</div>
 					</div>
 						
 					<div id="edit_friend_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_friend" class="btn btn-primary" onclick="edit_friend()">Edit</button>
+							<button id="edit_friend" class="btn btn-primary btn-fill" onclick="edit_friend()">Edit</button>
 						</div>
 					</div>
 						
 					<div id="delete_friend_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_friend" class="btn btn-primary" onclick="delete_friend()">Delete</button>
+							<button id="delete_friend" class="btn btn-primary btn-fill" onclick="delete_friend()">Delete</button>
 						</div>
 					</div>
 					<div id="cancel_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<a href="myfriendslist.html"><button id="cancel" class="btn btn-primary">Cancel</button></a>
+							<a href="myfriendslist.html"><button id="cancel" class="btn btn-primary btn-fill">Cancel</button></a>
 						</div>
 					</div>
 				</div>
