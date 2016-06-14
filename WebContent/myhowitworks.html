@@ -16,7 +16,7 @@
     <script src="js/jquery-1.11.3.min.js"></script>
 	
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">\
+    <link href="css/bootstrap.min.css" rel="stylesheet">
       <link href="css/gsdk.css" rel="stylesheet" />
 	<link href="css/myfriend.css" rel="stylesheet">
 	<link href="css/mystore.css" rel="stylesheet">
@@ -63,16 +63,17 @@
 </div>
 	<div id="main">	
 		
-		<nav class="navbar navbar-default navbar-fixed-top">
+		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
-				</div>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="myapp.html#/" class="navbar-brand" id="icon"><b>frrndLease</b></a>
+                </div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
 				
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
@@ -88,13 +89,14 @@
 						</li>
 					</ul>
 					
+                    <li class="nav navbar-nav navbar-right">
+                        <button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary btn-fill">StoreYourStuff</button>
+                    </li>
+<!--
 					<form class="navbar-form navbar-right" role="search" id="navBarSearchForm" type=get action="myindex.html">
-					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+					 Search Bar is displayed here. Refer file dropdownlist.js
 					</form>
-					
-					<div class="navbar-form navbar-right">
-						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
-					</div>
+-->
 					
 				</div>
 			</div>

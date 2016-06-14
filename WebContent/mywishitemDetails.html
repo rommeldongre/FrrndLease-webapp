@@ -61,18 +61,19 @@
 	</div>
 	<div id="main">	
 		
-		<nav class="navbar navbar-default navbar-fixed-top" id="header">
+		<nav class="navbar navbar-default" id="header">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
-				</div>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="myapp.html#/" class="navbar-brand" id="icon"><b>frrndLease</b></a>
+                </div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
-
+                    
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
 						<li class="dropdown" id="subheader">
 							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -83,9 +84,11 @@
 						</li>
 					</ul>
 					
+<!--
 					<form class="navbar-form navbar-right" role="search" id="navBarSearchForm" type=get action="myindex.html">
-					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+					 Search Bar is displayed here. Refer file dropdownlist.js
 					</form>
+-->
 					
 				</div>
 			</div>
@@ -194,25 +197,25 @@
 					<br />
 					<div id="add_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_wishitem" class="btn btn-primary" onclick="add_wishitem()">Add</button>
+							<button id="add_wishitem" class="btn btn-primary btn-fill" onclick="add_wishitem()">Add</button>
 						</div>
 					</div>
 						
 					<div id="edit_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_wishitem" class="btn btn-primary" onclick="edit_wishitem()">Edit</button>
+							<button id="edit_wishitem" class="btn btn-primary btn-fill" onclick="edit_wishitem()">Edit</button>
 						</div>
 					</div>
 						
 					<div id="delete_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_wishitem" class="btn btn-primary" onclick="delete_wishitem()">Delete</button>
+							<button id="delete_wishitem" class="btn btn-primary btn-fill" onclick="delete_wishitem()">Delete</button>
 						</div>
 					</div>
 
 					<div id="cancel_wishitem_row" class="row">	
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="cancel_wishitem" class="btn btn-primary" onclick="cancel_wishitem()">Cancel</button>
+							<button id="cancel_wishitem" class="btn btn-primary btn-fill" onclick="cancel_wishitem()">Cancel</button>
 						</div>
 					</div>	
 				</div>
