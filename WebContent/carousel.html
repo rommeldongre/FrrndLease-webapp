@@ -1,34 +1,79 @@
-    <div ng-app="carouselApp">
+		<div ng-app="carouselApp">
         <div ng-controller="carouselCtrl">
             <div id="categoryfilters" class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="btn-group" id="categorybrowsing">
-                            <span class="categoryfilters" ng-if="search.string != ''" ng-click="clearSearch()">
-                                <button class="btn btn-primary btn-fill">"{{search.string}}" &nbsp;&nbsp;&nbsp; x</button>
-                            </span>
                             <span class="categoryfilters" ng-repeat="c in categories" ng-click="categorySelected($index)">
-                                <button class="btn ng-class:{'btn-default': !c.active, 'btn-fill btn-primary': c.active}" id="All">{{c.label}}</button>
+                                <button class="btn ng-class:{'btn-default': !c.active, 'btn-primary': c.active}" id="All">{{c.label}}</button>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
 
+			<br />
             <!-- Carousel Start -->
-            <br />
-            <div id="carouselObject">
+			<div id="carouselObject">
+			<div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
+				<div class="row" id="product-cards">
+					<!--<div class="{{colClass}}" ng-repeat="item in items">-->
+					<div class="col-md-2">
+					</div>
+					<div class="" ng-repeat="item in items">
+                        <span class="items" ng-click="itemClicked(item.uid)">
+					<div class="col-md-3">
+						<div class="card card-product">
+							<div class="image">
+								<a href="#">
+									<!--<img src="images/product.jpg" alt="..."/>-->
+									<img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}">
+								</a>
+							</div>
+							<div class="content">
+								<a href="#">
+									<h5 class="title" id="{{item.itemId}}" style="text-align:center;"><b>{{item.title}}</b></h5>
+								</a><br>
+								<p class="description" id="{{item.itemId}}" style="text-align:center;">
+								<b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
+								<span class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
+								<label ng-switch="user_status" >
+									<label ng-switch-when="''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+									<label ng-switch-when="null" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+									<label ng-switch-when="anonymous" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+									<label ng-switch-default id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
+								</label>
+								</p>
+								<!--<div class="footer">
+									<span class="price"> &euro; 250</span>
+									<button class="btn btn-danger btn-simple pull-right ">
+										<i class="fa fa-heart"></i> Wishlisted
+									</button>
+								</div>-->
+							</div>
+						</div> <!-- end card -->
+					</div>
+					</span>
+					</div>
+				</div>	
+			</div>
+			<div class="col-md-3 col-md-offset-6" ng-if="showNext">
+                         <button rel="tooltip" title="This is a morphing button" ng-click="loadNextSlide()" class="btn btn-default btn-round btn-fill" id="successBtn" data-toggle="morphing" data-rotation-color="gray">Load more...</button>
+                    </div>
+			</div>
+		
+		<!--<div id="carouselObject">
                 <div id="carousel-example-generic" class="carousel slide" data-pause="true" data-wrap="false" data-interval="5000000">
                     <div class="carousel-inner" role="listbox" id="carouselinner">
                         <div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
                             <div class="row">
                                 <div class="{{colClass}}" ng-repeat="item in items">
                                     <span class="items" ng-click="itemClicked(item.uid)">
-                                        <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}" style="width: {{carouselWidth/itemsLimit}}px; height: {{carouselHeight}}px;">
+										<img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}" style="width: {{carouselWidth/itemsLimit}}px; height: {{carouselHeight}}px;">
                                         <div class="carousel-caption" id="{{item.itemId}}" style="opacity: 0.6; background-color: black;">
                                             <h4 id="{{item.itemId}}"><b>{{item.title}}</b></h4>
 											<!-- Below line will be used in the future
-                                            <p id="{{item.itemId}}">{{item.fullName}}</p>-->
+                                            <p id="{{item.itemId}}">{{item.fullName}}</p>
                                             <p id="{{item.itemId}}" >{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</p>
                                             <p id="{{item.itemId}}">{{'Lease Term: ' + item.leaseTerm}}</p>
 											<div ng-switch="user_status">
@@ -54,6 +99,6 @@
                 </div>
             </div>
             <br />
-            <!-- Carousel End -->
-        </div>
+            <!--Carousel End
+        </div>-->
     </div>
