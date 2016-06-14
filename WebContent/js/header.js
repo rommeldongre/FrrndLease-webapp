@@ -17,7 +17,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             $scope.showSearch = false;
         }
         else{
-            $scope.navClassValue = "navbar navbar-default navbar-fixed-top";
+            $scope.navClassValue = "navbar navbar-default";
             $scope.showSearch = true;
         }
     }else{
@@ -26,7 +26,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             $scope.showSearch = false;
         }
         else{
-            $scope.navClassValue = "navbar navbar-default navbar-fixed-top";
+            $scope.navClassValue = "navbar navbar-default";
             $scope.showSearch = true;
         }
     }
@@ -40,6 +40,8 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     $scope.search = function(){
         if(window.location.hash == '#/')
             searchService.sendDataToCarousel();
+        else
+            window.location.replace('myapp.html#/');
     }
     
     $scope.searchStringChanged = function(searchString){

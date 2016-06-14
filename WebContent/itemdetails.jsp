@@ -4,59 +4,71 @@
 <html lang="en" ng-app="itemDetailsApp">
     
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--Meta tags For Facebook start here-->
-	<meta property="og:title" content="New Item Posted on Frrndlease"/>
-	<meta property="og:type" content="website" />
-	<meta property="og:image" content="images/fls-logo.png" />
-	<meta property="og:url" content="http://www.frrndlease.com/ItemDetails?uid=${uid}" />
-	<meta property="og:description" content="${title}" />
-<!--Meta tags For Facebook end here-->
-    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Meta tags For Facebook start here-->
+        <meta property="og:title" content="New Item Posted on Frrndlease"/>
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="images/fls-logo.png" />
+        <meta property="og:url" content="http://www.frrndlease.com/ItemDetails?uid=${uid}" />
+        <meta property="og:description" content="${title}" />
+    <!--Meta tags For Facebook end here-->
 
-<!-- Google Apis Start -->
-<meta name="google-signin-scope" content="profile email">
-<meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-<script src="https://apis.google.com/js/platform.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
-<!-- Google Api End -->
-    
-<!-- Angularjs api -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-<script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
-<script src="js/header.js"></script>
-<!-- Angularjs api ends -->
-    
-<link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
 
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title>Item Details</title>
+    <!-- Google Apis Start -->
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+    <!-- Google Api End -->
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
-    
-<!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/mystore.css" rel="stylesheet">
-<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+    <!-- Angularjs api -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+    <script src="js/header.js"></script>
+    <!-- Angularjs api ends -->
 
-<!--Loading Animation code CSS & JS Links  -->
-<link href="css/animation.css" type="text/css" rel="stylesheet">
-<script src="js/jquery.backstretch.js"></script>
-<script src="js/animation.js"></script>
-<!--Loading Animation code CSS & JS Links ends here  -->
+    <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
 
-<!--Check whether user is logged in or not  -->
-<script src="js/logincheck.js"></script>
-<!--Check whether user is logged in or not ends here  -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Item Details</title>
 
-<!--Correct Orientation of image while uploading  -->
-<script src="js/exif.js"></script>
-<!--Correct Orientation of image while uploading ends here  -->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/gsdk.css" rel="stylesheet" />
+    <link href="css/mystore.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+
+    <!--Loading Animation code CSS & JS Links  -->
+    <link href="css/animation.css" type="text/css" rel="stylesheet">
+    <script src="js/jquery.backstretch.js"></script>
+    <script src="js/animation.js"></script>
+    <!--Loading Animation code CSS & JS Links ends here  -->
+
+    <!--Check whether user is logged in or not  -->
+    <script src="js/logincheck.js"></script>
+    <!--Check whether user is logged in or not ends here  -->
+
+    <!--Correct Orientation of image while uploading  -->
+    <script src="js/exif.js"></script>
+    <!--Correct Orientation of image while uploading ends here  -->
+
+    <script src="js/bootstrap-datepicker.js"></script>
+	<script src="js/bootstrap-select.js"></script>
+	<script src="js/get-shit-done.js"></script>
+	<script src="js/gsdk-bootstrapswitch.js"></script>
+	<script src="js/gsdk-checkbox.js"></script>
+	<script src="js/gsdk-morphing.js"></script>
+	<script src="js/gsdk-radio.js"></script>
+	<script src="js/jquery.flexisel.js"></script>
+	<script src="js/jquery.tagsinput.js"></script>
+	<script src="js/jquery-ui.custom.min.js"></script>
+	<script src="js/retina.min.js"></script>    
 </head>
     
 <body onload="start()">
