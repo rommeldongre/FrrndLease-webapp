@@ -62,18 +62,19 @@
 </div>
 	<div id="main">	
 		
-		<nav class="navbar navbar-default navbar-fixed-top">
+		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>                        
-					</button>
-					<a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
-				</div>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="myapp.html#/" class="navbar-brand" id="icon"><b>frrndLease</b></a>
+                </div>
 				<div class="collapse navbar-collapse" id="myNavbar1">
-					
+                    
 					<ul class="nav navbar-nav navbar-right" id="navbar1right">
 						<li class="dropdown" id="subheader">
 							<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -83,14 +84,15 @@
 							</ul>
 						</li>
 					</ul>
-					
+                    
+					<li class="nav navbar-nav navbar-right">
+                        <button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary btn-fill">StoreYourStuff</button>
+                    </li>
+<!--
 					<form class="navbar-form navbar-right" role="search" id="navBarSearchForm" type=get action="myindex.html">
-					<!-- Search Bar is displayed here. Refer file dropdownlist.js-->
+					 Search Bar is displayed here. Refer file dropdownlist.js
 					</form>
-					
-					<div class="navbar-form navbar-right">
-						<button onclick="storeYourStuff()" id="button_top_right" class="btn btn-primary">StoreYourStuff</button>
-					</div>
+-->
 					
 				</div>
 			</div>
@@ -100,21 +102,21 @@
 		<div id="heading"><strong>Invite Friends</strong></div><br/>
 			<div class="row">
 				<div class="col-*-12">
-					<center><button class="btn btn-primary" id="importfb" onclick="importfb()">Invite Facebook Friends</button>
+					<center><button class="btn btn-primary btn-fill" id="importfb" onclick="importfb()">Invite Facebook Friends</button>
 					</center>
 				</div>
 			</div>
 			</br> </br>
 			<div class="row">
 				<div class="col-*-12">
-					<center><button class="btn btn-primary" id="importgoogle" onclick="importgoogle()">Invite Gmail Friends</button>
+					<center><button class="btn btn-primary btn-fill" id="importgoogle" onclick="importgoogle()">Invite Gmail Friends</button>
 					</center>
 				</div>
 			</div>
 			</br> </br>
 			<div class="row">
 				<div class="col-*-12">
-					<center><button class="btn btn-primary" id="importwhatsapp" onclick="importwhatsapp()">Invite Whatsapp Friends</button>
+					<center><button class="btn btn-primary btn-fill" id="importwhatsapp" onclick="importwhatsapp()">Invite Whatsapp Friends</button>
 					</center>
 				</div> 
 			</div>
@@ -123,7 +125,7 @@
 			<div id="emailbox" class="input-group">
 				<input type="text" id="importemail" class="form-control" placeholder=" Email, comma separated. example1@xyz.com, example2@abc.net">
 				<span class="input-group-btn">
-					<button class="btn btn-primary" onclick="directImport()">Invite Friends by Email</button>
+					<button class="btn btn-primary btn-fill" onclick="directImport()">Invite Friends by Email</button>
 				</span>
 			</div>			
 			<br /><br />
