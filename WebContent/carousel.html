@@ -17,7 +17,6 @@
 			<div id="carouselObject">
 			<div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
 				<div class="row" id="product-cards">
-					<!--<div class="{{colClass}}" ng-repeat="item in items">-->
 					<div class="col-md-2">
 					</div>
 					<div class="" ng-repeat="item in items">
@@ -26,7 +25,6 @@
 						<div class="card card-product">
 							<div class="image">
 								<a href="#">
-									<!--<img src="images/product.jpg" alt="..."/>-->
 									<img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}">
 								</a>
 							</div>
@@ -44,12 +42,6 @@
 									<label ng-switch-default id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
 								</label>
 								</p>
-								<!--<div class="footer">
-									<span class="price"> &euro; 250</span>
-									<button class="btn btn-danger btn-simple pull-right ">
-										<i class="fa fa-heart"></i> Wishlisted
-									</button>
-								</div>-->
 							</div>
 						</div> <!-- end card -->
 					</div>
@@ -61,44 +53,4 @@
                          <button rel="tooltip" title="This is a morphing button" ng-click="loadNextSlide()" class="btn btn-default btn-round btn-fill" id="successBtn" data-toggle="morphing" data-rotation-color="gray">Load more...</button>
                     </div>
 			</div>
-		
-		<!--<div id="carouselObject">
-                <div id="carousel-example-generic" class="carousel slide" data-pause="true" data-wrap="false" data-interval="5000000">
-                    <div class="carousel-inner" role="listbox" id="carouselinner">
-                        <div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
-                            <div class="row">
-                                <div class="{{colClass}}" ng-repeat="item in items">
-                                    <span class="items" ng-click="itemClicked(item.uid)">
-										<img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}" style="width: {{carouselWidth/itemsLimit}}px; height: {{carouselHeight}}px;">
-                                        <div class="carousel-caption" id="{{item.itemId}}" style="opacity: 0.6; background-color: black;">
-                                            <h4 id="{{item.itemId}}"><b>{{item.title}}</b></h4>
-											<!-- Below line will be used in the future
-                                            <p id="{{item.itemId}}">{{item.fullName}}</p>
-                                            <p id="{{item.itemId}}" >{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</p>
-                                            <p id="{{item.itemId}}">{{'Lease Term: ' + item.leaseTerm}}</p>
-											<div ng-switch="user_status">
-												<p ng-switch-when="''" id="{{item.itemId}}">{{'@' + item.locality}}</p>
-												<p ng-switch-when="null" id="{{item.itemId}}">{{'@' + item.locality}}</p>
-												<p ng-switch-when="anonymous" id="{{item.itemId}}">{{'@' + item.locality}}</p>
-												<p ng-switch-default id="{{item.itemId}}">{{'@' + item.sublocality +"," + item.locality}}</p>
-											</div>
-                                        </div>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <a class="left carousel-control" href="#carousel-example-generic" target="_self" role="button" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true" ng-click="loadPrevSlide()" id="leftcarouselbutton"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="right carousel-control" href="#carousel-example-generic" target="_self" ng-if="showNext" role="button" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true" ng-click="loadNextSlide()" id="rightcarouselbutton"></span><span class="sr-only">Next</span>
-                    </a>
-                </div>
-            </div>
-            <br />
-            <!--Carousel End
-        </div>-->
     </div>
