@@ -1,16 +1,18 @@
 <div class="container-fluid" id="midcontainer">
-    <div id="heading"><strong>My WishList</strong></div>
-	<div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+	<div class="row" id="heading">
+        <div class="col-lg-6 col-md-6">
+            <strong>My WishList</strong>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <span class="addImport"><span class="btn btn-primary" ng-click="addWishItem()">Add Item</span></span>
+        <div class="col-lg-3 col-md-3">
+            <button class="btn btn-primary btn-fill" ng-click="addWishItem()">Add Item</button>
         </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <span class="addImport"><span class="btn btn-primary" ng-click="importWishList()">Import Items</span></span>
+        <div class="col-lg-3 col-md-3">
+            <button class="btn btn-primary btn-fill" ng-click="importWishList()">Import Items</button>
         </div>
 	</div>
     <br />
+    <br />
+<!--
 	<table id="wishlisttable" class="table table-striped">
 	    <thead>
 			<tr>
@@ -29,5 +31,88 @@
 		    </tr>
         </tbody>
     </table>
+-->
     <h4 ng-if="wishList.length == 0">You have not wished any item. You can add the items you wish. </h4>
+
+
+<!--
+category
+:
+"Kids"
+description
+:
+""
+fullName
+:
+"Ankit Karnany"
+image
+:
+"data:image/png;base64,"
+itemId
+:
+71
+leaseTerm
+:
+"Month"
+leaseValue
+:
+1000
+location
+:
+"Nilgiri Height, Shivaji Co operative Housing Society, Bhageerath, Gokhalenagar, Pune, Maharashtra 411016, India"
+status
+:
+"Wished"
+title
+:
+"my pet"
+uid
+:
+"my-pet-71"
+userId
+:
+"ankitkarnany@gmail.com"
+-->
+
+<div class="card card-horizontal" ng-repeat="wish in wishList">
+    <div class="row">
+       <div class="col-lg-3 col-md-4 col-sm-5">
+           <a class="image" ng-click="showItemDetails(wish.itemId)" href="">
+               <img ng-src="{{(wish.image === '' || wish.image === null || wish.image === 'null') ? 'images/imgplaceholder.png' : wish.image}}" alt="...">
+            </a>
+        </div>
+        <div class="col-lg-9 col-md-8 col-sm-7">
+           <div class="content">
+               <a class="card-link" href="" ng-click="showItemDetails(wish.itemId)">
+                  <h4 class="title">{{wish.title}}</h4>
+               </a>
+               <a class="card-link" href="" ng-click="showItemDetails(wish.itemId)">
+                  <p class="description">{{wish.description}}</p>
+               </a>
+               <a class="footer" href="" ng-click="showItemDetails(wish.itemId)">
+                  <div class="stats">
+                      <div class="card-link">
+                          <i><strong>Category: </strong></i> {{wish.category}}
+                      </div>
+                  </div>
+                  <div class="stats">
+                      <div class="card-link">
+                          <i><strong>Lease Term: </strong></i> {{wish.leaseTerm}}
+                      </div>
+                  </div>
+                  <div class="stats">
+                      <div class="card-link">
+                          <i><strong>Lease Value: </strong></i> {{wish.leaseValue}}
+                      </div>
+                  </div>
+               </a>
+               <hr />
+               <div class="stats pull-right" style="padding-bottom:20px;">
+                   <button ng-click="deleteWishItem(wish.itemId,$index)" class="btn btn-primary btn-round btn-fill">Delete</button>
+               </div>
+           </div>
+       </div>
+   </div>
 </div>
+    
+    </div>
