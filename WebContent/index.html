@@ -47,9 +47,7 @@
     <script src="js/dropdownlist.js"></script>
     <!-- DropDown list code ends-->
     
-	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Grand+Hotel|Open+Sans:400,300' rel='stylesheet' type='text/css'>
-	<link href="css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/bootstrap-select.js"></script>
 	<script src="js/get-shit-done.js"></script>
@@ -62,16 +60,6 @@
 	<script src="js/jquery-ui.custom.min.js"></script>
 	<script src="js/retina.min.js"></script>
 	
-	<style>
-	#gsd_footer{
-    width: 100%;
-    min-height: 70px;
-	margin-top: 570px;
-	padding-top: 10px;
-    clear: both;
-    bottom: 0;
-}
-	</style>
   </head>
   
   <body onload="start()" style="background-image: url('images/bluebackground.jpg');">
@@ -125,13 +113,13 @@
 	<!--The tawk.to widget code will get populated here from file chatbox.html.-->
     <div id="tawk_widget"></div>
 			
-	<footer class="footer footer-big footer-transparent" id="gsd_footer" style="background-image: url('assets/img/thumb.jpg')">
+	<footer class="footer footer-big footer-transparent" style="background-image: url('images/thumb.jpg');">
 
             <!-- .footer-black is another class for the footer, for the transparent version, we recommend you to change the url of the image with your favourite image.          -->
 
             <div class="container">
                 <div class="row">
-                    <div class="col-md-5 col-md-offset-1">
+                    <div class="col-md-3 col-md-offset-1">
                         <h5 class="title">Company</h5>
                         <nav>
                         <ul>
@@ -168,7 +156,7 @@
                         </ul>
                         </nav>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <h5 class="title">Help and Support</h5>
                         <nav>
                             <ul>
@@ -200,9 +188,7 @@
                             </ul>
                         </nav>
                     </div>
-                </div>
-                <hr />
-                <div class="social-area text-center">
+					<div class="col-md-3">
                         <h5>Join us on</h5>
                         <a href="https://www.facebook.com/frrndlease" class="btn btn-social btn-round">
                             <i class="fa fa-facebook"></i>
@@ -220,7 +206,8 @@
                             <i class="fa fa-linkedin"></i>
                         </a>
                     </div>
-
+                </div>
+                <hr />
                 <div class="copyright">
                     &copy; (c) 2015-2016 Grey Labs LLP. All Rights Reserved.
                 </div>
@@ -284,21 +271,6 @@
 				'margin-top': -(height*0.05)+'px',		//5% of height
 				'bottom': '0',
 			});
-			
-			if($(window).width()<=500){
-				$("#gsd_footer").css({
-				'width': '100%',
-				'min-height': '70px',
-				'margin-top': "1000"+"px",		
-				'padding-top': '10px',
-				'clear': 'both',
-				'bottom': '0',
-			});
-			
-			$("#carousel_div").css({
-				'margin-bottom': "-1000"+"px",		
-			});
-			}
 		}	
 
 	</script>

@@ -17,11 +17,10 @@
 			<div id="carouselObject">
 			<div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
 				<div class="row" id="product-cards">
-					<div class="col-md-2">
+					<div class="col-md-2 col-sm-2 col-xs-2">
 					</div>
-					<div class="" ng-repeat="item in items">
+					<div class="col-lg-3 col-md-3 col-sm-8 col-xs-8" ng-repeat="item in items">
                         <span class="items" ng-click="itemClicked(item.uid)">
-					<div class="col-md-3">
 						<div class="card card-product">
 							<div class="image">
 								<a href="#">
@@ -32,7 +31,7 @@
 								<a href="#">
 									<h5 class="title" id="{{item.itemId}}" style="text-align:center;"><b>{{item.title}}</b></h5>
 								</a><br>
-								<p class="description" id="{{item.itemId}}" style="text-align:center;">
+								<p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
 								<b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
 								<span class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
 								<label ng-switch="user_status" >
@@ -44,13 +43,13 @@
 								</p>
 							</div>
 						</div> <!-- end card -->
-					</div>
 					</span>
 					</div>
 				</div>	
 			</div>
-			<div class="col-md-3 col-md-offset-6" ng-if="showNext">
+			<div class="col-md-3 col-md-offset-6 col-sm-8 col-xs-8" ng-if="showNext" style="text-align:center;">
                          <button rel="tooltip" title="This is a morphing button" ng-click="loadNextSlide()" class="btn btn-default btn-round btn-fill" id="successBtn" data-toggle="morphing" data-rotation-color="gray">Load more...</button>
                     </div>
 			</div>
     </div>
+	</div>
