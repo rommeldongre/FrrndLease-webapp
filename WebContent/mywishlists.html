@@ -1,118 +1,65 @@
 <div class="container-fluid" id="midcontainer">
-	<div class="row" id="heading">
-        <div class="col-lg-6 col-md-6">
+    
+	<div class="row">
+        <div class="left_title col-lg-6 col-md-6">
             <strong>My WishList</strong>
         </div>
-        <div class="col-lg-3 col-md-3">
-            <button class="btn btn-primary btn-fill" ng-click="addWishItem()">Add Item</button>
-        </div>
-        <div class="col-lg-3 col-md-3">
-            <button class="btn btn-primary btn-fill" ng-click="importWishList()">Import Items</button>
+        <div class="right_title col-lg-6 col-md-6">
+            <a class="btn btn-primary btn-simple" ng-click="addWishItem()"><u>Add Items</u></a>
+            <a class="btn btn-primary btn-simple" ng-click="importWishList()"><u>Import Items</u></a>
         </div>
 	</div>
-    <br />
-    <br />
-<!--
-	<table id="wishlisttable" class="table table-striped">
-	    <thead>
-			<tr>
-				<th class="tablecell">Item</th>
-				<th class="tablecell">Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="wish in wishList">
-			    <td style="width:80%;" id="{{wish.itemId}}" ng-click="showItemDetails(wish.itemId)" class="tablecellItem">{{wish.title}}</td>
-			    <td style="width:20%;" id="{{wish.itemId}}" class="tablecellAction">
-                    <span class="remove" ng-click="deleteWishItem(wish.itemId)">
-			            <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
-			        </span>
-			   </td>
-		    </tr>
-        </tbody>
-    </table>
--->
+    
+    <hr /><br /><br />
+    
     <h4 ng-if="wishList.length == 0">You have not wished any item. You can add the items you wish. </h4>
 
-
-<!--
-category
-:
-"Kids"
-description
-:
-""
-fullName
-:
-"Ankit Karnany"
-image
-:
-"data:image/png;base64,"
-itemId
-:
-71
-leaseTerm
-:
-"Month"
-leaseValue
-:
-1000
-location
-:
-"Nilgiri Height, Shivaji Co operative Housing Society, Bhageerath, Gokhalenagar, Pune, Maharashtra 411016, India"
-status
-:
-"Wished"
-title
-:
-"my pet"
-uid
-:
-"my-pet-71"
-userId
-:
-"ankitkarnany@gmail.com"
--->
-
-<div class="card card-horizontal" ng-repeat="wish in wishList">
-    <div class="row">
-       <div class="col-lg-3 col-md-4 col-sm-5">
-           <a class="image" ng-click="showItemDetails(wish.itemId)" href="">
-               <img ng-src="{{(wish.image === '' || wish.image === null || wish.image === 'null') ? 'images/imgplaceholder.png' : wish.image}}" alt="...">
-            </a>
-        </div>
-        <div class="col-lg-9 col-md-8 col-sm-7">
-           <div class="content">
-               <a class="card-link" href="" ng-click="showItemDetails(wish.itemId)">
-                  <h4 class="title">{{wish.title}}</h4>
-               </a>
-               <a class="card-link" href="" ng-click="showItemDetails(wish.itemId)">
-                  <p class="description">{{wish.description}}</p>
-               </a>
-               <a class="footer" href="" ng-click="showItemDetails(wish.itemId)">
-                  <div class="stats">
-                      <div class="card-link">
-                          <i><strong>Category: </strong></i> {{wish.category}}
-                      </div>
-                  </div>
-                  <div class="stats">
-                      <div class="card-link">
-                          <i><strong>Lease Term: </strong></i> {{wish.leaseTerm}}
-                      </div>
-                  </div>
-                  <div class="stats">
-                      <div class="card-link">
-                          <i><strong>Lease Value: </strong></i> {{wish.leaseValue}}
-                      </div>
-                  </div>
-               </a>
-               <hr />
-               <div class="stats pull-right" style="padding-bottom:20px;">
-                   <button ng-click="deleteWishItem(wish.itemId,$index)" class="btn btn-primary btn-round btn-fill">Delete</button>
+    <div class="row" ng-repeat="wish in wishList">
+        <div class="col-lg-2 col-md-2"></div>
+        <div class="card col-lg-8 col-md-8" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
+            <div class="row">
+               <div class="col-lg-3 col-md-4 col-sm-3">
+                   <a class="image" ng-click="showItemDetails(wish.itemId)" href="">
+                       <img ng-src="{{(wish.image === '' || wish.image === null || wish.image === 'null') ? 'images/imgplaceholder.png' : wish.image}}" alt="...">
+                    </a>
+                </div>
+                <div class="col-lg-6 col-md-4 col-sm-6">
+                   <div class="content">
+                       <a class="card-link" href="" ng-click="showItemDetails(wish.itemId)">
+                          <h4 class="title">{{wish.title}}</h4>
+                       </a>
+                       <a class="card-link" href="" ng-click="showItemDetails(wish.itemId)">
+                          <p class="description">{{wish.description}}</p>
+                       </a>
+                       <a class="footer" href="" ng-click="showItemDetails(wish.itemId)">
+                          <div class="stats">
+                              <div class="card-link">
+                                  <i><strong>Category: </strong></i> {{wish.category}}
+                              </div>
+                          </div>
+                          <div class="stats">
+                              <div class="card-link">
+                                  <i><strong>Lease Term: </strong></i> {{wish.leaseTerm}}
+                              </div>
+                          </div>
+                          <div class="stats">
+                              <div class="card-link">
+                                  <i><strong>Lease Value: </strong></i> {{wish.leaseValue}}
+                              </div>
+                          </div>
+                       </a>
+                   </div>
                </div>
+                <div class="col-lg-3 col-md-4 col-sm-3">
+                    <div class="content">
+                        <a class="card-link" href="">
+                           <button ng-click="deleteWishItem(wish.itemId,$index)" class="btn btn-primary btn-simple">Delete</button>
+                        </a>
+                    </div>
+                </div>
            </div>
-       </div>
-   </div>
-</div>
-    
+        </div>
+        <div class="col-lg-2 col-md-2"></div>
     </div>
+    
+</div>
