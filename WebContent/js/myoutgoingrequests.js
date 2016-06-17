@@ -53,7 +53,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
     // populate the requests list initally
     initialPopulate();
     
-    $scope.deleteRequest = function(requestId){
+    $scope.deleteRequest = function(requestId, index){
         modalService.showModal({}, {bodyText: "Are you sure you want to delete this request?",actionButtonText: 'YES'}).then(
             function(result){
                 if(requestId === '')
@@ -64,11 +64,11 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
                     userId: userFactory.user
                 };
 
-                deleteRequest(req);
+                deleteRequest(req, index);
             },function(){});
     }
     
-    var deleteRequest = function(req){
+    var deleteRequest = function(req, index){
         $.ajax({
             url: '/flsv2/DeleteRequest',
             type:'POST',
@@ -79,14 +79,17 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
                 if(response.errorString == "No Error"){
                     modalService.showModal({}, {bodyText: "Request Deleted successfully", showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        $scope.requests = [];
-                        initialPopulate();
+                        $scope.requests.splice(index, 1);
                     },function(){});
                 }
             },
             error: function() {
             }
             });
+    }
+    
+    $scope.showItemDetails = function(uid){
+        window.location.replace("ItemDetails?uid="+uid);
     }
     
 }]);

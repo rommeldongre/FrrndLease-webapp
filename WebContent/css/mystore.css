@@ -63,6 +63,24 @@ body{
 	margin-top: 2%;
 }
 
+.left_title{
+    position: relative;
+    text-align: left;
+    color: #0066ff;
+    font-size: 200%;
+    font-family: 'Happy Monkey', serif;
+	margin-top: 2%;
+}
+
+.right_title{
+    position: relative;
+    text-align: right;
+    color: #0066ff;
+    font-size: 100%;
+    font-family: 'Happy Monkey', serif;
+	margin-top: 2%;
+}
+
 .addImport:hover{
 	cursor: pointer;
 }

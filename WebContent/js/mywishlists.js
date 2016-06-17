@@ -92,19 +92,19 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
         });
     }
     
-    $scope.deleteWishItem = function(itemId){
+    $scope.deleteWishItem = function(itemId, index){
         modalService.showModal({}, {bodyText: "Are you sure you want to delete this WishItem?",actionButtonText: 'YES'}).then(function(result){
             var req = {
                 id: itemId,
                 userId: userFactory.user
             }
             
-            sendDeleteWishItem(req);
+            sendDeleteWishItem(req, index);
             
         }, function(){});
     }
     
-    var sendDeleteWishItem = function(req){
+    var sendDeleteWishItem = function(req, index){
         $.ajax({
             url: '/flsv2/DeleteWishlist',
             type: 'get',
@@ -113,8 +113,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
             dataType:"json",
             success: function(response) {
                 modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                    $scope.wishList = [];
-                    initialPopulate();
+                    $scope.wishList.splice(index, 1);
                 }, function(){});
             },
             error: function() {
