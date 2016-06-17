@@ -21,6 +21,10 @@ $(function(){
                   $('#wait_bar').html(response);
             });
 			
+			$.get("howitworksdiv.html", function(response) {
+                  $('#gsd_howItWorks').html(response);
+            });
+			
 			var link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
