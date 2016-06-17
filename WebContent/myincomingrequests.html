@@ -1,36 +1,91 @@
 <div class="container-fluid" id="midcontainer">
-    <div id="heading"><strong>My Incoming Requests List</strong></div>
+    
     <div class="row">
-        <div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>
-    </div>
-    <br />
-    <table id="requesttable" class="table table-striped">
-        <thead>
-            <tr>
-                <th class="tablecell" style="text-align:left;">Date</th>
-                <th class="tablecell" style="text-align:center;">Item</th>
-                <th class="tablecell" style="text-align:center;">Friend</th>
-                <th class="tablecell" style="text-align:center;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="request in requests">
-                <td style="width:15%;text-align:left;" class="tablecell">{{request.requestDate}}</td>
-                <td style="width:40%;text-align:center;" id="{{request.itemNextId}}" ng-click="showItemDetails(request.uid)" class="tablecellItem">{{request.title}}</td>
-                <td style="width:25%;text-align:center;" id="{{request.itemNextId}}" class="tablecellFriend">{{request.requestUserName}}</td>
-                <td style="width:20%;text-align:center;" class="tablecellAction">
-                    <span ng-click="grantLease(request.requestItemId,request.requestorId)">
-                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="">Accept</span>
-                    </span>
-                    <span ng-click="rejectLease(request.requestItemId,request.requestorId)">
-                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
-                    </span>
-                    <span class="think">
-                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{request.itemNextId}}">Renew</span>
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="left_title col-lg-6 col-md-6">
+            <strong>My Incoming Requests List</strong>
+        </div>
+	</div>
+    
+    <hr /><br /><br />
+    
     <h4 ng-if="requests.length == 0">You have no Incoming Requests. Post more items to the Store</h4>
+    
+    <div class="row" ng-repeat="request in requests">
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
+            <div class="row" style="display: flex;flex-wrap: wrap;">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                   <a class="image">
+                      <img ng-src="{{(request.image === '' || request.image === null || request.image === 'null') ? 'images/imgplaceholder.png' : request.image}}" alt="...">
+                   </a>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                   <div class="content">
+                       <a class="card-link">
+                          <h5 class="title">{{request.title}}</h5>
+                       </a>
+                       <a class="card-link">
+                          <p class="description">{{request.description}}</p>
+                       </a>
+                       <a class="footer">
+                          <div class="stats">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{request.category}}
+                              </div>
+                          </div>
+                          <div class="stats">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{request.leaseTerm}}
+                              </div>
+                          </div>
+                          <div class="stats">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-euro" aria-hidden="true"></span> {{request.leaseValue}}
+                              </div>
+                          </div>
+                       </a>
+                   </div>
+               </div>
+               <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center;border-left: thin solid #eee;border-right: thin solid #eee;">
+                  <div class="content" style="text-align:center;">
+                      <a class="card-link">
+                         <h5 class="title">Requestor - </h5>
+                       </a>
+                      <a class="card-link">
+                          <img src="images/user_icon.png" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{request.requestUserName}}</p>
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{request.requestor_sublocality}}</p>
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{request.requestor_locality}}</p>
+                      </a>
+                  </div>
+               </div>
+               <div class="col-lg-2 col-md-2 col-sm-2">
+                   <div class="content" style="text-align:center;">
+                       <a class="card-link">
+                         <h5 class="title">Requested at:</h5>
+                       </a>
+                       <a class="card-link">
+                           <p class="description">{{request.requestDate}}</p>
+                       </a>
+                       <a class="card-link" href="">
+                           <button ng-click="grantLease(request.requestItemId,request.requestorId,$index)" class="btn btn-primary btn-simple">Accept</button>
+                       </a>
+                       <a class="card-link" href="">
+                           <button ng-click="rejectLease(request.requestItemId,request.requestorId,$index)" class="btn btn-primary btn-simple">Delete</button>
+                       </a>
+                       <a class="card-link" href="">
+                           <button class="btn btn-primary btn-simple">Renew</button>
+                       </a>
+                   </div>
+               </div>
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1"></div>
+    </div>
 </div>
