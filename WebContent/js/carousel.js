@@ -9,8 +9,6 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var userId = null;
     // searchString is used to display items which are being searched
     var searchString = '';
-    // to display the next button or not
-    var lastSavedItemId = 0;
     // to store the lat lng from the search bar
     var latitude = 0.0, longitude = 0.0;
     $scope.search = {};
@@ -86,10 +84,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     // populate the carousel with initital array
     var initPopulate = function(){
         lastItem = 0;
-        
-        lastSavedItemId = 0;
-        
-        $scope.showNext = true;
+            
+        $scope.showNext = false;
         
         populateCarousel(lastItem);
     }
@@ -126,24 +122,16 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                         }, 1000);
                     }
                     lastItem = response.data.lastItemId;
-                    lastSavedItemId = 0;
+					$scope.showNext = true;
                 }else{
+					$scope.showNext = false;
                     if(lastItem == 0)
                         $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
-                    if(lastSavedItemId == 2){
-                        $scope.showNext = false;
-                    }
-                    lastSavedItemId++;
                 }
             },
             function(error){
                 console.log("Not able to get items " + error.message);
             });
-    }
-    
-    $scope.loadPrevSlide = function(){
-        $scope.showNext = true;
-        lastSavedItemId--;
     }
     
     // called when next carousel button is clicked
