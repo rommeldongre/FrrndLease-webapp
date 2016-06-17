@@ -31,23 +31,23 @@
                        <a class="card-link">
                           <p class="description">{{wish.description}}</p>
                        </a>
-                       <div class="footer">
-                          <div class="stats">
+                       <a class="footer">
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
                               <div class="card-link">
-                                  <i><strong>Category: </strong></i> {{wish.category}}
+                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{wish.category}}
                               </div>
                           </div>
-                          <div class="stats">
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
                               <div class="card-link">
-                                  <i><strong>Lease Term: </strong></i> {{wish.leaseTerm}}
+                                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{wish.leaseTerm}}
                               </div>
                           </div>
-                          <div class="stats">
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value">
                               <div class="card-link">
-                                  <i><strong>Lease Value: </strong></i> {{wish.leaseValue}}
+                                  <span class="fa fa-rupee" aria-hidden="true"></span> {{wish.leaseValue}}
                               </div>
                           </div>
-                       </div>
+                       </a>
                    </div>
                </div>
                <div class="col-lg-2 col-md-3 col-sm-3">

@@ -88,4 +88,8 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
             });
     }
     
+    $scope.showItemDetails = function(uid){
+        window.location.replace("ItemDetails?uid="+uid);
+    }
+    
 }]);
