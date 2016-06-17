@@ -48,6 +48,7 @@
     <!-- DropDown list code ends-->
     
 	<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
+	<link href="css/pe-icon-7-stroke.css" type="text/css" rel="stylesheet" />
     <script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/bootstrap-select.js"></script>
 	<script src="js/get-shit-done.js"></script>
@@ -64,10 +65,18 @@
 	#gsd_footer{
     width: 100%;
     min-height: 70px;
-	margin-top: 570px;
+	margin-top: -5px;
 	padding-top: 10px;
     clear: both;
     bottom: 0;
+	}
+	#gsd_wrapper{
+	width: 100%;
+    min-height: 70px;
+	margin-top: 70px;
+	padding-top: 10px;
+	clear: both;
+	bottom: 0;
 	}
 	</style>
   </head>
@@ -108,9 +117,12 @@
 		
 	</div>
 	
+	<div ng-include="'benefits.html'">
+	<!--Benefits section goes here -->
+	</div>
 	
 	<div id="main" style="background-image: url('images/bluebackground.jpg');background-repeat:repeat;min-height:500px">
-		<br /><br />
+		<br />
 		<div id="friendstoreline"><strong>The Friend Store</strong></div>
 		<br />
         <!-- Carousel Start -->
@@ -118,6 +130,30 @@
 		  <div ng-include="'carousel.html'"></div>
         </div>
         <!-- Carousel End -->
+	</div>
+	
+	<div class="wrapper" id ="gsd_wrapper">
+	
+	<div ng-include="'howitworks.html'">
+	<!--How it Works section goes here -->
+	</div>
+	
+	<div ng-include="'pricing.html'">
+	<!--Pricing section goes here -->
+	</div>
+	
+	<div ng-include="'testimonial.html'">
+	<!--Testimonial section goes here -->
+	</div>
+	
+	<div ng-include="'aboutus.html'">
+	<!--About Us section goes here -->
+	</div>
+	
+	<div ng-include="'team.html'">
+	<!--Team section goes here -->
+	</div>
+	
 	</div>
 	
 	<!--The tawk.to widget code will get populated here from file chatbox.html.-->
