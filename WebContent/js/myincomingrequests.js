@@ -57,7 +57,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
     // populate the requests list initally
     initialPopulate();
     
-    $scope.grantLease = function(itemId, reqUserId){
+    $scope.grantLease = function(itemId, reqUserId, index){
         
         modalService.showModal({}, {bodyText: "Are you sure you want to lease the Item?",actionButtonText: 'YES'}).then(
             function(result){
@@ -67,11 +67,11 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
                     userId: userFactory.user
                 }
 
-                grantLeaseSend(req);
+                grantLeaseSend(req, index);
             },function(){});
     }
     
-    var grantLeaseSend = function(req){
+    var grantLeaseSend = function(req, index){
         $.ajax({
             url: '/flsv2/GrantLease',
             type:'post',
@@ -81,8 +81,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
             success: function(response) {
                 modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        $scope.requests = [];
-                        initialPopulate();
+                        $scope.requests.splice(index, 1);
                     },function(){});	
             },
             error: function() {
@@ -90,7 +89,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
         });
     }
     
-    $scope.rejectLease = function(itemId, reqUserId){
+    $scope.rejectLease = function(itemId, reqUserId, index){
         
         modalService.showModal({}, {bodyText: "Are you sure you want to reject the Request?",actionButtonText: 'YES'}).then(
             function(result){
@@ -105,13 +104,13 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
                     userId: reqUserId,
                 };
 
-                rejectLeaseSend(req);
+                rejectLeaseSend(req, index);
             },function(){});
         
         
     }
     
-    var rejectLeaseSend = function(req){
+    var rejectLeaseSend = function(req, index){
         $.ajax({
             url: '/flsv2/RejectRequest',
             type:'get',
@@ -121,8 +120,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
             success: function(response) {
                 modalService.showModal({}, {bodyText: response.Message, showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        $scope.requests = [];
-                        initialPopulate();
+                        $scope.requests.splice(index, 1);
                     },function(){});
             },
             error: function() {

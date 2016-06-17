@@ -48,7 +48,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside GetOutgoingrequests method");
 
 		try {
-			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb3.user_full_name FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_id>? HAVING tb1.request_status=? ORDER by tb1.request_id ASC LIMIT 1";
+			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb2.item_category, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb3.user_full_name, tb3.user_mobile, tb3.user_address, tb3.user_locality, tb3.user_sublocality FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb2.item_user_id = tb3.user_id WHERE tb1.request_requser_id=? AND tb1.request_id>? HAVING tb1.request_status=? ORDER by tb1.request_id ASC LIMIT 1";
 			LOGGER.info("Creating a statement .....");
 			PreparedStatement stmt = hcp.prepareStatement(sql);
 
@@ -72,6 +72,15 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 					rs.setRequest_item_id(dbResponse.getInt("request_item_id"));
 					rs.setRequest_date(dbResponse.getString("request_date"));
 					rs.setOwner_name(dbResponse.getString("user_full_name"));
+					rs.setCategory(dbResponse.getString("item_category"));
+					rs.setLeaseValue(dbResponse.getString("item_lease_value"));
+					rs.setLeaseTerm(dbResponse.getString("item_lease_term"));
+					rs.setImage(dbResponse.getString("item_image"));
+					rs.setUid(dbResponse.getString("item_uid"));
+					rs.setOwner_mobile(dbResponse.getString("user_mobile"));
+					rs.setOwner_address(dbResponse.getString("user_address"));
+					rs.setOwner_locality(dbResponse.getString("user_locality"));
+					rs.setOwner_sublocality(dbResponse.getString("user_sublocality"));
 
 					message = rs.getTitle() + ", " + rs.getDesc() + ", " + rs.getOwner_Id() + ", "
 							+ rs.getRequest_status() + ", " + rs.getRequest_item_id() + ", " + rs.getRequest_date();
