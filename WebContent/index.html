@@ -46,7 +46,8 @@
 	<!-- DropDown list code-->
     <script src="js/dropdownlist.js"></script>
     <!-- DropDown list code ends-->
-      
+    
+	<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/bootstrap-select.js"></script>
 	<script src="js/get-shit-done.js"></script>
@@ -58,11 +59,23 @@
 	<script src="js/jquery.tagsinput.js"></script>
 	<script src="js/jquery-ui.custom.min.js"></script>
 	<script src="js/retina.min.js"></script>
+	
+	<style>
+	#gsd_footer{
+    width: 100%;
+    min-height: 70px;
+	margin-top: 570px;
+	padding-top: 10px;
+    clear: both;
+    bottom: 0;
+	}
+	</style>
   </head>
   
-  <body onload="start()">
+  <body onload="start()" style="background-image: url('images/bluebackground.jpg');">
     <div id="loader">
 	</div>
+	
 	<div id="marketingpanel">
 		<!--header starts---------------------------------------->
 		<div ng-include="'header.html'"></div>
@@ -75,7 +88,7 @@
             <div id="marketingstore">
                 <button ng-click="storeYourStuff()" id="storebutton" class="btn btn-primary btn-fill">StoreYourStuff</button>
             </div>
-
+			<br><br><br><br><br><br>
             <div id="marketingsearch">
             </div>
             
@@ -96,13 +109,12 @@
 	</div>
 	
 	
-	<div id="main" style="background-image: url('images/bluebackground.jpg')">
+	<div id="main" style="background-image: url('images/bluebackground.jpg');background-repeat:repeat;min-height:500px">
 		<br /><br />
 		<div id="friendstoreline"><strong>The Friend Store</strong></div>
 		<br />
-		
         <!-- Carousel Start -->
-        <div>
+        <div id ="carousel_div">
 		  <div ng-include="'carousel.html'"></div>
         </div>
         <!-- Carousel End -->
@@ -110,35 +122,10 @@
 	
 	<!--The tawk.to widget code will get populated here from file chatbox.html.-->
     <div id="tawk_widget"></div>
-			
-	<div id="footerpanel">
-		<br />
-			
-		<nav id="footer" class="navbar navbar-default">
-			<div class="container-fluid">
-				<button id="collapsebutton" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbarBottom" onClick="increaseSizeOfFooter()">
-						<span id="collapseline" class="icon-bar"></span>
-						<span id="collapseline" class="icon-bar"></span>
-						<span id="collapseline" class="icon-bar"></span>                        
-				</button>
-				<div class="collapse navbar-collapse" id="myNavbarBottom">
-					<ul class="nav navbar-nav navbar-center">
-						<li><a id="headerfooteroptions" href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-th-large"></span> About</a></li>
-						<li><a id="headerfooteroptions" href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-pencil"></span> Blog</a></li>
-						<li><a id="headerfooteroptions" href="myhowitworks.html"><span class="glyphicon glyphicon-road"></span> How It Works</a></li>
-						<li><a id="headerfooteroptions" href="mycredits.html"><span class="glyphicon glyphicon-certificate"></span> Credits</a></li>
-						<li><a id="headerfooteroptions" href="https://www.facebook.com/frrndlease"><span class="glyphicon glyphicon-earphone"></span> Contact</a></li>
-						<li><a href="https://www.surveymonkey.com/r/Y9GSGLJ" target=""><span class="glyphicon glyphicon-comment"></span><b style="color:red;"> Survey</b></a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-		<div id="footertable">
-			<div class="footerpart">
-				(c) 2015-2016 Grey Labs LLP. All Rights Reserved.
-			</div>	
-		</div>
-	</div>
+	
+	<!--Footer starts here-->
+		<div ng-include="'footer.html'" id="gsd_footer"></div>
+    <!--Footer ends here-->	
 	
 	<script type="text/javascript">
 		
