@@ -1,31 +1,106 @@
 <div class="container-fluid" id="midcontainer">
-    <div id="heading"><strong>My Outgoing Requests List</strong></div>
+    
     <div class="row">
-        <div id="topcolleft" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class="left_title col-lg-6 col-md-6">
+            <strong>My Outgoing Requests List</strong>
         </div>
-    </div>
-    <br />
-    <table id="requesttable" class="table table-striped">
-        <thead>
-            <tr>
-                <th class="tablecell" style="text-align:left;">Date</th>
-				<th class="tablecell" style="text-align:center;">Item</th>
-				<th class="tablecell" style="text-align:center;">Friend</th>
-				<th class="tablecell" style="text-align:center;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="request in requests">
-                <td style="width:15%;text-align:left;" class="tablecell">{{request.request_date}}</td>
-                <td style="width:40%;text-align:center;" class="tablecellItem">{{request.title}}</td>
-                <td style="width:25%;text-align:center;" class="tablecellFriend">{{request.owner_name}}</td>
-                <td style="width:20%;text-align:center;" class="tablecellAction">
-                    <span class="refuse" ng-click="deleteRequest(request.request_id)">
-                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" >Delete</span>
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+	</div>
+    
+    <hr /><br /><br />
+
     <h4 ng-if="requests.length == 0">You have no Outgoing Requests. Request items from the Store</h4>
+    
+    <div class="row" ng-repeat="request in requests">
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                   <a class="image">
+                      <img ng-src="{{(request.image === '' || request.image === null || request.image === 'null') ? 'images/imgplaceholder.png' : request.image}}" alt="...">
+                   </a>
+                </div>
+                <div class="col-lg-4 col-md-3 col-sm-3">
+                   <div class="content">
+                       <a class="card-link">
+                          <h4 class="title">{{request.title}}</h4>
+                       </a>
+                       <a class="card-link">
+                          <p class="description">{{request.desc}}</p>
+                       </a>
+                       <a class="footer">
+                          <div class="stats">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{request.category}}
+                              </div>
+                          </div>
+                          <div class="stats">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{request.leaseTerm}}
+                              </div>
+                          </div>
+                          <div class="stats">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-euro" aria-hidden="true"></span> {{request.leaseValue}}
+                              </div>
+                          </div>
+                       </a>
+                   </div>
+               </div>
+                <hr style="width: 0px;height: 100%;">
+               <div class="col-lg-2 col-md-3 col-sm-3">
+                  <div class="content">
+                      <div class="card-link">
+                          <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                      </div>
+                      <a class="card-link">
+                         <h4 class="title">{{request.owner_name}}</h4>
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{request.owner_sublocality}}</p>
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{request.owner_locality}}</p>
+                      </a>
+                  </div>
+               </div>
+               <div class="col-lg-2 col-md-2 col-sm-2">
+                   <div class="content">
+                       <a class="card-link">
+                         <h4 class="description">Requested at: {{request.request_date}}</h4>
+                       </a>
+                       <a class="card-link" href="">
+                           <button ng-click="deleteRequest(request.request_id)" class="btn btn-primary btn-simple">Delete</button>
+                       </a>
+                   </div>
+               </div>
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1"></div>
+    </div>
+    
 </div>
+
+<!--
+category:"Vacation"
+cookie:0
+desc:"this is my desert"
+error:null
+errorString:null
+image: ""
+leaseTerm:"Season"
+leaseValue:"1000"
+owner_Id:"ankit@greylabs.org"
+owner_address:"Gokhalenagar, Pune, Maharashtra, India"
+owner_locality:"Pune"
+owner_mobile:"7896912181"
+owner_name:"Ankit Karnany"
+owner_sublocality:"Gokhalenagar"
+quantity:1
+request_date:"2016-06-16 13:58:08"
+request_id:8
+request_item_id:54
+request_status:"Active"
+returnCode:0
+title:"My Desert is awesome"
+uid:"my-desert-is-awesome-54"
+user_Id:null-->

@@ -50,6 +50,84 @@ public class GetRequestsByUserResObj extends ResObj{
 	
 	//Owner Name
 	String owner_name;
+	
+	// more items details
+	String category, leaseValue, leaseTerm, image ,uid;
+	
+	// more items owners details
+	String owner_mobile, owner_address, owner_locality, owner_sublocality;
+	
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getLeaseValue() {
+		return leaseValue;
+	}
+
+	public void setLeaseValue(String leaseValue) {
+		this.leaseValue = leaseValue;
+	}
+
+	public String getLeaseTerm() {
+		return leaseTerm;
+	}
+
+	public void setLeaseTerm(String leaseTerm) {
+		this.leaseTerm = leaseTerm;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getOwner_mobile() {
+		return owner_mobile;
+	}
+
+	public void setOwner_mobile(String owner_mobile) {
+		this.owner_mobile = owner_mobile;
+	}
+
+	public String getOwner_address() {
+		return owner_address;
+	}
+
+	public void setOwner_address(String owner_address) {
+		this.owner_address = owner_address;
+	}
+
+	public String getOwner_locality() {
+		return owner_locality;
+	}
+
+	public void setOwner_locality(String owner_locality) {
+		this.owner_locality = owner_locality;
+	}
+
+	public String getOwner_sublocality() {
+		return owner_sublocality;
+	}
+
+	public void setOwner_sublocality(String owner_sublocality) {
+		this.owner_sublocality = owner_sublocality;
+	}
 
 	public String getOwner_name() {
 		return owner_name;
