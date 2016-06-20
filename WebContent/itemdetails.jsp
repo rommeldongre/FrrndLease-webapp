@@ -57,7 +57,8 @@
     <!--Correct Orientation of image while uploading  -->
     <script src="js/exif.js"></script>
     <!--Correct Orientation of image while uploading ends here  -->
-
+	
+	<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <script src="js/bootstrap-datepicker.js"></script>
 	<script src="js/bootstrap-select.js"></script>
 	<script src="js/get-shit-done.js"></script>
@@ -98,7 +99,7 @@
 					<div class="row">
                         <div class="col-md-12">
                             <input type="file" ng-if="userMatch" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" />
-                            <img ng-src="{{item.image}}" width="300" height="300"/>
+                            <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" width="300" height="300"/>
                         </div>
 					</div>
                     
@@ -228,11 +229,10 @@
             <!--The tawk.to widget code will get populated here from file chatbox.html.-->
             <div id="tawk_widget"></div>
 
-			<!--Footer starts here-->
-			<div ng-include="'footer.html'"></div>
-            <!--Footer ends here-->
-
 		</div>
+		<!--Footer starts here-->
+		<div ng-include="'footer.html'"></div>
+        <!--Footer ends here-->
 	</div>
 
 	<script type="text/javascript">
