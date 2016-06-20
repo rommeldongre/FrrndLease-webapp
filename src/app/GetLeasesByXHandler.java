@@ -52,13 +52,17 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			String leaseReqUserId = rq.getLeaseReqUserId();
 			int offset = rq.getCookie();
 			
-			sql = "SELECT tb1.*, tb2.*, tb3.user_full_name AS Owner, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id = tb4.item_id WHERE ";
+			sql = "SELECT tb1.*, tb2.*, tb3.user_full_name AS OwnerName, tb3.user_address AS OwnerAddress, tb3.user_mobile AS OwnerMobile, tb3.user_locality AS OwnerLocality, tb3.user_sublocality AS OwnerSublocality, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id = tb4.item_id WHERE ";
 			
 			if(leaseUserId != "")
 				sql = sql + "tb1.lease_user_id='" + leaseUserId + "' AND ";
-			
-			if(leaseReqUserId != "")
+			else if(leaseReqUserId != "")
 				sql = sql + "tb1.lease_requser_id='" + leaseReqUserId + "' AND ";
+			else{
+				rs.setCode(FLS_END_OF_DB);
+				rs.setMessage(FLS_END_OF_DB_M);
+				return rs;
+			}
 			
 			sql = sql + " tb1.lease_status='Active' ORDER BY tb1.lease_id LIMIT " + offset + ", 1";
 			
@@ -75,10 +79,15 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				rs.setRequestorSublocality(dbResponse.getString("user_sublocality"));
 				
 				rs.setOwnerUserId(dbResponse.getString("lease_user_id"));
-				rs.setOwnerFullName(dbResponse.getString("Owner"));
+				rs.setOwnerFullName(dbResponse.getString("OwnerName"));
+				rs.setOwnerAddress(dbResponse.getString("OwnerAddress"));
+				rs.setOwnerMobile(dbResponse.getString("OwnerMobile"));
+				rs.setOwnerLocality(dbResponse.getString("OwnerLocality"));
+				rs.setOwnerSublocality(dbResponse.getString("OwnerSublocality"));
 				
 				rs.setLeaseExpiryDate(dbResponse.getString("lease_expiry_date"));
 				
+				rs.setItemId(dbResponse.getInt("item_id"));
 				rs.setTitle(dbResponse.getString("item_name"));
 				rs.setDescription(dbResponse.getString("item_desc"));
 				rs.setCategory(dbResponse.getString("item_category"));

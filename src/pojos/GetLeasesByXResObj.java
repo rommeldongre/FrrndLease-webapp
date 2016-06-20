@@ -11,12 +11,13 @@ public class GetLeasesByXResObj extends ResObj{
 	String requestorUserId, requestorFullName, requestorMobile, requestorAddress, requestorLocality, requestorSublocality;
 	
 	// owners details
-	String ownerUserId, ownerFullName;
+	String ownerUserId, ownerFullName, ownerMobile, ownerAddress, ownerLocality, ownerSublocality;
 	
 	// lease details
 	String leaseExpiryDate;
 	
 	// item details
+	int itemId;
 	String title, description, category, leaseValue, leaseTerm, image ,uid;
 
 	public int getCode() {
@@ -107,12 +108,52 @@ public class GetLeasesByXResObj extends ResObj{
 		this.ownerFullName = ownerFullName;
 	}
 
+	public String getOwnerMobile() {
+		return ownerMobile;
+	}
+
+	public void setOwnerMobile(String ownerMobile) {
+		this.ownerMobile = ownerMobile;
+	}
+
+	public String getOwnerAddress() {
+		return ownerAddress;
+	}
+
+	public void setOwnerAddress(String ownerAddress) {
+		this.ownerAddress = ownerAddress;
+	}
+
+	public String getOwnerLocality() {
+		return ownerLocality;
+	}
+
+	public void setOwnerLocality(String ownerLocality) {
+		this.ownerLocality = ownerLocality;
+	}
+
+	public String getOwnerSublocality() {
+		return ownerSublocality;
+	}
+
+	public void setOwnerSublocality(String ownerSublocality) {
+		this.ownerSublocality = ownerSublocality;
+	}
+
 	public String getLeaseExpiryDate() {
 		return leaseExpiryDate;
 	}
 
 	public void setLeaseExpiryDate(String leaseExpiryDate) {
 		this.leaseExpiryDate = leaseExpiryDate;
+	}
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
 	}
 
 	public String getTitle() {

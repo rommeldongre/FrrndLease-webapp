@@ -26,7 +26,7 @@ import app.NotImplementedException;
 @WebServlet(description = "Get Either Incoming or outgoing lease for a given UserId", urlPatterns = { "/GetLeasesByX" })
 public class GetLeasesByX  extends HttpServlet{
 
-	private FlsLogger LOGGER = new FlsLogger(GetLeasesByX.class.getName());;
+	private FlsLogger LOGGER = new FlsLogger(GetLeasesByX.class.getName());
 	
 	private static final long serialVersionUID = 1L;
 	

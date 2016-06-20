@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Get Leases by X Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var Token = 0;
+	var LeaseUserId = "";
+    var LeaseReqUserId = "";
+	
+	getData = function (){
+		Token = document.getElementById("token").value;
+        if(Token == null)
+            Token = 0;
+        LeaseUserId = document.getElementById("leaseUserId").value;
+        if(LeaseUserId == null)
+            LeaseUserId = "";
+        LeaseReqUserId = document.getElementById("leaseReqUserId").value;
+        if(LeaseReqUserId == null)
+            LeaseReqUserId = "";
+        
+        req = {
+            cookie: Token,
+            leaseUserId: LeaseUserId,
+            leaseReqUserId: LeaseReqUserId
+        };
+        
+        getLeaseByX(req);
+	};
+		
+	getLeaseByX = function(req) {
+		$.ajax({
+			url: '/flsv2/GetLeasesByX',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				console.log(response);
+                if(response.code == 0){
+                    document.getElementById("code").value = response.code;
+                    document.getElementById("message").value = response.message;
+                    document.getElementById("cookie").value = response.cookie;
+                    document.getElementById("requestorUserId").value = response.requestorUserId;
+                    document.getElementById("requestorFullName").value = response.requestorFullName;
+                    document.getElementById("requestorMobile").value = response.requestorMobile;
+                    document.getElementById("requestorAddress").value = response.requestorAddress;
+                    document.getElementById("requestorLocality").value = response.requestorLocality;
+                    document.getElementById("requestorSublocality").value = response.requestorSublocality;
+                    document.getElementById("ownerUserId").value = response.ownerUserId;
+                    document.getElementById("ownerFullName").value = response.ownerFullName;
+                    document.getElementById("ownerMobile").value = response.ownerMobile;
+                    document.getElementById("ownerAddress").value = response.ownerAddress;
+                    document.getElementById("ownerLocality").value = response.ownerLocality;
+                    document.getElementById("ownerSublocality").value = response.ownerSublocality;
+                    document.getElementById("leaseExpiryDate").value = response.leaseExpiryDate;
+                    document.getElementById("itemId").value = response.itemId;
+                    document.getElementById("title").value = response.title;
+                    document.getElementById("description").value = response.description;
+                    document.getElementById("category").value = response.category;
+                    document.getElementById("leaseValue").value = response.leaseValue;
+                    document.getElementById("leaseTerm").value = response.leaseTerm;
+                    document.getElementById("uid").value = response.uid;
+                }
+                else{
+                    document.getElementById("code").value = response.code;
+                    document.getElementById("message").value = response.message;
+                    document.getElementById("cookie").value = "";
+                    document.getElementById("requestorUserId").value = "";
+                    document.getElementById("requestorFullName").value = "";
+                    document.getElementById("requestorMobile").value = "";
+                    document.getElementById("requestorAddress").value = "";
+                    document.getElementById("requestorLocality").value = "";
+                    document.getElementById("requestorSublocality").value = "";
+                    document.getElementById("ownerUserId").value = "";
+                    document.getElementById("ownerFullName").value = "";
+                    document.getElementById("ownerMobile").value = "";
+                    document.getElementById("ownerAddress").value = "";
+                    document.getElementById("ownerLocality").value = "";
+                    document.getElementById("ownerSublocality").value = "";
+                    document.getElementById("leaseExpiryDate").value = "";
+                    document.getElementById("itemId").value = "";
+                    document.getElementById("title").value = "";
+                    document.getElementById("description").value = "";
+                    document.getElementById("category").value = "";
+                    document.getElementById("leaseValue").value = "";
+                    document.getElementById("leaseTerm").value = "";
+                    document.getElementById("uid").value = "";
+                }
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> Get Lease By X Form</h1>
+	<form>
+		Token : <input type="text" name="token" id="token" ><br/><br/>
+		Lease User Id : <input type="text" name="leaseUserId" id="leaseUserId" ><br/><br/>
+		Lease Req User Id : <input type="text" name="leaseReqUserId" id="leaseReqUserId" ><br/><br/>
+		<input type="button" value="Get Lease" onclick="getData()">
+    </form>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+        Token : <input type="text" name="cookie" id="cookie"><br/><br/>
+        Requestor User Id : <input type="text" name="requestorUserId" id="requestorUserId"><br/><br/>
+        Requestor Full Name : <input type="text" name="requestorFullName" id="requestorFullName"><br/><br/>
+        Requestor Mobile : <input type="text" name="requestorMobile" id="requestorMobile"><br/><br/>
+        Requestor Address : <input type="text" name="requestorAddress" id="requestorAddress"><br/><br/>
+        Requestor Locality : <input type="text" name="requestorLocality" id="requestorLocality"><br/><br/>
+        Requestor Sublocality : <input type="text" name="requestorSublocality" id="requestorSublocality"><br/><br/>
+        Owner User Id : <input type="text" name="ownerUserId" id="ownerUserId"><br/><br/>
+        Owner Full Name : <input type="text" name="ownerFullName" id="ownerFullName"><br/><br/>
+        Owner Mobile : <input type="text" name="ownerMobile" id="ownerMobile"><br/><br/>
+        Owner Address : <input type="text" name="ownerAddress" id="ownerAddress"><br/><br/>
+        Owner Locality : <input type="text" name="ownerLocality" id="ownerLocality"><br/><br/>
+        Owner Sublocality : <input type="text" name="ownerSublocality" id="ownerSublocality"><br/><br/>
+        Lease Expiry Date : <input type="text" name="leaseExpiryDate" id="leaseExpiryDate"><br/><br/>
+        Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
+        Title : <input type="text" name="title" id="title"><br/><br/>
+        Description : <input type="text" name="description" id="description"><br/><br/>
+        Category : <input type="text" name="category" id="category"><br/><br/>
+        Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
+        Lease Term : <input type="text" name="leaseTerm" id="leaseTerm"><br/><br/>
+        Uid : <input type="text" name="uid" id="uid"><br/><br/>
+    
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

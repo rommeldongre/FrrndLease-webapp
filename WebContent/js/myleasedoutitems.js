@@ -1,85 +1,90 @@
 var myLeasedOutItemsApp = angular.module('myApp');
 
 myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
-    var itemNextId = 0;
     
     $scope.leases = [];
     
-    var currentFlag = '';
-    
-    var getLeaseItem = function(i){
-        var req = {
-            operation: "getNextActive",
-            token: i+""
-        }
-        getLeaseItemSend(req);
+    var initialPopulate = function(){
+        getLeasedOutItems(0);
     }
     
-    var getLeaseItemSend = function(req){
+    var getLeasedOutItems = function(cookie){
+        
+        req = {
+            cookie: cookie,
+            leaseUserId: userFactory.user,
+            leaseReqUserId: ""
+        }
+        
+        getLeasedOutItemsSend(req);
+        
+    }
+    
+    var getLeasedOutItemsSend = function(req){
         $.ajax({
-            url: '/flsv2/GetLeases',
-            type:'get',
-            data: {req: JSON.stringify(req)},
+			url: '/flsv2/GetLeasesByX',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response){
+                if(response.code == 0){
+                    $scope.$apply(function(){
+                        $scope.leases.unshift(response);
+                    });
+                    getLeasedOutItems(response.cookie);
+                }
+            },
+		
+			error: function() {}
+		});
+    }
+    
+    $scope.closeLease = function(ItemId, RequestorUserId, index){
+        modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'YES'}).then(
+            function(result){
+                req = {
+                    itemId: ItemId,
+                    userId: userFactory.user,
+                    reqUserId: RequestorUserId,
+                    flag: "close"
+                };
+                closeLeaseSend(req, index);
+            },function(){});
+    }
+    
+    var closeLeaseSend = function(req, index){
+        $.ajax({
+            url: '/flsv2/RenewLease',
+            type:'post',
+            data: JSON.stringify(req),
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-                if(response.Code == "FLS_SUCCESS") {
-                    var obj = JSON.parse(response.Message);
-                    itemNextId = response.Id;
-                    showLeaseItem(obj);
-                }
-                else{
-                }
+                
+                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
+                function(result){
+                    $scope.leases.splice(index, 1);
+                },function(){});
+                
             },
             error: function() {
             }
         });
     }
     
-    var showLeaseItem = function(obj){
-		var leaseExpiry = obj.expiry; 
-		var leaseItemId = obj.itemId; 
-		var leaseReqUser = obj.reqUserId;
-		var objUserId = obj.userId;
-		var leaseReqOwnerName= obj.OwnerFullName;
-        
-        var req;
-        
-        switch(currentFlag){
-            case 'renew':
+    $scope.renewLease = function(ItemId, RequestorUserId){
+        modalService.showModal({}, {bodyText: "Are you sure you want to renew the lease on the Item?",actionButtonText: 'YES'}).then(
+            function(result){
                 req = {
-                    itemId: leaseItemId,
+                    itemId: ItemId,
                     userId: userFactory.user,
-                    reqUserId: leaseReqUser+"",
+                    reqUserId: RequestorUserId,
                     flag: "renew"
-                };
+                }
                 renewLeaseSend(req);
-                break;
-            case 'close':
-                req = {
-                    itemId: leaseItemId,
-                    userId: userFactory.user,
-                    reqUserId: leaseReqUser+"",
-                    flag: "close"
-                };
-                closeLeaseSend(req);
-                break;
-            default:
-                leaseItemId--;
-                if(leaseItemId == null || leaseItemId == '' || leaseItemId == 'null')
-                    leaseItemId = 0;
-                req = {
-                    token: leaseItemId,
-                    title: "",
-                    description: "",
-                    category: "",
-                    leaseValue: 0,
-                    leaseTerm: ""
-                };
-                searchItemSend(leaseExpiry, req, leaseReqOwnerName);
-                break;
-        }
-
+            },function(){});
     }
     
     var renewLeaseSend = function(req){
@@ -90,88 +95,21 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-                
                 modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                 function(result){
-                    currentFlag = '';
-                    itemNextId = 0;
                     $scope.leases = [];
-                    getLeaseItem(itemNextId);
+                    initialPopulate();
                 },function(){});
-                
             },
             error: function() {
             }
         });	
     }
     
-    var closeLeaseSend = function(req){
-        $.ajax({
-            url: '/flsv2/RenewLease',
-            type:'post',
-            data: JSON.stringify(req),
-            contentType:"application/json",
-            dataType: "json",
-            success: function(response) {
-                
-                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
-                function(result){
-                    currentFlag = '';
-                    itemNextId = 0;
-                    $scope.leases = [];
-                    getLeaseItem(itemNextId);
-                },function(){});
-                
-            },
-            error: function() {
-            }
-        });
-    }
-
-    var searchItemSend = function(leaseExpiry, req, leaseReqOwnerName){
-        $.ajax({
-            url: '/flsv2/SearchItem',
-            type: 'post',
-            data: {req : JSON.stringify(req)},
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "json",
-            success: function(response) {	
-                if(response.Code == "FLS_SUCCESS") {
-                    var itemObj = JSON.parse(response.Message);
-                    var lease = {expiry:leaseExpiry, ownerName:leaseReqOwnerName, itemTitle:itemObj.title, itemId:itemObj.itemId, itemNextId:itemNextId, uid:itemObj.uid};
-                    if(itemObj.userId == userFactory.user)
-                        $scope.$apply(function(){
-                            $scope.leases.unshift(lease);
-                        });
-                    getLeaseItem(itemNextId);
-                }
-            },
-            error: function() {
-            }
-        });
-    }
-    
-    getLeaseItem(itemNextId);
-    
-    $scope.closeLease = function(itemNextId){
-        itemNextId = itemNextId - 1;
-        modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'YES'}).then(
-            function(result){
-                currentFlag = 'close';
-                getLeaseItem(itemNextId);
-            },function(){});
-    }
+    initialPopulate();
     
     $scope.showItemDetails = function(uid){
         window.location.replace("ItemDetails?uid="+uid);
     }
     
-    $scope.renewLease = function(i){
-        itemNextId = itemNextId - 1;
-        modalService.showModal({}, {bodyText: "Are you sure you want to renew the lease on the Item?",actionButtonText: 'YES'}).then(
-            function(result){
-                currentFlag = 'renew';
-                getLeaseItem(itemNextId);
-            },function(){});
-    }
 }]);
