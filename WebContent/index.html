@@ -223,7 +223,12 @@
 				'bottom': '0',
 			});
 		}	
-
+		
+		$("#search_btn_home").click(function() {
+			$('html,body').animate({
+				scrollTop: $("#friendstoreline").offset().top},
+				'slow');
+		});
 	</script>
     
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
