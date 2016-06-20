@@ -2,6 +2,8 @@ var indexApp = angular.module('indexApp', ['headerApp', 'carouselApp', 'ngAutoco
 
 indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItemsForCarousel', 'searchService', function($scope, $timeout, userFactory, getItemsForCarousel, searchService){
     
+    localStorage.setItem("prevPage","index.html");
+    
     $scope.search = {};
     
     $scope.options = {

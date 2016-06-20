@@ -2,6 +2,8 @@ var myLeasedOutItemsApp = angular.module('myApp');
 
 myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
     
+    localStorage.setItem("prevPage","myapp.html#/myleasedoutitems");
+    
     $scope.leases = [];
     
     var initialPopulate = function(){

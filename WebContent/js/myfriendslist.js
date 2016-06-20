@@ -2,6 +2,8 @@ var myFriendsListApp = angular.module('myApp');
 
 myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', function($scope, userFactory){
     
+    localStorage.setItem("prevPage","myapp.html#/myfriendslist");
+    
     var friendIdArray = [];
     var lastFriendId = '';
     
