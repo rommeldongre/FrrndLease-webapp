@@ -21,6 +21,34 @@ $(function(){
                   $('#wait_bar').html(response);
             });
 			
+			$.get("howitworksdiv.html", function(response) {
+                  $('#gsd_howItWorks').html(response);
+            });
+			
+			$.get("teamdiv.html", function(response) {
+                  $('#gsd_team').html(response);
+            });
+			
+			$.get("pricingdiv.html", function(response) {
+                  $('#gsd_pricing').html(response);
+            });
+			
+			$.get("testimonialdiv.html", function(response) {
+                  $('#gsd_testimonial').html(response);
+            });
+			
+			$.get("aboutusdiv.html", function(response) {
+                  $('#gsd_aboutus').html(response);
+            });
+			
+			$.get("benefitsdiv.html", function(response) {
+                  $('#gsd_benefits').html(response);
+            });
+			
+			$.get("contactdiv.html", function(response) {
+                  $('#gsd_contact').html(response);
+            });
+			
 			var link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
