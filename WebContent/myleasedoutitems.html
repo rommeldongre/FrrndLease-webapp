@@ -1,31 +1,92 @@
 <div class="container-fluid" id="midcontainer" ng-cloak>
-    <div id="heading"><strong>My Leased Out Items</strong></div>
-    <table id="leasetable" class="table table-striped">
-        <thead>
-            <tr>
-                <th class="tablecell" style="text-align:left;">Date</th>
-				<th class="tablecell" style="text-align:center;">Item</th>
-				<th class="tablecell" style="text-align:center;">ReqUserId</th>
-				<th class="tablecell" style="text-align:center;">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="lease in leases">
-                <td style="width:15%;text-align:left;" class="tablecell">{{lease.expiry}}</td>
-                <td style="width:40%;text-align:center;" id="{{lease.itemId}}" ng-click="showItemDetails(lease.uid)" class="tablecellItem">{{lease.itemTitle}}</td>
-                <td style="width:25%;text-align:center;" id="{{lease.itemId}}" class="tablecellFriend">{{lease.ownerName}}</td>
-                <td style="width:20%;text-align:center;" class="tablecellAction">
-                    <span class="remove" ng-click="closeLease(lease.itemNextId)">
-                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{lease.itemNextId}}">Close</span>
-                    </span>
-                    <span class="renew" ng-click="renewLease(lease.itemNextId)">
-                        <span class="btn btn-primary" style="margin-top: 5px;margin-left: 10px;" id="{{lease.itemNextId}}">Renew</span>
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    
+    <div class="row">
+        <div class="left_title col-lg-6 col-md-6">
+            <strong>My Leased Out Items</strong>
+        </div>
+	</div>
+    
+    <hr /><br /><br />
+    
     <h4 ng-if="leases.length == 0">You have no items leased out to friends. 
         <a href="#/myincomingrequests">Check your Incoming Requests to lease them out.</a>
     </h4>
+    
+    <div class="row" ng-repeat="lease in leases">
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
+            <div class="row" style="display: flex;flex-wrap: wrap;">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                   <a class="image">
+                      <img ng-src="{{(lease.image === '' || lease.image === null || lease.image === 'null') ? 'images/imgplaceholder.png' : lease.image}}" alt="...">
+                   </a>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                   <div class="content">
+                       <a class="card-link" href="" ng-click="showItemDetails(lease.uid)">
+                          <h5 class="title">{{lease.title}}</h5>
+                       </a>
+                       <a class="card-link">
+                          <p class="description">{{lease.description}}</p>
+                       </a>
+                       <a class="footer">
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{lease.category}}
+                              </div>
+                          </div>
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
+                              <div class="card-link">
+                                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{lease.leaseTerm}}
+                              </div>
+                          </div>
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value">
+                              <div class="card-link">
+                                  <span class="fa fa-rupee" aria-hidden="true"></span> {{lease.leaseValue}}
+                              </div>
+                          </div>
+                       </a>
+                   </div>
+               </div>
+               <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center;border-left: thin solid #eee;border-right: thin solid #eee;">
+                  <div class="content" style="text-align:center;">
+                      <a class="card-link">
+                        <span class="label label-default label-fill">Requestor</span>
+                      </a>
+                      <br/>
+                      <a class="card-link">
+                          <img src="images/user_icon.png" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{lease.requestorFullName}}</p>
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{lease.requestorSublocality}}</p>
+                      </a>
+                      <a class="card-link">
+                         <p class="description">{{lease.requestorLocality}}</p>
+                      </a>
+                  </div>
+               </div>
+               <div class="col-lg-2 col-md-2 col-sm-2">
+                   <div class="content" style="text-align:center;">
+                       <a class="card-link">
+                         <span class="label label-default label-fill">Expiry Date</span>
+                       </a>
+                       <br/>
+                       <a class="card-link">
+                           <p class="description">{{lease.leaseExpiryDate}}</p>
+                       </a>
+                       <a class="card-link" href="">
+                           <button class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">Close</button>
+                       </a>
+                       <a class="card-link" href="">
+                           <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId)">Renew</button>
+                       </a>
+                   </div>
+               </div>
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1"></div>
+    </div>
 </div>

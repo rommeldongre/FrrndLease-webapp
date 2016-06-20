@@ -2,6 +2,8 @@ var itemDetailsApp = angular.module('itemDetailsApp', ['headerApp']);
 
 itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'userFactory', 'modalService', function($scope, $window, $http, userFactory, modalService){
     
+    localStorage.setItem("prevPage",window.location.pathname+window.location.search);
+    
     var user = localStorage.getItem("userloggedin");
     
     $scope.item = {};

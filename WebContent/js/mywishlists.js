@@ -2,6 +2,8 @@ var myWishLists = angular.module('myApp');
 
 myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
     
+    localStorage.setItem("prevPage","myapp.html#/mywishlists");
+    
     var itemNextId = 0;
     
     $scope.wishList = [];

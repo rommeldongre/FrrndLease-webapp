@@ -2,6 +2,8 @@ var myOutGoingRequests = angular.module('myApp');
 
 myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
     
+    localStorage.setItem("prevPage","myapp.html#/myoutgoingrequests");
+    
     // to get all out going requests
     var itemNextRequestId = 0;
     

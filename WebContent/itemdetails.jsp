@@ -20,7 +20,6 @@
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/platform.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
     <!-- Google Api End -->
 
     <!-- Angularjs api -->
@@ -271,7 +270,7 @@
 		}
 		
 		function cancel(){
-			window.history.back();
+			window.location.replace(localStorage.getItem("prevPage"));
 		}
 			
 	</script>

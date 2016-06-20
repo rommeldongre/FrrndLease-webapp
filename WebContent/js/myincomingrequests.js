@@ -2,6 +2,8 @@ var myInComingRequests = angular.module('myApp');
 
 myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
   
+    localStorage.setItem("prevPage","myapp.html#/myincomingrequests");
+    
     var itemNextId = "0";
     
     // to get all the incoming requests

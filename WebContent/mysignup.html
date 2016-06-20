@@ -437,7 +437,7 @@
 		}
 		
 		function redirectToPrevPage(){
-			window.history.back();
+			window.location.replace(localStorage.getItem("prevPage"));
 		}
 		
 		function redirectToHomePage(){

@@ -797,7 +797,7 @@
 		}
 		
 		function redirectToPrevPage(){
-			window.history.back();
+			window.location.replace(localStorage.getItem("prevPage"));
 		}
 		
 		//getting item info when user wants to view an existing item--------------------------------------------------------------------		
