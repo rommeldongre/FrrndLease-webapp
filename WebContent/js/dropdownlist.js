@@ -45,6 +45,10 @@ $(function(){
                   $('#gsd_benefits').html(response);
             });
 			
+			$.get("contactdiv.html", function(response) {
+                  $('#gsd_contact').html(response);
+            });
+			
 			var link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
