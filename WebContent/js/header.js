@@ -185,6 +185,7 @@ headerApp.service('modalService', ['$uibModal',
         var modalOptions = {
             actionButtonText: 'YES',
             showCancel: true,
+			wishItemLabel: 'Input URL of Public Amazon Wishlist',
             submitting: false,
             cancelButtonText: 'CANCEL',
             headerText: 'Frrndlease Says',

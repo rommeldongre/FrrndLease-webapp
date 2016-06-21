@@ -3,7 +3,7 @@
 </div>
 <div class="modal-body">
   <p ng-if="!modalOptions.submitting">{{modalOptions.bodyText}}</p>
-  <label ng-if="modalOptions.submitting">Input URL of Public Amazon Wishlist</label><br />
+  <label ng-if="modalOptions.submitting">{{modalOptions.wishItemLabel}}</label><br />
   <input type="text" ng-if="modalOptions.submitting" ng-model="submit.url">
 </div>
 <div class="modal-footer">

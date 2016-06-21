@@ -55,7 +55,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
     initialPopulate();
     
 	$scope.addWishItem = function(){
-        modalService.showModal({}, {submitting: true, actionButtonText: 'Submit'}).then(function(result){
+        modalService.showModal({}, {submitting: true, wishItemLabel: 'Add Wish Item Name', actionButtonText: 'Submit'}).then(function(result){
             var itemTitle = result;
             if(itemTitle == "" || itemTitle == undefined)
                 itemTitle = "";
@@ -86,7 +86,9 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
             dataType: "JSON",
             success: function(response) {
                 modalService.showModal({}, {bodyText: " Item Successfully added to Wish List",showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                }, function(){});
+                $scope.wishList = [];
+                initialPopulate();
+				}, function(){});
             },
             error: function() {
                 console.log("Invalid Entry");
