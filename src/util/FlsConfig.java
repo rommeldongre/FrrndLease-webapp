@@ -10,7 +10,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2005;			
+	public final int appBuild = 2006;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -317,6 +317,48 @@ public class FlsConfig extends Connect{
 			}
 			
 			dbBuild = 2005;
+			
+			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
+			try{
+				getConnection();
+				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
+				ps.executeUpdate();
+				ps.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			} finally {
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+		if(dbBuild < 2006){
+			// updating items table for location data
+			String sql_edit_location_columns = "ALTER TABLE items MODIFY COLUMN item_lat FLOAT(10,6), MODIFY COLUMN item_lng FLOAT(10,6);";
+			try{
+				getConnection();
+				PreparedStatement ps = connection.prepareStatement(sql_edit_location_columns);
+				ps.executeUpdate();
+				ps.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}finally{
+				try {
+					// close and reset connection to null
+					connection.close();
+					connection = null;
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+			
+			dbBuild = 2006;
 			
 			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
 			try{

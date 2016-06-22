@@ -55,7 +55,7 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
             $('#loginModal').modal('show');
         }
         else{
-            window.location.replace("mystore.html");
+            window.location.replace("EditPosting.html");
         }
     }
     
