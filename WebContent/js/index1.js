@@ -52,7 +52,7 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
 
     $scope.storeYourStuff = function(){
         if(userFactory.user == "" || userFactory.user == null || userFactory.user == 'anonymous'){
-            window.location.replace("mylogin.html");
+            $('#loginModal').modal('show');
         }
         else{
             window.location.replace("EditPosting.html");

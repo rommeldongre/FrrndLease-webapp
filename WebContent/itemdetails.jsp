@@ -14,13 +14,12 @@
         <meta property="og:url" content="http://www.frrndlease.com/ItemDetails?uid=${uid}" />
         <meta property="og:description" content="${title}" />
     <!--Meta tags For Facebook end here-->
-
-
-    <!-- Google Apis Start -->
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js"></script>
-    <!-- Google Api End -->
+    <meta name="google-signin-client_id" content="1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/api:client.js"></script>
+	<script src="js/md5.js"></script>
+    <!--for Facebook signin-->
+	<script src="js/Facebook_api.js"></script>
 
     <!-- Angularjs api -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
@@ -250,7 +249,33 @@
 			getLocationWidth();
 			getLeaseValueWidth();
 
+            load_Gapi();
 		}
+        
+        var googleUser = {};
+        
+        var load_Gapi = function() {
+            gapi.load('auth2', function(){
+              auth2 = gapi.auth2.init({
+                cookiepolicy: 'single_host_origin'
+              });
+              attachSignin(document.getElementById('customLoginBtn'));
+              attachSignin(document.getElementById('customSignUpBtn'));
+            });
+        }
+        
+        function attachSignin(element) {
+            auth2.attachClickHandler(element, {},
+                function(googleUser) {
+                if(element.id == "customLoginBtn")
+                    onSignIn(googleUser);
+                if(element.id == "customSignUpBtn")
+                    onSignUp(googleUser);
+                }, function(error) {
+                  alert(JSON.stringify(error, undefined, 2));
+                }
+            );
+        }
 
 		$(window).resize(function() {
 			getLocationWidth();

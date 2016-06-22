@@ -2,8 +2,6 @@ var itemDetailsApp = angular.module('itemDetailsApp', ['headerApp']);
 
 itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'userFactory', 'modalService', function($scope, $window, $http, userFactory, modalService){
     
-    localStorage.setItem("prevPage",window.location.pathname+window.location.search);
-    
     var user = localStorage.getItem("userloggedin");
     
     $scope.item = {};
@@ -38,17 +36,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         $scope.userMatch = false;
     }
     
-    var load_Gapi = function() { //for google
-        gapi.load('auth2', function() {
-            gapi.auth2.init();
-        });
-    }
-    
     $scope.requestItem = function(){
         modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
             function(result){
                 if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
-					window.location.replace("/flsv2/mylogin.html");
+					$('#loginModal').modal('show');
 				else
                     $http({
                         url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
@@ -112,7 +104,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         modalService.showModal({}, {bodyText: 'Are you sure you want to add this Item to your Wishlist?'}).then(
             function(result){
 				if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
-					window.location.replace("/flsv2/mylogin.html");
+					$('#loginModal').modal('show');
 				else
 					$.ajax({ url: '/flsv2/WishItem',
 							type: 'post',
@@ -292,7 +284,5 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
     $scope.leaseTermSelected = function(l){
         $scope.item.leaseTerm = l;
     }
-    
-    load_Gapi();
     
 }]);

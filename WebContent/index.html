@@ -12,8 +12,11 @@
 	<meta property="og:description" content="Make space for Life" />
 	<!--Meta tags For Facebook end here-->
 	<meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/api:client.js"></script>
+	<script src="js/md5.js"></script>
+    <!--for Facebook signin-->
+	<script src="js/Facebook_api.js"></script>
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>fRRndLease - Make Space for Life</title>
@@ -163,8 +166,8 @@
 	
 	<!--Footer starts here-->
 		<div ng-include="'footer.html'" id="gsd_footer"></div>
-    <!--Footer ends here-->	
-	
+    <!--Footer ends here-->
+      
 	<script type="text/javascript">
 		
 		function start(){
@@ -175,12 +178,31 @@
             load_Gapi();
 		}
         
-        function load_Gapi(){						//for google
-            gapi.load('auth2', function() {
-                gapi.auth2.init();
+        var googleUser = {};
+        
+        var load_Gapi = function() {
+            gapi.load('auth2', function(){
+              auth2 = gapi.auth2.init({
+                cookiepolicy: 'single_host_origin'
+              });
+              attachSignin(document.getElementById('customLoginBtn'));
+              attachSignin(document.getElementById('customSignUpBtn'));
             });
         }
-		
+        
+        function attachSignin(element) {
+            auth2.attachClickHandler(element, {},
+                function(googleUser) {
+                if(element.id == "customLoginBtn")
+                    onSignIn(googleUser);
+                if(element.id == "customSignUpBtn")
+                    onSignUp(googleUser);
+                }, function(error) {
+                  alert(JSON.stringify(error, undefined, 2));
+                }
+            );
+        }
+
 		function increaseSizeOfFooter(){
 			if(footerFlag == 'collapsed'){
 				$('#footerpanel').height('50%');
