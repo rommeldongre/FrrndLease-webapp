@@ -40,7 +40,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
             function(result){
                 if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
-					window.location.replace("/flsv2/mylogin.html");
+					$('#loginModal').modal('show');
 				else
                     $http({
                         url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
@@ -104,7 +104,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         modalService.showModal({}, {bodyText: 'Are you sure you want to add this Item to your Wishlist?'}).then(
             function(result){
 				if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
-					window.location.replace("/flsv2/mylogin.html");
+					$('#loginModal').modal('show');
 				else
 					$.ajax({ url: '/flsv2/WishItem',
 							type: 'post',
