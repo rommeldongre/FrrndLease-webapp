@@ -128,7 +128,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     $scope.storeYourStuff = function(){
         localStorage.setItem("prevFunc", 'storeYourStuff');
 			
-		window.location.replace("mystore.html");
+		window.location.replace("EditPosting.html");
     }
     
 }]);
@@ -185,8 +185,9 @@ headerApp.service('modalService', ['$uibModal',
         var modalOptions = {
             actionButtonText: 'YES',
             showCancel: true,
+			labelText: 'Default Label Text',
             submitting: false,
-            cancelButtonText: 'CANCEL',
+            cancelButtonText: 'Cancel',
             headerText: 'Frrndlease Says',
             bodyText: 'Perform this action?'
         };

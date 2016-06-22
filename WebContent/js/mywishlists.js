@@ -54,14 +54,51 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
     
     initialPopulate();
     
-    $scope.addWishItem = function(){
-        localStorage.setItem("prevFunc", "addWishItem");
-			
-        window.location.replace("mywishitemDetails.html");
+	$scope.addWishItem = function(){
+        modalService.showModal({}, {submitting: true, labelText: 'Add Wish Item Name', actionButtonText: 'Submit'}).then(function(result){
+            var itemTitle = result;
+            if(itemTitle == "" || itemTitle == undefined)
+                itemTitle = "";
+            
+			var itemId = 0;
+			var itemDescription = null, itemCategory= "House", itemStatus = "Wished", url = null, itemLeaseTerm = null, itemLeaseValue=1000 ;
+            var req = {
+                userId: userFactory.user,
+                title: itemTitle,
+				id: 0,
+				description: '',
+				category: 'House',
+				leaseValue: 0,
+				leaseTerm: '',
+				status: 'Wished',
+				image: ''
+            }
+            sendAddWishItem(req);
+        }, function(){});
     }
+	
+	var sendAddWishItem = function(req){
+        $.ajax({
+            url: '/flsv2/WishItem',
+            type:'post',
+            data: {req : JSON.stringify(req)},
+            contentType:"application/x-www-form-urlencoded",
+            dataType: "JSON",
+            success: function(response) {
+                modalService.showModal({}, {bodyText: " Item Successfully added to Wish List",showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                $scope.wishList = [];
+                initialPopulate();
+				}, function(){});
+            },
+            error: function() {
+                console.log("Invalid Entry");
+            }
+        });
+    }
+	
     
     $scope.importWishList = function(){
-        modalService.showModal({}, {submitting: true, actionButtonText: 'Submit'}).then(function(result){
+        modalService.showModal({}, {submitting: true, labelText: 'Input URL of Public Amazon Wishlist', actionButtonText: 'Submit'}).then(function(result){
             var url = result;
             if(url == "" || url == undefined)
                 url = "";

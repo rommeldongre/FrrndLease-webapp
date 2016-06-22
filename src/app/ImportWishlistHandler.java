@@ -55,14 +55,14 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 		// TODO Auto-generated method stub
 		ImportWishlistReqObj rq = (ImportWishlistReqObj) req;
 		ImportWishlistResObj rs = new ImportWishlistResObj();
 		
-
+	
 		LOGGER.info("Inside process method " + rq.getUrl());
 		// TODO: Core of the processing takes place here
 		check = null;
@@ -124,7 +124,7 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 					JSONObject obj1 = new JSONObject();
 					obj1.put("title", links.get(i).text());
 					obj1.put("description", "");
-					obj1.put("category", "");
+					obj1.put("category", "House");
 					obj1.put("userId", rq.getUserId());
 					obj1.put("leaseTerm", "");
 					obj1.put("id", 0);
@@ -162,11 +162,6 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 	}
 	
-	private void ImportnthPage(String nthURL){
-		
-		
-	} 
-
 	private void AmazonWishlist(String URL, String name) {
 
 		String Iname, User, Image;

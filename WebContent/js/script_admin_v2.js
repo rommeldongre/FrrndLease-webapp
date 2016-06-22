@@ -170,7 +170,7 @@ getItemSend = function(req) {
 				
 				if(reasonForGetItem == 'carousel'){				//index.html
 					addItemToCarousel(itemObj);			
-				}else if(reasonForGetItem == 'getItemInfo'){		//mystore.html
+				}else if(reasonForGetItem == 'getItemInfo'){		//EditPosting.html
 					getItemInfoContinued(itemObj);
 				}else if(reasonForGetItem == 'leaseItem'){
 					lease_requestedItem(itemObj);						//myincomingrequests.html
@@ -1307,7 +1307,7 @@ function getNextCategorySend(req){
 				if(reasonForGetCategory == 'categoryFilter'){
 					loadCategoryFilterContinued(obj);					//myindex.html	
 				}else if(reasonForGetCategory == 'categoryDropdown'){
-					loadCategoryDropdownContinued(obj);					//mystore.html
+					loadCategoryDropdownContinued(obj);					//EditPosting.html
 				}
 			}
 			else{
