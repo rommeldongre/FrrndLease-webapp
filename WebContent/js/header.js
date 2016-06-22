@@ -185,8 +185,9 @@ headerApp.service('modalService', ['$uibModal',
         var modalOptions = {
             actionButtonText: 'YES',
             showCancel: true,
+			labelText: 'Default Label Text',
             submitting: false,
-            cancelButtonText: 'CANCEL',
+            cancelButtonText: 'Cancel',
             headerText: 'Frrndlease Says',
             bodyText: 'Perform this action?'
         };
