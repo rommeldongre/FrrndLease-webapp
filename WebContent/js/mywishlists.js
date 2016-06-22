@@ -55,7 +55,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
     initialPopulate();
     
 	$scope.addWishItem = function(){
-        modalService.showModal({}, {submitting: true, wishItemLabel: 'Add Wish Item Name', actionButtonText: 'Submit'}).then(function(result){
+        modalService.showModal({}, {submitting: true, labelText: 'Add Wish Item Name', actionButtonText: 'Submit'}).then(function(result){
             var itemTitle = result;
             if(itemTitle == "" || itemTitle == undefined)
                 itemTitle = "";
@@ -98,7 +98,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
 	
     
     $scope.importWishList = function(){
-        modalService.showModal({}, {submitting: true, actionButtonText: 'Submit'}).then(function(result){
+        modalService.showModal({}, {submitting: true, labelText: 'Input URL of Public Amazon Wishlist', actionButtonText: 'Submit'}).then(function(result){
             var url = result;
             if(url == "" || url == undefined)
                 url = "";
