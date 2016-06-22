@@ -128,7 +128,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     $scope.storeYourStuff = function(){
         localStorage.setItem("prevFunc", 'storeYourStuff');
 			
-		window.location.replace("mystore.html");
+		window.location.replace("EditPosting.html");
     }
     
 }]);

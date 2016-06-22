@@ -11,7 +11,7 @@
 	<script src="js/Facebook_api.js"></script>
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Item Details</title>
+    <title>Post Item</title>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
@@ -59,6 +59,17 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 	
+	<style>
+		#desc{ margin-bottom:5%; }
+		hr {
+			display: block;
+			height: 1px;
+			border: 0;
+			border-top: 1px solid #ccc;
+			margin: 1em 0;
+			padding: 0; 
+		}
+	</style>
   </head>
   
   <body onload="start()">
@@ -100,149 +111,96 @@
 		</nav>
 		
 		<div class="container-fluid" id="midcontainer">
-			<div class="row">
-				<div class="col-md-6" id="outertable">
-					<div class="row">	
-						<div class="col-md-12">
-							<form>
-								<div class="form-group">
-<!-- http://www.syntaxxx.com/accessing-user-device-photos-with-the-html5-camera-api/ -->
-<!--http://www.codeproject.com/Articles/589445/JavaScript-Modal-Popup-Window-->								
-									<label for="item_image" id="image_label">Add Picture</label>
-									<input type="file" id="ifile">
-								</div>
-							</form>
-						</div>	
+			<div class="row">	
+			<div class="col-lg-1"></div>
+            <div class="card col-lg-10" style="margin: 10px 20px 10px 20px;min-height: 500px;" ng-view>
+				<div class="container-fluid" id="midcontainer">
+					<div id="heading">
+						<strong>Post Item</strong>
 					</div>
 					<br />
-					<div class="row">
-						<div class="col-md-12">
-							<canvas id="panel"></canvas>
-						</div>
-					</div>
-					<form id="itemform">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="title">Title</label>
-									<input type="text" class="form-control" id="title" placeholder="Enter Title" required>
+					<div class="col-lg-3 col-md-3"></div>
+						<div class="card-user col-lg-6 col-md-6" style="padding-top:50px">
+							<div class="content">
+								<div class="author">
+									<h4 class="title"><br />
+										<small></small>
+									</h4>
 								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="input-group">
-									<div class="input-group-button">
-										<label for="category">Category</label><br />
-										<div id="dropdownbuttoncategory_div"></div>
-										<select id="dropdownmenucategory_select" onChange="getCategory(this);">
-										</select>
-										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span></button>
-										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
-
-										</ul>
+								<div class="form-horizontal">
+									<div class="form-group">
+										<label for="item_image" id="image_label" class="col-sm-2 control-label">Add Picture</label>
+										<div class="col-sm-10">
+											<input type="file" class="form-control" id="ifile">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12">
+											<canvas id="panel" style=" display: table;margin: 0 auto;margin-bottom:10px;"></canvas>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="title" class="col-sm-2 control-label">Title</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="title" placeholder="Enter Title" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="category" class="col-sm-2 control-label">Category</label>
+										<div class="col-sm-10">
+											<div id="dropdownbuttoncategory_div"></div>
+											<select id="dropdownmenucategory_select" onChange="getCategory(this);">
+											</select>
+											<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span></button>
+											<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
+	
+											</ul>
+										</div>
+									</div>
+									<hr />
+									<div class="form-group">
+										<label for="lease_value" class="col-sm-2 control-label">Lease Value</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control" id="lease_value" placeholder="Lease Value">
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="lease_term" class="col-sm-2 control-label">Lease Term</label>
+										<div class="col-sm-10">
+											<div class="input-group">
+												<div class="input-group-button">
+													<div id="dropdownbuttonlease_term_div"></div>
+													<select id="dropdownmenulease_term_select" onChange="getLeaseTerm(this);">
+													</select>
+													<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
+													<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label  for="description" class="col-sm-2 control-label">Description</label>
+										<div class="col-sm-10" >
+											<textarea  id="desc" style="margin-bottom:5%;" class="form-control" id="description" placeholder="Add Description"></textarea>
+										</div>
+									</div>
 									</div>
 								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="location">Location</label>
-									<input type="text" class="form-control" id="location" placeholder="Location">
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="lease_value">Lease Value</label>
-									<input type="number" class="form-control" id="lease_value" placeholder="Lease Value">
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="input-group">
-									<div class="input-group-button">
-										<label for="lease_term">Lease Term</label><br />
-										<div id="dropdownbuttonlease_term_div"></div>
-										<select id="dropdownmenulease_term_select" onChange="getLeaseTerm(this);">
-										</select>
-										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
-										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
-
-										</ul>
+								<div class="row">
+									<div class="col-lg-3 col-md-3 col-md-offset-2">
+										<button id="add_item" class="btn btn-primary btn-fill" onclick="add_item()">Add Item</button>
+									</div >
+									<div class="col-lg-3 col-md-3 col-md-offset-1">
+										<button id="cancel" class="btn btn-primary" onclick="cancel()">Cancel</button>
 									</div>
 								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="quantity">Quantity</label>
-									<input type="number" class="form-control" id="quantity" placeholder="Quantity">
-								</div>
-							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="description">Description</label>
-									<textarea rows="3" class="form-control" id="description" placeholder="Add Description"></textarea>
-								</div>
-							</div>
-						</div>
-						<button class="btn btn-default" id="submit" type="submit">
-							Submit
-						</button>
-						
-					</form>
+					<div class="col-lg-3 col-md-3"></div>
 				</div>
-				<div class="col-md-6">
-					<br />
-					<div id="error_row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<div class="alert alert-danger fade in">
-								<a href="#" class="close" data-dismiss="alert">&times;</a>
-								<strong>Error!</strong> Operation failed.
-							</div>
-						</div>
-					</div>	
-					<br />
-					<div id="lease_item_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="lease_item" class="btn btn-primary" onclick="lease_item()">Lease Item</button>
-						</div>
-					</div>
-						
-					<div id="request_item_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="request_item" class="btn btn-primary" onclick="request_item()">Request Item</button>
-						</div>
-					</div>
-						
-					<div id="add_item_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_item" class="btn btn-primary" onclick="add_item()">Add Item</button>
-						</div>
-					</div>
-						
-					 <div id="edit_item_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_item" class="btn btn-primary" onclick="edit_item()">Edit Item</button>
-						</div>
-					</div>
-						
-					<div  id="delete_item_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_item" class="btn btn-primary" onclick="delete_item()">Delete Item</button>
-						</div>
-					</div>
-						
-					<div  id="cancel_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="cancel" class="btn btn-primary" onclick="cancel()">Cancel</button>
-						</div>
-					</div>
-				</div>
-		
 			</div>
-			
+            <div class="col-lg-1"></div>
+			</div>
 			
 			<!-- Button trigger Alert Modal -->
 			<button id="alertModalTriggerButton" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myAlertModal" data-backdrop="static" data-keyboard="false">
@@ -644,7 +602,8 @@
 		function add_item(){				//called when Add Item is clicked then add the item to Items table and to Store table
 			currentWork = 'addItem';
 			process_dialog("Posting Item Please Wait");
-			$('#submit').click();
+				itemSetValues();
+				itemDbCreate();
 		}
 		
 		function request_item(){
@@ -694,6 +653,7 @@
 			if(currentWork == 'addItem'){
 				itemSetValues();
 				itemDbCreate();
+				console.log("itemform clicked");
 			}		
 		});
 		
