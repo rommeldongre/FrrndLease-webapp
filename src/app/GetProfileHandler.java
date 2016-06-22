@@ -39,17 +39,19 @@ public class GetProfileHandler extends Connect implements AppHandler {
 		GetProfileReqObj rq = (GetProfileReqObj) req;
 		GetProfileResObj rs = new GetProfileResObj();
 		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps = null;
+		ResultSet result = null;
 
 		LOGGER.info("Inside process method " + rq.getUserId());
 
 		try {
 			String sql = "SELECT * FROM users WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
-			PreparedStatement ps = hcp.prepareStatement(sql);
+			ps = hcp.prepareStatement(sql);
 			ps.setString(1, rq.getUserId());
 
 			LOGGER.info("statement created...executing select from users query");
-			ResultSet result = ps.executeQuery();
+			result = ps.executeQuery();
 
 			LOGGER.info(result.toString());
 
@@ -71,15 +73,17 @@ public class GetProfileHandler extends Connect implements AppHandler {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 			}
-
-			ps.close();
-
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		} finally {
-			hcp.close();
+			if(result != null)
+				result.close();
+			if(ps != null)
+				ps.close();
+			if(hcp != null)
+				hcp.close();
 		}
 		LOGGER.info("Finished process method ");
 		// return the response

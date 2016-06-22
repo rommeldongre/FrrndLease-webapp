@@ -23,17 +23,23 @@ public class UsersModel {
 			userId = obj.getString("userId");
 			fullName = obj.getString("fullName");
 			mobile = obj.getString("mobile");
-			location = obj.getString("location");
+			if(obj.has("location"))
+				location = obj.getString("location");
 			auth = obj.getString("auth");
 			if (obj.has("activation") || obj.has("status")) {
 				activation = obj.getString("activation");
 				status = obj.getString("status");
 			}
-			address = obj.getString("address");
-			locality = obj.getString("locality");
-			sublocality = obj.getString("sublocality");
-			lat = Float.parseFloat(obj.getString("lat"));
-			lng = Float.parseFloat(obj.getString("lng"));
+			if(obj.has("address"))
+				address = obj.getString("address");
+			if(obj.has("locality"))
+				locality = obj.getString("locality");
+			if(obj.has("sublocality"))
+				sublocality = obj.getString("sublocality");
+			if(obj.has("lat"))
+				lat = Float.parseFloat(obj.getString("lat"));
+			if(obj.has("lng"))
+				lng = Float.parseFloat(obj.getString("lng"));
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();

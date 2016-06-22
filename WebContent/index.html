@@ -12,8 +12,11 @@
 	<meta property="og:description" content="Make space for Life" />
 	<!--Meta tags For Facebook end here-->
 	<meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="909447696017-ka0dc75ts261cua6d2ho5mvb7uuo9njc.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/api:client.js"></script>
+	<script src="js/md5.js"></script>
+    <!--for Facebook signin-->
+	<script src="js/Facebook_api.js"></script>
 	
 	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>fRRndLease - Make Space for Life</title>
@@ -163,8 +166,91 @@
 	
 	<!--Footer starts here-->
 		<div ng-include="'footer.html'" id="gsd_footer"></div>
-    <!--Footer ends here-->	
+    <!--Footer ends here-->
 	
+    <!-- Login Modal starts here -->
+    <div ng-controller="loginModalCtrl" class="modal modal-small fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="false" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title text-center">Login With</h4>
+          </div>
+          <div class="modal-body">
+                <div class="social-area">
+                    <a href="" class="btn btn-round btn-fill btn-social btn-facebook" ng-click="facebookSignIn()">
+                            <i class="fa fa-facebook-square"></i>
+                        </a>
+                    <a href="" class="btn btn-round btn-fill btn-social btn-google" id="gSignInWrapper">
+                        <div id="customLoginBtn" class="customGPlusSignIn">
+                            <i class="fa fa-google-plus-square"></i>
+                        </div>
+                    </a>
+                </div>
+                <span class="divider"> or </span>
+
+              <p ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
+            <form name="form">
+                <div class="form-group">
+                    <input name="email" type="email" id="email" class="form-control" ng-change="error=''" ng-model="email" placeholder="Email" required autofocus/>
+                </div>
+                <div class="form-group">
+                    <input name="password" type="password" id="password" class="form-control" ng-change="error=''" ng-model="password" placeholder="Password" required/>
+                </div>
+                <button type="button" class="btn btn-info btn-fill btn-block" ng-click="(form.email.$touched && form.email.$valid && form.password.$touched && form.password.$valid) ? formLogin(email, password) : error='Please Enter correct email and password'"> Login </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Login Modal ends here -->
+      
+    <!-- Sign Up Modal starts here -->
+    <div ng-controller="signUpModalCtrl" class="modal modal-small fade" id="registerModal" tabindex="-1" role="dialog" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center">Register with</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="social-area">
+                        <a href="" class="btn btn-round btn-fill btn-social btn-facebook" ng-click="facebookSignIn()">
+                            <i class="fa fa-facebook-square"></i>
+                        </a>
+                        <a href="" class="btn btn-round btn-fill btn-social btn-google" id="gSignInWrapper">
+                            <div id="customSignUpBtn" class="customGPlusSignIn">
+                                <i class="fa fa-google-plus-square"></i>
+                            </div>
+                        </a>
+                    </div>
+                    <span class="divider"> or </span>
+                    <p ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
+                    <form name="form">
+                        <div class="form-group">
+                            <input name="email" type="email" class="form-control" ng-model="email" ng-change="(form.email.$dirty && form.email.$valid) ? error='' : error='Please enter a valid email'" placeholder="Email" required autofocus/>
+                        </div>
+                        <div class="form-group">
+                            <input name="password" type="password" class="form-control" ng-model="password" ng-change="(form.password.$dirty && form.password.$valid) ? error='' : error='Invali Password'" placeholder="Password" required/>
+                        </div>
+                        <div class="form-group">
+                            <input name="retypepassword" type="password" class="form-control" ng-model="retypepassword"  ng-change="(password == retypepassword) ? error='' : error='Both passwords not same'" placeholder="Retype the Password" required>
+                        </div>
+                        <div class="form-group">
+                            <input name="name" type="text" class="form-control" ng-model="name" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <input name="mobile" type="text" ng-model="mobile" ng-change="(mobile.length == 10) ? error='' : error='Mobile number must have 10 digits'" class="form-control" placeholder="Mobile Number">
+                        </div>
+                        <div class="form-group">
+                            <input name="location" type="text" class="form-control" ng-model="location" placeholder="Location">
+                        </div>
+                        <button type="button" class="btn btn-info btn-fill btn-block" ng-click="(form.$dirty && error=='') ? formSignup(email, password, name, mobile, location) : error='Please enter correct data!!'"> Register </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sign Up Modal ends here -->
+      
 	<script type="text/javascript">
 		
 		function start(){
@@ -175,12 +261,31 @@
             load_Gapi();
 		}
         
-        function load_Gapi(){						//for google
-            gapi.load('auth2', function() {
-                gapi.auth2.init();
+        var googleUser = {};
+        
+        var load_Gapi = function() {
+            gapi.load('auth2', function(){
+              auth2 = gapi.auth2.init({
+                cookiepolicy: 'single_host_origin'
+              });
+              attachSignin(document.getElementById('customLoginBtn'));
+              attachSignin(document.getElementById('customSignUpBtn'));
             });
         }
-		
+        
+        function attachSignin(element) {
+            auth2.attachClickHandler(element, {},
+                function(googleUser) {
+                if(element.id == "customLoginBtn")
+                    onSignIn(googleUser);
+                if(element.id == "customSignUpBtn")
+                    onSignUp(googleUser);
+                }, function(error) {
+                  alert(JSON.stringify(error, undefined, 2));
+                }
+            );
+        }
+
 		function increaseSizeOfFooter(){
 			if(footerFlag == 'collapsed'){
 				$('#footerpanel').height('50%');

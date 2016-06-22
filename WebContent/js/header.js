@@ -1,6 +1,194 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'searchService', 'statsFactory', function($scope, userFactory, profileFactory, searchService, statsFactory){
+headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'searchService', 'statsFactory', 'loginSignupService', function($scope, userFactory, profileFactory, searchService, statsFactory, loginSignupService){
+    
+    // sign up starts here
+    
+    // variables for storing the location data
+    var Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0;
+    
+    $scope.$on('signUpCheckReq', function(event, email, password, name, mobile, location, signUpStatus){
+        Email = email;
+        Password = (CryptoJS.MD5(password)).toString();
+        Name = name;
+        Mobile = mobile;
+        Location = location;
+        SignUpStatus = signUpStatus;
+        
+        Address = '';
+        Sublocality = '';
+        Locality = '';
+        Lat = 0.0;
+        Lng = 0.0;
+        
+        if(Location != '')
+            getLocationData(Location);
+        else
+            sendAddData();
+    });
+    
+    var getLocationData = function(location){
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json',
+            type: 'get',
+            data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
+            success: function(response){
+                if(response.status == 'OK'){
+                    Address = response.results[0].formatted_address;
+                    response.results[0].address_components.forEach(function(component){
+                        if(component.types[0] == 'sublocality_level_1')
+                            Sublocality = component.long_name;
+                        if(component.types[0] == 'locality')
+                            Locality = component.long_name;
+                    });
+                    Lat = response.results[0].geometry.location.lat;
+                    Lng = response.results[0].geometry.location.lng;
+                }
+                sendAddData();
+            },
+            error: function(){
+                console.log("not able to get location data");
+            }
+        });
+    }
+    
+    var sendAddData = function(){
+        var Activation = CryptoJS.MD5(Email);
+        Activation = Activation.toString();
+            
+        var req = {
+            userId: Email,
+            fullName: Name,
+            mobile: Mobile,
+            location: Location,
+            auth: Password,
+            activation: Activation,
+            status: SignUpStatus,
+            address: Address,
+            locality: Locality,
+            sublocality: Sublocality,
+            lat: Lat+"",
+            lng: Lng+""
+        }
+        signUpSend(req);
+    }
+    
+    var signUpSend = function(req){
+        $.ajax({
+            url: '/flsv2/SignUp',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+
+            success: function(response) {
+				if(response.Code === "FLS_SUCCESS") {
+                    if(SignUpStatus != "email_pending"){
+                        localStorage.setItem("userloggedin", Email);
+                        localStorage.setItem("userloggedinName", Name);
+                        if(SignUpStatus == "facebook")
+                            getFacebookFriends(Email);
+                        else
+                            window.location.replace("myapp.html#/");
+                    }else{
+                        loginSignupService.signUpCheckRes("Email verification link send to your email!!");
+                    }
+				}else{
+                    if(response.Id == 200)
+                        loginSignupService.signUpCheckRes("User Already Exists!!");
+				}
+            },		
+            error: function() {
+            }
+        });
+    }
+    // sign up ends here
+    
+    // login starts here
+    $scope.$on('loginCheckReq', function(event, email, password, signUpStatus){
+        password = (CryptoJS.MD5(password)).toString();
+        var req = {
+            auth: password,
+            token: email,
+            signUpStatus: signUpStatus
+        }
+        loginSend(req, signUpStatus);
+    });
+    
+    var loginSend = function(req, signUpStatus){
+        $.ajax({
+            url: '/flsv2/LoginUser',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                if(response.Code === "FLS_SUCCESS") {
+                    var obj = JSON.parse(response.Message);
+                    localStorage.setItem("userloggedin", obj.userId);
+                    localStorage.setItem("userloggedinName", obj.fullName);
+                    if(signUpStatus == "facebook")
+                        getFacebookFriends(obj.userId);
+                    else
+                        window.location.replace("myapp.html#/");
+                }
+                else{
+                    loginSignupService.loginCheckRes(response.Message);
+                }
+            },
+            error: function() {}
+        });
+    }
+    
+    var getFacebookFriends = function(email){
+        FB.api(
+            '/me/friends', function (response) {
+                if (response && !response.error) {
+                    var friends = response.data.length;
+                    for(var i =0;i<=response.data.length;i++){
+                        if (response.data.hasOwnProperty(i)) {
+                            var friend_name = response.data[i].name;
+                            var friend_id= response.data[i].id+"@fb";
+							addFriendDbCreate(friend_name, '-', friend_id, email, friends);
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    var addFriendDbCreate = function(name, mobile, email, user, friends){
+        if(name == '')
+            name = null;
+        if(email == '')
+            email = null;
+        var req = {
+            id: email,
+            fullName: name,
+            mobile: mobile,
+            userId: user
+        }
+        addFriendSend(req, friends);
+    }
+
+    var addFriendSend = function(req, friends){
+        $.ajax({
+            url: '/flsv2/AddFriend',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+
+            success: function(response) {
+                loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your fRRndLease friendlist");
+                window.location.replace("myapp.html#/");
+            },
+            error: function() {
+                window.location.replace("myapp.html#/");
+            }
+        });
+    }
+    // login ends here
     
     $scope.search = {};
     
@@ -253,6 +441,26 @@ headerApp.service('searchService', ['$rootScope', function($rootScope){
     
     this.sendDataToCarousel = function(){
         $rootScope.$broadcast('searchDataChanged', this.lat, this.lng, this.searchTitle);
+    }
+    
+}]);
+
+headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
+    
+    this.loginCheckReq = function(email, password, signUpStatus){
+        $rootScope.$broadcast('loginCheckReq', email, password, signUpStatus);
+    }
+    
+    this.loginCheckRes = function(message){
+        $rootScope.$broadcast('loginCheckRes', message);
+    }
+    
+    this.signUpCheckReq = function(email, password, name, mobile, location, signUpStatus){
+        $rootScope.$broadcast('signUpCheckReq', email, password, name, mobile, location, signUpStatus);
+    }
+    
+    this.signUpCheckRes = function(message){
+        $rootScope.$broadcast('signUpCheckRes', message);
     }
     
 }]);
