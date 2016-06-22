@@ -36,12 +36,6 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         $scope.userMatch = false;
     }
     
-    var load_Gapi = function() { //for google
-        gapi.load('auth2', function() {
-            gapi.auth2.init();
-        });
-    }
-    
     $scope.requestItem = function(){
         modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
             function(result){
@@ -290,7 +284,5 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
     $scope.leaseTermSelected = function(l){
         $scope.item.leaseTerm = l;
     }
-    
-    load_Gapi();
     
 }]);
