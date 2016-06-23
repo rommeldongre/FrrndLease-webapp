@@ -81,8 +81,8 @@
 		<!--header ends----------------------------------------->
 
         <div class="row">
-            <div class="col-lg-1"></div>
-            <div class="card col-lg-10" style="margin: 10px 20px 10px 20px;min-height: 500px;">
+            <div class="col-lg-3  col-md-3"></div>
+            <div class="card col-lg-6  col-md-6" style="margin: 10px 20px 10px 20px;min-height: 500px;">
 		<div class="container-fluid" id="midcontainer" ng-controller="itemDetailsCtrl">
             
             <!-- Error Message Display starts -->
@@ -93,142 +93,49 @@
 			</div>
             <!-- Error Message Display ends -->
             
+			<br />
+            <div class="col-lg-2 col-md-2"></div>
+            
             <!-- Item Details starts -->
-			<div class="row" ng-if="!showError">
-				<div class="col-md-6" id="outertable">
-					<br />
-					<div class="row">
-                        <div class="col-md-12">
-                            <input type="file" ng-if="userMatch" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" />
-                            <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" width="300" height="300"/>
-                        </div>
-					</div>
-                    
-					<div id="itemform" ng-cloak>
-                        
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group" ng-init="item.title='${title}'">
-									<label for="title">Title</label>
-                                    <input type="text" class="form-control" ng-model="item.title" ng-disabled="!userMatch" placeholder="Enter Title" required>
-								</div>
-							</div>
-						</div>
-                        
-						<div class="row">
-							<div class="col-md-6">
-								<div class="input-group">
-									<div class="input-group-button" ng-init="item.category='${category}'">
-										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory" ng-disabled="!userMatch" ng-bind="item.category" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span>
-										</button>
-										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
-                                            <span ng-repeat="c in categories" ng-click="categorySelected(c)">
-                                                <li id="{{c}}" class="category">{{c}}</li>
-                                                <li class="divider"></li>
-                                            </span>
-                                        </ul>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="location">Location</label>
-                                    <input type="text" class="form-control" id="location" value="${sublocality},${locality}" placeholder="Location" disabled>
-								</div>
-							</div>
-						</div>
-                        
-						<div class="row">
-							<div class="col-md-4">
-								<div class="form-group" ng-init="item.leaseValue=${leaseValue}">
-									<label for="lease_value">Lease Value</label>
-                                    <input type="number" class="form-control" id="lease_value" ng-model="item.leaseValue" ng-disabled="!userMatch" placeholder="Lease Value">
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="input-group">
-									<div class="input-group-button" ng-init="item.leaseTerm='${leaseTerm}'">
-										<label for="lease_term">Lease Term</label><br />
-										<button id="dropdownbuttonlease_term" ng-disabled="!userMatch" ng-bind="item.leaseTerm" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span>
-										</button>
-										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
-                                            <span ng-repeat="l in leaseTerms" ng-click="leaseTermSelected(l)">
-                                                <li id="{{l}}" class="leaseterm">{{l}}</li>
-                                                <li class="divider"></li>
-                                            </span>
-                                        </ul>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="quantity">Quantity</label>
-                                    <input type="number" class="form-control" id="quantity" placeholder="Quantity">
-								</div>
-							</div>
-						</div>
-                        
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group" ng-init="item.description='${description}'">
-									<label for="description">Description</label>
-									<textarea rows="3" class="form-control" ng-model="item.description" ng-disabled="!userMatch" style="margin-bottom:35%;" placeholder="Add Description"></textarea>
-								</div>
-							</div>
-						</div>
-
-					</div>
-                    
-				</div>
-                
-				<div class="col-md-6">
-					<br />
-					<div id="error_row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<div class="alert alert-danger fade in">
-								<a href="#" class="close" data-dismiss="alert">&times;</a> <strong>Error!</strong>Operation failed.
-							</div>
-						</div>
-					</div>
-					<br />
-
-					<div ng-if="!userMatch" class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="request_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="requestItem()">Request Item</button>
-						</div>
-					</div>
-					
-					<div ng-if="!userMatch" class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="wish_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="wishItem()">Add to Wishlist</button>
-						</div>
-					</div>
-
-					<div ng-if="userMatch" class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="editItem()">Edit Item</button>
-						</div>
-					</div>
-
-					<div ng-if="userMatch" class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_item" style="margin-bottom:5px;" class="btn btn-primary" ng-click="deleteItem()">Delete Item</button>
-						</div>
-					</div>
-					
-					<div  id="cancel_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="cancel" style="margin-bottom:35%;" class="btn btn-primary" onclick="cancel()">Cancel</button>
-						</div>
-					</div>
-				</div>
-
+			<div class="card-user col-lg-8 col-md-8" style="padding-top:50px" ng-if="!showError">
+                <div class="content">
+                    <div class="author">
+                        <img class="img-rounded" ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" alt="..."/>
+                        <h4 class="title"><br />
+                            <strong>${title}</strong>
+                        </h4>
+                    </div>
+                    <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location">
+                        <span class="glyphicon glyphicon-map-marker"></span><strong>${sublocality},${locality}</strong>
+                    </p>
+                    <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease term">
+                        <span class="glyphicon glyphicon-tags"></span><i>${leaseTerm} Lease</i>
+                    </p>
+                    <p style="color:Grey;" class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                        <span class="glyphicon glyphicon-list-alt"></span>${category}
+                    </p>
+                    <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable replacement value">
+                        <span class="fa fa-rupee"></span>${leaseValue}
+                    </p>
+                    <p ng-if="${description} != ''" class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Description">
+                        <span class="glyphicon glyphicon-calendar"></span>${description}
+                    </p>
+                </div>
+                <hr/>
+                <div class="text-center">
+                    <div class="row" style="padding:20px;">
+                        <button ng-if="!userMatch" class="btn btn-primary btn-fill" ng-click="requestItem()" style="padding:10px;">Request Item</button>
+                        <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:10px;">Add to Wishlist</button>
+                        <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:10px;">Edit Item</button>
+                        <button class="btn btn-primary btn-simple" onclick="cancel()" style="padding:10px;">Cancel</button>
+                    </div>
+                </div>
 			</div>
+            <div class="col-lg-2 col-md-2"></div>
             <!-- Item Details ends -->
 		</div>
                 </div>
-            <div class="col-lg-1"></div>
+            <div class="col-lg-3 col-md-3"></div>
         </div>
         
         <!--The tawk.to widget code will get populated here from file chatbox.html.-->
@@ -240,7 +147,6 @@
 	</div>
 
 	<script type="text/javascript">
-		var reasonForGetItem, itemObj, reqObj, itemNo, leaseObj;
         
         var code = "${code}";
         var userId = "${userId}";
@@ -250,11 +156,8 @@
 
 		function start() {
 
-			$('#error_row').hide();
-
-			getLocationWidth();
-			getLeaseValueWidth();
-
+            $('.btn-tooltip').tooltip();
+            
             load_Gapi();
 		}
         
@@ -282,23 +185,6 @@
                 }
             );
         }
-
-		$(window).resize(function() {
-			getLocationWidth();
-			getLeaseValueWidth();
-		});
-
-		function getLocationWidth() { //just for a symmetrical look, to set width of dropdown button and menu equal to Location input field
-			var width = $("#location").width();
-			$("#dropdownbuttoncategory").width(width);
-			$("#dropdownmenucategory").width(width);
-		}
-
-		function getLeaseValueWidth() {
-			var width = $("#lease_value").width();
-			$("#dropdownbuttonlease_term").width(width);
-			$("#dropdownmenulease_term").width(width);
-		}
 		
 		function cancel(){
 			window.location.replace(localStorage.getItem("prevPage"));
