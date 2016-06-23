@@ -38,6 +38,8 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 		GetLeasesByXResObj rs = new GetLeasesByXResObj();
 		
 		Connection hcp = getConnectionFromPool();
+		PreparedStatement sql_stmt = null;
+		ResultSet dbResponse = null;
 		
 		LOGGER.info("Inside process method leaseUserId:" + rq.getLeaseUserId() + " leaseReqUserId: " + rq.getLeaseReqUserId() + "Cookie: " + rq.getCookie());
 		
@@ -45,7 +47,6 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			
 			// Prepare SQL
 			String sql = null;
-			PreparedStatement sql_stmt = null;
 			
 			// request data getting from the front end
 			String leaseUserId = rq.getLeaseUserId();
@@ -68,7 +69,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
-			ResultSet dbResponse = sql_stmt.executeQuery();
+			dbResponse = sql_stmt.executeQuery();
 			
 			if(dbResponse.next()){
 				rs.setRequestorUserId(dbResponse.getString("lease_requser_id"));
@@ -105,8 +106,6 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				rs.setMessage(FLS_END_OF_DB_M);
 				LOGGER.warning("End of DB");
 			}
-			dbResponse.close();
-			sql_stmt.close();
 			
 		}catch(SQLException e){
 			rs.setCode(FLS_JSON_EXCEPTION);
@@ -114,7 +113,13 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		}finally {
-			hcp.close();
+			try {
+				if(dbResponse!=null) dbResponse.close();
+				if(sql_stmt!=null) sql_stmt.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		LOGGER.info("Finished process method ");
 		// return the response
