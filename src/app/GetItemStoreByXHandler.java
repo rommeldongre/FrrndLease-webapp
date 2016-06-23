@@ -39,6 +39,8 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 
 		GetItemStoreByXListResObj rs = new GetItemStoreByXListResObj();
 		Connection hcp = getConnectionFromPool();
+		PreparedStatement sql_stmt = null;
+		ResultSet dbResponse = null;
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
@@ -48,7 +50,6 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 
 			// Prepare SQL
 			String sql = null;
-			PreparedStatement sql_stmt = null;
 			
 			// storing the front end data in appropriate variables
 			int offset = rq.getCookie();
@@ -78,7 +79,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
-			ResultSet dbResponse = sql_stmt.executeQuery();
+			dbResponse = sql_stmt.executeQuery();
 			
 			if (dbResponse.next()) {
 				dbResponse.previous();
@@ -105,13 +106,18 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 				rs.setReturnCode(404);
 				LOGGER.warning("End of DB");
 			}
-			sql_stmt.close();
 
 		} catch (SQLException e) {
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		} finally {
-			hcp.close();
+			try {
+				if(dbResponse!=null) dbResponse.close();
+				if(sql_stmt!=null) sql_stmt.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		LOGGER.info("Finished process method ");
 		// return the response

@@ -80,6 +80,9 @@
         </div>
 		<!--header ends----------------------------------------->
 
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="card col-lg-10" style="margin: 10px 20px 10px 20px;min-height: 500px;">
 		<div class="container-fluid" id="midcontainer" ng-controller="itemDetailsCtrl">
             
             <!-- Error Message Display starts -->
@@ -223,11 +226,14 @@
 
 			</div>
             <!-- Item Details ends -->
-
-            <!--The tawk.to widget code will get populated here from file chatbox.html.-->
-            <div id="tawk_widget"></div>
-
 		</div>
+                </div>
+            <div class="col-lg-1"></div>
+        </div>
+        
+        <!--The tawk.to widget code will get populated here from file chatbox.html.-->
+        <div id="tawk_widget"></div>
+        
 		<!--Footer starts here-->
 		<div ng-include="'footer.html'"></div>
         <!--Footer ends here-->
