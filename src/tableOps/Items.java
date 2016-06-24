@@ -158,7 +158,7 @@ public class Items extends Connect {
 			if(!checkWishItem_rs.next()){
 				
 				LOGGER.info("Creating statement.....");
-				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
+				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image, item_lat, item_lng) values (?,?,?,?,?,?,?,?,?,?)";
 				stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	
 				LOGGER.info("Statement created. Executing query.....");
@@ -170,6 +170,8 @@ public class Items extends Connect {
 				stmt.setString(6, leaseTerm);
 				stmt.setString(7, status);
 				stmt.setString(8, image);
+				stmt.setFloat(9, 0);
+				stmt.setFloat(10, 0);
 				stmt.executeUpdate();
 				
 				// getting the last item inserted id and appending it with the title to generate a uid
@@ -236,17 +238,17 @@ public class Items extends Connect {
 			}
 		}finally{
 				try {
-					checkWishItem_rs.close();
-					checkWishItem_ps.close();
-					keys.close();
-					rs.close();
+					if(checkWishItem_rs != null)checkWishItem_rs.close();
+					if(checkWishItem_ps != null)checkWishItem_ps.close();
+					if(keys != null)keys.close();
+					if(rs != null)rs.close();
 					
-					stmt.close();
-					stmt1.close();
-					s.close();
-					s1.close();
+					if(stmt != null)stmt.close();
+					if(stmt1 != null)stmt1.close();
+					if(s != null)s.close();
+					if(s1 != null)s1.close();
 					
-					hcp.close();
+					if(hcp != null)hcp.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

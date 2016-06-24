@@ -26,7 +26,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         }
         $scope.search.string = searchString;
         initPopulate();
-//        addToWishList(data);
+        if(searchString != "" && searchString != null && searchString != "undefined")
+            addToWishList(searchString);
     });
     
     $scope.clearSearch = function(){
@@ -197,7 +198,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             id: 0,
             title: data,
             description: '',
-            category: '',
+            category: 'House',
             userId: user,
             leaseValue: 0,
             leaseTerm: '',
