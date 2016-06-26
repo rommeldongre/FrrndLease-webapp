@@ -40,15 +40,17 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 		EmailVerificationReqObj rq = (EmailVerificationReqObj) req;
 		EmailVerificationResObj rs = new EmailVerificationResObj();
 		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet result1 = null;
 
 		LOGGER.info("Inside Process Method " + rq.getVerification());
 
 		try {
 			String select_status_sql = "Select user_status,user_id FROM users WHERE user_activation=?";
-			PreparedStatement ps1 = hcp.prepareStatement(select_status_sql);
+			ps1 = hcp.prepareStatement(select_status_sql);
 			ps1.setString(1, rq.getVerification());
 
-			ResultSet result1 = ps1.executeQuery();
+			result1 = ps1.executeQuery();
 			
 			if (result1.next()) {
 				if (result1.getString("user_status").equals("email_pending")) {
@@ -84,14 +86,19 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 				rs.setUserId("");
 				rs.setMessage("This account is not registered!! I wonder how you got this link");
 			}
-			ps1.close();
 
 		} catch (SQLException e) {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		} finally {
-			hcp.close();
+			try {
+				if(result1!=null) result1.close();
+				if(ps1!=null) ps1.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 		}
 		LOGGER.info("Finished process method ");
 		// return the response

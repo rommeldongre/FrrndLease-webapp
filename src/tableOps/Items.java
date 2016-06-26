@@ -236,17 +236,17 @@ public class Items extends Connect {
 			}
 		}finally{
 				try {
-					checkWishItem_rs.close();
-					checkWishItem_ps.close();
-					keys.close();
-					rs.close();
+					if(checkWishItem_rs != null)checkWishItem_rs.close();
+					if(checkWishItem_ps != null)checkWishItem_ps.close();
+					if(keys != null)keys.close();
+					if(rs != null)rs.close();
 					
-					stmt.close();
-					stmt1.close();
-					s.close();
-					s1.close();
+					if(stmt != null)stmt.close();
+					if(stmt1 != null)stmt1.close();
+					if(s != null)s.close();
+					if(s1 != null)s1.close();
 					
-					hcp.close();
+					if(hcp != null)hcp.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
