@@ -15,7 +15,7 @@
 
                     <!-- Store Your Stuff button -->
                     <li class="nav navbar-nav" ng-if="isLoggedIn()">
-                        <a ng-click="storeYourStuff()" class="btn btn-primary btn-fill">Store My Stuff</a>
+                        <a ng-click="storeYourStuff()" class="btn btn-primary btn-fill">Offer My Stuff</a>
                     </li>
                     
                     <!-- Searchbar starts here -->
@@ -27,7 +27,7 @@
                         <div class="input-group" style="margin-left:5px;">
                             <input type="text" class="form-control" style="margin-top:15px;margin-bottom:15px;" ng-keypress="($event.charCode==13)?search():return" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" ng-change="searchStringChanged(search.string)" ng-model="search.string">
                             <div class="input-group-btn">
-                                <a class="btn btn-primary btn-fill" ng-click="search()"><i class="glyphicon glyphicon-search"></i></a>
+                                <a class="btn btn-primary btn-fill" ng-click="searching()"><i class="glyphicon glyphicon-search"></i></a>
                             </div>
                         </div>
                     </div>
@@ -71,4 +71,14 @@
     </div>
     <div ng-include="'loginmodal.html'"></div>
     <div ng-include="'signupmodal.html'"></div>
+    <script>
+  		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  		ga('create', 'UA-54475745-2', 'auto');
+  		ga('send', 'pageview');
+
+</script>
 </div>
