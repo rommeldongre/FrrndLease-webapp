@@ -6,6 +6,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', funct
     
     var friendIdArray = [];
     var lastFriendId = '';
+    $scope.friends = [];
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
