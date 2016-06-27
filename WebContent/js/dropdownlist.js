@@ -17,10 +17,6 @@ $(function(){
                   $('#footer_nav').html(response);
             });
 			
-			$.get("waitbar.html", function(response) {
-                  $('#wait_bar').html(response);
-            });
-			
 			$.get("howitworksdiv.html", function(response) {
                   $('#gsd_howItWorks').html(response);
             });

@@ -7,11 +7,11 @@ html, body{
 }
 
 #marketingpanel{
-	background-image: url("test.jpg");
+	background-image: url("makespaceforlife-rect.jpg");
 	background-position: relative;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
-/*	-webkit-filter: grayscale(20%);*/
+	/*-webkit-filter: grayscale(70%);*/
 	
 	position: relative;
 	margin:0;
@@ -26,7 +26,7 @@ html, body{
 	position: relative;
 	display: block;
 	text-align: center;
-	color: white;
+	color: #0066ff;
 	font-family: 'Happy Monkey', serif;
 	-webkit-filter: contrast(200%);
 }
@@ -35,7 +35,7 @@ html, body{
 	position: relative;
 	display: block;
 	text-align: center;
-	color: white;
+	color: #0066ff;
 	/*font-size: 150%;*/
 	font-family: 'Happy Monkey', serif;
 	-webkit-filter: contrast(200%);
@@ -100,7 +100,7 @@ html, body{
 
 #icon{
 	font-family: 'Happy Monkey', serif;
-	color: white;
+	color: #0066ff;
 	font-size: 200%;
 }
 
@@ -152,7 +152,7 @@ ul{
 }
 
 #headerfooteroptions{
-	color: white;
+	color: #0066ff;
 }
 
 #main{
