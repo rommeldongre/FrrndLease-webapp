@@ -5,9 +5,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     localStorage.setItem("prevPage","myapp.html#/myfriendslist");
     
     var friendIdArray = [];
-	$scope.gmail_friends = [];
     var lastFriendId = '';
-	
+    
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
     
