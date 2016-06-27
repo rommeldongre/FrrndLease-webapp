@@ -63,9 +63,9 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
                         $scope.location = Address;
                     });
                     response.results[0].address_components.forEach(function(component){
-                        if(component.types[0] == 'sublocality_level_1')
+                        if(component.types.indexOf("sublocality_level_1") != -1)
                             Sublocality = component.long_name;
-                        if(component.types[0] == 'locality')
+                        if(component.types.indexOf("locality") != -1)
                             Locality = component.long_name;
                     });
                     Lat = response.results[0].geometry.location.lat;

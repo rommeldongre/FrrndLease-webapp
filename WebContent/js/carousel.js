@@ -12,6 +12,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     // to store the lat lng from the search bar
     var latitude = 0.0, longitude = 0.0;
     $scope.search = {};
+    $scope.search.show = false;
     
     $scope.$on('searchDataChanged', function(event, lat, lng, s){
         // called on the page load
@@ -20,9 +21,11 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         s = s.toLowerCase();
         if(s.match(/^[0-9a-zA-Z\s]+$/) && s != "undefined"){
             searchString = s;
+            $scope.search.show = true;
         }
         else{
             searchString = '';
+            $scope.search.show = false;
         }
         $scope.search.string = searchString;
         initPopulate();

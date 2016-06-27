@@ -36,9 +36,9 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
                 if(response.status == 'OK'){
                     Address = response.results[0].formatted_address;
                     response.results[0].address_components.forEach(function(component){
-                        if(component.types[0] == 'sublocality_level_1')
+                        if(component.types.indexOf("sublocality_level_1") != -1)
                             Sublocality = component.long_name;
-                        if(component.types[0] == 'locality')
+                        if(component.types.indexOf("locality") != -1)
                             Locality = component.long_name;
                     });
                     Lat = response.results[0].geometry.location.lat;
@@ -225,7 +225,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         $scope.salutation = userFactory.userName;
     }
     
-    $scope.search = function(){
+    $scope.searching = function(){
         if(window.location.hash == '#/')
             searchService.sendDataToCarousel();
         else
@@ -529,32 +529,35 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
         });
     });
     
-    // getting the current location
-    var getLocation = function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else { 
-            console.log("Geolocation is not supported by this browser.");
-        }
-    }
-
-    var showPosition = function(position) {
-		latitude = position.coords.latitude;
-		longitude = position.coords.longitude;
-		coords = new google.maps.LatLng(latitude, longitude);	
-			
-		var geocoder = new google.maps.Geocoder();
-		var latLng = new google.maps.LatLng(latitude, longitude);
-		geocoder.geocode( { 'latLng': latLng}, function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                $scope.$apply(function(){
-                   $scope.location = results[4].formatted_address; 
-                });
-            }else{
-                console.log("Geocode was unsucessfull in detecting your current location");
-            }
-        });
-    }
+    // remove this code and uncomment the below one when using https
+    $scope.location = "Gokhalenagar, Pune, Maharashtra, India";
     
-    getLocation();
+//    // getting the current location
+//    var getLocation = function() {
+//        if (navigator.geolocation) {
+//            navigator.geolocation.getCurrentPosition(showPosition);
+//        } else { 
+//            console.log("Geolocation is not supported by this browser.");
+//        }
+//    }
+//
+//    var showPosition = function(position) {
+//		latitude = position.coords.latitude;
+//		longitude = position.coords.longitude;
+//		coords = new google.maps.LatLng(latitude, longitude);	
+//			
+//		var geocoder = new google.maps.Geocoder();
+//		var latLng = new google.maps.LatLng(latitude, longitude);
+//		geocoder.geocode( { 'latLng': latLng}, function(results, status) {
+//            if (status == google.maps.GeocoderStatus.OK) {
+//                $scope.$apply(function(){
+//                   $scope.location = results[4].formatted_address; 
+//                });
+//            }else{
+//                console.log("Geocode was unsucessfull in detecting your current location");
+//            }
+//        });
+//    }
+//    
+//    getLocation();
 }]);
