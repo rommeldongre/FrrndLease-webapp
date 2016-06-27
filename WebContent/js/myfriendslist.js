@@ -5,12 +5,9 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     localStorage.setItem("prevPage","myapp.html#/myfriendslist");
     
     var friendIdArray = [];
+	$scope.gmail_friends = [];
     var lastFriendId = '';
-	var reasonForAddFriend = null;
-	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
-	var apiKey = 'API Code';
-	var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
-    
+	
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
     
@@ -24,6 +21,12 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
         
         displayFriendsList(req);
     }
+	
+	var load_Gapi = function(){						//for google
+		gapi.load('auth2', function() {
+			gapi.auth2.init();
+		});
+	}
     
     var displayFriendsList = function(req){
         $.ajax({
@@ -51,7 +54,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
                                 $scope.friends.unshift(obj);
                             });
                             
-                        console.log(obj);
+                        //console.log(obj);
                         
                         lastFriendId = response.Id;
                         friendIdArray.unshift(response.Id);
@@ -65,6 +68,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     }
     
     getFriendsList();
+	load_Gapi();
 	
     $scope.directImport = function(){
         modalService.showModal({}, {submitting: true, labelText: 'Invite Friends by Email', actionButtonText: 'Submit'}).then(function(result){
@@ -122,14 +126,14 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	
 	$scope.importgoogle = function(){
 		window.setTimeout(authorize);		//calls authorize()
-		$("#openBtn").click();
-		
+		//$("#openBtn").click();	
 	}
+	
 	var authorize = function(){
 		gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthorization);		//calls handleAuthorization()
 	}
 	
-	var authorize = function(){
+	var handleAuthorization = function(authorizationResult){
 		if (authorizationResult && !authorizationResult.error) {
 				$.get("https://www.google.com/m8/feeds/contacts/default/thin?alt=json&access_token=" + authorizationResult.access_token + "&max-results=500&v=3.0",
 				function(response){
@@ -145,7 +149,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 						return i;
 					};
 					var n = getLength(response.feed.entry);
-					var tp;
+					var tp, user_email='',number='',email = '', name='';
 					
 					googleFriendsCounter = n;
 					
@@ -177,13 +181,16 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 							//email = "Email do not Exist for Friend " +  tp;	
 							email = "-";
 						}
-					 
-						addFriendOptionToPage(email,name,number,user_email,i); 
+						//addFriendOptionToPage(email,name,number,user_email,i); 
+						//console.log(email,name,number,user_email,i);
+						$scope.$apply(function(){
+                                $scope.gmail_friends.unshift(email,name,number,user_email,i);
+                            });
 						}
-					}
-					
+					}	
 				});
 			}
+		
 	}
 	
 	var checkEmailValidity = function(email){
