@@ -7,6 +7,11 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     var friendIdArray = [];
     var lastFriendId = '';
     $scope.friends = [];
+	var reasonForAddFriend = null, googleFriendsCounter = 0, counter = 0,checkcounter = 0;
+	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
+	var apiKey = 'API Code';
+	var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
+	$("#openBtn").hide();
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
@@ -53,9 +58,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
                             $scope.$apply(function(){
                                 $scope.friends.unshift(obj);
                             });
-                            
-                        //console.log(obj);
-                        
+                             
                         lastFriendId = response.Id;
                         friendIdArray.unshift(response.Id);
                         getFriendsList();
@@ -91,14 +94,12 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 					}
 					if(errCount!=0){
 						var validEmail = len-errCount;
-						/*modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-						}, function(){});*/
-						confirmationIndex("Success", "Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount);
+						modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){});
 					}
 				}else{
-					/*modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-						}, function(){});*/
-					confirmationIndex("Sorry", "Please enter emails less than or equal to 20");
+					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){});
 				}
 			}
         }, function(){});
@@ -118,7 +119,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 				},function(response){
 					if (response && !response.error) {
 						//check 'response' to see if call was successful
-						confirmationIndex("Success","Message to Facebook Friend(s) sent");
+						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){});
 						}
 				});
             }, {scope: 'email,public_profile,user_friends'});
@@ -126,7 +128,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	
 	$scope.importgoogle = function(){
 		window.setTimeout(authorize);		//calls authorize()
-		//$("#openBtn").click();	
+		$("#openBtn").click();	
 	}
 	
 	var authorize = function(){
@@ -137,7 +139,6 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 		if (authorizationResult && !authorizationResult.error) {
 				$.get("https://www.google.com/m8/feeds/contacts/default/thin?alt=json&access_token=" + authorizationResult.access_token + "&max-results=500&v=3.0",
 				function(response){
-					console.log(response);
 					//function for length of entry array  (for number of contacts)
 					var getLength = function(obj) {
 						var i = 0, key;
@@ -181,18 +182,75 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 							//email = "Email do not Exist for Friend " +  tp;	
 							email = "-";
 						}
-						//addFriendOptionToPage(email,name,number,user_email,i); 
-						//console.log(email,name,number,user_email,i);
-						$scope.$apply(function(){
-                                $scope.gmail_friends.unshift(email,name,number,user_email,i);
-                            });
+						addFriendOptionToPage(email,name,number,user_email,i); 
 						}
 					}	
 				});
-			}
-		
+			}	
 	}
 	
+	var addFriendOptionToPage = function(email,name,number,user_email,i){
+		var table = document.getElementById("friendsoptionstable");
+		var row = table.insertRow(1);
+		var cell0 = row.insertCell(0);
+		var cell1 = row.insertCell(1);
+		var cell2 = row.insertCell(2);
+		var cell3 = row.insertCell(3);
+		
+		var inputgp = document.createElement("div");
+		var checkbox = document.createElement("input");
+		inputgp.className = "input-group";
+		checkbox.setAttribute("type","checkbox");
+		inputgp.appendChild(checkbox);
+		checkbox.id = i;
+		
+		cell0.innerHTML = email;
+		cell1.innerHTML = name;
+		cell2.innerHTML = number;
+		cell3.appendChild(inputgp);
+		
+		cell0.id = "email"+i;
+		cell1.id = "name"+i;
+		cell2.id = "mobile"+i;
+		
+		cell0.className = "tablecellName";
+		cell1.className = "tablecellMobile";
+		cell2.className = "tablecellEmail";
+		cell3.className = "checkboxes";
+	}
+	
+	$scope.add_checked_friends = function(){
+			if(counter==0){
+			process_dialog("Adding Gmail friends Please Wait");
+			$('#myModalTable').modal('toggle');
+			}
+			reasonForAddFriend = "importGoogle";
+			if(counter<googleFriendsCounter){
+				var ischecked = $("#"+counter).is(":checked");
+				console.log(counter+": "+ischecked);
+				
+				if(ischecked){
+					name = $("#name"+counter).text();
+					mobile = $("#mobile"+counter).text();
+					email = $("#email"+counter).text();
+					console.log("name: "+name+" mobile: "+mobile+" email: "+email);
+					checkcounter++;
+					
+					addFriendSetValues(name, mobile, email, userFactory.user);
+				}else{
+					add_checked_friends_continued();		//basically just increment and call the same function again
+				}
+			}else{
+				$('#myPleaseWait').modal('hide');
+				modalService.showModal({}, {bodyText: "Success, Number of Friends Imported : "+checkcounter ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+				}, function(){});
+			} 
+	}
+	
+	var add_checked_friends_continued = function(email){
+		counter++;
+		$scope.add_checked_friends();
+	}
 	var checkEmailValidity = function(email){
 		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			return re.test(email);
@@ -202,27 +260,26 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	
 	var friendName =null,friendEmail =null,friendMobile=0,
 	
-	friendName = name;
-	friendEmail = email;
-	friendMobile = mobile;
-	userId = user;
-	
-	if(friendName == '')
-		friendName = null;
-	if(friendEmail == '')
-		friendEmail = null;
-	if(friendMobile == '')
-		friendMobile = 0;
-	
-	var req = {
-		id: friendEmail,
-		fullName: friendName,
-		mobile: friendMobile,
-		userId: user
-	};
-	
-	addFriendSend(req);
+		friendName = name;
+		friendEmail = email;
+		friendMobile = mobile;
+		userId = user;
 		
+		if(friendName == '')
+			friendName = null;
+		if(friendEmail == '')
+			friendEmail = null;
+		if(friendMobile == '')
+			friendMobile = 0;
+		
+		var req = {
+			id: friendEmail,
+			fullName: friendName,
+			mobile: friendMobile,
+			userId: user
+		};
+		
+		addFriendSend(req);	
 	}
 	
 	var addFriendSend = function(req){
@@ -236,6 +293,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 				if(reasonForAddFriend == "importEmail"){
 					modalService.showModal({}, {bodyText: response.Message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 					}, function(){});
+				}else if(reasonForAddFriend == "importGoogle"){
+					add_checked_friends_continued();
 				}
             },
             error: function() {
