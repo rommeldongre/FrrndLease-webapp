@@ -74,7 +74,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	load_Gapi();
 	
     $scope.directImport = function(){
-        modalService.showModal({}, {submitting: true, labelText: 'Invite Friends by Email', actionButtonText: 'Submit'}).then(function(result){
+        modalService.showModal({}, {submitting: true, labelText: 'Invite Friends by Email,comma separated. example1@xyz.com, example2@abc.net', actionButtonText: 'Submit'}).then(function(result){
 			var value = result;
 			reasonForAddFriend = "importEmail";
 			var arrEmail = [];
