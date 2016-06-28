@@ -25,7 +25,7 @@
                     
                     <div class="nav navbar-nav col-sm-4 col-md-4" ng-if="showSearch">
                         <div class="input-group" style="margin-left:5px;">
-                            <input type="text" class="form-control" style="margin-top:15px;margin-bottom:15px;" ng-keypress="($event.charCode==13)?searc():return" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" ng-change="searchStringChanged(search.string)" ng-model="search.string">
+                            <input type="text" class="form-control" style="margin-top:15px;margin-bottom:15px;" ng-keypress="($event.charCode==13)?search():return" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" ng-change="searchStringChanged(search.string)" ng-model="search.string">
                             <div class="input-group-btn">
                                 <a class="btn btn-primary btn-fill" ng-click="searching()"><i class="glyphicon glyphicon-search"></i></a>
                             </div>
