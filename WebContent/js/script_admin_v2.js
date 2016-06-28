@@ -990,7 +990,6 @@ function editWishItemSend(req){
 			success: function(response) {
 				//alert(response.Id+" "+response.Code+" "+response.Message);
 				
-				setPrevPage("mywishlists.html");
 				var heading = "Successful";
 				msg = response.Message;
 				confirmationIndex(heading, msg);			//mywishitemdetails.html
@@ -1029,7 +1028,6 @@ function deleteWishItemSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			setPrevPage("mywishlists.html");
 			heading = "Successful";
 			
 			msg = response.Message;
