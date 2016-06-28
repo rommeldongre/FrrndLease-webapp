@@ -9,7 +9,7 @@
                         <span class="icon-bar"></span> 
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="index.html" class="navbar-brand" id="icon"><b>FrrndLease</b></a>
+                    <a href="index.html" class="navbar-brand" id="icon"><b>FrrndLease</b></a> <span class="label label-success label-fill">Pune</span>
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar1">
 
@@ -25,7 +25,7 @@
                     
                     <div class="nav navbar-nav col-sm-4 col-md-4" ng-if="showSearch">
                         <div class="input-group" style="margin-left:5px;">
-                            <input type="text" class="form-control" style="margin-top:15px;margin-bottom:15px;" ng-keypress="($event.charCode==13)?search():return" placeholder="Search from {{item_count}} items with {{user_count}} members on FrrndLease" ng-change="searchStringChanged(search.string)" ng-model="search.string">
+                            <input type="text" class="form-control" style="margin-top:15px;margin-bottom:15px;" ng-keypress="($event.charCode==13)?searching():return" placeholder="Search from {{item_count}} items from {{user_count}} members on Frrndlease" ng-change="searchStringChanged(search.string)" ng-model="search.string">
                             <div class="input-group-btn">
                                 <a class="btn btn-primary btn-fill" ng-click="searching()"><i class="glyphicon glyphicon-search"></i></a>
                             </div>
