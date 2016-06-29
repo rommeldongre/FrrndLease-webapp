@@ -133,6 +133,7 @@ public class FlsConfig extends Connect{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -140,6 +141,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 			
@@ -164,6 +166,7 @@ public class FlsConfig extends Connect{
 				ps2.close();
 			} catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -171,6 +174,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 			
@@ -182,8 +186,11 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
+				
+				System.out.println("dbBuild updated to 2002");
 			} catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -191,6 +198,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 		}
@@ -205,6 +213,7 @@ public class FlsConfig extends Connect{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -212,6 +221,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 			
@@ -223,8 +233,11 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
+				
+				System.out.println("dbBuild updated to 2003");
 			} catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -232,6 +245,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 		}
@@ -246,6 +260,7 @@ public class FlsConfig extends Connect{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -253,6 +268,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 			
@@ -264,8 +280,11 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
+				
+				System.out.println("dbBuild updated to 2004");
 			} catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -273,6 +292,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 		}
@@ -287,6 +307,7 @@ public class FlsConfig extends Connect{
 				ps.close();
 			}catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			}finally{
 				try {
 					// close and reset connection to null
@@ -294,6 +315,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 			
@@ -306,6 +328,7 @@ public class FlsConfig extends Connect{
 				ps.close();
 			}catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			}finally{
 				try {
 					// close and reset connection to null
@@ -313,6 +336,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 			
@@ -324,8 +348,11 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
+				
+				System.out.println("dbBuild updated to 2005");
 			} catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -333,6 +360,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 		}
@@ -348,6 +376,7 @@ public class FlsConfig extends Connect{
 				ps.close();
 			}catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			}finally{
 				try {
 					// close and reset connection to null
@@ -355,6 +384,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 			
@@ -366,8 +396,11 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
 				ps.executeUpdate();
 				ps.close();
+				
+				System.out.println("dbBuild updated to 2006");
 			} catch(SQLException e){
 				e.printStackTrace();
+				System.out.println(e.getStackTrace());
 			} finally {
 				try {
 					// close and reset connection to null
@@ -375,6 +408,7 @@ public class FlsConfig extends Connect{
 					connection = null;
 				} catch (SQLException e){
 					e.printStackTrace();
+					System.out.println(e.getStackTrace());
 				}
 			}
 		}
