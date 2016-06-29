@@ -36,12 +36,12 @@
 								</a><br>
 								<p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
 								<b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
-								<span class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
+								<span ng-if="item.leaseTerm != ''" class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
 								<label ng-switch="user_status" >
-									<label ng-switch-when="''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-									<label ng-switch-when="null" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-									<label ng-switch-when="anonymous" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-									<label ng-switch-default id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
+									<label ng-switch-when="''" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+									<label ng-switch-when="null" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+									<label ng-switch-when="anonymous" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+									<label ng-switch-default ng-if="item.sublocality != '' || item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
 								</label>
 								</p>
 							</div>
