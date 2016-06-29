@@ -55,19 +55,7 @@
     <!--Correct Orientation of image while uploading  -->
     <script src="js/exif.js"></script>
     <!--Correct Orientation of image while uploading ends here  -->
-	
-	<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
-    <script src="js/bootstrap-datepicker.js"></script>
-	<script src="js/bootstrap-select.js"></script>
-	<script src="js/get-shit-done.js"></script>
-	<script src="js/gsdk-bootstrapswitch.js"></script>
-	<script src="js/gsdk-checkbox.js"></script>
-	<script src="js/gsdk-morphing.js"></script>
-	<script src="js/gsdk-radio.js"></script>
-	<script src="js/jquery.flexisel.js"></script>
-	<script src="js/jquery.tagsinput.js"></script>
-	<script src="js/jquery-ui.custom.min.js"></script>
-	<script src="js/retina.min.js"></script>    
+	    
 </head>
     
 <body onload="start()">
@@ -192,11 +180,24 @@
 		}
 			
 	</script>
-
+    
+    <link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link href="css/pe-icon-7-stroke.css" type="text/css" rel="stylesheet">
+    <script async src="js/bootstrap-datepicker.js"></script>
+	<script async src="js/bootstrap-select.js"></script>
+	<script async src="js/get-shit-done.js"></script>
+	<script async src="js/gsdk-bootstrapswitch.js"></script>
+	<script async src="js/gsdk-checkbox.js"></script>
+	<script async src="js/gsdk-morphing.js"></script>
+	<script async src="js/gsdk-radio.js"></script>
+	<script async src="js/jquery.flexisel.js"></script>
+	<script async src="js/jquery.tagsinput.js"></script>
+	<script async src="js/jquery-ui.custom.min.js"></script>
+	<script async src="js/retina.min.js"></script>
 
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/itemdetails.js"></script>
-    <script src="js/tawk.js"></script>
+    <script async src="js/tawk.js"></script>
 	<script src="js/bootstrap.min.js"></script>
     <!-- For Autocomplete Feature -->
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
