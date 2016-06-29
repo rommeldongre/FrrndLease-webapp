@@ -6,6 +6,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     
     var friendIdArray = [];
     var lastFriendId = '';
+	var arrEmail = [];
+	var errCount = 0, len = 0,count=1;
     $scope.friends = [];
 	var reasonForAddFriend = null, googleFriendsCounter = 0, counter = 0,checkcounter = 0;
 	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
@@ -16,6 +18,15 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
     
+	var initialPopulate = function(){
+        
+        lastFriendId = '';
+        arrEmail = [];
+		errCount = 0, len = 0,count=0;
+        getFriendsList();
+        
+    }
+	
     var getFriendsList = function(){
         
         var req = {
@@ -70,41 +81,45 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
             });
     }
     
-    getFriendsList();
+    initialPopulate();
 	load_Gapi();
 	
     $scope.directImport = function(){
         modalService.showModal({}, {submitting: true, labelText: 'Invite Friends by Email,comma separated. example1@xyz.com, example2@abc.net', actionButtonText: 'Submit'}).then(function(result){
 			var value = result;
 			reasonForAddFriend = "importEmail";
-			var arrEmail = [];
-			var errCount = 0, len = 0;
 			arrEmail = value.split(",");
 			len = arrEmail.length;
 			if(value != '' && value != ' '){
 				if(len<=20){
-					for(i=0;i<len;i++){
-						var isValid = checkEmailValidity(arrEmail[i]);
-						if(checkEmailValidity(arrEmail[i])){
-								addFriendSetValues('-', '-', arrEmail[i], userFactory.user);
-							}else{
-								errCount = errCount+1;
-							}
-						
-					}
-					if(errCount!=0){
-						var validEmail = len-errCount;
-						modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-						}, function(){});
-					}
+					directImport_continue();
 				}else{
 					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-						}, function(){});
+					}, function(){});
 				}
 			}
         }, function(){});
     }
 	
+	var directImport_continue = function(){
+		
+				if(count == len){
+					var validEmail = len-errCount;
+					modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						$scope.friends = [];
+						initialPopulate();
+					}, function(){});	
+			}else{
+				var isValid = checkEmailValidity(arrEmail[count]);
+				if(checkEmailValidity(arrEmail[count])){
+						addFriendSetValues('-', '-', arrEmail[count], userFactory.user);
+					}else{
+						errCount = errCount+1;
+						count++;
+						directImport_continue();
+					}
+			}	
+	}
 	$scope.importfb = function(){
 		
 		FB.login(function(response) {
@@ -227,13 +242,11 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 			reasonForAddFriend = "importGoogle";
 			if(counter<googleFriendsCounter){
 				var ischecked = $("#"+counter).is(":checked");
-				console.log(counter+": "+ischecked);
 				
 				if(ischecked){
 					name = $("#name"+counter).text();
 					mobile = $("#mobile"+counter).text();
 					email = $("#email"+counter).text();
-					console.log("name: "+name+" mobile: "+mobile+" email: "+email);
 					checkcounter++;
 					
 					addFriendSetValues(name, mobile, email, userFactory.user);
@@ -243,6 +256,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 			}else{
 				$('#myPleaseWait').modal('hide');
 				modalService.showModal({}, {bodyText: "Success, Number of Friends Imported : "+checkcounter ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+				$scope.friends = [];
+				initialPopulate();
 				}, function(){});
 			} 
 	}
@@ -258,7 +273,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	
 	var addFriendSetValues = function(name, mobile, email, user){
 	
-	var friendName =null,friendEmail =null,friendMobile=0,
+	var friendName =null,friendEmail =null,friendMobile=0;
 	
 		friendName = name;
 		friendEmail = email;
@@ -291,8 +306,16 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
             dataType: "json",
             success: function(response) {
 				if(reasonForAddFriend == "importEmail"){
-					modalService.showModal({}, {bodyText: response.Message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-					}, function(){});
+					count++;
+					if(count == len){
+							var validEmail = len-errCount;
+							modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							$scope.friends = [];
+							initialPopulate();
+							}, function(){});
+					}else{
+						directImport_continue();
+					}
 				}else if(reasonForAddFriend == "importGoogle"){
 					add_checked_friends_continued();
 				}
