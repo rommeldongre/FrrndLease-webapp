@@ -42,7 +42,7 @@
 
                         <li ng-if="isAnonymous()"><a id="headerfooteroptions" href="" data-toggle="modal" data-target="#registerModal"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
 
-                        <li ng-if="isLoggedIn()" class="navbar-brand" style="color:#337ab7;font-size:14px;"><strong>{{credits}}</strong></li>
+                        <li ng-if="isLoggedIn()" class="navbar-brand btn-tooltip" style="color:#337ab7;font-size:14px;" data-toggle="tooltip" data-placement="bottom" title="Credits"><strong>{{credits + " "}}</strong><i class="fa fa-diamond"></i></li>
 
                         <li ng-if="isLoggedIn()" class="dropdown">
                             <a href="" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"> 
