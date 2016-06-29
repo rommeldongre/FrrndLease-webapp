@@ -2,6 +2,8 @@ var myProfile = angular.module('myApp');
 
 myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory', 'modalService', function($scope, userFactory, profileFactory, modalService){
     
+    localStorage.setItem("prevPage","myapp.html#/myprofile");
+    
     var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0;
     
     $scope.options = {
@@ -49,6 +51,10 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
             editProfileData();
         
         unsaved = false;
+    }
+    
+    $scope.cancel = function(){
+        window.location.replace("myapp.html#/");
     }
     
     var getLocationData = function(location){

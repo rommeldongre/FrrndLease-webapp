@@ -83,6 +83,7 @@ public class AwsSESEmail extends Connect {
 	static String TO; // Replace with a "To" address. If you have not yet
 						// requested
 						// production access, this address must be verified.
+	static String CC = "BlueMarble@frrndlease.com";
 	static String BODY;
 	static String SUBJECT;
 
@@ -340,6 +341,7 @@ public class AwsSESEmail extends Connect {
 			message.setFrom(new InternetAddress(FROM));
 			message.setReplyTo(new Address[] { new InternetAddress(FROM) });
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
+			message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(CC));
 
 			Multipart multipart = new MimeMultipart("related");
 

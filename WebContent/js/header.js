@@ -265,7 +265,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         function(response){
             if (response.data.code == 0) {
                 $scope.search.location = response.data.sublocality+","+response.data.locality;
-                $scope.credits = response.data.credit + " credits";
+                $scope.credits = response.data.credit;
                 searchService.saveCurrentLocation(response.data.lat,response.data.lng);
             } else {
                 $scope.credits = "";
