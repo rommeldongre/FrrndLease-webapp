@@ -151,17 +151,19 @@
 											<div id="dropdownbuttoncategory_div"></div>
 											<select id="dropdownmenucategory_select" onChange="getCategory(this);">
 											</select>
-											<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" required> Category <span class="caret"></span></button>
-											<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
-	
-											</ul>
+                                            <div class="dropdown">
+                                                <button id="dropdownbuttoncategory" class="btn btn-simple dropdown-toggle" data-toggle="dropdown" required> Category <span class="caret"></span></button>
+                                                <ul id="dropdownmenucategory" class="dropdown-menu" aria-labelledby="dropdownbuttoncategory" role="menu" style="text-align:center;">
+
+                                                </ul>
+                                            </div>
 										</div>
 									</div>
 									<hr />
 									<div class="form-group">
 										<label for="lease_value" class="col-sm-2 control-label">Lease Value</label>
 										<div class="col-sm-10">
-											<input type="text" class="form-control" id="lease_value" placeholder="Lease Value">
+											<input type="number" class="form-control" id="lease_value" placeholder="Lease Value">
 										</div>
 									</div>
 									<div class="form-group">
@@ -172,9 +174,11 @@
 													<div id="dropdownbuttonlease_term_div"></div>
 													<select id="dropdownmenulease_term_select" onChange="getLeaseTerm(this);">
 													</select>
-													<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
-													<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
-													</ul>
+                                                    <div class="dropdown">
+                                                        <button id="dropdownbuttonlease_term" class="btn btn-simple dropdown-toggle" data-toggle="dropdown"> Lease Term <span class="caret"></span></button>
+                                                        <ul id="dropdownmenulease_term" class="dropdown-menu" aria-labelledby="dropdownbuttonlease_term" role="menu" style="text-align:center;">
+                                                        </ul>
+                                                    </div>
 												</div>
 											</div>
 										</div>
@@ -570,7 +574,7 @@
 		}
 		
 		function getLocationWidth(){			//just for a symmetrical look, to set width of dropdown button and menu equal to Location input field
-			var width = $("#location").width();
+			var width = $("#lease_value").width();
 			$("#dropdownbuttoncategory").width(width);
 			$("#dropdownmenucategory").width(width);
 		}
