@@ -429,7 +429,9 @@
 			itemNextId = getItemToShow();
 			
 			reasonForGetFriend = 'prevFriend';
-			getPrevFriend(itemNextId);		//get Id of the prev of curr Id	
+			var info = localStorage.getItem("friend_details");
+			var obj = eval("(" + info + ")");
+			getItemInfoContinued(obj);
 		}
 		
 		function gotPrevFriend(idOfPrevFriend){
@@ -441,9 +443,13 @@
 		function getItemInfoContinued(obj){				//called from ajax response
 			//alert("getItemInfoContinued called");
 			
+			var strIndex = obj.friendId.indexOf('@fb');
+            if(strIndex != -1){
+                obj.friendId = '-';
+			}
 			$("#name").val(obj.fullName);
 			$("#mobile").val(obj.mobile);
-			$("#email").val(obj.userId);
+			$("#email").val(obj.friendId);
 			
 		}	
 		
