@@ -441,7 +441,11 @@ public class AwsSESEmail extends Connect {
 
 	private static File convertBinaryToImage(String imageString) {
 		// TODO Auto-generated method stub
-
+		
+		if(imageString == null || imageString == ""){
+			return null;
+		}
+		
 		try {
 			String[] i = imageString.split(",");
 			String binary = i[1];
@@ -463,6 +467,7 @@ public class AwsSESEmail extends Connect {
 			LOGGER.warning("Not able to decode the image");
 			e.printStackTrace();
 		}
+		
 		return null;
 	}
 }

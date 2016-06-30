@@ -204,7 +204,7 @@
 
         <script type="text/javascript">
 
-            var checkcounter =0, amazon_counter=0, amazon_orders_counter=0;
+            var checkcounter =0, amazon_counter=0, amazon_orders_counter=0,userloggedin;
             
             function start(){	
                 
@@ -219,6 +219,8 @@
                 look_good();
 
                 load_Gapi();
+				
+				userloggedin = localStorage.getItem("userloggedin");
             }
 
             function load_Gapi(){						//for google
@@ -248,7 +250,7 @@
                     console.log("No Input file Given: ");
                 }
             }
-
+			
             function parse_csv(){
                 var myfile = $("#csvfile").prop('files')[0];
 
@@ -264,6 +266,8 @@
                 var processCsv = function (csvData) {
                     var i,title,category,asin="-",cost="-";
                     amazon_orders_counter = csvData.length;
+					var order_limit=20;
+					if(amazon_orders_counter<=order_limit){
                     for(i=0;i<amazon_orders_counter;i++){
 
                         if(csvData[i]["Title"]){
@@ -272,7 +276,7 @@
                             title = "-";
                         }
                         if(csvData[i]["Category"]){
-                            category = "Furniture";
+                            category = "House";
                         }else{
                             category = "-";
                         }
@@ -291,6 +295,10 @@
                         }
                         addFriendOptionToPage(title,category,asin,cost,i); 
                     }
+					}else{
+						$('#myModalTable').modal('toggle');
+						confirmationIndex("Error" , " You can only import "+order_limit+" Items at a Time. Please Remove extra rows");
+					}
                 };
             }
 
@@ -357,7 +365,7 @@
                             add_checked_items_continued();		//basically just increment and call the same function again
                         }
                     }else{
-                        $("#myPleaseWait").hide();
+                        $("#myPleaseWait").modal('toggle');
                         confirmationIndex("Successful" , " Number of Amazon Ordered Items Imported : "+checkcounter);
                     }
             }
@@ -384,7 +392,7 @@
                     $.ajax({
                     url: '/flsv2/PostItem',
                     type: 'post',
-                    data: {req : JSON.stringify(req)},
+                    data: JSON.stringify(req),
                     contentType: "application/x-www-form-urlencoded",
                     dataType: "json",
 
@@ -409,6 +417,11 @@
 
                 $("#modalTriggerButton").click();
             }
+			
+			function redirectToPrevPage(){
+			$("#myModal").modal('toggle');
+			
+			}
 
             function look_good(){
                 var height = $(window).height();
