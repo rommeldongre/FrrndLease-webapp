@@ -101,82 +101,71 @@
 		
 		<div class="container-fluid" id="midcontainer">
 			<div class="row">
-				<div class="col-md-6" id="outertable">
-					<div class="row">	
-						<div class="col-md-12">
-							<form>
-								<div class="form-group">
-<!-- http://www.syntaxxx.com/accessing-user-device-photos-with-the-html5-camera-api/ -->
-<!--http://www.codeproject.com/Articles/589445/JavaScript-Modal-Popup-Window-->								
-									<label for="item_image" id="image_label">Add Picture</label>
-									<input id="item_image" type="file" class="form-control" id="add_picture" accept="image/*"> <!--onchange="saveAndDisplayImage(event)"-->
-								</div>
-							</form>
-						</div>	
-					</div>
-					<br />
-					<div class="row">
-						<!--<div class="col-md-12">
-							<img id="capturedPicture"/>
-							</img>
-						</div>-->
-					</div>
-					<form id="itemform">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="name">Name</label>
-									<input type="text" class="form-control" id="name" placeholder="Enter Name" required>
-								</div>
+				<div class="col-lg-1"></div>
+				<div class="card col-lg-10" style="margin: 10px 20px 10px 20px;min-height: 500px;">
+						<div class="container-fluid" id="midcontainer">
+							<div id="heading">
+								<strong> Edit Friend Details</strong>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="mobile">Mobile</label>
-									<input type="text" class="form-control" id="mobile" placeholder="10 digit Mobile Number" maxlength="10" required>
+							<br />
+							<div class="col-lg-3 col-md-3"></div>
+								<div class="card-user col-lg-6 col-md-6" style="padding-top:50px">
+									<div class="content">
+										<div class="author">
+											<h4 class="title"><br />
+												<small></small>
+											</h4>
+										</div>
+										<form class="form-horizontal" id="itemform">
+											<div class="form-group">
+												<label for="item_image" id="image_label" class="col-sm-2 control-label">Add Picture</label>
+												<div class="col-sm-10">
+													<input type="file" class="form-control" id="item_image" accept="image/*">
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="name" class="col-sm-2 control-label">Name</label>
+												<div class="col-sm-10">
+													<input type="text" class="form-control" id="name" placeholder="Enter Name" required />
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="mobile" class="col-sm-2 control-label">Mobile</label>
+												<div class="col-sm-10">
+													<input type="text" class="form-control" id="mobile" placeholder="Enter Mobile" required />
+												</div>
+											</div>
+											<hr />
+											<div class="form-group">
+												<label for="email" class="col-sm-2 control-label">Email</label>
+												<div class="col-sm-10">
+													<input type="text" class="form-control" id="email" placeholder="Enter Email">
+												</div>
+											</div>
+											<button class="btn btn-default" id="submit" type="submit">
+												Submit
+											</button>
+											</form>
+										</div>
+										<div class="row">
+											<div class="col-lg-3 col-md-3 col-md-offset-2" id="add_friend_row">
+												<button id="add_friend" class="btn btn-primary" onclick="add_friend()">Add Friend</button>
+											</div >
+											<div class="col-lg-3 col-md-3 col-md-offset-2" id="edit_friend_row">
+												<button id="edit_friend" class="btn btn-primary btn-fill" onclick="edit_friend()">Save</button>
+											</div>
+											<div class="col-lg-3 col-md-3" id="delete_friend_row">
+												<button id="delete_friend" class="btn btn-primary" onclick="delete_friend()">Delete</button>
+											</div>
+											<div class="col-lg-3 col-md-3" id="cancel_row">
+												<a href="myapp.html#/myfriendslist"><button id="cancel" class="btn btn-primary" onclick="delete_friend()">Cancel</button></a>
+											</div>
+										</div>
 								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="email">Email</label>
-									<input type="email" class="form-control" id="email" placeholder="email@xyz.com" required>
-								</div>
-							</div>
-						</div>
-						<button class="btn btn-default" id="submit" type="submit">
-							Submit
-						</button>
-						
-					</form>
-				</div>
-				<div class="col-md-6">
-					<br />
-					<div id="add_friend_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_friend" class="btn btn-primary btn-fill" onclick="add_friend()">Add</button>
+							<div class="col-lg-3 col-md-3"></div>
 						</div>
 					</div>
-						
-					<div id="edit_friend_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_friend" class="btn btn-primary btn-fill" onclick="edit_friend()">Edit</button>
-						</div>
-					</div>
-						
-					<div id="delete_friend_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_friend" class="btn btn-primary btn-fill" onclick="delete_friend()">Delete</button>
-						</div>
-					</div>
-					<div id="cancel_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<a href="myapp.html#/myfriendslist"><button id="cancel" class="btn btn-primary btn-fill">Cancel</button></a>
-						</div>
-					</div>
-				</div>
+				<div class="col-lg-1"></div>
 			
 				<!--Displaying error of the form-->
 				<div id="error_row">
