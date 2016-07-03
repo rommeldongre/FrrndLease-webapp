@@ -13,6 +13,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var latitude = 0.0, longitude = 0.0;
     $scope.search = {};
     $scope.search.show = false;
+    $scope.showWishes = false;
     
     $scope.$on('searchDataChanged', function(event, lat, lng, s){
         // called on the page load
@@ -229,6 +230,28 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
 			}
 		});
     }
+    
+    var getRecentWishes = function(req){
+        $.ajax({
+            url: '/flsv2/GetRecentWishes',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType: "application/x-www-form-urlencoded",
+			dataType:"json",
+            success: function(response) {
+                if(response.code == 0){
+                    $scope.showWishes = true;
+                    $scope.wishes = response.wishes;
+                }else{
+                    $scope.showWishes = false;
+                }
+			},
+			error: function() {
+			}
+        });
+    }
+    
+    getRecentWishes({limit: 10});
 }]);
                                         
 carouselApp.factory('getItemsForCarousel', ['$http', function($http){
