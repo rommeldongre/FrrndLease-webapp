@@ -17,7 +17,7 @@
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-      <link href="css/gsdk.css" rel="stylesheet" />
+    <link href="css/gsdk.css" rel="stylesheet" />
 	<link href="css/mystore.css" rel="stylesheet">
 	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 	
@@ -97,129 +97,100 @@
 		
 		<div class="container-fluid" id="midcontainer">
 			<div class="row">
-				<div class="col-md-6" id="outertable">
-					<div class="row">	
-						<div class="col-md-12">
-							<form>
-								<div class="form-group">
-<!-- http://www.syntaxxx.com/accessing-user-device-photos-with-the-html5-camera-api/ -->
-<!--http://www.codeproject.com/Articles/589445/JavaScript-Modal-Popup-Window-->								
-									<label for="item_image" id="image_label">Add Picture</label>
-									<input type="file" id="ifile">		<!--Taking image as input-->
-								</div>
-							</form>
-						</div>	
-					</div>
-					<br />
-					<div class="row">
-						<div class="col-md-12">
-							<canvas id="panel">
-								
-							</canvas>
+				<div class="col-lg-1"></div>
+				<div class="card col-lg-10" style="margin: 10px 20px 10px 20px;min-height: 500px;">
+					<div class="container-fluid" id="midcontainer">
+						<div id="heading">
+							<strong> Edit Wish Item Details</strong>
 						</div>
-					</div>
-					<form id="itemform">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="title">Title</label>
-									<input type="text" class="form-control" id="title" placeholder="Enter Title" required>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="input-group">
-									<div class="input-group-button">
-										<label for="category">Category</label><br />
-										<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Category <span class="caret"></span></button>
-										<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
-
-										</ul>
+						<br />
+						<div class="col-lg-3 col-md-3"></div>
+							<div class="card-user col-lg-6 col-md-6" style="padding-top:50px">
+								<div class="content">
+									<div class="author">
+										<h4 class="title"><br />
+											<small></small>
+										</h4>
 									</div>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<label for="location">Location</label>
-									<input type="text" class="form-control" id="location" placeholder="Location">
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="lease_value">Lease Value</label>
-									<input type="number" class="form-control" id="lease_value" placeholder="Lease Value">
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="input-group">
-									<div class="input-group-button">
-										<label for="lease_term">Lease Term</label><br />
-										<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
-										<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
-					
-										</ul>
+									<form class="form-horizontal" id="itemform">
+										<div class="form-group">
+											<label for="item_image" id="image_label" class="col-sm-2 control-label">Add Picture</label>
+											<div class="col-sm-10">
+												<input type="file" class="form-control" id="ifile">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<canvas id="panel" style=" display: table;margin: 0 auto;margin-bottom:10px;"></canvas>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="title" class="col-sm-2 control-label">Title</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="title" placeholder="Enter Title" required />
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="category" class="col-sm-2 control-label">Category</label>
+											<div class="col-sm-10">
+												<div class="input-group">
+													<div class="input-group-button">
+														<div id="dropdownbuttonlease_term_div"></div>
+														<button id="dropdownbuttoncategory" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Category <span class="caret"></span></button>
+														<ul id="dropdownmenucategory" class="dropdown-menu" role="menu">
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+										<hr />
+										<div class="form-group">
+											<label for="lease_value" class="col-sm-2 control-label">Lease Value</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="lease_value" placeholder="Lease Value">
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="lease_term" class="col-sm-2 control-label">Lease Term</label>
+											<div class="col-sm-10">
+												<div class="input-group">
+													<div class="input-group-button">
+														<div id="dropdownbuttonlease_term_div"></div>
+														<button id="dropdownbuttonlease_term" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> Lease Term <span class="caret"></span></button>
+														<ul id="dropdownmenulease_term" class="dropdown-menu" role="menu">
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label  for="description" class="col-sm-2 control-label">Description</label>
+											<div class="col-sm-10" >
+												<textarea class="form-control" style="margin-bottom:5%;" id="description" placeholder="Add Description"></textarea>
+											</div>
+										</div>
+										<button class="btn btn-default" id="submit" type="submit">
+											Submit
+										</button>
+										</form>
 									</div>
-								</div>
+									<div class="row">
+										<div class="col-lg-3 col-md-3 col-md-offset-2" id="edit_wishitem_row">
+											<button id="edit_wishitem" class="btn btn-primary btn-fill" onclick="edit_wishitem()">Save</button>
+										</div>
+										<div class="col-lg-3 col-md-3" id="delete_wishitem_row">
+											<button id="delete_wishitem" class="btn btn-primary" onclick="delete_wishitem()">Delete</button>
+										</div>
+										<div class="col-lg-3 col-md-3" id="cancel_wishitem_row">
+											<button id="cancel_wishitem" style="margin-bottom:5%;" class="btn btn-primary" onclick="cancel_wishitem()">Cancel</button></a>
+										</div>
+									</div>
 							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="quantity">Quantity</label>
-									<input type="number" class="form-control" id="quantity" placeholder="Quantity">
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<div class="form-group">
-									<label for="description">Description</label>
-									<textarea rows="3" class="form-control" id="description" placeholder="Add Description"></textarea>
-								</div>
-							</div>
-						</div>
-						<button class="btn btn-default" id="submit" type="submit">
-							Submit
-						</button>
-						
-					</form>
-				</div>
-				<div class="col-md-6">
-					<br />
-					<div id="error_row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<div class="alert alert-danger fade in">
-								<a href="#" class="close" data-dismiss="alert">&times;</a>
-								<strong>Error!</strong> Operation failed.
-							</div>
-						</div>
-					</div>	
-					<br />
-					<div id="add_wishitem_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="add_wishitem" class="btn btn-primary btn-fill" onclick="add_wishitem()">Add</button>
-						</div>
+						<div class="col-lg-3 col-md-3"></div>
 					</div>
-						
-					<div id="edit_wishitem_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="edit_wishitem" class="btn btn-primary btn-fill" onclick="edit_wishitem()">Edit</button>
-						</div>
 					</div>
-						
-					<div id="delete_wishitem_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="delete_wishitem" class="btn btn-primary btn-fill" onclick="delete_wishitem()">Delete</button>
-						</div>
-					</div>
-
-					<div id="cancel_wishitem_row" class="row">	
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<button id="cancel_wishitem" class="btn btn-primary btn-fill" onclick="cancel_wishitem()">Cancel</button>
-						</div>
-					</div>	
-				</div>
+				<div class="col-lg-1"></div>
 		
 			</div>
 			
@@ -295,7 +266,7 @@
 			$('#error_row').hide();
 			$('#submit').hide();
 			
-			getLocationWidth();
+			getTitleWidth();
 			getLeaseValueWidth();
 			loadCategoryDropdown();
 			loadLeaseTermDropdown();
@@ -319,16 +290,16 @@
 				$("#edit_wishitem_row").css("display","none");
 				$("#delete_wishitem_row").css("display","none");
 				$("#add_wishitem_row").css("margin-bottom","5px");
-				$("#cancel_wishitem_row").css("margin-bottom","35%");
-				$("#description").css("margin-bottom","35%");
+				$("#cancel_wishitem_row").css("margin-bottom","5%");
+				$("#description").css("margin-bottom","5%");
 			}
 			else if(prevfunc == "viewItemOwner"){		//if arrived from the mywishlists page by clicking an item/edit item	
 				getItemInfo();
 				
 				$("#add_wishitem_row").css("display","none");
 				$("#delete_wishitem_row").css("margin-bottom","5px");
-				$("#cancel_wishitem_row").css("margin-bottom","35%");
-				$("#description").css("margin-bottom","35%");
+				$("#cancel_wishitem_row").css("margin-bottom","5%");
+				$("#description").css("margin-bottom","5%");
 			}
 			
 			//display image begins here
@@ -375,7 +346,7 @@
 		}
 		
 		$(window).resize(function(){			
-			getLocationWidth();
+			getTitleWidth();
 			getLeaseValueWidth();
 		});
 		
@@ -429,8 +400,8 @@
 			getNextLeaseTerm(leaseTermName);	
 		}
 		
-		function getLocationWidth(){			//just for a symmetrical look, to set width of dropdown button and menu equal to Location input field
-			var width = $("#location").width();
+		function getTitleWidth(){			//just for a symmetrical look, to set width of dropdown button and menu equal to Location input field
+			var width = $("#title").width();
 			$("#dropdownbuttoncategory").width(width);
 			$("#dropdownmenucategory").width(width);
 		}

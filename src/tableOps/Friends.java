@@ -239,8 +239,8 @@ public class Friends extends Connect {
 		try {
 			LOGGER.info("Creating Statement....");
 			stmt2 = hcp.prepareStatement(sql2);
-			stmt2.setString(1, friendId);
-			stmt2.setString(2, userId);
+			stmt2.setString(1, userId);
+			stmt2.setString(2, friendId);
 			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("friend_id");
@@ -252,8 +252,8 @@ public class Friends extends Connect {
 				LOGGER.info("Statement created. Executing edit query on ..." + check);
 				stmt.setString(1, fullName);
 				stmt.setString(2, mobile);
-				stmt.setString(3, friendId);
-				stmt.setString(4, userId);
+				stmt.setString(3, userId);
+				stmt.setString(4, friendId);
 				stmt.executeUpdate();
 				message = "operation successfull edited friends id : " + friendId;
 				LOGGER.warning(message);
