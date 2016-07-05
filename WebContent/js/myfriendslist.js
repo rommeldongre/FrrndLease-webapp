@@ -5,6 +5,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     localStorage.setItem("prevPage","myapp.html#/myfriendslist");
     
     var friendIdArray = [];
+	var friendArray = [];
     var lastFriendId = '';
 	var arrEmail = [];
 	var errCount = 0, len = 0,count=1;
@@ -69,9 +70,10 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
                             $scope.$apply(function(){
                                 $scope.friends.unshift(obj);
                             });
-                             
+                          
                         lastFriendId = response.Id;
                         friendIdArray.unshift(response.Id);
+						friendArray.unshift(response.Message);
                         getFriendsList();
                     }
                 },
@@ -338,6 +340,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     $scope.showFriendDetails = function(index){
         localStorage.setItem("prevFunc", "viewFriend");
         localStorage.setItem("itemToShow", friendIdArray[index]);
+		localStorage.setItem("friend_details", friendArray[index]);
         window.location.replace('myfrienddetails.html');
     }
     
