@@ -174,15 +174,6 @@ ul{
 	margin-left: 35%;
 }
 
-#carouselObject{
-	height: 70%;
-	width: 80%;
-	margin: auto;
-	min-height: 300px;
-	min-width: 300px;
-	max-height: 300px;
-}
-
 .items:hover{
 	cursor: pointer;
 }

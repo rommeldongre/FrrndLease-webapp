@@ -1,10 +1,5 @@
     <div ng-app="carouselApp">
         <div ng-controller="carouselCtrl">
-            <div class="alert alert-success" ng-if="showWishes">
-                <div class="container">Top Ten Wished Items - 
-                      <span class="label label-success" ng-repeat="wish in wishes">{{wish}}</span>
-                </div>
-            </div>
             <div id="categoryfilters" class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -22,44 +17,49 @@
 
 			<br />
             <!-- Carousel Start -->
-			<div id="carouselObject" style="padding-right:5%">
-			<div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
-				<div class="row" id="product-cards" >
-					<div class="col-md-2 col-sm-2 col-xs-2">
-					</div>
-					<div class="col-md-3 col-sm-8 col-xs-8" ng-repeat="item in items">
-                        <span class="items" ng-click="itemClicked(item.uid)">
-						<div class="card card-product">
-							<div class="image">
-								<a href="#">
-									<img ng-src="{{(item.image === '' || item.image === null || item.image === NULL || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}">
-								</a>
-							</div>
-							<div class="content">
-								<a href="#">
-									<h5 class="title" id="{{item.itemId}}" style="text-align:center;"><b>{{item.title}}</b></h5>
-								</a><br>
-								<p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
-								<b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
-								<span ng-if="item.leaseTerm != ''" class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
-								<label ng-switch="user_status" >
-									<label ng-switch-when="''" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-									<label ng-switch-when="null" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-									<label ng-switch-when="anonymous" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-									<label ng-switch-default ng-if="item.sublocality != '' || item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
-								</label>
-								</p>
-							</div>
-						</div> <!-- end card -->
-					</span>
-					</div>
-				</div>	
+			<div class="row" id="carouselObject" style="padding-right:5%">
+                <div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
+                    <div class="row" id="product-cards" >
+                        <div class="col-md-2 col-sm-2 col-xs-2">
+                        </div>
+                        <div class="col-md-3 col-sm-8 col-xs-8" ng-repeat="item in items">
+                            <span class="items" ng-click="itemClicked(item.uid)">
+                            <div class="card card-product">
+                                <div class="image">
+                                    <a href="#">
+                                        <img ng-src="{{(item.image === '' || item.image === null || item.image === NULL || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}">
+                                    </a>
+                                </div>
+                                <div class="content">
+                                    <a href="#">
+                                        <h5 class="title" id="{{item.itemId}}" style="text-align:center;"><b>{{item.title}}</b></h5>
+                                    </a><br>
+                                    <p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
+                                    <b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
+                                    <span ng-if="item.leaseTerm != ''" class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
+                                    <label ng-switch="user_status" >
+                                        <label ng-switch-when="''" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+                                        <label ng-switch-when="null" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+                                        <label ng-switch-when="anonymous" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+                                        <label ng-switch-default ng-if="item.sublocality != '' || item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
+                                    </label>
+                                    </p>
+                                </div>
+                            </div> <!-- end card -->
+                        </span>
+                        </div>
+                    </div>	
+                </div>
+                <div class="col-md-6 col-sm-2 col-xs-3">
+                </div>
+                <div class="col-md-3 col-md-offset-6 col-sm-6 col-xs-6" ng-if="showNext" style="padding-left:0%;">
+                    <button rel="tooltip" title="This is a morphing button" ng-click="loadNextSlide()" class="btn btn-default btn-round btn-fill" id="successBtn" data-toggle="morphing" data-rotation-color="gray" data-rotation-color="azure">Load more...</button>
+                </div>
 			</div>
-			<div class="col-md-6 col-sm-2 col-xs-3">
-			</div>
-			<div class="col-md-3 col-md-offset-6 col-sm-6 col-xs-6" ng-if="showNext" style="padding-left:0%;">
-                         <button rel="tooltip" title="This is a morphing button" ng-click="loadNextSlide()" class="btn btn-default btn-round btn-fill" id="successBtn" data-toggle="morphing" data-rotation-color="gray" data-rotation-color="azure">Load more...</button>
-                    </div>
-			</div>
+            <div class="alert alert-success" ng-if="showWishes" style="margin-top: 20px;">
+                <div class="container">Top Ten Wished Items - 
+                      <span class="label label-success" ng-repeat="wish in wishes">{{wish | limitTo: 20}}<span ng-if="wish.length > 20">&hellip;</span></span>
+                </div>
+            </div>
     </div>
 </div>
