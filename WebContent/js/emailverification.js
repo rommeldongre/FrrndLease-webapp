@@ -4,35 +4,36 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
     
     $scope.title = "Frrndlease Sign up Email Verification";
     
-    $http.post('/flsv2/EmailVerification', JSON.stringify({verification : getQueryVariable("token")})).then(
-        function(data, status, headers, config){
+    var getQueryVariable = function (variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        console.log('Token= ' + variable + ' not found');
+    }
+    
+    var token = getQueryVariable("token");
+    
+    $http.post('/flsv2/EmailVerification', JSON.stringify({verification : token})).then(
+        function(data){
             $scope.response = data.data;
             
             if(data.data.code == 0){
                 localStorage.setItem("userloggedin", data.data.userId);
                 
-                modalService.showModal({}, {bodyText: data.data.message + ', Welcome to fRRndLease.',showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                
-                window.location.replace("/flsv2/myindex.html");
-                }, function(){
-                    
-                });
+                modalService.showModal({}, {bodyText: data.data.message + ', Welcome to fRRndLease.',showCancel: false,actionButtonText: 'OK'}).then(
+                    function(result){
+                        window.location.replace("myapp.html");
+                    },
+                    function(){});
             }
         }, 
-        function(data, status, headers, config){
-            console.log(data);
+        function(error){
+            console.log(error);
         }
     );
 }]);
-
-var getQueryVariable = function (variable) {
-    var query = window.location.search.substring(1);
-    var vars = query.split("&");
-    for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split("=");
-        if (pair[0] == variable) {
-            return pair[1];
-        }
-    }
-    alert('Token= ' + variable + ' not found');
-};
