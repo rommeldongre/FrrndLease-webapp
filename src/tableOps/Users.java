@@ -15,6 +15,7 @@ import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.ReferralCode;
+import app.EmailVerificationHandler;
 
 public class Users extends Connect {
 
@@ -162,8 +163,12 @@ public class Users extends Connect {
 			message = "Entry added into users table";
 			LOGGER.warning(message);
 			Code = 37;
-			Id = userId;
+			Id = generated_ref_code;
 
+			if(status!="email_pending"){
+				EmailVerificationHandler ev = new EmailVerificationHandler();
+				int result3 = ev.updateCredits(generated_ref_code,referrer_code);	
+			}
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
 				if (status.equals("email_pending"))
@@ -465,6 +470,7 @@ public class Users extends Connect {
 							json.put("fullName", rs.getString("user_full_name"));
 							json.put("mobile", rs.getString("user_mobile"));
 							json.put("location", rs.getString("user_location"));
+							json.put("referralCode", rs.getString("user_referral_code"));
 
 							message = json.toString();
 							LOGGER.warning(message);

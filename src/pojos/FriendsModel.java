@@ -9,7 +9,7 @@ public class FriendsModel {
 	
 	private FlsLogger LOGGER = new FlsLogger(FriendsModel.class.getName());
 	
-	private String friendId, fullName, mobile, userId;
+	private String friendId, fullName, mobile, userId, referralCode;
 	private JSONObject obj;
 	
 	public void getData(JSONObject ob) {
@@ -23,6 +23,7 @@ public class FriendsModel {
 			fullName = obj.getString("fullName");
 			mobile = obj.getString("mobile");
 			userId = obj.getString("userId");
+			referralCode = obj.getString("referralCode");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
@@ -43,5 +44,9 @@ public class FriendsModel {
 	
 	public String getUserId() {
 		return this.userId;
+	}
+
+	public String getReferralCode() {
+		return referralCode;
 	}
 }
