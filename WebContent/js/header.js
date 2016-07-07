@@ -5,13 +5,14 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     // sign up starts here
     
     // variables for storing the location data
-    var Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0;
+    var Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0;
     
-    $scope.$on('signUpCheckReq', function(event, email, password, name, mobile, location, signUpStatus){
+    $scope.$on('signUpCheckReq', function(event, email, password, name, mobile, code, location, signUpStatus){
         Email = email;
         Password = (CryptoJS.MD5(password)).toString();
         Name = name;
         Mobile = mobile;
+		Code = code;
         Location = location;
         SignUpStatus = signUpStatus;
         
@@ -60,6 +61,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             userId: Email,
             fullName: Name,
             mobile: Mobile,
+			referralCode: Code,
             location: Location,
             auth: Password,
             activation: Activation,
@@ -70,6 +72,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             lat: Lat+"",
             lng: Lng+""
         }
+		console.log(req);
         signUpSend(req);
     }
     
@@ -456,8 +459,8 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
         $rootScope.$broadcast('loginCheckRes', message);
     }
     
-    this.signUpCheckReq = function(email, password, name, mobile, location, signUpStatus){
-        $rootScope.$broadcast('signUpCheckReq', email, password, name, mobile, location, signUpStatus);
+    this.signUpCheckReq = function(email, password, name, mobile, code, location, signUpStatus){
+        $rootScope.$broadcast('signUpCheckReq', email, password, name, mobile, code, location, signUpStatus);
     }
     
     this.signUpCheckRes = function(message){
@@ -501,8 +504,8 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
 headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', function($scope, loginSignupService){
     
     // form sign up
-    $scope.formSignup = function(email, password, name, mobile, location){
-        loginSignupService.signUpCheckReq(email, password, name, mobile, location, "email_pending");
+    $scope.formSignup = function(email, password, name, mobile, code, location){
+        loginSignupService.signUpCheckReq(email, password, name, mobile, code, location, "email_pending");
     }
     
     // Google sign up
