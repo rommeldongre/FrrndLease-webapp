@@ -149,19 +149,19 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 						send_val = 0;
 						hcp.rollback();
 					}
-				}
-				
-				// add credit to new user whose referral_code was generated
-				int addReferralCredit =0;
-				String sqladdReferralCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
-				stmt1 = hcp.prepareStatement(sqladdReferralCredit);
-				stmt1.setString(1, referral);
-				addReferralCredit = stmt1.executeUpdate();
-				LOGGER.info("Credits of new user incremented by 10.....");
-				
-				if(addReferralCredit == 0){
-					send_val = 0;
-					hcp.rollback();
+					
+					// add credit to new user whose referral_code was generated
+					int addReferralCredit =0;
+					String sqladdReferralCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
+					stmt1 = hcp.prepareStatement(sqladdReferralCredit);
+					stmt1.setString(1, referral);
+					addReferralCredit = stmt1.executeUpdate();
+					LOGGER.info("Credits of new user incremented by 10.....");
+					
+					if(addReferralCredit == 0){
+						send_val = 0;
+						hcp.rollback();
+					}
 				}
 				hcp.commit();
 			} catch (SQLException e) {
