@@ -3,6 +3,7 @@ package util;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import util.ReferralCode;
 
 import connect.Connect;
 
@@ -10,7 +11,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2006;			
+	public final int appBuild = 2007;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -180,27 +181,7 @@ public class FlsConfig extends Connect{
 			
 			// The dbBuild version value is changed in the database
 			dbBuild = 2002;
-			
-			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
-			try{
-				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
-				ps.executeUpdate();
-				ps.close();
-				
-				System.out.println("dbBuild updated to 2002");
-			} catch(SQLException e){
-				e.printStackTrace();
-				System.out.println(e.getStackTrace());
-			} finally {
-				try {
-					// close and reset connection to null
-					connection.close();
-					connection = null;
-				} catch (SQLException e){
-					e.printStackTrace();
-					System.out.println(e.getStackTrace());
-				}
-			}
+			updateDBBuild(dbBuild);
 		}
 		
 		if(dbBuild < 2003){
@@ -226,28 +207,7 @@ public class FlsConfig extends Connect{
 			}
 			
 			dbBuild = 2003;
-			
-			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
-			try{
-				getConnection();
-				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
-				ps.executeUpdate();
-				ps.close();
-				
-				System.out.println("dbBuild updated to 2003");
-			} catch(SQLException e){
-				e.printStackTrace();
-				System.out.println(e.getStackTrace());
-			} finally {
-				try {
-					// close and reset connection to null
-					connection.close();
-					connection = null;
-				} catch (SQLException e){
-					e.printStackTrace();
-					System.out.println(e.getStackTrace());
-				}
-			}
+			updateDBBuild(dbBuild);
 		}
 		
 		if(dbBuild < 2004){
@@ -273,28 +233,7 @@ public class FlsConfig extends Connect{
 			}
 			
 			dbBuild = 2004;
-			
-			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
-			try{
-				getConnection();
-				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
-				ps.executeUpdate();
-				ps.close();
-				
-				System.out.println("dbBuild updated to 2004");
-			} catch(SQLException e){
-				e.printStackTrace();
-				System.out.println(e.getStackTrace());
-			} finally {
-				try {
-					// close and reset connection to null
-					connection.close();
-					connection = null;
-				} catch (SQLException e){
-					e.printStackTrace();
-					System.out.println(e.getStackTrace());
-				}
-			}
+			updateDBBuild(dbBuild);
 		}
 		
 		if(dbBuild < 2005){
@@ -341,28 +280,7 @@ public class FlsConfig extends Connect{
 			}
 			
 			dbBuild = 2005;
-			
-			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
-			try{
-				getConnection();
-				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
-				ps.executeUpdate();
-				ps.close();
-				
-				System.out.println("dbBuild updated to 2005");
-			} catch(SQLException e){
-				e.printStackTrace();
-				System.out.println(e.getStackTrace());
-			} finally {
-				try {
-					// close and reset connection to null
-					connection.close();
-					connection = null;
-				} catch (SQLException e){
-					e.printStackTrace();
-					System.out.println(e.getStackTrace());
-				}
-			}
+			updateDBBuild(dbBuild);
 		}
 		
 		
@@ -389,27 +307,99 @@ public class FlsConfig extends Connect{
 			}
 			
 			dbBuild = 2006;
+			updateDBBuild(dbBuild);
+		}
+		
+			// This block adds referral code to users table
+				if (dbBuild < 2007) {
+					
+					// New column created to store the uid of the item
+					String sqlAddRefCode = "ALTER TABLE `users` ADD `user_referral_code` VARCHAR(255) NULL DEFAULT NULL AFTER `user_sublocality`, ADD `user_referrer_code` VARCHAR(255) NULL DEFAULT NULL AFTER `user_referral_code`";
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddRefCode);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// These queries are updating items table to add item_uid
+					String getAllUserId = "SELECT user_id FROM `users`";
+					try{
+						getConnection();
+						PreparedStatement ps2 = connection.prepareStatement(getAllUserId);
+						ResultSet rs = ps2.executeQuery();
+						
+						while(rs.next()){
+							String ref_code = rs.getString("user_id");
+							int ref_code_length = 8;
+							ReferralCode rc = new ReferralCode();
+							ref_code = rc.createRandomCode(ref_code_length, ref_code);
+							
+							String sqlUpdateRowReferralCode = "UPDATE users SET user_referral_code=? WHERE user_id=?";
+							PreparedStatement s = connection.prepareStatement(sqlUpdateRowReferralCode);
+							s.setString(1, ref_code);
+							s.setString(2, rs.getString("user_id"));
+							s.executeUpdate();
+							s.close();
+						}
+						rs.close();
+						ps2.close();
+						System.out.println("REF_Codes Added");
+					} catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2007;
+					updateDBBuild(dbBuild);
+				}
+	}
+	
+	private void updateDBBuild(int version){
+		
+		String sqlUpdateDBBuild = "UPDATE config set `value` = "+ version +" where `option` = 'build'";
+		try{
+			getConnection();
+			System.out.println("Before Updating DBBUILD");
+			PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
+			ps.executeUpdate();
+			ps.close();
 			
-			String sqlUpdateDBBuild = "UPDATE config set `value` = "+ dbBuild +" where `option` = 'build'";
-			try{
-				getConnection();
-				PreparedStatement ps = connection.prepareStatement(sqlUpdateDBBuild);
-				ps.executeUpdate();
-				ps.close();
-				
-				System.out.println("dbBuild updated to 2006");
-			} catch(SQLException e){
+			System.out.println("dbBuild updated to "+version);
+		} catch(SQLException e){
+			e.printStackTrace();
+			System.out.println(e.getStackTrace());
+		} finally {
+			try {
+				// close and reset connection to null
+				connection.close();
+				connection = null;
+			} catch (SQLException e){
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
-			} finally {
-				try {
-					// close and reset connection to null
-					connection.close();
-					connection = null;
-				} catch (SQLException e){
-					e.printStackTrace();
-					System.out.println(e.getStackTrace());
-				}
 			}
 		}
 	}
