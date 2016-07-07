@@ -136,17 +136,19 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 			try {
 				hcp.setAutoCommit(false);
 				
-				// add credit to existing user whose referral_code was used
-				int addReferrerCredit =0;
-				String sqladdReferrerCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
-				stmt = hcp.prepareStatement(sqladdReferrerCredit);
-				stmt.setString(1, referrer);
-				addReferrerCredit = stmt.executeUpdate();
-				LOGGER.info("Credits of Referer incremented by 10.....");
+				if(referrer!=null){
+					// add credit to existing user whose referral_code was used
+					int addReferrerCredit =0;
+					String sqladdReferrerCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
+					stmt = hcp.prepareStatement(sqladdReferrerCredit);
+					stmt.setString(1, referrer);
+					addReferrerCredit = stmt.executeUpdate();
+					LOGGER.info("Credits of Referer incremented by 10.....");
 				
-				if(addReferrerCredit == 0){
-					send_val = 0;
-					hcp.rollback();
+					if(addReferrerCredit == 0){
+						send_val = 0;
+						hcp.rollback();
+					}
 				}
 				
 				// add credit to new user whose referral_code was generated
