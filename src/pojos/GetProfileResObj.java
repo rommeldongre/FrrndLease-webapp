@@ -6,7 +6,7 @@ public class GetProfileResObj extends ResObj{
 	String message;
 
 	int credit;
-	String fullName, mobile, location, address, locality, sublocality;
+	String fullName, mobile, location, address, locality, sublocality, referralCode;
 	float lat, lng;
 
 	public int getCode() {
@@ -95,5 +95,13 @@ public class GetProfileResObj extends ResObj{
 
 	public void setLng(float lng) {
 		this.lng = lng;
+	}
+
+	public String getReferralCode() {
+		return referralCode;
+	}
+
+	public void setReferralCode(String referralCode) {
+		this.referralCode = referralCode;
 	}
 }
