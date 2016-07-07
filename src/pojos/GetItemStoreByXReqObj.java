@@ -21,6 +21,17 @@ public class GetItemStoreByXReqObj extends ReqObj {
 	
 	// storing the search string
 	String searchString;
+	
+	// storing the item status
+	String[] itemStatus;
+
+	public String[] getItemStatus() {
+		return itemStatus;
+	}
+
+	public void setItemStatus(String[] itemStatus) {
+		this.itemStatus = itemStatus;
+	}
 
 	public String getSearchString() {
 		return searchString;
