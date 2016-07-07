@@ -27,7 +27,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         else
             sendAddData();
     });
-    
+	
     var getLocationData = function(location){
         $.ajax({
             url: 'https://maps.googleapis.com/maps/api/geocode/json',
@@ -72,7 +72,6 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             lat: Lat+"",
             lng: Lng+""
         }
-		console.log(req);
         signUpSend(req);
     }
     
@@ -89,6 +88,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
                     if(SignUpStatus != "email_pending"){
                         localStorage.setItem("userloggedin", Email);
                         localStorage.setItem("userloggedinName", Name);
+						localStorage.setItem("userReferralCode", response.Id);
                         if(SignUpStatus == "facebook")
                             getFacebookFriends(Email);
                         else
@@ -130,6 +130,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
                     var obj = JSON.parse(response.Message);
                     localStorage.setItem("userloggedin", obj.userId);
                     localStorage.setItem("userloggedinName", obj.fullName);
+					localStorage.setItem("userReferralCode", obj.referralCode);
                     if(signUpStatus == "facebook")
                         getFacebookFriends(obj.userId);
                     else
@@ -165,12 +166,16 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             name = null;
         if(email == '')
             email = null;
+		var code = localStorage.getItem("userReferralCode");
         var req = {
             id: email,
             fullName: name,
             mobile: mobile,
-            userId: user
+            userId: user,
+			referralCode: code
         }
+		console.log("Import FB friends:");
+		console.log(req);
         addFriendSend(req, friends);
     }
 
@@ -282,7 +287,7 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     // populating the credits
     displayCredits();
 	
-	// populating the credits
+	// populating the site Stats
 	displayStats();
 	
     $scope.isAdmin = function(){
@@ -511,7 +516,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
     // Google sign up
     function onSignUp(googleUser) {
         var profile = googleUser.getBasicProfile();
-        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getId(), profile.getName(), "", $scope.location, "google");
+        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getId(), profile.getName(), "", $scope.code, $scope.location, "google");
     }
     window.onSignUp = onSignUp;
     
@@ -520,7 +525,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
         FB.login(function(response) {
             // handle the response
             FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
-                loginSignupService.signUpCheckReq(response.email, response.id, response.name, "", $scope.location, "facebook");
+                loginSignupService.signUpCheckReq(response.email, response.id, response.name, "", $scope.code, $scope.location, "facebook");
             });
         }, {scope: 'email,public_profile,user_friends'});    
     }
@@ -531,6 +536,30 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
             $scope.error = message;
         });
     });
+	
+	var getQueryVariable = function (variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        console.log('Token= ' + variable + ' not found');
+		}
+    
+	if(window.location.href.indexOf("index.html") > -1){
+		console.log("index page");
+		var token = getQueryVariable("ref_token");
+		console.log(token);
+		if(token!="undefined"){
+			$scope.code = token;
+		}else{
+			$scope.code = "";
+		}
+	}
+    
     
     // remove this code and uncomment the below one when using https
     $scope.location = "Gokhalenagar, Pune, Maharashtra, India";
