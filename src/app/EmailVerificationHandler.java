@@ -40,9 +40,10 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 		EmailVerificationReqObj rq = (EmailVerificationReqObj) req;
 		EmailVerificationResObj rs = new EmailVerificationResObj();
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		ResultSet result1 = null;
-
+		PreparedStatement ps1 = null,ps2=null,ps3=null;
+		ResultSet result1 = null,rs2=null;
+		String referral_code =null, referrer_code=null;
+		
 		LOGGER.info("Inside Process Method " + rq.getVerification());
 
 		try {
@@ -56,16 +57,32 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 				if (result1.getString("user_status").equals("email_pending")) {
 					String update_status_sql = "UPDATE users SET user_status=? WHERE user_activation=?";
 					LOGGER.info("Creating Statement...");
-					PreparedStatement ps2 = hcp.prepareStatement(update_status_sql);
+					ps2 = hcp.prepareStatement(update_status_sql);
 					ps2.setString(1, "email_activated");
 					ps2.setString(2, rq.getVerification());
 
 					LOGGER.info("statement created...executing update to users query");
 					int result2 = ps2.executeUpdate();
-
+					int result3 =0;
 					LOGGER.info("Update Query Result : " + result2);
-
+					
 					if (result2 == 1) {
+						String get_activation_sql = "SELECT * FROM `users` WHERE user_activation=?";
+						LOGGER.info("Creating Select Statement to fetch referral & referrer Code...");
+						ps3 = hcp.prepareStatement(get_activation_sql);
+						ps3.setString(1, rq.getVerification());
+
+						LOGGER.info("statement created...executing update to users query");
+						rs2 = ps3.executeQuery();
+						
+						if(rs2.next()){
+							referral_code = rs2.getString("user_referral_code");
+							referrer_code = rs2.getString("user_referrer_code");
+							result3 = updateCredits(referral_code,referrer_code);
+						}
+					}
+
+					if (result3 == 1) {
 						rs.setCode(FLS_SUCCESS);
 						rs.setUserId(result1.getString("user_id"));
 						rs.setMessage("Your account has been activated!!");
@@ -109,6 +126,57 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 	public void cleanup() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public int updateCredits(String referral, String referrer){
+		
+			Connection hcp = getConnectionFromPool();
+			PreparedStatement stmt= null,stmt1=null;
+			Integer send_val =1;
+			try {
+				
+				if(referrer!=null){
+					hcp.setAutoCommit(false);
+					// add credit to existing user whose referral_code was used
+					int addReferrerCredit =0;
+					String sqladdReferrerCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
+					stmt = hcp.prepareStatement(sqladdReferrerCredit);
+					stmt.setString(1, referrer);
+					addReferrerCredit = stmt.executeUpdate();
+					LOGGER.info("Credits of Referer incremented by 10.....");
+				
+					if(addReferrerCredit == 0){
+						send_val = 0;
+						hcp.rollback();
+					}
+					
+					// add credit to new user whose referral_code was generated
+					int addReferralCredit =0;
+					String sqladdReferralCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
+					stmt1 = hcp.prepareStatement(sqladdReferralCredit);
+					stmt1.setString(1, referral);
+					addReferralCredit = stmt1.executeUpdate();
+					LOGGER.info("Credits of new user incremented by 10.....");
+					
+					if(addReferralCredit == 0){
+						send_val = 0;
+						hcp.rollback();
+					}
+					hcp.commit();
+				}
+				
+			} catch (SQLException e) {
+				// TODO: handle exception
+			}finally{
+				try {
+					if(stmt!=null) stmt.close();
+					if(stmt1!=null) stmt1.close();
+					if(hcp!=null) hcp.close();
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+			}
+			return send_val;
 	}
 
 }

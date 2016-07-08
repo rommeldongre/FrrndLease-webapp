@@ -27,12 +27,14 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
 				$scope.mobile = response.data.mobile;
 				$scope.location = response.data.address;
 				$scope.credit = response.data.credit;
+				$scope.referralCode = response.data.referralCode;
             } else {
                 $scope.userId = "";
                 $scope.fullname = "";
 				$scope.mobile = "";
 				$scope.location = "";
 				$scope.credit = "";
+				$scope.referralCode = "";
             }
         },
         function(error){
