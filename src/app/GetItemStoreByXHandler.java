@@ -62,9 +62,20 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			sql = "SELECT tb1.*";
 			
 			if(lat == 0.0 || lng == 0.0)
-				sql = sql + ", 0 AS distance, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_status = 'InStore'";
+				sql = sql + ", 0 AS distance, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE";
 			else
-				sql = sql + ", ( 6371 * acos( cos( radians("+lat+") ) * cos( radians( tb1.item_lat ) ) * cos( radians( tb1.item_lng ) - radians("+lng+") ) + sin( radians("+lat+") ) * sin( radians( tb1.item_lat ) ) ) ) AS distance, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE tb1.item_status = 'InStore'";
+				sql = sql + ", ( 6371 * acos( cos( radians("+lat+") ) * cos( radians( tb1.item_lat ) ) * cos( radians( tb1.item_lng ) - radians("+lng+") ) + sin( radians("+lat+") ) * sin( radians( tb1.item_lat ) ) ) ) AS distance, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id WHERE";
+			
+			// getting all itemStatus from the request
+			int i = 0;
+			String status = "";
+			while(i < rq.getItemStatus().length){
+				status = status + "'" + rq.getItemStatus()[i] + "'";
+				i++;
+				if(i < rq.getItemStatus().length)
+					status = status + ",";
+			}
+			sql = sql + " tb1.item_status IN ("+status+")";
 			
 			if(category != null)
 				sql = sql + " AND tb1.item_category='"+category+"'";

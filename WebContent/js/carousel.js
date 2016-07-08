@@ -15,6 +15,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     $scope.search.show = false;
     $scope.showWishes = false;
     
+    var ItemStatus = ['InStore'];
+    
     $scope.$on('searchDataChanged', function(event, lat, lng, s){
         // called on the page load
         latitude = lat;
@@ -46,8 +48,10 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var user = localStorage.getItem("userloggedin");
 	$scope.user_status = user;
     if(user != "" || user != null || user != 'anonymous'){
-        if(window.location.hash == '#/mypostings')
+        if(window.location.hash == '#/mypostings'){
             userId = user;
+            ItemStatus = ['InStore', 'OnHold'];
+        }
     }
     
     // getting the width and height of the carousel when page gets loaded
@@ -107,7 +111,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             limit: $scope.itemsLimit,
             lat: latitude,
             lng: longitude,
-            searchString: searchString
+            searchString: searchString,
+            itemStatus: ItemStatus
         };
         displayItems(req);
         
