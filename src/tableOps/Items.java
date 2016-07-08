@@ -324,7 +324,7 @@ public class Items extends Connect {
 		image = im.getImage();
 
 		LOGGER.info("Inside edit method...");
-		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=?, item_image=? WHERE item_id=? AND item_user_id=? AND item_status=?";
+		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=?, item_image=? WHERE item_id=? AND item_user_id=?";
 
 		PreparedStatement stmt = null, stmt2 = null, s = null;
 		ResultSet rs = null;
@@ -332,11 +332,10 @@ public class Items extends Connect {
 		try {
 			LOGGER.info("Creating statement...");
 
-			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=? AND item_status=?";
+			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
 			stmt2 = hcp.prepareStatement(sql2);
 			stmt2.setInt(1, id);
 			stmt2.setString(2, userId);
-			stmt2.setString(3, status);
 			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
@@ -354,7 +353,6 @@ public class Items extends Connect {
 				stmt.setString(6, image);
 				stmt.setInt(7, id);
 				stmt.setString(8, userId);
-				stmt.setString(9, status);
 				stmt.executeUpdate();
 				
 				String uid = title + " " + check;
@@ -796,7 +794,7 @@ public class Items extends Connect {
 					Store st = new Store();
 					st.DeleteP(id);// deletes entry from store table
 
-					String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
+					String sql = "UPDATE `items` SET `item_status`='Archived' WHERE item_id = ? AND item_user_id = ?";
 					stmt = hcp.prepareStatement(sql);
 
 					// deletes entry from items table
@@ -805,7 +803,7 @@ public class Items extends Connect {
 					stmt.setInt(1, id);
 					stmt.setString(2, userId);
 					stmt.executeUpdate();
-					status = "Posting Deleted!!";
+					status = "Your posted item is deleted!!";
 					Id = String.valueOf(check);
 					message = status;
 					Code = 001;
