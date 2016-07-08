@@ -796,7 +796,7 @@ public class Items extends Connect {
 					Store st = new Store();
 					st.DeleteP(id);// deletes entry from store table
 
-					String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
+					String sql = "UPDATE `items` SET `item_status`='Archived' WHERE item_id = ? AND item_user_id = ?";
 					stmt = hcp.prepareStatement(sql);
 
 					// deletes entry from items table
@@ -805,7 +805,7 @@ public class Items extends Connect {
 					stmt.setInt(1, id);
 					stmt.setString(2, userId);
 					stmt.executeUpdate();
-					status = "Posting Deleted!!";
+					status = "Your posted item is deleted!!";
 					Id = String.valueOf(check);
 					message = status;
 					Code = 001;
