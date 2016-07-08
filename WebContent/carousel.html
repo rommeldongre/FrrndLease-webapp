@@ -26,15 +26,16 @@
                             <span class="items" ng-click="itemClicked(item.uid)">
                             <div class="card card-product">
                                 <div class="image">
-                                    <a href="#">
+                                    <a href="">
                                         <img ng-src="{{(item.image === '' || item.image === null || item.image === NULL || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" id="{{item.itemId}}">
                                     </a>
                                 </div>
                                 <div class="content">
-                                    <a href="#">
+                                    <a href="">
                                         <h5 class="title" id="{{item.itemId}}" style="text-align:center;"><b>{{item.title}}</b></h5>
                                     </a><br>
                                     <p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
+                                    <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br>
                                     <b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
                                     <span ng-if="item.leaseTerm != ''" class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
                                     <label ng-switch="user_status" >
