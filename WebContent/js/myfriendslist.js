@@ -125,6 +125,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	$scope.importfb = function(){
 		
 		FB.login(function(response) {
+				
+				var ref_code = localStorage.getItem("userReferralCode");
 				// handle the response
 				
 				// check whether user is logged in or not and ask for credentials if not.
@@ -132,7 +134,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 				// send message to facebook friends using send request dialog
 				FB.ui({
 					method: 'send',
-					link: 'http://www.frrndlease.com/',
+					link: 'http://www.frrndlease.com/index.html?ref_token='+ref_code,
 				},function(response){
 					if (response && !response.error) {
 						//check 'response' to see if call was successful
@@ -281,6 +283,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 		friendEmail = email;
 		friendMobile = mobile;
 		userId = user;
+		code = localStorage.getItem("userReferralCode");
 		
 		if(friendName == '')
 			friendName = null;
@@ -293,7 +296,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 			id: friendEmail,
 			fullName: friendName,
 			mobile: friendMobile,
-			userId: user
+			userId: user,
+			referralCode: code
 		};
 		
 		addFriendSend(req);	

@@ -235,7 +235,8 @@ public class AwsSESEmail extends Connect {
 			FriendsModel atfm = (FriendsModel) obj;
 			SUBJECT = ("[fRRndLease] Your Friend '" + atfm.getUserId() + "' has added you to their Friend List");
 			BODY = ("<body>You are now in '" + atfm.getUserId()
-					+ "'\'s Friend List. You can now lease items to each other <br/> <br/></body>");
+					+ "'\'s Friend List. You can now lease items to each other <br/> <br/>"
+					+ "Click here to Sign Up http://www.frrndlease.com/index.html?ref_token="+atfm.getReferralCode()+"<br/></body>");
 			break;
 
 		case FLS_MAIL_DELETE_FRIEND_FROM:
