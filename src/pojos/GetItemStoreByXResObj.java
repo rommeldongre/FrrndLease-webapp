@@ -27,6 +27,9 @@ public class GetItemStoreByXResObj extends ResObj{
 	//Owner Name
 	String fullName;
 	
+	// owner user id
+	String userId;
+	
 	// lease term of item
 	String leaseTerm;
 	
@@ -128,8 +131,14 @@ public class GetItemStoreByXResObj extends ResObj{
 		this.quantity = quantity;
 	}
 
-	
-	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 	public String getFullName() {
 		return fullName;
 	}
