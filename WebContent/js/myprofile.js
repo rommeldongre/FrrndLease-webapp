@@ -172,7 +172,6 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
             lng: Lng,
 			photoId: image_url
 		}
-		console.log(req);
 		editProfile(req);
     }
     

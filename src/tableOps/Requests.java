@@ -139,8 +139,6 @@ public class Requests extends Connect {
 				user_verified = rs1.getBoolean("user_verified_flag");
 			}
 			
-			System.out.println("Boolean value: "+user_verified);
-			
 			if(user_verified){	
 			LOGGER.info("Creating select statement to check entry exists in requests table.....");
 			stmt1 = hcp.prepareStatement(sql1);
@@ -256,7 +254,6 @@ public class Requests extends Connect {
 				Id = "0";
 			}
 		}else{
-			System.out.println("User not verified");
 			message = FLS_INVALID_USER_M;
 			Code = FLS_INVALID_USER_I;
 			Id = "0";
