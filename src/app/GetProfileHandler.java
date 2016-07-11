@@ -66,6 +66,8 @@ public class GetProfileHandler extends Connect implements AppHandler {
 				rs.setLat(result.getFloat("user_lat"));
 				rs.setLng(result.getFloat("user_lng"));
 				rs.setReferralCode(result.getString("user_referral_code"));
+				rs.setPhotoId(result.getString("user_photo_id"));
+				rs.setPhotoIdVerified(result.getBoolean("user_verified_flag"));
 				rs.setCode(FLS_SUCCESS);
 
 				LOGGER.info("Printing out ResultSet: " + rs.getFullName() + ", " + rs.getMobile() + ", "

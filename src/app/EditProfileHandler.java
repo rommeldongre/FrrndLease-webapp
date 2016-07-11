@@ -42,9 +42,13 @@ public class EditProfileHandler extends Connect implements AppHandler {
 
 		LOGGER.info("Inside Process Method " + rq.getUserId());
 
+		boolean is_verified =false;
+		if(rq.getPhotoId()!=null){
+			is_verified = true;
+		}
 
 		try {
-			String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_address=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=?  WHERE user_id=?";
+			String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_address=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=? , user_photo_id=?, user_verified_flag=? WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
 			PreparedStatement ps = hcp.prepareStatement(sql);
 			ps.setString(1, rq.getFullName());
@@ -55,7 +59,9 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			ps.setString(6, rq.getSublocality());
 			ps.setFloat(7, rq.getLat());
 			ps.setFloat(8, rq.getLng());
-			ps.setString(9, rq.getUserId());
+			ps.setString(9, rq.getPhotoId());
+			ps.setBoolean(10, is_verified);
+			ps.setString(11, rq.getUserId());
 
 			LOGGER.info("statement created...executing update to users query");
 			int result = ps.executeUpdate();
