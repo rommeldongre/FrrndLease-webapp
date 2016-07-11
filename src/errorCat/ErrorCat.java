@@ -18,6 +18,7 @@ public class ErrorCat {
 	final public int FLS_WISH_ITEM_F = 211;
 	final public int FLS_SEARCH_ITEM_F = 212;
 	final public int FLS_SQL_EXCEPTION_I = 213;
+	final public int FLS_INVALID_USER_I = 214;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -60,6 +61,7 @@ public class ErrorCat {
 	final public String FLS_WISH_ITEM_F_M = "Wishitem could not be performed";
 	final public String FLS_INVALID_TABLE_NAME_M = "Request contains invalid table name";
 	final public String FLS_SEARCH_ITEM_F_M = "No data found.";
+	final public String FLS_INVALID_USER_M = "Request Rejected as User ID Proof not submitted";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

@@ -93,6 +93,7 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
 				$scope.location = response.data.address;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
+				$scope.label = response.data.photoIdVerified;
 				url = response.data.photoId;
 				var img = new Image();
 				img.src = url;
@@ -183,7 +184,9 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
             }else{
                 dialogText = 'please try after sometime';
             }
-            modalService.showModal({}, {bodyText:dialogText,showCancel: false,actionButtonText: 'OK'}).then(function(result){}, function(){});
+            modalService.showModal({}, {bodyText:dialogText,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+				window.location.reload();
+			}, function(){});
         },
         function(error){
             console.log("unable to edit profile: " + error.message);
