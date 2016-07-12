@@ -19,6 +19,7 @@ import app.GrantLeaseHandler;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
+import util.LogCredit;
 
 public class RenewLeaseHandler extends Connect implements AppHandler {
 
@@ -288,6 +289,9 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				}
 				LOGGER.info("Add Credit query executed successfully...");
 				
+				LogCredit lc = new LogCredit();
+				lc.addLogCredit(rq.getUserId(),10,"Lease Renewed","");
+				
 				// subtract credit from user getting a lease
 				   String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
 				psDebitCredit = hcp.prepareStatement(sqlSubCredit);
@@ -302,6 +306,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					hcp.rollback();
 					return false;
 				}
+				lc.addLogCredit(rq.getReqUserId(),-10,"Lease Renewed","");
+				
 					LOGGER.info("Debit Credit query executed successfully...");
 					rs.setCode(FLS_SUCCESS);
 					rs.setId(rq.getReqUserId());
