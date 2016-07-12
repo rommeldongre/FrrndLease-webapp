@@ -7,6 +7,28 @@
 <script type="text/javascript">
 	var UserId = null;
 	
+	//beginning of image display
+	$(document).ready(function() {
+	canvasCtx = document.getElementById("panel").getContext("2d");
+	
+	drawImage = function(img) {
+		this.canvasCtx.canvas.width = 300;//img.width;
+		this.canvasCtx.canvas.height = 300;//img.height;
+		
+		if(img.width>img.height){                      							//Landscape Image 
+			canvasCtx.width = 300;
+			canvasCtx.height = 300 / img.width * img.height;
+		} else {                                                                  //Portrait Image
+			canvasCtx.width = 300 / img.height * img.width;
+			canvasCtx.height = 300;
+		} 
+		
+		this.canvasCtx.drawImage(img,0,0,canvasCtx.width, canvasCtx.height);
+		image_url = canvasCtx.canvas.toDataURL();
+	}			
+	});
+	//end of image display
+	
 	getProfileReq = function() {
 		UserId = document.getElementById("userId").value;
 		var req = {
@@ -36,7 +58,12 @@
                     document.getElementById("latitude").value = response.lat;
                     document.getElementById("longitude").value = response.lng;
 					document.getElementById("message").value = "";
-				}
+					url = response.photoId;
+					var img = new Image();
+					img.src = url;
+					if(img.src != null && img.src != "null")
+						drawImage(img);
+					}
 				else{
 					document.getElementById("fullName").value = "";
 					document.getElementById("mobile").value = "";
@@ -78,6 +105,7 @@
 		Sublocality : <input type="text" name="sublocality" id="sublocality"><br/><br/>
 		Latitude : <input type="text" name="latitude" id="latitude"><br/><br/>
 		Longitude : <input type="text" name="longitude" id="longitude"><br/><br/>
+		Id Proof :<canvas id="panel" width="300" height="300" style=" display: table;margin: 0 auto;margin-bottom:10px;margin-left:0px;"></canvas>
 	</form>
 	
 	<br/>

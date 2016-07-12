@@ -4,6 +4,7 @@
 <meta charset="ISO-8859-1">
 <title>Edit Profile Form</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script src="../js/exif.js"></script>
 <script type="text/javascript">
 	var UserId = null;
 	var FullName = null;
@@ -14,6 +15,7 @@
     var Locality = '';
     var Lat = 0.0;
     var Lng = 0.0;
+	var image_url =null;
 
 	editProfileReq = function() {
 		UserId = document.getElementById("userId").value;
@@ -22,7 +24,74 @@
         
         editProfileData();
 	};
-    
+	
+	//beginning of image display
+	$(document).ready(function() {
+	canvasCtx = document.getElementById("panel").getContext("2d");
+	
+	document.getElementById("ifile").onchange = function(event) {
+		
+		EXIF.getData(event.target.files[0], function() {
+		exif = EXIF.getAllTags(this);
+	
+		picOrientation = exif.Orientation;
+		});
+		
+		this.imageFile = event.target.files[0];
+		
+		var reader = new FileReader();
+		reader.onload =  function(event) {
+			var img = new Image();
+			
+			img.onload = function() {
+				drawImage(img);
+			}
+			img.src = event.target.result;
+			
+		}
+		reader.readAsDataURL(this.imageFile);	
+	}
+		
+	drawImage = function(img) {
+		this.canvasCtx.canvas.width = 300;//img.width;
+		this.canvasCtx.canvas.height = 300;//img.height;
+		
+		if(img.width>img.height){                      							//Landscape Image 
+			canvasCtx.width = 300;
+			canvasCtx.height = 300 / img.width * img.height;
+		} else {                                                                  //Portrait Image
+			canvasCtx.width = 300 / img.height * img.width;
+			canvasCtx.height = 300;
+		} 
+		
+		if (picOrientation==2){
+			this.canvasCtx.transform(-1, 0, 0, 1,canvasCtx.width, 0);
+		}
+		if (picOrientation==3){
+			this.canvasCtx.transform(-1, 0, 0, -1,canvasCtx.width, canvasCtx.height);
+		}
+		if (picOrientation==4){
+			this.canvasCtx.transform(1, 0, 0, -1, 0, canvasCtx.height );
+		}
+		if (picOrientation==5){
+			this.canvasCtx.transform(0, 1, 1, 0, 0, 0);
+		}
+		if (picOrientation==6){
+			this.canvasCtx.transform(0, 1, -1, 0, canvasCtx.height , 0);
+		}
+		if (picOrientation==7){
+			this.canvasCtx.transform(0, -1, -1, 0, canvasCtx.height , canvasCtx.width);
+		}
+		if (picOrientation==8){
+			this.canvasCtx.transform(0, -1, 1, 0, 0, canvasCtx.width);
+		}
+		
+		this.canvasCtx.drawImage(img,0,0,canvasCtx.width, canvasCtx.height);
+		image_url = canvasCtx.canvas.toDataURL();
+	}			
+	//end of image display
+    });
+	
     verifyAddress = function(){
         Address = '';
         Sublocality = '';
@@ -78,7 +147,8 @@
             locality: Locality,
             sublocality: Sublocality,
             lat: Lat,
-            lng: Lng
+            lng: Lng,
+			photoId: image_url
 		}
 		editProfileSend(req);
     }
@@ -124,7 +194,8 @@
 		<br /> Address : <input type="text" name="address" id="address"><br />
 		<br /> Locality : <input type="text" name="locality" id="locality"><br />
 		<br /> Sublocality : <input type="text" name="sublocality" id="sublocality"><br />
-        <br > <input type="button" value="Verify Address" onclick="verifyAddress()">
+		<br /> Add Id Proof : <input type="file" name="file" id="ifile"><br />
+        <br > <canvas id="panel" width="300" height="300" style=" display: table;margin: 0 auto;margin-bottom:10px;margin-left:0px;"></canvas>
 		<input type="button" value="Edit Profile" onclick="editProfileReq()"><br /> <br />
 
 		<h1>OUTPUT</h1>

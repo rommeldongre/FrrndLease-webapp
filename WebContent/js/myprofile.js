@@ -4,7 +4,7 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0;
+    var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null;
     
     $scope.options = {
         country: 'in',
@@ -17,6 +17,69 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
         window.location.replace("myapp.html");
     
     var unsaved = false; 
+	
+	//beginning of image display
+	var canvasCtx = document.getElementById("panel").getContext("2d");
+	
+	$('#ifile').change(function(event) {
+        EXIF.getData(event.target.files[0], function() {
+		exif = EXIF.getAllTags(this);
+		
+		picOrientation = exif.Orientation;
+		});
+		
+		this.imageFile = event.target.files[0];
+		
+		var reader = new FileReader();
+		reader.onload =  function(event) {
+			var img = new Image();
+			img.onload = function() {
+				drawImage(img);
+			}
+			img.src = event.target.result;
+			
+		}
+		reader.readAsDataURL(this.imageFile);
+    });
+	
+	var drawImage = function(img) {
+		canvasCtx.width = 300;
+		canvasCtx.height = 300;
+		
+		if(img.width>img.height){                      							//Landscape Image 
+			canvasCtx.width = 300;
+			canvasCtx.height = 300 / img.width * img.height;
+		} else {                                                                  //Portrait Image
+			canvasCtx.width = 300 / img.height * img.width;
+			canvasCtx.height = 300;
+		} 
+		
+		if (picOrientation==2){
+			canvasCtx.transform(-1, 0, 0, 1,canvasCtx.width, 0);
+		}
+		if (picOrientation==3){
+			canvasCtx.transform(-1, 0, 0, -1,canvasCtx.width, canvasCtx.height);
+		}
+		if (picOrientation==4){
+			canvasCtx.transform(1, 0, 0, -1, 0, canvasCtx.height );
+		}
+		if (picOrientation==5){
+			canvasCtx.transform(0, 1, 1, 0, 0, 0);
+		}
+		if (picOrientation==6){
+			canvasCtx.transform(0, 1, -1, 0, canvasCtx.height , 0);
+		}
+		if (picOrientation==7){
+			canvasCtx.transform(0, -1, -1, 0, canvasCtx.height , canvasCtx.width);
+		}
+		if (picOrientation==8){
+			canvasCtx.transform(0, -1, 1, 0, 0, canvasCtx.width);
+		}
+		
+		canvasCtx.drawImage(img,0,0,canvasCtx.width, canvasCtx.height);
+		image_url = canvasCtx.canvas.toDataURL();
+	}			
+	//end of image display
     
     var displayProfile = function(){
         profileFactory.getProfile(userFactory.user).then(
@@ -28,6 +91,12 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
 				$scope.location = response.data.address;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
+				$scope.label = response.data.photoIdVerified;
+				url = response.data.photoId;
+				var img = new Image();
+				img.src = url;
+				if(img.src != null && img.src != "null")
+					drawImage(img);
             } else {
                 $scope.userId = "";
                 $scope.fullname = "";
@@ -98,7 +167,8 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
             locality: Locality,
             sublocality: Sublocality,
             lat: Lat,
-            lng: Lng
+            lng: Lng,
+			photoId: image_url
 		}
 		editProfile(req);
     }
@@ -111,7 +181,9 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
             }else{
                 dialogText = 'please try after sometime';
             }
-            modalService.showModal({}, {bodyText:dialogText,showCancel: false,actionButtonText: 'OK'}).then(function(result){}, function(){});
+            modalService.showModal({}, {bodyText:dialogText,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+				window.location.reload();
+			}, function(){});
         },
         function(error){
             console.log("unable to edit profile: " + error.message);
