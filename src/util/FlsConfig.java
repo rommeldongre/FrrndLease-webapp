@@ -412,7 +412,7 @@ public class FlsConfig extends Connect{
 				if (dbBuild < 2009) {
 					
 					// New table credit_log added to the database
-					String sqlAddPhotoId = "CREATE TABLE credit_log (credit_log_id int(11) NOT NULL AUTO_INCREMENT,credit_user_id varchar(255), credit_date DATETIME, credit_amount int(11), credit_type varchar(30), credit_desc varchar(255),  primary key (credit_log_id))";
+					String sqlAddPhotoId = "CREATE TABLE credit_log (credit_log_id int(11) NOT NULL AUTO_INCREMENT,credit_user_id varchar(255), credit_date DATETIME, credit_amount int(11), credit_type varchar(255), credit_desc varchar(255),  primary key (credit_log_id))";
 					try {
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddPhotoId);
