@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import connect.Connect;
 import pojos.GrantLeaseReqObj;
@@ -15,6 +16,7 @@ import pojos.ResObj;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
+import util.LogCredit;
 
 public class GrantLeaseHandler extends Connect implements AppHandler {
 
@@ -229,7 +231,10 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				hcp.rollback();
 				return rs;
 			}
-
+			
+			LogCredit lc = new LogCredit();
+			lc.addLogCredit(rq.getUserId(),10,"Lease Granted","");
+			
 			// subtract credit from user getting a lease
 			   String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
 			psDebitCredit = hcp.prepareStatement(sqlSubCredit);
@@ -244,6 +249,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				hcp.rollback();
 				return rs;
 			}
+			lc.addLogCredit(rq.getReqUserId(),-10,"Lease Recieved","");
 			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
