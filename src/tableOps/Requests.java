@@ -129,7 +129,7 @@ public class Requests extends Connect {
 
 		try {
 			LOGGER.info("Creating Select statement to check user profile status.....");
-			String checkUserStatus="SELECT * FROM `users` WHERE user_id=?";
+			String checkUserStatus="SELECT user_verified_flag FROM `users` WHERE user_id=?";
 			stmt4 = hcp.prepareStatement(checkUserStatus);
 			stmt4.setString(1, userId);
 			
@@ -139,7 +139,14 @@ public class Requests extends Connect {
 				user_verified = rs1.getBoolean("user_verified_flag");
 			}
 			
-			if(user_verified){	
+			if(!user_verified){
+				message = FLS_INVALID_USER_M;
+				Code = FLS_INVALID_USER_I;
+				Id = "0";
+				res.setData(Code, Id, message);
+				return;
+			}
+			
 			LOGGER.info("Creating select statement to check entry exists in requests table.....");
 			stmt1 = hcp.prepareStatement(sql1);
 			stmt1.setString(1, itemId);
@@ -152,7 +159,13 @@ public class Requests extends Connect {
 				check = rs.getString("request_requser_id");
 			}
 
-			if (check == null) {
+			if (check != null){
+				message = FLS_DUPLICATE_ENTRY_M;
+				Code = FLS_DUPLICATE_ENTRY;
+				Id = "0";
+				res.setData(Code, Id, message);
+				return;
+			}
 
 				// code to check whether item has been already leased out not
 				String checklease = null;
@@ -170,7 +183,13 @@ public class Requests extends Connect {
 				}
 				// code to check whether item has been already leased out not
 				// ends here
-				if (checklease == null) {
+				if (checklease != null){
+					message = FLS_DUPLICATE_ENTRY_L;
+					Code = FLS_DUPLICATE_ENTRY;
+					Id = "0";
+					res.setData(Code, Id, message);
+					return;
+				}
 
 					// code for populating item pojo for sending owner email
 					String ownerUserId;
@@ -243,21 +262,6 @@ public class Requests extends Connect {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else {
-					message = FLS_DUPLICATE_ENTRY_L;
-					Code = FLS_DUPLICATE_ENTRY;
-					Id = "0";
-				}
-			} else {
-				message = FLS_DUPLICATE_ENTRY_M;
-				Code = FLS_DUPLICATE_ENTRY;
-				Id = "0";
-			}
-		}else{
-			message = FLS_INVALID_USER_M;
-			Code = FLS_INVALID_USER_I;
-			Id = "0";
-		}
 			res.setData(Code, Id, message);
 		}catch(SQLException e){
 		LOGGER.warning("Couldn't create statement");

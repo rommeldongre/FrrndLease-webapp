@@ -42,9 +42,12 @@ public class EditProfileHandler extends Connect implements AppHandler {
 
 		LOGGER.info("Inside Process Method " + rq.getUserId());
 
-		boolean is_verified =false;
+		//TODO placeholder till we have automated verification.
+		boolean is_verified;
 		if(rq.getPhotoId()!=null){
 			is_verified = true;
+		}else{
+			is_verified = false;
 		}
 
 		try {

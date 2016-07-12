@@ -54,8 +54,6 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
 			canvasCtx.height = 300;
 		} 
 		
-		console.log("width: "+canvasCtx.width+"height: "+canvasCtx.height);
-		
 		if (picOrientation==2){
 			canvasCtx.transform(-1, 0, 0, 1,canvasCtx.width, 0);
 		}
