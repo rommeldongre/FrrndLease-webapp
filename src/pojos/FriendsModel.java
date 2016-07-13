@@ -23,7 +23,9 @@ public class FriendsModel {
 			fullName = obj.getString("fullName");
 			mobile = obj.getString("mobile");
 			userId = obj.getString("userId");
+			if(obj.has("referralCode")){
 			referralCode = obj.getString("referralCode");
+			}
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();

@@ -122,13 +122,32 @@ public class Requests extends Connect {
 		String sql1 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=? AND request_status = ? ";
 
 		String sql = "insert into requests (request_requser_id,request_item_id,request_date) values (?,?,?)"; //
-		PreparedStatement stmt = null,stmt1 = null,stmt2 = null, stmt3 = null ;
-		ResultSet rs = null, rslease = null, dbResponse = null;
+		PreparedStatement stmt = null,stmt1 = null,stmt2 = null, stmt3 = null,stmt4=null ;
+		ResultSet rs = null, rslease = null, dbResponse = null, rs1=null;
+		boolean user_verified=false;
 		Connection hcp = getConnectionFromPool();
 
 		try {
-
-			LOGGER.info("Creating statement.....");
+			LOGGER.info("Creating Select statement to check user profile status.....");
+			String checkUserStatus="SELECT user_verified_flag FROM `users` WHERE user_id=?";
+			stmt4 = hcp.prepareStatement(checkUserStatus);
+			stmt4.setString(1, userId);
+			
+			rs1 = stmt4.executeQuery();
+			
+			while (rs1.next()) {
+				user_verified = rs1.getBoolean("user_verified_flag");
+			}
+			
+			if(!user_verified){
+				message = FLS_INVALID_USER_M;
+				Code = FLS_INVALID_USER_I;
+				Id = "0";
+				res.setData(Code, Id, message);
+				return;
+			}
+			
+			LOGGER.info("Creating select statement to check entry exists in requests table.....");
 			stmt1 = hcp.prepareStatement(sql1);
 			stmt1.setString(1, itemId);
 			stmt1.setString(2, userId);
@@ -140,7 +159,13 @@ public class Requests extends Connect {
 				check = rs.getString("request_requser_id");
 			}
 
-			if (check == null) {
+			if (check != null){
+				message = FLS_DUPLICATE_ENTRY_M;
+				Code = FLS_DUPLICATE_ENTRY;
+				Id = "0";
+				res.setData(Code, Id, message);
+				return;
+			}
 
 				// code to check whether item has been already leased out not
 				String checklease = null;
@@ -158,7 +183,13 @@ public class Requests extends Connect {
 				}
 				// code to check whether item has been already leased out not
 				// ends here
-				if (checklease == null) {
+				if (checklease != null){
+					message = FLS_DUPLICATE_ENTRY_L;
+					Code = FLS_DUPLICATE_ENTRY;
+					Id = "0";
+					res.setData(Code, Id, message);
+					return;
+				}
 
 					// code for populating item pojo for sending owner email
 					String ownerUserId;
@@ -231,16 +262,6 @@ public class Requests extends Connect {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} else {
-					message = FLS_DUPLICATE_ENTRY_L;
-					Code = FLS_DUPLICATE_ENTRY;
-					Id = "0";
-				}
-			} else {
-				message = FLS_DUPLICATE_ENTRY_M;
-				Code = FLS_DUPLICATE_ENTRY;
-				Id = "0";
-			}
 			res.setData(Code, Id, message);
 		}catch(SQLException e){
 		LOGGER.warning("Couldn't create statement");
@@ -248,13 +269,15 @@ public class Requests extends Connect {
 		e.printStackTrace();
 	    }finally{
 			try {
-				rs.close();
-				rslease.close();
-				stmt.close();
-				stmt2.close();
-				stmt1.close();
-				stmt3.close();
-				hcp.close();
+				if(rs!=null) rs.close();
+				if(rs1!=null) rs1.close();
+				if(rslease!=null) rslease.close();
+				if(stmt!=null) stmt.close();
+				if(stmt1!=null) stmt1.close();
+				if(stmt2!=null) stmt2.close();
+				if(stmt3!=null) stmt3.close();
+				if(stmt4!=null) stmt4.close();
+				if(hcp!=null) hcp.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

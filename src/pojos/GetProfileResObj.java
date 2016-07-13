@@ -6,8 +6,9 @@ public class GetProfileResObj extends ResObj{
 	String message;
 
 	int credit;
-	String fullName, mobile, location, address, locality, sublocality, referralCode;
+	String fullName, mobile, location, address, locality, sublocality, referralCode, photoId;
 	float lat, lng;
+	boolean photoIdVerified;
 
 	public int getCode() {
 		return code;
@@ -103,5 +104,21 @@ public class GetProfileResObj extends ResObj{
 
 	public void setReferralCode(String referralCode) {
 		this.referralCode = referralCode;
+	}
+
+	public String getPhotoId() {
+		return photoId;
+	}
+
+	public void setPhotoId(String photoId) {
+		this.photoId = photoId;
+	}
+
+	public boolean isPhotoIdVerified() {
+		return photoIdVerified;
+	}
+
+	public void setPhotoIdVerified(boolean photoIdVerified) {
+		this.photoIdVerified = photoIdVerified;
 	}
 }

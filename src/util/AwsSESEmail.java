@@ -86,6 +86,7 @@ public class AwsSESEmail extends Connect {
 	static String CC = "BlueMarble@frrndlease.com";
 	static String BODY;
 	static String SUBJECT;
+	static String PREFIX;
 
 	private static String user_id;
 	static String env_config = FlsConfig.env;
@@ -115,9 +116,10 @@ public class AwsSESEmail extends Connect {
 
 		if (env_config.equals("dev")) {
 			EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
+			PREFIX = "[FrrndLease-Test]";
 		} else {
 			EMAIL_VERIFICATION_URL = "http://www.frrndlease.com/emailverification.html";
-
+			PREFIX = "[FrrndLease]";
 		}
 		
 		int credit = 0;
@@ -142,7 +144,7 @@ public class AwsSESEmail extends Connect {
 		switch (fls_enum) {
 		case FLS_MAIL_SIGNUP_VALIDATION:
 			UsersModel um = (UsersModel) obj;
-			SUBJECT = "[fRRndLease] Email Verification";
+			SUBJECT = PREFIX + " Email Verification";
 			BODY = "<body>Hello " + um.getFullName()
 					+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
 					+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
@@ -151,7 +153,7 @@ public class AwsSESEmail extends Connect {
 			break;
 		case FLS_MAIL_REGISTER:
 			UsersModel uom = (UsersModel) obj;
-			SUBJECT = "[fRRndLease] Welcome Aboard";
+			SUBJECT = PREFIX + " Welcome Aboard";
 			BODY = "<body>Hello " + uom.getFullName()
 					+ ". You have successfully signed up on fRRndLease, the platform that helps you Make Space for leading the Life you love. <br/>"
 					+ "We love our stuff, but are passionate about utilizing them well to get rich, positive experiences. <br/>"
@@ -163,7 +165,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_DELETE_ITEM:
 			ItemsModel idom = (ItemsModel) obj;
-			SUBJECT = ("[fRRndLease] Your Item [" + idom.getTitle() + "] has been deleted from the Friend Store");
+			SUBJECT = (PREFIX + " Your Item [" + idom.getTitle() + "] has been deleted from the Friend Store");
 			BODY = ("<body>You have deleted the following item on fRRndLease<br/> <br/>" + " Title : " + idom.getTitle()
 					+ "<br/>" + " Category : " + idom.getCategory() + "<br/>" + " Description : "
 					+ idom.getDescription() + "<br/>" + " Lease Value : " + idom.getLeaseValue() + "<br/>"
@@ -174,7 +176,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_POST_ITEM:
 			PostItemReqObj iom = (PostItemReqObj) obj;
-			SUBJECT = ("[fRRndLease] Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
+			SUBJECT = (PREFIX + " Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
 			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
@@ -185,7 +187,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_MATCH_WISHLIST_ITEM:
 			PostItemReqObj itemObj = (PostItemReqObj) obj;
-			SUBJECT = ("[fRRndLease] Item [" + itemObj.getTitle() + "] has been added to the Friend Store");
+			SUBJECT = (PREFIX + " Item [" + itemObj.getTitle() + "] has been added to the Friend Store");
 			BODY = ("<body>Someone has posted this item that matches your wishlist. <br/> <br/>" + " Title : "
 					+ itemObj.getTitle() + "<br/>" + " Category : " + itemObj.getCategory() + "<br/>"
 					+ " Description : " + itemObj.getDescription() + "<br/>" + " Lease Value : "
@@ -197,7 +199,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_MATCH_POST_ITEM:
 			List<PostItemReqObj> listItems = (List<PostItemReqObj>) obj;
-			SUBJECT = ("[fRRndLease] Items present in the Friend Store match your wishlist");
+			SUBJECT = (PREFIX + " Items present in the Friend Store match your wishlist");
 			BODY = ("<body>These items match your wishlist. <br/> <br/>");
 
 			int len = listItems.size();
@@ -220,11 +222,11 @@ public class AwsSESEmail extends Connect {
 		case FLS_MAIL_ADD_FRIEND_FROM:
 			FriendsModel affm = (FriendsModel) obj;
 			if (apiflag != null && apiflag[0] == "@api") {
-				SUBJECT = ("[fRRndLease] Your Friend '" + affm.getFullName() + "' has been added to your Friend List");
+				SUBJECT = (PREFIX + " Your Friend '" + affm.getFullName() + "' has been added to your Friend List");
 				BODY = ("<body>You have added your trusted friend '" + affm.getFullName()
 						+ "' to your Friend List. You can now lease items to each other <br/> <br/></body>");
 			} else if (apiflag != null && apiflag[0] == "@email") {
-				SUBJECT = ("[fRRndLease] Your Friend '" + (affm.getFriendId())
+				SUBJECT = (PREFIX + " Your Friend '" + (affm.getFriendId())
 						+ "' has been added to your Friend List. ");
 				BODY = ("<body>You have added '" + (affm.getFriendId())
 						+ "' to your Friend List. You can now lease items to each other <br/> <br/></body>");
@@ -233,7 +235,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_ADD_FRIEND_TO:
 			FriendsModel atfm = (FriendsModel) obj;
-			SUBJECT = ("[fRRndLease] Your Friend '" + atfm.getUserId() + "' has added you to their Friend List");
+			SUBJECT = (PREFIX + " Your Friend '" + atfm.getUserId() + "' has added you to their Friend List");
 			BODY = ("<body>You are now in '" + atfm.getUserId()
 					+ "'\'s Friend List. You can now lease items to each other <br/> <br/>"
 					+ "Click here to Sign Up http://www.frrndlease.com/index.html?ref_token="+atfm.getReferralCode()+"<br/></body>");
@@ -241,90 +243,90 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_DELETE_FRIEND_FROM:
 			FriendsModel dffm = (FriendsModel) obj;
-			SUBJECT = ("[fRRndLease] Your Friend \'" + dffm.getUserId() + "' has been removed from your Friend List");
+			SUBJECT = (PREFIX + " Your Friend \'" + dffm.getUserId() + "' has been removed from your Friend List");
 			BODY = ("<body>You have now removed " + dffm.getUserId()
 					+ " from your Friend List. You can no longer lease items to each other. Tell us what went wrong! <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_DELETE_FRIEND_TO:
 			FriendsModel dtfm = (FriendsModel) obj;
-			SUBJECT = ("[fRRndLease] Your Friend '" + dtfm.getFriendId() + "' removed you from thier Friend List");
+			SUBJECT = (PREFIX + " Your Friend '" + dtfm.getFriendId() + "' removed you from thier Friend List");
 			BODY = ("<body> You have been removed from the Friend List of your Friend " + dtfm.getFriendId()
 					+ ". You can no longer lease items to each other. Tell us what went wrong! <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_REJECT_REQUEST_FROM:
 			RequestsModel dfrm = (RequestsModel) obj;
-			SUBJECT = ("[fRRndLease] Request removed");
+			SUBJECT = (PREFIX + " Request removed");
 			BODY = ("<body>Request for item with id [" + dfrm.getItemId()
 					+ "] has been removed as a lease might be granted. <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_REJECT_REQUEST_TO:
 			RequestsModel dtrm = (RequestsModel) obj;
-			SUBJECT = ("[fRRndLease] Request removed");
+			SUBJECT = (PREFIX + " Request removed");
 			BODY = ("<body>Request of item having id [" + dtrm.getItemId()
 					+ "] has been removed by the owner as a lease might be granted. <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_DELETE_REQUEST_FROM:
 			ItemsModel dfim = (ItemsModel) obj;
-			SUBJECT = ("[fRRndLease] Request removed");
+			SUBJECT = (PREFIX + " Request removed");
 			BODY = ("<body>Your Request for item having id [" + dfim.getId()
 					+ "] has been removed. <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_DELETE_REQUEST_TO:
 			ItemsModel dtim = (ItemsModel) obj;
-			SUBJECT = ("[fRRndLease] Request removed");
+			SUBJECT = (PREFIX + " Request removed");
 			BODY = ("<body>Request of item having id [" + dtim.getId()
 					+ "] has been removed a Requestor. <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_GRANT_LEASE_FROM:
 			GrantLeaseReqObj gflm = (GrantLeaseReqObj) obj;
-			SUBJECT = ("[fRRndLease] Lease granted to user [" + gflm.getReqUserId() + "]");
+			SUBJECT = (PREFIX + " Lease granted to user [" + gflm.getReqUserId() + "]");
 			BODY = ("<body>You have sucessfully leased an item to [" + gflm.getReqUserId()
 					+ "] on Friend Lease - <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_GRANT_LEASE_TO:
 			GrantLeaseReqObj gtlm = (GrantLeaseReqObj) obj;
-			SUBJECT = ("[fRRndLease] Lease granted to you by [" + gtlm.getUserId() + "]");
+			SUBJECT = (PREFIX + " Lease granted to you by [" + gtlm.getUserId() + "]");
 			BODY = ("<body>An item has been leased by [" + gtlm.getUserId()
 					+ "] to you on Friend Lease - <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_REJECT_LEASE_FROM:
 			RenewLeaseReqObj rflm = (RenewLeaseReqObj) obj;
-			SUBJECT = ("[fRRndLease] Lease Cancelled to user [" + rflm.getReqUserId() + "]");
+			SUBJECT = (PREFIX + " Lease Cancelled to user [" + rflm.getReqUserId() + "]");
 			BODY = ("<body>You have closed leased of item having id [" + rflm.getItemId() + "] and leasee ["
 					+ rflm.getReqUserId() + "] on Friend Lease - <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_REJECT_LEASE_TO:
 			RenewLeaseReqObj rtlm = (RenewLeaseReqObj) obj;
-			SUBJECT = ("[fRRndLease] Lease Closed by the Owner");
+			SUBJECT = (PREFIX + " Lease Closed by the Owner");
 			BODY = ("<body>Lease has been closed by the Owner for the item having id [" + rtlm.getItemId()
 					+ "] <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_MAKE_REQUEST_FROM:
 			RequestsModel rfrm = (RequestsModel) obj;
-			SUBJECT = ("[fRRndLease] Item Requested");
+			SUBJECT = (PREFIX + " Item Requested");
 			BODY = ("<body>You have sucessfully Requested an item having id [" + rfrm.getItemId()
 					+ "] on Friend Lease - <br/> <br/></body>");
 			break;
 
 		case FLS_MAIL_MAKE_REQUEST_TO:
 			ItemsModel irtm = (ItemsModel) obj;
-			SUBJECT = ("[fRRndLease] Item Requested");
+			SUBJECT = (PREFIX + " Item Requested");
 			BODY = ("<body>Your Item [" + irtm.getTitle() + "] having id [" + irtm.getId()
 					+ "] has been requested on Friend Lease - <br/> <br/></body>");
 			break;
 
 		default:
-			SUBJECT = ("[fRRndLease] Default Subject");
+			SUBJECT = (PREFIX + " Default Subject");
 			BODY = ("<body>Default Message ... Contact us, you should never get this! </body>");
 			break;
 		}
@@ -342,7 +344,9 @@ public class AwsSESEmail extends Connect {
 			message.setFrom(new InternetAddress(FROM));
 			message.setReplyTo(new Address[] { new InternetAddress(FROM) });
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
-			message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(CC));
+			if (!env_config.equals("dev")) {
+				message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(CC));
+			}
 
 			Multipart multipart = new MimeMultipart("related");
 
