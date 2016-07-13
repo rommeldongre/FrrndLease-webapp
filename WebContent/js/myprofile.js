@@ -1,10 +1,11 @@
 var myProfile = angular.module('myApp');
 
-myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory', 'modalService', function($scope, userFactory, profileFactory, modalService){
+myProfile.controller('myProfileCtrl', ['$scope', '$timeout', 'userFactory', 'profileFactory', 'modalService', function($scope, $timeout, userFactory, profileFactory, modalService){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null;
+    var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null,lastOffset = 0;
+	$("#openBtn").hide();
     
     $scope.options = {
         country: 'in',
@@ -113,7 +114,62 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
     
     // getting the profile
     displayProfile();
+	
+	$scope.showCredit = function(){
+		$("#openBtn").click();	
+		getCredit(lastOffset);
+		$scope.showNext = false;
+	}
     
+	var getCredit = function(Offset){
+		var req = {
+			userId : userFactory.user,
+			cookie: Offset,
+			limit: 3
+		}
+		console.log("Request parameters: ");
+		console.log(req);
+		getCreditSend(req);
+	}
+	
+	var getCreditSend = function(req){
+		$.ajax({
+            url: '/flsv2/GetCreditTimeline',
+            type: 'post',
+            data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+            success: function(response){
+				if(response.returnCode == 0){
+                if(lastOffset == 0){
+					$scope.$apply(function(){
+						$scope.creditsArray = [response.resList];
+					});
+                        getCredit(response.lastItemId);
+                    }else{
+						$scope.$apply(function(){
+						$scope.creditsArray.push(response.resList);
+						});
+                    }
+                    lastOffset = response.lastItemId;
+					$scope.showNext = true;
+                }else{
+					$scope.showNext = false;
+					console.log("ReturnCode not Zero");
+                }
+            },
+            error: function(){
+                console.log("not able to get location data");
+            }
+	
+        });
+	}
+	
+	// called when next carousel button is clicked
+    $scope.loadNextCredit = function(){
+        getCredit(lastOffset);
+    }
+	
     $scope.updateProfile = function(){
         
         if($scope.location != '')
