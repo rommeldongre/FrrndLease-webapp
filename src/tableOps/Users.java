@@ -170,12 +170,6 @@ public class Users extends Connect {
 			LogCredit lc = new LogCredit();
 			lc.addLogCredit(userId,10,"SignUp","");
 			
-			try {
-				TimeUnit.SECONDS.sleep(8);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			if(status!="email_pending"){
 				EmailVerificationHandler ev = new EmailVerificationHandler();
 				int result3 = ev.updateCredits(generated_ref_code,referrer_code);	
