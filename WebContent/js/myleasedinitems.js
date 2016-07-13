@@ -15,7 +15,8 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', f
         req = {
             cookie: cookie,
             leaseUserId: "",
-            leaseReqUserId: userFactory.user
+            leaseReqUserId: userFactory.user,
+            status: 'Active'
         }
         
         getLeasedInItemsSend(req);

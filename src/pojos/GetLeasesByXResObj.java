@@ -18,7 +18,7 @@ public class GetLeasesByXResObj extends ResObj{
 	
 	// item details
 	int itemId;
-	String title, description, category, leaseValue, leaseTerm, image ,uid;
+	String title, description, category, leaseValue, leaseTerm, image, status, uid;
 
 	public int getCode() {
 		return code;
@@ -202,6 +202,14 @@ public class GetLeasesByXResObj extends ResObj{
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getUid() {

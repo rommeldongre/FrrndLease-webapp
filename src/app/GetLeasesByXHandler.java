@@ -52,6 +52,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			String leaseUserId = rq.getLeaseUserId();
 			String leaseReqUserId = rq.getLeaseReqUserId();
 			int offset = rq.getCookie();
+			String status = rq.getStatus();
 			
 			sql = "SELECT tb1.*, tb2.*, tb3.user_full_name AS OwnerName, tb3.user_address AS OwnerAddress, tb3.user_mobile AS OwnerMobile, tb3.user_locality AS OwnerLocality, tb3.user_sublocality AS OwnerSublocality, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id = tb4.item_id WHERE ";
 			
@@ -59,13 +60,8 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				sql = sql + "tb1.lease_user_id='" + leaseUserId + "' AND ";
 			else if(leaseReqUserId != "")
 				sql = sql + "tb1.lease_requser_id='" + leaseReqUserId + "' AND ";
-			else{
-				rs.setCode(FLS_END_OF_DB);
-				rs.setMessage(FLS_END_OF_DB_M);
-				return rs;
-			}
 			
-			sql = sql + " tb1.lease_status='Active' ORDER BY tb1.lease_id LIMIT " + offset + ", 1";
+			sql = sql + " tb1.lease_status='" + status + "' ORDER BY tb1.lease_id LIMIT " + offset + ", 1";
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
@@ -95,6 +91,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				rs.setLeaseValue(dbResponse.getString("item_lease_value"));
 				rs.setLeaseTerm(dbResponse.getString("item_lease_term"));
 				rs.setImage(dbResponse.getString("item_image"));
+				rs.setStatus(dbResponse.getString("item_status"));
 				rs.setUid(dbResponse.getString("item_uid"));
 				
 				offset = offset + 1;

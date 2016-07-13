@@ -7,6 +7,8 @@ public class GetLeasesByXReqObj extends ReqObj{
 	String leaseReqUserId;
 	
 	int cookie;
+	
+	String status;
 
 	public String getLeaseUserId() {
 		return leaseUserId;
@@ -30,6 +32,14 @@ public class GetLeasesByXReqObj extends ReqObj{
 
 	public void setCookie(int cookie) {
 		this.cookie = cookie;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

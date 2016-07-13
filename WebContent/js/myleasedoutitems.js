@@ -15,7 +15,8 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
         req = {
             cookie: cookie,
             leaseUserId: userFactory.user,
-            leaseReqUserId: ""
+            leaseReqUserId: "",
+            status: 'Active'
         }
         
         getLeasedOutItemsSend(req);
