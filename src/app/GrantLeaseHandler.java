@@ -171,7 +171,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			LOGGER.info("Creating 6th Statement of Grant Lease");
 								
 			psItemUpdate = hcp.prepareStatement(updateItemStatusSql);
-			psItemUpdate.setString(1, "PickedUpOut");
+			psItemUpdate.setString(1, "LeaseReady");
 			psItemUpdate.setInt(2, rq.getItemId());
 			LOGGER.info("Created statement...executing update query on Items table");
 								

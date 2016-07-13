@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import connect.Connect;
 import pojos.LeasesModel;
+import pojos.RenewLeaseReqObj;
 import adminOps.Response;
 import tableOps.LeaseTerms;
 import util.FlsSendMail;
@@ -29,12 +30,17 @@ public class Leases extends Connect {
 	private LeasesModel lm;
 	private Response res = new Response();
 
-	public Response selectOp(String Operation, LeasesModel lsm, JSONObject obj) {
+	public Response selectOp(String Operation, LeasesModel lsm, JSONObject obj){
 		operation = Operation.toLowerCase();
 		lm = lsm;
 
 		switch (operation) {
 
+		case "closelease":
+			LOGGER.info("Closing the lease..And making the item back InStore");
+			CloseLease();
+			break;
+		
 		case "add":
 			LOGGER.info("Add op is selected..");
 			Add();
@@ -109,6 +115,137 @@ public class Leases extends Connect {
 		}
 
 		return res;
+	}
+	
+	private void CloseLease(){
+		int leaseAction = 0, itemAction = 0, storeAction = 0;
+		PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null;
+		ResultSet dbResponseLease =  null, dbResponseitems = null;
+		Connection hcp = getConnectionFromPool();
+		try {
+			hcp.setAutoCommit(false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		LOGGER.info("inside close lease method");
+		
+		try {
+			LOGGER.info("Creating Statement....");
+			String sqlrf = "SELECT * FROM leases WHERE lease_item_id=?";
+			psLeaseSelect = hcp.prepareStatement(sqlrf);
+			psLeaseSelect.setInt(1, Integer.parseInt(lm.getItemId()));
+
+			LOGGER.info("Statement created. Executing select query on lease table");
+			dbResponseLease = psLeaseSelect.executeQuery();
+			
+			if (!dbResponseLease.next()) {
+				System.out.println("Empty result while firing select query on 1st table(leases)");
+				hcp.rollback();
+				hcp.close();
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
+			
+			LOGGER.info("Creating Update Statement....");
+			String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?"; //
+			psLeaseUpdate = hcp.prepareStatement(sql);
+	
+			LOGGER.info("Statement created. Executing edit query on lease table...");
+			psLeaseUpdate.setString(1, "Archived");
+			psLeaseUpdate.setString(2, lm.getReqUserId());
+			psLeaseUpdate.setInt(3, Integer.parseInt(lm.getItemId()));
+			psLeaseUpdate.setString(4, "Active");
+			leaseAction = psLeaseUpdate.executeUpdate();
+	
+			if(leaseAction == 0){
+				System.out.println("Error occured while firing edit query on lease table");
+				hcp.rollback();
+				hcp.close();
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
+					
+			LOGGER.info("Creating statement...");
+
+			String selectItemSql = "SELECT * FROM items WHERE item_id=?";
+			psItemSelect = hcp.prepareStatement(selectItemSql);
+			psItemSelect.setInt(1, Integer.parseInt(lm.getItemId()));
+			dbResponseitems = psItemSelect.executeQuery();
+			
+			if(!dbResponseitems.next()) {
+				System.out.println("Empty result while firing select query on 2nd table(items)");
+				hcp.rollback();
+				hcp.close();
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
+			
+			String updateItemsSql = "UPDATE items SET item_status=? WHERE item_id=?";
+			psItemUpdate = hcp.prepareStatement(updateItemsSql);
+
+			LOGGER.info("Statement created. Executing update query on items table...");
+			psItemUpdate.setString(1, "InStore");
+			psItemUpdate.setInt(2, Integer.parseInt(lm.getItemId()));
+			itemAction= psItemUpdate.executeUpdate();
+			
+			if(itemAction == 0){
+				System.out.println("Error occured while firing update query on items table");
+				hcp.rollback();
+				hcp.close();
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
+			
+			String insertStoreSql = "insert into store (store_item_id) values (?)"; //
+			LOGGER.info("Creating insert statement store table.....");
+			psStoreUpdate = hcp.prepareStatement(insertStoreSql);
+
+			LOGGER.info("Statement created. Executing update query on store table.....");
+			psStoreUpdate.setInt(1, Integer.parseInt(lm.getItemId()));
+			storeAction = psStoreUpdate.executeUpdate();
+			
+			if(storeAction == 0){
+				System.out.println("Error occured while firing update query on store table");
+				hcp.rollback();
+				hcp.close();
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
+
+			AwsSESEmail newE = new AwsSESEmail();
+			RenewLeaseReqObj rq = new RenewLeaseReqObj();
+			rq.setItemId(Integer.parseInt(lm.getItemId()));
+			rq.setFlag("close");
+			rq.setReqUserId(lm.getReqUserId());
+			rq.setUserId(lm.getUserId());
+			newE.send(lm.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, rq);
+			newE.send(lm.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, rq);
+			
+			res.setData(FLS_SUCCESS, "0", FLS_SUCCESS_M);
+			hcp.commit();
+			//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				
+		} catch (SQLException e) {
+			LOGGER.info("SQL Exception encountered....");
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		}catch (Exception e) {
+			LOGGER.info("AWS SES Exception encountered....");
+			e.printStackTrace();
+		}finally{
+			try {
+				if(dbResponseLease != null)dbResponseLease.close();
+				if(dbResponseitems != null)dbResponseitems.close();
+				
+				if(psLeaseSelect != null)psLeaseSelect.close();
+				if(psLeaseUpdate != null)psLeaseUpdate.close();
+				if(psItemSelect != null)psItemSelect.close();
+				if(psItemUpdate != null)psItemUpdate.close();
+				if(psStoreUpdate != null)psStoreUpdate.close();
+				
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void Add() {

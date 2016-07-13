@@ -68,7 +68,8 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
                 
                 modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                 function(result){
-                    $scope.leases.splice(index, 1);
+                    $scope.leases = [];
+                    initialPopulate();
                 },function(){});
                 
             },
