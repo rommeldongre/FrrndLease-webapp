@@ -141,13 +141,13 @@ public class PostItemHandler extends Connect implements AppHandler {
 			LOGGER.warning(message);
 			
 			// to add credit in user_credit
-			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
 			PreparedStatement psCredit = hcp.prepareStatement(sqlAddCredit);
 			psCredit.setString(1, rq.getUserId());
 			psCredit.executeUpdate();
 			
 			LogCredit lc = new LogCredit();
-			lc.addLogCredit(rq.getUserId(),1,"Item Added In Store","");
+			lc.addLogCredit(rq.getUserId(),10,"Item Added In Store","");
 
 			String status_W = rq.getStatus(); // To be used to check if Request
 												// is from WishItem API.

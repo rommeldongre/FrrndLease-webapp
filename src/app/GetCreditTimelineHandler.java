@@ -58,8 +58,7 @@ public class GetCreditTimelineHandler extends Connect implements AppHandler {
 			
 			dbResponse = sql_stmt.executeQuery();
 			
-			if (dbResponse.next()) {
-				dbResponse.previous();
+			if (dbResponse.isBeforeFirst()) {
 				while (dbResponse.next()) {
 					GetCreditTimelineResObj rs1 = new GetCreditTimelineResObj();
 					rs1.setUserId(dbResponse.getString("credit_user_id"));
@@ -73,6 +72,7 @@ public class GetCreditTimelineHandler extends Connect implements AppHandler {
 				rs.setLastItemId(offset);
 			} else {
 				rs.setReturnCode(404);
+				rs.setErrorString("End of DB");
 				LOGGER.warning("End of DB");
 			}
 
