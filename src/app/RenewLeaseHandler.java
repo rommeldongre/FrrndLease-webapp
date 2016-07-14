@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import connect.Connect;
@@ -55,52 +54,15 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			
 		case "close":
 		
-			int leaseAction = 0, itemAction = 0, storeAction = 0;
-			PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null;
-			ResultSet dbResponseLease =  null, dbResponseitems = null;
+			int itemAction = 0;
+			PreparedStatement psItemSelect = null, psItemUpdate = null;
+			ResultSet dbResponseitems = null;
 			Connection hcp = getConnectionFromPool();
 			hcp.setAutoCommit(false);
 			
 			LOGGER.info("inside edit method");
 			
-			try {
-				LOGGER.info("Creating Statement....");
-				String sqlrf = "SELECT * FROM leases WHERE lease_item_id=?";
-				psLeaseSelect = hcp.prepareStatement(sqlrf);
-				psLeaseSelect.setInt(1, rq.getItemId());
-
-				LOGGER.info("Statement created. Executing select query on lease table");
-				dbResponseLease = psLeaseSelect.executeQuery();
-				
-				if (!dbResponseLease.next()) {
-					System.out.println("Empty result while firing select query on 1st table(leases)");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					hcp.close();
-					return rs;
-				}
-				
-				LOGGER.info("Creating Update Statement....");
-				String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?"; //
-				psLeaseUpdate = hcp.prepareStatement(sql);
-		
-				LOGGER.info("Statement created. Executing edit query on lease table...");
-				psLeaseUpdate.setString(1, "Archived");
-				psLeaseUpdate.setString(2, rq.getReqUserId());
-				psLeaseUpdate.setInt(3, rq.getItemId());
-				psLeaseUpdate.setString(4, "Active");
-				leaseAction = psLeaseUpdate.executeUpdate();
-		
-				if(leaseAction == 0){
-					System.out.println("Error occured while firing edit query on lease table");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					hcp.close();
-					return rs;
-				}
-						
+			try {		
 				LOGGER.info("Creating statement...");
 
 				String selectItemSql = "SELECT * FROM items WHERE item_id=?";
@@ -121,29 +83,12 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				psItemUpdate = hcp.prepareStatement(updateItemsSql);
 
 				LOGGER.info("Statement created. Executing update query on items table...");
-				psItemUpdate.setString(1, "InStore");
+				psItemUpdate.setString(1, "LeaseEnded");
 				psItemUpdate.setInt(2, rq.getItemId());
 				itemAction= psItemUpdate.executeUpdate();
 				
 				if(itemAction == 0){
 					System.out.println("Error occured while firing update query on items table");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					hcp.close();
-					return rs;
-				}
-				
-				String insertStoreSql = "insert into store (store_item_id) values (?)"; //
-				LOGGER.info("Creating insert statement store table.....");
-				psStoreUpdate = hcp.prepareStatement(insertStoreSql);
-
-				LOGGER.info("Statement created. Executing update query on store table.....");
-				psStoreUpdate.setInt(1, rq.getItemId());
-				storeAction = psStoreUpdate.executeUpdate();
-				
-				if(storeAction == 0){
-					System.out.println("Error occured while firing update query on store table");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
@@ -170,14 +115,10 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				e.printStackTrace();
 			}finally{
 				
-				dbResponseLease.close();
 				dbResponseitems.close();
 				
-				psLeaseSelect.close();
-				psLeaseUpdate.close();
 				psItemSelect.close();
 				psItemUpdate.close();
-				psStoreUpdate.close();
 				
 				hcp.close();
 			}
