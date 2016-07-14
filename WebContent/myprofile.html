@@ -60,7 +60,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							<canvas id="panel" ng-model="panel" width="300" height="300" style=" display: table;margin: 0 auto;margin-bottom:10px;"></canvas>
+							<canvas id="panel" ng-model="panel" width="300" height="300" style=" display: table;margin: 0 25%;margin-bottom:10px;"></canvas>
 						</div>
 					</div>
                 </div>
@@ -106,7 +106,7 @@
 					</div>
 					<div class="modal-footer">
 					<button type="button" class="btn btn-default " data-dismiss="modal" ng-click="">Cancel</button>
-					<button class="btn btn-primary" id="next_credits" ng-if="showNext" ng-click="loadNextCredit()">Show More</button>
+					<button class="btn btn-primary" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextCredit()">Show More</button>
 					</div>
 							
 				</div><!-- /.modal-content -->

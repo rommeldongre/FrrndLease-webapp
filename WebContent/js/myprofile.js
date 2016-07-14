@@ -116,9 +116,9 @@ myProfile.controller('myProfileCtrl', ['$scope', '$timeout', 'userFactory', 'pro
     displayProfile();
 	
 	$scope.showCredit = function(){
-		$("#openBtn").click();	
+		$("#openBtn").click();
+		$scope.showNext = true;
 		getCredit(lastOffset);
-		$scope.showNext = false;
 	}
     
 	var getCredit = function(Offset){
@@ -127,8 +127,7 @@ myProfile.controller('myProfileCtrl', ['$scope', '$timeout', 'userFactory', 'pro
 			cookie: Offset,
 			limit: 3
 		}
-		console.log("Request parameters: ");
-		console.log(req);
+		
 		getCreditSend(req);
 	}
 	
@@ -141,6 +140,7 @@ myProfile.controller('myProfileCtrl', ['$scope', '$timeout', 'userFactory', 'pro
 			dataType:"json",
             success: function(response){
 				if(response.returnCode == 0){
+					console.log(response);
                 if(lastOffset == 0){
 					$scope.$apply(function(){
 						$scope.creditsArray = [response.resList];
@@ -152,7 +152,6 @@ myProfile.controller('myProfileCtrl', ['$scope', '$timeout', 'userFactory', 'pro
 						});
                     }
                     lastOffset = response.lastItemId;
-					$scope.showNext = true;
                 }else{
 					$scope.showNext = false;
 					console.log("ReturnCode not Zero");
