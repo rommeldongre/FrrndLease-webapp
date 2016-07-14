@@ -17,6 +17,7 @@ import pojos.ItemsModel;
 import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
+import util.LogCredit;
 
 public class Requests extends Connect {
 
@@ -240,6 +241,9 @@ public class Requests extends Connect {
 					s1.executeUpdate();
 					
 					stmt = hcp.prepareStatement(sql);
+					
+					LogCredit lc = new LogCredit();
+					lc.addLogCredit(userId,1,"Item Requested","");
 	
 					LOGGER.info("Statement created. Executing query.....");
 					stmt.setString(1, userId);

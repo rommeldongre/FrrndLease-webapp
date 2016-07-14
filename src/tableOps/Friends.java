@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import connect.Connect;
 import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
+import util.LogCredit;
 
 public class Friends extends Connect {
 
@@ -122,7 +124,10 @@ public class Friends extends Connect {
 				s1 = hcp.prepareStatement(sqlAddCredit);
 				s1.setString(1, userId);
 				s1.executeUpdate();
-
+				
+				LogCredit lc = new LogCredit();
+				lc.addLogCredit(userId,1,"Friend Added","");
+				
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					String source = "@api";

@@ -12,6 +12,7 @@ import adminOps.Response;
 import connect.Connect;
 import pojos.WishlistModel;
 import util.FlsLogger;
+import util.LogCredit;
 import util.MatchItems;
 
 public class Wishlist extends Connect {
@@ -100,6 +101,9 @@ public class Wishlist extends Connect {
 				s2.setString(1, rs1.getString("item_user_id"));
 				s2.executeUpdate();
 			}
+			
+			LogCredit lc = new LogCredit();
+			lc.addLogCredit(rs1.getString("item_user_id"),1,"Wishlist Item Added","");
 			
 			MatchItems matchItems = new MatchItems(itemId);
 			matchItems.checkPostedItems();

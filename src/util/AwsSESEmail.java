@@ -106,7 +106,7 @@ public class AwsSESEmail extends Connect {
 		// Fls_Enum = fls_enum;
 		user_id = userId;
 		TO = userId;
-		String EMAIL_VERIFICATION_URL;
+		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL;
 
 		// this variable is used to store the image
 		File imageFile = null;
@@ -116,9 +116,12 @@ public class AwsSESEmail extends Connect {
 
 		if (env_config.equals("dev")) {
 			EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
+			EMAIL_INVITATION_URL ="http://localhost:8080/flsv2/ref_token=";
 			PREFIX = "[FrrndLease-Test]";
+			
 		} else {
 			EMAIL_VERIFICATION_URL = "http://www.frrndlease.com/emailverification.html";
+			EMAIL_INVITATION_URL ="http://www.frrndlease.com/ref_token=";
 			PREFIX = "[FrrndLease]";
 		}
 		
@@ -238,7 +241,7 @@ public class AwsSESEmail extends Connect {
 			SUBJECT = (PREFIX + " Your Friend '" + atfm.getUserId() + "' has added you to their Friend List");
 			BODY = ("<body>You are now in '" + atfm.getUserId()
 					+ "'\'s Friend List. You can now lease items to each other <br/> <br/>"
-					+ "Click here to Sign Up http://www.frrndlease.com/index.html?ref_token="+atfm.getReferralCode()+"<br/></body>");
+					+ "Click here to Sign Up "+EMAIL_INVITATION_URL+atfm.getReferralCode()+"<br/></body>");
 			break;
 
 		case FLS_MAIL_DELETE_FRIEND_FROM:

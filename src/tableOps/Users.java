@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import pojos.UsersModel;
 import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
+import util.LogCredit;
 import util.ReferralCode;
 import app.EmailVerificationHandler;
 
@@ -164,7 +166,10 @@ public class Users extends Connect {
 			LOGGER.warning(message);
 			Code = 37;
 			Id = generated_ref_code;
-
+			
+			LogCredit lc = new LogCredit();
+			lc.addLogCredit(userId,10,"SignUp","");
+			
 			if(status!="email_pending"){
 				EmailVerificationHandler ev = new EmailVerificationHandler();
 				int result3 = ev.updateCredits(generated_ref_code,referrer_code);	

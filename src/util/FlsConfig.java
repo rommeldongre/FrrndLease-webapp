@@ -11,7 +11,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2008;			
+	public final int appBuild = 2009;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -335,7 +335,7 @@ public class FlsConfig extends Connect{
 						}
 					}
 					
-					// These queries are updating items table to add item_uid
+					// These queries are updating items table to add referral code
 					String getAllUserId = "SELECT user_id FROM `users`";
 					try{
 						getConnection();
@@ -405,6 +405,36 @@ public class FlsConfig extends Connect{
 							
 					// The dbBuild version value is changed in the database
 					dbBuild = 2008;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds user photo id to users table
+				if (dbBuild < 2009) {
+					
+					// New table credit_log added to the database
+					String sqlAddPhotoId = "CREATE TABLE credit_log (credit_log_id int(11) NOT NULL AUTO_INCREMENT,credit_user_id varchar(255), credit_date DATETIME, credit_amount int(11), credit_type varchar(255), credit_desc varchar(255),  primary key (credit_log_id))";
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddPhotoId);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+							
+					// The dbBuild version value is changed in the database
+					dbBuild = 2009;
 					updateDBBuild(dbBuild);
 				}
 	}
