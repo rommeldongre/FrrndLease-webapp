@@ -1,6 +1,6 @@
 var myProfile = angular.module('myApp');
 
-myProfile.controller('myProfileCtrl', ['$scope', '$timeout', 'userFactory', 'profileFactory', 'modalService', function($scope, $timeout, userFactory, profileFactory, modalService){
+myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory', 'modalService', function($scope, userFactory, profileFactory, modalService){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
@@ -140,7 +140,6 @@ myProfile.controller('myProfileCtrl', ['$scope', '$timeout', 'userFactory', 'pro
 			dataType:"json",
             success: function(response){
 				if(response.returnCode == 0){
-					console.log(response);
                 if(lastOffset == 0){
 					$scope.$apply(function(){
 						$scope.creditsArray = [response.resList];
