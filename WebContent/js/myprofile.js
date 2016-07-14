@@ -151,19 +151,19 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
 						});
                     }
                     lastOffset = response.lastItemId;
-                }else{
+				}else{
 					$scope.showNext = false;
 					console.log("ReturnCode not Zero");
                 }
             },
             error: function(){
-                console.log("not able to get location data");
+                console.log("not able to get credit log data");
             }
 	
         });
 	}
 	
-	// called when next carousel button is clicked
+	// called when Show More Credits button is clicked
     $scope.loadNextCredit = function(){
         getCredit(lastOffset);
     }
