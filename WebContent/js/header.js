@@ -553,13 +553,16 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
 		console.log("index page");
 		var token = getQueryVariable("ref_token");
 		console.log(token);
-		if(token!="undefined"){
-			$scope.code = token;
+		if(token === undefined || token=="undefined"){
 		}else{
-			$scope.code = "";
-		}
+			$scope.code = token;
+			localStorage.setItem("friendReferralCode",token);
+		}	
+		var ref_code = localStorage.getItem("friendReferralCode");
+		$scope.code = ref_code;
 	}
     
+	
     
     // remove this code and uncomment the below one when using https
     $scope.location = "Gokhalenagar, Pune, Maharashtra, India";
