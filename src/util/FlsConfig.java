@@ -11,7 +11,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2009;			
+	public final int appBuild = 2010;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -436,6 +436,36 @@ public class FlsConfig extends Connect{
 					// The dbBuild version value is changed in the database
 					dbBuild = 2009;
 					updateDBBuild(dbBuild);
+				}
+				
+				//  This block adds admin and ops user id to the users table
+				if(dbBuild < 2010){
+					
+					// inserting two user ids each for admin and ops
+					String sqlAddAdminOps = "INSERT INTO `users` (`user_id`, `user_full_name`, `user_mobile`, `user_location`, `user_auth`, `user_activation`, `user_status`, `user_credit`, `user_lat`, `user_lng`, `user_address`, `user_locality`, `user_sublocality`) VALUES ('admin@frrndlease.com', 'Admin', '1234567890', 'None', '859e4768db04cba0422771ea97a44dbb', 'None', 'email_activated', '10', 0.0, 0.0, '', '', ''), ('ops@frrndlease.com', 'Ops', '1234567890', 'None', '859e4768db04cba0422771ea97a44dbb', 'None', 'email_activated', '10', 0.0, 0.0, '', '', '')";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddAdminOps);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2010;
+					updateDBBuild(dbBuild);
+					
 				}
 	}
 	
