@@ -24,7 +24,7 @@ public class Users extends Connect {
 	private FlsLogger LOGGER = new FlsLogger(Users.class.getName());
 
 	private String userId, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
-			check = null, token, address, locality, sublocality, referralCode=null;
+			check = null, token, address, locality, sublocality, referralCode=null,profilePicture;
 	private float lat, lng;
 	private String signUpStatus;
 	private int Code;
@@ -108,6 +108,7 @@ public class Users extends Connect {
 		lat = um.getLat();
 		lng = um.getLng();
 		referralCode = um.getReferralCode();
+		profilePicture = um.getProfilePicture();
 
 		String  referrer_code=null;
 		PreparedStatement stmt = null, stmt1 = null,stmt2=null;
@@ -142,7 +143,7 @@ public class Users extends Connect {
 			int ref_code_length = 8;
 			ReferralCode rc = new ReferralCode();
 			String generated_ref_code = rc.createRandomCode(ref_code_length, userId);
-			String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
@@ -161,6 +162,7 @@ public class Users extends Connect {
 			stmt.setString(13, sublocality);
 			stmt.setString(14, generated_ref_code);
 			stmt.setString(15, referrer_code);
+			stmt.setString(16, profilePicture);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);

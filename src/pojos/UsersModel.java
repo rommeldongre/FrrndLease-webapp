@@ -9,7 +9,7 @@ public class UsersModel {
 
 	private FlsLogger LOGGER = new FlsLogger(UsersModel.class.getName());
 
-	private String userId, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode;
+	private String userId, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode,profilePicture;
 	private float lat, lng;
 	private JSONObject obj;
 
@@ -42,6 +42,8 @@ public class UsersModel {
 				lng = Float.parseFloat(obj.getString("lng"));
 			if(obj.has("referralCode"))
 				referralCode = obj.getString("referralCode");
+			if(obj.has("profilePicture"))
+				profilePicture = obj.getString("profilePicture");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
@@ -118,5 +120,9 @@ public class UsersModel {
 
 	public String getReferralCode() {
 		return referralCode;
+	}
+
+	public String getProfilePicture() {
+		return profilePicture;
 	}
 }
