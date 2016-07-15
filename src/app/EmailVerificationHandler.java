@@ -12,6 +12,7 @@ import pojos.EmailVerificationResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.LogCredit;
 
 public class EmailVerificationHandler extends Connect implements AppHandler {
 
@@ -133,10 +134,12 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 			Connection hcp = getConnectionFromPool();
 			PreparedStatement stmt= null,stmt1=null;
 			Integer send_val =1;
+			LogCredit lc = new LogCredit();
 			try {
 				
 				if(referrer!=null){
 					hcp.setAutoCommit(false);
+					
 					// add credit to existing user whose referral_code was used
 					int addReferrerCredit =0;
 					String sqladdReferrerCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
@@ -144,11 +147,14 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 					stmt.setString(1, referrer);
 					addReferrerCredit = stmt.executeUpdate();
 					LOGGER.info("Credits of Referer incremented by 10.....");
-				
+					
+					
 					if(addReferrerCredit == 0){
 						send_val = 0;
 						hcp.rollback();
+						return send_val;
 					}
+					lc.addLogCredit(referrer,10,"SignUp with Code","");
 					
 					// add credit to new user whose referral_code was generated
 					int addReferralCredit =0;
@@ -161,7 +167,9 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 					if(addReferralCredit == 0){
 						send_val = 0;
 						hcp.rollback();
+						return send_val;
 					}
+					lc.addLogCredit(referral,10,"SignUp with Referral","");
 					hcp.commit();
 				}
 				

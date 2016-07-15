@@ -16,6 +16,7 @@ import pojos.ResObj;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
+import util.LogCredit;
 import util.MatchItems;
 
 public class PostItemHandler extends Connect implements AppHandler {
@@ -138,6 +139,15 @@ public class PostItemHandler extends Connect implements AppHandler {
 			String message;
 			message = "Item added into table";
 			LOGGER.warning(message);
+			
+			// to add credit in user_credit
+			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
+			PreparedStatement psCredit = hcp.prepareStatement(sqlAddCredit);
+			psCredit.setString(1, rq.getUserId());
+			psCredit.executeUpdate();
+			
+			LogCredit lc = new LogCredit();
+			lc.addLogCredit(rq.getUserId(),10,"Item Added In Store","");
 
 			String status_W = rq.getStatus(); // To be used to check if Request
 												// is from WishItem API.
@@ -166,6 +176,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs.setErrorString(message);
 			stmt.close();
 			stmt1.close();
+			psCredit.close();
 			s.close();
 		} catch (SQLException e) {
 			LOGGER.warning("Couldnt create a statement");

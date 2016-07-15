@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import connect.Connect;
 import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
+import util.LogCredit;
 
 public class Friends extends Connect {
 
@@ -122,7 +124,10 @@ public class Friends extends Connect {
 				s1 = hcp.prepareStatement(sqlAddCredit);
 				s1.setString(1, userId);
 				s1.executeUpdate();
-
+				
+				LogCredit lc = new LogCredit();
+				lc.addLogCredit(userId,1,"Friend Added","");
+				
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					String source = "@api";
@@ -174,8 +179,8 @@ public class Friends extends Connect {
 			LOGGER.info("Creating statement...");
 
 			stmt2 = hcp.prepareStatement(sql2);
-			stmt2.setString(1, friendId);
-			stmt2.setString(2, userId);
+			stmt2.setString(1, userId);
+			stmt2.setString(2, friendId);
 			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getString("friend_id");
@@ -185,8 +190,8 @@ public class Friends extends Connect {
 				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query on ..." + check);
-				stmt.setString(1, friendId);
-				stmt.setString(2, userId);
+				stmt.setString(1, userId);
+				stmt.setString(2, friendId);
 				stmt.executeUpdate();
 				message = "operation successfull deleted friend id : " + friendId;
 				LOGGER.warning(message);

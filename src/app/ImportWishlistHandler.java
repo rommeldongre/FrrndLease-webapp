@@ -18,6 +18,7 @@ import tableOps.Items;
 import tableOps.Wishlist;
 import util.FlsLogger;
 import util.BufferImage;
+import util.LogCredit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -212,7 +213,10 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				PreparedStatement s1 = hcp.prepareStatement(sqlAddCredit);
 				s1.setString(1, User);
 				s1.executeUpdate();
-
+				
+				LogCredit lc = new LogCredit();
+				lc.addLogCredit(User,1,"Importing Amazon Wishlist","");
+				
 				// returning the new id
 				String sql2 = "SELECT MAX(item_id) FROM items";
 				PreparedStatement stmt2 = hcp.prepareStatement(sql2);

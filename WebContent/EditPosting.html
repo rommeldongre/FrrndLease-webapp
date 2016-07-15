@@ -60,7 +60,6 @@
     <![endif]-->
 	
 	<style>
-		#desc{ margin-bottom:5%; }
 		hr {
 			display: block;
 			height: 1px;
@@ -186,7 +185,7 @@
 									<div class="form-group">
 										<label  for="description" class="col-sm-2 control-label">Description</label>
 										<div class="col-sm-10" >
-											<textarea  id="desc" style="margin-bottom:5%;" class="form-control" id="description" placeholder="Add Description"></textarea>
+											<textarea  class="form-control" id="description" placeholder="Add Description"></textarea>
 										</div>
 									</div>
 									<button class="btn btn-default" id="submit" type="submit">
@@ -195,8 +194,11 @@
 									</form>
 								</div>
 								<div class="row">
-									<div class="col-lg-3 col-md-3 col-md-offset-2">
+									<div class="col-lg-3 col-md-3 col-md-offset-2" id="add_item_row">
 										<button id="add_item" class="btn btn-primary btn-fill" onclick="add_item()">Add Item</button>
+									</div >
+									<div class="col-lg-3 col-md-3 col-md-offset-2">
+										<button id="edit_item" class="btn btn-primary btn-fill" onclick="edit_item()">Edit Item</button>
 									</div >
 									<div class="col-lg-3 col-md-3 col-md-offset-1">
 										<button id="cancel" class="btn btn-primary" onclick="cancel()">Cancel</button>
@@ -321,7 +323,7 @@
 				$("#lease_value").val(1000);
 				$("#dropdownbuttonlease_term").text("Month");
 				
-				$("#description").css("margin-bottom","35%");
+				$("#description").css("margin-bottom","5%");
 				$("#lease_item_row").css("display","none");
 				$("#request_item_row").css("display","none");
 				$("#add_item").css("margin-bottom","10px");
@@ -345,7 +347,7 @@
 				getItemInfo();
 				makeFormReadOnly();
 				
-				$("#description").css("margin-bottom","35%");
+				$("#description").css("margin-bottom","5%");
 				$("#lease_item_row").css("display","none");
 				$("#request_item").css("margin-bottom","5px");
 				$("#cancel").css("margin-bottom","35%");
@@ -356,7 +358,7 @@
 			}else if(prevfunc == "viewItemOwner"){		//if arrived from the myincomingrequests page by clicking an item	
 				getItemInfo();
 				
-				$("#description").css("margin-bottom","35%");
+				$("#description").css("margin-bottom","5%");
 				$("#lease_item").css("margin-bottom","5px");
 				$("#request_item_row").css("display","none");
 				$("#add_item_row").css("display","none");
@@ -367,7 +369,7 @@
 			}else if(prevfunc == "viewItemOwnerNoLease"){
 				getItemInfo();
 				
-				$("#description").css("margin-bottom","35%");
+				$("#description").css("margin-bottom","5%");
 				$("#lease_item").css("display","none");
 				$("#request_item_row").css("display","none");
 				$("#add_item_row").css("display","none");
