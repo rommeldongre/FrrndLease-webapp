@@ -478,7 +478,7 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
     // Form login
     $scope.formLogin = function(email, password){
         if(email == 'admin@frrndlease.com' || email == 'ops@frrndlease.com')
-            $scope.error = "Not a valid email";
+            $scope.error = "This user cannot access the website";
         else
             loginSignupService.loginCheckReq(email, password, "email_activated");
     }
