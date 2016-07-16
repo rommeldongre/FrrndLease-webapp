@@ -198,6 +198,11 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     }
     // login ends here
     
+    // add credits
+    $scope.addCredits = function(){
+        console.log("adding credits");
+    }
+    
     $scope.search = {};
     
     $scope.options = {
