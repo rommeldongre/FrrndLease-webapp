@@ -477,7 +477,10 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function($scope, loginSignupService){
     // Form login
     $scope.formLogin = function(email, password){
-        loginSignupService.loginCheckReq(email, password, "email_activated");
+        if(email == 'admin@frrndlease.com' || email == 'ops@frrndlease.com')
+            $scope.error = "This user cannot access the website";
+        else
+            loginSignupService.loginCheckReq(email, password, "email_activated");
     }
     
     // Google login
