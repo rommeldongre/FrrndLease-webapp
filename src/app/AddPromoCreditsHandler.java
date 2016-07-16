@@ -70,7 +70,7 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 
 			if (result1.next()) {
 
-				String expiry = result1.getString("expiry");
+				Date expiry = result1.getDate("expiry");
 				int credit = result1.getInt("credit");
 				if (expired(expiry)) {
 					rs.setCode(FLS_PROMO_EXPIRED);
@@ -94,7 +94,7 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 					}
 					
 					rs.setCode(FLS_SUCCESS);
-					rs.setMessage(FLS_SUCCESS_M);
+					rs.setMessage(credit + " credits has been added to your frrndlease account.");
 
 					LogCredit lc = new LogCredit();
 					lc.addLogCredit(userId, result1.getInt("credit"), "Promo Code", "");
@@ -128,18 +128,15 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 
 	}
 
-	private boolean expired(String expiry) {
-
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	private boolean expired(Date expiry) {
 		
 		int result = 0;
 		
 		try{
-			Date expiryDate = (Date)formatter.parse(expiry);
 			
-			Date currentDate = new Date();
-			currentDate.setTime(0);
-			result = currentDate.compareTo(expiryDate);
+			Date current = new Date();
+			current.setTime(0);
+			result = current.compareTo(expiry);
 		}catch(Exception e){
 			e.printStackTrace();
 			LOGGER.info(e.getMessage());

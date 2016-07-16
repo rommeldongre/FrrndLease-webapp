@@ -472,7 +472,7 @@ public class FlsConfig extends Connect{
 				if(dbBuild < 2011){
 					
 					// creating a promo code table for credits
-					String sqlAddPromoTable = "CREATE TABLE `fls`.`promo_credits` ( `id` INT(255) NOT NULL AUTO_INCREMENT , `code` VARCHAR(255) NULL , `credit` INT(255) NULL , `expiry` VARCHAR(30) NULL , PRIMARY KEY (`id`))";
+					String sqlAddPromoTable = "CREATE TABLE `fls`.`promo_credits` ( `id` INT(255) NOT NULL AUTO_INCREMENT , `code` VARCHAR(255) NULL , `credit` INT(255) NULL , `expiry` DATE NULL , PRIMARY KEY (`id`))";
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddPromoTable);
