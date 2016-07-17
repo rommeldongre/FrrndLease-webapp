@@ -25,7 +25,8 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
                     success: function(response){
                         modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(
                             function(r){
-                                $scope.credit = response.newCreditBalance
+                                if(response.code == 0)
+                                    $scope.credit = response.newCreditBalance;
                             }, function(){});
                     },
                     error: function(){

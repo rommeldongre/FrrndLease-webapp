@@ -49,8 +49,12 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 		ResultSet result1 = null;
 		
 		PreparedStatement ps2 = null;
+		
 		PreparedStatement ps3 = null;
 		ResultSet result3 = null;
+		
+		PreparedStatement ps4 = null;
+		ResultSet result4 = null;
 
 		LOGGER.info("Inside Process Method " + rq.getUserId());
 
@@ -76,28 +80,38 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_PROMO_EXPIRED);
 					rs.setMessage(FLS_PROMO_EXPIRED_M);
 				} else {
+					String sql4 = "SELECT * FROM credit_log WHERE credit_user_id=? AND credit_desc=?";
+					ps4 = hcp.prepareStatement(sql4);
+					ps4.setString(1, userId);
+					ps4.setString(2, promoCode);
+					result4 = ps4.executeQuery();
 					
-					LOGGER.info(credit+userId+expiry);
-					String sql2 = "UPDATE users SET user_credit=user_credit+? WHERE user_id=?";
-					ps2 = hcp.prepareStatement(sql2);
-					ps2.setInt(1, credit);
-					ps2.setString(2, userId);
-					ps2.executeUpdate();
-					
-					String sql3 = "SELECT user_credit FROM users WHERE user_id=?";
-					ps3 = hcp.prepareStatement(sql3);
-					ps3.setString(1, userId);
-					result3 = ps3.executeQuery();
-					
-					if(result3.next()){
-						rs.setNewCreditBalance(result3.getInt("user_credit"));
+					if(result4.next()){
+						rs.setCode(FLS_INVALID_PROMO);
+						rs.setMessage("This promo can be used only once");
+					}else{
+						String sql2 = "UPDATE users SET user_credit=user_credit+? WHERE user_id=?";
+						ps2 = hcp.prepareStatement(sql2);
+						ps2.setInt(1, credit);
+						ps2.setString(2, userId);
+						ps2.executeUpdate();
+						
+						String sql3 = "SELECT user_credit FROM users WHERE user_id=?";
+						ps3 = hcp.prepareStatement(sql3);
+						ps3.setString(1, userId);
+						result3 = ps3.executeQuery();
+						
+						if(result3.next()){
+							rs.setNewCreditBalance(result3.getInt("user_credit"));
+						}
+						
+						rs.setCode(FLS_SUCCESS);
+						rs.setMessage(credit + " credits has been added to your frrndlease account.");
+
+						LogCredit lc = new LogCredit();
+						lc.addLogCredit(userId, result1.getInt("credit"), "Promo Code", promoCode);
 					}
 					
-					rs.setCode(FLS_SUCCESS);
-					rs.setMessage(credit + " credits has been added to your frrndlease account.");
-
-					LogCredit lc = new LogCredit();
-					lc.addLogCredit(userId, result1.getInt("credit"), "Promo Code", "");
 				}
 
 			} else {
