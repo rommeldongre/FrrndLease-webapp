@@ -7,6 +7,36 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
     var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null,lastOffset = 0;
 	$("#openBtn").hide();
     
+    // add credits
+    $scope.addCredits = function(){
+        modalService.showModal({}, {actionButtonText: "submit", labelText: "Enter the promo code: ", submitting: true}).then(
+            function(promo){
+                var req = {
+                    userId: userFactory.user,
+                    promoCode: promo
+                }
+                
+                $.ajax({
+                    url: '/flsv2/AddPromoCredits',
+                    type: 'post',
+                    data: JSON.stringify(req),
+                    contentType:"application/json",
+                    dataType:"json",
+                    success: function(response){
+                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(
+                            function(r){
+                                if(response.code == 0)
+                                    $scope.credit = response.newCreditBalance;
+                            }, function(){});
+                    },
+                    error: function(){
+                        console.log("not able to add promo credit");
+                    }
+
+                });
+            },function(){});
+    }
+    
     $scope.options = {
         country: 'in',
         sendToCarousel: false
