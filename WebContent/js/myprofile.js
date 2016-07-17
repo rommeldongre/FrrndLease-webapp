@@ -93,6 +93,7 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
 				$scope.label = response.data.photoIdVerified;
+				$scope.profilePic = response.data.profilePic;
 				url = response.data.photoId;
 				var img = new Image();
 				img.src = url;
