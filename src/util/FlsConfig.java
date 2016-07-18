@@ -11,7 +11,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2011;			
+	public final int appBuild = 2012;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -494,6 +494,37 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2011;
+					updateDBBuild(dbBuild);
+				}
+				
+				
+				// This block adds Profile Picture to users table
+				if (dbBuild < 2012) {
+					
+					// New column created to store the uid of the item
+					String sqlAddPhotoId = "ALTER TABLE `users` ADD `user_profile_picture` varchar(255) NULL DEFAULT NULL AFTER `user_verified_flag`";
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddPhotoId);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+							
+					// The dbBuild version value is changed in the database
+					dbBuild = 2012;
 					updateDBBuild(dbBuild);
 				}
 	}
