@@ -155,8 +155,8 @@
                                     </table>
                                 </div>
                                 <div class="modal-footer">
-                                <button type="button" class="btn btn-default " data-dismiss="modal" ng-click="">Cancel</button>
-                                <button class="btn btn-primary" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextItemTimeline()">Show More</button>
+                                <button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
+                                <button class="btn btn-primary btn-fill" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextItemTimeline()">Show More</button>
                                 </div>
 
                             </div><!-- /.modal-content -->
