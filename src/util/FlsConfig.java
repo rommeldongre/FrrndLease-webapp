@@ -13,6 +13,7 @@ public class FlsConfig extends Connect{
 	//Increase it on every change that needs a upgrade hook
 	public final int appBuild = 2011;			
 
+	
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
 	
