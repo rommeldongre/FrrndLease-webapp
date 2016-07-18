@@ -496,6 +496,7 @@ public class FlsConfig extends Connect{
 					dbBuild = 2011;
 					updateDBBuild(dbBuild);
 				}
+				
 	}
 	
 	private void updateDBBuild(int version){
