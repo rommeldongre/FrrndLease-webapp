@@ -443,7 +443,7 @@ public class Items extends Connect {
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT_STAT);
 				
-				// logging item status to lease ready
+				// logging item status
 				LogItem li = new LogItem();
 				li.addItemLog(id, status, "", image);
 			} else {

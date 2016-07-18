@@ -118,7 +118,7 @@
                                 <button ng-if="userMatch" class="btn btn-primary btn-simple" ng-click="deleteItem()" style="padding:10px;">Delete</button>
                                 <button class="btn btn-primary btn-simple" onclick="cancel()" style="padding:10px;">Cancel</button>
                                 <hr/>
-                                <button ng-if="userMatch" class="btn btn-primary btn-simple" ng-click="showItemTimeline()"><u>Show Item Timeline</u></button>
+                                <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()"><u>Show Item Timeline</u></button>
                             </div>
                         </div>
                     </div>
