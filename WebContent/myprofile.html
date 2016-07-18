@@ -7,7 +7,7 @@
         <div class="card-user col-lg-6 col-md-6" style="padding-top:50px">
             <div class="content">
                 <div class="author">
-<!--                    <img class="avatar" src="images/fls-logo.png" alt="..."/>-->
+						<img class="avatar border-gray img-circle" ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}"  alt="User Profile Picture" style="display:block;margin:auto auto;width:200px;height:200px;">
                       <h4 class="title"><br />
                          <small></small>
                       </h4>

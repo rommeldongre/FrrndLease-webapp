@@ -6,7 +6,7 @@ public class GetProfileResObj extends ResObj{
 	String message;
 
 	int credit;
-	String fullName, mobile, location, address, locality, sublocality, referralCode, photoId;
+	String fullName, mobile, location, address, locality, sublocality, referralCode, photoId,profilePic;
 	float lat, lng;
 	boolean photoIdVerified;
 
@@ -120,5 +120,13 @@ public class GetProfileResObj extends ResObj{
 
 	public void setPhotoIdVerified(boolean photoIdVerified) {
 		this.photoIdVerified = photoIdVerified;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
 	}
 }
