@@ -16,6 +16,7 @@ import adminOps.Response;
 import tableOps.Store;
 import pojos.ItemsModel;
 import util.FlsSendMail;
+import util.LogItem;
 import util.AwsSESEmail;
 import util.FlsLogger;
 
@@ -406,6 +407,7 @@ public class Items extends Connect {
 		check = 0;
 		id = im.getId();
 		status = im.getStatus();
+		image = im.getImage();
 
 		LOGGER.info("Inside edit stat method...");
 		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
@@ -436,6 +438,10 @@ public class Items extends Connect {
 				Id = String.valueOf(check);
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT_STAT);
+				
+				// logging item status to lease ready
+				LogItem li = new LogItem();
+				li.addItemLog(id, status, "", image);
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);

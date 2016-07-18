@@ -17,6 +17,7 @@ import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
 import util.LogCredit;
+import util.LogItem;
 
 public class GrantLeaseHandler extends Connect implements AppHandler {
 
@@ -187,6 +188,10 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				hcp.rollback();
 				return rs;
 			}
+			
+			// logging item status to lease ready
+			LogItem li = new LogItem();
+			li.addItemLog(rq.getItemId(), "LeaseReady", "", result3.getString("item_image"));
 									
 			int days;
             String term = getLeaseTerm((rq.getItemId()));

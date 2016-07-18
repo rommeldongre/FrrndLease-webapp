@@ -17,6 +17,7 @@ import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
 import util.LogCredit;
+import util.LogItem;
 import util.MatchItems;
 
 public class PostItemHandler extends Connect implements AppHandler {
@@ -139,6 +140,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 			String message;
 			message = "Item added into table";
 			LOGGER.warning(message);
+			
+			LogItem li = new LogItem();
+			li.addItemLog(itemId, rq.getStatus(), "", rq.getImage());
 			
 			// to add credit in user_credit
 			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
