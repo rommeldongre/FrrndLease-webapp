@@ -14,9 +14,17 @@ import org.quartz.CronTrigger;
 
 public class FlsServletContextListener implements ServletContextListener {
 
+	 private Scheduler scheduler;
+	 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// Notification that the servlet context is about to be shut down.
+		try {
+			scheduler.shutdown(true);	
+		} catch (SchedulerException e) {
+			// TODO: handle exception
+		}
+		
 	}
 
 	@Override
@@ -31,8 +39,8 @@ public class FlsServletContextListener implements ServletContextListener {
 
 		try {
 			// Grab the Scheduler instance from the Factory
-  			Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-	  			
+			scheduler = StdSchedulerFactory.getDefaultScheduler();
+			    
 	  		// and start it off
 	  		scheduler.start();
 	
@@ -70,10 +78,10 @@ public class FlsServletContextListener implements ServletContextListener {
 		}
 
 		System.out.println("=====> Scheduler started ...");
-
+		
 		// Notification that the web application initialization process is
 		// starting
 		System.out.println("=====> Startup code called");
 	}
-
+	
 }

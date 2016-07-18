@@ -11,7 +11,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2012;			
+	public final int appBuild = 2013;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -497,8 +497,37 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 				}
 				
-				// This block adds item timeline table
-				if(dbBuild < 2012){
+				// This block adds Profile Picture to users table
+				if (dbBuild < 2012) {
+					
+					// New column created to store the uid of the item
+					String sqlAddPhotoId = "ALTER TABLE `users` ADD `user_profile_picture` varchar(255) NULL DEFAULT NULL AFTER `user_verified_flag`";
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddPhotoId);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2012;
+					updateDBBuild(dbBuild);
+				}
+
+				//This block adds item timeline table
+				if(dbBuild < 2013){
 					
 					// creating a item log table
 					String sqlItemLogTable = "CREATE TABLE `fls`.`item_log` ( `item_log_id` INT(11) NOT NULL AUTO_INCREMENT , `item_id` INT(255) NULL , `item_log_date` DATETIME NULL , `item_log_type` VARCHAR(255) NULL , `item_log_desc` VARCHAR(255) NULL , `item_log_image` MEDIUMTEXT NULL DEFAULT NULL , PRIMARY KEY (`item_log_id`))";
@@ -520,9 +549,8 @@ public class FlsConfig extends Connect{
 							System.out.println(e.getStackTrace());
 						}
 					}
-					
 					// The dbBuild version value is changed in the database
-					dbBuild = 2012;
+					dbBuild = 2013;
 					updateDBBuild(dbBuild);
 				}
 	}
