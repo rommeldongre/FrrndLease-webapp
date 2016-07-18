@@ -191,7 +191,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			// logging item status to lease ready
 			LogItem li = new LogItem();
-			li.addItemLog(rq.getItemId(), "LeaseReady", "", result3.getString("item_image"));
+			li.addItemLog(rq.getItemId(), "LeaseReady", "", "");
 									
 			int days;
             String term = getLeaseTerm((rq.getItemId()));

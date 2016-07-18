@@ -142,7 +142,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			LOGGER.warning(message);
 			
 			LogItem li = new LogItem();
-			li.addItemLog(itemId, rq.getStatus(), "", rq.getImage());
+			li.addItemLog(itemId, rq.getStatus(), "", "");
 			
 			// to add credit in user_credit
 			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";

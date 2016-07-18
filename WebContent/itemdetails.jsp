@@ -71,59 +71,100 @@
         <div class="row">
             <div class="col-lg-3  col-md-3"></div>
             <div class="card col-lg-6  col-md-6" style="margin: 10px 20px 10px 20px;min-height: 500px;">
-		<div class="container-fluid" id="midcontainer" ng-controller="itemDetailsCtrl">
-            
-            <!-- Error Message Display starts -->
-			<div class="row" ng-if="showError">
-				<div id="heading">
-					<span>${message}</span>
-				</div>
-			</div>
-            <!-- Error Message Display ends -->
-            
-			<br />
-            <div class="col-lg-2 col-md-2"></div>
-            
-            <!-- Item Details starts -->
-			<div class="card-user col-lg-8 col-md-8" style="padding-top:50px" ng-if="!showError">
-                <div class="content">
-                    <div class="author">
-                        <img class="img-rounded" ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" alt="..."/>
-                        <h4 class="title"><br />
-                            <strong>${title}</strong>
-                        </h4>
+                <div class="container-fluid" id="midcontainer" ng-controller="itemDetailsCtrl">
+
+                    <!-- Error Message Display starts -->
+                    <div class="row" ng-if="showError">
+                        <div id="heading">
+                            <span>${message}</span>
+                        </div>
                     </div>
-                    <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location">
-                        <span class="glyphicon glyphicon-map-marker"></span><strong>${sublocality},${locality}</strong>
-                    </p>
-                    <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease term">
-                        <span class="glyphicon glyphicon-tags"></span><i>${leaseTerm} Lease</i>
-                    </p>
-                    <p style="color:Grey;" class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
-                        <span class="glyphicon glyphicon-list-alt"></span>${category}
-                    </p>
-                    <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable replacement value">
-                        <span class="fa fa-rupee"></span>${leaseValue}
-                    </p>
-                    <p ng-if="${description} != ''" class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Description">
-                        <span class="glyphicon glyphicon-calendar"></span>${description}
-                    </p>
-                </div>
-                <hr/>
-                <div class="text-center">
-                    <div class="row" style="padding:20px;">
-                        <button ng-if="!userMatch" class="btn btn-primary btn-fill" ng-click="requestItem()" style="padding:10px;">Request Item</button>
-                        <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:10px;">Add to Wishlist</button>
-                        <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:10px;">Edit Item</button>
-                        <button ng-if="userMatch" class="btn btn-primary btn-simple" ng-click="deleteItem()" style="padding:10px;">Delete</button>
-                        <button class="btn btn-primary btn-simple" onclick="cancel()" style="padding:10px;">Cancel</button>
+                    <!-- Error Message Display ends -->
+
+                    <br />
+                    <div class="col-lg-2 col-md-2"></div>
+
+                    <!-- Item Details starts -->
+                    <div class="card-user col-lg-8 col-md-8" style="padding-top:50px" ng-if="!showError">
+                        <div class="content">
+                            <div class="author">
+                                <img class="img-rounded" ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" alt="..."/>
+                                <h4 class="title"><br />
+                                    <strong>${title}</strong>
+                                </h4>
+                            </div>
+                            <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location">
+                                <span class="glyphicon glyphicon-map-marker"></span><strong>${sublocality},${locality}</strong>
+                            </p>
+                            <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease term">
+                                <span class="glyphicon glyphicon-tags"></span><i>${leaseTerm} Lease</i>
+                            </p>
+                            <p style="color:Grey;" class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                                <span class="glyphicon glyphicon-list-alt"></span>${category}
+                            </p>
+                            <p class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable replacement value">
+                                <span class="fa fa-rupee"></span>${leaseValue}
+                            </p>
+                            <p ng-if="'${description}' != '' && '${description}' != null" class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Description">
+                                <span class="glyphicon glyphicon-calendar"></span>${description}
+                            </p>
+                        </div>
+                        <hr/>
+                        <div class="text-center">
+                            <div class="row" style="padding:20px;">
+                                <button ng-if="!userMatch" class="btn btn-primary btn-fill" ng-click="requestItem()" style="padding:10px;">Request Item</button>
+                                <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:10px;">Add to Wishlist</button>
+                                <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:10px;">Edit Item</button>
+                                <button ng-if="userMatch" class="btn btn-primary btn-simple" ng-click="deleteItem()" style="padding:10px;">Delete</button>
+                                <button class="btn btn-primary btn-simple" onclick="cancel()" style="padding:10px;">Cancel</button>
+                                <hr/>
+                                <button ng-if="userMatch" class="btn btn-primary btn-simple" ng-click="showItemTimeline()"><u>Show Item Timeline</u></button>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-lg-2 col-md-2"></div>
+                    <!-- Item Details ends -->
+                            
+                    <!-- sample pop up starts here-->
+                    <button ng-hide="true" href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
+
+                    <div class="modal fade" id="myModalTable" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                    <h3 class="modal-title">Item Timeline</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <h5 class="text-center">Item Timeline is as follows</h5>
+                                    <table id="creditLogTable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
+                                        <thead>
+                                            <tr>
+                                                <th class="tablecell" style="width: 50%">Log Date</th>
+                                                <th class="tablecell" style="width: 25%">Log Type</th>
+                                                <th class="tablecell" style="width: 25%">Item Image</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="y in timelineArray">
+                                            <tr ng-repeat="x in y">
+                                                <td>{{ x.itemLogDate }}</td>
+                                                <td>{{ x.itemLogType }}</td>
+                                                <td><img ng-src="{{(x.itemLogImage === '' || x.itemLogImage === null || x.itemLogImage === NULL || x.itemLogImage === 'null') ? 'images/imgplaceholder.png' : x.itemLogImage}}" style="width:50px;"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-default " data-dismiss="modal" ng-click="">Cancel</button>
+                                <button class="btn btn-primary" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextItemTimeline()">Show More</button>
+                                </div>
+
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    <!-- sample pop up ends here-->
                 </div>
-			</div>
-            <div class="col-lg-2 col-md-2"></div>
-            <!-- Item Details ends -->
-		</div>
-                </div>
+            </div>
             <div class="col-lg-3 col-md-3"></div>
         </div>
         

@@ -371,6 +371,10 @@ public class Items extends Connect {
 				Id = String.valueOf(check);
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT);
+				
+				// logging item status to item edited
+				LogItem li = new LogItem();
+				li.addItemLog(id, "Item Edited", "", image);
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
@@ -814,6 +818,10 @@ public class Items extends Connect {
 					message = status;
 					Code = 001;
 					res.setData(FLS_SUCCESS, Id, FLS_ITEMS_DELETE_POSTING);
+					
+					// logging item status to archived
+					LogItem li = new LogItem();
+					li.addItemLog(id, "Archived", "", "");
 					break;
 
 				case "Leased":
