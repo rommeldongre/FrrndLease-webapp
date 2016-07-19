@@ -112,11 +112,12 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     // sign up ends here
     
     // login starts here
-    $scope.$on('loginCheckReq', function(event, email, password, signUpStatus){
+    $scope.$on('loginCheckReq', function(event, email, password, picture, signUpStatus){
         password = (CryptoJS.MD5(password)).toString();
         var req = {
             auth: password,
             token: email,
+			profilePicture: picture,
             signUpStatus: signUpStatus
         }
         loginSend(req, signUpStatus);
@@ -460,8 +461,8 @@ headerApp.service('searchService', ['$rootScope', function($rootScope){
 
 headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
     
-    this.loginCheckReq = function(email, password, signUpStatus){
-        $rootScope.$broadcast('loginCheckReq', email, password, signUpStatus);
+    this.loginCheckReq = function(email, password, picture, signUpStatus){
+        $rootScope.$broadcast('loginCheckReq', email, password, picture, signUpStatus);
     }
     
     this.loginCheckRes = function(message){
@@ -484,13 +485,13 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
         if(email == 'admin@frrndlease.com' || email == 'ops@frrndlease.com')
             $scope.error = "This user cannot access the website";
         else
-            loginSignupService.loginCheckReq(email, password, "email_activated");
+            loginSignupService.loginCheckReq(email, password, "", "email_activated");
     }
     
     // Google login
     function onSignIn(googleUser) {
         var profile = googleUser.getBasicProfile();
-        loginSignupService.loginCheckReq(profile.getEmail(), profile.getId(), "google");
+        loginSignupService.loginCheckReq(profile.getEmail(), profile.getId(), "", "google");
     }
     window.onSignIn = onSignIn;
     
@@ -498,8 +499,8 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
     $scope.facebookSignIn = function() {
         FB.login(function(response) {
             // handle the response
-            FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender', function(response) {
-                loginSignupService.loginCheckReq(response.email, response.id, "facebook");
+            FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender,picture.type(large)', function(response) {
+                loginSignupService.loginCheckReq(response.email, response.id, response.picture.data.url,"facebook");
             });
         }, {scope: 'email,public_profile,user_friends'});    
     }
