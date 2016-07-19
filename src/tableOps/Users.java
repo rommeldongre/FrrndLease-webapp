@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +28,7 @@ public class Users extends Connect {
 			check = null, token, address, locality, sublocality, referralCode=null,profilePicture;
 	private float lat, lng;
 	private String signUpStatus;
-	private int Code;
+	private int Code, offset, limit, verification;
 	private UsersModel um;
 	private Response res = new Response();
 
@@ -86,6 +87,19 @@ public class Users extends Connect {
 			}
 			break;
 
+		case "getusers":
+			LOGGER.info("Get Users operation is selected");
+			try{
+				offset = obj.getInt("cookie");
+				limit = obj.getInt("limit");
+				verification = obj.getInt("verification");
+				getUsers();
+			}catch(JSONException e){
+				res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
+				e.printStackTrace();
+			}
+			break;
+			
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
@@ -580,5 +594,82 @@ public class Users extends Connect {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void getUsers(){
+		
+		LOGGER.info("Inside Get Users Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try{
+			
+			String sqlGetUsers = "SELECT * FROM `users` WHERE user_id NOT IN ('admin@frrndlease.com', 'ops@frrndlease.com')";
+			
+			if(verification != -1)
+				sqlGetUsers = sqlGetUsers + " AND user_verified_flag=" + verification;
+			
+			sqlGetUsers = sqlGetUsers + " ORDER BY user_id LIMIT " + offset + ", " + limit;
+			
+			ps1 = hcp.prepareStatement(sqlGetUsers);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				rs1.previous();
+				JSONObject object = new JSONObject();
+				JSONArray array = new JSONArray();
+				while(rs1.next()){
+					JSONObject obj = new JSONObject();
+					
+					obj.put("userId", rs1.getString("user_id"));
+					obj.put("fullName", rs1.getString("user_full_name"));
+					obj.put("mobile", rs1.getString("user_mobile"));
+					obj.put("status", rs1.getString("user_status"));
+					obj.put("credit", rs1.getInt("user_credit"));
+					obj.put("lat", rs1.getFloat("user_lat"));
+					obj.put("lng", rs1.getFloat("user_lng"));
+					obj.put("address", rs1.getString("user_address"));
+					obj.put("locality", rs1.getString("user_locality"));
+					obj.put("sublocality", rs1.getString("user_sublocality"));
+					obj.put("referral", rs1.getString("user_referral_code"));
+					obj.put("referrer", rs1.getString("user_referrer_code"));
+					obj.put("photoId", rs1.getString("user_photo_id"));
+					obj.put("verification", rs1.getInt("user_verified_flag"));
+					obj.put("profilePic", rs1.getString("user_profile_picture"));
+					
+					array.put(obj);
+					offset = offset + 1;
+				}
+				object.put("users", array);
+				object.put("offset", offset);
+				Code = FLS_SUCCESS;
+				message = object.toString();
+			}else{
+				Code = FLS_END_OF_DB;
+			}
+			
+			res.setData(Code, Id, message);
+		}catch(SQLException e){
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+			LOGGER.warning(e.getMessage());
+		}catch (JSONException e) {
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
+			e.printStackTrace();
+			LOGGER.warning(e.getMessage());
+		}finally{
+			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }
