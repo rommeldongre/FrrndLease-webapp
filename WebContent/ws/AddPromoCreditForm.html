@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Add Promo Credit</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	getData = function (){
+		var UserId = document.getElementById("userId").value;
+		
+		var PromoCode = document.getElementById("promoCode").value;
+		
+		AddPromoCredits(UserId,PromoCode);
+	};
+	
+	function AddPromoCredits(UserId,PromoCode){
+	
+		var req = {
+			userId: UserId,
+            promoCode: PromoCode
+		}
+        
+		console.log(JSON.stringify(req));
+		AddPromoCreditsSend(req);
+	}
+		
+	AddPromoCreditsSend = function(req) {
+		$.ajax({
+			url: '/flsv2/AddPromoCredits',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				console.log(response);
+				document.getElementById("code").value = response.code;
+				document.getElementById("message").value = response.message;
+				document.getElementById("newCreditBalance").value = response.newCreditBalance;
+			},
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> ADD PROMO CODE FORM</h1>
+	<form>
+		User Id : <input type="text" name="userId" id="userId" ><br/><br/>
+		Promo Code: <input type="text" name="promoCode" id="promoCode" ><br/><br/>
+		<input type="button" value="Next" onclick="getData()">
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+		New Credit Balance : <input type="text" name="newCreditBalance" id="newCreditBalance"><br/><br/>
+		
+		<div id="output">
+		
+		</div>
+	</form>
+	
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

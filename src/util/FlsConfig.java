@@ -11,7 +11,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2012;			
+	public final int appBuild = 2014;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -521,9 +521,64 @@ public class FlsConfig extends Connect{
 							System.out.println(e.getStackTrace());
 						}
 					}
-							
 					// The dbBuild version value is changed in the database
 					dbBuild = 2012;
+					updateDBBuild(dbBuild);
+				}
+
+				//This block adds item timeline table
+				if(dbBuild < 2013){
+					
+					// creating a item log table
+					String sqlItemLogTable = "CREATE TABLE `fls`.`item_log` ( `item_log_id` INT(11) NOT NULL AUTO_INCREMENT , `item_id` INT(255) NULL , `item_log_date` DATETIME NULL , `item_log_type` VARCHAR(255) NULL , `item_log_desc` VARCHAR(255) NULL , `item_log_image` MEDIUMTEXT NULL DEFAULT NULL , PRIMARY KEY (`item_log_id`))";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlItemLogTable);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2013;
+					updateDBBuild(dbBuild);
+				}
+				
+				//This block adds user_live_status column in users table
+				if(dbBuild < 2014){
+					
+					// creating a item log table
+					String sqlLiveStatusColumn = "ALTER TABLE `users` ADD `user_live_status` TINYINT(1) NOT NULL DEFAULT '1' AFTER `user_profile_picture`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlLiveStatusColumn);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2014;
 					updateDBBuild(dbBuild);
 				}
 	}

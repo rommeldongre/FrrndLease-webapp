@@ -122,6 +122,15 @@ public class AdminOpsHandler extends ErrorCat {
 			um.getData(jsonobj1);
 			res = user.selectOp(operation, um, jsonobj2);
 			break;
+			
+		case "promocode":
+			PromoCode promoCode = new PromoCode();
+			PromoCodeModel pcm = new PromoCodeModel();
+			
+			LOGGER.info("Promo Code table is selected");
+			pcm.getData(jsonobj1);
+			res = promoCode.selectOp(operation, pcm, jsonobj2);
+			break;
 
 		default:
 			LOGGER.info("Table not present..");
