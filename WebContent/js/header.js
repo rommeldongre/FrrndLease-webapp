@@ -11,8 +11,11 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         Email = email;
         Password = (CryptoJS.MD5(password)).toString();
         Name = name;
-		if(signUpStatus == "facebook"){
+		if(signUpStatus == "facebook" || signUpStatus == "google"){
 			Picture = picture;
+		}
+		if(Picture === undefined){
+			Picture ="";
 		}
         Mobile = mobile;
 		Code = code;
@@ -113,7 +116,10 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
     
     // login starts here
     $scope.$on('loginCheckReq', function(event, email, password, picture, signUpStatus){
-        password = (CryptoJS.MD5(password)).toString();
+	    password = (CryptoJS.MD5(password)).toString();
+		if(picture === undefined){
+			picture ="";
+		}
         var req = {
             auth: password,
             token: email,
@@ -491,7 +497,7 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
     // Google login
     function onSignIn(googleUser) {
         var profile = googleUser.getBasicProfile();
-        loginSignupService.loginCheckReq(profile.getEmail(), profile.getId(), "", "google");
+        loginSignupService.loginCheckReq(profile.getEmail(), profile.getId(), profile.getImageUrl(), "google");
     }
     window.onSignIn = onSignIn;
     
@@ -524,7 +530,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
     // Google sign up
     function onSignUp(googleUser) {
         var profile = googleUser.getBasicProfile();
-        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getId(), profile.getName(), "", "", $scope.code, $scope.location, "google");
+        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.code, $scope.location, "google");
     }
     window.onSignUp = onSignUp;
     
