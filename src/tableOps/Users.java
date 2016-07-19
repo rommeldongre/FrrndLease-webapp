@@ -104,6 +104,11 @@ public class Users extends Connect {
 			editLiveStatus();
 			break;
 			
+		case "editverification":
+			LOGGER.info("Edit Verification is selected");
+			editVerification();
+			break;
+			
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
@@ -718,6 +723,65 @@ public class Users extends Connect {
 			
 			if(rs2.next()){
 				if(rs2.getInt("user_live_status") == 0)
+					message = "0";
+				else
+					message = "1";
+			}
+			
+			res.setData(FLS_SUCCESS, "0", message);
+			
+		}catch(SQLException e){
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+			LOGGER.warning(e.getMessage());
+		}finally{
+			try {
+				if(rs2 != null)rs2.close();
+				if(ps2 != null)ps2.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void editVerification(){
+
+		userId = um.getUserId();
+		verification = um.getVerification();
+//		boolean ver;
+//		if(verification == 0)
+//			ver = false;
+//		else
+//			ver = true;
+		
+		LOGGER.info("Inside Edit Verification Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		
+		PreparedStatement ps2 = null;
+		ResultSet rs2 = null;
+		
+		try{
+			
+			String sqlEditVerification = "UPDATE users SET user_verified_flag=?  WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlEditVerification);
+			ps1.setInt(1, verification);
+			ps1.setString(2, userId);
+			
+			ps1.executeUpdate();
+			
+			String sqlGetVerification = "SELECT user_verified_flag FROM users WHERE user_id=?";
+			ps2 = hcp.prepareStatement(sqlGetVerification);
+			ps2.setString(1, userId);
+			
+			rs2 = ps2.executeQuery();
+			
+			if(rs2.next()){
+				if(rs2.getInt("user_verified_flag") == 0)
 					message = "0";
 				else
 					message = "1";
