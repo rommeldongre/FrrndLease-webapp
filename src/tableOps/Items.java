@@ -125,7 +125,6 @@ public class Items extends Connect {
 
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
-			;
 			break;
 		}
 		return res;

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Add Promo Code Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	
+	addPromoCodeReq = function() {
+        var PromoCode = document.getElementById("promoCode").value;
+        var Expiry = document.getElementById("expiry").value;
+        var Credit = document.getElementById("credit").value;
+        
+		var req = {
+            table:"promocode",
+            operation:"addpromocode",
+            row:{
+                promoCode:PromoCode,
+                expiry:Expiry,
+                credit:Credit
+            },
+            token:0
+		}
+		addPromoCodeReqSend(req);
+	};
+	
+	addPromoCodeReqSend = function(req) {
+		$.ajax({
+			url: '/flsv2/AdminOps',
+			type:'get',
+			data: {req: JSON.stringify(req)},
+			contentType:"application/json",
+			dataType: "json",
+			
+			success: function(response) {
+				document.getElementById("code").value = response.Code;
+				document.getElementById("message").value = response.Message;
+			},
+			
+			error: function() {
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+	<h1>GET PROFILE FORM</h1>
+	<form>
+		Promo Code : <input type="text" name="promoCode" id="promoCode"><br/><br/>
+		Expiry : <input type="date" name="expiry" id="expiry"><br/><br/>
+		Credit : <input type="text" name="credit" id="credit"><br/><br/>
+		<input type="button" value="Add Promo Code" onclick="addPromoCodeReq()"><br/><br/>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+	</form>
+	
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
