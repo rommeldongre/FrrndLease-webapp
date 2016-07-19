@@ -616,6 +616,7 @@ public class Users extends Connect {
 	private void getUsers(){
 		
 		verification = um.getVerification();
+		liveStatus = um.getLiveStatus();
 		
 		LOGGER.info("Inside Get Users Method");
 		
@@ -629,6 +630,9 @@ public class Users extends Connect {
 			
 			if(verification != -1)
 				sqlGetUsers = sqlGetUsers + " AND user_verified_flag=" + verification;
+			
+			if(liveStatus != -1)
+				sqlGetUsers = sqlGetUsers + " AND user_live_status=" + liveStatus;
 			
 			sqlGetUsers = sqlGetUsers + " ORDER BY user_id LIMIT " + offset + ", " + limit;
 			
