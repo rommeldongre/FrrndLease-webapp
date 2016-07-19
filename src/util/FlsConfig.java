@@ -11,7 +11,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2013;			
+	public final int appBuild = 2014;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -551,6 +551,34 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2013;
+					updateDBBuild(dbBuild);
+				}
+				
+				//This block adds user_live_status column in users table
+				if(dbBuild < 2014){
+					
+					// creating a item log table
+					String sqlLiveStatusColumn = "ALTER TABLE `users` ADD `user_live_status` TINYINT(1) NOT NULL DEFAULT '1' AFTER `user_profile_picture`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlLiveStatusColumn);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2014;
 					updateDBBuild(dbBuild);
 				}
 	}

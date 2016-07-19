@@ -28,7 +28,7 @@ public class Users extends Connect {
 			check = null, token, address, locality, sublocality, referralCode=null,profilePicture;
 	private float lat, lng;
 	private String signUpStatus;
-	private int Code, offset, limit, verification;
+	private int liveStatus, Code, offset, limit, verification;
 	private UsersModel um;
 	private Response res = new Response();
 
@@ -92,12 +92,16 @@ public class Users extends Connect {
 			try{
 				offset = obj.getInt("cookie");
 				limit = obj.getInt("limit");
-				verification = obj.getInt("verification");
 				getUsers();
 			}catch(JSONException e){
 				res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 				e.printStackTrace();
 			}
+			break;
+			
+		case "editlivestatus":
+			LOGGER.info("Edit Live Status is selected");
+			editLiveStatus();
 			break;
 			
 		default:
@@ -462,7 +466,7 @@ public class Users extends Connect {
 		Connection hcp = getConnectionFromPool();
 
 		try {
-			String select_status_sql = "Select user_status FROM users WHERE user_id=?";
+			String select_status_sql = "Select user_live_status, user_status FROM users WHERE user_id=?";
 			ps1 = hcp.prepareStatement(select_status_sql);
 			ps1.setString(1, token);
 
@@ -470,58 +474,13 @@ public class Users extends Connect {
 
 			if (result1.next()) {
 
+				int liveStatus = result1.getInt("user_live_status");
 				String status = result1.getString("user_status");
+				
+				if(liveStatus == 1){
+					if (status.equals("facebook") || status.equals("google") || status.equals("email_activated")) {
 
-				if (status.equals("facebook") || status.equals("google") || status.equals("email_activated")) {
-
-					if (status.equals(signUpStatus)) {
-						String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
-
-						LOGGER.info("Creating a statement .....");
-						stmt = hcp.prepareStatement(sql);
-
-						LOGGER.info("Statement created. Executing getPrevious query...");
-						stmt.setString(1, token);
-						stmt.setString(2, auth);
-
-						rs = stmt.executeQuery();
-						while (rs.next()) {
-							JSONObject json = new JSONObject();
-							json.put("userId", rs.getString("user_id"));
-							json.put("fullName", rs.getString("user_full_name"));
-							json.put("mobile", rs.getString("user_mobile"));
-							json.put("location", rs.getString("user_location"));
-							json.put("referralCode", rs.getString("user_referral_code"));
-
-							message = json.toString();
-							LOGGER.warning(message);
-							check = rs.getString("user_id");
-						}
-
-						if (check != null) {
-							Code = FLS_SUCCESS;
-							Id = check;
-						} else {
-							Id = "0";
-							message = FLS_LOGIN_USER_F;
-							Code = FLS_END_OF_DB;
-						}
-					} else {
-						Id = "0";
-						Code = FLS_END_OF_DB;
-						if (status.equals("facebook") || status.equals("google"))
-							message = "Signed up using " + status + "!! Please continue with " + status;
-						else
-							message = "Signed up using email!! Please login with email";
-					}
-
-				} else {
-					if (status.equals("email_pending")) {
-						Id = "0";
-						Code = FLS_INVALID_OPERATION;
-						message = "Please click on the link sent to your email to activate this account!!";
-					} else {
-						if (signUpStatus.equals("facebook") || signUpStatus.equals("google")) {
+						if (status.equals(signUpStatus)) {
 							String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
 
 							LOGGER.info("Creating a statement .....");
@@ -538,6 +497,7 @@ public class Users extends Connect {
 								json.put("fullName", rs.getString("user_full_name"));
 								json.put("mobile", rs.getString("user_mobile"));
 								json.put("location", rs.getString("user_location"));
+								json.put("referralCode", rs.getString("user_referral_code"));
 
 								message = json.toString();
 								LOGGER.warning(message);
@@ -545,14 +505,6 @@ public class Users extends Connect {
 							}
 
 							if (check != null) {
-								String update_status = "UPDATE users SET user_status=? WHERE user_id=?";
-								stmt1 = hcp.prepareStatement(update_status);
-
-								stmt1.setString(1, signUpStatus);
-								stmt1.setString(2, token);
-
-								stmt1.executeUpdate();
-
 								Code = FLS_SUCCESS;
 								Id = check;
 							} else {
@@ -562,11 +514,71 @@ public class Users extends Connect {
 							}
 						} else {
 							Id = "0";
-							message = FLS_LOGIN_USER_F;
 							Code = FLS_END_OF_DB;
+							if (status.equals("facebook") || status.equals("google"))
+								message = "Signed up using " + status + "!! Please continue with " + status;
+							else
+								message = "Signed up using email!! Please login with email";
+						}
+
+					} else {
+						if (status.equals("email_pending")) {
+							Id = "0";
+							Code = FLS_INVALID_OPERATION;
+							message = "Please click on the link sent to your email to activate this account!!";
+						} else {
+							if (signUpStatus.equals("facebook") || signUpStatus.equals("google")) {
+								String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
+
+								LOGGER.info("Creating a statement .....");
+								stmt = hcp.prepareStatement(sql);
+
+								LOGGER.info("Statement created. Executing getPrevious query...");
+								stmt.setString(1, token);
+								stmt.setString(2, auth);
+
+								rs = stmt.executeQuery();
+								while (rs.next()) {
+									JSONObject json = new JSONObject();
+									json.put("userId", rs.getString("user_id"));
+									json.put("fullName", rs.getString("user_full_name"));
+									json.put("mobile", rs.getString("user_mobile"));
+									json.put("location", rs.getString("user_location"));
+
+									message = json.toString();
+									LOGGER.warning(message);
+									check = rs.getString("user_id");
+								}
+
+								if (check != null) {
+									String update_status = "UPDATE users SET user_status=? WHERE user_id=?";
+									stmt1 = hcp.prepareStatement(update_status);
+
+									stmt1.setString(1, signUpStatus);
+									stmt1.setString(2, token);
+
+									stmt1.executeUpdate();
+
+									Code = FLS_SUCCESS;
+									Id = check;
+								} else {
+									Id = "0";
+									message = FLS_LOGIN_USER_F;
+									Code = FLS_END_OF_DB;
+								}
+							} else {
+								Id = "0";
+								message = FLS_LOGIN_USER_F;
+								Code = FLS_END_OF_DB;
+							}
 						}
 					}
+				}else{
+					Id = "0";
+					message = "Your account is kept on hold";
+					Code = FLS_ENTRY_NOT_FOUND;
 				}
+				
 			} else {
 				Id = "0";
 				message = "Email does not exist!!";
@@ -597,6 +609,8 @@ public class Users extends Connect {
 	}
 	
 	private void getUsers(){
+		
+		verification = um.getVerification();
 		
 		LOGGER.info("Inside Get Users Method");
 		
@@ -639,6 +653,7 @@ public class Users extends Connect {
 					obj.put("photoId", rs1.getString("user_photo_id"));
 					obj.put("verification", rs1.getInt("user_verified_flag"));
 					obj.put("profilePic", rs1.getString("user_profile_picture"));
+					obj.put("liveStatus", rs1.getInt("user_live_status"));
 					
 					array.put(obj);
 					offset = offset + 1;
@@ -671,5 +686,59 @@ public class Users extends Connect {
 			}
 		}
 		
+	}
+	
+	private void editLiveStatus(){
+
+		userId = um.getUserId();
+		liveStatus = um.getLiveStatus();
+		
+		LOGGER.info("Inside Edit Live Status Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		
+		PreparedStatement ps2 = null;
+		ResultSet rs2 = null;
+		
+		try{
+			
+			String sqlEditLiveStatus = "UPDATE users SET user_live_status=?  WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlEditLiveStatus);
+			ps1.setInt(1, liveStatus);
+			ps1.setString(2, userId);
+			
+			ps1.executeUpdate();
+			
+			String sqlGetLivestatus = "SELECT user_live_status FROM users WHERE user_id=?";
+			ps2 = hcp.prepareStatement(sqlGetLivestatus);
+			ps2.setString(1, userId);
+			
+			rs2 = ps2.executeQuery();
+			
+			if(rs2.next()){
+				if(rs2.getInt("user_live_status") == 0)
+					message = "0";
+				else
+					message = "1";
+			}
+			
+			res.setData(FLS_SUCCESS, "0", message);
+			
+		}catch(SQLException e){
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+			LOGGER.warning(e.getMessage());
+		}finally{
+			try {
+				if(rs2 != null)rs2.close();
+				if(ps2 != null)ps2.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

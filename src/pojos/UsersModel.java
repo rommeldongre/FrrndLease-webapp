@@ -10,6 +10,7 @@ public class UsersModel {
 	private FlsLogger LOGGER = new FlsLogger(UsersModel.class.getName());
 
 	private String userId, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode,profilePicture;
+	private int liveStatus, verification;
 	private float lat, lng;
 	private JSONObject obj;
 
@@ -34,6 +35,8 @@ public class UsersModel {
 			if(obj.has("lng"))lng = Float.parseFloat(obj.getString("lng"));
 			if(obj.has("referralCode"))referralCode = obj.getString("referralCode");
 			if(obj.has("profilePicture"))profilePicture = obj.getString("profilePicture");
+			if(obj.has("liveStatus"))liveStatus = obj.getInt("liveStatus");
+			if(obj.has("verification"))verification = obj.getInt("verification");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
@@ -114,5 +117,21 @@ public class UsersModel {
 
 	public String getProfilePicture() {
 		return profilePicture;
+	}
+
+	public int getLiveStatus() {
+		return liveStatus;
+	}
+
+	public void setLiveStatus(int liveStatus) {
+		this.liveStatus = liveStatus;
+	}
+
+	public int getVerification() {
+		return verification;
+	}
+
+	public void setVerification(int verification) {
+		this.verification = verification;
 	}
 }
