@@ -295,13 +295,13 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		boolean condition = false;
 		switch (graceDays) {
 		case "Annual":
-			gracedays = -37;
+			gracedays = -7;
 			break;
 		case "Season":
-			gracedays = -10;
+			gracedays = -7;
 			break;
 		case "Month":
-			gracedays = -3;
+			gracedays = -7;
 			break;
 		default:
 			break;
