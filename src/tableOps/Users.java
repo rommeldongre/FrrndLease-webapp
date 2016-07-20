@@ -629,6 +629,7 @@ public class Users extends Connect {
 				if(ps1!=null) ps1.close();
 				if(rs!=null) rs.close();
 				if(s1!=null) s1.close();
+				if(profilepicstmt!=null) profilepicstmt.close();
 				if(stmt!=null) stmt.close();
 				if(stmt1!=null) stmt1.close();
 				if(hcp!=null) hcp.close();
