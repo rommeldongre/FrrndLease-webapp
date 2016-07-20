@@ -511,6 +511,30 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
         });
     });
     
+    $scope.forgotPassword = function(email){
+        if(email == 'admin@frrndlease.com' || email == 'ops@frrndlease.com')
+            $scope.error = "This user cannot access the website";
+        else{
+            process_dialog("Sending email to reset the password!!");
+            $.ajax({
+                url: '/flsv2/ForgotPassword',
+                type:'POST',
+                data: JSON.stringify({userId:email}),
+                contentType:"application/json",
+                dataType: "JSON",
+                success: function(response) {
+                    $("#myPleaseWait").modal('toggle');
+                    $scope.$apply(function(){
+                        $scope.error = response.message;
+                    });
+                },
+                error: function() {
+                    $("#myPleaseWait").modal('toggle');
+                }
+            });
+        }
+    }
+    
 }]);
 
 headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', function($scope, loginSignupService){
