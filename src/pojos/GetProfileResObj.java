@@ -5,7 +5,7 @@ public class GetProfileResObj extends ResObj{
 	int code;
 	String message;
 
-	int credit;
+	int credit, liveStatus;
 	String fullName, mobile, location, address, locality, sublocality, referralCode, photoId,profilePic;
 	float lat, lng;
 	boolean photoIdVerified;
@@ -24,6 +24,14 @@ public class GetProfileResObj extends ResObj{
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public int getLiveStatus() {
+		return liveStatus;
+	}
+
+	public void setLiveStatus(int liveStatus) {
+		this.liveStatus = liveStatus;
 	}
 
 	public String getFullName() {

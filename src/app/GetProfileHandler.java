@@ -69,6 +69,7 @@ public class GetProfileHandler extends Connect implements AppHandler {
 				rs.setPhotoId(result.getString("user_photo_id"));
 				rs.setPhotoIdVerified(result.getBoolean("user_verified_flag"));
 				rs.setProfilePic(result.getString("user_profile_picture"));
+				rs.setLiveStatus(result.getInt("user_live_status"));
 				rs.setCode(FLS_SUCCESS);
 
 				LOGGER.info("Printing out ResultSet: " + rs.getFullName() + ", " + rs.getMobile() + ", "

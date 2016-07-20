@@ -18,6 +18,7 @@ import pojos.RenewLeaseReqObj;
 import adminOps.Response;
 import tableOps.LeaseTerms;
 import util.FlsSendMail;
+import util.LogItem;
 import util.AwsSESEmail;
 import util.FlsLogger;
 
@@ -221,6 +222,10 @@ public class Leases extends Connect {
 			res.setData(FLS_SUCCESS, "0", FLS_SUCCESS_M);
 			hcp.commit();
 			//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			
+			// logging item status to back instore
+			LogItem li = new LogItem();
+			li.addItemLog(Integer.parseInt(lm.getItemId()), "InStore", "", "");
 				
 		} catch (SQLException e) {
 			LOGGER.info("SQL Exception encountered....");

@@ -19,6 +19,7 @@ import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
 import util.LogCredit;
+import util.LogItem;
 
 public class RenewLeaseHandler extends Connect implements AppHandler {
 
@@ -105,6 +106,10 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				rs.setMessage(FLS_SUCCESS_M);
 				hcp.commit();
 				//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+				
+				// logging item status to lease ended
+				LogItem li = new LogItem();
+				li.addItemLog(rq.getItemId(), "LeaseEnded", "", "");
 					
 			} catch (SQLException e) {
 				LOGGER.info("SQL Exception encountered....");
@@ -248,6 +253,10 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					return false;
 				}
 				lc.addLogCredit(rq.getReqUserId(),-10,"Lease Renewed","");
+				
+				// logging item status to renewed
+				LogItem li = new LogItem();
+				li.addItemLog(rq.getItemId(), "Lease Renewed", "", "");
 				
 					LOGGER.info("Debit Credit query executed successfully...");
 					rs.setCode(FLS_SUCCESS);

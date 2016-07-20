@@ -16,6 +16,7 @@ import adminOps.Response;
 import tableOps.Store;
 import pojos.ItemsModel;
 import util.FlsSendMail;
+import util.LogItem;
 import util.AwsSESEmail;
 import util.FlsLogger;
 
@@ -124,7 +125,6 @@ public class Items extends Connect {
 
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
-			;
 			break;
 		}
 		return res;
@@ -370,6 +370,10 @@ public class Items extends Connect {
 				Id = String.valueOf(check);
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT);
+				
+				// logging item status to item edited
+				LogItem li = new LogItem();
+				li.addItemLog(id, "Item Edited", "", image);
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
@@ -406,6 +410,7 @@ public class Items extends Connect {
 		check = 0;
 		id = im.getId();
 		status = im.getStatus();
+		image = im.getImage();
 
 		LOGGER.info("Inside edit stat method...");
 		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
@@ -436,6 +441,10 @@ public class Items extends Connect {
 				Id = String.valueOf(check);
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT_STAT);
+				
+				// logging item status
+				LogItem li = new LogItem();
+				li.addItemLog(id, status, "", image);
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
@@ -808,6 +817,10 @@ public class Items extends Connect {
 					message = status;
 					Code = 001;
 					res.setData(FLS_SUCCESS, Id, FLS_ITEMS_DELETE_POSTING);
+					
+					// logging item status to archived
+					LogItem li = new LogItem();
+					li.addItemLog(id, "Archived", "", "");
 					break;
 
 				case "Leased":

@@ -289,4 +289,57 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
         $scope.item.leaseTerm = l;
     }
     
+    var lastOffset = 0;
+    
+    $scope.showItemTimeline = function(){
+		$("#openBtn").click();
+		$scope.showNext = true;
+		getItemTimeline(lastOffset);
+	}
+    
+	var getItemTimeline = function(Offset){
+		var req = {
+			itemId : $scope.item_id,
+			cookie: Offset,
+			limit: 3
+		}
+		
+		getItemTimelineSend(req);
+	}
+	
+	var getItemTimelineSend = function(req){
+		$.ajax({
+            url: '/flsv2/GetItemTimeline',
+            type: 'post',
+            data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+            success: function(response){
+				if(response.code == 0){
+                if(lastOffset == 0){
+					$scope.$apply(function(){
+						$scope.timelineArray = [response.resList];
+					});
+                    getItemTimeline(response.cookie);
+                    }else{
+						$scope.$apply(function(){
+						  $scope.timelineArray.push(response.resList);
+						});
+                    }
+                    lastOffset = response.cookie;
+				}else{
+					$scope.showNext = false;
+                }
+            },
+            error: function(){
+            }
+	
+        });
+	}
+	
+	// called when Show More Items Timeline button is clicked
+    $scope.loadNextItemTimeline = function(){
+        getItemTimeline(lastOffset);
+    }
+    
 }]);
