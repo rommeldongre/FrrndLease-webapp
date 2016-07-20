@@ -11,6 +11,7 @@ import pojos.ForgotPasswordReqObj;
 import pojos.ForgotPasswordResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
+import pojos.UsersModel;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.FlsSendMail;
@@ -69,6 +70,15 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 						rs.setMessage("This email is signed up using facebook. Please continue with facebook.");
 						break;
 					case "email_pending":
+						try{
+							AwsSESEmail newE = new AwsSESEmail();
+							UsersModel um = new UsersModel();
+							um.setActivation(activation);
+							newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION, um);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
 						rs.setCode(FLS_INVALID_USER_I);
 						rs.setMessage("This email was not verified from the link sent during sign up.");
 						break;

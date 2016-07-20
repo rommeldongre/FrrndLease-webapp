@@ -112,7 +112,13 @@ public class Users extends Connect {
 			
 		case "resetpassword":
 			LOGGER.info("Reset Password is selected");
-			resetPassword();
+			try {
+				token = obj.getString("token");
+				resetPassword();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 			
 		default:
@@ -835,7 +841,7 @@ public class Users extends Connect {
 				String sqlUpdateUserPassword = "UPDATE users SET user_auth=?,user_activation=? WHERE user_activation=?";
 				ps2 = hcp.prepareStatement(sqlUpdateUserPassword);
 				ps2.setString(1, auth);
-				ps2.setString(2, changeActivationCode(activation));
+				ps2.setString(2, token);
 				ps2.setString(3, activation);
 				
 				ps2.executeUpdate();
@@ -860,12 +866,6 @@ public class Users extends Connect {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	private String changeActivationCode(String a){
-		Date date = new Date();
-		String s = date.getTime()+"";
-		return a.substring(0, a.length()-2)+s.substring(s.length()-3, s.length()-1);
 	}
 	
 }

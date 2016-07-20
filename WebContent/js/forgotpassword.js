@@ -20,13 +20,15 @@ forgotPasswordApp.controller('forgotPasswordCtrl', ['$scope', '$http', '$locatio
     
     $scope.resetPassword = function(password){
         var Password = (CryptoJS.MD5(password)).toString();
+        
         var req = {
             table: "users",
             operation: "resetpassword",
             row: {
                 activation: activation,
                 auth: Password
-            }
+            },
+            token: (CryptoJS.MD5(activation)).toString()
         }
         $.ajax({
             url: '/flsv2/AdminOps',
