@@ -476,9 +476,12 @@ public class Users extends Connect {
 	private void getUserInfo() {
 		check = null;
 		auth = um.getAuth();
+		profilePicture = um.getProfilePicture();
+		String dbProfilePicture = null;
+		int profilePicrs=0;
 		LOGGER.info("Inside GetPrevious method");
 
-		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null;
+		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null,profilepicstmt=null;
 		ResultSet result1 = null, rs = null;
 		Connection hcp = getConnectionFromPool();
 
@@ -515,13 +518,36 @@ public class Users extends Connect {
 								json.put("mobile", rs.getString("user_mobile"));
 								json.put("location", rs.getString("user_location"));
 								json.put("referralCode", rs.getString("user_referral_code"));
-
+								dbProfilePicture = rs.getString("user_profile_picture");
 								message = json.toString();
 								LOGGER.warning(message);
 								check = rs.getString("user_id");
 							}
 
 							if (check != null) {
+								if(profilePicture!=null && dbProfilePicture==null){
+									String UpdatePicsql = "UPDATE users SET user_profile_picture=? WHERE user_id = ? AND user_auth = ?";
+									LOGGER.info("Creating update Profile Pic statement .....");
+									profilepicstmt = hcp.prepareStatement(UpdatePicsql);
+
+									LOGGER.info("update Profile Pic Statement created. Executing  query...");
+									profilepicstmt.setString(1, profilePicture);
+									profilepicstmt.setString(2, token);
+									profilepicstmt.setString(3, auth);
+
+									profilePicrs = profilepicstmt.executeUpdate();
+									if(profilePicrs!=0){
+										Code = FLS_SUCCESS;
+										Id = check;
+									}else{
+										Id = "0";
+										message = FLS_LOGIN_USER_F;
+										Code = FLS_END_OF_DB;
+									}
+							    }else{
+							    	Code = FLS_SUCCESS;
+									Id = check;
+							    }
 								Code = FLS_SUCCESS;
 								Id = check;
 							} else {
@@ -615,6 +641,7 @@ public class Users extends Connect {
 				if(ps1!=null) ps1.close();
 				if(rs!=null) rs.close();
 				if(s1!=null) s1.close();
+				if(profilepicstmt!=null) profilepicstmt.close();
 				if(stmt!=null) stmt.close();
 				if(stmt1!=null) stmt1.close();
 				if(hcp!=null) hcp.close();
