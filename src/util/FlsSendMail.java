@@ -32,7 +32,10 @@ public class FlsSendMail {
 		FLS_MAIL_GRANT_LEASE_FROM, // done
 		FLS_MAIL_GRANT_LEASE_TO, // done
 		FLS_MAIL_REJECT_LEASE_FROM, // not done pojo needs to be filled //done
-		FLS_MAIL_REJECT_LEASE_TO
+		FLS_MAIL_REJECT_LEASE_TO,
+		
+		FLS_MAIL_GRACE_PERIOD_OWNER,
+		FLS_MAIL_GRACE_PERIOD_REQUESTOR
 	} // done
 
 	public static void send(String userId, Fls_Enum fls_enum, Object obj, String... apiflag) throws Exception {
