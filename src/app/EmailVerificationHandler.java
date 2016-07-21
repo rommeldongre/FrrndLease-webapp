@@ -102,7 +102,7 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setUserId("");
-				rs.setMessage("This account is not registered!! I wonder how you got this link");
+				rs.setMessage("This is an invalid link!!");
 			}
 
 		} catch (SQLException e) {

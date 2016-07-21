@@ -106,7 +106,7 @@ public class AwsSESEmail extends Connect {
 		// Fls_Enum = fls_enum;
 		user_id = userId;
 		TO = userId;
-		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL;
+		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD;
 
 		// this variable is used to store the image
 		File imageFile = null;
@@ -117,11 +117,13 @@ public class AwsSESEmail extends Connect {
 		if (env_config.equals("dev")) {
 			EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
 			EMAIL_INVITATION_URL ="http://localhost:8080/flsv2/ref_token=";
+			EMAIL_FORGOT_PASSWORD = "http://localhost:8080/flsv2/forgotpassword.html";
 			PREFIX = "[FrrndLease-Test]";
 			
 		} else {
 			EMAIL_VERIFICATION_URL = "http://www.frrndlease.com/emailverification.html";
 			EMAIL_INVITATION_URL ="http://www.frrndlease.com/ref_token=";
+			EMAIL_FORGOT_PASSWORD = "http://www.frrndlease.com/forgotpassword.html";
 			PREFIX = "[FrrndLease]";
 		}
 		
@@ -145,6 +147,13 @@ public class AwsSESEmail extends Connect {
 
 		// Build Email Subject and Body
 		switch (fls_enum) {
+		case FLS_MAIL_FORGOT_PASSWORD:
+			String activation = (String)obj;
+			SUBJECT = PREFIX + " Forgot Password";
+			BODY = "<body>Click on this link to reset password for your frrndlease account. <br/>"
+					+ "<a href='" + EMAIL_FORGOT_PASSWORD + "?act=" + activation + "'>"
+					+ EMAIL_FORGOT_PASSWORD + "?act=" + activation + "</a>" + "<br/></body>";
+			break;
 		case FLS_MAIL_SIGNUP_VALIDATION:
 			UsersModel um = (UsersModel) obj;
 			SUBJECT = PREFIX + " Email Verification";
