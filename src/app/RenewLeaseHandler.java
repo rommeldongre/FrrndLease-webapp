@@ -258,6 +258,15 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				LogItem li = new LogItem();
 				li.addItemLog(rq.getItemId(), "Lease Renewed", "", "");
 				
+				try {
+					AwsSESEmail newE = new AwsSESEmail();
+					newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
+					newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_RENEW_LEASE_OWNER, rq);
+				} catch (Exception e) {
+					// TODO: handle exception
+					 e.printStackTrace();
+				}
+				
 					LOGGER.info("Debit Credit query executed successfully...");
 					rs.setCode(FLS_SUCCESS);
 					rs.setId(rq.getReqUserId());

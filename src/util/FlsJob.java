@@ -61,7 +61,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
     	  try {
     		  getConnection();
     		  System.out.println("After getting connection");
-    		  String getLeases =" SELECT tb1.lease_requser_id, tb1.lease_item_id, tb1.lease_user_id, tb1.lease_status, tb1.lease_expiry_date, tb2.user_credit FROM leases tb1 INNER JOIN users tb2 on tb1.lease_requser_id = tb2.user_id WHERE tb1.lease_status=? AND lease_expiry_date< ? LIMIT 1";
+    		  String getLeases =" SELECT tb1.lease_requser_id, tb1.lease_item_id, tb1.lease_user_id, tb1.lease_status, tb1.lease_expiry_date, tb2.user_credit FROM leases tb1 INNER JOIN users tb2 on tb1.lease_requser_id = tb2.user_id WHERE tb1.lease_status=? AND lease_expiry_date< ?";
     		  psgetLeases= connection.prepareStatement(getLeases);
     		  psgetLeases.setString(1, "Active");
     		  psgetLeases.setString(2, futureDate);
@@ -206,6 +206,15 @@ public class FlsJob extends Connect implements org.quartz.Job {
 					
 					// logging item status to renewed
 					li.addItemLog(lease_item_id, "Lease Renewed", "", "");
+					
+					AwsSESEmail newE = new AwsSESEmail();
+					RenewLeaseReqObj rq = new RenewLeaseReqObj();
+					rq.setItemId(lease_item_id);
+					rq.setFlag("renew");
+					rq.setReqUserId(lease_requser_id);
+					rq.setUserId(lease_user_id);
+					newE.send(lease_requser_id, FlsSendMail.Fls_Enum.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
+					newE.send(lease_user_id, FlsSendMail.Fls_Enum.FLS_MAIL_RENEW_LEASE_OWNER, rq);
 					
 				}else{
 					
