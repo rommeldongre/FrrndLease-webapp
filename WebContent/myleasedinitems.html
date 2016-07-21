@@ -80,10 +80,7 @@
                            <p class="description">{{lease.leaseExpiryDate}}</p>
                        </a>
                        <a class="card-link" href="">
-                           <button class="btn btn-primary btn-simple">Request Cancel</button>
-                       </a>
-                       <a class="card-link" href="">
-                           <button class="btn btn-primary btn-simple">Request Renew</button>
+                           <button class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.ownerUserId, lease.requestorUserId, $index)">Request Cancel</button>
                        </a>
                    </div>
                </div>

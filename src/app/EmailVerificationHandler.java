@@ -48,7 +48,7 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside Process Method " + rq.getVerification());
 
 		try {
-			String select_status_sql = "Select user_status,user_id FROM users WHERE user_activation=?";
+			String select_status_sql = "Select user_status,user_id,user_full_name FROM users WHERE user_activation=?";
 			ps1 = hcp.prepareStatement(select_status_sql);
 			ps1.setString(1, rq.getVerification());
 
@@ -86,10 +86,12 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 					if (result3 == 1) {
 						rs.setCode(FLS_SUCCESS);
 						rs.setUserId(result1.getString("user_id"));
+						rs.setName(result1.getString("user_full_name"));
 						rs.setMessage("Your account has been activated!!");
 					} else {
 						rs.setCode(FLS_SQL_EXCEPTION);
 						rs.setUserId("");
+						rs.setName("");
 						rs.setMessage(
 								"Could not activate your account due to some internal problems!! Trying to fix it ASAP");
 					}
@@ -97,11 +99,13 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 				} else {
 					rs.setCode(FLS_END_OF_DB);
 					rs.setUserId("");
+					rs.setName("");
 					rs.setMessage("This account is already activated!! No point activating it again");
 				}
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setUserId("");
+				rs.setName("");
 				rs.setMessage("This is an invalid link!!");
 			}
 
