@@ -144,7 +144,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
     	try {
     		hcp.setAutoCommit(false);
 			LOGGER.info("Grace Condition is false ...");
-		    if(user_credit >10){
+		    if(user_credit >=10){
 		    	term = GLH.getLeaseTerm(lease_item_id);
 				days = GLH.getDuration(term);
 					
