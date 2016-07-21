@@ -64,10 +64,7 @@ public class FlsServletContextListener implements ServletContextListener {
 	     	//For production every day at 5am			   
 	      	Trigger trigger = newTrigger()
 	      						    .withIdentity("FlsTrigger1", "FlsGroup1")
-	      						    .startNow()
-	      						    .withSchedule(simpleSchedule()
-	      						    			.withIntervalInHours(24)
-	      						    			.repeatForever())
+	      						    .withSchedule(CronScheduleBuilder.cronSchedule("0 0 1 * * ?"))
 	      						    .build();
 	  		
 	  		

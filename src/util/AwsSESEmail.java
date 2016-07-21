@@ -322,6 +322,34 @@ public class AwsSESEmail extends Connect {
 			BODY = ("<body>Lease has been closed by the Owner for the item having id [" + rtlm.getItemId()
 					+ "] <br/> <br/></body>");
 			break;
+			
+		case FLS_MAIL_GRACE_PERIOD_OWNER:
+			RenewLeaseReqObj rlgpo = (RenewLeaseReqObj) obj;
+			SUBJECT = (PREFIX + " Reminder to Renew Lease to user [" + rlgpo.getReqUserId() + "]");
+			BODY = ("<body>Less than 5 days left for lease to close.Please consider renewing the lease of item having id [" + rlgpo.getItemId() + "] and leasee ["
+					+ rlgpo.getReqUserId() + "] on Friend Lease - <br/> <br/></body>");
+			break;
+
+		case FLS_MAIL_GRACE_PERIOD_REQUESTOR:
+			RenewLeaseReqObj rlgpr = (RenewLeaseReqObj) obj;
+			SUBJECT = (PREFIX + " Reminder to Renew Lease");
+			BODY = ("<body>Less than 5 days left for lease to close. Please consider renewing the lease of item having id [" + rlgpr.getItemId()
+					+ "] <br/> <br/></body>");
+			break;
+			
+		case FLS_MAIL_RENEW_LEASE_OWNER:
+			RenewLeaseReqObj rlo = (RenewLeaseReqObj) obj;
+			SUBJECT = (PREFIX + " Renewed Lease to user [" + rlo.getReqUserId() + "]");
+			BODY = ("<body>Lease has been renewed for item having id [" + rlo.getItemId() + "] and leasee ["
+					+ rlo.getReqUserId() + "] on Friend Lease - <br/> <br/></body>");
+			break;
+
+		case FLS_MAIL_RENEW_LEASE_REQUESTOR:
+			RenewLeaseReqObj rlr = (RenewLeaseReqObj) obj;
+			SUBJECT = (PREFIX + " Lease Renewed");
+			BODY = ("<body>Lease has been renewed by the owner of item having id [" + rlr.getItemId()
+					+ "] <br/> <br/></body>");
+			break;
 
 		case FLS_MAIL_MAKE_REQUEST_FROM:
 			RequestsModel rfrm = (RequestsModel) obj;
