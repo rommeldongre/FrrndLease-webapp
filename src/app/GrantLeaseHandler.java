@@ -306,7 +306,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		// TODO Auto-generated method stub
 	}
 
-	String getLeaseTerm(int itemId) throws SQLException {
+	public String getLeaseTerm(int itemId) throws SQLException {
 		String term = null;
 		PreparedStatement stmt= null;
 		ResultSet rs =null;
@@ -335,7 +335,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		return term;
 	}
 	
-	int getDuration(String term) throws SQLException {
+	public int getDuration(String term) throws SQLException {
 		int days = 0;
 		PreparedStatement stmt= null;
 		ResultSet rs =null;
