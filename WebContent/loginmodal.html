@@ -18,14 +18,15 @@
                 <span class="divider"> or </span>
 
               <p ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
-            <form name="form">
+            <form name="form" style="text-align: center;">
                 <div class="form-group">
                     <input name="email" type="email" id="email" class="form-control" ng-change="error=''" ng-model="email" placeholder="Email" required autofocus/>
                 </div>
                 <div class="form-group">
-                    <input name="password" type="password" id="password" class="form-control" ng-change="error=''" ng-model="password" placeholder="Password" required/>
+                    <input name="password" type="password" id="password" class="form-control" ng-change="error=''" ng-model="password" placeholder="Password" />
                 </div>
                 <button type="button" class="btn btn-primary btn-fill btn-block" ng-click="(form.email.$touched && form.email.$valid && form.password.$touched && form.password.$valid) ? formLogin(email, password) : error='Please Enter correct email and password'"> Login </button>
+                <button class="btn btn-default btn-simple" ng-click="(form.email.$touched && form.email.$valid) ? forgotPassword(email) : error='Please enter the registered email'"><u>Forgot Password??</u></button>
             </form>
           </div>
         </div>

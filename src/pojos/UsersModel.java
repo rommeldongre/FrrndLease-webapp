@@ -43,6 +43,10 @@ public class UsersModel {
 		}
 	}
 
+	public void setActivation(String activation) {
+		this.activation = activation;
+	}
+
 	public String getUserId() {
 		return this.userId;
 	}

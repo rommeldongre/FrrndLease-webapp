@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
@@ -107,6 +108,17 @@ public class Users extends Connect {
 		case "editverification":
 			LOGGER.info("Edit Verification is selected");
 			editVerification();
+			break;
+			
+		case "resetpassword":
+			LOGGER.info("Reset Password is selected");
+			try {
+				token = obj.getString("token");
+				resetPassword();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 			
 		default:
@@ -782,11 +794,6 @@ public class Users extends Connect {
 
 		userId = um.getUserId();
 		verification = um.getVerification();
-//		boolean ver;
-//		if(verification == 0)
-//			ver = false;
-//		else
-//			ver = true;
 		
 		LOGGER.info("Inside Edit Verification Method");
 		
@@ -836,4 +843,56 @@ public class Users extends Connect {
 			}
 		}
 	}
+	
+	private void resetPassword(){
+		
+		auth = um.getAuth();
+		activation = um.getActivation();
+		
+		LOGGER.info("Inside Reset Password Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		PreparedStatement ps2 = null;
+		
+		try{
+			
+			String sqlCheckActivation = "SELECT user_activation FROM users WHERE user_activation=?";
+			ps1 = hcp.prepareStatement(sqlCheckActivation);
+			ps1.setString(1, activation);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				String sqlUpdateUserPassword = "UPDATE users SET user_auth=?,user_activation=? WHERE user_activation=?";
+				ps2 = hcp.prepareStatement(sqlUpdateUserPassword);
+				ps2.setString(1, auth);
+				ps2.setString(2, token);
+				ps2.setString(3, activation);
+				
+				ps2.executeUpdate();
+				
+				res.setData(FLS_SUCCESS, "0", "Your password has been reset");
+			}else{
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", "This link is expired. To reset the password go back to ");
+			}
+			
+		}catch(SQLException e){
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+			LOGGER.warning(e.getMessage());
+		}finally{
+			try {
+				if(ps2 != null)ps2.close();
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }
