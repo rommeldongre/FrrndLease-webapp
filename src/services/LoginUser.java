@@ -62,7 +62,10 @@ public class LoginUser extends HttpServlet {
 			row.put("mobile", "0");
 			row.put("location", "0");
 			row.put("userId", "0");
-			row.put("profilePicture", obj.getString("profilePicture"));
+			if(obj.has("profilePicture")){
+				row.put("profilePicture", obj.getString("profilePicture"));
+			}
+			
 			row.put("auth", obj.getString("auth"));
 
 			obj.put("row", row);
