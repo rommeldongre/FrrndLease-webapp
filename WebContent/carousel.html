@@ -57,7 +57,7 @@
                     <button rel="tooltip" title="This is a morphing button" ng-click="loadNextSlide()" class="btn btn-default btn-round btn-fill" id="successBtn" data-toggle="morphing" data-rotation-color="gray" data-rotation-color="azure">Load more...</button>
                 </div>
 			</div>
-            <div class="alert alert-success" ng-if="showWishes" style="margin-top: 20px;">
+            <div class="alert alert-success btn-tooltip" ng-if="showWishes" style="margin-top: 20px;" ng-click="offerStuffClicked()" data-toggle="tooltip" data-placement="top" title="Add your items to the store">
                 <div class="container">Top Ten Wished Items - 
                       <span class="label label-success" ng-repeat="wish in wishes">{{wish | limitTo: 20}}<span ng-if="wish.length > 20">&hellip;</span></span>
                 </div>
