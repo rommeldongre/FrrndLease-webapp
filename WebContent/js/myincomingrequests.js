@@ -14,6 +14,8 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
     
     var initialPopulate = function(){
         
+        $scope.requests = [];
+        
         itemNextRequestId = 0;
         
         getInRequests(itemNextRequestId);
@@ -83,7 +85,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
             success: function(response) {
                 modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        $scope.requests.splice(index, 1);
+                        initialPopulate();
                     },function(){});	
             },
             error: function() {
@@ -122,7 +124,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
             success: function(response) {
                 modalService.showModal({}, {bodyText: response.Message, showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        $scope.requests.splice(index, 1);
+                        initialPopulate();
                     },function(){});
             },
             error: function() {

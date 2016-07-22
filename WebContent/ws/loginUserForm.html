@@ -16,9 +16,11 @@
 		SignUpData = document.getElementById("signUpData").value;
 		
 		var req = {
-				auth: Auth,
 				token: Token,
-				signUpData: SignUpData
+				signUpData: SignUpData,
+                row: {
+				    auth: Auth
+                }
 		}
 		send(req);
 	};

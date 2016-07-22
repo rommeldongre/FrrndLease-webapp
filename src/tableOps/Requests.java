@@ -123,12 +123,28 @@ public class Requests extends Connect {
 		String sql1 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=? AND request_status = ? ";
 
 		String sql = "insert into requests (request_requser_id,request_item_id,request_date) values (?,?,?)"; //
-		PreparedStatement stmt = null,stmt1 = null,stmt2 = null, stmt3 = null,stmt4=null ;
-		ResultSet rs = null, rslease = null, dbResponse = null, rs1=null;
+		PreparedStatement stmt = null,stmt1 = null,stmt2 = null, stmt3 = null,stmt4=null, stmt5 = null;
+		ResultSet rs = null, rslease = null, dbResponse = null, rs1=null, rs2 = null;
 		boolean user_verified=false;
 		Connection hcp = getConnectionFromPool();
 
 		try {
+			LOGGER.info("Creating Select statement to if item is InStore.....");
+			String checkItemStatus = "SELECT item_status FROM `items` WHERE item_id=?";
+			stmt5 = hcp.prepareStatement(checkItemStatus);
+			stmt5.setInt(1, Integer.parseInt(itemId));
+			rs2 = stmt5.executeQuery();
+			
+			if(rs2.next()){
+				if(!(rs2.getString("item_status")).equals("InStore")){
+					message = FLS_ITEM_ON_HOLD_M;
+					Code = FLS_ITEM_ON_HOLD;
+					Id = "0";
+					res.setData(Code, Id, message);
+					return;
+				}
+			}
+			
 			LOGGER.info("Creating Select statement to check user profile status.....");
 			String checkUserStatus="SELECT user_verified_flag FROM `users` WHERE user_id=?";
 			stmt4 = hcp.prepareStatement(checkUserStatus);
@@ -273,6 +289,8 @@ public class Requests extends Connect {
 		e.printStackTrace();
 	    }finally{
 			try {
+				if(rs2 != null)	rs2.close();
+				if(stmt5 != null) stmt5.close();
 				if(rs!=null) rs.close();
 				if(rs1!=null) rs1.close();
 				if(rslease!=null) rslease.close();
@@ -455,7 +473,6 @@ public class Requests extends Connect {
 			if (check != null) {
 
 				// code for populating item pojo for sending requester email
-				RequestsModel rm1 = new RequestsModel();
 				ItemsModel im = new ItemsModel();
 				String sql1 = "SELECT * FROM items WHERE item_id=?";
 				LOGGER.info("Creating a statement .....");

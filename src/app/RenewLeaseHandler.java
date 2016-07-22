@@ -97,10 +97,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					hcp.close();
 					return rs;
 				}
-
-				AwsSESEmail newE = new AwsSESEmail();
-				newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, rq);
-				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, rq);
 				
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
@@ -110,6 +106,10 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				// logging item status to lease ended
 				LogItem li = new LogItem();
 				li.addItemLog(rq.getItemId(), "LeaseEnded", "", "");
+				
+				AwsSESEmail newE = new AwsSESEmail();
+				newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, rq);
+				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, rq);
 					
 			} catch (SQLException e) {
 				LOGGER.info("SQL Exception encountered....");
@@ -258,6 +258,13 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				LogItem li = new LogItem();
 				li.addItemLog(rq.getItemId(), "Lease Renewed", "", "");
 				
+				LOGGER.info("Debit Credit query executed successfully...");
+				rs.setCode(FLS_SUCCESS);
+				rs.setId(rq.getReqUserId());
+				rs.setMessage(FLS_SUCCESS_M);
+				LOGGER.info("renew Lease query executed successfully...");
+				hcp.commit();
+					
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
@@ -266,13 +273,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					// TODO: handle exception
 					 e.printStackTrace();
 				}
-				
-					LOGGER.info("Debit Credit query executed successfully...");
-					rs.setCode(FLS_SUCCESS);
-					rs.setId(rq.getReqUserId());
-					rs.setMessage(FLS_SUCCESS_M);
-					LOGGER.info("renew Lease query executed successfully...");
-					hcp.commit();
 		} catch (SQLException e1) {
 			// TODO: handle exception
 		}catch(NullPointerException e) {

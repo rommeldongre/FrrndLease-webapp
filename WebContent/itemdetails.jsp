@@ -181,7 +181,12 @@
         var code = "${code}";
         var userId = "${userId}";
         var image = "${image}";
-        
+		var title = "${title}";
+        var description = "${description}";
+		var category = "${category}";
+		var leaseValue = "${leaseValue}";
+		var leaseTerm = "${leaseTerm}";
+		
         var item_id = "${itemId}";
 
 		function start() {
