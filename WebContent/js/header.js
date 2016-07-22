@@ -19,6 +19,9 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
 		}
         Mobile = mobile;
 		Code = code;
+		if(Code === undefined || Code==null){
+			Code ="";
+		}
         Location = location;
         SignUpStatus = signUpStatus;
         
@@ -185,8 +188,6 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
             userId: user,
 			referralCode: code
         }
-		console.log("Import FB friends:");
-		console.log(req);
         addFriendSend(req, friends);
     }
 
