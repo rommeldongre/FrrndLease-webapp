@@ -202,7 +202,12 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     }
     
     $scope.offerStuffClicked = function(){
-        window.location.replace("EditPosting.html");
+       if(user == "" || user == null || user == 'anonymous'){
+            $('#loginModal').modal('show');
+        }
+        else{
+            window.location.replace("EditPosting.html");
+        }
     }
     
     var addToWishList = function(data){
