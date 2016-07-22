@@ -24,6 +24,7 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
             
             if(data.data.code == 0){
                 localStorage.setItem("userloggedin", data.data.userId);
+                localStorage.setItem("userloggedinName", data.data.name);
                 
                 modalService.showModal({}, {bodyText: data.data.message + ', Welcome to fRRndLease.',showCancel: false,actionButtonText: 'OK'}).then(
                     function(result){

@@ -1,6 +1,6 @@
 var myLeasedInItemsApp = angular.module('myApp');
 
-myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', function($scope, userFactory){
+myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
 
     localStorage.setItem("prevPage","myapp.html#/myleasedinitems");
     
@@ -45,6 +45,40 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', f
     }
     
     initialPopulate();
+    
+    $scope.closeLease = function(ItemId, OwnerUserId, RequestorUserId, index){
+        modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'YES'}).then(
+            function(result){
+                req = {
+                    itemId: ItemId,
+                    userId: OwnerUserId,
+                    reqUserId: RequestorUserId,
+                    flag: "close"
+                };
+                closeLeaseSend(req, index);
+            },function(){});
+    }
+    
+    var closeLeaseSend = function(req, index){
+        $.ajax({
+            url: '/flsv2/RenewLease',
+            type:'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                
+                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
+                function(result){
+                    $scope.leases = [];
+                    initialPopulate();
+                },function(){});
+                
+            },
+            error: function() {
+            }
+        });
+    }
     
     $scope.showItemDetails = function(uid){
         window.location.replace("ItemDetails?uid="+uid);
