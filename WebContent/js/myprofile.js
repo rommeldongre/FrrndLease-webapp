@@ -125,10 +125,11 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
 				$scope.label = response.data.photoIdVerified;
 				$scope.profilePic = response.data.profilePic;
 				url = response.data.photoId;
-				var img = new Image();
-				img.src = url;
-				if(img.src != null && img.src != "null")
+				if(url != null && url != "null"){
+					var img = new Image();
+					img.src = url;
 					drawImage(img);
+				}
             } else {
                 $scope.userId = "";
                 $scope.fullname = "";

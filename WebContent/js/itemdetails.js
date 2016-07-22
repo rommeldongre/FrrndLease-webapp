@@ -7,7 +7,12 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
     $scope.item = {};
     
     $scope.item.image = $window.image;
-    
+    $scope.item.title = $window.title;
+	$scope.item.description = $window.description;
+	$scope.item.category = $window.category;
+	$scope.item.leaseValue = $window.leaseValue;
+	$scope.item.leaseTerm = $window.leaseTerm;
+	
     $scope.item_id = $window.item_id;
     
     $scope.uploadImage = function(file){
@@ -113,7 +118,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
 							dataType: "json",
 							success:function(response){
 								modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-									 window.location.replace("/flsv2/mywishlists.html");
+									 window.location.replace("myapp.html#/mywishlists");
 								},function(){});
 							},
 							error: function(){
