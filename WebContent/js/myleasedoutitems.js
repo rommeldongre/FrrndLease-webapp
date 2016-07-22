@@ -45,16 +45,23 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
     }
     
     $scope.closeLease = function(ItemId, RequestorUserId, index){
-        modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'YES'}).then(
-            function(result){
-                req = {
-                    itemId: ItemId,
-                    userId: userFactory.user,
-                    reqUserId: RequestorUserId,
-                    flag: "close"
-                };
-                closeLeaseSend(req, index);
-            },function(){});
+        if($scope.leases[index].status == 'LeaseStarted' || $scope.leases[index].status == 'LeaseEnded' || $scope.leases[index].status == 'LeaseReady'){
+            modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'YES'}).then(
+                function(result){
+                    req = {
+                        itemId: ItemId,
+                        userId: userFactory.user,
+                        reqUserId: RequestorUserId,
+                        flag: "close"
+                    };
+                    closeLeaseSend(req, index);
+                },function(){});
+        }else{
+            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseEnded or LeaseReady", showCancel:false, actionButtonText: 'OK'}).then(
+                function(result){
+                },function(){});
+        }
+        
     }
     
     var closeLeaseSend = function(req, index){
@@ -78,17 +85,23 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 'userFactory',
         });
     }
     
-    $scope.renewLease = function(ItemId, RequestorUserId){
-        modalService.showModal({}, {bodyText: "Are you sure you want to renew the lease on the Item?",actionButtonText: 'YES'}).then(
-            function(result){
-                req = {
-                    itemId: ItemId,
-                    userId: userFactory.user,
-                    reqUserId: RequestorUserId,
-                    flag: "renew"
-                }
-                renewLeaseSend(req);
-            },function(){});
+    $scope.renewLease = function(ItemId, RequestorUserId, index){
+        if($scope.leases[index].status == 'LeaseStarted' || $scope.leases[index].status == 'LeaseEnded' || $scope.leases[index].status == 'LeaseReady'){
+            modalService.showModal({}, {bodyText: "Are you sure you want to renew the lease on the Item?",actionButtonText: 'YES'}).then(
+                function(result){
+                    req = {
+                        itemId: ItemId,
+                        userId: userFactory.user,
+                        reqUserId: RequestorUserId,
+                        flag: "renew"
+                    }
+                    renewLeaseSend(req);
+                },function(){});
+        }else{
+            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseEnded or LeaseReady", showCancel:false, actionButtonText: 'OK'}).then(
+                function(result){
+                },function(){});
+        }
     }
     
     var renewLeaseSend = function(req){

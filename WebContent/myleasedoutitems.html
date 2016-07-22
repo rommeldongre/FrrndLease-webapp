@@ -16,7 +16,7 @@
         <div class="col-lg-1 col-md-1"></div>
         <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
             <div class="row" style="display: flex;flex-wrap: wrap;">
-                <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="col-lg-4 col-md-4 col-sm-4" href="" ng-click="showItemDetails(lease.uid)">
                    <a class="image">
                       <img ng-src="{{(lease.image === '' || lease.image === null || lease.image === NULL || lease.image === 'null') ? 'images/imgplaceholder.png' : lease.image}}" alt="...">
                    </a>
@@ -83,7 +83,7 @@
                            <button class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">Close</button>
                        </a>
                        <a class="card-link" href="">
-                           <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId)">Renew</button>
+                           <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">Renew</button>
                        </a>
                    </div>
                </div>

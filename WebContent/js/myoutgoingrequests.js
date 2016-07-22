@@ -12,6 +12,8 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
     
     var initialPopulate = function(){
         
+        $scope.requests = [];
+        
         itemNextRequestId = 0;
         
         getOutRequests(itemNextRequestId);
@@ -81,7 +83,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
                 if(response.errorString == "No Error"){
                     modalService.showModal({}, {bodyText: "Request Deleted successfully", showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        $scope.requests.splice(index, 1);
+                        initialPopulate();
                     },function(){});
                 }
             },

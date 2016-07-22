@@ -93,7 +93,9 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     // populate the carousel with initital array
     var initPopulate = function(){
         lastItem = 0;
-            
+        
+        $scope.itemsArray = [];
+        
         $scope.showNext = false;
         
         populateCarousel(lastItem);
@@ -124,12 +126,9 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                 if(response.data.returnCode == 0){
                     if(lastItem == 0){
                         $scope.itemsArray = [response.data.resList];
-                        populateCarousel(response.data.lastItemId);
                     }
                     else{
-                        $timeout(function(){
-                            $scope.itemsArray.push(response.data.resList);
-                        }, 1000);
+                        $scope.itemsArray.push(response.data.resList);
                     }
                     lastItem = response.data.lastItemId;
 					$scope.showNext = true;
@@ -200,6 +199,15 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     // called when item from carousel is clicked
     $scope.itemClicked = function(uid){
         window.location.replace("ItemDetails?uid="+uid);
+    }
+    
+    $scope.offerStuffClicked = function(){
+       if(user == "" || user == null || user == 'anonymous'){
+            $('#loginModal').modal('show');
+        }
+        else{
+            window.location.replace("EditPosting.html");
+        }
     }
     
     var addToWishList = function(data){

@@ -209,6 +209,14 @@ public class Leases extends Connect {
 				hcp.close();
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
+			
+			res.setData(FLS_SUCCESS, "0", FLS_SUCCESS_M);
+			hcp.commit();
+			//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			
+			// logging item status to back instore
+			LogItem li = new LogItem();
+			li.addItemLog(Integer.parseInt(lm.getItemId()), "InStore", "", "");
 
 			AwsSESEmail newE = new AwsSESEmail();
 			RenewLeaseReqObj rq = new RenewLeaseReqObj();
@@ -218,14 +226,6 @@ public class Leases extends Connect {
 			rq.setUserId(lm.getUserId());
 			newE.send(lm.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, rq);
 			newE.send(lm.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, rq);
-			
-			res.setData(FLS_SUCCESS, "0", FLS_SUCCESS_M);
-			hcp.commit();
-			//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
-			
-			// logging item status to back instore
-			LogItem li = new LogItem();
-			li.addItemLog(Integer.parseInt(lm.getItemId()), "InStore", "", "");
 				
 		} catch (SQLException e) {
 			LOGGER.info("SQL Exception encountered....");

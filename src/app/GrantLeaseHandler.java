@@ -48,11 +48,29 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		Connection hcp = getConnectionFromPool();
 		hcp.setAutoCommit(false);
 		
-		PreparedStatement psReqSelect = null, psReqUpdate = null, psStoreSelect = null, psStoreUpdate = null, psItemSelect = null, psItemUpdate = null, psLeaseSelect = null, psLeaseUpdate = null, psAddCredit = null, psDebitCredit = null;
-		ResultSet result1 = null, result2 = null, result3 = null, result4 = null;
+		PreparedStatement psReqSelect = null, psReqUpdate = null, psStoreSelect = null, psStoreUpdate = null, psItemSelect = null, 
+				psItemUpdate = null, psLeaseSelect = null, psLeaseUpdate = null, 
+				psAddCredit = null, psDebitCredit = null, psItemStatus = null;
+		ResultSet result1 = null, result2 = null, result3 = null, result4 = null, result5 = null;
 		int RequestAction = 0, StoreAction = 0, ItemAction = 0, LeaseAction = 0, addCredit = 0, subCredit = 0;
 		
 		try {
+			LOGGER.info("Creating Select statement to if item is InStore.....");
+			String checkItemStatus = "SELECT item_status FROM `items` WHERE item_id=?";
+			psItemStatus = hcp.prepareStatement(checkItemStatus);
+			psItemStatus.setInt(1, rq.getItemId());
+			result5 = psItemStatus.executeQuery();
+			
+			if(result5.next()){
+				if(!(result5.getString("item_status")).equals("InStore")){
+					rs.setCode(FLS_ITEM_ON_HOLD);
+					rs.setError("404");
+					rs.setMessage(FLS_ITEM_ON_HOLD_M);
+					hcp.rollback();
+					return rs;
+				}
+			}
+			
 			
 			int credit = 0;
 			String sqlCheckCredit = "SELECT user_credit FROM users WHERE user_id=?";
@@ -256,18 +274,19 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			}
 			lc.addLogCredit(rq.getReqUserId(),-10,"Lease Recieved","");
 			
+			rs.setCode(FLS_SUCCESS);
+			rs.setId(rq.getReqUserId());
+			rs.setMessage(FLS_SUCCESS_M);
+			hcp.commit();
+			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
 			    newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, rq);
 				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, rq);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
-									
-			rs.setCode(FLS_SUCCESS);
-			rs.setId(rq.getReqUserId());
-			rs.setMessage(FLS_SUCCESS_M);
-			hcp.commit();
+			}						
+			
 		} catch (SQLException e) {
 			//res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			rs.setCode(FLS_SQL_EXCEPTION);
@@ -278,23 +297,25 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 		}finally{
 			
-			result1.close();
-			result2.close();
-			result3.close();
-			result4.close();
+			if(result1 != null)result1.close();
+			if(result2 != null)result2.close();
+			if(result3 != null)result3.close();
+			if(result4 != null)result4.close();
+			if(result5 != null)result5.close();
 			
-			psReqSelect.close();
-			psReqUpdate.close();
-			psStoreSelect.close();
-			psStoreUpdate.close();
-			psItemSelect.close();
-			psItemUpdate.close();
-			psLeaseSelect.close();
-			psLeaseUpdate.close();
-			psAddCredit.close();
-			psDebitCredit.close();
+			if(psReqSelect != null)psReqSelect.close();
+			if(psReqUpdate != null)psReqUpdate.close();
+			if(psStoreSelect != null)psStoreSelect.close();
+			if(psStoreUpdate != null)psStoreUpdate.close();
+			if(psItemSelect != null)psItemSelect.close();
+			if(psItemUpdate != null)psItemUpdate.close();
+			if(psLeaseSelect != null)psLeaseSelect.close();
+			if(psLeaseUpdate != null)psLeaseUpdate.close();
+			if(psAddCredit != null)psAddCredit.close();
+			if(psDebitCredit != null)psDebitCredit.close();
+			if(psItemStatus != null)psItemStatus.close();
 			
-			hcp.close();
+			if(hcp != null)hcp.close();
 		}
 		LOGGER.info("Finished process method ");
 		// return the response
