@@ -129,20 +129,25 @@ public class AwsSESEmail extends Connect {
 		
 		int credit = 0;
 		Connection hcp = getConnectionFromPool();
-		
+		PreparedStatement s1 = null;
+		ResultSet rs1 = null;
 		try{
 			// getting the credits of the user
 			String sqlGetCredit = "SELECT user_credit FROM users WHERE user_id=?";
-			PreparedStatement s1 = hcp.prepareStatement(sqlGetCredit);
+			s1 = hcp.prepareStatement(sqlGetCredit);
 			s1.setString(1, user_id);
-			ResultSet rs1 = s1.executeQuery();
+			rs1 = s1.executeQuery();
 			if (rs1.next()) {
 				credit = rs1.getInt("user_credit");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try { hcp.close(); } catch(SQLException e) {}
+			try { 
+				if(rs1 != null)rs1.close();
+				if(s1 != null)s1.close();
+				if(hcp != null)hcp.close(); 
+			} catch(SQLException e) {}
 		}
 
 		// Build Email Subject and Body
