@@ -52,23 +52,10 @@ public class LoginUser extends HttpServlet {
 		String str = request.getParameter("req");
 
 		try {
-			JSONObject row = new JSONObject();
 			JSONObject obj = new JSONObject(str);
 			table = "users";
 			obj.put("table", table);
 			obj.put("operation", "info");
-
-			row.put("fullName", "0");
-			row.put("mobile", "0");
-			row.put("location", "0");
-			row.put("userId", "0");
-			if(obj.has("profilePicture")){
-				row.put("profilePicture", obj.getString("profilePicture"));
-			}
-			
-			row.put("auth", obj.getString("auth"));
-
-			obj.put("row", row);
 
 			// Sending data to Admin-Ops-Handler
 			res = aoh.getInfo(table, obj);
