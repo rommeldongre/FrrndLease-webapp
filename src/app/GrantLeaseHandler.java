@@ -274,18 +274,19 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			}
 			lc.addLogCredit(rq.getReqUserId(),-10,"Lease Recieved","");
 			
+			rs.setCode(FLS_SUCCESS);
+			rs.setId(rq.getReqUserId());
+			rs.setMessage(FLS_SUCCESS_M);
+			hcp.commit();
+			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
 			    newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, rq);
 				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, rq);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
-									
-			rs.setCode(FLS_SUCCESS);
-			rs.setId(rq.getReqUserId());
-			rs.setMessage(FLS_SUCCESS_M);
-			hcp.commit();
+			}						
+			
 		} catch (SQLException e) {
 			//res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			rs.setCode(FLS_SQL_EXCEPTION);
