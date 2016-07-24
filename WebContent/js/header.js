@@ -124,10 +124,12 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
 			picture ="";
 		}
         var req = {
-            auth: password,
             token: email,
-			profilePicture: picture,
-            signUpStatus: signUpStatus
+            signUpStatus: signUpStatus,
+            row: {
+                auth: password,
+                profilePicture: picture
+            }
         }
         loginSend(req, signUpStatus);
     });
