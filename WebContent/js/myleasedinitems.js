@@ -4,6 +4,8 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', '
 
     localStorage.setItem("prevPage","myapp.html#/myleasedinitems");
     
+    var leaseStatusDesc = {'LeaseReady':'This item will be picked up by us from the owner soon.','PickedUpOut':'This item has been picked up and will be delivered to the requestor.', 'LeaseStarted':'This item has been delivered to the requestor.','LeaseEnded':'This item will be picked up by us from the requestor soon.','PickedUpIn':'This item has been picked and will be delivered to the owner.'};
+
     $scope.leases = [];
     
     var initialPopulate = function(){
@@ -33,6 +35,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', '
 			
 			success: function(response){
                 if(response.code == 0){
+                    response.statusDesc = leaseStatusDesc[response.status];
                     $scope.$apply(function(){
                         $scope.leases.unshift(response);
                     });
