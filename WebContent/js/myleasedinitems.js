@@ -4,7 +4,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', '
 
     localStorage.setItem("prevPage","myapp.html#/myleasedinitems");
     
-    var leaseStatusDesc = {'LeaseReady':'This item will be picked up soon.','PickedUpOut':'This item has been picked up and will be delivered to the requestor.', 'LeaseStarted':'This item has been delivered to the requestor','LeaseEnded':'This item is ready to be picked up for returning back to the owner','PickedUpIn':'This item has been picked and will be delivered to the owner.'};
+    var leaseStatusDesc = {'LeaseReady':'This item will be picked up by us from the owner soon.','PickedUpOut':'This item has been picked up and will be delivered to the requestor.', 'LeaseStarted':'This item has been delivered to the requestor.','LeaseEnded':'This item will be picked up by us from the requestor soon.','PickedUpIn':'This item has been picked and will be delivered to the owner.'};
 
     $scope.leases = [];
     
