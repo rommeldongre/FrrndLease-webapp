@@ -149,7 +149,7 @@
                                             <tr ng-repeat="x in y">
                                                 <td>{{ x.itemLogDate }}</td>
                                                 <td>{{ x.itemLogType }}</td>
-                                                <td><img ng-src="{{(x.itemLogImage === '' || x.itemLogImage === null || x.itemLogImage === NULL || x.itemLogImage === 'null') ? 'images/imgplaceholder.png' : x.itemLogImage}}" style="width:50px;"></td>
+                                                <td><img ng-src="{{((x.itemLogType == 'InStore' || x.itemLogType == 'LeaseReady') ? item.image : ((x.itemLogImage === '' || x.itemLogImage === null || x.itemLogImage === NULL || x.itemLogImage === 'null') ? 'images/imgplaceholder.png' : x.itemLogImage))}}" style="width:50px;"></td>
                                             </tr>
                                         </tbody>
                                     </table>
