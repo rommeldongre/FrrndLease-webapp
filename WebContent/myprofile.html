@@ -13,12 +13,22 @@
                       </h4>
                 </div>
                 <div class="form" ng-init="error = ''">
-                    <label for="userId">User Id</label>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="userId" ng-model="userId" placeholder="Email" disabled>
-                        <span class="label label-warning label-fill" ng-model="label" ng-if="label == false">Not Verified</span>
-                        <span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
+						<div id="userId"><i class="fa fa-user"></i> {{'  '+ userId }}
+							<span class="label label-warning label-fill" ng-model="label" ng-if="label == false" style="text-align:right;">Not Verified</span>
+							<span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
+						</div>
                     </div>
+					 <div class="input-group">
+						<div id="credit"><i class="fa fa-diamond"></i><b>{{'  '+ credit }}</b>
+							<a class="btn btn-primary btn-simple" ng-click="addCredits()" style="align:right;"><u>Add Credit</u></a>	
+						</div>
+					</div>
+					<div class="form-group">
+						<div id="referralCode"><i class="fa fa-envelope"></i><b>{{'  '+ referralCode }}</b>
+							<a class="btn btn-primary btn-simple" href="myapp.html#/myfriendslist"><u>Import Friends</u></a>
+						</div>
+					</div>
                     <label for="fullname">Full Name</label>
                     <div class="form-group">
                         <input type="text" class="form-control" id="fullname" ng-change="(fullname != '') ? error='' : error='Name is required'" ng-model="fullname" placeholder="Full name">
@@ -30,15 +40,6 @@
                     <label for="location">Location</label>
                     <div class="form-group">
                         <input type="text" class="form-control" id="location" ng-change="(location != '') ? error='' : error='Location is required'" ng-model="location" ng-autocomplete options="options" details="details" placeholder="Location">
-                    </div>
-                    <label for="credit">Credit</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="credit" ng-model="credit" placeholder="Credits" disabled>
-                        <span class="input-group-addon btn btn-default btn-fill" ng-click="addCredits()"><i class="fa fa-plus"></i></span>
-                    </div>
-                    <label for="referralCode">Referral Code</label>
-					<div class="form-group">
-                        <input type="text" class="form-control" id="referralCode" ng-model="referralCode" placeholder="Referral Code" disabled>
                     </div>
                     <label for="item_image" id="image_label">Add Id Proof</label>
 					<div class="form-group">
