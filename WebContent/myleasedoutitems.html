@@ -57,7 +57,7 @@
                       </a>
                       <br/>
                       <a class="card-link">
-                          <img src="images/user_icon.png" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
+                          <img ng-src="{{(lease.requestorProfilePic === '' || lease.requestorProfilePic === null || lease.requestorProfilePic === NULL || lease.requestorProfilePic === 'null') ? 'images/user_icon.png' : lease.requestorProfilePic}}" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
                       </a>
                       <a class="card-link">
                          <p class="description">{{lease.requestorFullName}}</p>
