@@ -22,7 +22,7 @@
             <div class="content">
                 <div class="author">
                     <a>
-                        <img class="avatar border-gray" src="images/user_icon.png" alt="...">
+                        <img class="avatar border-gray" ng-src="{{(friend.friendPicture === '' || friend.friendPicture === null || friend.friendPicture === NULL || friend.friendPicture === 'null') ? 'images/user_icon.png' : friend.friendPicture}}" alt="...">
                         <h4 class="title">{{friend.fullName}}<br>
                             <small></small>
                         </h4>
