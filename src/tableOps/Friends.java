@@ -291,9 +291,10 @@ public class Friends extends Connect {
 		Id = fm.getFriendId();
 		LOGGER.info("Inside GetNext method");
 		String sql = "SELECT * FROM friends WHERE friend_user_id = ? AND friend_id>? ORDER BY friend_id LIMIT 1"; //
-
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+		String getPicturesql = "SELECT user_profile_picture FROM users WHERE user_id = ?"; //
+		
+		PreparedStatement stmt = null,stmt1=null;
+		ResultSet rs = null,rs1=null;
 		Connection hcp = getConnectionFromPool();
 		try {
 			LOGGER.info("Creating a statement .....");
@@ -305,15 +306,25 @@ public class Friends extends Connect {
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
+				LOGGER.info("Creating 2nd Select statement to fetch profile picture .....");
+				stmt1 = hcp.prepareStatement(getPicturesql);
+
+				LOGGER.info("Statement created. Executing getNext query...");
+				stmt1.setString(1, rs.getString("friend_id"));
+				rs1 = stmt1.executeQuery();
+				
 				JSONObject json = new JSONObject();
 				json.put("friendId", rs.getString("friend_id"));
 				json.put("fullName", rs.getString("friend_full_name"));
 				json.put("mobile", rs.getString("friend_mobile"));
 				json.put("userId", rs.getString("friend_user_id"));
-
+				while (rs1.next()) {
+				json.put("friendPicture", rs1.getString("user_profile_picture"));
+				}
 				message = json.toString();
 				LOGGER.info(message);
 				check = rs.getString("friend_id");
+				
 			}
 
 			if (check != null) {
