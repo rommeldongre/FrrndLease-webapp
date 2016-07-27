@@ -62,7 +62,7 @@
       <classfileset dir="${test.classes.dir}" includes="**/*.class"/>
     </testng>
   </target>
-
+	
   <target name="jar" depends="compile">
     <pathconvert property="runtime.classpath" refid="classpath">
       <regexpmapper from=".+/jar/(.+)" to="\1"/>
@@ -77,6 +77,7 @@
         <attribute name="Build-Version" value="${build.version}"/>
         <attribute name="Class-Path" value="${manifest.classpath}"/>
       </manifest>
+    	<zipfileset dir="${basedir}/templates" />
     </jar>
   </target>
 
