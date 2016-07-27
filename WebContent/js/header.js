@@ -1,6 +1,6 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
-headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', 'searchService', 'statsFactory', 'loginSignupService', function($scope, userFactory, profileFactory, searchService, statsFactory, loginSignupService){
+headerApp.controller('headerCtrl', ['$scope', '$timeout', 'userFactory', 'profileFactory', 'bannerService', 'searchService', 'statsFactory', 'loginSignupService', function($scope, $timeout, userFactory, profileFactory, bannerService, searchService, statsFactory, loginSignupService){
     
     // sign up starts here
     
@@ -258,6 +258,15 @@ headerApp.controller('headerCtrl', ['$scope', 'userFactory', 'profileFactory', '
         searchService.saveSearchTitle(searchString);
     }
     
+	$scope.$on('bannerMessage', function(event, data){
+		$scope.successBanner = data;
+		$scope.bannerVal = true;
+		$timeout(function(){
+			$scope.bannerVal = false;
+		}, 5000);
+		
+    });
+	
     $scope.$on('headerLocationChanged', function(event, data){
         $scope.search.location = data;
     });
@@ -436,6 +445,15 @@ headerApp.service('modalService', ['$uibModal',
         };
 
     }]);
+
+headerApp.service('bannerService', ['$rootScope', function($rootScope){
+    
+    this.bannerFlag = true;
+    this.updatebannerMessage = function(data){
+		this.data = data;
+        $rootScope.$broadcast('bannerMessage', this.data);
+    }
+}]);
 
 headerApp.service('searchService', ['$rootScope', function($rootScope){
     
