@@ -1,6 +1,6 @@
 var myOutGoingRequests = angular.module('myApp');
 
-myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
+myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory', 'bannerService', 'modalService', function($scope, userFactory, bannerService, modalService){
     
     localStorage.setItem("prevPage","myapp.html#/myoutgoingrequests");
     
@@ -81,11 +81,15 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
             dataType: "json",
             success: function(response) {
                 if(response.errorString == "No Error"){
-                    modalService.showModal({}, {bodyText: "Request Deleted successfully", showCancel:false, actionButtonText: 'OK'}).then(
+					bannerService.updatebannerMessage("Request Deleted successfully","");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                    initialPopulate();
+                }else{
+					modalService.showModal({}, {bodyText: "Some Error occured please try again", showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
                         initialPopulate();
                     },function(){});
-                }
+				}
             },
             error: function() {
             }

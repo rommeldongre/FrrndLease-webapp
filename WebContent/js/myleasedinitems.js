@@ -1,6 +1,6 @@
 var myLeasedInItemsApp = angular.module('myApp');
 
-myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
+myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', 'bannerService', 'modalService', function($scope, userFactory, bannerService, modalService){
 
     localStorage.setItem("prevPage","myapp.html#/myleasedinitems");
     
@@ -76,13 +76,18 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', '
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-                
-                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
-                function(result){
-                    $scope.leases = [];
+				if(response.code==0){
+					bannerService.updatebannerMessage(response.message,"");
+					$("html, body").animate({ scrollTop: 0 }, "slow");
+					$scope.leases = [];
                     initialPopulate();
-                },function(){});
-                
+				}else{
+					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
+						function(result){
+							$scope.leases = [];
+							initialPopulate();
+					},function(){});
+				}  
             },
             error: function() {
             }

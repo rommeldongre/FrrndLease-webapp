@@ -264,11 +264,15 @@ myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory'
         function(response){
             if (response.data.code == 0) {
                 dialogText = 'Your Profile Has Been Updated!!';
+				bannerService.updatebannerMessage(dialogText,"");
+				$("html, body").animate({ scrollTop: 0 }, "slow");
             }else{
                 dialogText = 'please try after sometime';
+				modalService.showModal({}, {bodyText:dialogText,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+				window.location.reload();
+			}, function(){});
             }
-			bannerService.updatebannerMessage(dialogText);
-			$("html, body").animate({ scrollTop: 0 }, "slow");
+			
         },
         function(error){
             console.log("unable to edit profile: " + error.message);
