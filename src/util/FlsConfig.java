@@ -553,6 +553,35 @@ public class FlsConfig extends Connect{
 					dbBuild = 2013;
 					updateDBBuild(dbBuild);
 				}
+				
+				//This block adds user_live_status column in users table
+				if(dbBuild < 2014){
+				
+				// creating a item log table
+				String sqlLiveStatusColumn = "ALTER TABLE `users` ADD `user_live_status` TINYINT(1) NOT NULL DEFAULT '1' AFTER `user_profile_picture`";
+				try{
+					getConnection();
+					PreparedStatement ps1 = connection.prepareStatement(sqlLiveStatusColumn);
+					ps1.executeUpdate();
+					ps1.close();
+				}catch(SQLException e){
+					e.printStackTrace();
+					System.out.println(e.getStackTrace());
+				}finally {
+					try {
+						// close and reset connection to null
+						connection.close();
+						connection = null;
+						} catch (SQLException e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+				}
+				// The dbBuild version value is changed in the database
+				dbBuild = 2014;
+				updateDBBuild(dbBuild);
+				}
+				
 	}
 	
 	private void updateDBBuild(int version){
