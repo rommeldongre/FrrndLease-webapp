@@ -998,7 +998,13 @@ function editWishItemSend(req){
 				
 				var heading = "Successful";
 				msg = response.Message;
-				confirmationIndex(heading, msg);			//mywishitemdetails.html
+				$("#successBanner").text(msg);       //mywishitemdetails.html
+				$("#bannerVal").show();
+				$("html, body").animate({ scrollTop: 0 }, "slow");
+				setTimeout(function(){
+					$("#bannerVal").hide();
+					window.location.replace("myapp.html#/mywishlists");
+				}, 5000);
 			
 			},
 		
@@ -1037,7 +1043,14 @@ function deleteWishItemSend(req){
 			heading = "Successful";
 			
 			msg = response.Message;
-			confirmationIndex(heading, msg);			//mywishitemdetails.html
+			//confirmationIndex(heading, msg);			//mywishitemdetails.html
+			$("#successBanner").text(msg);
+			$("#bannerVal").show();
+			$("html, body").animate({ scrollTop: 0 }, "slow");
+			setTimeout(function(){
+				$("#bannerVal").hide();
+				window.location.replace("myapp.html#/mywishlists");
+			}, 5000);										
 		},
 	
 		error: function() {
