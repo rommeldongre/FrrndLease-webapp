@@ -8,10 +8,10 @@ public class GetLeasesByXResObj extends ResObj{
 	int cookie;
 	
 	// requesters details
-	String requestorUserId, requestorFullName, requestorMobile, requestorAddress, requestorLocality, requestorSublocality;
+	String requestorUserId, requestorFullName, requestorMobile, requestorAddress, requestorLocality, requestorSublocality,requestorProfilePic;
 	
 	// owners details
-	String ownerUserId, ownerFullName, ownerMobile, ownerAddress, ownerLocality, ownerSublocality;
+	String ownerUserId, ownerFullName, ownerMobile, ownerAddress, ownerLocality, ownerSublocality,ownerProfilePic;
 	
 	// lease details
 	String leaseExpiryDate;
@@ -219,5 +219,20 @@ public class GetLeasesByXResObj extends ResObj{
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
-	
+
+	public String getRequestorProfilePic() {
+		return requestorProfilePic;
+	}
+
+	public void setRequestorProfilePic(String requestorProfilePic) {
+		this.requestorProfilePic = requestorProfilePic;
+	}
+
+	public String getOwnerProfilePic() {
+		return ownerProfilePic;
+	}
+
+	public void setOwnerProfilePic(String ownerProfilePic) {
+		this.ownerProfilePic = ownerProfilePic;
+	}
 }
