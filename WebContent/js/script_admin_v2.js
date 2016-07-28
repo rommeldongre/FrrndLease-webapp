@@ -1225,9 +1225,15 @@ function editFriendSend(req){
 		dataType: "json",
 		
 		success: function(response) {
-			var header = "Friend Editted";
+			var header = "Friend Details Edited";
 			var msg = response.Message;
-			confirmationIndex(header, msg);
+			$("#successBanner").text(msg);
+			$("#bannerVal").show();
+			$("html, body").animate({ scrollTop: 0 }, "slow");
+			setTimeout(function(){
+			$("#bannerVal").hide();
+			window.location.replace("myapp.html#/myfriendslist");
+			}, 5000);
 		},
 		
 		error: function() {
@@ -1270,7 +1276,13 @@ function deleteFriendSend(req){
 		success: function(response) {
 			var header = "Friend Deleted";
 			var msg = response.Message;
-			confirmationIndex(header, msg);	
+			$("#successBanner").text(msg);
+			$("#bannerVal").show();
+			$("html, body").animate({ scrollTop: 0 }, "slow");
+			setTimeout(function(){
+			$("#bannerVal").hide();
+			window.location.replace("myapp.html#/myfriendslist");
+			}, 5000);
 		},
 		
 		error: function() {
