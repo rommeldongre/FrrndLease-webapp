@@ -303,7 +303,13 @@ function editItemSend(req){
 			//alert(response.Id+" "+response.Code+" "+response.Message);
 			var heading = "Successful";
 			var msg = response.Message;
-			confirmationIndex(heading ,msg);
+			$("#successBanner").text(msg);
+			$("#bannerVal").show();
+			$("html, body").animate({ scrollTop: 0 }, "slow");
+			setTimeout(function(){
+			$("#bannerVal").hide();
+			window.location.replace("myapp.html#/mypostings");
+			}, 5000);
 		},
 	
 		error: function() {
