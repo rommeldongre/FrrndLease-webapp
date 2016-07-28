@@ -1,6 +1,6 @@
 var itemDetailsApp = angular.module('itemDetailsApp', ['headerApp']);
 
-itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'userFactory', 'modalService', function($scope, $window, $http, userFactory, modalService){
+itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'userFactory', 'bannerService', 'modalService', function($scope, $window, $http, userFactory, bannerService, modalService){
     
     var user = localStorage.getItem("userloggedin");
     
@@ -51,9 +51,15 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
                         url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
                         method:"GET"
                     }).then(function success(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                            window.location.replace("/flsv2/index.html");
-                        },function(){});
+						console.log(response);
+						if(response.data.Code=="FLS_SUCCESS"){
+							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
+							$("html, body").animate({ scrollTop: 0 }, "slow");
+						}else{
+							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+								window.location.replace("/flsv2/index.html");
+							},function(){});
+					}
                     },
                     function error(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
