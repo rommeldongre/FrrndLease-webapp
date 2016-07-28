@@ -1,0 +1,26 @@
+<div style="background-color: aliceblue;padding:50px;">
+	<table align="center" bgcolor="#ffffff" cellpadding="20">
+        <tr style="text-align:center;">
+        	<th><img src="cid:logo" style="width:10%;"><h1>FrrndLease</h1></th>
+        </tr>
+        <tr style="text-align:center;">
+        	<td><h2>$subject</h2></td>
+        </tr>
+        <tr style="text-align:center;">
+        	<td valign="top" style="padding-bottom:20px;">
+        		<u>Account Status</u>: <br>
+        		You have <strong>$credits credits</strong> left to spend on frrndlease.<br><br>
+        		<u>Activity</u>: <br>
+            	$body
+            </td>
+         </tr>
+         <tr style="text-align:center;">
+         	<td style="padding-top:20px;">
+         		<hr/>
+         		Thank you so much,<br>
+         		Frrndlease Team,<br>
+         		Greylabs.
+         	</td>
+         </tr>
+  </table>
+</div>
