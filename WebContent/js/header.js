@@ -258,13 +258,16 @@ headerApp.controller('headerCtrl', ['$scope', '$timeout', 'userFactory', 'profil
         searchService.saveSearchTitle(searchString);
     }
     
-	$scope.$on('bannerMessage', function(event, data){
+	$scope.$on('bannerMessage', function(event, data, page){
 		$scope.successBanner = data;
 		$scope.bannerVal = true;
 		$timeout(function(){
 			$scope.bannerVal = false;
+			if(page === undefined || page == null || page == ""){
+			}else{
+				window.location.replace(page);
+			}
 		}, 5000);
-		
     });
 	
     $scope.$on('headerLocationChanged', function(event, data){
@@ -448,10 +451,10 @@ headerApp.service('modalService', ['$uibModal',
 
 headerApp.service('bannerService', ['$rootScope', function($rootScope){
     
-    this.bannerFlag = true;
-    this.updatebannerMessage = function(data){
+    this.updatebannerMessage = function(data, page){
 		this.data = data;
-        $rootScope.$broadcast('bannerMessage', this.data);
+		this.page = page;
+        $rootScope.$broadcast('bannerMessage', this.data, this.page);
     }
 }]);
 
