@@ -51,7 +51,6 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope', '$window', '$http', 'use
                         url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
                         method:"GET"
                     }).then(function success(response){
-						console.log(response);
 						if(response.data.Code=="FLS_SUCCESS"){
 							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
