@@ -7,7 +7,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									'bannerService', 
 									'searchService', 
 									'statsFactory', 
-									'loginSignupService', 
+									'loginSignupService',
+                                    'logoutService',
 									function($scope, 
 									$timeout, 
 									userFactory, 
@@ -15,7 +16,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									bannerService, 
 									searchService, 
 									statsFactory, 
-									loginSignupService){
+									loginSignupService,
+                                    logoutService){
     
     // sign up starts here
     
@@ -356,13 +358,7 @@ headerApp.controller('headerCtrl', ['$scope',
     }
     
     $scope.logout = function(){
-        localStorage.setItem("userloggedin", "anonymous");  //userloggedin-> anonymous
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function() {
-            console.log('User signed out.');
-        });
-											
-        window.location.replace("index.html");
+        logoutService.logout();
     }
     
     $scope.storeYourStuff = function(){
@@ -379,6 +375,7 @@ headerApp.service('logoutService', function(){
     
     l.logout = function(){
         localStorage.clear();
+        localStorage.setItem("userloggedin", "anonymous");
         var auth2 = gapi.auth2.getAuthInstance();
         auth2.signOut().then(function() {
             console.log('User signed out.');
