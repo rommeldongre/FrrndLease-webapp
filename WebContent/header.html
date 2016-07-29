@@ -67,7 +67,14 @@
                     
                 </div>
             </div>
+			
+			 <!-- Code for Success banner the alert notification which will be closed in 5 seconds -->
+			<div class="alert alert-success ng-hide" ng-show="bannerVal">
+            <div class="container">{{successBanner}}</div>
+			</div>
+			
         </nav>
+		
     </div>
     <div ng-include="'loginmodal.html'"></div>
     <div ng-include="'signupmodal.html'"></div>

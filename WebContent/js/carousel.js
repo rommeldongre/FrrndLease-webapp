@@ -234,7 +234,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
 			contentType: "application/x-www-form-urlencoded",
 			dataType:"json",
 			success: function(response) {
-                if(response.Code == "FLS_SUCCESS")
+                if(response.Code == 0)
                     console.log("item added to the wish list");
                 else
                     console.log("wished item already exists");

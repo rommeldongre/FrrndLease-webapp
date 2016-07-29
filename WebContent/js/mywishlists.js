@@ -1,6 +1,15 @@
 var myWishLists = angular.module('myApp');
 
-myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
+myWishLists.controller('myWishListsCtrl', ['$scope', 
+											'$timeout', 
+											'userFactory', 
+											'bannerService', 
+											'modalService', 
+											function($scope, 
+											$timeout, 
+											userFactory, 
+											bannerService, 
+											modalService){
     
     localStorage.setItem("prevPage","myapp.html#/mywishlists");
     
@@ -85,10 +94,16 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
             contentType:"application/x-www-form-urlencoded",
             dataType: "JSON",
             success: function(response) {
-                modalService.showModal({}, {bodyText: " Item Successfully added to Wish List",showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                $scope.wishList = [];
-                initialPopulate();
-				}, function(){});
+				if(response.Code == 0){
+					bannerService.updatebannerMessage("Item Successfully added to Wish List","");
+					$scope.wishList = [];
+					initialPopulate();
+				}else{
+					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						$scope.wishList = [];
+						initialPopulate();
+					}, function(){});
+				}
             },
             error: function() {
                 console.log("Invalid Entry");
@@ -151,9 +166,17 @@ myWishLists.controller('myWishListsCtrl', ['$scope', 'userFactory', 'modalServic
             contentType:"application/json",
             dataType:"json",
             success: function(response) {
-                modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                    $scope.wishList.splice(index, 1);
-                }, function(){});
+				if(response.Code == 0){
+					bannerService.updatebannerMessage(response.Message,"");
+					$("html, body").animate({ scrollTop: 0 }, "slow");
+					$timeout(function () {
+						$scope.wishList.splice(index, 1);
+					});
+				}else{
+					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						$scope.wishList.splice(index, 1);
+					}, function(){});
+				}
             },
             error: function() {
             }
