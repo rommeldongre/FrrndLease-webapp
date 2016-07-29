@@ -15,6 +15,7 @@ import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.LogCredit;
+import util.OAuth;
 import util.ReferralCode;
 import app.EmailVerificationHandler;
 
@@ -624,6 +625,17 @@ public class Users extends Connect {
 				message = "Email does not exist!!";
 				Code = FLS_ENTRY_NOT_FOUND;
 			}
+			
+			String access_token = null;
+			JSONObject jObj = new JSONObject(message);
+			
+			if(Code == FLS_SUCCESS){
+				OAuth oauth = new OAuth();
+				access_token = oauth.generateOAuth(token);
+				jObj.put("access_token", access_token);
+			}
+			
+			message = jObj.toString();
 
 			res.setData(Code, Id, message);
 		} catch (SQLException e) {
