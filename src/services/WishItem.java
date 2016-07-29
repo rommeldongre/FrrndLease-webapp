@@ -50,7 +50,8 @@ public class WishItem extends HttpServlet {
 		response.setContentType("application/json");
 		LOGGER.info("Inside POST Method");
 		String table;
-		String Id = "0", Message = e.FLS_WISH_ITEM_F_M, Code = String.valueOf(e.FLS_WISH_ITEM_F);
+		String Id = "0", Message = e.FLS_WISH_ITEM_F_M;
+		int Code = e.FLS_WISH_ITEM_F;
 		PrintWriter out = response.getWriter();
 
 		String str = request.getParameter("req");
@@ -79,7 +80,7 @@ public class WishItem extends HttpServlet {
 					LOGGER.warning("Item added to store...");
 					Id = res2.getId();
 					Message = e.FLS_WISH_ITEM;
-					Code = "FLS_SUCCESS";
+					Code = 0;
 				} else {
 					LOGGER.warning("Couldn't perform WishItem");
 				}
