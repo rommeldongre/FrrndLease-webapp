@@ -65,7 +65,7 @@ public class SignUp extends HttpServlet {
 
 			if (res.getIntCode() == e.FLS_SUCCESS) {
 				json.put("Code", "FLS_SUCCESS");
-				json.put("Message", e.FLS_SIGNUP);
+				json.put("Message", res.getMessage());
 				json.put("Id", res.getId());
 			}
 

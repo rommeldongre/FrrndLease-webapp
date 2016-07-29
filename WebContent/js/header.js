@@ -114,6 +114,8 @@ headerApp.controller('headerCtrl', ['$scope',
                         localStorage.setItem("userloggedin", Email);
                         localStorage.setItem("userloggedinName", Name);
 						localStorage.setItem("userReferralCode", response.Id);
+                        var obj = JSON.parse(response.Message);
+                        localStorage.setItem("userloggedinAccess", obj.access_token);
                         if(SignUpStatus == "facebook")
                             getFacebookFriends(Email);
                         else
