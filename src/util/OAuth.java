@@ -15,7 +15,7 @@ import connect.Connect;
 
 public class OAuth extends Connect{
 	
-	FlsLogger LOGGER = new FlsLogger(OAuth.class.getSimpleName());
+	FlsLogger LOGGER = new FlsLogger(OAuth.class.getName());
 	
 	String API_KEY = null;
 	
@@ -82,7 +82,7 @@ public class OAuth extends Connect{
 			if(expiry.compareTo(new Date()) < 1){
 				return null;
 			}
-			
+			LOGGER.info(claims.getIssuer());
 			return claims.getIssuer();
 			
 		}catch(SignatureException e){

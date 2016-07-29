@@ -373,6 +373,24 @@ headerApp.controller('headerCtrl', ['$scope',
     
 }]);
 
+headerApp.service('logoutService', function(){
+    
+    var l = {};
+    
+    l.logout = function(){
+        localStorage.clear();
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function() {
+            console.log('User signed out.');
+        });
+
+        window.location.replace("index.html");
+    }
+    
+    return l;
+    
+});
+
 // factory for getting Site Stats from the backend service
 headerApp.factory('statsFactory', ['$http', function($http){
     
@@ -407,6 +425,8 @@ headerApp.factory('userFactory', function(){
     dataFactory.user = localStorage.getItem("userloggedin");
     
     dataFactory.userName = localStorage.getItem("userloggedinName");
+    
+    dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
     
     return dataFactory;
 });

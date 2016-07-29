@@ -4,12 +4,14 @@ myProfile.controller('myProfileCtrl', ['$scope',
 										'userFactory', 
 										'profileFactory', 
 										'bannerService', 
-										'modalService', 
+										'modalService',
+                                        'logoutService',
 										function($scope, 
 										userFactory, 
 										profileFactory, 
 										bannerService, 
-										modalService){
+										modalService,
+                                        logoutService){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
@@ -22,7 +24,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
             function(promo){
                 var req = {
                     userId: userFactory.user,
-                    promoCode: promo
+                    promoCode: promo,
+                    accessToken: userFactory.userAccessToken
                 }
                 
                 $.ajax({
@@ -36,6 +39,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
                             function(r){
                                 if(response.code == 0)
                                     $scope.credit = response.newCreditBalance;
+                                if(response.code == 400)
+                                    logoutService.logout();
                             }, function(){});
                     },
                     error: function(){
