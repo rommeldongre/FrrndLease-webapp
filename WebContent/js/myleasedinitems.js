@@ -1,6 +1,13 @@
 var myLeasedInItemsApp = angular.module('myApp');
 
-myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 'userFactory', 'bannerService', 'modalService', function($scope, userFactory, bannerService, modalService){
+myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 
+													    'userFactory', 
+														'bannerService', 
+														'modalService', 
+														function($scope, 
+														userFactory, 
+														bannerService, 
+														modalService){
 
     localStorage.setItem("prevPage","myapp.html#/myleasedinitems");
     

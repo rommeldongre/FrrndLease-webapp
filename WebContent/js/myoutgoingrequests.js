@@ -1,6 +1,13 @@
 var myOutGoingRequests = angular.module('myApp');
 
-myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory', 'bannerService', 'modalService', function($scope, userFactory, bannerService, modalService){
+myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 
+														'userFactory', 
+														'bannerService', 
+														'modalService', 
+														function($scope, 
+														userFactory, 
+														bannerService, 
+														modalService){
     
     localStorage.setItem("prevPage","myapp.html#/myoutgoingrequests");
     
@@ -80,7 +87,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 'userFactory'
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-                if(response.errorString == "No Error"){
+                if(response.returnCode == 0){
 					bannerService.updatebannerMessage("Request Deleted successfully","");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
                     initialPopulate();

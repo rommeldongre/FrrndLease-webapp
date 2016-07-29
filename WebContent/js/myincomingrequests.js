@@ -1,6 +1,13 @@
 var myInComingRequests = angular.module('myApp');
 
-myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory', 'bannerService', 'modalService', function($scope, userFactory, bannerService, modalService){
+myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 
+														'userFactory', 
+														'bannerService', 
+														'modalService', 
+														function($scope, 
+														userFactory, 
+														bannerService,
+														modalService){
   
     localStorage.setItem("prevPage","myapp.html#/myincomingrequests");
     
@@ -128,7 +135,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory'
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-				if(response.Code=="FLS_SUCCESS"){
+				if(response.Code == 0){
 					bannerService.updatebannerMessage(response.Message,"");
 					initialPopulate();
 					$("html, body").animate({ scrollTop: 0 }, "slow");

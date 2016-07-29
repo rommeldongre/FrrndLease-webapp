@@ -1,6 +1,15 @@
 var myProfile = angular.module('myApp');
 
-myProfile.controller('myProfileCtrl', ['$scope', 'userFactory', 'profileFactory', 'bannerService', 'modalService', function($scope, userFactory, profileFactory, bannerService, modalService){
+myProfile.controller('myProfileCtrl', ['$scope', 
+										'userFactory', 
+										'profileFactory', 
+										'bannerService', 
+										'modalService', 
+										function($scope, 
+										userFactory, 
+										profileFactory, 
+										bannerService, 
+										modalService){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     

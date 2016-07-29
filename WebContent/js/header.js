@@ -1,6 +1,21 @@
 var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
-headerApp.controller('headerCtrl', ['$scope', '$timeout', 'userFactory', 'profileFactory', 'bannerService', 'searchService', 'statsFactory', 'loginSignupService', function($scope, $timeout, userFactory, profileFactory, bannerService, searchService, statsFactory, loginSignupService){
+headerApp.controller('headerCtrl', ['$scope', 
+									'$timeout', 
+									'userFactory', 
+									'profileFactory', 
+									'bannerService', 
+									'searchService', 
+									'statsFactory', 
+									'loginSignupService', 
+									function($scope, 
+									$timeout, 
+									userFactory, 
+									profileFactory, 
+									bannerService, 
+									searchService, 
+									statsFactory, 
+									loginSignupService){
     
     // sign up starts here
     

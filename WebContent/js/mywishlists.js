@@ -1,6 +1,15 @@
 var myWishLists = angular.module('myApp');
 
-myWishLists.controller('myWishListsCtrl', ['$scope', '$timeout', 'userFactory', 'bannerService', 'modalService', function($scope, $timeout, userFactory, bannerService, modalService){
+myWishLists.controller('myWishListsCtrl', ['$scope', 
+											'$timeout', 
+											'userFactory', 
+											'bannerService', 
+											'modalService', 
+											function($scope, 
+											$timeout, 
+											userFactory, 
+											bannerService, 
+											modalService){
     
     localStorage.setItem("prevPage","myapp.html#/mywishlists");
     
@@ -85,7 +94,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope', '$timeout', 'userFactory', 
             contentType:"application/x-www-form-urlencoded",
             dataType: "JSON",
             success: function(response) {
-				if(response.Code =="FLS_SUCCESS"){
+				if(response.Code == 0){
 					bannerService.updatebannerMessage("Item Successfully added to Wish List","");
 					$scope.wishList = [];
 					initialPopulate();
@@ -157,7 +166,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope', '$timeout', 'userFactory', 
             contentType:"application/json",
             dataType:"json",
             success: function(response) {
-				if(response.Code=="FLS_SUCCESS"){
+				if(response.Code == 0){
 					bannerService.updatebannerMessage(response.Message,"");
 					$("html, body").animate({ scrollTop: 0 }, "slow");
 					$timeout(function () {

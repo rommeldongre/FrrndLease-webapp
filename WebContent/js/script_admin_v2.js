@@ -1040,17 +1040,19 @@ function deleteWishItemSend(req){
 		
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
-			heading = "Successful";
-			
-			msg = response.Message;
-			//confirmationIndex(heading, msg);			//mywishitemdetails.html
-			$("#successBanner").text(msg);
-			$("#bannerVal").show();
-			$("html, body").animate({ scrollTop: 0 }, "slow");
-			setTimeout(function(){
-				$("#bannerVal").hide();
-				window.location.replace("myapp.html#/mywishlists");
-			}, 5000);										
+			if(response.Code == 0){
+				$("#successBanner").text(msg);
+				$("#bannerVal").show();
+				$("html, body").animate({ scrollTop: 0 }, "slow");
+				setTimeout(function(){
+					$("#bannerVal").hide();
+					window.location.replace("myapp.html#/mywishlists");
+				}, 5000);										
+			}else{
+				heading = "Successful";
+				msg = response.Message;
+				confirmationIndex(heading, msg);			//mywishitemdetails.html
+			}
 		},
 	
 		error: function() {
