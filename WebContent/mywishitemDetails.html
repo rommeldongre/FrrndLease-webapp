@@ -93,6 +93,10 @@
 					
 				</div>
 			</div>
+			<!-- Code for Success banner the alert notification which will be closed in 5 seconds -->
+			<div class="alert alert-success" id="bannerVal">
+            <div class="container" id="successBanner"></div>
+			</div>
 		</nav>
 		
 		<div class="container-fluid" id="midcontainer">
@@ -265,6 +269,7 @@
 			
 			$('#error_row').hide();
 			$('#submit').hide();
+			$("#bannerVal").hide();
 			
 			getTitleWidth();
 			getLeaseValueWidth();
