@@ -15,10 +15,10 @@
 	var Status = null;
 	var LeaseValue = 0;
 	var Token = 0;
-	//var canvasCtx = document.getElementById("panel").getContext("2d");
 	var canvasCtx = null;
 	var imageFile = null;
 	var url = null;
+	var AccessToken = null;
 	
 	getData = function() {
 		//alert("Inside get Data");
@@ -40,6 +40,8 @@
 		LeaseTerm = document.getElementById("leaseTerms").value;
 		if (LeaseTerm === '') LeaseTerm = null;
 		
+        AccessToken = document.getElementById("accessToken").value;
+        
 		Status = "InStore";
 	}
 	
@@ -53,13 +55,10 @@
 			var reader = new FileReader();
 			reader.onload =  function(event) {
 				var img = new Image();
-				//img.src = event.target.result;
 				img.onload = function() {
 					drawImage(img);
 				}
 				img.src = event.target.result;
-				//img.src = jic.compress(img,40).src;
-				//img.style.display = "block";
 			}
 			reader.readAsDataURL(this.imageFile);
 		}
@@ -69,27 +68,23 @@
 			this.canvasCtx.canvas.height = 500;
 			this.canvasCtx.drawImage(img,0,0,500,500);
 			url = canvasCtx.canvas.toDataURL("image/png");
-			console.log(url);
 		}
 	}
 	
 	postItem = function() {
-		//alert("Inside Add function");
 		
 		getData();
-		//alert(url);
-		//alert("creating a json object")
 		var req = {
-				id:Id,
-				title:Title,
-				description:Description,
-				category: Category,
-				userId: UserId,
-				leaseValue: LeaseValue,
-				leaseTerm: LeaseTerm,
-				status: Status,
-				//image: JSON.stringify(url.replace(/^data:image\/(png|jpg);base64,/, ""))
-				image: url
+            id:Id,
+			title:Title,
+			description:Description,
+			category: Category,
+			userId: UserId,
+			leaseValue: LeaseValue,
+			leaseTerm: LeaseTerm,
+			status: Status,
+			image: url,
+            accessToken: AccessToken
 		};
 		
 		send(req);
@@ -107,14 +102,11 @@
 			dataType: "json",
 			
 			success: function(response) {
-				alert('Working');
 				console.log(response);
 				document.getElementById("Id").value = response.itemId;
 				document.getElementById("uid").value = response.uid;
-				document.getElementById("Code").value = response.returnCode;
-				document.getElementById("Message").value = response.errorString;
-				//if(parseInt(response.Code) === 3 || parseInt(response.Code) === 4) Token = parseInt(response.Id);
-				console.log(Token);
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message;
 			},
 		
 			error: function() {
@@ -134,6 +126,7 @@
 		User ID : <input type="text" name="userId" id="userId"><br/><br/>
 		Lease Terms : <input type="text" name="leaseTerms" id="leaseTerms"><br/><br/>
 		Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
 		<input type="file" id="ifile"><br/>
 		<canvas id="panel"></canvas><br/><br/>
 		<input type="button" value="Post Item" onclick="postItem()">

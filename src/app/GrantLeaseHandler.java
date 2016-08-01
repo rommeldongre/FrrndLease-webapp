@@ -304,7 +304,10 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
-		}finally{
+		} catch (NullPointerException e) {
+			rs.setCode(FLS_NULL_POINT);
+			rs.setMessage(FLS_NULL_POINT_M);
+		} finally{
 			
 			if(result1 != null)result1.close();
 			if(result2 != null)result2.close();

@@ -3,11 +3,13 @@ var myLeasedInItemsApp = angular.module('myApp');
 myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope', 
 													    'userFactory', 
 														'bannerService', 
-														'modalService', 
+														'modalService',
+                                                        'logoutService',
 														function($scope, 
 														userFactory, 
 														bannerService, 
-														modalService){
+														modalService,
+                                                        logoutService){
 
     localStorage.setItem("prevPage","myapp.html#/myleasedinitems");
     
@@ -64,7 +66,8 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
                         itemId: ItemId,
                         userId: OwnerUserId,
                         reqUserId: RequestorUserId,
-                        flag: "close"
+                        flag: "close",
+                        accessToken: userFactory.userAccessToken
                     };
                     closeLeaseSend(req, index);
                 },function(){});
@@ -91,8 +94,12 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
 				}else{
 					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
 						function(result){
-							$scope.leases = [];
-							initialPopulate();
+                            if(response.code == 400)
+                                logoutService.logout();
+                            else{
+                                $scope.leases = [];
+                                initialPopulate();
+                            }
 					},function(){});
 				}  
             },

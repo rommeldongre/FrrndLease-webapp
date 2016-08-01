@@ -3,7 +3,6 @@ package util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -85,9 +84,7 @@ public class OAuth extends Connect{
 			LOGGER.info(claims.getIssuer());
 			return claims.getIssuer();
 			
-		}catch(SignatureException e){
-			System.out.println(e.getMessage());
-		}catch(NullPointerException e){
+		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
 		

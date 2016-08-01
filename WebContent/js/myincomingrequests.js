@@ -98,7 +98,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
 				}else{
                 modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        if(response.data.code == 400)
+                        if(response.code == 400)
                             logoutService.logout();
                         else
                             initialPopulate();

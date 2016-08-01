@@ -381,6 +381,8 @@
 
             function add_checked_items_ajax(i_title,i_asin,i_category,i_cost){
 
+                var AccessToken = localStorage.getItem("userloggedinAccess");
+                
                 var req = {
                     id: 0,
                     title: i_title,
@@ -390,7 +392,8 @@
                     leaseValue: i_cost,
                     leaseTerm: "Season",
                     status: "InStore",
-                    image: ""
+                    image: "",
+                    accessToken: AccessToken
                 };
 
                     $.ajax({
@@ -401,8 +404,18 @@
                     dataType: "json",
 
                     success: function(response) {
-                        add_checked_items_continued();
-                        //alert(response.Code+" "+response.Message);
+                        // to logout if OAuth fails
+                        if(response.code == 400){
+                            localStorage.clear();
+                            localStorage.setItem("userloggedin", "anonymous");
+                            var auth2 = gapi.auth2.getAuthInstance();
+                            auth2.signOut().then(function() {
+                                console.log('User signed out.');
+                            });
+
+                            window.location.replace("index.html");
+                        }else
+                            add_checked_items_continued();
                     },
 
                     error: function() {

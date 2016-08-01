@@ -99,6 +99,9 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			rs.setCode(FLS_NULL_POINT);
+			rs.setMessage(FLS_NULL_POINT_M);
 		} finally {
 			hcp.close();
 		}

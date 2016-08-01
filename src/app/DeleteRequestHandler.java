@@ -149,6 +149,9 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 			rs.setCode(FLS_SQL_EXCEPTION);
 			rs.setMessage(FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			rs.setCode(FLS_NULL_POINT);
+			rs.setMessage(FLS_NULL_POINT_M);
 		} finally {
 			hcp.close();
 		}
