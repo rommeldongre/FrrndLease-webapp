@@ -405,7 +405,7 @@ headerApp.factory('profileFactory', ['$http', function($http){
     var dataFactory = {};
     
     dataFactory.getProfile = function(user){
-        return $http.post('/flsv2/GetProfile', JSON.stringify(req));
+        return $http.post('/flsv2/GetProfile', JSON.stringify({userId : user}));
     }
     
     dataFactory.updateProfile = function(req){

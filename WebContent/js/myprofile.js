@@ -127,11 +127,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
 	//end of image display
     
     var displayProfile = function(){
-        req = {
-            userId : userFactory.user,
-            accessToken: userFactory.userAccessToken
-        }
-        profileFactory.getProfile(req).then(
+        profileFactory.getProfile(userFactory.user).then(
         function(response){
             if (response.data.code == 0) {
                 $scope.userId = userFactory.user;
@@ -149,8 +145,6 @@ myProfile.controller('myProfileCtrl', ['$scope',
 					drawImage(img);
 				}
             } else {
-                if(response.data.code == 400)
-                    logoutService.logout();
                 $scope.userId = "";
                 $scope.fullname = "";
 				$scope.mobile = "";
