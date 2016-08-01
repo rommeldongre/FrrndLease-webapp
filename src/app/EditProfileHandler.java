@@ -11,6 +11,7 @@ import pojos.EditProfileResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.OAuth;
 
 public class EditProfileHandler extends Connect implements AppHandler {
 
@@ -43,6 +44,15 @@ public class EditProfileHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside Process Method " + rq.getUserId());
 
 		try {
+			
+			OAuth oauth = new OAuth();
+			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+			if(!oauthcheck.equals(rq.getUserId())){
+				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+				return rs;
+			}
+			
 			String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_address=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=? , user_photo_id=? WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
 			PreparedStatement ps = hcp.prepareStatement(sql);

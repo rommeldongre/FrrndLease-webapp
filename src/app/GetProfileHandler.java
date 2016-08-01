@@ -12,6 +12,7 @@ import pojos.GetProfileResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.OAuth;
 
 public class GetProfileHandler extends Connect implements AppHandler {
 
@@ -45,6 +46,15 @@ public class GetProfileHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside process method " + rq.getUserId());
 
 		try {
+			
+			OAuth oauth = new OAuth();
+			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+			if(!oauthcheck.equals(rq.getUserId())){
+				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+				return rs;
+			}
+			
 			String sql = "SELECT * FROM users WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
 			ps = hcp.prepareStatement(sql);

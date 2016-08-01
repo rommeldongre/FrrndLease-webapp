@@ -6,6 +6,7 @@
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var UserId = null;
+	var AccessToken = null;
 	
 	//beginning of image display
 	$(document).ready(function() {
@@ -31,8 +32,10 @@
 	
 	getProfileReq = function() {
 		UserId = document.getElementById("userId").value;
+        AccessToken = document.getElementById("accessToken").value;
 		var req = {
-				userId: UserId
+			userId: UserId,
+            accessToken: AccessToken
 		}
 		getProfileSend(req);
 	};
@@ -90,6 +93,7 @@
 	<h1>GET PROFILE FORM</h1>
 	<form>
 		User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
 		<input type="button" value="Get Profile" onclick="getProfileReq()"><br/><br/>
 		
 		<h1>OUTPUT</h1>

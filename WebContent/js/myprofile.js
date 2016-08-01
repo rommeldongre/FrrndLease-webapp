@@ -127,7 +127,11 @@ myProfile.controller('myProfileCtrl', ['$scope',
 	//end of image display
     
     var displayProfile = function(){
-        profileFactory.getProfile(userFactory.user).then(
+        req = {
+            userId : userFactory.user,
+            accessToken: userFactory.userAccessToken
+        }
+        profileFactory.getProfile(req).then(
         function(response){
             if (response.data.code == 0) {
                 $scope.userId = userFactory.user;
@@ -145,6 +149,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
 					drawImage(img);
 				}
             } else {
+                if(response.data.code == 400)
+                    logoutService.logout();
                 $scope.userId = "";
                 $scope.fullname = "";
 				$scope.mobile = "";
@@ -268,7 +274,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
             sublocality: Sublocality,
             lat: Lat,
             lng: Lng,
-			photoId: image_url
+			photoId: image_url,
+            accessToken: userFactory.userAccessToken
 		}
 		editProfile(req);
     }
@@ -281,10 +288,12 @@ myProfile.controller('myProfileCtrl', ['$scope',
 				bannerService.updatebannerMessage(dialogText,"");
 				$("html, body").animate({ scrollTop: 0 }, "slow");
             }else{
-                dialogText = 'please try after sometime';
-				modalService.showModal({}, {bodyText:dialogText,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-				window.location.reload();
-			}, function(){});
+				modalService.showModal({}, {bodyText:response.data.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                    if(response.data.code == 400)
+                        logoutService.logout();
+                    else
+                        window.location.reload();
+                }, function(){});
             }
 			
         },
