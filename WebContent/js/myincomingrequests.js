@@ -75,7 +75,8 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
                 var req = {
                     reqUserId: reqUserId,
                     itemId: itemId,
-                    userId: userFactory.user
+                    userId: userFactory.user,
+                    accessToken: userFactory.userAccessToken
                 }
 
                 grantLeaseSend(req, index);
@@ -97,7 +98,10 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
 				}else{
                 modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        initialPopulate();
+                        if(response.data.code == 400)
+                            logoutService.logout();
+                        else
+                            initialPopulate();
                     },function(){});	
 				}
             },
