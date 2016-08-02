@@ -10,6 +10,10 @@
 	var ReqUserId = null;
 	var AccessToken = null;
 	
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
 		UserId = document.getElementById("userId").value;
@@ -58,7 +62,7 @@
 	
 </script>
 </head>
-<body>
+<body onload="start()">
 	<h1>GRANT LEASE FORM</h1>
 	<form>
 		Request User Id : <input type="text" name="reqUserId" id="reqUserId"><br/><br/>

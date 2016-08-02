@@ -17,6 +17,10 @@
     var Lng = 0.0;
 	var image_url =null;
 	var AccessToken = null;
+    
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
 
 	editProfileReq = function() {
 		UserId = document.getElementById("userId").value;
@@ -185,7 +189,7 @@
 	};
 </script>
 </head>
-<body>
+<body onload="start()">
 	<h1>EDIT PROFILE FORM</h1>
 	<form>
 		User Id : <input type="text" name="userId" id="userId"><br />

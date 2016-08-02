@@ -9,6 +9,10 @@
 	var UserId = null;
 	var AccessToken = null;
     
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
 	getData = function (){
 		RequestId = document.getElementById("RequestId").value;
 		if (RequestId === '') RequestId = null;
@@ -56,7 +60,7 @@
 	
 </script>
 </head>
-<body>
+<body onload="start()">
 	<h1>DELETE REQUEST FORM</h1>
 	<form>
 		Request Id : <input type="text" name="RequestId" id="RequestId"><br/><br/>
