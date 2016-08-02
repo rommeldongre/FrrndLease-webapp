@@ -7,21 +7,29 @@
 <script type="text/javascript">
 	var RequestId = null;
 	var UserId = null;
-	
+	var AccessToken = null;
+    
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
 	getData = function (){
 		RequestId = document.getElementById("RequestId").value;
 		if (RequestId === '') RequestId = null;
 		
 		UserId = document.getElementById("userId").value;
 		if (UserId ==='') UserId = null;
+        
+        AccessToken = document.getElementById("accessToken").value;
 	};
 	
 	deleteD = function() {
 		alert("inside add function.");
 		getData();
 		var req = {
-					request_Id: RequestId,
-					userId: UserId
+            request_Id: RequestId,
+			userId: UserId,
+            accessToken: AccessToken
 		};
 		alert("got data");
 		console.log(JSON.stringify(req));
@@ -40,9 +48,8 @@
 			success: function(response) {
 				alert("working");
 				console.log(response);
-				//document.getElementById("Id").value = response.Id;
-				document.getElementById("Code").value = response.returnCode;
-				document.getElementById("Message").value = response.errorString;
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message;
 			},
 			
 			error: function() {
@@ -53,11 +60,12 @@
 	
 </script>
 </head>
-<body>
+<body onload="start()">
 	<h1>DELETE REQUEST FORM</h1>
 	<form>
 		Request Id : <input type="text" name="RequestId" id="RequestId"><br/><br/>
 		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
 		<input type="button" value="Delete Request" onclick="deleteD()"><br/><br/>
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>

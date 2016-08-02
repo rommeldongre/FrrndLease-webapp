@@ -5,10 +5,17 @@
 <title>Add Promo Credit</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
+    
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
 	getData = function (){
 		var UserId = document.getElementById("userId").value;
 		
 		var PromoCode = document.getElementById("promoCode").value;
+        
+        var AccessToken = document.getElementById("accessToken").value;
 		
 		AddPromoCredits(UserId,PromoCode);
 	};
@@ -17,7 +24,8 @@
 	
 		var req = {
 			userId: UserId,
-            promoCode: PromoCode
+            promoCode: PromoCode,
+            accessToken: AccessToken
 		}
         
 		console.log(JSON.stringify(req));
@@ -46,11 +54,12 @@
 	
 </script>
 </head>
-<body>
+<body onload="start()">
 <h1> ADD PROMO CODE FORM</h1>
 	<form>
 		User Id : <input type="text" name="userId" id="userId" ><br/><br/>
 		Promo Code: <input type="text" name="promoCode" id="promoCode" ><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
 		<input type="button" value="Next" onclick="getData()">
 		
 		<h1>OUTPUT</h1>

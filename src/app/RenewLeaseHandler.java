@@ -20,6 +20,7 @@ import util.FlsLogger;
 import util.FlsSendMail;
 import util.LogCredit;
 import util.LogItem;
+import util.OAuth;
 
 public class RenewLeaseHandler extends Connect implements AppHandler {
 
@@ -64,7 +65,16 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			
 			LOGGER.info("inside edit method");
 			
-			try {		
+			try {
+				
+				OAuth oauth = new OAuth();
+				String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+				if(!oauthcheck.equals(rq.getUserId())){
+					rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+					rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+					return rs;
+				}
+				
 				LOGGER.info("Creating statement...");
 
 				String selectItemSql = "SELECT * FROM items WHERE item_id=?";
@@ -77,7 +87,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
-					hcp.close();
 					return rs;
 				}
 				
@@ -94,7 +103,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
-					hcp.close();
 					return rs;
 				}
 				
@@ -116,17 +124,20 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				rs.setCode(FLS_SQL_EXCEPTION);
 				rs.setMessage(FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
-			}catch (Exception e) {
+			} catch (NullPointerException e) {
+				rs.setCode(FLS_NULL_POINT);
+				rs.setMessage(FLS_NULL_POINT_M);
+			} catch (Exception e) {
 				LOGGER.info("AWS SES Exception encountered....");
 				e.printStackTrace();
 			}finally{
 				
-				dbResponseitems.close();
+				if(dbResponseitems != null)dbResponseitems.close();
 				
-				psItemSelect.close();
-				psItemUpdate.close();
+				if(psItemSelect != null)psItemSelect.close();
+				if(psItemUpdate != null)psItemUpdate.close();
 				
-				hcp.close();
+				if(hcp != null)hcp.close();
 			}
 			break;
 
@@ -153,6 +164,15 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		String SelectRenewLeasesql = "SELECT lease_expiry_date,lease_id FROM leases WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?";
 		
 		try {
+			
+			OAuth oauth = new OAuth();
+			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+			if(!oauthcheck.equals(rq.getUserId())){
+				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+				return false;
+			}
+			
 			psRenewSelect = hcp.prepareStatement(SelectRenewLeasesql);
 			psRenewSelect.setString(1, rq.getReqUserId());
 			psRenewSelect.setInt(2, rq.getItemId());
@@ -163,7 +183,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				System.out.println("Empty result while firing select query on lease table for Renew Lease");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				hcp.close();
 				return false;
 			}
 				
@@ -178,9 +197,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				if(!checkGracePeroid(date1,term)){
 					LOGGER.info("Renew Lease not done as lease not in grace period");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					//rs.setId("Error");
 					rs.setMessage("Renewal Failed as Item not in Grace Peroid");
-					hcp.close();
 					return false;
 				}
 				
@@ -214,7 +231,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
-					hcp.close();
 					return false;
 				}
 				
@@ -230,7 +246,6 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setError("500");
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
-					hcp.close();
 					return false;
 				}
 				LOGGER.info("Add Credit query executed successfully...");
@@ -275,16 +290,17 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				}
 		} catch (SQLException e1) {
 			// TODO: handle exception
-		}catch(NullPointerException e) {
-		   e.printStackTrace();
+		}  catch (NullPointerException e) {
+			rs.setCode(FLS_NULL_POINT);
+			rs.setMessage(FLS_NULL_POINT_M);
 		}finally{
 			try {
-				result1.close();
-				psRenewSelect.close();
+				if(result1 != null)result1.close();
+				if(psRenewSelect != null)psRenewSelect.close();
 				if(psRenewUpdate!=null) psRenewUpdate.close();	
 				if(psAddCredit!=null) psAddCredit.close();
 				if(psDebitCredit!=null) psDebitCredit.close();
-				hcp.close();
+				if(hcp != null)hcp.close();
 			} catch (Exception e2) {
 				// TODO: handle exception
 				e2.printStackTrace();

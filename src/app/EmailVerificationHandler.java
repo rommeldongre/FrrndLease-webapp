@@ -13,6 +13,7 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 import util.LogCredit;
+import util.OAuth;
 
 public class EmailVerificationHandler extends Connect implements AppHandler {
 
@@ -88,6 +89,9 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 						rs.setUserId(result1.getString("user_id"));
 						rs.setName(result1.getString("user_full_name"));
 						rs.setMessage("Your account has been activated!!");
+						OAuth oauth = new OAuth();
+						String access_token = oauth.generateOAuth(result1.getString("user_id"));
+						rs.setAccess_token(access_token);
 					} else {
 						rs.setCode(FLS_SQL_EXCEPTION);
 						rs.setUserId("");

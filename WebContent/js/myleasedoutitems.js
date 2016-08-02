@@ -3,11 +3,13 @@ var myLeasedOutItemsApp = angular.module('myApp');
 myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope', 
 														'userFactory', 
 														'bannerService', 
-														'modalService', 
+														'modalService',
+                                                        'logoutService',
 														function($scope, 
 														userFactory, 
 														bannerService, 
-														modalService){
+														modalService,
+                                                        logoutService){
     
     localStorage.setItem("prevPage","myapp.html#/myleasedoutitems");
     
@@ -62,7 +64,8 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
                         itemId: ItemId,
                         userId: userFactory.user,
                         reqUserId: RequestorUserId,
-                        flag: "close"
+                        flag: "close",
+                        accessToken: userFactory.userAccessToken
                     };
                     closeLeaseSend(req, index);
                 },function(){});
@@ -90,8 +93,12 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
 				}else{
 					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
 					function(result){
-						$scope.leases = [];
-						initialPopulate();
+                        if(response.code == 400)
+                            logoutService.logout();
+                        else{
+                            $scope.leases = [];
+                            initialPopulate();
+                        }
 					},function(){});
 				}
                 
@@ -109,7 +116,8 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
                         itemId: ItemId,
                         userId: userFactory.user,
                         reqUserId: RequestorUserId,
-                        flag: "renew"
+                        flag: "renew",
+                        accessToken: userFactory.userAccessToken
                     }
                     renewLeaseSend(req);
                 },function(){});
@@ -136,8 +144,12 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
 				}else{
 					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
 					function(result){
-						$scope.leases = [];
-						initialPopulate();
+						if(response.code == 400)
+                            logoutService.logout();
+                        else{
+                            $scope.leases = [];
+                            initialPopulate();
+                        }
 					},function(){});
 				}
             },

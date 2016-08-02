@@ -55,7 +55,7 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
 //    
 //    getCurrentLocation();
     
-    if(userFactory.user != "" && userFactory.user != null && userFactory.user != 'anonymous')
+    if(userFactory.user != "" && userFactory.user != null && userFactory.user != "anonymous")
         window.location.replace("myapp.html");
 
     $scope.storeYourStuff = function(){

@@ -15,6 +15,7 @@ import util.FlsSendMail;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.LogCredit;
+import util.OAuth;
 import util.ReferralCode;
 import app.EmailVerificationHandler;
 
@@ -175,7 +176,7 @@ public class Users extends Connect {
 			int ref_code_length = 8;
 			ReferralCode rc = new ReferralCode();
 			String generated_ref_code = rc.createRandomCode(ref_code_length, userId);
-			String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
@@ -195,6 +196,7 @@ public class Users extends Connect {
 			stmt.setString(14, generated_ref_code);
 			stmt.setString(15, referrer_code);
 			stmt.setString(16, profilePicture);
+			stmt.setInt(17, 1);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);
@@ -217,8 +219,21 @@ public class Users extends Connect {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
+			JSONObject jObj = new JSONObject();
 
-			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
+			try {
+				OAuth oauth = new OAuth();
+				String access_token = oauth.generateOAuth(userId);
+				jObj.put("access_token", access_token);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			message = jObj.toString();
+			
+			res.setData(FLS_SUCCESS, Id, message);
 			}else{
 				res.setData(FLS_DUPLICATE_ENTRY, "200", "Account with this Email Id already exists");	
 			}
@@ -624,6 +639,17 @@ public class Users extends Connect {
 				message = "Email does not exist!!";
 				Code = FLS_ENTRY_NOT_FOUND;
 			}
+			
+			String access_token = null;
+			JSONObject jObj = new JSONObject(message);
+			
+			if(Code == FLS_SUCCESS){
+				OAuth oauth = new OAuth();
+				access_token = oauth.generateOAuth(token);
+				jObj.put("access_token", access_token);
+			}
+			
+			message = jObj.toString();
 
 			res.setData(Code, Id, message);
 		} catch (SQLException e) {

@@ -3,7 +3,7 @@ package pojos;
 public class EmailVerificationResObj extends ResObj {
 
 	int code;
-	String message, userId, name;
+	String message, userId, name, access_token;
 
 	public String getUserId() {
 		return userId;
@@ -19,6 +19,14 @@ public class EmailVerificationResObj extends ResObj {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAccess_token() {
+		return access_token;
+	}
+
+	public void setAccess_token(String access_token) {
+		this.access_token = access_token;
 	}
 
 	public int getCode() {
