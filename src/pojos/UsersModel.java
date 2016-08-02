@@ -9,7 +9,7 @@ public class UsersModel {
 
 	private FlsLogger LOGGER = new FlsLogger(UsersModel.class.getName());
 
-	private String userId, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode,profilePicture;
+	private String userId, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode,profilePicture,friendId;
 	private int liveStatus, verification;
 	private float lat, lng;
 	private JSONObject obj;
@@ -37,10 +37,15 @@ public class UsersModel {
 			if(obj.has("profilePicture"))profilePicture = obj.getString("profilePicture");
 			if(obj.has("liveStatus"))liveStatus = obj.getInt("liveStatus");
 			if(obj.has("verification"))verification = obj.getInt("verification");
+			if(obj.has("friendId"))friendId = obj.getString("friendId");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
 		}
+	}
+
+	public String getFriendId() {
+		return friendId;
 	}
 
 	public void setActivation(String activation) {
