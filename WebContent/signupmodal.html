@@ -17,7 +17,7 @@
                     </div>
 					<div ng-if="code" style="color:grey;margin-top:10%;margin-left:25%;">Referral Code: {{code}}</div>
                     <span class="divider"> or </span>
-                    <p ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
+                    <p id="signup_error" ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
                     <form name="form">
                         <div class="form-group">
                             <input name="email" type="email" class="form-control" ng-model="email" ng-change="(form.email.$dirty && form.email.$valid) ? error='' : error='Please enter a valid email'" placeholder="Email*" required autofocus/>
