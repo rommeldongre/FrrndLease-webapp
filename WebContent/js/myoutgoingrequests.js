@@ -3,11 +3,13 @@ var myOutGoingRequests = angular.module('myApp');
 myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope', 
 														'userFactory', 
 														'bannerService', 
-														'modalService', 
+														'modalService',
+                                                        'logoutService',
 														function($scope, 
 														userFactory, 
 														bannerService, 
-														modalService){
+														modalService,
+                                                        logoutService){
     
     localStorage.setItem("prevPage","myapp.html#/myoutgoingrequests");
     
@@ -72,7 +74,8 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
                 
                 var req = {
                     request_Id: requestId,
-                    userId: userFactory.user
+                    userId: userFactory.user,
+                    accessToken: userFactory.userAccessToken
                 };
 
                 deleteRequest(req, index);
@@ -87,14 +90,17 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-                if(response.returnCode == 0){
+                if(response.code == 0){
 					bannerService.updatebannerMessage("Request Deleted successfully","");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
                     initialPopulate();
                 }else{
-					modalService.showModal({}, {bodyText: "Some Error occured please try again", showCancel:false, actionButtonText: 'OK'}).then(
+					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                     function(result){
-                        initialPopulate();
+                        if(response.code == 400)
+                            logoutService.logout();
+                        else
+                            initialPopulate();
                     },function(){});
 				}
             },

@@ -7,7 +7,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									'bannerService', 
 									'searchService', 
 									'statsFactory', 
-									'loginSignupService', 
+									'loginSignupService',
+                                    'logoutService',
 									function($scope, 
 									$timeout, 
 									userFactory, 
@@ -15,7 +16,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									bannerService, 
 									searchService, 
 									statsFactory, 
-									loginSignupService){
+									loginSignupService,
+                                    logoutService){
     
     // sign up starts here
     
@@ -114,6 +116,8 @@ headerApp.controller('headerCtrl', ['$scope',
                         localStorage.setItem("userloggedin", Email);
                         localStorage.setItem("userloggedinName", Name);
 						localStorage.setItem("userReferralCode", response.Id);
+                        var obj = JSON.parse(response.Message);
+                        localStorage.setItem("userloggedinAccess", obj.access_token);
                         if(SignUpStatus == "facebook")
                             getFacebookFriends(Email);
                         else
@@ -161,6 +165,7 @@ headerApp.controller('headerCtrl', ['$scope',
                     var obj = JSON.parse(response.Message);
                     localStorage.setItem("userloggedin", obj.userId);
                     localStorage.setItem("userloggedinName", obj.fullName);
+                    localStorage.setItem("userloggedinAccess", obj.access_token);
 					localStorage.setItem("userReferralCode", obj.referralCode);
                     if(signUpStatus == "facebook")
                         getFacebookFriends(obj.userId);
@@ -353,13 +358,7 @@ headerApp.controller('headerCtrl', ['$scope',
     }
     
     $scope.logout = function(){
-        localStorage.setItem("userloggedin", "anonymous");  //userloggedin-> anonymous
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function() {
-            console.log('User signed out.');
-        });
-											
-        window.location.replace("index.html");
+        logoutService.logout();
     }
     
     $scope.storeYourStuff = function(){
@@ -369,6 +368,25 @@ headerApp.controller('headerCtrl', ['$scope',
     }
     
 }]);
+
+headerApp.service('logoutService', function(){
+    
+    var l = {};
+    
+    l.logout = function(){
+        localStorage.clear();
+        localStorage.setItem("userloggedin", "anonymous");
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function() {
+            console.log('User signed out.');
+        });
+
+        window.location.replace("index.html");
+    }
+    
+    return l;
+    
+});
 
 // factory for getting Site Stats from the backend service
 headerApp.factory('statsFactory', ['$http', function($http){
@@ -404,6 +422,8 @@ headerApp.factory('userFactory', function(){
     dataFactory.user = localStorage.getItem("userloggedin");
     
     dataFactory.userName = localStorage.getItem("userloggedinName");
+    
+    dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
     
     return dataFactory;
 });

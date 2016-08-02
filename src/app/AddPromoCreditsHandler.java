@@ -16,6 +16,7 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 import util.LogCredit;
+import util.OAuth;
 
 public class AddPromoCreditsHandler extends Connect implements AppHandler {
 
@@ -60,6 +61,14 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 
 		try {
 
+			OAuth oauth = new OAuth();
+			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+			if(!oauthcheck.equals(rq.getUserId())){
+				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+				return rs;
+			}
+			
 			String promoCode = rq.getPromoCode();
 			String userId = rq.getUserId();
 

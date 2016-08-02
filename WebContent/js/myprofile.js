@@ -4,12 +4,14 @@ myProfile.controller('myProfileCtrl', ['$scope',
 										'userFactory', 
 										'profileFactory', 
 										'bannerService', 
-										'modalService', 
+										'modalService',
+                                        'logoutService',
 										function($scope, 
 										userFactory, 
 										profileFactory, 
 										bannerService, 
-										modalService){
+										modalService,
+                                        logoutService){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
@@ -22,7 +24,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
             function(promo){
                 var req = {
                     userId: userFactory.user,
-                    promoCode: promo
+                    promoCode: promo,
+                    accessToken: userFactory.userAccessToken
                 }
                 
                 $.ajax({
@@ -36,6 +39,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
                             function(r){
                                 if(response.code == 0)
                                     $scope.credit = response.newCreditBalance;
+                                if(response.code == 400)
+                                    logoutService.logout();
                             }, function(){});
                     },
                     error: function(){
@@ -263,7 +268,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
             sublocality: Sublocality,
             lat: Lat,
             lng: Lng,
-			photoId: image_url
+			photoId: image_url,
+            accessToken: userFactory.userAccessToken
 		}
 		editProfile(req);
     }
@@ -276,10 +282,12 @@ myProfile.controller('myProfileCtrl', ['$scope',
 				bannerService.updatebannerMessage(dialogText,"");
 				$("html, body").animate({ scrollTop: 0 }, "slow");
             }else{
-                dialogText = 'please try after sometime';
-				modalService.showModal({}, {bodyText:dialogText,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-				window.location.reload();
-			}, function(){});
+				modalService.showModal({}, {bodyText:response.data.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                    if(response.data.code == 400)
+                        logoutService.logout();
+                    else
+                        window.location.reload();
+                }, function(){});
             }
 			
         },

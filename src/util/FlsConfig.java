@@ -1,17 +1,19 @@
 package util;
 
+import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import util.ReferralCode;
 
 import connect.Connect;
+import io.jsonwebtoken.impl.crypto.MacProvider;
 
 public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2014;			
+	public final int appBuild = 2015;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -556,30 +558,62 @@ public class FlsConfig extends Connect{
 				
 				//This block adds user_live_status column in users table
 				if(dbBuild < 2014){
-				
-				// creating a item log table
-				String sqlLiveStatusColumn = "ALTER TABLE `users` ADD `user_live_status` TINYINT(1) NOT NULL DEFAULT '1' AFTER `user_profile_picture`";
-				try{
-					getConnection();
-					PreparedStatement ps1 = connection.prepareStatement(sqlLiveStatusColumn);
-					ps1.executeUpdate();
-					ps1.close();
-				}catch(SQLException e){
-					e.printStackTrace();
-					System.out.println(e.getStackTrace());
-				}finally {
-					try {
-						// close and reset connection to null
-						connection.close();
-						connection = null;
-						} catch (SQLException e){
-							e.printStackTrace();
-							System.out.println(e.getStackTrace());
-						}
+					
+					// creating a item log table
+					String sqlLiveStatusColumn = "ALTER TABLE `users` ADD `user_live_status` TINYINT(1) NOT NULL DEFAULT '1' AFTER `user_profile_picture`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlLiveStatusColumn);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2014;
+					updateDBBuild(dbBuild);
 				}
-				// The dbBuild version value is changed in the database
-				dbBuild = 2014;
-				updateDBBuild(dbBuild);
+				
+				//This block adds api_key column in config table
+				if(dbBuild < 2015){
+					
+					Key key = MacProvider.generateKey();
+					
+					// inserting api_key for OAuth in APIs
+					String sqlInsertApiKey = "INSERT INTO `config`(`option`, `value`) VALUES (?,?)";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlInsertApiKey);
+						ps1.setString(1, "api_key");
+						ps1.setString(2, key.toString());
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2015;
+					updateDBBuild(dbBuild);
 				}
 				
 	}

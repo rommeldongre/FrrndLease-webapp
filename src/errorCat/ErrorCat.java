@@ -22,6 +22,8 @@ public class ErrorCat {
 	final public int FLS_PROMO_EXPIRED = 215;
 	final public int FLS_INVALID_PROMO = 216;
 	final public int FLS_ITEM_ON_HOLD = 217;
+	final public int FLS_ACCESS_TOKEN_FAILED = 400;
+	final public int FLS_NULL_POINT = 218;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -68,6 +70,8 @@ public class ErrorCat {
 	final public String FLS_PROMO_EXPIRED_M = "This promo has expired!!";
 	final public String FLS_INVALID_PROMO_M = "This is an invalid promo code!!";
 	final public String FLS_ITEM_ON_HOLD_M= "This item is not allowed to be requested";
+	final public String FLS_ACCESS_TOKEN_FAILED_M = "Session Expired!! Please login again";
+	final public String FLS_NULL_POINT_M = "Wrong data!!";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";
