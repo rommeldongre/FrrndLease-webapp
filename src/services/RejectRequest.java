@@ -68,13 +68,13 @@ public class RejectRequest extends HttpServlet {
 			JSONObject json = new JSONObject();
 
 			if (Integer.parseInt(res.getCode()) == e.FLS_SUCCESS) {
-				json.put("Code", "FLS_SUCCESS");
+				json.put("Code", 0);
 				json.put("Message", e.FLS_REJECT_REQUEST);
 				json.put("Id", res.getId());
 			}
 
 			else {
-				json.put("Code", res.getCode());
+				json.put("Code", res.getIntCode());
 				json.put("Message", res.getMessage());
 				json.put("Id", res.getId());
 			}

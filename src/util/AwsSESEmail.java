@@ -15,22 +15,30 @@ package util;
  */
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Session;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -43,6 +51,12 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.xml.bind.DatatypeConverter;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
 import pojos.FriendsModel;
 import pojos.GrantLeaseReqObj;
@@ -149,40 +163,57 @@ public class AwsSESEmail extends Connect {
 				if(hcp != null)hcp.close(); 
 			} catch(SQLException e) {}
 		}
+		
+		try {
+			
+			// starting velocity engine
+			VelocityEngine ve = new VelocityEngine();
+			ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+			ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+			ve.init();
+			
+			// Initializing context for generating template
+			VelocityContext context = new VelocityContext();
+			
+			// declaring template to get template for each email type from templates folder
+			Template template = null;
+			
+			// the generated text from the template is written on the writer and is set in the body
+			StringWriter writer = new StringWriter();
 
 		// Build Email Subject and Body
 		switch (fls_enum) {
 		case FLS_MAIL_FORGOT_PASSWORD:
 			String activation = (String)obj;
-			SUBJECT = PREFIX + " Forgot Password";
-			BODY = "<body>Click on this link to reset password for your frrndlease account. <br/>"
+			SUBJECT = " Forgot Password";
+			BODY = "Click on this link to reset password for your frrndlease account. <br/>"
 					+ "<a href='" + EMAIL_FORGOT_PASSWORD + "?act=" + activation + "'>"
-					+ EMAIL_FORGOT_PASSWORD + "?act=" + activation + "</a>" + "<br/></body>";
+					+ EMAIL_FORGOT_PASSWORD + "?act=" + activation + "</a>";
 			break;
 		case FLS_MAIL_SIGNUP_VALIDATION:
 			UsersModel um = (UsersModel) obj;
-			SUBJECT = PREFIX + " Email Verification";
-			BODY = "<body>Hello " + um.getFullName()
+			SUBJECT = " Email Verification";
+			BODY = "Hello " + um.getFullName()
 					+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
 					+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
 					+ "<a href='" + EMAIL_VERIFICATION_URL + "?token=" + um.getActivation() + "'>"
-					+ EMAIL_VERIFICATION_URL + "?token=" + um.getActivation() + "</a>" + "<br/></body>";
+					+ EMAIL_VERIFICATION_URL + "?token=" + um.getActivation() + "</a>" + "<br/>";
 			break;
 		case FLS_MAIL_REGISTER:
 			UsersModel uom = (UsersModel) obj;
-			SUBJECT = PREFIX + " Welcome Aboard";
-			BODY = "<body>Hello " + uom.getFullName()
+			SUBJECT = " Welcome Aboard";
+			BODY = "Hello " + uom.getFullName()
 					+ ". You have successfully signed up on fRRndLease, the platform that helps you Make Space for leading the Life you love. <br/>"
 					+ "We love our stuff, but are passionate about utilizing them well to get rich, positive experiences. <br/>"
 					+ "Check out and follow us on our Facebook community page at <a href='http://www.facebook.com/frrndlease'>frrndlease on facebook</a>. "
 					+ "We use that to make announcements and share posts.<br/>"
 					+ "We are happy to have you. Now go and offer your dormant stuff on the platform!! <br/>"
-					+ "Remember, it will always be yours ... and will come back after enriching your friends, whenever you want!</body>";
+					+ "Remember, it will always be yours ... and will come back after enriching your friends, whenever you want!";
 			break;
 
 		case FLS_MAIL_DELETE_ITEM:
 			ItemsModel idom = (ItemsModel) obj;
-			SUBJECT = (PREFIX + " Your Item [" + idom.getTitle() + "] has been deleted from the Friend Store");
+			SUBJECT = (" Your Item [" + idom.getTitle() + "] has been deleted from the Friend Store");
 			BODY = ("<body>You have deleted the following item on fRRndLease<br/> <br/>" + " Title : " + idom.getTitle()
 					+ "<br/>" + " Category : " + idom.getCategory() + "<br/>" + " Description : "
 					+ idom.getDescription() + "<br/>" + " Lease Value : " + idom.getLeaseValue() + "<br/>"
@@ -193,7 +224,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_POST_ITEM:
 			PostItemReqObj iom = (PostItemReqObj) obj;
-			SUBJECT = (PREFIX + " Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
+			SUBJECT = (" Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
 			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
@@ -204,7 +235,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_MATCH_WISHLIST_ITEM:
 			PostItemReqObj itemObj = (PostItemReqObj) obj;
-			SUBJECT = (PREFIX + " Item [" + itemObj.getTitle() + "] has been added to the Friend Store");
+			SUBJECT = (" Item [" + itemObj.getTitle() + "] has been added to the Friend Store");
 			BODY = ("<body>Someone has posted this item that matches your wishlist. <br/> <br/>" + " Title : "
 					+ itemObj.getTitle() + "<br/>" + " Category : " + itemObj.getCategory() + "<br/>"
 					+ " Description : " + itemObj.getDescription() + "<br/>" + " Lease Value : "
@@ -216,7 +247,7 @@ public class AwsSESEmail extends Connect {
 
 		case FLS_MAIL_MATCH_POST_ITEM:
 			List<PostItemReqObj> listItems = (List<PostItemReqObj>) obj;
-			SUBJECT = (PREFIX + " Items present in the Friend Store match your wishlist");
+			SUBJECT = (" Items present in the Friend Store match your wishlist");
 			BODY = ("<body>These items match your wishlist. <br/> <br/>");
 
 			int len = listItems.size();
@@ -239,151 +270,137 @@ public class AwsSESEmail extends Connect {
 		case FLS_MAIL_ADD_FRIEND_FROM:
 			FriendsModel affm = (FriendsModel) obj;
 			if (apiflag != null && apiflag[0] == "@api") {
-				SUBJECT = (PREFIX + " Your Friend '" + affm.getFullName() + "' has been added to your Friend List");
+				SUBJECT = (" Your Friend '" + affm.getFullName() + "' has been added to your Friend List");
 				BODY = ("<body>You have added your trusted friend '" + affm.getFullName()
 						+ "' to your Friend List. You can now lease items to each other <br/> <br/></body>");
 			} else if (apiflag != null && apiflag[0] == "@email") {
-				SUBJECT = (PREFIX + " Your Friend '" + (affm.getFriendId())
+				SUBJECT = (" Your Friend '" + (affm.getFriendId())
 						+ "' has been added to your Friend List. ");
-				BODY = ("<body>You have added '" + (affm.getFriendId())
-						+ "' to your Friend List. You can now lease items to each other <br/> <br/></body>");
+				BODY = "You have added '" + (affm.getFriendId()) + "' to your Friend List. You can now lease items to each other ";
 			}
 			break;
 
 		case FLS_MAIL_ADD_FRIEND_TO:
 			FriendsModel atfm = (FriendsModel) obj;
-			SUBJECT = (PREFIX + " Your Friend '" + atfm.getUserId() + "' has added you to their Friend List");
-			BODY = ("<body>You are now in '" + atfm.getUserId()
-					+ "'\'s Friend List. You can now lease items to each other <br/> <br/>"
-					+ "Click here to Sign Up "+EMAIL_INVITATION_URL+atfm.getReferralCode()+"<br/></body>");
+			SUBJECT = (" Your Friend '" + atfm.getUserId() + "' has added you to their Friend List");
+			BODY = "You are now in '" + atfm.getUserId() + "'\'s Friend List. You can now lease items to each other <br/> <br/>"
+					+ "Click here to Sign Up "+EMAIL_INVITATION_URL+atfm.getReferralCode();
 			break;
 
 		case FLS_MAIL_DELETE_FRIEND_FROM:
 			FriendsModel dffm = (FriendsModel) obj;
-			SUBJECT = (PREFIX + " Your Friend \'" + dffm.getUserId() + "' has been removed from your Friend List");
-			BODY = ("<body>You have now removed " + dffm.getUserId()
-					+ " from your Friend List. You can no longer lease items to each other. Tell us what went wrong! <br/> <br/></body>");
+			SUBJECT = (" Your Friend \'" + dffm.getUserId() + "' has been removed from your Friend List");
+			BODY = "You have now removed " + dffm.getUserId()
+					+ " from your Friend List. You can no longer lease items to each other. Tell us what went wrong! ";
 			break;
 
 		case FLS_MAIL_DELETE_FRIEND_TO:
 			FriendsModel dtfm = (FriendsModel) obj;
-			SUBJECT = (PREFIX + " Your Friend '" + dtfm.getFriendId() + "' removed you from thier Friend List");
-			BODY = ("<body> You have been removed from the Friend List of your Friend " + dtfm.getFriendId()
-					+ ". You can no longer lease items to each other. Tell us what went wrong! <br/> <br/></body>");
+			SUBJECT = (" Your Friend '" + dtfm.getFriendId() + "' removed you from thier Friend List");
+			BODY = "You have been removed from the Friend List of your Friend " + dtfm.getFriendId()
+					+ ". You can no longer lease items to each other. Tell us what went wrong! ";
 			break;
 
 		case FLS_MAIL_REJECT_REQUEST_FROM:
 			RequestsModel dfrm = (RequestsModel) obj;
-			SUBJECT = (PREFIX + " Request removed");
-			BODY = ("<body>Request for item with id [" + dfrm.getItemId()
-					+ "] has been removed as a lease might be granted. <br/> <br/></body>");
+			SUBJECT = (" Request removed");
+			BODY = "Request for item with id [" + dfrm.getItemId() + "] has been removed as a lease might be granted. ";
 			break;
 
 		case FLS_MAIL_REJECT_REQUEST_TO:
 			RequestsModel dtrm = (RequestsModel) obj;
-			SUBJECT = (PREFIX + " Request removed");
-			BODY = ("<body>Request of item having id [" + dtrm.getItemId()
-					+ "] has been removed by the owner as a lease might be granted. <br/> <br/></body>");
+			SUBJECT = (" Request removed");
+			BODY = "Request of item having id [" + dtrm.getItemId() + "] has been removed by the owner as a lease might be granted. ";
 			break;
 
 		case FLS_MAIL_DELETE_REQUEST_FROM:
 			ItemsModel dfim = (ItemsModel) obj;
-			SUBJECT = (PREFIX + " Request removed");
-			BODY = ("<body>Your Request for item having id [" + dfim.getId()
-					+ "] has been removed. <br/> <br/></body>");
+			SUBJECT = (" Request removed");
+			BODY = "Your Request for item having id [" + dfim.getId() + "] has been removed. ";
 			break;
 
 		case FLS_MAIL_DELETE_REQUEST_TO:
 			ItemsModel dtim = (ItemsModel) obj;
-			SUBJECT = (PREFIX + " Request removed");
-			BODY = ("<body>Request of item having id [" + dtim.getId()
-					+ "] has been removed a Requestor. <br/> <br/></body>");
+			SUBJECT = (" Request removed");
+			BODY = "Request of item having id [" + dtim.getId() + "] has been removed a Requestor. ";
 			break;
 
 		case FLS_MAIL_GRANT_LEASE_FROM:
 			GrantLeaseReqObj gflm = (GrantLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Lease granted to user [" + gflm.getReqUserId() + "]");
-			BODY = ("<body>You have sucessfully leased an item to [" + gflm.getReqUserId()
-					+ "] on Friend Lease - <br/> <br/></body>");
+			SUBJECT = (" Lease granted to user [" + gflm.getReqUserId() + "]");
+			BODY = "You have sucessfully leased an item to [" + gflm.getReqUserId() + "] on Friend Lease - ";
 			break;
 
 		case FLS_MAIL_GRANT_LEASE_TO:
 			GrantLeaseReqObj gtlm = (GrantLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Lease granted to you by [" + gtlm.getUserId() + "]");
-			BODY = ("<body>An item has been leased by [" + gtlm.getUserId()
-					+ "] to you on Friend Lease - <br/> <br/></body>");
+			SUBJECT = (" Lease granted to you by [" + gtlm.getUserId() + "]");
+			BODY = "An item has been leased by [" + gtlm.getUserId() + "] to you on Friend Lease - ";
 			break;
 
 		case FLS_MAIL_REJECT_LEASE_FROM:
 			RenewLeaseReqObj rflm = (RenewLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Lease Cancelled to user [" + rflm.getReqUserId() + "]");
-			BODY = ("<body>You have closed leased of item having id [" + rflm.getItemId() + "] and leasee ["
-					+ rflm.getReqUserId() + "] on Friend Lease - <br/> <br/></body>");
+			SUBJECT = (" Lease Cancelled to user [" + rflm.getReqUserId() + "]");
+			BODY = "You have closed leased of item having id [" + rflm.getItemId() + "] and leasee ["
+					+ rflm.getReqUserId() + "] on Friend Lease - ";
 			break;
 
 		case FLS_MAIL_REJECT_LEASE_TO:
 			RenewLeaseReqObj rtlm = (RenewLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Lease Closed by the Owner");
-			BODY = ("<body>Lease has been closed by the Owner for the item having id [" + rtlm.getItemId()
-					+ "] <br/> <br/></body>");
+			SUBJECT = (" Lease Closed by the Owner");
+			BODY = "Lease has been closed by the Owner for the item having id [" + rtlm.getItemId() + "] ";
 			break;
 			
 		case FLS_MAIL_GRACE_PERIOD_OWNER:
 			RenewLeaseReqObj rlgpo = (RenewLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Reminder to Renew Lease to user [" + rlgpo.getReqUserId() + "]");
-			BODY = ("<body>Less than 5 days left for lease to close.Please consider renewing the lease of item having id [" + rlgpo.getItemId() + "] and leasee ["
-					+ rlgpo.getReqUserId() + "] on Friend Lease - <br/> <br/></body>");
+			SUBJECT = (" Reminder to Renew Lease to user [" + rlgpo.getReqUserId() + "]");
+			BODY = "Less than 5 days left for lease to close.Please consider renewing the lease of item having id [" 
+					+ rlgpo.getItemId() + "] and leasee [" + rlgpo.getReqUserId() + "] on Friend Lease - ";
 			break;
 
 		case FLS_MAIL_GRACE_PERIOD_REQUESTOR:
 			RenewLeaseReqObj rlgpr = (RenewLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Reminder to Renew Lease");
-			BODY = ("<body>Less than 5 days left for lease to close. Please consider renewing the lease of item having id [" + rlgpr.getItemId()
-					+ "] <br/> <br/></body>");
+			SUBJECT = (" Reminder to Renew Lease");
+			BODY = "Less than 5 days left for lease to close. Please consider renewing the lease of item having id [" 
+					+ rlgpr.getItemId() + "] ";
 			break;
 			
 		case FLS_MAIL_RENEW_LEASE_OWNER:
 			RenewLeaseReqObj rlo = (RenewLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Renewed Lease to user [" + rlo.getReqUserId() + "]");
-			BODY = ("<body>Lease has been renewed for item having id [" + rlo.getItemId() + "] and leasee ["
-					+ rlo.getReqUserId() + "] on Friend Lease - <br/> <br/></body>");
+			SUBJECT = (" Renewed Lease to user [" + rlo.getReqUserId() + "]");
+			BODY = "Lease has been renewed for item having id [" + rlo.getItemId() + "] and leasee [" 
+					+ rlo.getReqUserId() + "] on Friend Lease - ";
 			break;
 
 		case FLS_MAIL_RENEW_LEASE_REQUESTOR:
 			RenewLeaseReqObj rlr = (RenewLeaseReqObj) obj;
-			SUBJECT = (PREFIX + " Lease Renewed");
-			BODY = ("<body>Lease has been renewed by the owner of item having id [" + rlr.getItemId()
-					+ "] <br/> <br/></body>");
+			SUBJECT = (" Lease Renewed");
+			BODY = "Lease has been renewed by the owner of item having id [" + rlr.getItemId() + "] ";
 			break;
 
 		case FLS_MAIL_MAKE_REQUEST_FROM:
 			RequestsModel rfrm = (RequestsModel) obj;
-			SUBJECT = (PREFIX + " Item Requested");
-			BODY = ("<body>You have sucessfully Requested an item having id [" + rfrm.getItemId()
-					+ "] on Friend Lease - <br/> <br/></body>");
+			SUBJECT = (" Item Requested");
+			BODY = "You have sucessfully Requested an item having id [" + rfrm.getItemId() + "] on Friend Lease - ";
 			break;
 
 		case FLS_MAIL_MAKE_REQUEST_TO:
 			ItemsModel irtm = (ItemsModel) obj;
-			SUBJECT = (PREFIX + " Item Requested");
-			BODY = ("<body>Your Item [" + irtm.getTitle() + "] having id [" + irtm.getId()
-					+ "] has been requested on Friend Lease - <br/> <br/></body>");
+			SUBJECT = (" Item Requested");
+			BODY = "Your Item [" + irtm.getTitle() + "] having id [" + irtm.getId() + "] has been requested on Friend Lease - ";
 			break;
 
 		default:
-			SUBJECT = (PREFIX + " Default Subject");
-			BODY = ("<body>Default Message ... Contact us, you should never get this! </body>");
+			SUBJECT = (" Default Subject");
+			BODY = "Default Message ... Contact us, you should never get this! ";
 			break;
 		}
-
-		try {
 
 			// getting a default session
 			Session session = Session.getDefaultInstance(new Properties());
 
 			// mime message type from javax.mail library
 			MimeMessage message = new MimeMessage(session);
-			message.setSubject(SUBJECT, "UTF-8");
+			message.setSubject(PREFIX + SUBJECT, "UTF-8");
 
 			// setting the basic properties of the email message
 			message.setFrom(new InternetAddress(FROM));
@@ -395,14 +412,23 @@ public class AwsSESEmail extends Connect {
 
 			Multipart multipart = new MimeMultipart("related");
 
+			template = ve.getTemplate("templates/defaultEmail.vm");
+			context.put("credits", credit);
+			context.put("subject", SUBJECT);
+			context.put("body", BODY);
+			
+			BodyPart body = new MimeBodyPart();
+			
+            multipart.addBodyPart(body);
+			
+            InputStream logoUrl = getClass().getClassLoader().getResourceAsStream("images/fls-logo-min.png");
+            MimeBodyPart logo = new MimeBodyPart();
+            logo.attachFile(createFile(logoUrl));
+            logo.setContentID("<logo>");
+            logo.setDisposition(MimeBodyPart.INLINE);
+            multipart.addBodyPart(logo);
+            
 			if (imageFiles.isEmpty()) {
-				// Body part of the email
-				MimeBodyPart bodyPart = new MimeBodyPart();
-				bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit
-						+ " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY,
-						"text/html");
-				multipart.addBodyPart(bodyPart);
-
 				if (imageFile != null) {
 					MimeBodyPart imagePart = new MimeBodyPart();
 					LOGGER.warning("Sending Image!!");
@@ -413,14 +439,6 @@ public class AwsSESEmail extends Connect {
 					imageFile = null;
 				}
 			} else {
-
-				// Body part of the email
-				MimeBodyPart bodyPart = new MimeBodyPart();
-				bodyPart.setContent("<u>Account Status</u>: <br/>You have <strong>" + credit
-						+ " credits</strong> left to spend on frrndlease.<br/><br/><u>Activity</u>: <br/>" + BODY,
-						"text/html");
-				multipart.addBodyPart(bodyPart);
-
 				int len = imageFiles.size();
 				for (int j = 0; j < len; j++) {
 					// Image part if the message has an image
@@ -434,8 +452,13 @@ public class AwsSESEmail extends Connect {
 
 				}
 			}
-
-			message.setContent(multipart);
+            
+			template.merge(context, writer);
+			
+            /* you can add html tags in your text to decorate it. */
+            body.setContent(writer.toString(), "text/html");
+            
+			message.setContent(multipart, "text/html");
 
 			// converting the mime message into ram message
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -519,5 +542,23 @@ public class AwsSESEmail extends Connect {
 		}
 		
 		return null;
+	}
+	
+	public static File createFile(InputStream is) throws IOException {
+	    File tmp = null;
+	    FileOutputStream tmpOs = null;
+	    try {
+	        tmp = File.createTempFile("xml", "tmp");
+	        tmpOs = new FileOutputStream(tmp);
+	        int len = -1;
+	        byte[] b = new byte[4096];
+	        while ((len = is.read(b)) != -1) {
+	            tmpOs.write(b, 0, len);
+	        }
+	    } finally {
+	        try { is.close(); } catch (Exception e) {}
+	        try { tmpOs.close(); } catch (Exception e) {}
+	    }
+	    return tmp;
 	}
 }

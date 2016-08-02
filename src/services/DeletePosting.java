@@ -74,11 +74,11 @@ public class DeletePosting extends HttpServlet {
 
 			JSONObject json = new JSONObject();
 			if (res.getIntCode() == e.FLS_SUCCESS) {
-				json.put("Code", "FLS_SUCCESS");
+				json.put("Code", 0);
 			}
 
 			else {
-				json.put("Code", res.getCode());
+				json.put("Code", res.getIntCode());
 			}
 
 			json.put("Message", res.getMessage());
