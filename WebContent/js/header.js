@@ -22,9 +22,9 @@ headerApp.controller('headerCtrl', ['$scope',
     // sign up starts here
     
     // variables for storing the location data
-    var Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0,Picture='';
+    var Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0,Picture='',FriendId;
     
-    $scope.$on('signUpCheckReq', function(event, email, password, name, picture, mobile, code, location, signUpStatus){
+    $scope.$on('signUpCheckReq', function(event, email, password, name, picture, mobile, code, location, signUpStatus, friendId){
         Email = email;
         Password = (CryptoJS.MD5(password)).toString();
         Name = name;
@@ -35,6 +35,7 @@ headerApp.controller('headerCtrl', ['$scope',
 			Picture ="";
 		}
         Mobile = mobile;
+        FriendId = friendId;
 		Code = code;
 		if(Code === undefined || Code==null){
 			Code ="";
@@ -97,7 +98,8 @@ headerApp.controller('headerCtrl', ['$scope',
             locality: Locality,
             sublocality: Sublocality,
             lat: Lat+"",
-            lng: Lng+""
+            lng: Lng+"",
+            friendId: FriendId
         }
         signUpSend(req);
     }
@@ -534,8 +536,8 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
         $rootScope.$broadcast('loginCheckRes', message);
     }
     
-    this.signUpCheckReq = function(email, password, name, picture,mobile, code, location, signUpStatus){
-        $rootScope.$broadcast('signUpCheckReq', email, password, name, picture ,mobile, code, location, signUpStatus);
+    this.signUpCheckReq = function(email, password, name, picture,mobile, code, location, signUpStatus, friendId){
+        $rootScope.$broadcast('signUpCheckReq', email, password, name, picture ,mobile, code, location, signUpStatus, friendId);
     }
     
     this.signUpCheckRes = function(message){
@@ -605,15 +607,19 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
 
 headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', function($scope, loginSignupService){
     
+    var friendId = "";
+    
     // form sign up
     $scope.formSignup = function(email, password, name, mobile, code, location){
-        loginSignupService.signUpCheckReq(email, password, name, "", mobile, code, location, "email_pending");
+        friendId = email;
+        loginSignupService.signUpCheckReq(email, password, name, "", mobile, code, location, "email_pending", friendId);
     }
     
     // Google sign up
     function onSignUp(googleUser) {
         var profile = googleUser.getBasicProfile();
-        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.code, $scope.location, "google");
+        friendId = profile.getEmail();
+        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.code, $scope.location, "google", friendId);
     }
     window.onSignUp = onSignUp;
     
@@ -622,7 +628,8 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
         FB.login(function(response) {
             // handle the response
             FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender,picture.type(large)', function(response) {
-                loginSignupService.signUpCheckReq(response.email, response.id, response.name, response.picture.data.url, "", $scope.code, $scope.location, "facebook");
+                friendId = response.id + "@fb";
+                loginSignupService.signUpCheckReq(response.email, response.id, response.name, response.picture.data.url, "", $scope.code, $scope.location, "facebook", friendId);
             });
         }, {scope: 'email,public_profile,user_friends'});    
     }
