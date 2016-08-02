@@ -24,7 +24,7 @@ public class Users extends Connect {
 	private FlsLogger LOGGER = new FlsLogger(Users.class.getName());
 
 	private String userId, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
-			check = null, token, address, locality, sublocality, referralCode=null,profilePicture;
+			check = null, token, address, locality, sublocality, referralCode=null,profilePicture,friendId;
 	private float lat, lng;
 	private String signUpStatus;
 	private int liveStatus, Code, offset, limit, verification;
@@ -142,9 +142,10 @@ public class Users extends Connect {
 		lng = um.getLng();
 		referralCode = um.getReferralCode();
 		profilePicture = um.getProfilePicture();
+		friendId = um.getFriendId();
 
 		String  referrer_code=null;
-		PreparedStatement stmt = null, stmt1 = null,stmt2=null;
+		PreparedStatement stmt = null, stmt1 = null,stmt2=null,stmt3 = null;
 		ResultSet rs1 = null,rs2=null;
 		Connection hcp = getConnectionFromPool();
 
@@ -210,6 +211,13 @@ public class Users extends Connect {
 				EmailVerificationHandler ev = new EmailVerificationHandler();
 				int result3 = ev.updateCredits(generated_ref_code,referrer_code);	
 			}
+			
+			String sqlChangeFriendStatus = "UPDATE friends SET friend_status=? WHERE friend_id=?";
+			stmt3 = hcp.prepareStatement(sqlChangeFriendStatus);
+			stmt3.setString(1, "signedup");
+			stmt3.setString(2, friendId);
+			stmt3.executeUpdate();
+			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
 				if (status.equals("email_pending"))
@@ -244,6 +252,9 @@ public class Users extends Connect {
 		}finally{
 			try {
 				if(rs1!=null) rs1.close();
+				if(rs2 != null)rs2.close();
+				if(stmt3 != null) stmt3.close();
+				if(stmt2 != null)stmt2.close();
 				if(stmt!=null) stmt.close();
 				if(stmt1!=null) stmt1.close();
 				if(hcp!=null) hcp.close();
