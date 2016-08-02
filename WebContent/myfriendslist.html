@@ -39,7 +39,7 @@
                 <button href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="showFriendDetails($index)" data-toggle="tooltip" data-placement="top" title="Edit Details">
                     <i class="fa fa-edit"></i>
                 </button>
-                <button href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="reinviteFriend($index)" data-toggle="tooltip" data-placement="top" title="Send Reinvite">
+                <button ng-if="friend.status == 'pending'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="reinviteFriend($index)" data-toggle="tooltip" data-placement="top" title="Send Reinvite">
                     <i class="fa fa-paper-plane"></i>
                 </button>
             </div>

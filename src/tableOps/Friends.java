@@ -83,39 +83,50 @@ public class Friends extends Connect {
 		mobile = fm.getMobile();
 		userId = fm.getUserId();
 
-		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status) values (?,?,?,?,?)"; //
-		String sql1 = "SELECT * FROM friends WHERE friend_user_id=? AND friend_id=?";
-		PreparedStatement stmt1 = null,s1 = null, stmt = null;
-		ResultSet rs = null;
+		PreparedStatement stmt1 = null, stmt2 = null, stmt3 = null, stmt4 = null;
+		ResultSet rs1 = null, rs2 = null;
 		Connection hcp = getConnectionFromPool();
 
 		AwsSESEmail newE = new AwsSESEmail();
 		String source = "@api";
 		
+		String status = "pending";
+		
 		try {
-			LOGGER.info("Creating Select statement.....");
-			stmt1 = hcp.prepareStatement(sql1);
-			stmt1.setString(1, userId);
-			stmt1.setString(2, friendId);
-
-			rs = stmt1.executeQuery();
+			LOGGER.info("Checking if friend is signed up");
+			String sqlCheckUser = "SELECT user_id FROM users WHERE user_id=?";
+			stmt1 = hcp.prepareStatement(sqlCheckUser);
+			stmt1.setString(1, friendId);
+			rs1 = stmt1.executeQuery();
 			
-			while (rs.next()) {
-				check = rs.getString("friend_id");
-				LOGGER.info("Printing check val: "+check+" "+rs.getString("friend_full_name"));
+			if(rs1.next()){
+				status = "signedup";
+			}
+			
+			LOGGER.info("Creating Select statement from friends table");
+			String sqlSelectFriends = "SELECT * FROM friends WHERE friend_user_id=? AND friend_id=?";
+			stmt2 = hcp.prepareStatement(sqlSelectFriends);
+			stmt2.setString(1, userId);
+			stmt2.setString(2, friendId);
+			rs2 = stmt2.executeQuery();
+			
+			while (rs2.next()) {
+				check = rs2.getString("friend_id");
+				LOGGER.info("Printing check val: "+check+" "+rs2.getString("friend_full_name"));
 			}
 			
 			if (check == null) {
 				LOGGER.info("Creating statement.....");
-				stmt = hcp.prepareStatement(sql);
+				String sqlAddFriends = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status) values (?,?,?,?,?)";
+				stmt3 = hcp.prepareStatement(sqlAddFriends);
 
 				LOGGER.info("Statement created. Executing query.....");
-				stmt.setString(1, friendId);
-				stmt.setString(2, fullName);
-				stmt.setString(3, mobile);
-				stmt.setString(4, userId);
-				stmt.setString(5, "pending");
-				stmt.executeUpdate();
+				stmt3.setString(1, friendId);
+				stmt3.setString(2, fullName);
+				stmt3.setString(3, mobile);
+				stmt3.setString(4, userId);
+				stmt3.setString(5, status);
+				stmt3.executeUpdate();
 
 				message = "Entry added into friends table";
 				LOGGER.warning(message);
@@ -125,9 +136,9 @@ public class Friends extends Connect {
 				
 				// to add credit in user_credit
 				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-				s1 = hcp.prepareStatement(sqlAddCredit);
-				s1.setString(1, userId);
-				s1.executeUpdate();
+				stmt4 = hcp.prepareStatement(sqlAddCredit);
+				stmt4.setString(1, userId);
+				stmt4.executeUpdate();
 				
 				LogCredit lc = new LogCredit();
 				lc.addLogCredit(userId,1,"Friend Added","");
@@ -150,15 +161,17 @@ public class Friends extends Connect {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} finally{
+		} finally {
 			try {
-				rs.close();
-				stmt1.close();
-				if(stmt!=null) stmt.close();	
-				if(s1!= null)  s1.close();
-				hcp.close();
+				if(rs1 != null)rs1.close();
+				if(rs2 != null)rs2.close();
+				if(stmt4 != null)stmt4.close();
+				if(stmt3 != null)stmt3.close();
+				if(stmt2 != null)stmt2.close();
+				if(stmt1 != null)stmt1.close();
+				if(hcp != null)hcp.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
