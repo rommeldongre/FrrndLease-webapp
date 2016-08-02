@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 import connect.Connect;
 import pojos.GrantLeaseReqObj;
@@ -18,6 +17,7 @@ import util.FlsLogger;
 import util.FlsSendMail;
 import util.LogCredit;
 import util.LogItem;
+import util.OAuth;
 
 public class GrantLeaseHandler extends Connect implements AppHandler {
 
@@ -55,6 +55,15 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		int RequestAction = 0, StoreAction = 0, ItemAction = 0, LeaseAction = 0, addCredit = 0, subCredit = 0;
 		
 		try {
+			
+			OAuth oauth = new OAuth();
+			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+			if(!oauthcheck.equals(rq.getUserId())){
+				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+				return rs;
+			}
+			
 			LOGGER.info("Creating Select statement to if item is InStore.....");
 			String checkItemStatus = "SELECT item_status FROM `items` WHERE item_id=?";
 			psItemStatus = hcp.prepareStatement(checkItemStatus);
@@ -295,7 +304,10 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
-		}finally{
+		} catch (NullPointerException e) {
+			rs.setCode(FLS_NULL_POINT);
+			rs.setMessage(FLS_NULL_POINT_M);
+		} finally{
 			
 			if(result1 != null)result1.close();
 			if(result2 != null)result2.close();

@@ -4,6 +4,15 @@ public class EditProfileReqObj extends ReqObj {
 
 	String userId, fullName, mobile, location, address, locality, sublocality, photoId;
 	float lat, lng;
+	String accessToken;
+
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
 
 	public String getUserId() {
 		return userId;

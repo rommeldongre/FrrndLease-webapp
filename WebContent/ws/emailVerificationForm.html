@@ -29,6 +29,7 @@
 					success : function(response) {
 						document.getElementById("code").value = response.code;
 						document.getElementById("userId").value = response.userId;
+						document.getElementById("accessToken").value = response.access_token;
 						if (response.code == 0) {
 							document.getElementById("message").value = "";
 						} else {
@@ -53,6 +54,7 @@
 		Code : <input type="text" name="code" id="code"><br /> <br />
 		Message : <input type="text" name="message" id="message"><br /><br />
 		User Id : <input type="text" name="userId" id="userId"><br /><br />
+		Access Token : <input type="text" name="accessToken" id="accessToken"><br /><br />
 	</form>
 
 	<br />

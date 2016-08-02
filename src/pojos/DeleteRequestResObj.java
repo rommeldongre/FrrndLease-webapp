@@ -2,27 +2,26 @@ package pojos;
 
 public class DeleteRequestResObj extends ResObj {
 	
-	
 	//Return code
-		int ReturnCode = 0;
+	int code = 0;
 		
 	//Error String
-	    String ErrorString;
+	String message;
 		
-	public int getReturnCode() {
-			return ReturnCode;
-		}
+	public int getCode() {
+		return code;
+	}
 
-		public void setReturnCode(int returnCode) {
-			ReturnCode = returnCode;
-		}
+	public void setCode(int code) {
+		this.code = code;
+	}
 
-		public String getErrorString() {
-			return ErrorString;
-		}
+	public String getMessage() {
+		return message;
+	}
 
-		public void setErrorString(String errorString) {
-			ErrorString = errorString;
-		}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 }

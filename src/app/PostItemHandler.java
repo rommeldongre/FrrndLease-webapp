@@ -19,6 +19,7 @@ import util.FlsSendMail;
 import util.LogCredit;
 import util.LogItem;
 import util.MatchItems;
+import util.OAuth;
 
 public class PostItemHandler extends Connect implements AppHandler {
 
@@ -56,9 +57,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 			//if user does not select a category
 			
 			rs.setItemId(0);
-			rs.setReturnCode(200);
+			rs.setCode(200);
 			rs.setUid("Error");
-			rs.setErrorString("Item Not Posted as no Valid Category was selected");
+			rs.setMessage("Item Not Posted as no Valid Category was selected");
 			return rs;
 		}
 		
@@ -76,6 +77,15 @@ public class PostItemHandler extends Connect implements AppHandler {
 		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image, item_lat, item_lng) values (?,?,?,?,?,?,?,?,?,?)";
 
 		try {
+			
+			OAuth oauth = new OAuth();
+			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+			if(!oauthcheck.equals(rq.getUserId())){
+				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+				return rs;
+			}
+			
 			float lat = 0, lng = 0;
 			
 			LOGGER.info("Creating statement for selecting users lat lng.....");
@@ -175,9 +185,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 			}
 			
 			rs.setItemId(id);
-			rs.setReturnCode(0);
+			rs.setCode(0);
 			rs.setUid(uid);
-			rs.setErrorString(message);
+			rs.setMessage(message);
 			stmt.close();
 			stmt1.close();
 			psCredit.close();
@@ -188,17 +198,20 @@ public class PostItemHandler extends Connect implements AppHandler {
 					&& e.getMessage().matches(".*\\bitem_image\\b.*")) {
 				LOGGER.warning("The image size is too large. Please select image less than 16MB");
 				rs.setItemId(FLS_SQL_EXCEPTION_I);
-				rs.setReturnCode(FLS_SQL_EXCEPTION_I);
+				rs.setCode(FLS_SQL_EXCEPTION_I);
 				rs.setUid("Error");
-				rs.setErrorString(FLS_SQL_EXCEPTION_IMAGE);
+				rs.setMessage(FLS_SQL_EXCEPTION_IMAGE);
 				LOGGER.warning(e.getErrorCode() + " " + e.getMessage());
 			} else {
 				rs.setItemId(0);
-				rs.setReturnCode(FLS_SQL_EXCEPTION);
+				rs.setCode(FLS_SQL_EXCEPTION);
 				rs.setUid("Error");
-				rs.setErrorString(FLS_SQL_EXCEPTION_M);
+				rs.setMessage(FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
+		} catch (NullPointerException e) {
+			rs.setCode(FLS_NULL_POINT);
+			rs.setMessage(FLS_NULL_POINT_M);
 		} finally {
 			hcp.close();
 		}

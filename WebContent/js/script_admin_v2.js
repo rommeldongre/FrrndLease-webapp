@@ -1586,7 +1586,8 @@ function deleteRequestSetValues(i, req){
 	
 	var req = {
 		request_Id: itemToken,
-		userId: reqUserId
+		userId: reqUserId,
+        accessToken: AccessToken
 	};
 	
 	deleteRequestSend(req);
@@ -1601,9 +1602,8 @@ function deleteRequestSend(req){
 		dataType: "json",
 		
 		success: function(response) {
-			//alert(response.Id+" "+response.Code+" "+response.Message);
 			var heading = "Successful";
-			if(response.errorString == "No Error"){
+			if(response.code == 0){
 			var msg = "Request Deleted successfully";
 			}
 			confirmationIndex(heading, msg);
