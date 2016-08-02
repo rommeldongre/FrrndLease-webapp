@@ -86,6 +86,11 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     initialPopulate();
 	load_Gapi();
 	
+    $scope.reinviteFriend = function(i){
+        if($scope.friends[i].friendId != '-')
+            addFriendSetValues($scope.friends[i].fullName, $scope.friends[i].mobile, $scope.friends[i].friendId, userFactory.user);
+    }
+    
     $scope.directImport = function(){
         modalService.showModal({}, {submitting: true, labelText: 'Invite Friends by Email,comma separated. example1@xyz.com, example2@abc.net', actionButtonText: 'Submit'}).then(function(result){
 			var value = result;

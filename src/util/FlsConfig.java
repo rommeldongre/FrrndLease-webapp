@@ -620,7 +620,7 @@ public class FlsConfig extends Connect{
 				if(dbBuild < 2016){
 					
 					// Adding friends signup status column
-					String sqlAddFriendStatus = "ALTER TABLE `friends` ADD `friend_status` ENUM('pending','signed') NOT NULL DEFAULT 'pending' AFTER `friend_user_id`";
+					String sqlAddFriendStatus = "ALTER TABLE `friends` ADD `friend_status` ENUM('pending','signedup') NOT NULL DEFAULT 'pending' AFTER `friend_user_id`";
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddFriendStatus);

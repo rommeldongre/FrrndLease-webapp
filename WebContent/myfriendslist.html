@@ -31,11 +31,17 @@
                 <p class="description text-center">
                     <i class="fa fa-phone"></i>{{(friend.mobile == '-') ? "No Mobile" : friend.mobile}}<br>
                     <i class="fa fa-envelope"></i>{{(friend.friendId == '-') ? "No Email Id" : friend.friendId}}<br>
+                    <span class="label label-fill ng-class:{'label-success':(friend.status=='signedup'),'label-danger':(friend.status=='pending')}" style="text-align:center;">{{friend.status}}</span>
                 </p>
             </div>
             <hr>
             <div class="text-center">
-                <button href="" class="btn btn-social btn-facebook btn-simple" ng-click="showFriendDetails($index)"><i class="fa fa-edit"></i></button>
+                <button href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="showFriendDetails($index)" data-toggle="tooltip" data-placement="top" title="Edit Details">
+                    <i class="fa fa-edit"></i>
+                </button>
+                <button href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="reinviteFriend($index)" data-toggle="tooltip" data-placement="top" title="Send Reinvite">
+                    <i class="fa fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>

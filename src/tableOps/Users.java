@@ -214,7 +214,7 @@ public class Users extends Connect {
 			
 			String sqlChangeFriendStatus = "UPDATE friends SET friend_status=? WHERE friend_id=?";
 			stmt3 = hcp.prepareStatement(sqlChangeFriendStatus);
-			stmt3.setString(1, "signed");
+			stmt3.setString(1, "signedup");
 			stmt3.setString(2, friendId);
 			stmt3.executeUpdate();
 			

@@ -321,6 +321,7 @@ public class Friends extends Connect {
 				json.put("fullName", rs.getString("friend_full_name"));
 				json.put("mobile", rs.getString("friend_mobile"));
 				json.put("userId", rs.getString("friend_user_id"));
+				json.put("status", rs.getString("friend_status"));
 				while (rs1.next()) {
 				json.put("friendPicture", rs1.getString("user_profile_picture"));
 				}
