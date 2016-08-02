@@ -13,7 +13,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2015;			
+	public final int appBuild = 2016;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -616,6 +616,33 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 				}
 				
+				//This block adds friend_status column in friends table
+				if(dbBuild < 2016){
+					
+					// Adding friends signup status column
+					String sqlAddFriendStatus = "ALTER TABLE `friends` ADD `friend_status` ENUM('pending','signed') NOT NULL DEFAULT 'pending' AFTER `friend_user_id`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddFriendStatus);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2016;
+					updateDBBuild(dbBuild);
+				}
 	}
 	
 	private void updateDBBuild(int version){

@@ -83,12 +83,15 @@ public class Friends extends Connect {
 		mobile = fm.getMobile();
 		userId = fm.getUserId();
 
-		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id) values (?,?,?,?)"; //
+		String sql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status) values (?,?,?,?,?)"; //
 		String sql1 = "SELECT * FROM friends WHERE friend_user_id=? AND friend_id=?";
 		PreparedStatement stmt1 = null,s1 = null, stmt = null;
 		ResultSet rs = null;
 		Connection hcp = getConnectionFromPool();
 
+		AwsSESEmail newE = new AwsSESEmail();
+		String source = "@api";
+		
 		try {
 			LOGGER.info("Creating Select statement.....");
 			stmt1 = hcp.prepareStatement(sql1);
@@ -111,6 +114,7 @@ public class Friends extends Connect {
 				stmt.setString(2, fullName);
 				stmt.setString(3, mobile);
 				stmt.setString(4, userId);
+				stmt.setString(5, "pending");
 				stmt.executeUpdate();
 
 				message = "Entry added into friends table";
@@ -128,28 +132,27 @@ public class Friends extends Connect {
 				LogCredit lc = new LogCredit();
 				lc.addLogCredit(userId,1,"Friend Added","");
 				
-				try {
-					AwsSESEmail newE = new AwsSESEmail();
-					String source = "@api";
-					if (friendId.contains("@fb") || friendId.contains("@google")) {
-						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
-					} else {
-						source = "@email";
-						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
-						newE.send(friendId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO, fm);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				if (friendId.contains("@fb") || friendId.contains("@google"))
+					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
+
 			} else {
 				LOGGER.warning("Friend Already exists.....");
 				res.setData(FLS_SUCCESS, check, FLS_SUCCESS_M);
-			}		
+			}
+			
+			if (!(friendId.contains("@fb") || friendId.contains("@google"))) {
+				source = "@email";
+				newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
+				newE.send(friendId, FlsSendMail.Fls_Enum.FLS_MAIL_ADD_FRIEND_TO, fm);
+			}
+			
 		} catch (SQLException e) {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
-		}finally{
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally{
 			try {
 				rs.close();
 				stmt1.close();
