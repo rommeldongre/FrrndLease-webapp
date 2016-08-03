@@ -651,16 +651,12 @@ public class Users extends Connect {
 				Code = FLS_ENTRY_NOT_FOUND;
 			}
 			
-			String access_token = null;
-			JSONObject jObj = new JSONObject(message);
-			
 			if(Code == FLS_SUCCESS){
+				JSONObject jObj = new JSONObject(message);
 				OAuth oauth = new OAuth();
-				access_token = oauth.generateOAuth(token);
-				jObj.put("access_token", access_token);
+				jObj.put("access_token", oauth.generateOAuth(token));
+				message = jObj.toString();
 			}
-			
-			message = jObj.toString();
 
 			res.setData(Code, Id, message);
 		} catch (SQLException e) {
