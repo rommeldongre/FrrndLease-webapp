@@ -67,7 +67,7 @@ import pojos.RenewLeaseReqObj;
 import pojos.RequestsModel;
 import pojos.UsersModel;
 import tableOps.Wishlist;
-import util.FlsSendMail.Fls_Enum;
+import util.FlsEnums.Notification_Type;
 import util.FlsConfig;
 
 import com.amazonaws.AmazonClientException;
@@ -115,7 +115,7 @@ public class AwsSESEmail extends Connect {
 	 * WANRNING: To avoid accidental leakage of your credentials, DO NOT keep
 	 * the credentials file in your source directory.
 	 */
-	public void send(String userId, Fls_Enum fls_enum, Object obj, String... apiflag) throws IOException {
+	public void send(String userId, Notification_Type fls_enum, Object obj, String... apiflag) throws IOException {
 
 		// Fls_Enum = fls_enum;
 		user_id = userId;

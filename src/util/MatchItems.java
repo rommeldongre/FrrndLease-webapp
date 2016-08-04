@@ -54,7 +54,7 @@ public class MatchItems extends Connect {
 			while (rs1.next()) {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
+					newE.send(rs1.getString("item_user_id"), FlsEnums.Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,7 +123,7 @@ public class MatchItems extends Connect {
 				if(!listItems.isEmpty()){
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_POST_ITEM, listItems);
+						newE.send(rs1.getString("item_user_id"), FlsEnums.Notification_Type.FLS_MAIL_MATCH_POST_ITEM, listItems);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

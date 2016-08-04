@@ -14,7 +14,7 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import util.AwsSESEmail;
 import util.FlsLogger;
-import util.FlsSendMail;
+import util.FlsEnums;
 import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
@@ -290,8 +290,8 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
-			    newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, rq);
-				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, rq);
+			    newE.send(rq.getUserId(), FlsEnums.Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq);
+				newE.send(rq.getReqUserId(), FlsEnums.Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}						

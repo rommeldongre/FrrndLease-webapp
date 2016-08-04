@@ -17,7 +17,7 @@ import pojos.LeasesModel;
 import pojos.RenewLeaseReqObj;
 import adminOps.Response;
 import tableOps.LeaseTerms;
-import util.FlsSendMail;
+import util.FlsEnums;
 import util.LogItem;
 import util.AwsSESEmail;
 import util.FlsLogger;
@@ -224,8 +224,8 @@ public class Leases extends Connect {
 			rq.setFlag("close");
 			rq.setReqUserId(lm.getReqUserId());
 			rq.setUserId(lm.getUserId());
-			newE.send(lm.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, rq);
-			newE.send(lm.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, rq);
+			newE.send(lm.getUserId(), FlsEnums.Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
+			newE.send(lm.getReqUserId(), FlsEnums.Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
 				
 		} catch (SQLException e) {
 			LOGGER.info("SQL Exception encountered....");
@@ -317,8 +317,8 @@ public class Leases extends Connect {
 
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, lm);
-					newE.send(reqUserId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, lm);
+					newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, lm);
+					newE.send(reqUserId, FlsEnums.Notification_Type.FLS_MAIL_GRANT_LEASE_TO, lm);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -532,8 +532,8 @@ public class Leases extends Connect {
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
 				userId = lm1.getUserId();
-				newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, lm1);
-				newE.send(reqUserId, FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, lm);
+				newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, lm1);
+				newE.send(reqUserId, FlsEnums.Notification_Type.FLS_MAIL_REJECT_LEASE_TO, lm);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

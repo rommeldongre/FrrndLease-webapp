@@ -13,7 +13,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2016;			
+	public final int appBuild = 2017;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -642,6 +642,33 @@ public class FlsConfig extends Connect{
 					// The dbBuild version value is changed in the database
 					dbBuild = 2016;
 					updateDBBuild(dbBuild);
+				}
+				
+				if(dbBuild < 2017){
+					
+					String sqlNotificationTable = "CREATE TABLE `fls`.`events` ( `event_id` INT(32) NOT NULL AUTO_INCREMENT , `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `from_user_id` VARCHAR(255) NULL , `to_user_id` VARCHAR(255) NULL , `event_type` ENUM('FLS_EVENT_NOT_NOTIFICATION','FLS_EVENT_NOTIFICATION') NOT NULL , `read_status` ENUM('FLS_READ','FLS_UNREAD') NOT NULL DEFAULT 'FLS_UNREAD' , `delivery_status` ENUM('FLS_DELIVERED','FLS_UNDELIVERED') NOT NULL DEFAULT 'FLS_UNDELIVERED' , `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRANT_LEASE_FROM','FLS_MAIL_GRANT_LEASE_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO') NOT NULL , `item_id` INT(32) NULL , `message` VARCHAR(255) NULL , `archived` ENUM('FLS_ACTIVE','FLS_ARCHIVED') NOT NULL DEFAULT 'FLS_ACTIVE' , PRIMARY KEY (`event_id`))";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlNotificationTable);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2017;
+					updateDBBuild(dbBuild);
+					
 				}
 	}
 	

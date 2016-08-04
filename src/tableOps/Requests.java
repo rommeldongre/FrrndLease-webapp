@@ -14,7 +14,7 @@ import adminOps.Response;
 import connect.Connect;
 import pojos.RequestsModel;
 import pojos.ItemsModel;
-import util.FlsSendMail;
+import util.FlsEnums;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.LogCredit;
@@ -275,9 +275,9 @@ public class Requests extends Connect {
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
 						ownerUserId = im.getUserId();
-						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_FROM, rm);
+						newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, rm);
 						LOGGER.info("Statement FLS_MAIL_MAKE_REQUEST_FROM fired......");
-						newE.send(ownerUserId, FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_TO, im);
+						newE.send(ownerUserId, FlsEnums.Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, im);
 						LOGGER.info("Statement FLS_MAIL_MAKE_REQUEST_TO fired......");
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -529,7 +529,7 @@ public class Requests extends Connect {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					// ownerId= im.getUserId();
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_TO, rm);
+					newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_REJECT_REQUEST_TO, rm);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

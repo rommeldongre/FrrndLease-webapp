@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import adminOps.Response;
 import connect.Connect;
 import pojos.ForgotPasswordReqObj;
 import pojos.ForgotPasswordResObj;
@@ -14,13 +13,11 @@ import pojos.ResObj;
 import pojos.UsersModel;
 import util.AwsSESEmail;
 import util.FlsLogger;
-import util.FlsSendMail;
+import util.FlsEnums;
 
 public class ForgotPasswordHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(ForgotPasswordHandler.class.getName());
-
-	private Response res = new Response();
 
 	private static ForgotPasswordHandler instance = null;
 
@@ -74,7 +71,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 							AwsSESEmail newE = new AwsSESEmail();
 							UsersModel um = new UsersModel();
 							um.setActivation(activation);
-							newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION, um);
+							newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -85,7 +82,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 					case "email_activated":
 						try{
 							AwsSESEmail newE = new AwsSESEmail();
-							newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_FORGOT_PASSWORD, activation);
+							newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_FORGOT_PASSWORD, activation);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

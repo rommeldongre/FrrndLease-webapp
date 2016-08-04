@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import adminOps.Response;
 import connect.Connect;
 import pojos.UsersModel;
-import util.FlsSendMail;
+import util.FlsEnums;
 import util.AwsSESEmail;
 import util.FlsLogger;
 import util.LogCredit;
@@ -221,9 +221,9 @@ public class Users extends Connect {
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
 				if (status.equals("email_pending"))
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION, um);
+					newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
 				else
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER, um);
+					newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_REGISTER, um);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
