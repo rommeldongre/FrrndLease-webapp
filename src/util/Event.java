@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import connect.Connect;
+import pojos.GetNotificationsListResObj;
+import pojos.GetNotificationsResObj;
 import util.FlsEnums.Delivery_Status;
 import util.FlsEnums.Event_Type;
 import util.FlsEnums.Notification_Type;
@@ -134,5 +136,10 @@ public int changeDeliveryStatus(int eventId, Delivery_Status deliveryStatus){
 		return 0;
 		
 	}
+
+public GetNotificationsListResObj getNotifications(String userId, Event_Type flsEventNotification, int offset) {
+	
+	return null;
+}
 
 }
