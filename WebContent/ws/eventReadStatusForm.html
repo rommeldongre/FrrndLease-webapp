@@ -6,8 +6,15 @@
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var EventId = null;
+    var UserId = null;
     var ReadStatus = null;
+	var AccessToken = null;
 	
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+        document.getElementById("userId").value = localStorage.getItem("userloggedin");
+    }
+    
 	getData = function (){
 		EventId = document.getElementById("eventId").value;
         if(EventId == null)
@@ -15,10 +22,16 @@
         ReadStatus = document.getElementById("readStatus").value;
         if(ReadStatus == null)
             ReadStatus = "FLS_READ";
+        UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+        
+        AccessToken = document.getElementById("accessToken").value;
         
         req = {
             eventId: EventId,
-            readStatus: ReadStatus
+            readStatus: ReadStatus,
+            userId: UserId,
+            accessToken: AccessToken
         };
         
         eventReadStatus(req);
@@ -52,11 +65,13 @@
 	
 </script>
 </head>
-<body>
+<body onload="start()">
 <h1> Event Read Status Form</h1>
 	<form>
 		Event Id : <input type="text" name="eventId" id="eventId" ><br/><br/>
+        User Id : <input type="text" name="userId" id="userId"><br/><br/>
 		Read Status : <input type="text" name="readStatus" id="readStatus" ><br/><br/>
+        Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
 		<input type="button" value="Set Status" onclick="getData()">
     </form>
 		

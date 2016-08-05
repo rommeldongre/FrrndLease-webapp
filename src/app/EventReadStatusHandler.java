@@ -7,6 +7,7 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import util.Event;
 import util.FlsLogger;
+import util.OAuth;
 
 public class EventReadStatusHandler extends Connect implements AppHandler {
 
@@ -32,6 +33,14 @@ public class EventReadStatusHandler extends Connect implements AppHandler {
 		
 		EventReadStatusReqObj rq = (EventReadStatusReqObj) req;
 		EventReadStatusResObj rs = new EventReadStatusResObj();
+		
+		OAuth oauth = new OAuth();
+		String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
+		if(!oauthcheck.equals(rq.getUserId())){
+			rs.setCode(FLS_ACCESS_TOKEN_FAILED);
+			rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
+			return rs;
+		}
 		
 		Event event = new Event();
 		int result = event.changeReadStatus(rq.getEventId(), rq.getReadStatus());
