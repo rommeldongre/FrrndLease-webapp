@@ -2,8 +2,8 @@ package pojos;
 
 public class GetNotificationsResObj{
 
-	int eventId;
-	String datetime, toUserId, readStatus, itemId, notificationMsg;
+	int eventId, itemId;
+	String datetime, fromUserId, toUserId, readStatus, notificationMsg;
 
 	public int getEventId() {
 		return eventId;
@@ -19,6 +19,14 @@ public class GetNotificationsResObj{
 
 	public void setDatetime(String datetime) {
 		this.datetime = datetime;
+	}
+
+	public String getFromUserId() {
+		return fromUserId;
+	}
+
+	public void setFromUserId(String fromUserId) {
+		this.fromUserId = fromUserId;
 	}
 
 	public String getToUserId() {
@@ -37,11 +45,11 @@ public class GetNotificationsResObj{
 		this.readStatus = readStatus;
 	}
 
-	public String getItemId() {
+	public int getItemId() {
 		return itemId;
 	}
 
-	public void setItemId(String itemId) {
+	public void setItemId(int itemId) {
 		this.itemId = itemId;
 	}
 

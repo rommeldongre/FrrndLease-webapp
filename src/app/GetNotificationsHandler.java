@@ -35,7 +35,7 @@ public class GetNotificationsHandler extends Connect implements AppHandler {
 		GetNotificationsListResObj rs = new GetNotificationsListResObj();
 		
 		Event event = new Event();
-		rs = event.getNotifications(rq.getUserId(), FlsEnums.Event_Type.FLS_EVENT_NOTIFICATION, rq.getOffset());
+		rs = event.getNotifications(rq.getUserId(), FlsEnums.Event_Type.FLS_EVENT_NOTIFICATION, rq.getLimit(), rq.getOffset());
 		
 		return rs;
 	}

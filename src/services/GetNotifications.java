@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 
+import pojos.GetNotificationsListResObj;
 import pojos.GetNotificationsReqObj;
-import pojos.GetNotificationsResObj;
 import util.FlsLogger;
 import app.GetNotificationsHandler;
 import app.NotImplementedException;
@@ -39,13 +39,13 @@ public class GetNotifications extends HttpServlet{
 		ObjectMapper mapper = new ObjectMapper();
 		GetNotificationsReqObj request = mapper.readValue(httprequest.getInputStream(), GetNotificationsReqObj.class);
 		httpresponse.setContentType("application/json");
-		GetNotificationsResObj response = null;
+		GetNotificationsListResObj response = null;
 		
 		try {
 
 			// App Handler to to process request and create service response
 			// into pojo
-			response = (GetNotificationsResObj) GetNotificationsHandler.getInstance().process(request);
+			response = (GetNotificationsListResObj) GetNotificationsHandler.getInstance().process(request);
 
 			// service response pojo to json
 			PrintWriter out = httpresponse.getWriter();

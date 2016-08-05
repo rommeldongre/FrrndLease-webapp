@@ -82,6 +82,8 @@ public class GetItemTimelineHandler extends Connect implements AppHandler {
 
 				} catch (SQLException e) {
 					LOGGER.warning("Error Check Stacktrace");
+					rs.setCode(FLS_SQL_EXCEPTION);
+					rs.setMessage(FLS_SQL_EXCEPTION_M);
 					e.printStackTrace();
 				} finally {
 					try {

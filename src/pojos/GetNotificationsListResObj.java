@@ -38,4 +38,12 @@ public class GetNotificationsListResObj extends ResObj {
 		this.resList.add(res);
 	}
 
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
 }
