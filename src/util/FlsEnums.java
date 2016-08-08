@@ -35,7 +35,8 @@ public class FlsEnums {
 	
 	public enum Event_Type {
 		FLS_EVENT_NOT_NOTIFICATION,
-		FLS_EVENT_NOTIFICATION
+		FLS_EVENT_NOTIFICATION,
+		FLS_EVENT_CHAT
 	}
 	
 	public enum Read_Status {

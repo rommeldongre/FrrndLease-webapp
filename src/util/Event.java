@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import connect.Connect;
 import pojos.GetNotificationsListResObj;
 import pojos.GetNotificationsResObj;
+import pojos.GetUnreadEventsCountResObj;
 import util.FlsEnums.Delivery_Status;
 import util.FlsEnums.Event_Type;
 import util.FlsEnums.Notification_Type;
@@ -187,6 +188,52 @@ public GetNotificationsListResObj getNotifications(String userId, Event_Type fls
 		response.setCode(FLS_NULL_POINT);
 		response.setMessage(FLS_NULL_POINT_M);
 		LOGGER.warning(e.getMessage());
+		e.printStackTrace();
+	}finally{
+		try {
+			if(rs != null)rs.close();
+			if(ps != null)ps.close();
+			if(hcp != null)hcp.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	return response;
+}
+
+public GetUnreadEventsCountResObj getUnreadEventsCount(String userId) {
+	
+	GetUnreadEventsCountResObj response = new GetUnreadEventsCountResObj();
+	
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	Connection hcp = getConnectionFromPool();
+	
+	try{
+		String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=?";
+		ps = hcp.prepareStatement(sqlGetUnreadEventsCount);
+		ps.setString(1, userId);
+		ps.setString(2, Read_Status.FLS_UNREAD.name());
+		
+		rs = ps.executeQuery();
+		
+		if(rs.next()){
+			response.setUnreadCount((int)rs.getLong(1));
+			response.setCode(FLS_SUCCESS);
+			response.setMessage(FLS_SUCCESS_M);
+		}else{
+			response.setCode(FLS_END_OF_DB);
+			response.setMessage(FLS_END_OF_DB_M);
+		}
+	}catch(SQLException e){
+		response.setCode(FLS_SQL_EXCEPTION);
+		response.setMessage(FLS_SQL_EXCEPTION_M);
+		e.printStackTrace();
+	}catch(NullPointerException e){
+		response.setCode(FLS_NULL_POINT);
+		response.setMessage(FLS_NULL_POINT_M);
 		e.printStackTrace();
 	}finally{
 		try {

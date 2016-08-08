@@ -2,7 +2,12 @@ package connect;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.h2.jdbcx.JdbcDataSource;
+
 import javax.sql.DataSource;
 
 import java.sql.Connection;
@@ -15,7 +20,7 @@ public class Connect extends ErrorCat {
 
 	protected static Connection connection = null;
 	protected static HikariDataSource HikariDS = null;
-
+	private VelocityEngine ve = new VelocityEngine();
 
 	//Cannot use LOGGER class because it is being used on startup 
 	//private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
@@ -23,7 +28,7 @@ public class Connect extends ErrorCat {
 	// Local - Database
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls?autoReconnect=true";
 	private static String name = "root";
-	private static String pass = "root";
+	private static String pass = "";
 
 	// Amazon RDS Database
 	// private static String url =
@@ -80,7 +85,7 @@ public class Connect extends ErrorCat {
     		HikariConfig config = new HikariConfig();
     		config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
     		config.setUsername("root");
-    		config.setPassword("root");
+    		config.setPassword("");
     		config.setMaximumPoolSize(10);
     		config.setMinimumIdle(2);
     		config.setIdleTimeout(10);
@@ -92,4 +97,5 @@ public class Connect extends ErrorCat {
     	}
     	return HikariDS;
     }
+    
 }

@@ -332,12 +332,39 @@ headerApp.controller('headerCtrl', ['$scope',
         });
     }
     
+    var displayUnreadNotifications = function(){
+        $.ajax({
+			url: '/flsv2/GetUnreadEventsCount',
+			type: 'post',
+			data: JSON.stringify({userId: userFactory.user}),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+                if(response.code == 0){
+                    $scope.unread = response.unreadCount;
+                }
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+    }
+    
     // populating the credits
     displayCredits();
 	
 	// populating the site Stats
 	displayStats();
+                                        
+    // fetching the unread notifications
+    displayUnreadNotifications();
 	
+    $scope.openNotifications = function(){
+        window.location.replace("myapp.html#/mynotifications");
+    }
+                                        
     $scope.isAdmin = function(){
         if(userFactory.user == 'frrndlease@greylabs.org')
             return true;
