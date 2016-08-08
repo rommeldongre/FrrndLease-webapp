@@ -3,7 +3,7 @@ package pojos;
 public class GetNotificationsResObj{
 
 	int eventId, itemId;
-	String datetime, fromUserId, toUserId, readStatus, notificationMsg;
+	String datetime, fromUserId, toUserId, readStatus, notificationMsg, uid = null, profilePic, fullName;
 
 	public int getEventId() {
 		return eventId;
@@ -59,6 +59,30 @@ public class GetNotificationsResObj{
 
 	public void setNotificationMsg(String notificationMsg) {
 		this.notificationMsg = notificationMsg;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 }

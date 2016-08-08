@@ -139,7 +139,7 @@ public int changeDeliveryStatus(int eventId, Delivery_Status deliveryStatus){
 		
 	}
 
-public GetNotificationsListResObj getNotifications(String userId, Event_Type flsEventNotification, int limit, int offset) {
+public GetNotificationsListResObj getNotifications(String userId, int limit, int offset) {
 	
 	PreparedStatement ps = null;
 	ResultSet rs = null;
@@ -148,12 +148,13 @@ public GetNotificationsListResObj getNotifications(String userId, Event_Type fls
 	GetNotificationsListResObj response = new GetNotificationsListResObj();
 	
 	try{
-		String sqlGetNotifications = "SELECT * FROM events WHERE to_user_id=? AND event_type=? ORDER BY event_id LIMIT ?,?";
+		String sqlGetNotifications = "SELECT tb1.*, tb2.user_profile_picture, tb2.user_full_name, tb3.item_uid FROM events tb1 LEFT JOIN users tb2 ON tb1.from_user_id=tb2.user_id LEFT JOIN items tb3 ON tb1.item_id=tb3.item_id WHERE to_user_id=? AND event_type IN (?,?) ORDER BY event_id DESC LIMIT ?,?";
 		ps = hcp.prepareStatement(sqlGetNotifications);
 		ps.setString(1, userId);
-		ps.setString(2, flsEventNotification.name());
-		ps.setInt(3, offset);
-		ps.setInt(4, limit);
+		ps.setString(2, Event_Type.FLS_EVENT_NOTIFICATION.name());
+		ps.setString(3, Event_Type.FLS_EVENT_CHAT.name());
+		ps.setInt(4, offset);
+		ps.setInt(5, limit);
 		
 		rs = ps.executeQuery();
 		
@@ -164,6 +165,9 @@ public GetNotificationsListResObj getNotifications(String userId, Event_Type fls
 				res.setDatetime(rs.getString("datetime"));
 				res.setFromUserId(rs.getString("from_user_id"));
 				res.setToUserId(rs.getString("to_user_id"));
+				res.setProfilePic(rs.getString("user_profile_picture"));
+				res.setUid(rs.getString("item_uid"));
+				res.setFullName(rs.getString("user_full_name"));
 				res.setReadStatus(rs.getString("read_status"));
 				res.setItemId(rs.getInt("item_id"));
 				res.setNotificationMsg(rs.getString("message"));
