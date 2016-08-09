@@ -64,3 +64,9 @@ myApp.config(function($routeProvider){
     .otherwise({redirectTo : '/'});
     
 });
+
+myApp.filter('to_trusted', ['$sce', function($sce){
+    return function(text) {
+        return $sce.trustAsHtml(text);
+    };
+}]);

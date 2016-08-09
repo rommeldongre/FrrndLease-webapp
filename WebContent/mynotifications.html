@@ -17,8 +17,7 @@
                 <td class="text-center">
                     <i class="ng-class:{'pink fa fa-lg fa-user':(event.notificationType=='FLS_USER'),'green fa fa-lg fa-thumbs-up':(event.notificationType=='FLS_POSITIVE'),'red fa fa-lg fa-thumbs-down':(event.notificationType=='FLS_NEGATIVE'),'blue fa fa-lg fa-info-circle':(event.notificationType=='FLS_DEFAULT'),'purple fa fa-lg fa-clock-o':(event.notificationType=='FLS_TIME'),'orange fa fa-lg fa-cubes':(event.notificationType=='FLS_ITEM')}"></i>
                 </td>
-                <td class="text-center ng-class:{'font-bold':(event.readStatus == 'FLS_UNREAD'),'font-normal':(event.readStatus == 'FLS_READ')}">{{event.notificationMsg}}</td>
-                <td class="text-center"><a ng-if="event.uid != null" href="/flsv2/ItemDetails?uid={{event.uid}}">See Item Details</a></td>
+                <td class="ng-class:{'font-bold':(event.readStatus == 'FLS_UNREAD'),'font-normal':(event.readStatus == 'FLS_READ')}" ng-bind-html="event.notificationMsg | to_trusted"></td>
                 <td class="td-actions text-center">
                     <button class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{event.readStatus == 'FLS_READ' ? 'Read' : 'Mark as read'}}" ng-click="readEvent($index)"><i class="ng-class:{'fa fa-lg fa-circle-o':(event.readStatus == 'FLS_UNREAD'),'fa fa-lg fa-dot-circle-o':(event.readStatus == 'FLS_READ')}"></i></button><br/>
                     <span class="label label-default label-fill">{{event.datetime | date:'medium'}}</span>

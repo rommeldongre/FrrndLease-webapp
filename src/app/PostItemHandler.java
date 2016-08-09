@@ -14,6 +14,8 @@ import pojos.PostItemResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsLogger;
 import util.LogCredit;
@@ -169,6 +171,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, rq);
+					Event event = new Event();
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, rq.getId(), "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

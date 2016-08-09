@@ -16,6 +16,8 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import app.GrantLeaseHandler;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsLogger;
 import util.LogCredit;
@@ -58,8 +60,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		case "close":
 		
 			int itemAction = 0;
-			PreparedStatement psItemSelect = null, psItemUpdate = null;
-			ResultSet dbResponseitems = null;
+			PreparedStatement psItemSelect = null, psItemUpdate = null, ps1 = null;
+			ResultSet dbResponseitems = null, rs1 = null;
 			Connection hcp = getConnectionFromPool();
 			hcp.setAutoCommit(false);
 			
@@ -115,9 +117,24 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				LogItem li = new LogItem();
 				li.addItemLog(rq.getItemId(), "LeaseEnded", "", "");
 				
+				// fetching the uid
+				String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
+				ps1 = hcp.prepareStatement(sqlUid);
+				ps1.setInt(1, rq.getItemId());
+				rs1 = ps1.executeQuery();
+				String uid = null;
+				String title = null;
+				if(rs1.next()){
+					uid = rs1.getString("item_uid");
+					title = rs1.getString("item_name");
+				}
+				
 				AwsSESEmail newE = new AwsSESEmail();
 				newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
 				newE.send(rq.getReqUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
+				Event event = new Event();
+				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee " + rq.getReqUserId() + " on Friend Lease ");
+				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
 					
 			} catch (SQLException e) {
 				LOGGER.info("SQL Exception encountered....");
@@ -132,8 +149,9 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				e.printStackTrace();
 			}finally{
 				
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
 				if(dbResponseitems != null)dbResponseitems.close();
-				
 				if(psItemSelect != null)psItemSelect.close();
 				if(psItemUpdate != null)psItemUpdate.close();
 				
@@ -151,8 +169,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 
 	private boolean renewLease(RenewLeaseReqObj rq, RenewLeaseResObj rs) throws SQLException {
 		
-		PreparedStatement psRenewSelect = null,psRenewUpdate = null, psAddCredit = null, psDebitCredit = null;
-		ResultSet result1 = null;
+		PreparedStatement psRenewSelect = null,psRenewUpdate = null, psAddCredit = null, psDebitCredit = null, ps1 = null;
+		ResultSet result1 = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
 		int addCredit = 0, subCredit = 0;
 		
@@ -279,11 +297,26 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				rs.setMessage(FLS_SUCCESS_M);
 				LOGGER.info("renew Lease query executed successfully...");
 				hcp.commit();
-					
+				
 				try {
+					// fetching the uid
+					String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
+					ps1 = hcp.prepareStatement(sqlUid);
+					ps1.setInt(1, rq.getItemId());
+					rs1 = ps1.executeQuery();
+					String uid = null;
+					String title = null;
+					if(rs1.next()){
+						uid = rs1.getString("item_uid");
+						title = rs1.getString("item_name");
+					}
+					
 					AwsSESEmail newE = new AwsSESEmail();
 					newE.send(rq.getReqUserId(), Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
 					newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq);
+					Event event = new Event();
+					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq.getItemId(), "Lease has been renewed by the owner of item having item id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a>");
+					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq.getItemId(), "Lease has been renewed for item having id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee " + rq.getReqUserId() + " on Friend Lease");
 				} catch (Exception e) {
 					// TODO: handle exception
 					 e.printStackTrace();
@@ -295,6 +328,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 			rs.setMessage(FLS_NULL_POINT_M);
 		}finally{
 			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
 				if(result1 != null)result1.close();
 				if(psRenewSelect != null)psRenewSelect.close();
 				if(psRenewUpdate!=null) psRenewUpdate.close();	
