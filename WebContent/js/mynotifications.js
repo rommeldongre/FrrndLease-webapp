@@ -60,6 +60,35 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', func
         getNotifications();
     }
     
+    $scope.readEvent = function(index){
+        if($scope.events[index].readStatus == 'FLS_UNREAD'){
+            $.ajax({
+                url: '/flsv2/EventReadStatus',
+                type: 'post',
+                data: JSON.stringify({
+                    eventId: $scope.events[index].eventId,
+                    readStatus: 'FLS_READ',
+                    userId:userFactory.user,
+                    accessToken: userFactory.userAccessToken
+                }),
+                contentType:"application/json",
+                dataType:"json",
+
+                success: function(response) {
+                    if(response.code == 0){
+                        $scope.$apply(function(){
+                            $scope.events[index].readStatus = 'FLS_READ';
+                        });
+
+                    }
+                },
+
+                error: function() {
+                }
+            });
+        }
+    }
+    
     initialPopulate();
     
 }]);

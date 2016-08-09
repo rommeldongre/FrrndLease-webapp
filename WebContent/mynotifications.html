@@ -6,44 +6,25 @@
         </div>
 	</div>
     
-    <hr /><br /><br />
-    
     <h4 ng-if="events.length == 0">You have no notifications</h4>
     
-    <div class="row" ng-repeat="event in events">
-        <div class="col-lg-1 col-md-1"></div>
-        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
-            <div class="row" style="display: flex;flex-wrap: wrap;">
-                <div class="col-lg-4 col-md-4 col-sm-4" href="">
-                   <a class="image">
-                      <img alt="{{event.itemId}}">
-                   </a>
-                </div>
-               <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:center;border-left: thin solid #eee;border-right: thin solid #eee;">
-                  <div class="content" style="text-align:center;">
-                      <br/>
-                      <a class="card-link">
-                          <img src="images/user_icon.png" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{event.fromUserId}}</p>
-                      </a>
-                  </div>
-               </div>
-               <div class="col-lg-2 col-md-2 col-sm-2">
-                   <div class="content" style="text-align:center;">
-                       <br/>
-                       <a class="card-link">
-                           <p class="description">{{event.datetime}}</p>
-                       </a>
-                       <a class="card-link" href="">
-                           <button class="btn btn-primary btn-tooltip ng-class:{'btn-success':(event.readStatus=='FLS_READ'),'btn-danger':(event.readStatus=='FLS_UNREAD')}" data-toggle="tooltip" data-placement="top" title="{{event.readStatus == 'FLS_READ' ? 'Read' : 'Unread'}}">{{event.readStatus == 'FLS_READ' ? 'Unread' : 'Mark as Read'}}</button>
-                       </a>
-                   </div>
-               </div>
-            </div>
-        </div>
-        <div class="col-lg-1 col-md-1"></div>
-    </div>
-    <button ng-if="loadMore" ng-click="loadmore()" class="btn btn-default btn-round btn-fill" style="text-align:center;">Load more..</button>
+    <table class="table">
+        <tbody>
+            <tr ng-repeat="event in events">
+                <td class="text-center">
+                    <img style="width:50px;height:50px;" class="img-circle" ng-src="{{(event.profilePic === '' || event.profilePic === null || event.profilePic === NULL || event.profilePic === 'null') ? 'images/user_icon.png' : event.profilePic}}" alt="..">
+                </td>
+                <td class="text-center">
+                    <i class="ng-class:{'pink fa fa-lg fa-user':(event.notificationType=='FLS_USER'),'green fa fa-lg fa-thumbs-up':(event.notificationType=='FLS_POSITIVE'),'red fa fa-lg fa-thumbs-down':(event.notificationType=='FLS_NEGATIVE'),'blue fa fa-lg fa-info-circle':(event.notificationType=='FLS_DEFAULT'),'purple fa fa-lg fa-clock-o':(event.notificationType=='FLS_TIME'),'orange fa fa-lg fa-cubes':(event.notificationType=='FLS_ITEM')}"></i>
+                </td>
+                <td class="text-center ng-class:{'font-bold':(event.readStatus == 'FLS_UNREAD'),'font-normal':(event.readStatus == 'FLS_READ')}">{{event.notificationMsg}}</td>
+                <td class="text-center"><a ng-if="event.uid != null" href="/flsv2/ItemDetails?uid={{event.uid}}">See Item Details</a></td>
+                <td class="td-actions text-center">
+                    <button class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{event.readStatus == 'FLS_READ' ? 'Read' : 'Mark as read'}}" ng-click="readEvent($index)"><i class="ng-class:{'fa fa-lg fa-circle-o':(event.readStatus == 'FLS_UNREAD'),'fa fa-lg fa-dot-circle-o':(event.readStatus == 'FLS_READ')}"></i></button><br/>
+                    <span class="label label-default label-fill">{{event.datetime | date:'medium'}}</span>
+                </td>
+              </tr>
+        </tbody>
+    </table>
+    <button ng-if="loadMore" ng-click="loadmore()" class="btn btn-default btn-simple" style="text-align:center;">Show more..</button>
 </div>

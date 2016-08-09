@@ -11,8 +11,8 @@ import org.json.JSONObject;
 import pojos.FriendsModel;
 import adminOps.Response;
 import connect.Connect;
-import util.FlsEnums;
 import util.AwsSESEmail;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 import util.LogCredit;
 
@@ -143,7 +143,7 @@ public class Friends extends Connect {
 				lc.addLogCredit(userId,1,"Friend Added","");
 				
 				if (friendId.contains("@fb") || friendId.contains("@google"))
-					newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
+					newE.send(userId, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
 
 			} else {
 				LOGGER.warning("Friend Already exists.....");
@@ -152,8 +152,8 @@ public class Friends extends Connect {
 			
 			if (!(friendId.contains("@fb") || friendId.contains("@google"))) {
 				source = "@email";
-				newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
-				newE.send(friendId, FlsEnums.Notification_Type.FLS_MAIL_ADD_FRIEND_TO, fm);
+				newE.send(userId, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
+				newE.send(friendId, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, fm);
 			}
 			
 		} catch (SQLException e) {
@@ -216,8 +216,8 @@ public class Friends extends Connect {
 
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(friendId, FlsEnums.Notification_Type.FLS_MAIL_DELETE_FRIEND_FROM, fm);
-					newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_DELETE_FRIEND_TO, fm);
+					newE.send(friendId, Notification_Type.FLS_MAIL_DELETE_FRIEND_FROM, fm);
+					newE.send(userId, Notification_Type.FLS_MAIL_DELETE_FRIEND_TO, fm);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

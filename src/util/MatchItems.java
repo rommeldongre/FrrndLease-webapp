@@ -9,6 +9,7 @@ import java.util.List;
 
 import connect.Connect;
 import pojos.PostItemReqObj;
+import util.Event.Notification_Type;
 
 public class MatchItems extends Connect {
 
@@ -54,7 +55,7 @@ public class MatchItems extends Connect {
 			while (rs1.next()) {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(rs1.getString("item_user_id"), FlsEnums.Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
+					newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -123,7 +124,7 @@ public class MatchItems extends Connect {
 				if(!listItems.isEmpty()){
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(rs1.getString("item_user_id"), FlsEnums.Notification_Type.FLS_MAIL_MATCH_POST_ITEM, listItems);
+						newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_POST_ITEM, listItems);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -159,23 +160,4 @@ public class MatchItems extends Connect {
 	      return longestString;
 	  }
 
-	private boolean compareTitles(String title1[], String title2[]) {
-
-		// getting the array length of both the titles.
-		int len1 = title1.length;
-		int len2 = title2.length;
-
-		if (len1 > 3)
-			len1 = 3;
-		if (len2 > 3)
-			len2 = 3;
-
-		for (int i = 0; i < len1; i++) {
-			for (int j = 0; j < len2; j++) {
-				if (title1[i].equals(title2[j]))
-					return true;
-			}
-		}
-		return false;
-	}
 }

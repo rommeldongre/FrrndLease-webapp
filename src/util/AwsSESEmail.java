@@ -67,7 +67,7 @@ import pojos.RenewLeaseReqObj;
 import pojos.RequestsModel;
 import pojos.UsersModel;
 import tableOps.Wishlist;
-import util.FlsEnums.Notification_Type;
+import util.Event.Notification_Type;
 import util.FlsConfig;
 
 import com.amazonaws.AmazonClientException;

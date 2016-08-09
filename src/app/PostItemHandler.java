@@ -14,8 +14,8 @@ import pojos.PostItemResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.AwsSESEmail;
+import util.Event.Notification_Type;
 import util.FlsLogger;
-import util.FlsEnums;
 import util.LogCredit;
 import util.LogItem;
 import util.MatchItems;
@@ -168,7 +168,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_POST_ITEM, rq);
+					newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, rq);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

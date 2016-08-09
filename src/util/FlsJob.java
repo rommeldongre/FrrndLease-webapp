@@ -12,6 +12,7 @@ import app.GetLeasesByXHandler;
 import app.GrantLeaseHandler;
 import app.RenewLeaseHandler;
 import util.AwsSESEmail;
+import util.Event.Notification_Type;
 import connect.Connect;
 
 import org.quartz.Scheduler;
@@ -217,8 +218,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rq.setFlag("renew");
 				rq.setReqUserId(lease_requser_id);
 				rq.setUserId(lease_user_id);
-				newE.send(lease_requser_id, FlsEnums.Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
-				newE.send(lease_user_id, FlsEnums.Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq);
+				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
+				newE.send(lease_user_id, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq);
 					
 			}else{
 				
@@ -288,8 +289,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rq.setFlag("close");
 				rq.setReqUserId(lease_requser_id);
 				rq.setUserId(lease_user_id);
-				newE.send(lease_user_id, FlsEnums.Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
-				newE.send(lease_requser_id, FlsEnums.Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
+				newE.send(lease_user_id, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
+				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
 			}
 		    
 			hcp.commit();
@@ -334,8 +335,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rlrq.setReqUserId(lease_requser_id);
 				rlrq.setUserId(lease_user_id);
 				
-				newE.send(lease_user_id, FlsEnums.Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, rlrq);
-				newE.send(lease_requser_id, FlsEnums.Notification_Type.FLS_MAIL_GRACE_PERIOD_REQUESTOR, rlrq);
+				newE.send(lease_user_id, Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, rlrq);
+				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_GRACE_PERIOD_REQUESTOR, rlrq);
 				
 		} catch (Exception e) {
 				e.printStackTrace();

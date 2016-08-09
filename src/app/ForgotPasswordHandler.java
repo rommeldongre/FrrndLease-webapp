@@ -12,8 +12,8 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import pojos.UsersModel;
 import util.AwsSESEmail;
+import util.Event.Notification_Type;
 import util.FlsLogger;
-import util.FlsEnums;
 
 public class ForgotPasswordHandler extends Connect implements AppHandler {
 
@@ -71,7 +71,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 							AwsSESEmail newE = new AwsSESEmail();
 							UsersModel um = new UsersModel();
 							um.setActivation(activation);
-							newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
+							newE.send(userId, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -82,7 +82,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 					case "email_activated":
 						try{
 							AwsSESEmail newE = new AwsSESEmail();
-							newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_FORGOT_PASSWORD, activation);
+							newE.send(userId, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, activation);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

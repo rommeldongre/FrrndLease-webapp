@@ -1,6 +1,6 @@
 package pojos;
 
-import util.FlsEnums.Read_Status;
+import util.Event.Read_Status;
 
 public class EventReadStatusReqObj extends ReqObj{
 

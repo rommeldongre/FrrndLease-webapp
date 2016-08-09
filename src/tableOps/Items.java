@@ -15,9 +15,9 @@ import connect.Connect;
 import adminOps.Response;
 import tableOps.Store;
 import pojos.ItemsModel;
-import util.FlsEnums;
 import util.LogItem;
 import util.AwsSESEmail;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 
 public class Items extends Connect {
@@ -204,7 +204,7 @@ public class Items extends Connect {
 				if (!FLS_WISHLIST_ADD.equals(status_W)) {
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(userId, FlsEnums.Notification_Type.FLS_MAIL_POST_ITEM, im);
+						newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, im);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

@@ -1,9 +1,15 @@
 package pojos;
 
-public class GetNotificationsResObj{
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import util.Event.Icon_Type;
+
+public class GetNotificationsResObj {
 
 	int eventId, itemId;
-	String datetime, fromUserId, toUserId, readStatus, notificationMsg, uid = null, profilePic, fullName;
+	String datetime, fromUserId, toUserId, readStatus, notificationMsg, uid, profilePic, fullName, notificationType;
 
 	public int getEventId() {
 		return eventId;
@@ -18,7 +24,13 @@ public class GetNotificationsResObj{
 	}
 
 	public void setDatetime(String datetime) {
-		this.datetime = datetime;
+		try {
+			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(datetime);
+			this.datetime = Long.toString(date.getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getFromUserId() {
@@ -83,6 +95,57 @@ public class GetNotificationsResObj{
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getNotificationType() {
+		return notificationType;
+	}
+
+	public void setNotificationType(String notificationType) {
+		switch(notificationType){
+			case "FLS_MAIL_REGISTER":
+			case "FLS_MAIL_SIGNUP_VALIDATION":
+			case "FLS_MAIL_FORGOT_PASSWORD":
+				this.notificationType = Icon_Type.FLS_DEFAULT.name();
+				break;
+			case "FLS_MAIL_MATCH_WISHLIST_ITEM":
+			case "FLS_MAIL_MATCH_POST_ITEM":
+			case "FLS_MAIL_POST_ITEM":
+			case "FLS_MAIL_DELETE_ITEM":
+			case "FLS_MAIL_MAKE_REQUEST_FROM":
+			case "FLS_MAIL_MAKE_REQUEST_TO":
+				this.notificationType = Icon_Type.FLS_ITEM.name();
+				break;
+			case "FLS_MAIL_ADD_FRIEND_FROM":
+			case "FLS_MAIL_ADD_FRIEND_TO":
+			case "FLS_MAIL_DELETE_FRIEND_FROM":
+			case "FLS_MAIL_DELETE_FRIEND_TO":
+				this.notificationType = Icon_Type.FLS_USER.name();
+				break;
+			case "FLS_MAIL_GRANT_REQUEST_FROM":
+			case "FLS_MAIL_GRANT_REQUEST_TO":
+			case "FLS_MAIL_GRANT_LEASE_FROM":
+			case "FLS_MAIL_GRANT_LEASE_TO":
+			case "FLS_MAIL_RENEW_LEASE_OWNER":
+			case "FLS_MAIL_RENEW_LEASE_REQUESTOR":
+				this.notificationType = Icon_Type.FLS_POSITIVE.name();
+				break;
+			case "FLS_MAIL_REJECT_REQUEST_FROM":
+			case "FLS_MAIL_REJECT_REQUEST_TO":
+			case "FLS_MAIL_DELETE_REQUEST_FROM":
+			case "FLS_MAIL_DELETE_REQUEST_TO":
+			case "FLS_MAIL_REJECT_LEASE_FROM":
+			case "FLS_MAIL_REJECT_LEASE_TO":
+				this.notificationType = Icon_Type.FLS_NEGATIVE.name();
+				break;
+			case "FLS_MAIL_GRACE_PERIOD_OWNER":
+			case "FLS_MAIL_GRACE_PERIOD_REQUESTOR":
+				this.notificationType = Icon_Type.FLS_TIME.name();
+				break;
+			default:
+				this.notificationType = Icon_Type.FLS_DEFAULT.name();
+				break;
+		}
 	}
 
 }

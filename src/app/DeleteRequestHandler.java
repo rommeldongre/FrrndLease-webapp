@@ -16,9 +16,9 @@ import org.json.JSONObject;
 
 import pojos.ReqObj;
 import pojos.ResObj;
-import util.FlsEnums;
 import util.OAuth;
 import util.AwsSESEmail;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 
 public class DeleteRequestHandler extends Connect implements AppHandler {
@@ -132,8 +132,8 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					// ownerId= im.getUserId();
-					newE.send(rq.getUserId(), FlsEnums.Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im);
-					newE.send(im.getUserId(), FlsEnums.Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im);
+					newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im);
+					newE.send(im.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im);
 					rs.setMessage(FLS_SUCCESS_M);
 					rs.setCode(FLS_SUCCESS);
 				} catch (Exception e) {
