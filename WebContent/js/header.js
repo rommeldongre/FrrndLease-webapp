@@ -281,6 +281,8 @@ headerApp.controller('headerCtrl', ['$scope',
     }
     
 	$scope.$on('bannerMessage', function(event, data, page){
+        // updating the notifications count in the header
+        displayUnreadNotifications();
 		$scope.successBanner = data;
 		$scope.bannerVal = true;
 		$timeout(function(){
@@ -332,6 +334,8 @@ headerApp.controller('headerCtrl', ['$scope',
         });
     }
     
+    $scope.head = {};
+    
     var displayUnreadNotifications = function(){
         $.ajax({
 			url: '/flsv2/GetUnreadEventsCount',
@@ -342,12 +346,12 @@ headerApp.controller('headerCtrl', ['$scope',
 			
 			success: function(response) {
                 if(response.code == 0){
-                    $scope.unread = response.unreadCount;
+                    $scope.$apply(function(){
+                        $scope.head.unread = response.unreadCount;
+                    });
                 }
 			},
-		
 			error: function() {
-				alert('Not Working');
 			}
 		});
     }
@@ -395,6 +399,10 @@ headerApp.controller('headerCtrl', ['$scope',
 			
 		window.location.replace("EditPosting.html");
     }
+    
+    $scope.$on('updateEventsCount', function(event){
+        displayUnreadNotifications();
+    });
     
 }]);
 
@@ -519,6 +527,13 @@ headerApp.service('bannerService', ['$rootScope', function($rootScope){
 		this.data = data;
 		this.page = page;
         $rootScope.$broadcast('bannerMessage', this.data, this.page);
+    }
+}]);
+
+headerApp.service('eventsCount', ['$rootScope', function($rootScope){
+    
+    this.updateEventsCount = function(){
+        $rootScope.$broadcast('updateEventsCount');
     }
 }]);
 

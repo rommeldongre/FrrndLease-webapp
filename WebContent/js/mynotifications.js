@@ -1,6 +1,6 @@
 var myNotifications = angular.module('myApp');
 
-myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', function($scope, userFactory){
+myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', 'eventsCount', function($scope, userFactory, eventsCount){
     
     var offset = 0;
     var Limit = 5;
@@ -77,10 +77,10 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', func
 
                 success: function(response) {
                     if(response.code == 0){
+                        eventsCount.updateEventsCount();
                         $scope.$apply(function(){
                             $scope.events[index].readStatus = 'FLS_READ';
                         });
-
                     }
                 },
 

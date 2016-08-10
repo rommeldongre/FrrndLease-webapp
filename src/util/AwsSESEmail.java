@@ -127,9 +127,6 @@ public class AwsSESEmail extends Connect {
 
 		// this variable is used to store list of files
 		List<File> imageFiles = new ArrayList<>();
-		
-		// empty image file 
-		InputStream emptyImage = getClass().getClassLoader().getResourceAsStream("images/imgplaceholder.png");
 
 		if (env_config.equals("dev")) {
 			EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
@@ -223,8 +220,6 @@ public class AwsSESEmail extends Connect {
 					+ " Lease Term : " + idom.getLeaseTerm() + "<br/>" + " Status : " + idom.getStatus() + "<br/>"
 					+ "<img src=\"cid:image\" alt=" + idom.getTitle() + " ></img>" + "</body>");
 			imageFile = convertBinaryToImage(idom.getImage());
-			if(imageFile == null)
-				imageFile = createFile(emptyImage);
 			break;
 
 		case FLS_MAIL_POST_ITEM:
@@ -236,8 +231,6 @@ public class AwsSESEmail extends Connect {
 					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "<br/>"
 					+ "<img src=\"cid:image\" alt=" + iom.getTitle() + " ></img>" + "</body>");
 			imageFile = convertBinaryToImage(iom.getImage());
-			if(imageFile == null)
-				imageFile = createFile(emptyImage);
 			break;
 
 		case FLS_MAIL_MATCH_WISHLIST_ITEM:
@@ -250,8 +243,6 @@ public class AwsSESEmail extends Connect {
 					+ " Status : " + itemObj.getStatus() + "<br/>" + "<img src=\"cid:image\" alt=" + itemObj.getTitle()
 					+ " ></img>" + "</body>");
 			imageFile = convertBinaryToImage(itemObj.getImage());
-			if(imageFile == null)
-				imageFile = createFile(emptyImage);
 			break;
 
 		case FLS_MAIL_MATCH_POST_ITEM:
@@ -269,10 +260,7 @@ public class AwsSESEmail extends Connect {
 						+ listItems.get(i).getLeaseTerm() + "<br/>" + " Status : " + listItems.get(i).getStatus()
 						+ "<br/>" + "<img src=\"cid:image" + Integer.toString(i) + "\" alt="
 						+ listItems.get(i).getTitle() + " ></img><br/><br/>");
-				imageFile = convertBinaryToImage(listItems.get(i).getImage());
-				if(imageFile == null)
-					imageFile = createFile(emptyImage);
-				imageFiles.add(imageFile);
+				imageFiles.add(convertBinaryToImage(listItems.get(i).getImage()));
 			}
 
 			BODY = BODY + ("</body>");
@@ -454,14 +442,15 @@ public class AwsSESEmail extends Connect {
 				int len = imageFiles.size();
 				for (int j = 0; j < len; j++) {
 					// Image part if the message has an image
-					MimeBodyPart imagePart = new MimeBodyPart();
-					LOGGER.warning("Sending Image!!");
-					imagePart.attachFile(imageFiles.get(j));
-					imagePart.setContentID("<image" + Integer.toString(j) + ">");
-					imagePart.setDisposition(MimeBodyPart.INLINE);
-					multipart.addBodyPart(imagePart);
-					imageFile = null;
-
+					if(imageFiles.get(j) != null){
+						MimeBodyPart imagePart = new MimeBodyPart();
+						LOGGER.warning("Sending Image!!");
+						imagePart.attachFile(imageFiles.get(j));
+						imagePart.setContentID("<image" + Integer.toString(j) + ">");
+						imagePart.setDisposition(MimeBodyPart.INLINE);
+						multipart.addBodyPart(imagePart);
+						imageFile = null;
+					}
 				}
 			}
             
