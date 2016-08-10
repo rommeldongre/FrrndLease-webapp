@@ -56,6 +56,17 @@ myApp.config(function($routeProvider){
         controller : 'myPostingsCtrl'
     })
     
+    .when('/mynotifications', {
+        templateUrl : 'mynotifications.html',
+        controller : 'myNotificationsCtrl'
+    })
+    
     .otherwise({redirectTo : '/'});
     
 });
+
+myApp.filter('to_trusted', ['$sce', function($sce){
+    return function(text) {
+        return $sce.trustAsHtml(text);
+    };
+}]);

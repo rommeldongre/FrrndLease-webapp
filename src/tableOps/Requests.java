@@ -14,8 +14,10 @@ import adminOps.Response;
 import connect.Connect;
 import pojos.RequestsModel;
 import pojos.ItemsModel;
-import util.FlsSendMail;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 import util.LogCredit;
 
@@ -232,6 +234,7 @@ public class Requests extends Connect {
 								obj1.put("description", dbResponse.getString("item_desc"));
 								obj1.put("category", dbResponse.getString("item_category"));
 								obj1.put("userId", dbResponse.getString("item_user_id"));
+								obj1.put("uid", dbResponse.getString("item_uid"));
 								obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
 								obj1.put("id", dbResponse.getString("item_id"));
 								obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
@@ -275,10 +278,11 @@ public class Requests extends Connect {
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
 						ownerUserId = im.getUserId();
-						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_FROM, rm);
-						LOGGER.info("Statement FLS_MAIL_MAKE_REQUEST_FROM fired......");
-						newE.send(ownerUserId, FlsSendMail.Fls_Enum.FLS_MAIL_MAKE_REQUEST_TO, im);
-						LOGGER.info("Statement FLS_MAIL_MAKE_REQUEST_TO fired......");
+						newE.send(userId, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, rm);
+						newE.send(ownerUserId, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, im);
+						Event event = new Event();
+						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> on Friend Lease");
+						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been requested on Friend Lease");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -495,6 +499,7 @@ public class Requests extends Connect {
 							obj1.put("description", dbResponse.getString("item_desc"));
 							obj1.put("category", dbResponse.getString("item_category"));
 							obj1.put("userId", dbResponse.getString("item_user_id"));
+							obj1.put("uid", dbResponse.getString("item_uid"));
 							obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
 							obj1.put("id", dbResponse.getString("item_id"));
 							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
@@ -529,7 +534,9 @@ public class Requests extends Connect {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					// ownerId= im.getUserId();
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_REQUEST_TO, rm);
+					newE.send(userId, Notification_Type.FLS_MAIL_REJECT_REQUEST_TO, rm);
+					Event event = new Event();
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_REQUEST_TO, Integer.parseInt(itemId), "Request of item <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the owner as a lease might be granted.");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

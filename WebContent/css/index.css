@@ -1,3 +1,35 @@
+.pink{
+    color:palevioletred;
+}
+
+.green{
+    color:greenyellow;
+}
+
+.red{
+    color:indianred;
+}
+
+.blue{
+    color:steelblue;
+}
+
+.purple{
+    color:mediumpurple;
+}
+
+.orange{
+    color:coral;
+}
+
+.font-bold{
+    font-weight: bold;
+}
+
+.font-normal{
+    font-weight: normal;
+}
+
 html, body{
 	margin: 0;
 	padding: 0;

@@ -286,6 +286,8 @@ headerApp.controller('headerCtrl', ['$scope',
     }
     
 	$scope.$on('bannerMessage', function(event, data, page){
+        // updating the notifications count in the header
+        displayUnreadNotifications();
 		$scope.successBanner = data;
 		$scope.bannerVal = true;
 		$timeout(function(){
@@ -337,12 +339,41 @@ headerApp.controller('headerCtrl', ['$scope',
         });
     }
     
+    $scope.head = {};
+    
+    var displayUnreadNotifications = function(){
+        $.ajax({
+			url: '/flsv2/GetUnreadEventsCount',
+			type: 'post',
+			data: JSON.stringify({userId: userFactory.user}),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+                if(response.code == 0){
+                    $scope.$apply(function(){
+                        $scope.head.unread = response.unreadCount;
+                    });
+                }
+			},
+			error: function() {
+			}
+		});
+    }
+    
     // populating the credits
     displayCredits();
 	
 	// populating the site Stats
 	displayStats();
+                                        
+    // fetching the unread notifications
+    displayUnreadNotifications();
 	
+    $scope.openNotifications = function(){
+        window.location.replace("myapp.html#/mynotifications");
+    }
+                                        
     $scope.isAdmin = function(){
         if(userFactory.user == 'frrndlease@greylabs.org')
             return true;
@@ -373,6 +404,10 @@ headerApp.controller('headerCtrl', ['$scope',
 			
 		window.location.replace("EditPosting.html");
     }
+    
+    $scope.$on('updateEventsCount', function(event){
+        displayUnreadNotifications();
+    });
     
 }]);
 
@@ -497,6 +532,13 @@ headerApp.service('bannerService', ['$rootScope', function($rootScope){
 		this.data = data;
 		this.page = page;
         $rootScope.$broadcast('bannerMessage', this.data, this.page);
+    }
+}]);
+
+headerApp.service('eventsCount', ['$rootScope', function($rootScope){
+    
+    this.updateEventsCount = function(){
+        $rootScope.$broadcast('updateEventsCount');
     }
 }]);
 
