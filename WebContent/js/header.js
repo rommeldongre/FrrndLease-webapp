@@ -187,13 +187,18 @@ headerApp.controller('headerCtrl', ['$scope',
             '/me/friends', function (response) {
                 if (response && !response.error) {
                     var friends = response.data.length;
-                    for(var i =0;i<=response.data.length;i++){
-                        if (response.data.hasOwnProperty(i)) {
-                            var friend_name = response.data[i].name;
-                            var friend_id= response.data[i].id+"@fb";
-							addFriendDbCreate(friend_name, '-', friend_id, email, friends);
-                        }
-                    }
+					if(response.data.length!=0){
+						for(var i =0;i<=response.data.length;i++){
+							if (response.data.hasOwnProperty(i)) {
+								var friend_name = response.data[i].name;
+								var friend_id= response.data[i].id+"@fb";
+								addFriendDbCreate(friend_name, '-', friend_id, email, friends);
+							}
+						}
+					}else{
+						loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your fRRndLease friendlist");
+						window.location.replace("myapp.html#/");
+					}
                 }
             }
         );

@@ -17,7 +17,7 @@
                 </div>
                 <span class="divider"> or </span>
 
-              <p ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
+              <p id="login_error" ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
             <form name="form" style="text-align: center;">
                 <div class="form-group">
                     <input name="email" type="email" id="email" class="form-control" ng-change="error=''" ng-model="email" placeholder="Email" required autofocus/>
