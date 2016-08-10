@@ -1,6 +1,6 @@
 var carouselApp = angular.module('carouselApp', []);
 
-carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', 'searchService', function($scope, $timeout, getItemsForCarousel, searchService){
+carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', 'searchService', 'eventsCount', function($scope, $timeout, getItemsForCarousel, searchService, eventsCount){
     // lastItem is used to store the id of the last retrieved item from the database
     var lastItem = 0;
     // selected category is stored in this variable
@@ -234,8 +234,10 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
 			contentType: "application/x-www-form-urlencoded",
 			dataType:"json",
 			success: function(response) {
-                if(response.Code == 0)
+                if(response.Code == 0){
                     console.log("item added to the wish list");
+                    eventsCount.updateEventsCount();
+                }
                 else
                     console.log("wished item already exists");
 			},
