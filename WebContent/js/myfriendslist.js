@@ -1,6 +1,6 @@
 var myFriendsListApp = angular.module('myApp');
 
-myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'modalService', function($scope, userFactory, modalService){
+myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'modalService', 'eventsCount', function($scope, userFactory, modalService, eventsCount){
     
     localStorage.setItem("prevPage","myapp.html#/myfriendslist");
     
@@ -105,6 +105,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 					}, function(){});
 				}
 			}
+            eventsCount.updateEventsCount();
         }, function(){});
     }
 	
@@ -115,6 +116,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 					modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 						$scope.friends = [];
 						initialPopulate();
+                        eventsCount.updateEventsCount();
 					}, function(){});	
 			}else{
 				var isValid = checkEmailValidity(arrEmail[count]);
@@ -143,7 +145,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 				},function(response){
 					if (response && !response.error) {
 						//check 'response' to see if call was successful
-						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
 						}, function(){});
 						}
 				});
@@ -267,6 +269,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 				modalService.showModal({}, {bodyText: "Success, Number of Friends Imported : "+checkcounter ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 				$scope.friends = [];
 				initialPopulate();
+                eventsCount.updateEventsCount();
 				}, function(){});
 			} 
 	}
@@ -323,6 +326,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 							modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 							$scope.friends = [];
 							initialPopulate();
+                            eventsCount.updateEventsCount();
 							}, function(){});
 					}else{
 						directImport_continue();

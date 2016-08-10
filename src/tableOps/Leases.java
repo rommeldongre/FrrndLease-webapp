@@ -17,9 +17,11 @@ import pojos.LeasesModel;
 import pojos.RenewLeaseReqObj;
 import adminOps.Response;
 import tableOps.LeaseTerms;
-import util.FlsSendMail;
 import util.LogItem;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 
 public class Leases extends Connect {
@@ -120,8 +122,8 @@ public class Leases extends Connect {
 	
 	private void CloseLease(){
 		int leaseAction = 0, itemAction = 0, storeAction = 0;
-		PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null;
-		ResultSet dbResponseLease =  null, dbResponseitems = null;
+		PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null, ps1 = null;
+		ResultSet dbResponseLease =  null, dbResponseitems = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
 		try {
 			hcp.setAutoCommit(false);
@@ -218,14 +220,29 @@ public class Leases extends Connect {
 			LogItem li = new LogItem();
 			li.addItemLog(Integer.parseInt(lm.getItemId()), "InStore", "", "");
 
+			// fetching the uid
+			String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
+			ps1 = hcp.prepareStatement(sqlUid);
+			ps1.setInt(1, Integer.parseInt(lm.getItemId()));
+			rs1 = ps1.executeQuery();
+			String uid = null;
+			String title = null;
+			if(rs1.next()){
+				uid = rs1.getString("item_uid");
+				title = rs1.getString("item_name");
+			}
+			
 			AwsSESEmail newE = new AwsSESEmail();
 			RenewLeaseReqObj rq = new RenewLeaseReqObj();
 			rq.setItemId(Integer.parseInt(lm.getItemId()));
 			rq.setFlag("close");
 			rq.setReqUserId(lm.getReqUserId());
 			rq.setUserId(lm.getUserId());
-			newE.send(lm.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, rq);
-			newE.send(lm.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, rq);
+			newE.send(lm.getUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
+			newE.send(lm.getReqUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
+			Event event = new Event();
+			event.createEvent(lm.getReqUserId(), lm.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, Integer.parseInt(lm.getItemId()), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lm.getReqUserId() + "</strong> on Friend Lease ");
+			event.createEvent(lm.getUserId(), lm.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, Integer.parseInt(lm.getItemId()), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
 				
 		} catch (SQLException e) {
 			LOGGER.info("SQL Exception encountered....");
@@ -236,6 +253,8 @@ public class Leases extends Connect {
 			e.printStackTrace();
 		}finally{
 			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
 				if(dbResponseLease != null)dbResponseLease.close();
 				if(dbResponseitems != null)dbResponseitems.close();
 				
@@ -317,8 +336,11 @@ public class Leases extends Connect {
 
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, lm);
-					newE.send(reqUserId, FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, lm);
+					newE.send(userId, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, lm);
+					newE.send(reqUserId, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, lm);
+					Event event = new Event();
+					event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, Integer.parseInt(itemId), "You have sucessfully leased an item to <a href=\"myapp.html#/myleasedoutitems\">" + reqUserId + "</a> on Friend Lease ");
+					event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, Integer.parseInt(itemId), "An item has been leased by <a href=\"myapp.html#/myleasedinitems\">" + userId + "</a> to you on Friend Lease ");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -470,8 +492,8 @@ public class Leases extends Connect {
 		status = lm.getStatus();
 
 		LOGGER.info("inside edit method");
-		PreparedStatement stmt = null,stmtrf = null ;
-		ResultSet rs = null;
+		PreparedStatement stmt = null,stmtrf = null, ps1 = null;
+		ResultSet rs = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
 		String sql = "UPDATE leases SET lease_status = ? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status=?"; //
 
@@ -529,11 +551,26 @@ public class Leases extends Connect {
 			Id = check;
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 
+			// fetching the uid
+			String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
+			ps1 = hcp.prepareStatement(sqlUid);
+			ps1.setInt(1, Integer.parseInt(itemId));
+			rs1 = ps1.executeQuery();
+			String uid = null;
+			String title = null;
+			if(rs1.next()){
+				uid = rs1.getString("item_uid");
+				title = rs1.getString("item_name");
+			}
+			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
 				userId = lm1.getUserId();
-				newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_FROM, lm1);
-				newE.send(reqUserId, FlsSendMail.Fls_Enum.FLS_MAIL_REJECT_LEASE_TO, lm);
+				newE.send(userId, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, lm1);
+				newE.send(reqUserId, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, lm);
+				Event event = new Event();
+				event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, Integer.parseInt(itemId), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + reqUserId + "</strong> on Friend Lease ");
+				event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, Integer.parseInt(itemId), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -543,6 +580,8 @@ public class Leases extends Connect {
 			e.printStackTrace();
 		}finally{
 			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
 				rs.close();
 				stmt.close();
 				stmtrf.close();

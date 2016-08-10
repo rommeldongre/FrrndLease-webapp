@@ -36,6 +36,7 @@ public class ItemsModel {
 			leaseValue = obj.getInt("leaseValue");
 			status = obj.getString("status");
 			image = obj.getString("image");
+			if(obj.has("uid")) uid = obj.getString("uid");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse row object of JSON");
 			e.printStackTrace();

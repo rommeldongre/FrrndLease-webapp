@@ -1,0 +1,313 @@
+package util;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import connect.Connect;
+import pojos.GetNotificationsListResObj;
+import pojos.GetNotificationsResObj;
+import pojos.GetUnreadEventsCountResObj;
+
+public class Event extends Connect{
+	
+	FlsLogger LOGGER = new FlsLogger(Event.class.getName());
+	
+	public enum Notification_Type {
+		FLS_MAIL_REGISTER,
+		FLS_MAIL_SIGNUP_VALIDATION,
+		FLS_MAIL_POST_ITEM,
+		FLS_MAIL_MATCH_WISHLIST_ITEM,
+		FLS_MAIL_MATCH_POST_ITEM,
+		FLS_MAIL_DELETE_ITEM,
+		FLS_MAIL_MAKE_REQUEST_FROM,
+		FLS_MAIL_MAKE_REQUEST_TO,
+		FLS_MAIL_GRANT_REQUEST_FROM,
+		FLS_MAIL_GRANT_REQUEST_TO,
+		FLS_MAIL_REJECT_REQUEST_FROM,
+		FLS_MAIL_REJECT_REQUEST_TO,
+		FLS_MAIL_DELETE_REQUEST_FROM,
+		FLS_MAIL_DELETE_REQUEST_TO,
+		FLS_MAIL_ADD_FRIEND_FROM,
+		FLS_MAIL_ADD_FRIEND_TO,
+		FLS_MAIL_DELETE_FRIEND_FROM,
+		FLS_MAIL_DELETE_FRIEND_TO,
+		FLS_MAIL_GRANT_LEASE_FROM,
+		FLS_MAIL_GRANT_LEASE_TO,
+		FLS_MAIL_REJECT_LEASE_FROM,
+		FLS_MAIL_REJECT_LEASE_TO,
+		FLS_MAIL_FORGOT_PASSWORD,
+		FLS_MAIL_GRACE_PERIOD_OWNER,
+		FLS_MAIL_GRACE_PERIOD_REQUESTOR,
+		FLS_MAIL_RENEW_LEASE_OWNER,
+		FLS_MAIL_RENEW_LEASE_REQUESTOR
+	}
+	
+	public enum Event_Type {
+		FLS_EVENT_NOT_NOTIFICATION,
+		FLS_EVENT_NOTIFICATION,
+		FLS_EVENT_CHAT
+	}
+	
+	public enum Read_Status {
+		FLS_READ,
+		FLS_UNREAD
+	}
+	
+	public enum Delivery_Status {
+		FLS_DELIVERED,
+		FLS_UNDELIVERED
+	}
+	
+	public enum Archived {
+		FLS_ACTIVE,
+		FLS_ARCHIVED
+	}
+	
+	public enum Icon_Type {
+		FLS_DEFAULT,
+		FLS_ITEM,
+		FLS_USER,
+		FLS_TIME,
+		FLS_POSITIVE,
+		FLS_NEGATIVE
+	}
+	
+	public void createEvent(String fromUserId, String toUserId, Event_Type eventType, Notification_Type notificationType, int itemId, String message){
+		
+		PreparedStatement ps = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			String sqlCreateEvent = "INSERT INTO events (from_user_id,to_user_id,event_type,notification_type,item_id,message) VALUES (?,?,?,?,?,?)";
+			ps = hcp.prepareStatement(sqlCreateEvent);
+			ps.setString(1, fromUserId);
+			ps.setString(2, toUserId);
+			ps.setString(3, eventType.name());
+			ps.setString(4, notificationType.name());
+			ps.setInt(5, itemId);
+			ps.setString(6, message);
+			ps.executeUpdate();
+			
+		}catch(SQLException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}catch(NullPointerException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}finally{
+			try {
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public int changeReadStatus(int eventId, Read_Status readStatus){
+		
+		PreparedStatement ps = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			hcp.setAutoCommit(false);
+			
+			String sqlChangeReadStatus = "UPDATE events SET read_status=? WHERE event_id=?";
+			ps = hcp.prepareStatement(sqlChangeReadStatus);
+			ps.setString(1, readStatus.name());
+			ps.setInt(2, eventId);
+			
+			int count = ps.executeUpdate();
+			
+			if(count == 1)
+				hcp.commit();
+			else
+				hcp.rollback();
+			
+			return count;
+			
+		}catch(SQLException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}catch(NullPointerException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}finally{
+			try {
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return 0;
+		
+	}
+	
+public int changeDeliveryStatus(int eventId, Delivery_Status deliveryStatus){
+		
+		PreparedStatement ps = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			hcp.setAutoCommit(false);
+			
+			String sqlChangeReadStatus = "UPDATE events SET delivery_status=? WHERE event_id=?";
+			ps = hcp.prepareStatement(sqlChangeReadStatus);
+			ps.setString(1, deliveryStatus.name());
+			ps.setInt(2, eventId);
+			
+			int count = ps.executeUpdate();
+			
+			if(count == 1)
+				hcp.commit();
+			else
+				hcp.rollback();
+			
+			return count;
+			
+		}catch(SQLException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}catch(NullPointerException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}finally{
+			try {
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return 0;
+		
+	}
+
+public GetNotificationsListResObj getNotifications(String userId, int limit, int offset) {
+	
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	Connection hcp = getConnectionFromPool();
+	
+	GetNotificationsListResObj response = new GetNotificationsListResObj();
+	
+	try{
+		String sqlGetNotifications = "SELECT tb1.*, tb2.user_profile_picture, tb2.user_full_name, tb3.item_uid FROM events tb1 LEFT JOIN users tb2 ON tb1.from_user_id=tb2.user_id LEFT JOIN items tb3 ON tb1.item_id=tb3.item_id WHERE to_user_id=? AND event_type IN (?,?) ORDER BY event_id DESC LIMIT ?,?";
+		ps = hcp.prepareStatement(sqlGetNotifications);
+		ps.setString(1, userId);
+		ps.setString(2, Event_Type.FLS_EVENT_NOTIFICATION.name());
+		ps.setString(3, Event_Type.FLS_EVENT_CHAT.name());
+		ps.setInt(4, offset);
+		ps.setInt(5, limit);
+		
+		rs = ps.executeQuery();
+		
+		if(rs.isBeforeFirst()){
+			while(rs.next()){
+				GetNotificationsResObj res = new GetNotificationsResObj();
+				res.setEventId(rs.getInt("event_id"));
+				res.setDatetime(rs.getString("datetime"));
+				res.setFromUserId(rs.getString("from_user_id"));
+				res.setToUserId(rs.getString("to_user_id"));
+				res.setProfilePic(rs.getString("user_profile_picture"));
+				res.setUid(rs.getString("item_uid"));
+				res.setFullName(rs.getString("user_full_name"));
+				res.setReadStatus(rs.getString("read_status"));
+				res.setItemId(rs.getInt("item_id"));
+				res.setNotificationMsg(rs.getString("message"));
+				res.setNotificationType(rs.getString("notification_type"));
+				response.addResList(res);
+				offset = offset + 1;
+			}
+			response.setOffset(offset);
+			response.setCode(FLS_SUCCESS);
+			response.setMessage(FLS_SUCCESS_M);
+		} else {
+			response.setCode(FLS_END_OF_DB);
+			response.setMessage(FLS_END_OF_DB_M);
+			LOGGER.warning(FLS_END_OF_DB_M);
+		}
+		
+	}catch(SQLException e){
+		response.setCode(FLS_SQL_EXCEPTION);
+		response.setMessage(FLS_SQL_EXCEPTION_M);
+		LOGGER.warning(e.getMessage());
+		e.printStackTrace();
+	}catch(NullPointerException e){
+		response.setCode(FLS_NULL_POINT);
+		response.setMessage(FLS_NULL_POINT_M);
+		LOGGER.warning(e.getMessage());
+		e.printStackTrace();
+	}finally{
+		try {
+			if(rs != null)rs.close();
+			if(ps != null)ps.close();
+			if(hcp != null)hcp.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	return response;
+}
+
+public GetUnreadEventsCountResObj getUnreadEventsCount(String userId) {
+	
+	GetUnreadEventsCountResObj response = new GetUnreadEventsCountResObj();
+	
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	Connection hcp = getConnectionFromPool();
+	
+	try{
+		String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=?";
+		ps = hcp.prepareStatement(sqlGetUnreadEventsCount);
+		ps.setString(1, userId);
+		ps.setString(2, Read_Status.FLS_UNREAD.name());
+		
+		rs = ps.executeQuery();
+		
+		if(rs.next()){
+			response.setUnreadCount((int)rs.getLong(1));
+			response.setCode(FLS_SUCCESS);
+			response.setMessage(FLS_SUCCESS_M);
+		}else{
+			response.setCode(FLS_END_OF_DB);
+			response.setMessage(FLS_END_OF_DB_M);
+		}
+	}catch(SQLException e){
+		response.setCode(FLS_SQL_EXCEPTION);
+		response.setMessage(FLS_SQL_EXCEPTION_M);
+		e.printStackTrace();
+	}catch(NullPointerException e){
+		response.setCode(FLS_NULL_POINT);
+		response.setMessage(FLS_NULL_POINT_M);
+		e.printStackTrace();
+	}finally{
+		try {
+			if(rs != null)rs.close();
+			if(ps != null)ps.close();
+			if(hcp != null)hcp.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	return response;
+}
+
+}

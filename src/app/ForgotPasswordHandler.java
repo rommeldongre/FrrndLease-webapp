@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import adminOps.Response;
 import connect.Connect;
 import pojos.ForgotPasswordReqObj;
 import pojos.ForgotPasswordResObj;
@@ -13,14 +12,14 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import pojos.UsersModel;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsLogger;
-import util.FlsSendMail;
 
 public class ForgotPasswordHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(ForgotPasswordHandler.class.getName());
-
-	private Response res = new Response();
 
 	private static ForgotPasswordHandler instance = null;
 
@@ -74,7 +73,9 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 							AwsSESEmail newE = new AwsSESEmail();
 							UsersModel um = new UsersModel();
 							um.setActivation(activation);
-							newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION, um);
+							newE.send(userId, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
+							Event event = new Event();
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -85,7 +86,9 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 					case "email_activated":
 						try{
 							AwsSESEmail newE = new AwsSESEmail();
-							newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_FORGOT_PASSWORD, activation);
+							newE.send(userId, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, activation);
+							Event event = new Event();
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "A link has been sent to your registered email account for reseting the password.");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

@@ -9,6 +9,8 @@ import java.util.List;
 
 import connect.Connect;
 import pojos.PostItemReqObj;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 
 public class MatchItems extends Connect {
 
@@ -17,10 +19,15 @@ public class MatchItems extends Connect {
 	PostItemReqObj itemObj;
 
 	int wishedItemId;
+	
+	String uid = null;
+	int itemId = 0;
 
 	// being called from post items handler
-	public MatchItems(PostItemReqObj rq) {
+	public MatchItems(PostItemReqObj rq, String uid, int itemId) {
 		this.itemObj = (PostItemReqObj) rq;
+		this.uid = uid;
+		this.itemId = itemId;
 	}
 
 	// being called when item is added to the wish list
@@ -38,7 +45,7 @@ public class MatchItems extends Connect {
 		
 		String longestWord = getLongestString(userItemTitle);
 
-		String sqlGetWishlistNames = "SELECT item_user_id FROM items WHERE item_name LIKE ? AND item_status='Wished' AND item_user_id<>? LIMIT 3";
+		String sqlGetWishlistNames = "SELECT item_user_id,item_name FROM items WHERE item_name LIKE ? AND item_status='Wished' AND item_user_id<>? LIMIT 3";
 		
 		PreparedStatement ps1 = null;
 		ResultSet rs1 = null;
@@ -54,7 +61,9 @@ public class MatchItems extends Connect {
 			while (rs1.next()) {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
+					newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
+					Event event = new Event();
+					event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM, itemId, "An item posted to the frrndlease <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + itemObj.getTitle() + "</a> match your wished item <strong>'" + rs1.getString("item_name") + "'</strong>");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -83,6 +92,8 @@ public class MatchItems extends Connect {
 		String sqlGetPostedItemObjs = "SELECT * FROM items WHERE item_name LIKE ? AND item_status='InStore' AND item_user_id<>? LIMIT 3";
 
 		List<PostItemReqObj> listItems = new ArrayList<>();
+		
+		String itemLinks = "";
 		
 		PreparedStatement ps1 = null, ps2 = null;
 		ResultSet rs1 = null, rs2 = null;
@@ -116,6 +127,8 @@ public class MatchItems extends Connect {
 					item.setLeaseTerm(rs2.getString("item_lease_term"));
 					item.setStatus(rs2.getString("item_status"));
 					item.setImage(rs2.getString("item_image"));
+					
+					itemLinks = itemLinks + " <u><a href=\"/flsv2/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a></u>";
 
 					listItems.add(item);
 				}
@@ -123,7 +136,9 @@ public class MatchItems extends Connect {
 				if(!listItems.isEmpty()){
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(rs1.getString("item_user_id"), FlsSendMail.Fls_Enum.FLS_MAIL_MATCH_POST_ITEM, listItems);
+						newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_POST_ITEM, listItems);
+						Event event = new Event();
+						event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_POST_ITEM, 0, "Some items in the store" + itemLinks + " match your wished item <strong>'" + rs1.getString("item_name") + "'</strong>");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -134,16 +149,16 @@ public class MatchItems extends Connect {
 			e.printStackTrace();
 			LOGGER.warning(e.getMessage());
 		}finally{
-			if(rs1!=null)
-				try {
-					if(rs1!=null) rs1.close();
-					if(rs2!=null) rs2.close();
-					if(ps1!=null) ps1.close();
-					if(ps2!=null) ps2.close();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			try {
+				if(rs1!=null) rs1.close();
+				if(rs2!=null) rs2.close();
+				if(ps1!=null) ps1.close();
+				if(ps2!=null) ps2.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -159,23 +174,4 @@ public class MatchItems extends Connect {
 	      return longestString;
 	  }
 
-	private boolean compareTitles(String title1[], String title2[]) {
-
-		// getting the array length of both the titles.
-		int len1 = title1.length;
-		int len2 = title2.length;
-
-		if (len1 > 3)
-			len1 = 3;
-		if (len2 > 3)
-			len2 = 3;
-
-		for (int i = 0; i < len1; i++) {
-			for (int j = 0; j < len2; j++) {
-				if (title1[i].equals(title2[j]))
-					return true;
-			}
-		}
-		return false;
-	}
 }

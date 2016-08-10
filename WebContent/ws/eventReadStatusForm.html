@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Event Read Status Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var EventId = null;
+    var UserId = null;
+    var ReadStatus = null;
+	var AccessToken = null;
+	
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+        document.getElementById("userId").value = localStorage.getItem("userloggedin");
+    }
+    
+	getData = function (){
+		EventId = document.getElementById("eventId").value;
+        if(EventId == null)
+            EventId = 0;
+        ReadStatus = document.getElementById("readStatus").value;
+        if(ReadStatus == null)
+            ReadStatus = "FLS_READ";
+        UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+        
+        AccessToken = document.getElementById("accessToken").value;
+        
+        req = {
+            eventId: EventId,
+            readStatus: ReadStatus,
+            userId: UserId,
+            accessToken: AccessToken
+        };
+        
+        eventReadStatus(req);
+	};
+		
+	eventReadStatus = function(req) {
+		$.ajax({
+			url: '/flsv2/EventReadStatus',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				console.log(response);
+                if(response.code == 0){
+                    document.getElementById("code").value = response.code;
+                    document.getElementById("message").value = response.message;
+                }
+                else{
+                    document.getElementById("code").value = response.code;
+                    document.getElementById("message").value = response.message;
+                }
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body onload="start()">
+<h1> Event Read Status Form</h1>
+	<form>
+		Event Id : <input type="text" name="eventId" id="eventId" ><br/><br/>
+        User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Read Status : <input type="text" name="readStatus" id="readStatus" ><br/><br/>
+        Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
+		<input type="button" value="Set Status" onclick="getData()">
+    </form>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+    
+        <div id="output">
+		
+		</div>
+    
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

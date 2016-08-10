@@ -11,8 +11,10 @@ import org.json.JSONObject;
 import adminOps.Response;
 import connect.Connect;
 import pojos.UsersModel;
-import util.FlsSendMail;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 import util.LogCredit;
 import util.OAuth;
@@ -220,10 +222,16 @@ public class Users extends Connect {
 			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
-				if (status.equals("email_pending"))
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_SIGNUP_VALIDATION, um);
-				else
-					newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_REGISTER, um);
+				if (status.equals("email_pending")){
+					newE.send(userId, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
+					Event event = new Event();
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
+				}
+				else{
+					newE.send(userId, Notification_Type.FLS_MAIL_REGISTER, um);
+					Event event = new Event();
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to frrndlease.");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

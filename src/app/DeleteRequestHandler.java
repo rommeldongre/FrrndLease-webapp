@@ -16,9 +16,11 @@ import org.json.JSONObject;
 
 import pojos.ReqObj;
 import pojos.ResObj;
-import util.FlsSendMail;
 import util.OAuth;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 
 public class DeleteRequestHandler extends Connect implements AppHandler {
@@ -105,6 +107,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
 							obj1.put("status", "InStore");
 							obj1.put("image", dbResponse.getString("item_image"));
+							obj1.put("uid", dbResponse.getString("item_uid"));
 
 							im.getData(obj1);
 							LOGGER.info("Json parsed for FLS_MAIL_REJECT_REQUEST_TO");
@@ -132,8 +135,11 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				try {
 					AwsSESEmail newE = new AwsSESEmail();
 					// ownerId= im.getUserId();
-					newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_REQUEST_FROM, im);
-					newE.send(im.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_DELETE_REQUEST_TO, im);
+					newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im);
+					newE.send(im.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im);
+					Event event = new Event();
+					event.createEvent(im.getUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im.getId(), "Your Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed. ");
+					event.createEvent(rq.getUserId(), im.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im.getId(), "Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the Requestor. ");
 					rs.setMessage(FLS_SUCCESS_M);
 					rs.setCode(FLS_SUCCESS);
 				} catch (Exception e) {
