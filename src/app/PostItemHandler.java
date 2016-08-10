@@ -48,6 +48,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 		PostItemReqObj rq = (PostItemReqObj) req;
 		PostItemResObj rs = new PostItemResObj();
 		Connection hcp = getConnectionFromPool();
+		
+		String uid = null;
+		int itemId = 0;
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getId());
 		
@@ -102,8 +105,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 				lng = r1.getFloat("user_lng");
 			}
 			
-			r1.close();
-			s1.close();
+			if(r1 != null)r1.close();
+			if(s1 != null)s1.close();
 			
 			LOGGER.info("Creating statement.....");
 			PreparedStatement stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -125,9 +128,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 			// getting the last item inserted id and appending it with the title to generate a uid
 			ResultSet keys = stmt.getGeneratedKeys();
 			keys.next();
-			int itemId = keys.getInt(1);
+			itemId = keys.getInt(1);
 			
-			String uid= null;
 			uid = rq.getTitle()+ " " + itemId;
 			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
 			
@@ -172,7 +174,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 					AwsSESEmail newE = new AwsSESEmail();
 					newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, rq);
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, rq.getId(), "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -192,10 +194,12 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs.setCode(0);
 			rs.setUid(uid);
 			rs.setMessage(message);
-			stmt.close();
-			stmt1.close();
-			psCredit.close();
-			s.close();
+			if(keys != null)keys.close();
+			if(resultset != null)resultset.close();
+			if(stmt != null)stmt.close();
+			if(stmt1 != null)stmt1.close();
+			if(psCredit != null)psCredit.close();
+			if(s != null)s.close();
 		} catch (SQLException e) {
 			LOGGER.warning("Couldnt create a statement");
 			if (e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG
@@ -222,7 +226,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 		
 		try{
 			// checking the wish list if this posted item matches someone's requirements
-			MatchItems matchItems = new MatchItems(rq);
+			MatchItems matchItems = new MatchItems(rq, uid, itemId);
 			matchItems.checkWishlist();
 		}catch(Exception e){
 			LOGGER.warning(e.getMessage());

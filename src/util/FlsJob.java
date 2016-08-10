@@ -12,6 +12,7 @@ import app.GetLeasesByXHandler;
 import app.GrantLeaseHandler;
 import app.RenewLeaseHandler;
 import util.AwsSESEmail;
+import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import connect.Connect;
 
@@ -134,8 +135,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
   	    
   	    Connection hcp = getConnectionFromPool();
 		
-  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null,psStoreUpdate=null,psAddCredit=null,psDebitCredit=null;
-  	    ResultSet dbResponseitems=null;
+  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null,psStoreUpdate=null,psAddCredit=null,psDebitCredit=null, ps1 = null;
+  	    ResultSet dbResponseitems=null, rs1 = null;
 		SimpleDateFormat sdfCal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		GrantLeaseHandler GLH = new GrantLeaseHandler();
 		RenewLeaseHandler RLH = new RenewLeaseHandler();
@@ -143,6 +144,19 @@ public class FlsJob extends Connect implements org.quartz.Job {
 		LogItem li = new LogItem();
   	    
     	try {
+    		
+    		// fetching the uid
+			String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
+			ps1 = hcp.prepareStatement(sqlUid);
+			ps1.setInt(1, lease_item_id);
+			rs1 = ps1.executeQuery();
+			String uid = null;
+			String title = null;
+			if(rs1.next()){
+				uid = rs1.getString("item_uid");
+				title = rs1.getString("item_name");
+			}
+			
     		hcp.setAutoCommit(false);
 			LOGGER.info("Grace Condition is false ...");
 		    if(user_credit >=10){
@@ -220,6 +234,9 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rq.setUserId(lease_user_id);
 				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
 				newE.send(lease_user_id, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq);
+				Event event = new Event();
+				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, lease_item_id, "Lease has been renewed by the owner of item having item id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a>");
+				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, lease_item_id, "Lease has been renewed for item having id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
 					
 			}else{
 				
@@ -291,6 +308,9 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rq.setUserId(lease_user_id);
 				newE.send(lease_user_id, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
 				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
+				Event event = new Event();
+				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease ");
+				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
 			}
 		    
 			hcp.commit();
@@ -303,6 +323,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
   		}finally {
   			try {
   				
+  				if(rs1 != null)rs1.close();
+  				if(ps1 != null)ps1.close();
   				if(dbResponseitems != null)dbResponseitems.close();
   				
   				if(psRenewUpdate != null)psRenewUpdate.close();
@@ -326,7 +348,22 @@ public class FlsJob extends Connect implements org.quartz.Job {
 
 	private void sendGraceMail(String lease_requser_id, String lease_user_id,int lease_item_id) {
 		LOGGER.info("Inside check block for 7 day period");
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
 		try {
+			// fetching the uid
+			String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
+			ps1 = hcp.prepareStatement(sqlUid);
+			ps1.setInt(1, lease_item_id);
+			rs1 = ps1.executeQuery();
+			String uid = null;
+			String title = null;
+			if(rs1.next()){
+				uid = rs1.getString("item_uid");
+				title = rs1.getString("item_name");
+			}
+			
 			AwsSESEmail newE = new AwsSESEmail();
 			LOGGER.info("Inside Block to send Grace Period Notification");
 			RenewLeaseReqObj rlrq = new RenewLeaseReqObj();
@@ -338,8 +375,20 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				newE.send(lease_user_id, Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, rlrq);
 				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_GRACE_PERIOD_REQUESTOR, rlrq);
 				
+				Event event = new Event();
+				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, lease_item_id, "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
+				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRACE_PERIOD_REQUESTOR, lease_item_id, "Less than 5 days left for lease to close. Please consider renewing the lease of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+				
 		} catch (Exception e) {
 				e.printStackTrace();
+		}finally{
+			try {
+  				if(rs1 != null)rs1.close();
+  				if(ps1 != null)ps1.close();
+  				if(hcp != null)hcp.close();
+  			}catch (Exception e1){
+  				e1.printStackTrace();
+			}
 		}
 	}
       

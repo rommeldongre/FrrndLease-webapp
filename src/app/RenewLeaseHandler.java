@@ -133,7 +133,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
 				newE.send(rq.getReqUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
 				Event event = new Event();
-				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee " + rq.getReqUserId() + " on Friend Lease ");
+				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + rq.getReqUserId() + "</strong> on Friend Lease ");
 				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
 					
 			} catch (SQLException e) {
@@ -316,7 +316,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq);
 					Event event = new Event();
 					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq.getItemId(), "Lease has been renewed by the owner of item having item id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a>");
-					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq.getItemId(), "Lease has been renewed for item having id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee " + rq.getReqUserId() + " on Friend Lease");
+					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq.getItemId(), "Lease has been renewed for item having id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + rq.getReqUserId() + "</strong> on Friend Lease");
 				} catch (Exception e) {
 					// TODO: handle exception
 					 e.printStackTrace();

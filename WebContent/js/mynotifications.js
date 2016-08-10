@@ -3,6 +3,7 @@ var myNotifications = angular.module('myApp');
 myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', function($scope, userFactory){
     
     var offset = 0;
+    var Limit = 5;
     
     var initialPopulate = function(){
         offset = 0;
@@ -18,7 +19,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', func
         
         req = {
             userId: userFactory.user,
-            limit: 5,
+            limit: Limit,
             offset: offset
         }
         
@@ -39,7 +40,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', func
                     console.log(response.resList);
                     $scope.$apply(function(){
                         $scope.events.push.apply($scope.events, response.resList);
-                        if(response.resList < 5)
+                        if(response.resList.length < Limit)
                             $scope.loadMore = false;
                     });
                     offset = response.offset;

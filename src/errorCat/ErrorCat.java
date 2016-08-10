@@ -63,7 +63,7 @@ public class ErrorCat {
 	final public String FLS_GRANT_LEASE_N_M = "Lease could not be granted.";
 	final public String FLS_LOGIN_USER_F = "Invalid password or username.";
 	final public String FLS_POST_ITEM_F_M = "Post item could not be performed";
-	final public String FLS_WISH_ITEM_F_M = "Wishitem could not be performed";
+	final public String FLS_WISH_ITEM_F_M = "This wish already exists!!";
 	final public String FLS_INVALID_TABLE_NAME_M = "Request contains invalid table name";
 	final public String FLS_SEARCH_ITEM_F_M = "No data found.";
 	final public String FLS_INVALID_USER_M = "Request Rejected as User ID Proof not submitted";
