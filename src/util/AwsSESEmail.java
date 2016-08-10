@@ -67,7 +67,7 @@ import pojos.RenewLeaseReqObj;
 import pojos.RequestsModel;
 import pojos.UsersModel;
 import tableOps.Wishlist;
-import util.FlsSendMail.Fls_Enum;
+import util.Event.Notification_Type;
 import util.FlsConfig;
 
 import com.amazonaws.AmazonClientException;
@@ -115,7 +115,7 @@ public class AwsSESEmail extends Connect {
 	 * WANRNING: To avoid accidental leakage of your credentials, DO NOT keep
 	 * the credentials file in your source directory.
 	 */
-	public void send(String userId, Fls_Enum fls_enum, Object obj, String... apiflag) throws IOException {
+	public void send(String userId, Notification_Type fls_enum, Object obj, String... apiflag) throws IOException {
 
 		// Fls_Enum = fls_enum;
 		user_id = userId;
@@ -442,14 +442,15 @@ public class AwsSESEmail extends Connect {
 				int len = imageFiles.size();
 				for (int j = 0; j < len; j++) {
 					// Image part if the message has an image
-					MimeBodyPart imagePart = new MimeBodyPart();
-					LOGGER.warning("Sending Image!!");
-					imagePart.attachFile(imageFiles.get(j));
-					imagePart.setContentID("<image" + Integer.toString(j) + ">");
-					imagePart.setDisposition(MimeBodyPart.INLINE);
-					multipart.addBodyPart(imagePart);
-					imageFile = null;
-
+					if(imageFiles.get(j) != null){
+						MimeBodyPart imagePart = new MimeBodyPart();
+						LOGGER.warning("Sending Image!!");
+						imagePart.attachFile(imageFiles.get(j));
+						imagePart.setContentID("<image" + Integer.toString(j) + ">");
+						imagePart.setDisposition(MimeBodyPart.INLINE);
+						multipart.addBodyPart(imagePart);
+						imageFile = null;
+					}
 				}
 			}
             

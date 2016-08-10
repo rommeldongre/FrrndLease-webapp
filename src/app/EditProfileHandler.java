@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import adminOps.Response;
 import connect.Connect;
 import pojos.EditProfileReqObj;
 import pojos.EditProfileResObj;
@@ -16,8 +15,6 @@ import util.OAuth;
 public class EditProfileHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(EditProfileHandler.class.getName());
-
-	private Response res = new Response();
 
 	private static EditProfileHandler instance = null;
 
@@ -96,7 +93,8 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			}
 
 		} catch (SQLException e) {
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+			rs.setCode(FLS_SQL_EXCEPTION);
+			rs.setMessage(FLS_SQL_EXCEPTION_M);
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		} catch (NullPointerException e) {

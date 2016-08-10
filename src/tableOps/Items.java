@@ -15,9 +15,11 @@ import connect.Connect;
 import adminOps.Response;
 import tableOps.Store;
 import pojos.ItemsModel;
-import util.FlsSendMail;
 import util.LogItem;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsLogger;
 
 public class Items extends Connect {
@@ -204,7 +206,9 @@ public class Items extends Connect {
 				if (!FLS_WISHLIST_ADD.equals(status_W)) {
 					try {
 						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(userId, FlsSendMail.Fls_Enum.FLS_MAIL_POST_ITEM, im);
+						newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, im);
+						Event event = new Event();
+						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> has been added to the Friend Store");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

@@ -13,8 +13,10 @@ import pojos.GrantLeaseResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.AwsSESEmail;
+import util.Event;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsLogger;
-import util.FlsSendMail;
 import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
@@ -290,8 +292,11 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			try {
 				AwsSESEmail newE = new AwsSESEmail();
-			    newE.send(rq.getUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_FROM, rq);
-				newE.send(rq.getReqUserId(), FlsSendMail.Fls_Enum.FLS_MAIL_GRANT_LEASE_TO, rq);
+			    newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq);
+				newE.send(rq.getReqUserId(), Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq);
+				Event event = new Event();
+				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq.getItemId(), "You have sucessfully leased an item to <a href=\"myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
+				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq.getItemId(), "An item has been leased by <a href=\"myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}						

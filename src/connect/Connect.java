@@ -2,7 +2,9 @@ package connect;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import org.h2.jdbcx.JdbcDataSource;
+
 import javax.sql.DataSource;
 
 import java.sql.Connection;
@@ -15,7 +17,6 @@ public class Connect extends ErrorCat {
 
 	protected static Connection connection = null;
 	protected static HikariDataSource HikariDS = null;
-
 
 	//Cannot use LOGGER class because it is being used on startup 
 	//private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
@@ -92,4 +93,5 @@ public class Connect extends ErrorCat {
     	}
     	return HikariDS;
     }
+    
 }

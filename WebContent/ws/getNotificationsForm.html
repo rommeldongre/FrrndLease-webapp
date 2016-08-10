@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Get Notifications Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var Offset = 0;
+    var Limit = 1;
+	var UserId = "";
+	
+	getData = function (){
+		Offset = document.getElementById("offset").value;
+        if(Offset == null)
+            Offset = 0;
+        Limit = document.getElementById("limit").value;
+        if(Limit == null)
+            Limit = 1;
+        UserId = document.getElementById("userId").value;
+        if(UserId == null)
+            UserId = "";
+        
+        req = {
+            userId: UserId,
+            limit: Limit,
+            offset: Offset
+        };
+        
+        getNotifications(req);
+	};
+		
+	getNotifications = function(req) {
+		$.ajax({
+			url: '/flsv2/GetNotifications',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				console.log(response);
+                if(response.code == 0){
+                    document.getElementById("code").value = response.code;
+                    document.getElementById("message").value = response.message;
+                    document.getElementById("cookie").value = response.offset;
+                    var div = document.getElementById("output");
+				    div.innerHTML = JSON.stringify(response.resList);
+                }
+                else{
+                    document.getElementById("code").value = response.code;
+                    document.getElementById("message").value = response.message;
+                    document.getElementById("cookie").value = "";
+                }
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> Get Notifications Form</h1>
+	<form>
+		User Id : <input type="text" name="userId" id="userId" ><br/><br/>
+		Limit : <input type="text" name="limit" id="limit" ><br/><br/>
+		Offset : <input type="text" name="offset" id="offset" ><br/><br/>
+		<input type="button" value="Get Notifications" onclick="getData()">
+    </form>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+        Cookie : <input type="text" name="cookie" id="cookie"><br/><br/>
+    
+        <div id="output">
+		
+		</div>
+    
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
