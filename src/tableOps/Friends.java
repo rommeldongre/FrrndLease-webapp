@@ -146,8 +146,8 @@ public class Friends extends Connect {
 				
 				if (friendId.contains("@fb") || friendId.contains("@google")){
 //					newE.send(userId, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
-					Event event = new Event();
-					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.", fm, source);
+//					Event event = new Event();
+//					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.", fm, source);
 				}
 
 			} else {

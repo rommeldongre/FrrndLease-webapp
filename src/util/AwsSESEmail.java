@@ -497,7 +497,6 @@ public class AwsSESEmail extends Connect {
 				// Send the email.
 				client.sendRawEmail(request);
 				LOGGER.warning("====> Email sent!");
-				System.out.println("====> Email sent!");
 			} catch (Throwable e) {
 				// Catching throwable instead of Exception so that we also catch
 				// Errors. Not
