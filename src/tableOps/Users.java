@@ -221,16 +221,16 @@ public class Users extends Connect {
 			stmt3.executeUpdate();
 			
 			try {
-				AwsSESEmail newE = new AwsSESEmail();
+//				AwsSESEmail newE = new AwsSESEmail();
 				if (status.equals("email_pending")){
-					newE.send(userId, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
+//					newE.send(userId, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.", um);
 				}
 				else{
-					newE.send(userId, Notification_Type.FLS_MAIL_REGISTER, um);
+//					newE.send(userId, Notification_Type.FLS_MAIL_REGISTER, um);
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to frrndlease.");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to frrndlease.", um);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

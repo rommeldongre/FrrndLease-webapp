@@ -60,10 +60,10 @@ public class MatchItems extends Connect {
 
 			while (rs1.next()) {
 				try {
-					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
+//					AwsSESEmail newE = new AwsSESEmail();
+//					newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM,itemObj);
 					Event event = new Event();
-					event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM, itemId, "An item posted to the frrndlease <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + itemObj.getTitle() + "</a> match your wished item <strong>'" + rs1.getString("item_name") + "'</strong>");
+					event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_WISHLIST_ITEM, itemId, "An item posted to the frrndlease <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + itemObj.getTitle() + "</a> match your wished item <strong>'" + rs1.getString("item_name") + "'</strong>", itemObj);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -135,10 +135,10 @@ public class MatchItems extends Connect {
 
 				if(!listItems.isEmpty()){
 					try {
-						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_POST_ITEM, listItems);
+//						AwsSESEmail newE = new AwsSESEmail();
+//						newE.send(rs1.getString("item_user_id"), Notification_Type.FLS_MAIL_MATCH_POST_ITEM, listItems);
 						Event event = new Event();
-						event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_POST_ITEM, 0, "Some items in the store" + itemLinks + " match your wished item <strong>'" + rs1.getString("item_name") + "'</strong>");
+						event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_POST_ITEM, 0, "Some items in the store" + itemLinks + " match your wished item <strong>'" + rs1.getString("item_name") + "'</strong>", listItems);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

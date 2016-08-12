@@ -1,16 +1,18 @@
 package util;
 
-import javax.servlet.ServletContextListener;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
+
 import javax.servlet.ServletContextEvent;
-import org.quartz.*;
+import javax.servlet.ServletContextListener;
+
+import org.quartz.CronScheduleBuilder;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
-import static org.quartz.JobBuilder.*;
-import static org.quartz.TriggerBuilder.*;
-import static org.quartz.SimpleScheduleBuilder.*;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
 
 public class FlsServletContextListener implements ServletContextListener {
 
@@ -67,9 +69,16 @@ public class FlsServletContextListener implements ServletContextListener {
 	      						    .withSchedule(CronScheduleBuilder.cronSchedule("0 0 1 * * ?"))
 	      						    .build();
 	  		
-	  		
-	  		// Tell quartz to schedule the job using our trigger
+	      	// Tell quartz to schedule the job using our trigger
 	  		scheduler.scheduleJob(job, trigger);
+	      	
+	      	// FlsEmailJob key
+	      	JobKey jobKey = JobKey.jobKey("FlsEmailJob", "FlsEmailGroup");
+	      	// FlsEmailJob declaration
+	      	JobDetail emailJob = newJob(FlsEmailJob.class).withIdentity(jobKey).storeDurably().build();
+	      	// adding the job to the scheduler without any trigger
+	  		scheduler.addJob(emailJob, true);
+	  		
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

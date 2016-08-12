@@ -13,7 +13,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2017;			
+	public final int appBuild = 2018;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -667,6 +667,34 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2017;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds user_notification column in users table
+				if(dbBuild < 2018){
+					
+					String sqlUserNotification = "ALTER TABLE `users` ADD `user_notification` ENUM('EMAIL','SMS','BOTH','NONE') NOT NULL DEFAULT 'BOTH' AFTER `user_live_status`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlUserNotification);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2018;
 					updateDBBuild(dbBuild);
 					
 				}

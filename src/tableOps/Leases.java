@@ -232,17 +232,17 @@ public class Leases extends Connect {
 				title = rs1.getString("item_name");
 			}
 			
-			AwsSESEmail newE = new AwsSESEmail();
+//			AwsSESEmail newE = new AwsSESEmail();
 			RenewLeaseReqObj rq = new RenewLeaseReqObj();
 			rq.setItemId(Integer.parseInt(lm.getItemId()));
 			rq.setFlag("close");
 			rq.setReqUserId(lm.getReqUserId());
 			rq.setUserId(lm.getUserId());
-			newE.send(lm.getUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
-			newE.send(lm.getReqUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
+//			newE.send(lm.getUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
+//			newE.send(lm.getReqUserId(), Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
 			Event event = new Event();
-			event.createEvent(lm.getReqUserId(), lm.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, Integer.parseInt(lm.getItemId()), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lm.getReqUserId() + "</strong> on Friend Lease ");
-			event.createEvent(lm.getUserId(), lm.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, Integer.parseInt(lm.getItemId()), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+			event.createEvent(lm.getReqUserId(), lm.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, Integer.parseInt(lm.getItemId()), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lm.getReqUserId() + "</strong> on Friend Lease ", rq);
+			event.createEvent(lm.getUserId(), lm.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, Integer.parseInt(lm.getItemId()), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ", rq);
 				
 		} catch (SQLException e) {
 			LOGGER.info("SQL Exception encountered....");
@@ -335,12 +335,12 @@ public class Leases extends Connect {
 				s3.executeUpdate();
 
 				try {
-					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, lm);
-					newE.send(reqUserId, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, lm);
+//					AwsSESEmail newE = new AwsSESEmail();
+//					newE.send(userId, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, lm);
+//					newE.send(reqUserId, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, lm);
 					Event event = new Event();
-					event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, Integer.parseInt(itemId), "You have sucessfully leased an item to <a href=\"myapp.html#/myleasedoutitems\">" + reqUserId + "</a> on Friend Lease ");
-					event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, Integer.parseInt(itemId), "An item has been leased by <a href=\"myapp.html#/myleasedinitems\">" + userId + "</a> to you on Friend Lease ");
+					event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, Integer.parseInt(itemId), "You have sucessfully leased an item to <a href=\"myapp.html#/myleasedoutitems\">" + reqUserId + "</a> on Friend Lease ", lm);
+					event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, Integer.parseInt(itemId), "An item has been leased by <a href=\"myapp.html#/myleasedinitems\">" + userId + "</a> to you on Friend Lease ", lm);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -564,13 +564,13 @@ public class Leases extends Connect {
 			}
 			
 			try {
-				AwsSESEmail newE = new AwsSESEmail();
+//				AwsSESEmail newE = new AwsSESEmail();
 				userId = lm1.getUserId();
-				newE.send(userId, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, lm1);
-				newE.send(reqUserId, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, lm);
+//				newE.send(userId, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, lm1);
+//				newE.send(reqUserId, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, lm);
 				Event event = new Event();
-				event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, Integer.parseInt(itemId), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + reqUserId + "</strong> on Friend Lease ");
-				event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, Integer.parseInt(itemId), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+				event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, Integer.parseInt(itemId), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + reqUserId + "</strong> on Friend Lease ", lm1);
+				event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, Integer.parseInt(itemId), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ", lm);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

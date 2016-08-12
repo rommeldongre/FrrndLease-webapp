@@ -171,10 +171,10 @@ public class PostItemHandler extends Connect implements AppHandler {
 												// is from WishItem API.
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try {
-					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, rq);
+//					AwsSESEmail newE = new AwsSESEmail();
+//					newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, rq);
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store", rq);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

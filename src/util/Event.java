@@ -5,6 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
+
 import connect.Connect;
 import pojos.GetNotificationsListResObj;
 import pojos.GetNotificationsResObj;
@@ -74,7 +81,14 @@ public class Event extends Connect{
 		FLS_NEGATIVE
 	}
 	
-	public void createEvent(String fromUserId, String toUserId, Event_Type eventType, Notification_Type notificationType, int itemId, String message){
+	public enum User_Notification {
+		EMAIL,
+		SMS,
+		BOTH,
+		NONE
+	}
+	
+	public void createEvent(String fromUserId, String toUserId, Event_Type eventType, Notification_Type notificationType, int itemId, String message, Object obj, String... apiflag){
 		
 		PreparedStatement ps = null;
 		Connection hcp = getConnectionFromPool();
@@ -101,6 +115,19 @@ public class Event extends Connect{
 			try {
 				if(ps != null)ps.close();
 				if(hcp != null)hcp.close();
+				
+				// Grab the Scheduler instance from the Factory
+				Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+				JobKey jobKey = JobKey.jobKey("FlsEmailJob", "FlsEmailGroup");
+				scheduler.getContext().put("userId", toUserId);
+				scheduler.getContext().put("notificationType", notificationType);
+				scheduler.getContext().put("obj", obj);
+//				scheduler.getContext().put("apiflag", apiflag);
+				scheduler.triggerJob(jobKey);
+				
+			} catch(SchedulerException e){
+				LOGGER.warning("not able to get scheduler");
+				e.printStackTrace();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -308,6 +335,159 @@ public GetUnreadEventsCountResObj getUnreadEventsCount(String userId) {
 	}
 	
 	return response;
+}
+
+public int getNextUndeliveredEvent(){
+	
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	Connection hcp = getConnectionFromPool();
+	
+	try{
+		String sqlGetUndeliveredEvent = "SELECT event_id FROM events WHERE delivery_status=? ORDER BY event_id ASC LIMIT 1";
+		ps = hcp.prepareStatement(sqlGetUndeliveredEvent);
+		ps.setString(1,Delivery_Status.FLS_UNDELIVERED.name());
+		
+		rs = ps.executeQuery();
+		
+		if(rs.next()){
+			return rs.getInt("event_id");
+		}else{
+			return -1;
+		}
+	}catch(SQLException e){
+		LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		e.printStackTrace();
+	}finally{
+		try {
+			if(rs != null)rs.close();
+			if(ps != null)ps.close();
+			if(hcp != null)hcp.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	return -1;
+	
+}
+
+public boolean SendNotifications(int eventId){
+	
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	Connection hcp = getConnectionFromPool();
+	
+	try{
+		String sqlCheckUserNotificationType = "SELECT user_notification FROM events INNER JOIN users ON events.to_user_id = users.user_id WHERE event_id=?";
+		ps = hcp.prepareStatement(sqlCheckUserNotificationType);
+		ps.setInt(1, eventId);
+		
+		rs = ps.executeQuery();
+		
+		if(rs.next()){
+			switch(rs.getString("user_notification")){
+				case "EMAIL":
+					return sendEmail(eventId);
+				case "SMS":
+					return sendSms(eventId);
+				case "BOTH":
+					return sendEmail(eventId) || sendSms(eventId);
+				case "NONE":
+					return true;
+			}
+		}else{
+			return false;
+		}
+	}catch(SQLException e){
+		LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		e.printStackTrace();
+	}finally{
+		try {
+			if(rs != null)rs.close();
+			if(ps != null)ps.close();
+			if(hcp != null)hcp.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	return false;
+}
+
+private boolean sendSms(int eventId){
+	LOGGER.info("Sms not sent");
+	return false;
+}
+
+private boolean sendEmail(int eventId){
+	
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	Connection hcp = getConnectionFromPool();
+
+	JSONObject obj = new JSONObject();
+	
+	try{
+		
+		String sqlGetAllData = "SELECT tb1.event_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
+		ps = hcp.prepareStatement(sqlGetAllData);
+		ps.setInt(1, eventId);
+		
+		rs = ps.executeQuery();
+		
+		if(rs.next()){
+			// Senders Data
+			obj.put("fromUserId", rs.getString("senders_user_id"));
+			obj.put("fromFullName", rs.getString("senders_full_name"));
+			obj.put("fromProfilePic", rs.getString("senders_profile_pic"));
+			obj.put("fromUserRefferalCode", rs.getString("senders_refferal_code"));
+			
+			// Receivers Data
+			obj.put("toUserId", rs.getString("user_id"));
+			obj.put("toUserName", rs.getString("user_full_name"));
+			obj.put("toProfilePic", rs.getString("user_profile_picture"));
+			
+			// Items Data
+			obj.put("itemId", rs.getInt("item_id"));
+			obj.put("title", rs.getString("item_name"));
+			obj.put("category", rs.getString("item_category"));
+			obj.put("description", rs.getString("item_desc"));
+			obj.put("itemUserId", rs.getString("item_user_id"));
+			obj.put("leaseValue", rs.getString("item_lease_value"));
+			obj.put("leaseTerm", rs.getString("item_lease_term"));
+			obj.put("image", rs.getString("item_image"));
+			obj.put("uid", rs.getString("item_uid"));
+			
+			// Events Data
+			obj.put("eventId", rs.getInt("event_id"));
+			obj.put("datetime", rs.getString("datetime"));
+			obj.put("notificationType", rs.getString("notification_type"));
+			obj.put("message", rs.getString("message"));
+			
+			return true;
+		}else{
+			return false;
+		}
+		
+	}catch(SQLException e){
+		LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		e.printStackTrace();
+	} catch (JSONException e) {
+		LOGGER.warning(FLS_JSON_EXCEPTION_M);
+		e.printStackTrace();
+	}finally{
+		try {
+			if(rs != null)rs.close();
+			if(ps != null)ps.close();
+			if(hcp != null)hcp.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	return false;
 }
 
 }

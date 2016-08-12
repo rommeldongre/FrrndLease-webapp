@@ -205,10 +205,10 @@ public class Items extends Connect {
 													// is from WishItem API.
 				if (!FLS_WISHLIST_ADD.equals(status_W)) {
 					try {
-						AwsSESEmail newE = new AwsSESEmail();
-						newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, im);
+//						AwsSESEmail newE = new AwsSESEmail();
+//						newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, im);
 						Event event = new Event();
-						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> has been added to the Friend Store");
+						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> has been added to the Friend Store", im);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
