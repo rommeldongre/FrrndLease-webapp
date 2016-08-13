@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +50,8 @@ public class Event extends Connect{
 		FLS_MAIL_GRACE_PERIOD_OWNER,
 		FLS_MAIL_GRACE_PERIOD_REQUESTOR,
 		FLS_MAIL_RENEW_LEASE_OWNER,
-		FLS_MAIL_RENEW_LEASE_REQUESTOR
+		FLS_MAIL_RENEW_LEASE_REQUESTOR,
+		FLS_NOMAIL_ADD_WISH_ITEM
 	}
 	
 	public enum Event_Type {
@@ -88,7 +91,7 @@ public class Event extends Connect{
 		NONE
 	}
 	
-	public void createEvent(String fromUserId, String toUserId, Event_Type eventType, Notification_Type notificationType, int itemId, String message, Object obj, String... apiflag){
+	public void createEvent(String fromUserId, String toUserId, Event_Type eventType, Notification_Type notificationType, int itemId, String message){
 		
 		PreparedStatement ps = null;
 		Connection hcp = getConnectionFromPool();
@@ -292,10 +295,12 @@ public GetUnreadEventsCountResObj getUnreadEventsCount(String userId) {
 	Connection hcp = getConnectionFromPool();
 	
 	try{
-		String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=?";
+		String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=? AND event_type IN (?,?)";
 		ps = hcp.prepareStatement(sqlGetUnreadEventsCount);
 		ps.setString(1, userId);
 		ps.setString(2, Read_Status.FLS_UNREAD.name());
+		ps.setString(3, Event_Type.FLS_EVENT_NOTIFICATION.name());
+		ps.setString(4, Event_Type.FLS_EVENT_CHAT.name());
 		
 		rs = ps.executeQuery();
 		
@@ -444,11 +449,17 @@ private boolean sendEmail(int eventId){
 			obj.put("itemId", rs.getInt("item_id"));
 			obj.put("title", rs.getString("item_name"));
 			obj.put("category", rs.getString("item_category"));
-			obj.put("description", rs.getString("item_desc"));
+			if(rs.getString("item_desc") == null || rs.getString("item_desc").equals(""))
+				obj.put("description", "");
+			else
+				obj.put("description", rs.getString("item_desc"));
 			obj.put("itemUserId", rs.getString("item_user_id"));
 			obj.put("leaseValue", rs.getInt("item_lease_value"));
 			obj.put("leaseTerm", rs.getString("item_lease_term"));
-			obj.put("image", rs.getString("item_image"));
+			if(rs.getString("item_image") == null || rs.getString("item_image").equals(""))
+				obj.put("image", "");
+			else
+				obj.put("image", rs.getString("item_image"));
 			obj.put("uid", rs.getString("item_uid"));
 			obj.put("itemStatus", rs.getString("item_status"));
 			
@@ -458,8 +469,45 @@ private boolean sendEmail(int eventId){
 			obj.put("notificationType", rs.getString("notification_type"));
 			obj.put("message", rs.getString("message"));
 			
-			FlsEmail email = new FlsEmail();
-			return email.sendEmail(obj, Notification_Type.valueOf(obj.getString("notificationType")));
+			
+			if(Notification_Type.valueOf(obj.getString("notificationType")).equals(Notification_Type.FLS_NOMAIL_ADD_WISH_ITEM)){
+				
+				List<JSONObject> listItems = new ArrayList<>();
+				
+				String itemLinks = "";
+				
+				MatchItems matchItems = new MatchItems();
+				listItems = matchItems.checkPostedItems(obj.getInt("itemId"));
+				
+				if(!listItems.isEmpty()){
+					try {
+						for(JSONObject p : listItems){
+							itemLinks = itemLinks + " <u><a href=\"/flsv2/ItemDetails?uid=" + p.getString("uid") + "\">" + p.getString("title") + "</a></u>";
+						}
+						
+						Event event = new Event();
+						event.createEvent(obj.getString("toUserId"), obj.getString("toUserId"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_POST_ITEM, obj.getInt("itemId"), "Some items in the store" + itemLinks + " match your wished item <strong>'" + obj.getString("title") + "'</strong>");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				return true;
+			}else{
+				if(Notification_Type.valueOf(obj.getString("notificationType")).equals(Notification_Type.FLS_MAIL_POST_ITEM)){
+					try{
+						// checking the wish list if this posted item matches someone's requirements
+						MatchItems matchItems = new MatchItems();
+						matchItems.checkWishlist(obj.getString("title"), obj.getString("itemUserId"), obj.getString("uid"), obj.getInt("itemId"));
+					}catch(Exception e){
+						LOGGER.warning(e.getMessage());
+					}
+				}
+				FlsEmail email = new FlsEmail();
+				return email.sendEmail(obj, Notification_Type.valueOf(obj.getString("notificationType")));
+			}
+			
+			
 		}else{
 			return false;
 		}

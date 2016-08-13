@@ -159,27 +159,29 @@ public class FlsEmail extends Connect{
 				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
-			/*case FLS_MAIL_MATCH_POST_ITEM:
-				List<PostItemReqObj> listItems = (List<PostItemReqObj>) obj;
+			case FLS_MAIL_MATCH_POST_ITEM:
+				MatchItems matchItems = new MatchItems();
+				List<JSONObject> listItems = matchItems.checkPostedItems(obj.getInt("itemId"));
 				SUBJECT = (" Items present in the Friend Store match your wishlist");
 				BODY = ("<body>These items match your wishlist. <br/> <br/>");
 
-				int len = listItems.size();
-
-				for (int i = 0; i < len; i++) {
-					BODY = BODY + (" Title : " + listItems.get(i).getTitle() + "<br/>" + " Category : "
-							+ listItems.get(i).getCategory() + "<br/>" + " Description : "
-							+ listItems.get(i).getDescription() + "<br/>" + " Lease Value : "
-							+ listItems.get(i).getLeaseValue() + "<br/>" + " Lease Term : "
-							+ listItems.get(i).getLeaseTerm() + "<br/>" + " Status : " + listItems.get(i).getStatus()
+				int i = 0;
+				
+				for (JSONObject l : listItems) {
+					BODY = BODY + (" Title : " + l.getString("title") + "<br/>" + " Category : "
+							+ l.getString("category") + "<br/>" + " Description : "
+							+ l.getString("description") + "<br/>" + " Lease Value : "
+							+ l.getInt("leaseValue") + "<br/>" + " Lease Term : "
+							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")
 							+ "<br/>" + "<img src=\"cid:image" + Integer.toString(i) + "\" alt="
-							+ listItems.get(i).getTitle() + " ></img><br/><br/>");
-					imageFiles.add(convertBinaryToImage(listItems.get(i).getImage()));
+							+ l.getString("title") + " ></img><br/><br/>");
+					i++;
+					imageFiles.add(convertBinaryToImage(l.getString("image")));
 				}
 
 				BODY = BODY + ("</body>");
 
-				break;*/
+				break;
 
 			case FLS_MAIL_ADD_FRIEND_FROM:
 				SUBJECT = (" Your Friend '" + obj.getString("fromUserId")	+ "' has been added to your Friend List. ");

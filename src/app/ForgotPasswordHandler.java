@@ -75,7 +75,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 							UsersModel um = new UsersModel();
 							um.setActivation(activation);
 							Event event = new Event();
-							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.", um);
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -88,7 +88,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 							AwsSESEmail newE = new AwsSESEmail();
 							newE.send(userId, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, activation);
 							Event event = new Event();
-							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "A link has been sent to your registered email account for reseting the password.", activation);
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "A link has been sent to your registered email account for reseting the password.");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

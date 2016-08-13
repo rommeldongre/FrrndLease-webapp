@@ -208,7 +208,7 @@ public class Items extends Connect {
 //						AwsSESEmail newE = new AwsSESEmail();
 //						newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, im);
 						Event event = new Event();
-						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> has been added to the Friend Store", im);
+						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> has been added to the Friend Store");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

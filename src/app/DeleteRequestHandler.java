@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.OAuth;
-import util.AwsSESEmail;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
@@ -138,8 +137,8 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 //					newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im);
 //					newE.send(im.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im);
 					Event event = new Event();
-					event.createEvent(im.getUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im.getId(), "Your Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed. ", im);
-					event.createEvent(rq.getUserId(), im.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im.getId(), "Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the Requestor. ", im);
+					event.createEvent(im.getUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im.getId(), "Your Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed. ");
+					event.createEvent(rq.getUserId(), im.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im.getId(), "Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the Requestor. ");
 					rs.setMessage(FLS_SUCCESS_M);
 					rs.setCode(FLS_SUCCESS);
 				} catch (Exception e) {
