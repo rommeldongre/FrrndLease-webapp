@@ -42,7 +42,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 		PreparedStatement sql_stmt = null;
 		ResultSet dbResponse = null;
 
-		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
+		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie()+ ", "+rq.getMatch_userId());
 		// TODO: Core of the processing takes place here
 		LOGGER.info("Inside GetItemStore method");
 
@@ -56,6 +56,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			int limit = rq.getLimit();
 			String category = rq.getCategory();
 			String userId = rq.getUserId();
+			String match_userId = rq.getMatch_userId();
 			Float lat = rq.getLat(), lng = rq.getLng();
 			String searchString = rq.getSearchString();
 			
@@ -110,6 +111,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs1.setLocality(dbResponse.getString("user_locality"));
 					rs1.setSublocality(dbResponse.getString("user_sublocality"));
 					rs1.setDistance(dbResponse.getFloat("distance"));
+					rs1.setFriendStatus(false);
 					rs.addResList(rs1);
 					offset = offset + 1;
 				}
