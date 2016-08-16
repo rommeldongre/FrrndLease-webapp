@@ -730,6 +730,37 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 					
 				}
+				
+				// This block creates an email column in users table
+				if(dbBuild < 2020){
+					
+					String sqlCreateUserEmailColumn = "ALTER TABLE `users` ADD `user_email` VARCHAR(255) NULL DEFAULT NULL AFTER `user_mobile`";
+					String sqlCopyEmailsFromUserId = "UPDATE `users` SET `user_email` = `user_id`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateUserEmailColumn);
+						ps1.executeUpdate();
+						ps1.close();
+						PreparedStatement ps2 = connection.prepareStatement(sqlCopyEmailsFromUserId);
+						ps2.executeUpdate();
+						ps2.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2020;
+					updateDBBuild(dbBuild);
+				}
 	}
 	
 	private void updateDBBuild(int version){
