@@ -23,6 +23,8 @@ public class Event extends Connect{
 	
 	FlsLogger LOGGER = new FlsLogger(Event.class.getName());
 	
+	String URL = FlsConfig.prefixUrl;
+	
 	public enum Notification_Type {
 		FLS_MAIL_REGISTER,
 		FLS_MAIL_SIGNUP_VALIDATION,
@@ -482,7 +484,7 @@ private boolean sendEmail(int eventId){
 				if(!listItems.isEmpty()){
 					try {
 						for(JSONObject p : listItems){
-							itemLinks = itemLinks + " <u><a href=\"/flsv2/ItemDetails?uid=" + p.getString("uid") + "\">" + p.getString("title") + "</a></u>";
+							itemLinks = itemLinks + " <u><a href=\"" + URL + "/ItemDetails?uid=" + p.getString("uid") + "\">" + p.getString("title") + "</a></u>";
 						}
 						
 						Event event = new Event();

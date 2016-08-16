@@ -18,6 +18,7 @@ public class FlsConfig extends Connect{
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
 	
+	public static String prefixUrl = "http://www.frrndlease.com";
 	
 	String getEnv() {
 
@@ -55,6 +56,9 @@ public class FlsConfig extends Connect{
 			System.out.println(env);
 		}
 
+		if(env.equals("dev"))
+			prefixUrl = "http://localhost:8080/flsv2";
+		
 		//env return
 		return env;
 	}

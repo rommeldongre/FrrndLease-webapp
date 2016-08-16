@@ -17,6 +17,7 @@ import pojos.ItemsModel;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsConfig;
 import util.FlsLogger;
 import util.LogCredit;
 
@@ -24,6 +25,8 @@ public class Requests extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(Requests.class.getName());
 
+	private String URL = FlsConfig.prefixUrl;
+	
 	private String check = null, Id = null, token, userId, itemId, operation, message;
 	private int Code;
 	private RequestsModel rm;
@@ -277,8 +280,8 @@ public class Requests extends Connect {
 					try {
 						ownerUserId = im.getUserId();
 						Event event = new Event();
-						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> on Friend Lease");
-						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been requested on Friend Lease");
+						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> on Friend Lease");
+						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been requested on Friend Lease");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -529,7 +532,7 @@ public class Requests extends Connect {
 
 				try {
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_REQUEST_TO, Integer.parseInt(itemId), "Request of item <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the owner as a lease might be granted.");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_REQUEST_TO, Integer.parseInt(itemId), "Request of item <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the owner as a lease might be granted.");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

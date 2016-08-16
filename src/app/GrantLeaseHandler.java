@@ -15,6 +15,7 @@ import pojos.ResObj;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsConfig;
 import util.FlsLogger;
 import util.LogCredit;
 import util.LogItem;
@@ -24,6 +25,8 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(GrantLeaseHandler.class.getName());
 
+	private String URL = FlsConfig.prefixUrl;
+	
 	private static GrantLeaseHandler instance = null;
 
 	public static GrantLeaseHandler getInstance() {
@@ -291,8 +294,8 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			try {
 				Event event = new Event();
-				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq.getItemId(), "You have sucessfully leased an item to <a href=\"myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
-				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq.getItemId(), "An item has been leased by <a href=\"myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
+				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}						

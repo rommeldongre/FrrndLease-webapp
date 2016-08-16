@@ -16,6 +16,7 @@ import pojos.ResObj;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsConfig;
 import util.FlsLogger;
 import util.LogCredit;
 import util.LogItem;
@@ -25,6 +26,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(PostItemHandler.class.getName());
 
+	private String URL = FlsConfig.prefixUrl;
+	
 	private static PostItemHandler instance = null;
 
 	public static PostItemHandler getInstance() {
@@ -170,7 +173,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try {
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

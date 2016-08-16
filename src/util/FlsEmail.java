@@ -53,6 +53,7 @@ public class FlsEmail extends Connect{
 	public boolean sendEmail(JSONObject obj, Notification_Type notificationType){
 
 		String ENV_CONFIG = FlsConfig.env;
+		String URL = FlsConfig.prefixUrl;
 		
 		String FROM = "BlueMarble@frrndlease.com", CC = "BlueMarble@frrndlease.com", TO, PREFIX, SUBJECT, BODY;
 		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS;
@@ -65,20 +66,15 @@ public class FlsEmail extends Connect{
 		// this variable is used to store list of files
 		List<File> imageFiles = new ArrayList<>();
 		
-		if (ENV_CONFIG.equals("dev")) {
-			EMAIL_VERIFICATION_URL = "http://localhost:8080/flsv2/emailverification.html";
-			EMAIL_INVITATION_URL ="http://localhost:8080/flsv2/ref_token=";
-			EMAIL_FORGOT_PASSWORD = "http://localhost:8080/flsv2/forgotpassword.html";
-			EMAIL_ITEM_DETAILS = "http://localhost:8080/flsv2/ItemDetails?uid=";
+		EMAIL_VERIFICATION_URL = URL + "/emailverification.html";
+		EMAIL_INVITATION_URL = URL + "/ref_token=";
+		EMAIL_FORGOT_PASSWORD = URL + "/forgotpassword.html";
+		EMAIL_ITEM_DETAILS = URL + "/ItemDetails?uid=";
+		
+		if (ENV_CONFIG.equals("dev"))
 			PREFIX = "[FrrndLease-Test]";
-			
-		} else {
-			EMAIL_VERIFICATION_URL = "http://www.frrndlease.com/emailverification.html";
-			EMAIL_INVITATION_URL ="http://www.frrndlease.com/ref_token=";
-			EMAIL_FORGOT_PASSWORD = "http://www.frrndlease.com/forgotpassword.html";
-			EMAIL_ITEM_DETAILS = "http://www.frrndlease.com/ItemDetails?uid=";
+		else
 			PREFIX = "[FrrndLease]";
-		}
 		
 		try{
 			

@@ -19,12 +19,15 @@ import util.LogItem;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsConfig;
 import util.FlsLogger;
 
 public class Items extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(Items.class.getName());
 
+	private String URL = FlsConfig.prefixUrl;
+	
 	private String operation, category, leaseTerm, userId, status, title, description, message, Id = null, image;
 	private int leaseValue, id, token, Code;
 	private ItemsModel im;
@@ -205,7 +208,7 @@ public class Items extends Connect {
 				if (!FLS_WISHLIST_ADD.equals(status_W)) {
 					try {
 						Event event = new Event();
-						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> has been added to the Friend Store");
+						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> has been added to the Friend Store");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

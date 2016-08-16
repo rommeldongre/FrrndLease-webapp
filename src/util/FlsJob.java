@@ -24,6 +24,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 	private FlsLogger LOGGER = new FlsLogger(FlsJob.class.getName());
 	private int gracetime=7;
 
+	private String URL = FlsConfig.prefixUrl;
+	
     public FlsJob() {
     }
 
@@ -222,8 +224,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rq.setReqUserId(lease_requser_id);
 				rq.setUserId(lease_user_id);
 				Event event = new Event();
-				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, lease_item_id, "Lease has been renewed by the owner of item having item id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a>");
-				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, lease_item_id, "Lease has been renewed for item having id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
+				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, lease_item_id, "Lease has been renewed by the owner of item having item id <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a>");
+				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, lease_item_id, "Lease has been renewed for item having id <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
 					
 			}else{
 				
@@ -293,8 +295,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rq.setReqUserId(lease_requser_id);
 				rq.setUserId(lease_user_id);
 				Event event = new Event();
-				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease ");
-				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease ");
+				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
 			}
 		    
 			hcp.commit();
@@ -356,8 +358,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				rlrq.setUserId(lease_user_id);
 				
 				Event event = new Event();
-				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, lease_item_id, "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
-				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRACE_PERIOD_REQUESTOR, lease_item_id, "Less than 5 days left for lease to close. Please consider renewing the lease of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, lease_item_id, "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
+				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRACE_PERIOD_REQUESTOR, lease_item_id, "Less than 5 days left for lease to close. Please consider renewing the lease of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
 				
 		} catch (Exception e) {
 				e.printStackTrace();

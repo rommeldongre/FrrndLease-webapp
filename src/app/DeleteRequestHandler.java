@@ -20,12 +20,15 @@ import util.OAuth;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsConfig;
 import util.FlsLogger;
 
 public class DeleteRequestHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(DeleteRequestHandler.class.getName());
 
+	private String URL = FlsConfig.prefixUrl;
+	
 	private String item_Id = null;
 
 	private static DeleteRequestHandler instance = null;
@@ -133,8 +136,8 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 
 				try {
 					Event event = new Event();
-					event.createEvent(im.getUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im.getId(), "Your Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed. ");
-					event.createEvent(rq.getUserId(), im.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im.getId(), "Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the Requestor. ");
+					event.createEvent(im.getUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im.getId(), "Your Request for item having id <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed. ");
+					event.createEvent(rq.getUserId(), im.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im.getId(), "Request for item having id <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the Requestor. ");
 					rs.setMessage(FLS_SUCCESS_M);
 					rs.setCode(FLS_SUCCESS);
 				} catch (Exception e) {
