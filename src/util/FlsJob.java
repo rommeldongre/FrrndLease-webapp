@@ -8,21 +8,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import app.GetLeasesByXHandler;
 import app.GrantLeaseHandler;
 import app.RenewLeaseHandler;
-import util.AwsSESEmail;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import connect.Connect;
-
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
-
-import static org.quartz.JobBuilder.*;
-import static org.quartz.TriggerBuilder.*;
-import static org.quartz.SimpleScheduleBuilder.*;
 
 import org.quartz.*;
 
@@ -226,14 +216,11 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				// logging item status to renewed
 				li.addItemLog(lease_item_id, "Lease Renewed", "", "");
 				
-//				AwsSESEmail newE = new AwsSESEmail();
 				RenewLeaseReqObj rq = new RenewLeaseReqObj();
 				rq.setItemId(lease_item_id);
 				rq.setFlag("renew");
 				rq.setReqUserId(lease_requser_id);
 				rq.setUserId(lease_user_id);
-//				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, rq);
-//				newE.send(lease_user_id, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, rq);
 				Event event = new Event();
 				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_REQUESTOR, lease_item_id, "Lease has been renewed by the owner of item having item id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a>");
 				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_RENEW_LEASE_OWNER, lease_item_id, "Lease has been renewed for item having id <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
@@ -300,14 +287,11 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				
 				li.addItemLog(lease_item_id, "LeaseEnded", "", "");
 				
-//				AwsSESEmail newE = new AwsSESEmail();
 				RenewLeaseReqObj rq = new RenewLeaseReqObj();
 				rq.setItemId(lease_item_id);
 				rq.setFlag("close");
 				rq.setReqUserId(lease_requser_id);
 				rq.setUserId(lease_user_id);
-//				newE.send(lease_user_id, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq);
-//				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq);
 				Event event = new Event();
 				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease ");
 				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
@@ -364,16 +348,12 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				title = rs1.getString("item_name");
 			}
 			
-//			AwsSESEmail newE = new AwsSESEmail();
 			LOGGER.info("Inside Block to send Grace Period Notification");
 			RenewLeaseReqObj rlrq = new RenewLeaseReqObj();
 				rlrq.setItemId(lease_item_id);
 				rlrq.setFlag("renew");
 				rlrq.setReqUserId(lease_requser_id);
 				rlrq.setUserId(lease_user_id);
-				
-//				newE.send(lease_user_id, Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, rlrq);
-//				newE.send(lease_requser_id, Notification_Type.FLS_MAIL_GRACE_PERIOD_REQUESTOR, rlrq);
 				
 				Event event = new Event();
 				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRACE_PERIOD_OWNER, lease_item_id, "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");

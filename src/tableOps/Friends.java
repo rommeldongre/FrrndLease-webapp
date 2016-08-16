@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import pojos.FriendsModel;
 import adminOps.Response;
 import connect.Connect;
-import util.AwsSESEmail;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
@@ -88,7 +87,6 @@ public class Friends extends Connect {
 		ResultSet rs1 = null, rs2 = null;
 		Connection hcp = getConnectionFromPool();
 
-//		AwsSESEmail newE = new AwsSESEmail();
 		String source = "@api";
 		
 		String status = "pending";
@@ -145,7 +143,6 @@ public class Friends extends Connect {
 				lc.addLogCredit(userId,1,"Friend Added","");
 				
 				if (friendId.contains("@fb") || friendId.contains("@google")){
-//					newE.send(userId, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
 //					Event event = new Event();
 //					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
 				}
@@ -157,8 +154,6 @@ public class Friends extends Connect {
 			
 			if (!(friendId.contains("@fb") || friendId.contains("@google"))) {
 				source = "@email";
-//				newE.send(userId, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, fm, source);
-//				newE.send(friendId, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, fm);
 				Event event = new Event();
 				event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
 				event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
@@ -223,9 +218,6 @@ public class Friends extends Connect {
 				res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 
 				try {
-//					AwsSESEmail newE = new AwsSESEmail();
-//					newE.send(friendId, Notification_Type.FLS_MAIL_DELETE_FRIEND_FROM, fm);
-//					newE.send(userId, Notification_Type.FLS_MAIL_DELETE_FRIEND_TO, fm);
 					Event event = new Event();
 					event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_FRIEND_FROM, 0, "You have now removed <a href=\"myapp.html#/myfriendslist\">" + userId + "</a> from your Friend List. You can no longer lease items to each other. Tell us what went wrong!");
 					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_FRIEND_TO, 0, "You have been removed from the Friend List of your Friend <a href=\"myapp.html#/myfriendslist\">" + friendId + "</a>. You can no longer lease items to each other. Tell us what went wrong!");

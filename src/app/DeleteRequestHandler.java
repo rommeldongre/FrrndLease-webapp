@@ -132,10 +132,6 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 				LOGGER.warning("Deleted request id : " + rq.getRequest_Id());
 
 				try {
-//					AwsSESEmail newE = new AwsSESEmail();
-//					// ownerId= im.getUserId();
-//					newE.send(rq.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im);
-//					newE.send(im.getUserId(), Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im);
 					Event event = new Event();
 					event.createEvent(im.getUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im.getId(), "Your Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed. ");
 					event.createEvent(rq.getUserId(), im.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im.getId(), "Request for item having id <a href=\"/flsv2/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the Requestor. ");
