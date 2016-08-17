@@ -706,7 +706,7 @@ public class FlsConfig extends Connect{
 				// This block adds notification_type enum in events table
 				if(dbBuild < 2019){
 					
-					String sqlAddNotificationEnum = "ALTER TABLE `events` CHANGE `notification_type` `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRANT_LEASE_FROM','FLS_MAIL_GRANT_LEASE_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_SIGNUP_VALIDATION')";
+					String sqlAddNotificationEnum = "ALTER TABLE `events` CHANGE `notification_type` `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRANT_LEASE_FROM','FLS_MAIL_GRANT_LEASE_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER')";
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddNotificationEnum);
@@ -734,8 +734,9 @@ public class FlsConfig extends Connect{
 				// This block creates an email column in users table
 				if(dbBuild < 2020){
 					
-					String sqlCreateUserEmailColumn = "ALTER TABLE `users` ADD `user_email` VARCHAR(255) NULL DEFAULT NULL AFTER `user_mobile`";
+					String sqlCreateUserEmailColumn = "ALTER TABLE `users` ADD `user_email` VARCHAR(255) NULL DEFAULT NULL AFTER `user_mobile`, ADD `user_sec_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `user_email`";
 					String sqlCopyEmailsFromUserId = "UPDATE `users` SET `user_email` = `user_id`";
+					String sqlChangeUserStatusEnum = "ALTER TABLE `users` CHANGE `user_status` `user_status` ENUM('google','facebook','email_pending','email_activated','mobile_pending','mobile_activated')";
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlCreateUserEmailColumn);
@@ -744,6 +745,9 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps2 = connection.prepareStatement(sqlCopyEmailsFromUserId);
 						ps2.executeUpdate();
 						ps2.close();
+						PreparedStatement ps3 = connection.prepareStatement(sqlChangeUserStatusEnum);
+						ps3.executeUpdate();
+						ps3.close();
 					}catch(SQLException e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
