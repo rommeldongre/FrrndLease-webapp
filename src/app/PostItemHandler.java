@@ -13,20 +13,21 @@ import pojos.PostItemReqObj;
 import pojos.PostItemResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
-import util.AwsSESEmail;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsConfig;
 import util.FlsLogger;
 import util.LogCredit;
 import util.LogItem;
-import util.MatchItems;
 import util.OAuth;
 
 public class PostItemHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(PostItemHandler.class.getName());
 
+	private String URL = FlsConfig.prefixUrl;
+	
 	private static PostItemHandler instance = null;
 
 	public static PostItemHandler getInstance() {
@@ -171,10 +172,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 												// is from WishItem API.
 			if (!FLS_WISHLIST_ADD.equals(status_W)) {
 				try {
-					AwsSESEmail newE = new AwsSESEmail();
-					newE.send(userId, Notification_Type.FLS_MAIL_POST_ITEM, rq);
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"/flsv2/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -222,14 +221,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs.setMessage(FLS_NULL_POINT_M);
 		} finally {
 			hcp.close();
-		}
-		
-		try{
-			// checking the wish list if this posted item matches someone's requirements
-			MatchItems matchItems = new MatchItems(rq, uid, itemId);
-			matchItems.checkWishlist();
-		}catch(Exception e){
-			LOGGER.warning(e.getMessage());
 		}
 		
 		LOGGER.info("Finished process method ");

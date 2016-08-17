@@ -86,7 +86,8 @@ itemDbCreate = function(){									//for storing in db/localstorage
 		leaseValue: itemLeaseValue,
 		leaseTerm: itemLeaseTerm,
 		status: itemStatus,
-		image: url
+		image: url,
+        accessToken: localStorage.getItem("userloggedinAccess")
 	};
 	
 	postItemSend(req);
