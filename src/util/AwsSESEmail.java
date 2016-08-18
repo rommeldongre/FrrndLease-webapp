@@ -194,7 +194,7 @@ public class AwsSESEmail extends Connect {
 			UsersModel um = (UsersModel) obj;
 			SUBJECT = " Email Verification";
 			BODY = "Hello " + um.getFullName()
-					+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
+					+ ". You have successfully signed up on FrrndLease. To start using frrndlease "
 					+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
 					+ "<a href='" + EMAIL_VERIFICATION_URL + "?token=" + um.getActivation() + "'>"
 					+ EMAIL_VERIFICATION_URL + "?token=" + um.getActivation() + "</a>" + "<br/>";
@@ -203,7 +203,7 @@ public class AwsSESEmail extends Connect {
 			UsersModel uom = (UsersModel) obj;
 			SUBJECT = " Welcome Aboard";
 			BODY = "Hello " + uom.getFullName()
-					+ ". You have successfully signed up on fRRndLease, the platform that helps you Make Space for leading the Life you love. <br/>"
+					+ ". You have successfully signed up on FrrndLease, the platform that helps you Make Space for leading the Life you love. <br/>"
 					+ "We love our stuff, but are passionate about utilizing them well to get rich, positive experiences. <br/>"
 					+ "Check out and follow us on our Facebook community page at <a href='http://www.facebook.com/frrndlease'>frrndlease on facebook</a>. "
 					+ "We use that to make announcements and share posts.<br/>"
@@ -214,7 +214,7 @@ public class AwsSESEmail extends Connect {
 		case FLS_MAIL_DELETE_ITEM:
 			ItemsModel idom = (ItemsModel) obj;
 			SUBJECT = (" Your Item [" + idom.getTitle() + "] has been deleted from the Friend Store");
-			BODY = ("<body>You have deleted the following item on fRRndLease<br/> <br/>" + " Title : " + idom.getTitle()
+			BODY = ("<body>You have deleted the following item on FrrndLease<br/> <br/>" + " Title : " + idom.getTitle()
 					+ "<br/>" + " Category : " + idom.getCategory() + "<br/>" + " Description : "
 					+ idom.getDescription() + "<br/>" + " Lease Value : " + idom.getLeaseValue() + "<br/>"
 					+ " Lease Term : " + idom.getLeaseTerm() + "<br/>" + " Status : " + idom.getStatus() + "<br/>"
@@ -225,7 +225,7 @@ public class AwsSESEmail extends Connect {
 		case FLS_MAIL_POST_ITEM:
 			PostItemReqObj iom = (PostItemReqObj) obj;
 			SUBJECT = (" Your Item [" + iom.getTitle() + "] has been added to the Friend Store");
-			BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + iom.getTitle()
+			BODY = ("<body>You have added the following item on FrrndLease <br/> <br/>" + " Title : " + iom.getTitle()
 					+ "<br/>" + " Category : " + iom.getCategory() + "<br/>" + " Description : " + iom.getDescription()
 					+ "<br/>" + " Lease Value : " + iom.getLeaseValue() + "<br/>" + " Lease Term : "
 					+ iom.getLeaseTerm() + "<br/>" + " Status : " + iom.getStatus() + "<br/>"
