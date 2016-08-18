@@ -425,14 +425,6 @@
 					canvasCtx.height = 300;
 				} 
 				
-				// TEST CODE starts here
-				
-				var bin = atob(b64.split(',')[1]);
-				var exif = EXIF.readFromBinaryFile(new BinaryFile(bin));
-				alert("DB image orientation: "+exif.Orientation);
-				
-				// TEST CODE ends here
-				
 					if (picOrientation==2){
 						this.canvasCtx.transform(-1, 0, 0, 1,canvasCtx.width, 0);
 					}
