@@ -11,9 +11,11 @@ import org.json.JSONObject;
 import adminOps.Response;
 import connect.Connect;
 import pojos.WishlistModel;
+import util.Event;
 import util.FlsLogger;
 import util.LogCredit;
-import util.MatchItems;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 
 public class Wishlist extends Connect {
 
@@ -105,8 +107,8 @@ public class Wishlist extends Connect {
 			LogCredit lc = new LogCredit();
 			lc.addLogCredit(rs1.getString("item_user_id"),1,"Wishlist Item Added","");
 			
-			MatchItems matchItems = new MatchItems(itemId);
-			matchItems.checkPostedItems();
+			Event event = new Event();
+			event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_NOMAIL_ADD_WISH_ITEM, itemId, "");
 			
 			res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 		} catch (SQLException e) {

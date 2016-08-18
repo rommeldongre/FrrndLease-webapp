@@ -40,9 +40,9 @@
 
                         <li ng-if="isAnonymous()"><a id="headerfooteroptions" href="" data-toggle="modal" data-target="#registerModal"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
 
-                        <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="See Notifications" style="font-size:18px;{{(head.unread == 0) ? '' : 'color:black;'}}" ng-click="openNotifications()"><strong ng-if="head.unread!=0">{{head.unread + " "}}</strong><i class="fa fa-bell"></i></li>
+                        <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="See Notifications" style="font-size:16px;{{(head.unread == 0) ? '' : 'color:black;'}}" ng-click="openNotifications()"><strong ng-if="head.unread!=0">{{head.unread + " "}}</strong><i class="fa fa-bell"></i></li>
                         
-                        <li ng-if="isLoggedIn()" class="navbar-brand btn-tooltip" style="color:#337ab7;font-size:14px;" data-toggle="tooltip" data-placement="bottom" title="Credits"><strong>{{credits + " "}}</strong><i class="fa fa-diamond"></i></li>
+                        <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" style="color:#337ab7;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title="Credits"><strong>{{credits + " "}}</strong><i class="fa fa-diamond"></i></li>
 
                         <li ng-if="isLoggedIn()" class="dropdown">
                             <a href="" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"> 

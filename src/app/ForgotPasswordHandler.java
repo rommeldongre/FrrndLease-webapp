@@ -11,7 +11,6 @@ import pojos.ForgotPasswordResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import pojos.UsersModel;
-import util.AwsSESEmail;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
@@ -70,10 +69,8 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 						break;
 					case "email_pending":
 						try{
-							AwsSESEmail newE = new AwsSESEmail();
 							UsersModel um = new UsersModel();
 							um.setActivation(activation);
-							newE.send(userId, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, um);
 							Event event = new Event();
 							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
 						} catch (Exception e) {
@@ -85,8 +82,6 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 						break;
 					case "email_activated":
 						try{
-							AwsSESEmail newE = new AwsSESEmail();
-							newE.send(userId, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, activation);
 							Event event = new Event();
 							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "A link has been sent to your registered email account for reseting the password.");
 						} catch (Exception e) {

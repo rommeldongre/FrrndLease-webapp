@@ -13,11 +13,12 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2017;			
+	public final int appBuild = 2019;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
 	
+	public static String prefixUrl = "http://www.frrndlease.com";
 	
 	String getEnv() {
 
@@ -55,6 +56,9 @@ public class FlsConfig extends Connect{
 			System.out.println(env);
 		}
 
+		if(env.equals("dev"))
+			prefixUrl = "http://localhost:8080/flsv2";
+		
 		//env return
 		return env;
 	}
@@ -669,6 +673,97 @@ public class FlsConfig extends Connect{
 					dbBuild = 2017;
 					updateDBBuild(dbBuild);
 					
+				}
+				
+				// This block adds user_notification column in users table
+				if(dbBuild < 2018){
+					
+					String sqlUserNotification = "ALTER TABLE `users` ADD `user_notification` ENUM('EMAIL','SMS','BOTH','NONE') NOT NULL DEFAULT 'BOTH' AFTER `user_live_status`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlUserNotification);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2018;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds notification_type enum in events table
+				if(dbBuild < 2019){
+					
+					String sqlAddNotificationEnum = "ALTER TABLE `events` CHANGE `notification_type` `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRANT_LEASE_FROM','FLS_MAIL_GRANT_LEASE_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER')";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddNotificationEnum);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2019;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates an email column in users table
+				if(dbBuild < 2020){
+					
+					String sqlCreateUserEmailColumn = "ALTER TABLE `users` ADD `user_email` VARCHAR(255) NULL DEFAULT NULL AFTER `user_mobile`, ADD `user_sec_status` ENUM('1','0') NOT NULL DEFAULT '0' AFTER `user_email`";
+					String sqlCopyEmailsFromUserId = "UPDATE `users` SET `user_email` = `user_id`";
+					String sqlChangeUserStatusEnum = "ALTER TABLE `users` CHANGE `user_status` `user_status` ENUM('google','facebook','email_pending','email_activated','mobile_pending','mobile_activated')";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateUserEmailColumn);
+						ps1.executeUpdate();
+						ps1.close();
+						PreparedStatement ps2 = connection.prepareStatement(sqlCopyEmailsFromUserId);
+						ps2.executeUpdate();
+						ps2.close();
+						PreparedStatement ps3 = connection.prepareStatement(sqlChangeUserStatusEnum);
+						ps3.executeUpdate();
+						ps3.close();
+					}catch(SQLException e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (SQLException e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2020;
+					updateDBBuild(dbBuild);
 				}
 	}
 	
