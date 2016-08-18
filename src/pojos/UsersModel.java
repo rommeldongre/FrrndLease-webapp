@@ -9,7 +9,7 @@ public class UsersModel {
 
 	private FlsLogger LOGGER = new FlsLogger(UsersModel.class.getName());
 
-	private String userId, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode,profilePicture,friendId;
+	private String userId, email, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode,profilePicture,friendId;
 	private int liveStatus, verification;
 	private float lat, lng;
 	private JSONObject obj;
@@ -22,6 +22,7 @@ public class UsersModel {
 	private void extractData() {
 		try {
 			if(obj.has("userId"))userId = obj.getString("userId");
+			if(obj.has("email"))email = obj.getString("email");
 			if(obj.has("fullName"))fullName = obj.getString("fullName");
 			if(obj.has("mobile"))mobile = obj.getString("mobile");
 			if(obj.has("location"))location = obj.getString("location");
@@ -142,5 +143,9 @@ public class UsersModel {
 
 	public void setVerification(int verification) {
 		this.verification = verification;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 }

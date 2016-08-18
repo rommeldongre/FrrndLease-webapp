@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +16,7 @@ import pojos.UsersModel;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.Event.User_Notification;
 import util.FlsLogger;
 import util.LogCredit;
 import util.OAuth;
@@ -24,7 +27,7 @@ public class Users extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(Users.class.getName());
 
-	private String userId, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
+	private String userId, email, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
 			check = null, token, address, locality, sublocality, referralCode=null,profilePicture,friendId;
 	private float lat, lng;
 	private String signUpStatus;
@@ -130,6 +133,7 @@ public class Users extends Connect {
 
 	private void Add() {
 		userId = um.getUserId();
+		email = um.getEmail();
 		fullName = um.getFullName();
 		mobile = um.getMobile();
 		location = um.getLocation();
@@ -145,6 +149,14 @@ public class Users extends Connect {
 		profilePicture = um.getProfilePicture();
 		friendId = um.getFriendId();
 
+		String userNotification = User_Notification.EMAIL.name();
+		
+		if(status.equals("mobile_pending")){
+			Random rnd = new Random();
+			activation =  100000 + rnd.nextInt(900000)+"";
+			userNotification = User_Notification.SMS.name();
+		}
+		
 		String  referrer_code=null;
 		PreparedStatement stmt = null, stmt1 = null,stmt2=null,stmt3 = null;
 		ResultSet rs1 = null,rs2=null;
@@ -178,27 +190,29 @@ public class Users extends Connect {
 			int ref_code_length = 8;
 			ReferralCode rc = new ReferralCode();
 			String generated_ref_code = rc.createRandomCode(ref_code_length, userId);
-			String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into users (user_id,user_full_name,user_mobile,user_email,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status,user_notification) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, userId);
 			stmt.setString(2, fullName);
 			stmt.setString(3, mobile);
-			stmt.setString(4, location);
-			stmt.setString(5, auth);
-			stmt.setString(6, activation);
-			stmt.setString(7, status);
-			stmt.setInt(8, 10);
-			stmt.setFloat(9, lat);
-			stmt.setFloat(10, lng);
-			stmt.setString(11, address);
-			stmt.setString(12, locality);
-			stmt.setString(13, sublocality);
-			stmt.setString(14, generated_ref_code);
-			stmt.setString(15, referrer_code);
-			stmt.setString(16, profilePicture);
-			stmt.setInt(17, 1);
+			stmt.setString(4, email);
+			stmt.setString(5, location);
+			stmt.setString(6, auth);
+			stmt.setString(7, activation);
+			stmt.setString(8, status);
+			stmt.setInt(9, 10);
+			stmt.setFloat(10, lat);
+			stmt.setFloat(11, lng);
+			stmt.setString(12, address);
+			stmt.setString(13, locality);
+			stmt.setString(14, sublocality);
+			stmt.setString(15, generated_ref_code);
+			stmt.setString(16, referrer_code);
+			stmt.setString(17, profilePicture);
+			stmt.setInt(18, 1);
+			stmt.setString(19, userNotification);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);
@@ -223,8 +237,9 @@ public class Users extends Connect {
 				Event event = new Event();
 				if (status.equals("email_pending")){
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
-				}
-				else{
+				}else if(status.equals("mobile_pending")){
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_SMS_SIGNUP_VALIDATION, 0, "Here is the OTP for your mobile verification of frrndlease account: " + activation);
+				}else{
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to frrndlease.");
 				}
 			} catch (Exception e) {

@@ -3,7 +3,7 @@ var myApp = angular.module('myApp', ['headerApp', 'carouselApp', 'ngRoute']);
 myApp.run(['userFactory', function(userFactory){
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
-        window.location.replace("mylogin.html");
+        window.location.replace("myindex.html");
     
 }]);
 

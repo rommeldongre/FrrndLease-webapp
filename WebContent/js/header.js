@@ -22,9 +22,10 @@ headerApp.controller('headerCtrl', ['$scope',
     // sign up starts here
     
     // variables for storing the location data
-    var Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0,Picture='',FriendId;
+    var UserId, Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0,Picture='',FriendId;
     
-    $scope.$on('signUpCheckReq', function(event, email, password, name, picture, mobile, code, location, signUpStatus, friendId){
+    $scope.$on('signUpCheckReq', function(event, userId, email, password, name, picture, mobile, code, location, signUpStatus, friendId){
+        UserId = userId;
         Email = email;
         Password = (CryptoJS.MD5(password)).toString();
         Name = name;
@@ -85,7 +86,8 @@ headerApp.controller('headerCtrl', ['$scope',
         Activation = Activation.toString();
             
         var req = {
-            userId: Email,
+            userId: UserId,
+            email: Email,
             fullName: Name,
 			profilePicture: Picture,
             mobile: Mobile,
@@ -114,18 +116,20 @@ headerApp.controller('headerCtrl', ['$scope',
 
             success: function(response) {
 				if(response.Code === "FLS_SUCCESS") {
-                    if(SignUpStatus != "email_pending"){
-                        localStorage.setItem("userloggedin", Email);
+                    if(SignUpStatus == "email_pending")
+                        loginSignupService.signUpCheckRes("Email verification link send to your email!!");
+                    else if(SignUpStatus == "mobile_pending")
+                        loginSignupService.signUpCheckRes("OTP has been sent to your phone!!");
+                    else{
+                        localStorage.setItem("userloggedin", UserId);
                         localStorage.setItem("userloggedinName", Name);
-						localStorage.setItem("userReferralCode", response.Id);
+                        localStorage.setItem("userReferralCode", response.Id);
                         var obj = JSON.parse(response.Message);
                         localStorage.setItem("userloggedinAccess", obj.access_token);
                         if(SignUpStatus == "facebook")
                             getFacebookFriends(Email);
                         else
                             window.location.replace("myapp.html#/");
-                    }else{
-                        loginSignupService.signUpCheckRes("Email verification link send to your email!!");
                     }
 				}else{
                     if(response.Id == 200)
@@ -656,17 +660,45 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
     
     var friendId = "";
     
+    var signUpStatus = "";
+    
+    $scope.userIdChanged = function(){
+        
+        var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
+        var mobile = /(\d+$)$/;
+        
+        if(email.test($scope.userId)){
+            $scope.email = $scope.userId;
+            $scope.emailEditable = true;
+            signUpStatus = "email_pending";
+        }
+        else{
+            $scope.email = '';
+            $scope.emailEditable = false;
+        }
+        
+        if(mobile.test($scope.userId)){
+            $scope.mobile = $scope.userId;
+            $scope.mobileEditable = true;
+            signUpStatus = "mobile_pending";
+        }
+        else{
+            $scope.mobile = '';
+            $scope.mobileEditable = false;
+        }
+    }
+    
     // form sign up
     $scope.formSignup = function(email, password, name, mobile, code, location){
         friendId = email;
-        loginSignupService.signUpCheckReq(email, password, name, "", mobile, code, location, "email_pending", friendId);
+        loginSignupService.signUpCheckReq($scope.userId, email, password, name, "", mobile, code, location, signUpStatus, friendId);
     }
     
     // Google sign up
     function onSignUp(googleUser) {
         var profile = googleUser.getBasicProfile();
         friendId = profile.getEmail();
-        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.code, $scope.location, "google", friendId);
+        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.code, $scope.location, "google", friendId);
     }
     window.onSignUp = onSignUp;
     
@@ -676,7 +708,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
             // handle the response
             FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender,picture.type(large)', function(response) {
                 friendId = response.id + "@fb";
-                loginSignupService.signUpCheckReq(response.email, response.id, response.name, response.picture.data.url, "", $scope.code, $scope.location, "facebook", friendId);
+                loginSignupService.signUpCheckReq(response.email, response.email, response.id, response.name, response.picture.data.url, "", $scope.code, $scope.location, "facebook", friendId);
             });
         }, {scope: 'email,public_profile,user_friends'});    
     }
