@@ -103,18 +103,18 @@ function postItemSend(req) {
 			dataType: "json",
 			
 			success: function(response) {
-				if(response.returnCode==0){
+				if(response.code==0){
 					shareOrNot(response);
 				}else{
-					var heading = "Unsuccessful";
-					var msg = response.errorString;
+					var heading = "Failure";
+					var msg = response.message;
 					$('#myPleaseWait').modal('hide');
 					confirmationIndex(heading ,msg);
 				}
 			},
 		
 			error: function() {
-				var heading = "Unsuccessful";
+				var heading = "Error";
 				var msg = "Not Working";
 				confirmationIndex(heading ,msg);
 			}

@@ -425,14 +425,6 @@
 					canvasCtx.height = 300;
 				} 
 				
-				// TEST CODE starts here
-				
-				var bin = atob(b64.split(',')[1]);
-				var exif = EXIF.readFromBinaryFile(new BinaryFile(bin));
-				alert("DB image orientation: "+exif.Orientation);
-				
-				// TEST CODE ends here
-				
 					if (picOrientation==2){
 						this.canvasCtx.transform(-1, 0, 0, 1,canvasCtx.width, 0);
 					}
@@ -676,7 +668,7 @@
 		function discontinueWork(){
 			if(currentWork == 'shareItem'){
 				$('#myAlertModal').modal('hide');
-				confirmationIndex("Sucessful" ,"Item sucessfully posted");
+				confirmationIndex("Successful" ,"Item sucessfully posted");
 			}else{
 				$('#myAlertModal').modal('hide');
 			}
@@ -688,7 +680,7 @@
 			uidTitle = obj.uid;
 			
 			var heading = document.getElementById("myModalLabel");
-			heading.innerHTML = "Sucess! Item Posted on Frrndlease";
+			heading.innerHTML = "Success! Item Posted on Frrndlease";
 			
 			var div = document.getElementById("alertModalMsg");
 			div.innerHTML = "Do you want to share this item on Facebook?";
