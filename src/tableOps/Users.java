@@ -520,7 +520,7 @@ public class Users extends Connect {
 		profilePicture = um.getProfilePicture();
 		String dbProfilePicture = null;
 		int profilePicrs=0;
-		LOGGER.info("Inside GetPrevious method");
+		LOGGER.info("Inside getUserInfo method");
 
 		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null,profilepicstmt=null;
 		ResultSet result1 = null, rs = null;
@@ -539,7 +539,7 @@ public class Users extends Connect {
 				String status = result1.getString("user_status");
 				
 				if(liveStatus == 1){
-					if (status.equals("facebook") || status.equals("google") || status.equals("email_activated")) {
+					if (status.equals("facebook") || status.equals("google") || status.equals("email_activated") || status.equals("mobile_activated")) {
 
 						if (status.equals(signUpStatus)) {
 							String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
@@ -556,6 +556,7 @@ public class Users extends Connect {
 								JSONObject json = new JSONObject();
 								json.put("userId", rs.getString("user_id"));
 								json.put("fullName", rs.getString("user_full_name"));
+								json.put("email", rs.getString("user_email"));
 								json.put("mobile", rs.getString("user_mobile"));
 								json.put("location", rs.getString("user_location"));
 								json.put("referralCode", rs.getString("user_referral_code"));
@@ -601,8 +602,10 @@ public class Users extends Connect {
 							Code = FLS_END_OF_DB;
 							if (status.equals("facebook") || status.equals("google"))
 								message = "Signed up using " + status + "!! Please continue with " + status;
-							else
+							else if (status.equals("email_activated"))
 								message = "Signed up using email!! Please login with email";
+							else if (status.equals("mobile_activated"))
+								message = "Signed up using mobile!! Please login with phone number";
 						}
 
 					} else {
@@ -610,6 +613,10 @@ public class Users extends Connect {
 							Id = "0";
 							Code = FLS_INVALID_OPERATION;
 							message = "Please click on the link sent to your email to activate this account!!";
+						} else if (status.equals("mobile_pending")) {
+							Id = "0";
+							Code = FLS_INVALID_OPERATION;
+							message = "Your account is not activated using the OTP!!";
 						} else {
 							if (signUpStatus.equals("facebook") || signUpStatus.equals("google")) {
 								String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
@@ -625,6 +632,7 @@ public class Users extends Connect {
 								while (rs.next()) {
 									JSONObject json = new JSONObject();
 									json.put("userId", rs.getString("user_id"));
+									json.put("email", rs.getString("user_email"));
 									json.put("fullName", rs.getString("user_full_name"));
 									json.put("mobile", rs.getString("user_mobile"));
 									json.put("location", rs.getString("user_location"));

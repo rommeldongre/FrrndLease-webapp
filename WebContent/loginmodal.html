@@ -20,13 +20,13 @@
               <p id="login_error" ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
             <form name="form" style="text-align: center;">
                 <div class="form-group">
-                    <input name="email" type="email" id="email" class="form-control" ng-change="error=''" ng-model="email" placeholder="Email" required autofocus/>
+                    <input name="userId" class="form-control" ng-model="userId" ng-pattern="/^([_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,5}))|(\d+$)$/" ng-change="error=''" placeholder="Email or Phone" required autofocus/>
                 </div>
                 <div class="form-group">
                     <input name="password" type="password" id="password" class="form-control" ng-change="error=''" ng-model="password" placeholder="Password" />
                 </div>
-                <button type="button" class="btn btn-primary btn-fill btn-block" ng-click="(form.email.$touched && form.email.$valid && form.password.$touched && form.password.$valid) ? formLogin(email, password) : error='Please Enter correct email and password'"> Login </button>
-                <button class="btn btn-default btn-simple" ng-click="(form.email.$touched && form.email.$valid) ? forgotPassword(email) : error='Please enter the registered email'"><u>Forgot Password??</u></button>
+                <button type="button" class="btn btn-primary btn-fill btn-block" ng-click="(form.userId.$touched && form.userId.$valid && form.password.$touched && form.password.$valid) ? formLogin(userId, password) : error='Please Enter correct user id and password'"> Login </button>
+                <button class="btn btn-default btn-simple" ng-click="(form.userId.$touched && form.userId.$valid) ? forgotPassword(userId) : error='Please enter the registered User Id'"><u>Forgot Password??</u></button>
             </form>
           </div>
         </div>

@@ -143,13 +143,13 @@ headerApp.controller('headerCtrl', ['$scope',
     // sign up ends here
     
     // login starts here
-    $scope.$on('loginCheckReq', function(event, email, password, picture, signUpStatus){
+    $scope.$on('loginCheckReq', function(event, userId, password, picture, signUpStatus){
 	    password = (CryptoJS.MD5(password)).toString();
 		if(picture === undefined){
 			picture ="";
 		}
         var req = {
-            token: email,
+            token: userId,
             signUpStatus: signUpStatus,
             row: {
                 auth: password,
@@ -573,16 +573,16 @@ headerApp.service('searchService', ['$rootScope', function($rootScope){
 
 headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
     
-    this.loginCheckReq = function(email, password, picture, signUpStatus){
-        $rootScope.$broadcast('loginCheckReq', email, password, picture, signUpStatus);
+    this.loginCheckReq = function(userId, password, picture, signUpStatus){
+        $rootScope.$broadcast('loginCheckReq', userId, password, picture, signUpStatus);
     }
     
     this.loginCheckRes = function(message){
         $rootScope.$broadcast('loginCheckRes', message);
     }
     
-    this.signUpCheckReq = function(email, password, name, picture,mobile, code, location, signUpStatus, friendId){
-        $rootScope.$broadcast('signUpCheckReq', email, password, name, picture ,mobile, code, location, signUpStatus, friendId);
+    this.signUpCheckReq = function(userId, email, password, name, picture,mobile, code, location, signUpStatus, friendId){
+        $rootScope.$broadcast('signUpCheckReq', userId, email, password, name, picture ,mobile, code, location, signUpStatus, friendId);
     }
     
     this.signUpCheckRes = function(message){
@@ -592,12 +592,20 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
 }]);
 
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function($scope, loginSignupService){
+    
+    var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
+    var mobile = /(\d+$)$/;
+    
     // Form login
-    $scope.formLogin = function(email, password){
-        if(email == 'admin@frrndlease.com' || email == 'ops@frrndlease.com')
+    $scope.formLogin = function(userId, password){
+        if(userId == 'admin@frrndlease.com' || userId == 'ops@frrndlease.com')
             $scope.error = "This user cannot access the website";
-        else
-            loginSignupService.loginCheckReq(email, password, "", "email_activated");
+        else{
+            if(email.test(userId))
+                loginSignupService.loginCheckReq(userId, password, "", "email_activated");
+            else
+                loginSignupService.loginCheckReq(userId, password, "", "mobile_activated");
+        }
     }
     
     // Google login
@@ -624,15 +632,18 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
         });
     });
     
-    $scope.forgotPassword = function(email){
-        if(email == 'admin@frrndlease.com' || email == 'ops@frrndlease.com')
+    $scope.forgotPassword = function(userId){
+        if(userId == 'admin@frrndlease.com' || userId == 'ops@frrndlease.com')
             $scope.error = "This user cannot access the website";
         else{
-            process_dialog("Sending email to reset the password!!");
+            if(email.test(userId))
+                process_dialog("Sending email to reset the password!!");
+            else
+                process_dialog("Sending OTP to reset the password!!");
             $.ajax({
                 url: '/flsv2/ForgotPassword',
                 type:'POST',
-                data: JSON.stringify({userId:email}),
+                data: JSON.stringify({userId:userId}),
                 contentType:"application/json",
                 dataType: "JSON",
                 success: function(response) {
