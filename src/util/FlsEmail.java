@@ -108,7 +108,7 @@ public class FlsEmail extends Connect{
 			case FLS_MAIL_SIGNUP_VALIDATION:
 				SUBJECT = " Email Verification";
 				BODY = "Hello " + obj.getString("toUserName")
-						+ ". You have successfully signed up on fRRndLease. To start using frrndlease "
+						+ ". You have successfully signed up on FrrndLease. To start using frrndlease "
 						+ "you need to activate your account. Click on this link to activate your frrndlease account. <br/>"
 						+ "<a href='" + EMAIL_VERIFICATION_URL + "?token=" + obj.getString("toUserActivation") + "'>"
 						+ EMAIL_VERIFICATION_URL + "?token=" + obj.getString("toUserActivation") + "</a>" + "<br/>";
@@ -116,7 +116,7 @@ public class FlsEmail extends Connect{
 			case FLS_MAIL_REGISTER:
 				SUBJECT = " Welcome Aboard";
 				BODY = "Hello " + obj.getString("toUserName")
-						+ ". You have successfully signed up on fRRndLease, the platform that helps you Make Space for leading the Life you love. <br/>"
+						+ ". You have successfully signed up on FrrndLease, the platform that helps you Make Space for leading the Life you love. <br/>"
 						+ "We love our stuff, but are passionate about utilizing them well to get rich, positive experiences. <br/>"
 						+ "Check out and follow us on our Facebook community page at <a href='http://www.facebook.com/frrndlease'>frrndlease on facebook</a>. "
 						+ "We use that to make announcements and share posts.<br/>"
@@ -126,7 +126,7 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_DELETE_ITEM:
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been deleted from the Friend Store");
-				BODY = ("<body>You have deleted the following item on fRRndLease<br/> <br/>" + " Title : " + obj.getString("title")
+				BODY = ("<body>You have deleted the following item on FrrndLease<br/> <br/>" + " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : "
 						+ obj.getString("description") + "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>"
 						+ " Lease Term : " + obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
@@ -136,7 +136,7 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_POST_ITEM:
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been added to the Friend Store");
-				BODY = ("<body>You have added the following item on fRRndLease <br/> <br/>" + " Title : " + obj.getString("title")
+				BODY = ("<body>You have added the following item on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"

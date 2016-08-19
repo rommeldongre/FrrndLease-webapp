@@ -26,7 +26,7 @@ public class OAuth extends Connect{
 		
 		try{
 			
-			String sqlSelectApiKey = "SELECT value FROM config WHERE option=?";
+			String sqlSelectApiKey = "SELECT value FROM config WHERE config.option=?";
 			ps = hcp.prepareStatement(sqlSelectApiKey);
 			ps.setString(1, "api_key");
 			rs = ps.executeQuery();

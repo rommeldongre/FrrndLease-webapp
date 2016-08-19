@@ -222,9 +222,8 @@ public class Users extends Connect {
 			LogCredit lc = new LogCredit();
 			lc.addLogCredit(userId,10,"SignUp","");
 			
-			if(status!="email_pending"){
-				EmailVerificationHandler ev = new EmailVerificationHandler();
-				int result3 = ev.updateCredits(generated_ref_code,referrer_code);	
+			if(!(status.equals("email_pending") && status.equals("mobile_pending"))){
+				lc.updateCredits(generated_ref_code,referrer_code);
 			}
 			
 			String sqlChangeFriendStatus = "UPDATE friends SET friend_status=? WHERE friend_id=?";

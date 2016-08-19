@@ -200,7 +200,7 @@ headerApp.controller('headerCtrl', ['$scope',
 							}
 						}
 					}else{
-						loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your fRRndLease friendlist");
+						loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
 						window.location.replace("myapp.html#/");
 					}
                 }
@@ -233,7 +233,7 @@ headerApp.controller('headerCtrl', ['$scope',
             dataType: "json",
 
             success: function(response) {
-                loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your fRRndLease friendlist");
+                loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
                 window.location.replace("myapp.html#/");
             },
             error: function() {

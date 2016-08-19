@@ -77,10 +77,12 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 						LOGGER.info("statement created...executing update to users query");
 						rs2 = ps3.executeQuery();
 						
+						LogCredit lc = new LogCredit();
+						
 						if(rs2.next()){
 							referral_code = rs2.getString("user_referral_code");
 							referrer_code = rs2.getString("user_referrer_code");
-							result3 = updateCredits(referral_code,referrer_code);
+							result3 = lc.updateCredits(referral_code,referrer_code);
 						}
 					}
 
@@ -135,64 +137,6 @@ public class EmailVerificationHandler extends Connect implements AppHandler {
 	public void cleanup() {
 		// TODO Auto-generated method stub
 
-	}
-	
-	public int updateCredits(String referral, String referrer){
-		
-			Connection hcp = getConnectionFromPool();
-			PreparedStatement stmt= null,stmt1=null;
-			Integer send_val =1;
-			LogCredit lc = new LogCredit();
-			try {
-				
-				if(referrer!=null){
-					hcp.setAutoCommit(false);
-					
-					// add credit to existing user whose referral_code was used
-					int addReferrerCredit =0;
-					String sqladdReferrerCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
-					stmt = hcp.prepareStatement(sqladdReferrerCredit);
-					stmt.setString(1, referrer);
-					addReferrerCredit = stmt.executeUpdate();
-					LOGGER.info("Credits of Referer incremented by 10.....");
-					
-					
-					if(addReferrerCredit == 0){
-						send_val = 0;
-						hcp.rollback();
-						return send_val;
-					}
-					lc.addLogCredit(referrer,10,"SignUp with Code","");
-					
-					// add credit to new user whose referral_code was generated
-					int addReferralCredit =0;
-					String sqladdReferralCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
-					stmt1 = hcp.prepareStatement(sqladdReferralCredit);
-					stmt1.setString(1, referral);
-					addReferralCredit = stmt1.executeUpdate();
-					LOGGER.info("Credits of new user incremented by 10.....");
-					
-					if(addReferralCredit == 0){
-						send_val = 0;
-						hcp.rollback();
-						return send_val;
-					}
-					lc.addLogCredit(referral,10,"SignUp with Referral","");
-					hcp.commit();
-				}
-				
-			} catch (SQLException e) {
-				// TODO: handle exception
-			}finally{
-				try {
-					if(stmt!=null) stmt.close();
-					if(stmt1!=null) stmt1.close();
-					if(hcp!=null) hcp.close();
-				} catch (Exception e2) {
-					// TODO: handle exception
-				}
-			}
-			return send_val;
 	}
 
 }
