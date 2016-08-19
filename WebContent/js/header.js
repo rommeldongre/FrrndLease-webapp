@@ -403,12 +403,6 @@ headerApp.controller('headerCtrl', ['$scope',
         logoutService.logout();
     }
     
-    $scope.storeYourStuff = function(){
-        localStorage.setItem("prevFunc", 'storeYourStuff');
-			
-		window.location.replace("EditPosting.html");
-    }
-    
     $scope.$on('updateEventsCount', function(event){
         displayUnreadNotifications();
     });
