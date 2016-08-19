@@ -238,9 +238,9 @@ public class Users extends Connect {
 				if (status.equals("email_pending")){
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
 				}else if(status.equals("mobile_pending")){
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_SMS_SIGNUP_VALIDATION, 0, "Here is the OTP for your mobile verification of frrndlease account: " + activation);
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_SMS_SIGNUP_VALIDATION, 0, "Here is the OTP for your mobile verification of FrrndLease account: " + activation);
 				}else{
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to frrndlease.");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to FrrndLease.");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

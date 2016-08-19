@@ -130,7 +130,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : "
 						+ obj.getString("description") + "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>"
 						+ " Lease Term : " + obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+						+ "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
 				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
@@ -140,7 +140,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+						+ "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
 				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
@@ -150,7 +150,7 @@ public class FlsEmail extends Connect{
 						+ obj.getString("title") + "<br/>" + " Category : " + obj.getString("category") + "<br/>"
 						+ " Description : " + obj.getString("description") + "<br/>" + " Lease Value : "
 						+ obj.getInt("leaseValue") + "<br/>" + " Lease Term : " + obj.getString("leaseTerm") + "<br/>"
-						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img src=\"cid:image\" alt=" + obj.getString("title")
+						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title")
 						+ " ></img>" + "</body>");
 				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
@@ -169,7 +169,7 @@ public class FlsEmail extends Connect{
 							+ l.getString("description") + "<br/>" + " Lease Value : "
 							+ l.getInt("leaseValue") + "<br/>" + " Lease Term : "
 							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")
-							+ "<br/>" + "<img src=\"cid:image" + Integer.toString(i) + "\" alt="
+							+ "<br/>" + "<img style=\"width:50%;\" src=\"cid:image" + Integer.toString(i) + "\" alt="
 							+ l.getString("title") + " ></img><br/><br/>");
 					i++;
 					imageFiles.add(convertBinaryToImage(l.getString("image")));
