@@ -117,9 +117,9 @@ headerApp.controller('headerCtrl', ['$scope',
             success: function(response) {
 				if(response.Code === "FLS_SUCCESS") {
                     if(SignUpStatus == "email_pending")
-                        loginSignupService.signUpCheckRes("Email verification link send to your email!!");
+                        loginSignupService.signUpCheckRes(0, "Email verification link send to your email!!");
                     else if(SignUpStatus == "mobile_pending")
-                        loginSignupService.signUpCheckRes("OTP has been sent to your phone!!");
+                        loginSignupService.signUpCheckRes(0, "OTP has been sent to your phone!!");
                     else{
                         localStorage.setItem("userloggedin", UserId);
                         localStorage.setItem("userloggedinName", Name);
@@ -133,7 +133,7 @@ headerApp.controller('headerCtrl', ['$scope',
                     }
 				}else{
                     if(response.Id == 200)
-                        loginSignupService.signUpCheckRes("User Already Exists!!");
+                        loginSignupService.signUpCheckRes(1, "User Already Exists!!");
 				}
             },		
             error: function() {
@@ -586,7 +586,7 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
     }
     
     this.signUpCheckRes = function(message){
-        $rootScope.$broadcast('signUpCheckRes', message);
+        $rootScope.$broadcast('signUpCheckRes', code, message);
     }
     
 }]);
@@ -661,7 +661,7 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
     
 }]);
 
-headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', function($scope, loginSignupService){
+headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
     var friendId = "";
     
@@ -719,10 +719,23 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', functio
     }
     
     // sign up response
-    $scope.$on('signUpCheckRes', function(event, message){
-        $scope.$apply(function(){
-            $scope.error = message;
-        });
+    $scope.$on('signUpCheckRes', function(event, code, message){
+        if(code == 0){
+            if(signUpStatus == 'mobile_pending'){
+                $("#registerModal").modal('toggle');
+                modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
+                    console.log(result);
+                }, function(){});
+            }else{
+                $scope.$apply(function(){
+                    $scope.error = message;
+                });
+            }
+        }else{
+            $scope.$apply(function(){
+                $scope.error = message;
+            });
+        }
     });
 	
 	var getQueryVariable = function (variable) {
