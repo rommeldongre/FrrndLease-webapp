@@ -912,17 +912,22 @@ public class Users extends Connect {
 		
 		try{
 			
-			String sqlCheckActivation = "SELECT user_activation FROM users WHERE user_activation=?";
+			String sqlCheckActivation = "SELECT user_activation, user_status FROM users WHERE user_activation=?";
 			ps1 = hcp.prepareStatement(sqlCheckActivation);
 			ps1.setString(1, activation);
 			
 			rs1 = ps1.executeQuery();
 			
 			if(rs1.next()){
+				if(rs1.getString("user_status").equals("mobile_activated")){
+					Random rnd = new Random();
+					token = 100000 + rnd.nextInt(900000)+"";
+				}
+				
 				String sqlUpdateUserPassword = "UPDATE users SET user_auth=?,user_activation=? WHERE user_activation=?";
 				ps2 = hcp.prepareStatement(sqlUpdateUserPassword);
 				ps2.setString(1, auth);
-				ps2.setString(2, token);
+				ps2.setString(2, token+"_u");
 				ps2.setString(3, activation);
 				
 				ps2.executeUpdate();

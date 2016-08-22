@@ -591,7 +591,7 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
     
 }]);
 
-headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function($scope, loginSignupService){
+headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
     var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
     var mobile = /(\d+$)$/;
@@ -648,6 +648,31 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', function
                 dataType: "JSON",
                 success: function(response) {
                     $("#myPleaseWait").modal('toggle');
+                    
+                    if(mobile.test(userId)){
+                        $('#loginModal').modal('hide');
+                        modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
+                            if(response.code == 300){
+                                $.ajax({
+                                    url: '/flsv2/Verification',
+                                    type:'POST',
+                                    data: JSON.stringify({verification : result+"_u"}),
+                                    contentType:"application/json",
+                                    dataType: "JSON",
+                                    success: function(res) {
+                                        if(res.code == 0){
+                                            window.location.replace("forgotpassword.html?act="+result+"_u");
+                                        }
+                                    },
+                                    error: function() {
+                                    }
+                                });
+                            } else if(response.code == 0){
+                                window.location.replace("forgotpassword.html?act="+result+"_u");
+                            }
+                        }, function(){});
+                    }
+                    
                     $scope.$apply(function(){
                         $scope.error = response.message;
                     });
