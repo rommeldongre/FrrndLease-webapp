@@ -21,7 +21,6 @@ import util.FlsLogger;
 import util.LogCredit;
 import util.OAuth;
 import util.ReferralCode;
-import app.EmailVerificationHandler;
 
 public class Users extends Connect {
 
@@ -200,7 +199,7 @@ public class Users extends Connect {
 			stmt.setString(4, email);
 			stmt.setString(5, location);
 			stmt.setString(6, auth);
-			stmt.setString(7, activation);
+			stmt.setString(7, activation+"_u");
 			stmt.setString(8, status);
 			stmt.setInt(9, 10);
 			stmt.setFloat(10, lat);

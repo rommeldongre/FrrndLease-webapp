@@ -1,6 +1,6 @@
 package pojos;
 
-public class EmailVerificationResObj extends ResObj {
+public class VerificationResObj extends ResObj {
 
 	int code;
 	String message, userId, name, access_token;

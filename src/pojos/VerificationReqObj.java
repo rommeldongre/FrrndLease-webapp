@@ -1,6 +1,7 @@
 package pojos;
 
-public class EmailVerificationReqObj extends ReqObj {
+public class VerificationReqObj extends ReqObj {
+
 	String verification;
 
 	public String getVerification() {

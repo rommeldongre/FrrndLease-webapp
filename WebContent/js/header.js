@@ -117,9 +117,9 @@ headerApp.controller('headerCtrl', ['$scope',
             success: function(response) {
 				if(response.Code === "FLS_SUCCESS") {
                     if(SignUpStatus == "email_pending")
-                        loginSignupService.signUpCheckRes(0, "Email verification link send to your email!!");
+                        loginSignupService.signUpCheckRes("Email verification link send to your email!!");
                     else if(SignUpStatus == "mobile_pending")
-                        loginSignupService.signUpCheckRes(0, "OTP has been sent to your phone!!");
+                        loginSignupService.signUpCheckRes("OTP has been sent to your phone!!");
                     else{
                         localStorage.setItem("userloggedin", UserId);
                         localStorage.setItem("userloggedinName", Name);
@@ -133,7 +133,7 @@ headerApp.controller('headerCtrl', ['$scope',
                     }
 				}else{
                     if(response.Id == 200)
-                        loginSignupService.signUpCheckRes(1, "User Already Exists!!");
+                        loginSignupService.signUpCheckRes("User Already Exists!!");
 				}
             },		
             error: function() {
@@ -586,7 +586,7 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
     }
     
     this.signUpCheckRes = function(message){
-        $rootScope.$broadcast('signUpCheckRes', code, message);
+        $rootScope.$broadcast('signUpCheckRes', message);
     }
     
 }]);
@@ -719,18 +719,28 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     }
     
     // sign up response
-    $scope.$on('signUpCheckRes', function(event, code, message){
-        if(code == 0){
-            if(signUpStatus == 'mobile_pending'){
-                $("#registerModal").modal('toggle');
-                modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
-                    console.log(result);
-                }, function(){});
-            }else{
-                $scope.$apply(function(){
-                    $scope.error = message;
+    $scope.$on('signUpCheckRes', function(event, message){
+        if(signUpStatus == 'mobile_pending'){
+            $('#registerModal').modal('hide');
+            modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
+                $.ajax({
+                    url: '/flsv2/Verification',
+                    type:'POST',
+                    data: JSON.stringify({verification : result+"_u"}),
+                    contentType:"application/json",
+                    dataType: "JSON",
+                    success: function(response) {
+                        if(response.code == 0){
+                            localStorage.setItem("userloggedin", response.userId);
+                            localStorage.setItem("userloggedinName", response.name);
+                            localStorage.setItem("userloggedinAccess", response.access_token);
+                            window.location.replace("myapp.html");
+                        }
+                    },
+                    error: function() {
+                    }
                 });
-            }
+            }, function(){});
         }else{
             $scope.$apply(function(){
                 $scope.error = message;
