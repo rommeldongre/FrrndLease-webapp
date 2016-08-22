@@ -88,15 +88,15 @@ myProfile.controller('myProfileCtrl', ['$scope',
     });
 	
 	var drawImage = function(img) {
-		canvasCtx.width = 300;
-		canvasCtx.height = 300;
+		canvasCtx.width = 200;
+		canvasCtx.height = 200;
 		
 		if(img.width>img.height){                      							//Landscape Image 
-			canvasCtx.width = 300;
-			canvasCtx.height = 300 / img.width * img.height;
+			canvasCtx.width = 200;
+			canvasCtx.height = 200 / img.width * img.height;
 		} else {                                                                  //Portrait Image
-			canvasCtx.width = 300 / img.height * img.width;
-			canvasCtx.height = 300;
+			canvasCtx.width = 200 / img.height * img.width;
+			canvasCtx.height = 200;
 		} 
 		
 		if (picOrientation==2){

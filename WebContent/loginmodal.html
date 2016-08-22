@@ -26,7 +26,7 @@
                     <input name="password" type="password" id="password" class="form-control" ng-change="error=''" ng-model="password" placeholder="Password" />
                 </div>
                 <button type="button" class="btn btn-primary btn-fill btn-block" ng-click="(form.userId.$touched && form.userId.$valid && form.password.$touched && form.password.$valid) ? formLogin(userId, password) : error='Please Enter correct user id and password'"> Login </button>
-                <button class="btn btn-default btn-simple" ng-click="(form.userId.$touched && form.userId.$valid) ? forgotPassword(userId) : error='Please enter the registered User Id'"><u>Forgot Password??</u></button>
+                <button type="button" class="btn btn-default btn-simple" ng-click="(form.userId.$touched && form.userId.$valid) ? forgotPassword(userId) : error='Please enter the registered User Id'"><u>Forgot Password??</u></button>
             </form>
           </div>
         </div>

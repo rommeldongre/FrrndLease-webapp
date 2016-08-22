@@ -1,65 +1,66 @@
 <div class="container-fluid" id="midcontainer">
-    <div id="heading">
-        <strong>My Profile</strong>
-	</div>
-	<br />
-    <div class="col-lg-3 col-md-3"></div>
-        <div class="card-user col-lg-6 col-md-6" style="padding-top:50px">
-            <div class="content">
-                <div class="author">
-						<img class="avatar border-gray img-circle" ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}"  alt="User Profile Picture" style="display:block;margin:auto auto;width:200px;height:200px;">
-                      <h4 class="title"><br />
-                         <small></small>
-                      </h4>
-                </div>
-                <div class="form" ng-init="error = ''">
-                    <div class="form-group">
-						<div id="userId"><i class="fa fa-user"></i><b style="font-size:16px"> {{'  '+ userId }}</b>
-							<span class="label label-warning label-fill btn-tooltip" ng-model="label" ng-if="label == false" style="text-align:right;" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified">Not Verified</span>
-							<span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
-						</div>
-                    </div>
-					 <div class="input-group">
-						<div id="credit"><i class="fa fa-diamond"></i><b>{{'  '+ credit }}</b>
-							<a class="btn btn-primary btn-simple" ng-click="addCredits()" style="align:right;font-size:14px"><u>Add Credit</u></a>	
-						</div>
-					</div>
-					<div class="form-group">
-						<div id="referralCode"><i class="fa fa-envelope"></i><b>{{'  '+ referralCode }}</b>
-							<a class="btn btn-primary btn-simple" style="align:right;font-size:14px" href="myapp.html#/myfriendslist"><u>Invite Friends</u></a>
-						</div>
-					</div>
-                    <label for="fullname">Full Name</label>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="fullname" ng-change="(fullname != '') ? error='' : error='Name is required'" ng-model="fullname" placeholder="Full name">
-                    </div>
-                    <label for="mobile">Mobile</label>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="mobile" ng-model="mobile" ng-change="(mobile.length == 10) ? error='' : error='Mobile number must have 10 digits'" placeholder="Mobile">
-                    </div>
-                    <label for="location">Location</label>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="location" ng-change="(location != '') ? error='' : error='Location is required'" ng-model="location" ng-autocomplete options="options" details="details" placeholder="Location">
-                    </div>
-                    <label for="item_image" id="image_label">Add Id Proof</label>
-					<div class="form-group">
-                        <input type="file" class="form-control" accept="image/jpeg" id="ifile" ng-model="ifile">
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<canvas id="panel" ng-model="panel" width="300" height="300" style=" display: table;margin: 0 25%;margin-bottom:10px;"></canvas>
-						</div>
-					</div>
-                </div>
-                <span ng-if="error != ''" style="color:red;padding:10px;">{{error}}</span>
-            </div>
-            <div class="text-center">
-                <button class="btn btn-primary btn-fill" ng-click="(error == '') ? updateProfile() : error='Please enter correct data!!'">Save</button>
-                <button class="btn btn-primary btn-simple" ng-click="cancel()">Cancel</button><br/><br/>
-				 <a class="btn btn-primary btn-simple" ng-click="showCredit()"><u>Show Credit Timeline</u></a>
+    <div class="row">
+        <div class="left_title col-lg-2 col-md-2">
+            <strong>My Profile</strong>
+        </div>
+        <div class="col-lg-10 col-md-10" style="text-align: end;margin-top: 2%;">
+            <button type="button" class="btn btn-primary btn-simple" ng-click="showCredit()">Credits History</button>
+        </div>
+    </div>
+	<hr/><br/><br/>
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <img ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}" alt="Profile Pic" style="display:block;margin:auto;width:200px;height:200px;">
+            <br/>
+            <div id="userId" style="text-align:center;">
+                <i class="fa fa-user"></i><b style="font-size:16px"> {{'  '+ userId }}</b>
+                <span class="label label-warning label-fill btn-tooltip" ng-model="label" ng-if="label == false" style="text-align:right;" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified">Not Verified</span>
+                <span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
             </div>
         </div>
-    <div class="col-lg-3 col-md-3"></div>
+        <div class="col-lg-6 col-md-6">
+            <div id="credit" class="input-group">
+              <span class="input-group-addon">Credits</span>
+              <input  type="text" class="form-control" ng-disabled="true" ng-model="credit">
+              <a class="input-group-addon" href="" ng-click="addCredits()"><i class="fa fa-plus"></i></a>
+            </div>
+            <br/>
+            <div id="referralCode" class="input-group">
+              <span class="input-group-addon">Refferal</span>
+              <input  type="text" class="form-control" ng-disabled="true" ng-model="referralCode">
+              <a class="input-group-addon" href="myapp.html#/myfriendslist"><i class="fa fa-share-alt"></i></a>
+            </div>
+            <br/> <br/>
+            <label>Notification - </label>
+            <div class="btn-group btn-group-justified" role="group" aria-label="...">
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success btn-danger"><i class="fa fa-envelope-o" aria-hidden="true"></i>EMAIL<i class="fa fa-check-square-o fa-times" aria-hidden="true" style="float: right;margin-top: 1%;"></i></button>
+              </div>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success btn-danger"><i class="fa fa-mobile" aria-hidden="true"></i>SMS<i class="fa fa-check-square-o fa-times" aria-hidden="true" style="float: right;margin-top: 1%;"></i></button>
+              </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <input type="file" class="form-control" accept="image/jpeg" id="ifile" ng-model="ifile">
+            <canvas id="panel" ng-model="panel" width="200" height="200" style="display:block;margin:auto;padding-top:50px;"></canvas>
+        </div>
+        <div class="col-lg-6 col-md-6" style="padding-bottom:40px;">
+            <input type="text" class="form-control" id="fullname" ng-change="(fullname != '') ? error='' : error='Name is required'" ng-model="fullname" placeholder="Full name">
+            <br/>
+            <input type="text" class="form-control" id="mobile" ng-model="mobile" ng-change="(mobile.length == 10) ? error='' : error='Mobile number must have 10 digits'" placeholder="Mobile">
+            <br/>
+            <input type="text" class="form-control" id="location" ng-change="(location != '') ? error='' : error='Location is required'" ng-model="location" ng-autocomplete options="options" details="details" placeholder="Location">
+            <br/>
+            <span ng-if="error != ''" style="color:red;padding:10px;">{{error}}</span>
+            <br/>
+            <button class="btn btn-primary btn-fill" ng-click="(error == '') ? updateProfile() : error='Please enter correct data!!'">Save</button>
+            <button class="btn btn-default btn-fill" ng-click="cancel()">Cancel</button>
+        </div>
+    </div>
 	
 	<!-- sample pop up starts here-->
 			<button href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>

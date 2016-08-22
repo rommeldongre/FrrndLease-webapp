@@ -1,14 +1,15 @@
 package pojos;
 
-public class GetProfileResObj extends ResObj{
+public class GetProfileResObj extends ResObj {
 
 	int code;
 	String message;
 
 	int credit, liveStatus;
-	String fullName, mobile, location, address, locality, sublocality, referralCode, photoId,profilePic;
+	String fullName, mobile, location, address, locality, sublocality, referralCode, photoId, profilePic;
 	float lat, lng;
 	boolean photoIdVerified;
+	String userStatus, userSecStatus, userNotification;
 
 	public int getCode() {
 		return code;
@@ -61,8 +62,8 @@ public class GetProfileResObj extends ResObj{
 	public void setCredit(int credit) {
 		this.credit = credit;
 	}
-	
-	public int getCredit(){
+
+	public int getCredit() {
 		return this.credit;
 	}
 
@@ -136,5 +137,29 @@ public class GetProfileResObj extends ResObj{
 
 	public void setProfilePic(String profilePic) {
 		this.profilePic = profilePic;
+	}
+
+	public String getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public String getUserSecStatus() {
+		return userSecStatus;
+	}
+
+	public void setUserSecStatus(String userSecStatus) {
+		this.userSecStatus = userSecStatus;
+	}
+
+	public String getUserNotification() {
+		return userNotification;
+	}
+
+	public void setUserNotification(String userNotification) {
+		this.userNotification = userNotification;
 	}
 }
