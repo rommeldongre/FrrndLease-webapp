@@ -133,11 +133,15 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.userId = userFactory.user;
                 $scope.fullname = response.data.fullName;
 				$scope.mobile = response.data.mobile;
+                $scope.email = response.data.email;
 				$scope.location = response.data.address;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
 				$scope.label = response.data.photoIdVerified;
 				$scope.profilePic = response.data.profilePic;
+                $scope.status = response.data.userStatus;
+                $scope.secStatus = response.data.userSecStatus;
+                $scope.notification = response.data.userNotification;
 				url = response.data.photoId;
 				if(url != null && url != "null"){
 					var img = new Image();

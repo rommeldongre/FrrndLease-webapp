@@ -122,6 +122,11 @@ public class Users extends Connect {
 			}
 			break;
 			
+		case "secuserid":
+			LOGGER.info("Saving the secondary user id");
+			saveSecUserId();
+			break;
+			
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
@@ -130,6 +135,103 @@ public class Users extends Connect {
 		return res;
 	}
 
+	private void saveSecUserId(){
+		userId = um.getUserId();
+		email = um.getEmail();
+		mobile = um.getMobile();
+		activation = um.getActivation();
+		
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			String sqlCheckStatus = "SELECT user_email, user_mobile, user_status, user_sec_status FROM users WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlCheckStatus);
+			ps1.setString(1, userId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				
+				switch(rs1.getString("user_status")){
+					case "facebook":
+					case "google":
+					case "email_activated":
+					case "email_pending":
+						if(!email.equals(rs1.getString("user_email"))){
+							String sqlUpdateEmail = "UPDATE users SET user_email=?, user_activation=? WHERE user_id=?";
+							ps2 = hcp.prepareStatement(sqlUpdateEmail);
+							ps2.setString(1, email);
+							ps2.setString(2, activation+"_n");
+							ps2.setString(3, userId);
+							rs2 = ps2.executeUpdate();
+							
+							if(rs2 == 1){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
+									res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
+							}
+						}else{
+							res.setData(FLS_DUPLICATE_ENTRY, "0", "This email already exists.");
+						}
+						break;
+					case "mobile_activated":
+					case "mobile_pending":
+						if(!mobile.equals(rs1.getString("user_mobile"))){
+							Random rnd = new Random();
+							activation =  100000 + rnd.nextInt(900000)+"";
+							String sqlUpdateMobile = "UPDATE users SET user_mobile=?, user_activation=? WHERE user_id=?";
+							ps2 = hcp.prepareStatement(sqlUpdateMobile);
+							ps2.setString(1, mobile);
+							ps2.setString(2, activation+"_n");
+							ps2.setString(3, userId);
+							rs2 = ps2.executeUpdate();
+							
+							if(rs2 == 1){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
+									res.setData(FLS_SUCCESS, "0", "An OTP has been sent to this number");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
+							}
+						}else{
+							res.setData(FLS_DUPLICATE_ENTRY, "0", "This mobile number is already saved.");
+						}
+						break;
+				}
+				
+			}else{
+				res.setData(FLS_END_OF_DB, "0", FLS_END_OF_DB_M);	
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try {
+				if(rs1!=null) rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	private void Add() {
 		userId = um.getUserId();
 		email = um.getEmail();
@@ -275,7 +377,6 @@ public class Users extends Connect {
 				if(stmt1!=null) stmt1.close();
 				if(hcp!=null) hcp.close();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

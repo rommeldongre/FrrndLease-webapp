@@ -62,7 +62,9 @@ public class Event extends Connect{
 		FLS_NOMAIL_ADD_WISH_ITEM,
 		FLS_SMS_FORGOT_PASSWORD,
 		FLS_SMS_SIGNUP_VALIDATION,
-		FLS_SMS_REGISTER
+		FLS_SMS_REGISTER,
+		FLS_EMAIL_VERIFICATION,
+		FLS_MOBILE_VERIFICATION
 	}
 	
 	public enum Event_Type {
@@ -491,10 +493,12 @@ public class Event extends Connect{
 					case FLS_MAIL_FORGOT_PASSWORD:
 					case FLS_MAIL_REGISTER:
 					case FLS_MAIL_SIGNUP_VALIDATION:
+					case FLS_EMAIL_VERIFICATION:
 						return sendEmail(eventId);
 					case FLS_SMS_FORGOT_PASSWORD:
 					case FLS_SMS_SIGNUP_VALIDATION:
 					case FLS_SMS_REGISTER:
+					case FLS_MOBILE_VERIFICATION:
 						return sendSms(eventId);
 					default:
 						break;
@@ -609,7 +613,7 @@ public class Event extends Connect{
 				}
 				
 				if(email != null){
-					String sqlGetAllData = "SELECT tb1.event_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
+					String sqlGetAllData = "SELECT tb1.event_id, tb1.from_user_id, tb1.to_user_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
 					ps2 = hcp.prepareStatement(sqlGetAllData);
 					ps2.setInt(1, eventId);
 					
@@ -618,8 +622,9 @@ public class Event extends Connect{
 					if(rs2.next()){
 						// Senders Data
 						obj.put("fromUserId", rs2.getString("senders_user_id"));
-						obj.put("fromFullName", rs2.getString("senders_full_name"));
+						obj.put("fromUserName", rs2.getString("senders_full_name"));
 						obj.put("fromProfilePic", rs2.getString("senders_profile_pic"));
+						obj.put("fromUserActivation", rs2.getString("senders_user_activation"));
 						obj.put("fromUserRefferalCode", rs2.getString("senders_refferal_code"));
 						
 						// Receivers Data
@@ -648,6 +653,8 @@ public class Event extends Connect{
 						
 						// Events Data
 						obj.put("eventId", rs2.getInt("event_id"));
+						obj.put("from", rs2.getString("from_user_id"));
+						obj.put("to", rs2.getString("to_user_id"));
 						obj.put("datetime", rs2.getString("datetime"));
 						obj.put("notificationType", rs2.getString("notification_type"));
 						obj.put("message", rs2.getString("message"));

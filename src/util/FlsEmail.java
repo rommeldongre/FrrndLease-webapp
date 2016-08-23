@@ -78,7 +78,7 @@ public class FlsEmail extends Connect{
 		
 		try{
 			
-			TO = obj.getString("toUserId");
+			TO = obj.getString("to");
 			
 			credits = getCurrentCredits(TO);
 			
@@ -123,6 +123,13 @@ public class FlsEmail extends Connect{
 						+ "We are happy to have you. Now go and offer your dormant stuff on the platform!! <br/>"
 						+ "Remember, it will always be yours ... and will come back after enriching your friends, whenever you want!";
 				break;
+				
+			case FLS_EMAIL_VERIFICATION:
+				SUBJECT = " Email Verification";
+				BODY = "Hello " + obj.getString("fromUserName")
+						+ "Click on this link to activate this email. <br/>"
+						+ "<a href='" + EMAIL_VERIFICATION_URL + "?token=" + obj.getString("fromUserActivation") + "'>"
+						+ EMAIL_VERIFICATION_URL + "?token=" + obj.getString("fromUserActivation") + "</a>" + "<br/>";
 
 			case FLS_MAIL_DELETE_ITEM:
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been deleted from the Friend Store");

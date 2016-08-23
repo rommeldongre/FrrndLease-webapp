@@ -58,6 +58,7 @@ public class GetProfileHandler extends Connect implements AppHandler {
 			if (result.next()) {
 				rs.setFullName(result.getString("user_full_name"));
 				rs.setMobile(result.getString("user_mobile"));
+				rs.setEmail(result.getString("user_email"));
 				rs.setLocation(result.getString("user_location"));
 				rs.setCredit(result.getInt("user_credit"));
 				rs.setAddress(result.getString("user_address"));

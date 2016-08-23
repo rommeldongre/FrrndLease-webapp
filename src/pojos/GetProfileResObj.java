@@ -6,7 +6,7 @@ public class GetProfileResObj extends ResObj {
 	String message;
 
 	int credit, liveStatus;
-	String fullName, mobile, location, address, locality, sublocality, referralCode, photoId, profilePic;
+	String fullName, mobile, email, location, address, locality, sublocality, referralCode, photoId, profilePic;
 	float lat, lng;
 	boolean photoIdVerified;
 	String userStatus, userSecStatus, userNotification;
@@ -49,6 +49,14 @@ public class GetProfileResObj extends ResObj {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getLocation() {
