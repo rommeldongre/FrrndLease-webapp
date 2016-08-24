@@ -42,7 +42,7 @@ public class VerificationHandler extends Connect implements AppHandler {
 		
 		String verification = rq.getVerification();
 		
-		LOGGER.info("Inside Process Method of email verification handler");
+		LOGGER.info("Inside Process Method of verification handler");
 
 		try {
 			String sqlUserStatus = "Select user_id, user_status, user_full_name, user_email, user_sec_status, user_referral_code, user_referrer_code FROM users WHERE user_activation=?";
@@ -172,7 +172,7 @@ public class VerificationHandler extends Connect implements AppHandler {
 				e.printStackTrace();
 			}
 		}
-		LOGGER.info("Finished Email Verification process method ");
+		LOGGER.info("Finished Verification process method ");
 		return rs;
 	}
 

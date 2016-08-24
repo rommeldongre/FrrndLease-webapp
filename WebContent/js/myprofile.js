@@ -6,16 +6,18 @@ myProfile.controller('myProfileCtrl', ['$scope',
 										'bannerService', 
 										'modalService',
                                         'logoutService',
+                                        '$timeout',
 										function($scope, 
 										userFactory, 
 										profileFactory, 
 										bannerService, 
 										modalService,
-                                        logoutService){
+                                        logoutService,
+                                        $timeout){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null,lastOffset = 0;
+    var Email = '', Mobile = '', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null,lastOffset = 0;
 	$("#openBtn").hide();
     
     // add credits
@@ -133,7 +135,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.userId = userFactory.user;
                 $scope.fullname = response.data.fullName;
 				$scope.mobile = response.data.mobile;
+                Mobile = response.data.mobile;
                 $scope.email = response.data.email;
+                Email = response.data.email;
 				$scope.location = response.data.address;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
@@ -164,6 +168,161 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     // getting the profile
     displayProfile();
+                                            
+    $scope.verifyEmail = function(e){
+        var req = {
+            table: "users",
+            operation: "secuserid",
+            row: {
+                userId:userFactory.user, 
+                email: e
+            }
+        }
+        
+        $.ajax({
+            url: '/flsv2/AdminOps',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                $scope.error = response.Message;
+                $timeout(function(){
+                    $scope.error = '';
+                }, 3000);
+            },
+            error:function() {
+            }
+        });
+    }
+    
+    $scope.verifyMobile = function(m){
+        
+        var req = {
+            table: "users",
+            operation: "secuserid",
+            row: {
+                userId:userFactory.user, 
+                mobile: m+""
+            }
+        }
+        
+        $.ajax({
+            url: '/flsv2/AdminOps',
+            type:'get',
+            data: {req: JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                if(response.Code == 0){
+                    modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
+                        $.ajax({
+                            url: '/flsv2/Verification',
+                            type:'POST',
+                            data: JSON.stringify({verification : result+"_n"}),
+                            contentType:"application/json",
+                            dataType: "JSON",
+                            success: function(response) {
+                                if(response.code == 0){
+                                    $scope.secStatus = 1;
+                                    Mobile = m;
+                                    $scope.notification = 'EMAIL';
+                                }else{
+                                    $scope.secStatus = 0;
+                                }
+                                $scope.error = response.message;
+                                $timeout(function(){
+                                    $scope.error = '';
+                                }, 3000);
+                            },
+                            error: function() {
+                            }
+                        });
+                    }, function(){});
+                }
+            },
+            error:function() {
+            }
+        });
+        
+    }
+    
+    $scope.changeEmailNotification = function(){
+        if($scope.secStatus == 1){
+            var n;
+            if($scope.notification == 'SMS')
+                n = 'BOTH';
+            else
+                n = 'SMS';
+            $.ajax({
+                url: '/flsv2/ChangeUserNotification',
+                type: 'post',
+                data: JSON.stringify({userId:userFactory.user, notification: n, accessToken: userFactory.userAccessToken}),
+                contentType:"application/json",
+                dataType:"json",
+                success: function(response){
+                    if(response.code == 0)
+                        $scope.$apply(function(){
+                            $scope.notification = n;
+                        });
+                    if(response.code == 400)
+                        logoutService.logout();
+                },
+                error: function(){
+                    console.log("not able to change notification");
+                }
+            });
+        }else{
+            $scope.error = 'You dont have a verified email!!';
+        }
+        
+    }
+    
+    $scope.changeSmsNotification = function(){
+        if($scope.secStatus == 1){
+            var n;
+            if($scope.notification == 'EMAIL')
+                n = 'BOTH';
+            else
+                n = 'EMAIL';
+            $.ajax({
+                url: '/flsv2/ChangeUserNotification',
+                type: 'post',
+                data: JSON.stringify({userId:userFactory.user, notification: n, accessToken: userFactory.userAccessToken}),
+                contentType:"application/json",
+                dataType:"json",
+                success: function(response){
+                    if(response.code == 0)
+                        $scope.$apply(function(){
+                            $scope.notification = n;
+                        });
+                    if(response.code == 400)
+                        logoutService.logout();
+                },
+                error: function(){
+                    console.log("not able to change notification");
+                }
+            });
+        }else{
+            $scope.error = 'You dont have a verified mobile number!!';
+        }
+    }
+    
+    $scope.emailTouched = function(e){
+        if(e == Email){
+            $scope.secStatus = 1;
+        }else{
+            $scope.secStatus = 0;
+        }
+    }
+    
+    $scope.mobileTouched = function(m){
+        if(m == Mobile){
+            $scope.secStatus = 1;
+        }else{
+            $scope.secStatus = 0;
+        }
+    }
 	
 	$scope.showCredit = function(){
 		$("#openBtn").click();
@@ -265,7 +424,6 @@ myProfile.controller('myProfileCtrl', ['$scope',
         var req = {
 			userId : userFactory.user,
 			fullName : $scope.fullname,
-			mobile : $scope.mobile,
 			location : $scope.location,
             address: Address,
             locality: Locality,

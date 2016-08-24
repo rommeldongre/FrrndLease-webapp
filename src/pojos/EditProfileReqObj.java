@@ -2,7 +2,7 @@ package pojos;
 
 public class EditProfileReqObj extends ReqObj {
 
-	String userId, fullName, mobile, location, address, locality, sublocality, photoId;
+	String userId, fullName, location, address, locality, sublocality, photoId;
 	float lat, lng;
 	String accessToken;
 
@@ -28,14 +28,6 @@ public class EditProfileReqObj extends ReqObj {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
-	}
-
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
 	}
 
 	public String getLocation() {

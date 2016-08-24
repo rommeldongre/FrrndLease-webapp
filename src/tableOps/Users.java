@@ -161,39 +161,16 @@ public class Users extends Connect {
 					case "google":
 					case "email_activated":
 					case "email_pending":
-						if(!email.equals(rs1.getString("user_email"))){
-							String sqlUpdateEmail = "UPDATE users SET user_email=?, user_activation=? WHERE user_id=?";
-							ps2 = hcp.prepareStatement(sqlUpdateEmail);
-							ps2.setString(1, email);
-							ps2.setString(2, activation+"_n");
-							ps2.setString(3, userId);
-							rs2 = ps2.executeUpdate();
-							
-							if(rs2 == 1){
-								try {
-									Event event = new Event();
-									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
-									res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}else{
-								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
-							}
-						}else{
-							res.setData(FLS_DUPLICATE_ENTRY, "0", "This email already exists.");
-						}
-						break;
-					case "mobile_activated":
-					case "mobile_pending":
 						if(!mobile.equals(rs1.getString("user_mobile"))){
 							Random rnd = new Random();
 							activation =  100000 + rnd.nextInt(900000)+"";
-							String sqlUpdateMobile = "UPDATE users SET user_mobile=?, user_activation=? WHERE user_id=?";
+							String sqlUpdateMobile = "UPDATE users SET user_mobile=?, user_activation=?, user_sec_status=?, user_notification=? WHERE user_id=?";
 							ps2 = hcp.prepareStatement(sqlUpdateMobile);
 							ps2.setString(1, mobile);
 							ps2.setString(2, activation+"_n");
-							ps2.setString(3, userId);
+							ps2.setString(3, "0");
+							ps2.setString(4, User_Notification.EMAIL.name());
+							ps2.setString(5, userId);
 							rs2 = ps2.executeUpdate();
 							
 							if(rs2 == 1){
@@ -211,17 +188,48 @@ public class Users extends Connect {
 							res.setData(FLS_DUPLICATE_ENTRY, "0", "This mobile number is already saved.");
 						}
 						break;
+					case "mobile_activated":
+					case "mobile_pending":
+						if(!email.equals(rs1.getString("user_email"))){
+							String sqlUpdateEmail = "UPDATE users SET user_email=?, user_activation=?, user_sec_status=?, user_notification=? WHERE user_id=?";
+							ps2 = hcp.prepareStatement(sqlUpdateEmail);
+							ps2.setString(1, email);
+							ps2.setString(2, activation+"_n");
+							ps2.setString(3, "0");
+							ps2.setString(4, User_Notification.SMS.name());
+							ps2.setString(5, userId);
+							rs2 = ps2.executeUpdate();
+							
+							if(rs2 == 1){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
+									res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
+							}
+						}else{
+							res.setData(FLS_DUPLICATE_ENTRY, "0", "This email already exists.");
+						}
+						break;
 				}
 				
 			}else{
 				res.setData(FLS_END_OF_DB, "0", FLS_END_OF_DB_M);	
 			}
 			
-		}catch(Exception e){
+		}catch(SQLException e){
 			e.printStackTrace();
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}catch(NullPointerException e){
+			e.printStackTrace();
+			res.setData(FLS_NULL_POINT, "0", FLS_NULL_POINT_M);
 		}finally{
 			try {
+				if(ps2 != null) ps2.close();
 				if(rs1!=null) rs1.close();
 				if(ps1 != null)ps1.close();
 				if(hcp!=null) hcp.close();
