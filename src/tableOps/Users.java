@@ -185,7 +185,17 @@ public class Users extends Connect {
 								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 							}
 						}else{
-							res.setData(FLS_DUPLICATE_ENTRY, "0", "This mobile number is already saved.");
+							if(rs1.getString("user_sec_status").equals("0")){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
+									res.setData(FLS_SUCCESS, "0", "An OTP has been sent to this number");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_DUPLICATE_ENTRY, "0", "This mobile number is already saved.");
+							}
 						}
 						break;
 					case "mobile_activated":
@@ -212,7 +222,17 @@ public class Users extends Connect {
 								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 							}
 						}else{
-							res.setData(FLS_DUPLICATE_ENTRY, "0", "This email already exists.");
+							if(rs1.getString("user_sec_status").equals("0")){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
+									res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_DUPLICATE_ENTRY, "0", "This email already exists.");
+							}
 						}
 						break;
 				}

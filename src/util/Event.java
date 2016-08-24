@@ -604,7 +604,7 @@ public class Event extends Connect{
 			if(rs1.next()){
 				String status = rs1.getString("user_status");
 				String email = null;
-				if(status.equals("email_pending") || status.equals("email_activated")){
+				if(status.equals("email_pending") || status.equals("email_activated") || status.equals("facebook") || status.equals("google")){
 					email = rs1.getString("to_user_id");
 				}else if(rs1.getInt("user_sec_status") == 1){
 					email = rs1.getString("user_email");

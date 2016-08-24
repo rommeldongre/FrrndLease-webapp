@@ -130,6 +130,7 @@ public class FlsEmail extends Connect{
 						+ "Click on this link to activate this email. <br/>"
 						+ "<a href='" + EMAIL_VERIFICATION_URL + "?token=" + obj.getString("fromUserActivation") + "'>"
 						+ EMAIL_VERIFICATION_URL + "?token=" + obj.getString("fromUserActivation") + "</a>" + "<br/>";
+				break;
 
 			case FLS_MAIL_DELETE_ITEM:
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been deleted from the Friend Store");

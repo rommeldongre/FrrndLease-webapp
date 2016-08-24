@@ -17,9 +17,11 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Email = '', Mobile = '', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null,lastOffset = 0;
+    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null,lastOffset = 0;
 	$("#openBtn").hide();
     
+    $scope.user = {};
+                                            
     // add credits
     $scope.addCredits = function(){
         modalService.showModal({}, {actionButtonText: "submit", labelText: "Enter the promo code: ", submitting: true}).then(
@@ -134,10 +136,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
             if (response.data.code == 0) {
                 $scope.userId = userFactory.user;
                 $scope.fullname = response.data.fullName;
-				$scope.mobile = response.data.mobile;
-                Mobile = response.data.mobile;
-                $scope.email = response.data.email;
-                Email = response.data.email;
+				$scope.user.mobile = response.data.mobile;
+                $scope.user.email = response.data.email;
 				$scope.location = response.data.address;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
@@ -152,10 +152,14 @@ myProfile.controller('myProfileCtrl', ['$scope',
 					img.src = url;
 					drawImage(img);
 				}
+                Mobile = response.data.mobile;
+                Email = response.data.email;
+                SecStatus = response.data.userSecStatus;
+                Notification = response.data.userNotification;
             } else {
                 $scope.userId = "";
                 $scope.fullname = "";
-				$scope.mobile = "";
+				$scope.user.mobile = "";
 				$scope.location = "";
 				$scope.credit = "";
 				$scope.referralCode = "";
@@ -175,7 +179,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
             operation: "secuserid",
             row: {
                 userId:userFactory.user, 
-                email: e
+                email: e,
+                activation: CryptoJS.MD5(e).toString()
             }
         }
         
@@ -186,7 +191,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-                $scope.error = response.Message;
+                $scope.$apply(function(){
+                    $scope.error = response.message;
+                });
                 $timeout(function(){
                     $scope.error = '';
                 }, 3000);
@@ -225,12 +232,16 @@ myProfile.controller('myProfileCtrl', ['$scope',
                             success: function(response) {
                                 if(response.code == 0){
                                     $scope.secStatus = 1;
-                                    Mobile = m;
                                     $scope.notification = 'EMAIL';
+                                    SecStatus = 1;
+                                    Mobile = m;
+                                    Notification = 'EMAIL';
                                 }else{
                                     $scope.secStatus = 0;
                                 }
-                                $scope.error = response.message;
+                                $scope.$apply(function(){
+                                    $scope.error = response.message;
+                                });
                                 $timeout(function(){
                                     $scope.error = '';
                                 }, 3000);
@@ -248,12 +259,34 @@ myProfile.controller('myProfileCtrl', ['$scope',
     }
     
     $scope.changeEmailNotification = function(){
-        if($scope.secStatus == 1){
+        var active = false;
+        if($scope.status == 'email_activated' || $scope.status == 'facebook' || $scope.status == 'google'){
+            active = true;
+        }else{
+            if($scope.secStatus == 1){
+                active = true;
+            }else{
+                active = false;
+                $scope.error = 'You dont have a verified email!!';
+            }
+        }
+        
+        if(active){
             var n;
-            if($scope.notification == 'SMS')
-                n = 'BOTH';
-            else
-                n = 'SMS';
+            switch($scope.notification){
+                case 'EMAIL':
+                    n = 'NONE';
+                    break;
+                case 'SMS':
+                    n = 'BOTH';
+                    break;
+                case 'BOTH':
+                    n = 'SMS';
+                    break;
+                case 'NONE':
+                    n = 'EMAIL';
+                    break;
+            }
             $.ajax({
                 url: '/flsv2/ChangeUserNotification',
                 type: 'post',
@@ -264,6 +297,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     if(response.code == 0)
                         $scope.$apply(function(){
                             $scope.notification = n;
+                            Notification = n;
                         });
                     if(response.code == 400)
                         logoutService.logout();
@@ -272,19 +306,38 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     console.log("not able to change notification");
                 }
             });
-        }else{
-            $scope.error = 'You dont have a verified email!!';
         }
-        
     }
     
     $scope.changeSmsNotification = function(){
-        if($scope.secStatus == 1){
+        var active = false;
+        if($scope.status == 'mobile_activated'){
+            active = true;
+        }else{
+            if($scope.secStatus == 1){
+                active = true;
+            }else{
+                active = false;
+                $scope.error = 'You dont have a verified mobile number!!';
+            }
+        }
+        
+        if(active){
             var n;
-            if($scope.notification == 'EMAIL')
-                n = 'BOTH';
-            else
-                n = 'EMAIL';
+            switch($scope.notification){
+                case 'EMAIL':
+                    n = 'BOTH';
+                    break;
+                case 'SMS':
+                    n = 'NONE';
+                    break;
+                case 'BOTH':
+                    n = 'EMAIL';
+                    break;
+                case 'NONE':
+                    n = 'SMS';
+                    break;
+            }
             $.ajax({
                 url: '/flsv2/ChangeUserNotification',
                 type: 'post',
@@ -295,6 +348,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     if(response.code == 0)
                         $scope.$apply(function(){
                             $scope.notification = n;
+                            Notification = n;
                         });
                     if(response.code == 400)
                         logoutService.logout();
@@ -303,25 +357,73 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     console.log("not able to change notification");
                 }
             });
-        }else{
-            $scope.error = 'You dont have a verified mobile number!!';
         }
     }
     
-    $scope.emailTouched = function(e){
-        if(e == Email){
-            $scope.secStatus = 1;
-        }else{
-            $scope.secStatus = 0;
+    $scope.emailTouched = function(){
+        $scope.changedText = true;
+        $scope.secStatus = 0;
+        switch($scope.notification){
+            case 'EMAIL':
+                $scope.notification = 'NONE';
+                break;
+            case 'BOTH':
+                $scope.notification = 'SMS';
+                break;
         }
     }
     
-    $scope.mobileTouched = function(m){
-        if(m == Mobile){
-            $scope.secStatus = 1;
-        }else{
-            $scope.secStatus = 0;
+    $scope.mobileTouched = function(){
+        $scope.changedText = true;
+        $scope.secStatus = 0;
+        switch($scope.notification){
+            case 'SMS':
+                $scope.notification = 'NONE';
+                break;
+            case 'BOTH':
+                $scope.notification = 'EMAIL';
+                break;
         }
+    }
+    
+    $scope.undoEmail = function(){
+        $scope.changedText = false;
+        $scope.secStatus = SecStatus;
+        switch(Notification){
+            case 'SMS':
+                $scope.notification = 'SMS';
+                break;
+            case 'EMAIL':
+                $scope.notification = 'EMAIL';
+                break;
+            case 'BOTH':
+                $scope.notification = 'BOTH';
+                break;
+            case 'NONE':
+                $scope.notification = 'NONE';
+                break;
+        }
+        $scope.user.email = Email;
+    }
+    
+    $scope.undoMobile = function(){
+        $scope.changedText = false;
+        $scope.secStatus = SecStatus;
+        switch(Notification){
+            case 'SMS':
+                $scope.notification = 'SMS';
+                break;
+            case 'EMAIL':
+                $scope.notification = 'EMAIL';
+                break;
+            case 'BOTH':
+                $scope.notification = 'BOTH';
+                break;
+            case 'NONE':
+                $scope.notification = 'NONE';
+                break;
+        }
+        $scope.user.mobile = Mobile;
     }
 	
 	$scope.showCredit = function(){

@@ -17,20 +17,6 @@
                 <span class="label label-warning label-fill btn-tooltip" ng-model="label" ng-if="label == false" style="text-align:right;" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified">Not Verified</span>
                 <span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
             </div>
-            <br/>
-            <form name="secForm">
-                <label ng-if="(status=='mobile_activated')" class="control-label">Email</label>
-                <div ng-if="(status=='mobile_activated')" class="input-group">
-                    <input name="email" type="email" class="form-control" id="email" ng-model="email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-change="emailTouched(email)" placeholder="Email">
-                    <span class="input-group-addon btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(form.email.$touched && form.email.$valid) ? verifyEmail(email) : error='Not a valid email'">{{(secStatus==1) ? 'verified' : 'verify'}}</span>
-                </div>
-                <label ng-if="(status=='email_activated' || status == 'facebook' || status=='google')" class="control-label">Mobile</label>
-                <div name="mobile" ng-if="(status=='email_activated' || status == 'facebook' || status=='google')" class="input-group">
-                    <input type="text" class="form-control" id="mobile" ng-model="mobile" ng-change="mobileTouched(mobile)" placeholder="Mobile">
-                    <span class="input-group-addon btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(mobile.length == 10) ? verifyMobile(mobile) : error='Not a valid Mobile Number'">{{(secStatus==1) ? 'verified' : 'verify'}}</span>
-                </div>
-            </form>
-            <br/>
         </div>
         <div class="col-lg-6 col-md-6">
             <label class="control-label">Credits</label>
@@ -44,23 +30,38 @@
               <input  type="text" class="form-control" ng-disabled="true" ng-model="referralCode">
               <a class="input-group-addon" href="myapp.html#/myfriendslist"><i class="fa fa-share-alt"></i></a>
             </div>
-            <br/> <br/>
+            <br/>
+            <form name="secForm">
+                <label ng-if="(status=='mobile_activated')" class="control-label">Email</label>
+                <div ng-if="(status=='mobile_activated')" class="input-group">
+                    <input name="email" type="email" class="form-control" id="email" ng-model="user.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-change="emailTouched()" placeholder="Email">
+                    <span ng-if="changedText" class="input-group-addon btn btn-fill btn-info" ng-click="undoEmail()">Undo</span>
+                    <span class="input-group-addon btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(secForm.email.$touched && secForm.email.$valid) ? verifyEmail(user.email) : error='Not a valid email'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</span>
+                </div>
+                <label ng-if="(status=='email_activated' || status == 'facebook' || status=='google')" class="control-label">Mobile</label>
+                <div name="mobile" ng-if="(status=='email_activated' || status == 'facebook' || status=='google')" class="input-group">
+                    <input type="text" class="form-control" id="mobile" ng-model="user.mobile" ng-change="mobileTouched()" placeholder="Mobile">
+                    <span ng-if="changedText" class="input-group-addon btn btn-fill btn-info" ng-click="undoMobile()">Undo</span>
+                    <span class="input-group-addon btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(mobile.length == 10) ? verifyMobile(user.mobile) : error='Not a valid Mobile Number'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</span>
+                </div>
+            </form>
+            <br/>
             <label class="control-label">Notification Preferences - </label>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
-                    <button ng-disabled="(status=='email_activated' || status == 'facebook' || status=='google')" type="button" ng-class="((status=='email_activated' || status == 'facebook' || status=='google') ? 'btn btn-simple btn-default' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeEmailNotification()">
+                    <button type="button" ng-class="((status=='email_activated' || status == 'facebook' || status=='google') ? 'btn btn-simple btn-success' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeEmailNotification()">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
                         EMAIL
                         <i ng-if="notification=='EMAIL' || notification=='BOTH'" class="fa fa-check-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
-                        <i ng-if="notification=='SMS' || notification=='NONE'" class="fa fa-times" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
+                        <i ng-if="notification=='SMS' || notification=='NONE'" class="fa fa-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button ng-disabled="(status=='mobile_activated')" type="button" ng-class="((status=='mobile_activated') ? 'btn btn-simple btn-default' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeSmsNotification()">
+                    <button type="button" ng-class="((status=='mobile_activated') ? 'btn btn-simple btn-success' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeSmsNotification()">
                         <i class="fa fa-mobile" aria-hidden="true"></i>
                         SMS
                         <i ng-if="notification=='SMS' || notification=='BOTH'" class="fa fa-check-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
-                        <i ng-if="notification=='EMAIL' || notification=='NONE'" class="fa fa-times" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
+                        <i ng-if="notification=='EMAIL' || notification=='NONE'" class="fa fa-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
                     </button>
                 </div>
             </div>
@@ -72,7 +73,7 @@
             <div class="col-lg-6 col-md-6">
                 <label class="control-label">Photo Id - </label>
                 <input name="photoId" type="file" class="form-control" accept="image/jpeg" id="ifile" ng-model="ifile">
-                <canvas id="panel" ng-model="panel" width="200" height="200" style="display:block;margin:auto;padding-top:50px;"></canvas>
+                <canvas id="panel" ng-model="panel" width="200" height="200" style="display:block;margin:auto;padding-top:20px;"></canvas>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label class="control-label">Name</label>
