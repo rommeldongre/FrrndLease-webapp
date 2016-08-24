@@ -191,11 +191,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
             contentType:"application/json",
             dataType: "json",
             success: function(response) {
-                $scope.$apply(function(){
-                    $scope.error = response.message;
-                });
+                $scope.user.error = response.message;
                 $timeout(function(){
-                    $scope.error = '';
+                    $scope.user.error = '';
                 }, 3000);
             },
             error:function() {
@@ -233,17 +231,16 @@ myProfile.controller('myProfileCtrl', ['$scope',
                                 if(response.code == 0){
                                     $scope.secStatus = 1;
                                     $scope.notification = 'EMAIL';
+                                    $scope.changedText = false;
                                     SecStatus = 1;
                                     Mobile = m;
                                     Notification = 'EMAIL';
                                 }else{
                                     $scope.secStatus = 0;
                                 }
-                                $scope.$apply(function(){
-                                    $scope.error = response.message;
-                                });
+                                $scope.user.error = response.message;
                                 $timeout(function(){
-                                    $scope.error = '';
+                                    $scope.user.error = '';
                                 }, 3000);
                             },
                             error: function() {
@@ -267,7 +264,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 active = true;
             }else{
                 active = false;
-                $scope.error = 'You dont have a verified email!!';
+                $scope.user.error = 'You dont have a verified email!!';
             }
         }
         
@@ -318,7 +315,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 active = true;
             }else{
                 active = false;
-                $scope.error = 'You dont have a verified mobile number!!';
+                $scope.user.error = 'You dont have a verified mobile number!!';
             }
         }
         
@@ -404,6 +401,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 break;
         }
         $scope.user.email = Email;
+        $scope.user.error = '';
     }
     
     $scope.undoMobile = function(){
@@ -424,6 +422,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 break;
         }
         $scope.user.mobile = Mobile;
+        $scope.user.error = '';
     }
 	
 	$scope.showCredit = function(){
