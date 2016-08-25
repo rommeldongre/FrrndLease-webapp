@@ -38,20 +38,30 @@ html, body{
 	overflow-x: hidden;
 }
 
-#marketingpanel{
-	background-image: url("makespaceforlife-rect.jpg");
-	background-position: relative;
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
-	/*-webkit-filter: grayscale(70%);*/
-	
-	position: relative;
-	margin:0;
-	padding:0;
-	width: 100%;
-	height: 100%;
-	
 
+#marketingpanel{
+    position: relative;
+    background: white;
+    overflow: hidden;
+}
+     
+#marketingpanel:before{
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    background-image: url("makespaceforlife-rect.jpg");
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    -ms-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: 100% 100%;
 }
 
 #marketingheading{
@@ -76,11 +86,11 @@ html, body{
 #marketingstore{
 	display: block;
 	position: relative;
+	text-align: center;
 }
 
 #storebutton{
 	position: relative;
-	margin-left: 46%;
 }
 
 #marketingsearch{
