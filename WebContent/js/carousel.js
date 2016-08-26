@@ -22,8 +22,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         latitude = lat;
         longitude = lng;
         s = s.toLowerCase();
-        if(s.match(/^[0-9a-zA-Z\s]+$/) && s != "undefined"){
-            searchString = s;
+        if(s != "undefined"){
+            searchString = s.replace(/[^0-9a-zA-Z ]/g, " ");
             $scope.search.show = true;
         }
         else{
