@@ -92,7 +92,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			if(searchString != "" || searchString != null)
 				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%')";
 			
-			sql = sql + " ORDER BY distance LIMIT "+offset+", "+limit;
+			sql = sql + " ORDER BY friendst DESC, distance LIMIT "+offset+", "+limit;
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
