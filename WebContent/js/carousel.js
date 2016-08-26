@@ -50,12 +50,12 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var user = localStorage.getItem("userloggedin");
 	$scope.user_status = user;
     if(user != "" || user != null || user != 'anonymous'){
-		match_userId = user;
         if(window.location.hash == '#/mypostings'){
             userId = user;
-			match_userId = null;
             ItemStatus = ['InStore', 'OnHold'];
-        }
+        }else{
+			match_userId = user;
+		}
     }
     
     // getting the width and height of the carousel when page gets loaded
