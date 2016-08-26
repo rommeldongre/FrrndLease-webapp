@@ -265,7 +265,12 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_RENEW_LEASE_REQUESTOR:
 				SUBJECT = (" Lease Renewed");
-				BODY = "Lease has been renewed by the owner of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> ";
+				BODY = ("<body>Item Owner " +obj.getString("fromFullName") + " has renewed lease for the following item to you on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_FROM:
