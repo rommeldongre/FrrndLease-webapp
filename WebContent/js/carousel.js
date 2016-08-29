@@ -5,6 +5,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     var lastItem = 0;
     // selected category is stored in this variable
     var category = '';
+	// if this carousel is loaded in myapp/index then match_userId in req var is set to current userId from local storage
+    var match_userId = null;
     // if this carousel is loaded in myPostings then userId in req var is set to current userId from local storage
     var userId = null;
     // searchString is used to display items which are being searched
@@ -51,7 +53,9 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         if(window.location.hash == '#/mypostings'){
             userId = user;
             ItemStatus = ['InStore', 'OnHold'];
-        }
+        }else{
+			match_userId = user;
+		}
     }
     
     // getting the width and height of the carousel when page gets loaded
@@ -109,6 +113,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         var req = {
             cookie: token,
             userId: userId,
+			match_userId: match_userId,
             category: category,
             limit: $scope.itemsLimit,
             lat: latitude,
