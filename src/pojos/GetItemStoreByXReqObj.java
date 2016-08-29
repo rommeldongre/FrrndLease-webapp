@@ -7,6 +7,8 @@ public class GetItemStoreByXReqObj extends ReqObj {
 	// user posting item
 	@NotNull
 	String userId;
+	
+	String match_userId;
 
 	// Cookie
 	// TBD: change to user id type
@@ -106,4 +108,11 @@ public class GetItemStoreByXReqObj extends ReqObj {
 		this.cookie = cookie;
 	}
 
+	public String getMatch_userId() {
+		return match_userId;
+	}
+
+	public void setMatch_userId(String match_userId) {
+		this.match_userId = match_userId;
+	}
 }
