@@ -211,7 +211,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             $('#loginModal').modal('show');
         }
         else{
-            window.location.replace("EditPosting.html");
+            window.location.replace("myapp.html#/postitem");
         }
     }
     

@@ -15,36 +15,36 @@ import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import app.EmailVerificationHandler;
+import app.ChangeUserNotificationHandler;
 import app.NotImplementedException;
-import pojos.EmailVerificationReqObj;
-import pojos.EmailVerificationResObj;
+import pojos.ChangeUserNotificationReqObj;
+import pojos.ChangeUserNotificationResObj;
 import util.FlsLogger;
 
-@WebServlet(description = "Email Verification", urlPatterns = { "/EmailVerification" })
-public class EmailVerification extends HttpServlet {
+@WebServlet(description = "Change User Notification", urlPatterns = { "/ChangeUserNotification" })
+public class ChangeUserNotification extends HttpServlet{
 
-	private FlsLogger LOGGER = new FlsLogger(EmailVerification.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(ChangeUserNotification.class.getName());
 
 	private static final long serialVersionUID = 1L;
-
+	
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse)
 			throws ServletException, IOException {
 		// HTTP request to Service request pojo
 
-		LOGGER.info("Inside Post Method");
+		LOGGER.info("Inside Post Method of Change User Notificaiton Api");
 
 		ObjectMapper mapper = new ObjectMapper();
-		EmailVerificationReqObj request = mapper.readValue(httprequest.getInputStream(), EmailVerificationReqObj.class);
+		ChangeUserNotificationReqObj request = mapper.readValue(httprequest.getInputStream(), ChangeUserNotificationReqObj.class);
 		httpresponse.setContentType("application/json");
 		// application logic from here..
-		EmailVerificationResObj response = null;
+		ChangeUserNotificationResObj response = null;
 
 		try {
 
 			// App Handler to to process request and create service response
 			// into pojo
-			response = (EmailVerificationResObj) EmailVerificationHandler.getInstance().process(request);
+			response = (ChangeUserNotificationResObj) ChangeUserNotificationHandler.getInstance().process(request);
 
 			// service response pojo to json
 			PrintWriter out = httpresponse.getWriter();
@@ -54,11 +54,11 @@ public class EmailVerification extends HttpServlet {
 
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			LOGGER.warning("EmailVerification process method not implemented");
-			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,
-					"EmailVerification process method not implemented");
+			LOGGER.warning("ChangeUserNotification process method not implemented");
+			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "ChangeUserNotification process method not implemented");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
 }

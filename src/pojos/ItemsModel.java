@@ -21,21 +21,22 @@ public class ItemsModel {
 	
 	private void extractData() {
 		try {
-			LOGGER.info("Extracting data from row object");
+			LOGGER.info("Extracting data from row object : " + obj.toString());
 			
-			title = obj.getString("title");
-			if(obj.isNull("description")){
-				description = "";
-			}else{
-				description = obj.getString("description");
-			}
-			category = obj.getString("category");
-			userId = obj.getString("userId");
-			leaseTerm = obj.getString("leaseTerm");
-			id = obj.getInt("id");
-			leaseValue = obj.getInt("leaseValue");
-			status = obj.getString("status");
-			image = obj.getString("image");
+			if(obj.has("title"))title = obj.getString("title");
+			if(obj.has("description"))
+				if(obj.isNull("description")){
+					description = "";
+				}else{
+					description = obj.getString("description");
+				}
+			if(obj.has("category"))category = obj.getString("category");
+			if(obj.has("userId"))userId = obj.getString("userId");
+			if(obj.has("leaseTerm"))leaseTerm = obj.getString("leaseTerm");
+			if(obj.has("id"))id = obj.getInt("id");
+			if(obj.has("leaseValue"))leaseValue = obj.getInt("leaseValue");
+			if(obj.has("status"))status = obj.getString("status");
+			if(obj.has("image"))image = obj.getString("image");
 			if(obj.has("uid")) uid = obj.getString("uid");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse row object of JSON");

@@ -1,9 +1,9 @@
-var myApp = angular.module('myApp', ['headerApp', 'carouselApp', 'ngRoute']);
+var myApp = angular.module('myApp', ['headerApp', 'carouselApp', 'ngRoute', 'cp.ng.fix-image-orientation']);
 
 myApp.run(['userFactory', function(userFactory){
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
-        window.location.replace("mylogin.html");
+        window.location.replace("index.html");
     
 }]);
 
@@ -59,6 +59,11 @@ myApp.config(function($routeProvider){
     .when('/mynotifications', {
         templateUrl : 'mynotifications.html',
         controller : 'myNotificationsCtrl'
+    })
+    
+    .when('/postitem/:id?', {
+        templateUrl : 'postitem.html',
+        controller : 'postItemCtrl'
     })
     
     .otherwise({redirectTo : '/'});

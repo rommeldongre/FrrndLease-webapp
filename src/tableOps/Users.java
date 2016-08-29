@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Random;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,17 +16,17 @@ import pojos.UsersModel;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.Event.User_Notification;
 import util.FlsLogger;
 import util.LogCredit;
 import util.OAuth;
 import util.ReferralCode;
-import app.EmailVerificationHandler;
 
 public class Users extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(Users.class.getName());
 
-	private String userId, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
+	private String userId, email, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
 			check = null, token, address, locality, sublocality, referralCode=null,profilePicture,friendId;
 	private float lat, lng;
 	private String signUpStatus;
@@ -120,6 +122,11 @@ public class Users extends Connect {
 			}
 			break;
 			
+		case "secuserid":
+			LOGGER.info("Saving the secondary user id");
+			saveSecUserId();
+			break;
+			
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
@@ -128,8 +135,134 @@ public class Users extends Connect {
 		return res;
 	}
 
+	private void saveSecUserId(){
+		userId = um.getUserId();
+		email = um.getEmail();
+		mobile = um.getMobile();
+		activation = um.getActivation();
+		
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			String sqlCheckStatus = "SELECT user_email, user_mobile, user_status, user_sec_status FROM users WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlCheckStatus);
+			ps1.setString(1, userId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				
+				switch(rs1.getString("user_status")){
+					case "facebook":
+					case "google":
+					case "email_activated":
+					case "email_pending":
+						if(!mobile.equals(rs1.getString("user_mobile"))){
+							Random rnd = new Random();
+							activation =  100000 + rnd.nextInt(900000)+"";
+							String sqlUpdateMobile = "UPDATE users SET user_mobile=?, user_activation=?, user_sec_status=?, user_notification=? WHERE user_id=?";
+							ps2 = hcp.prepareStatement(sqlUpdateMobile);
+							ps2.setString(1, mobile);
+							ps2.setString(2, activation+"_n");
+							ps2.setString(3, "0");
+							ps2.setString(4, User_Notification.EMAIL.name());
+							ps2.setString(5, userId);
+							rs2 = ps2.executeUpdate();
+							
+							if(rs2 == 1){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
+									res.setData(FLS_SUCCESS, "0", "An OTP has been sent to this number");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
+							}
+						}else{
+							if(rs1.getString("user_sec_status").equals("0")){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
+									res.setData(FLS_SUCCESS, "0", "An OTP has been sent to this number");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_DUPLICATE_ENTRY, "0", "This mobile number is already saved.");
+							}
+						}
+						break;
+					case "mobile_activated":
+					case "mobile_pending":
+						if(!email.equals(rs1.getString("user_email"))){
+							String sqlUpdateEmail = "UPDATE users SET user_email=?, user_activation=?, user_sec_status=?, user_notification=? WHERE user_id=?";
+							ps2 = hcp.prepareStatement(sqlUpdateEmail);
+							ps2.setString(1, email);
+							ps2.setString(2, activation+"_n");
+							ps2.setString(3, "0");
+							ps2.setString(4, User_Notification.SMS.name());
+							ps2.setString(5, userId);
+							rs2 = ps2.executeUpdate();
+							
+							if(rs2 == 1){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
+									res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
+							}
+						}else{
+							if(rs1.getString("user_sec_status").equals("0")){
+								try {
+									Event event = new Event();
+									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
+									res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}else{
+								res.setData(FLS_DUPLICATE_ENTRY, "0", "This email already exists.");
+							}
+						}
+						break;
+				}
+				
+			}else{
+				res.setData(FLS_END_OF_DB, "0", FLS_END_OF_DB_M);	
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}catch(NullPointerException e){
+			e.printStackTrace();
+			res.setData(FLS_NULL_POINT, "0", FLS_NULL_POINT_M);
+		}finally{
+			try {
+				if(ps2 != null) ps2.close();
+				if(rs1!=null) rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp!=null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	private void Add() {
 		userId = um.getUserId();
+		email = um.getEmail();
 		fullName = um.getFullName();
 		mobile = um.getMobile();
 		location = um.getLocation();
@@ -145,6 +278,14 @@ public class Users extends Connect {
 		profilePicture = um.getProfilePicture();
 		friendId = um.getFriendId();
 
+		String userNotification = User_Notification.EMAIL.name();
+		
+		if(status.equals("mobile_pending")){
+			Random rnd = new Random();
+			activation =  100000 + rnd.nextInt(900000)+"";
+			userNotification = User_Notification.SMS.name();
+		}
+		
 		String  referrer_code=null;
 		PreparedStatement stmt = null, stmt1 = null,stmt2=null,stmt3 = null;
 		ResultSet rs1 = null,rs2=null;
@@ -178,27 +319,29 @@ public class Users extends Connect {
 			int ref_code_length = 8;
 			ReferralCode rc = new ReferralCode();
 			String generated_ref_code = rc.createRandomCode(ref_code_length, userId);
-			String sql = "insert into users (user_id,user_full_name,user_mobile,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into users (user_id,user_full_name,user_mobile,user_email,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status,user_notification) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
 			stmt.setString(1, userId);
 			stmt.setString(2, fullName);
 			stmt.setString(3, mobile);
-			stmt.setString(4, location);
-			stmt.setString(5, auth);
-			stmt.setString(6, activation);
-			stmt.setString(7, status);
-			stmt.setInt(8, 10);
-			stmt.setFloat(9, lat);
-			stmt.setFloat(10, lng);
-			stmt.setString(11, address);
-			stmt.setString(12, locality);
-			stmt.setString(13, sublocality);
-			stmt.setString(14, generated_ref_code);
-			stmt.setString(15, referrer_code);
-			stmt.setString(16, profilePicture);
-			stmt.setInt(17, 1);
+			stmt.setString(4, email);
+			stmt.setString(5, location);
+			stmt.setString(6, auth);
+			stmt.setString(7, activation+"_u");
+			stmt.setString(8, status);
+			stmt.setInt(9, 10);
+			stmt.setFloat(10, lat);
+			stmt.setFloat(11, lng);
+			stmt.setString(12, address);
+			stmt.setString(13, locality);
+			stmt.setString(14, sublocality);
+			stmt.setString(15, generated_ref_code);
+			stmt.setString(16, referrer_code);
+			stmt.setString(17, profilePicture);
+			stmt.setInt(18, 1);
+			stmt.setString(19, userNotification);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);
@@ -208,9 +351,8 @@ public class Users extends Connect {
 			LogCredit lc = new LogCredit();
 			lc.addLogCredit(userId,10,"SignUp","");
 			
-			if(status!="email_pending"){
-				EmailVerificationHandler ev = new EmailVerificationHandler();
-				int result3 = ev.updateCredits(generated_ref_code,referrer_code);	
+			if(!(status.equals("email_pending") && status.equals("mobile_pending"))){
+				lc.updateCredits(generated_ref_code,referrer_code);
 			}
 			
 			String sqlChangeFriendStatus = "UPDATE friends SET friend_status=? WHERE friend_id=?";
@@ -223,9 +365,10 @@ public class Users extends Connect {
 				Event event = new Event();
 				if (status.equals("email_pending")){
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
-				}
-				else{
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to frrndlease.");
+				}else if(status.equals("mobile_pending")){
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_SMS_SIGNUP_VALIDATION, 0, "Here is the OTP for your mobile verification of FrrndLease account: " + activation);
+				}else{
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered to FrrndLease.");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -262,7 +405,6 @@ public class Users extends Connect {
 				if(stmt1!=null) stmt1.close();
 				if(hcp!=null) hcp.close();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -505,7 +647,7 @@ public class Users extends Connect {
 		profilePicture = um.getProfilePicture();
 		String dbProfilePicture = null;
 		int profilePicrs=0;
-		LOGGER.info("Inside GetPrevious method");
+		LOGGER.info("Inside getUserInfo method");
 
 		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null,profilepicstmt=null;
 		ResultSet result1 = null, rs = null;
@@ -524,7 +666,7 @@ public class Users extends Connect {
 				String status = result1.getString("user_status");
 				
 				if(liveStatus == 1){
-					if (status.equals("facebook") || status.equals("google") || status.equals("email_activated")) {
+					if (status.equals("facebook") || status.equals("google") || status.equals("email_activated") || status.equals("mobile_activated")) {
 
 						if (status.equals(signUpStatus)) {
 							String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
@@ -541,6 +683,7 @@ public class Users extends Connect {
 								JSONObject json = new JSONObject();
 								json.put("userId", rs.getString("user_id"));
 								json.put("fullName", rs.getString("user_full_name"));
+								json.put("email", rs.getString("user_email"));
 								json.put("mobile", rs.getString("user_mobile"));
 								json.put("location", rs.getString("user_location"));
 								json.put("referralCode", rs.getString("user_referral_code"));
@@ -586,8 +729,10 @@ public class Users extends Connect {
 							Code = FLS_END_OF_DB;
 							if (status.equals("facebook") || status.equals("google"))
 								message = "Signed up using " + status + "!! Please continue with " + status;
-							else
+							else if (status.equals("email_activated"))
 								message = "Signed up using email!! Please login with email";
+							else if (status.equals("mobile_activated"))
+								message = "Signed up using mobile!! Please login with phone number";
 						}
 
 					} else {
@@ -595,6 +740,10 @@ public class Users extends Connect {
 							Id = "0";
 							Code = FLS_INVALID_OPERATION;
 							message = "Please click on the link sent to your email to activate this account!!";
+						} else if (status.equals("mobile_pending")) {
+							Id = "0";
+							Code = FLS_INVALID_OPERATION;
+							message = "Your account is not activated using the OTP!!";
 						} else {
 							if (signUpStatus.equals("facebook") || signUpStatus.equals("google")) {
 								String sql = "SELECT * FROM users WHERE user_id = ? AND user_auth = ?";
@@ -610,6 +759,7 @@ public class Users extends Connect {
 								while (rs.next()) {
 									JSONObject json = new JSONObject();
 									json.put("userId", rs.getString("user_id"));
+									json.put("email", rs.getString("user_email"));
 									json.put("fullName", rs.getString("user_full_name"));
 									json.put("mobile", rs.getString("user_mobile"));
 									json.put("location", rs.getString("user_location"));
@@ -891,17 +1041,22 @@ public class Users extends Connect {
 		
 		try{
 			
-			String sqlCheckActivation = "SELECT user_activation FROM users WHERE user_activation=?";
+			String sqlCheckActivation = "SELECT user_activation, user_status FROM users WHERE user_activation=?";
 			ps1 = hcp.prepareStatement(sqlCheckActivation);
 			ps1.setString(1, activation);
 			
 			rs1 = ps1.executeQuery();
 			
 			if(rs1.next()){
+				if(rs1.getString("user_status").equals("mobile_activated")){
+					Random rnd = new Random();
+					token = 100000 + rnd.nextInt(900000)+"";
+				}
+				
 				String sqlUpdateUserPassword = "UPDATE users SET user_auth=?,user_activation=? WHERE user_activation=?";
 				ps2 = hcp.prepareStatement(sqlUpdateUserPassword);
 				ps2.setString(1, auth);
-				ps2.setString(2, token);
+				ps2.setString(2, token+"_u");
 				ps2.setString(3, activation);
 				
 				ps2.executeUpdate();

@@ -42,6 +42,8 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 		ForgotPasswordResObj rs = new ForgotPasswordResObj();
 
 		String userId = rq.getUserId();
+		
+		Event event = new Event();
 
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
@@ -71,18 +73,16 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 						try{
 							UsersModel um = new UsersModel();
 							um.setActivation(activation);
-							Event event = new Event();
 							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_SIGNUP_VALIDATION, 0, "Click on the link sent to your registered email account.");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						
-						rs.setCode(FLS_INVALID_USER_I);
+						rs.setCode(FLS_NOT_VERIFIED);
 						rs.setMessage("This email was not verified from the link sent during sign up.");
 						break;
 					case "email_activated":
 						try{
-							Event event = new Event();
 							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "A link has been sent to your registered email account for reseting the password.");
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -91,6 +91,26 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 						rs.setCode(FLS_SUCCESS);
 						rs.setMessage("The link to reset password has been sent to your email.");
 						break;
+					case "mobile_pending":
+						try{
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_SMS_SIGNUP_VALIDATION, 0, "Please enter this OTP for verifiying your mobile number.");
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+						
+						rs.setCode(FLS_NOT_VERIFIED);
+						rs.setMessage("This mobile number is not verified. Please enter the otp sent to your mobile number to verify the same.");
+						break;
+					case "mobile_activated":
+						try{
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "Please use this OTP for reseting your password.");
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+						
+						rs.setCode(FLS_SUCCESS);
+						rs.setMessage("An OTP has been sent to reset the password.");
+						break;
 					default:
 						rs.setCode(FLS_ENTRY_NOT_FOUND);
 						rs.setMessage("Somethings wrong in our side. We'll get back to you as soon as it is fixed.");
@@ -98,7 +118,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 				}
 			}else{
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setMessage("This email id does not exist!!");
+				rs.setMessage("This user id does not exist!!");
 			}
 			
 		} catch (SQLException e) {

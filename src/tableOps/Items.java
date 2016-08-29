@@ -126,6 +126,11 @@ public class Items extends Connect {
 				e.printStackTrace();
 			}
 			break;
+			
+		case "getdetails":
+			LOGGER.info("getdetails operation is selected");
+			getDetails();
+			break;
 
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
@@ -396,15 +401,14 @@ public class Items extends Connect {
 			}
 		}finally{
 			try {
-				rs.close();
+				if(rs != null)rs.close();
 				
-				stmt.close();
-				stmt2.close();
-				s.close();
+				if(stmt != null)stmt.close();
+				if(stmt2 != null)stmt2.close();
+				if(s != null)s.close();
 				
-				hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				if(hcp != null)hcp.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -860,6 +864,56 @@ public class Items extends Connect {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void getDetails(){
+		id = im.getId();
+		userId = im.getUserId();
+		
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			String sqlGetDetails = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
+			ps1 = hcp.prepareStatement(sqlGetDetails);
+			ps1.setInt(1, id);
+			ps1.setString(2, userId);
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				
+				JSONObject json = new JSONObject();
+				json.put("id", rs1.getInt("item_id"));
+				json.put("title", rs1.getString("item_name"));
+				json.put("category", rs1.getString("item_category"));
+				json.put("description", rs1.getString("item_desc"));
+				json.put("leaseValue", rs1.getInt("item_lease_value"));
+				json.put("leaseTerm", rs1.getString("item_lease_term"));
+				json.put("image", rs1.getString("item_image"));
+				json.put("uid", rs1.getString("item_uid"));
+				
+				message = json.toString();
+				
+				res.setData(FLS_SUCCESS, "0", message);
+			}else{
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			}
 		}
 	}
