@@ -778,6 +778,7 @@ public class FlsConfig extends Connect{
 					}catch(SQLException e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
+						System.exit(1);
 					}finally {
 						try {
 							// close and reset connection to null
