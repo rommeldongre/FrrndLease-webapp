@@ -637,14 +637,14 @@ public class Event extends Connect{
 						obj.put("itemId", rs2.getInt("item_id"));
 						obj.put("title", rs2.getString("item_name"));
 						obj.put("category", rs2.getString("item_category"));
-						if(rs2.getString("item_desc") == null || rs2.getString("item_desc").equals(""))
+						if(rs2.getString("item_desc") == null || rs2.getString("item_desc").equals("") || rs2.getString("item_desc").equals("null"))
 							obj.put("description", "");
 						else
 							obj.put("description", rs2.getString("item_desc"));
 						obj.put("itemUserId", rs2.getString("item_user_id"));
 						obj.put("leaseValue", rs2.getInt("item_lease_value"));
 						obj.put("leaseTerm", rs2.getString("item_lease_term"));
-						if(rs2.getString("item_image") == null || rs2.getString("item_image").equals(""))
+						if(rs2.getString("item_image") == null || rs2.getString("item_image").equals("") || rs2.getString("item_image").equals("null"))
 							obj.put("image", "");
 						else
 							obj.put("image", rs2.getString("item_image"));
