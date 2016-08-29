@@ -678,7 +678,7 @@ public class FlsConfig extends Connect{
 				// This block adds user_notification column in users table
 				if(dbBuild < 2018){
 					
-					String sqlUserNotification = "ALTER TABLE `users` ADD `user_notification` ENUM('EMAIL','SMS','BOTH','NONE') NOT NULL DEFAULT 'BOTH' AFTER `user_live_status`";
+					String sqlUserNotification = "ALTER TABLE `users` ADD `user_notification` ENUM('EMAIL','SMS','BOTH','NONE') NOT NULL DEFAULT 'EMAIL' AFTER `user_live_status`";
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlUserNotification);
@@ -778,6 +778,7 @@ public class FlsConfig extends Connect{
 					}catch(SQLException e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
+						System.exit(1);
 					}finally {
 						try {
 							// close and reset connection to null
