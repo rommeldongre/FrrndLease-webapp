@@ -29,6 +29,7 @@ public class Event extends Connect{
 	
 	FlsLogger LOGGER = new FlsLogger(Event.class.getName());
 	
+	String ENV_CONFIG = FlsConfig.env;
 	String URL = FlsConfig.prefixUrl;
 	
 	public enum Notification_Type {
@@ -536,8 +537,13 @@ public class Event extends Connect{
 		
 		LOGGER.info("Sending msg for this event id : " + eventId);
 
-		String ACCOUNT_SID = "AC133fd97e5cb38d1e4d3ebd176f2a0c71";
-		String AUTH_TOKEN = "84f1a1797a2e386aca2d8256e3f5ce6f";
+		String ACCOUNT_SID = "ACd0d67cc952f254e5cce8e6912527750a";
+		String AUTH_TOKEN = "69d7e761d7361e35fe43afd55acff5ff";
+		
+		if(ENV_CONFIG.equals("dev")){
+			ACCOUNT_SID = "AC133fd97e5cb38d1e4d3ebd176f2a0c71";
+			AUTH_TOKEN = "84f1a1797a2e386aca2d8256e3f5ce6f";
+		}
 		
 		PreparedStatement ps = null;
 		ResultSet rs = null;

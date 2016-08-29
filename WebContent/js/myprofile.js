@@ -247,6 +247,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
                             }
                         });
                     }, function(){});
+                }else{
+                    modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(
+                            function(r){}, function(){});
                 }
             },
             error:function() {
