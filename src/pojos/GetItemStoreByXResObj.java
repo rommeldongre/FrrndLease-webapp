@@ -48,6 +48,16 @@ public class GetItemStoreByXResObj extends ResObj{
 	// distance of item from current searched location
 	String distance;
 	
+	boolean friendStatus;
+	
+	public boolean isFriendStatus() {
+		return friendStatus;
+	}
+
+	public void setFriendStatus(boolean friendStatus) {
+		this.friendStatus = friendStatus;
+	}
+
 	public String getLocality() {
 		return locality;
 	}

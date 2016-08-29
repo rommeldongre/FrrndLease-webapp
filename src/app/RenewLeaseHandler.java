@@ -168,7 +168,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 
 	private boolean renewLease(RenewLeaseReqObj rq, RenewLeaseResObj rs) throws SQLException {
 		
-		PreparedStatement psRenewSelect = null,psRenewUpdate = null, psAddCredit = null, psDebitCredit = null, ps1 = null;
+		PreparedStatement psRenewSelect = null,psRenewUpdate = null, psUpdateLeaseStatus = null, psAddCredit = null, psDebitCredit = null, ps1 = null;
 		ResultSet result1 = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
 		int addCredit = 0, subCredit = 0;
@@ -245,6 +245,25 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				
 				if(renewAction == 0 ){
 					System.out.println("Error occured while firing Update query on lease table for Renew Lease");
+					rs.setCode(FLS_ENTRY_NOT_FOUND);
+					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+					hcp.rollback();
+					return false;
+				}
+				
+				String updateItemStatussql = "UPDATE`items` SET item_status=? WHERE item_id=?"; //
+				
+				psUpdateLeaseStatus = hcp.prepareStatement(updateItemStatussql);
+	
+				LOGGER.info("Statement created. Executing renew query ...");
+				psUpdateLeaseStatus.setString(1, "LeaseStarted");
+				psUpdateLeaseStatus.setInt(2, rq.getItemId());
+				
+				int updateStatusAction =0;
+				updateStatusAction = psUpdateLeaseStatus.executeUpdate();
+				
+				if(updateStatusAction == 0 ){
+					System.out.println("Error occured while firing Update query on Items table for Renewing Item Status");
 					rs.setCode(FLS_ENTRY_NOT_FOUND);
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();

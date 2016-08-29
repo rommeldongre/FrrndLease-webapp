@@ -36,6 +36,7 @@
                                     </a><br>
                                     <p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
                                     <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br>
+									<span class="label label-success label-fill" ng-if="item.friendStatus == true" style="text-align:center;">Friend</span><br>
                                     <b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
                                     <span ng-if="item.leaseTerm != ''" class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
                                     <label ng-switch="user_status" >
