@@ -452,14 +452,14 @@ private boolean sendEmail(int eventId){
 			obj.put("itemId", rs.getInt("item_id"));
 			obj.put("title", rs.getString("item_name"));
 			obj.put("category", rs.getString("item_category"));
-			if(rs.getString("item_desc") == null || rs.getString("item_desc").equals("") || rs.getString("item_desc").equals("null"))
+			if(rs.getString("item_desc") == null || rs.getString("item_desc").equals(""))
 				obj.put("description", "");
 			else
 				obj.put("description", rs.getString("item_desc"));
 			obj.put("itemUserId", rs.getString("item_user_id"));
 			obj.put("leaseValue", rs.getInt("item_lease_value"));
 			obj.put("leaseTerm", rs.getString("item_lease_term"));
-			if(rs.getString("item_image") == null || rs.getString("item_image").equals("") || rs.getString("item_image").equals("null"))
+			if(rs.getString("item_image") == null || rs.getString("item_image").equals(""))
 				obj.put("image", "");
 			else
 				obj.put("image", rs.getString("item_image"));
