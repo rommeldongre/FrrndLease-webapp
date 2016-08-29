@@ -24,6 +24,7 @@ public class ErrorCat {
 	final public int FLS_ITEM_ON_HOLD = 217;
 	final public int FLS_ACCESS_TOKEN_FAILED = 400;
 	final public int FLS_NULL_POINT = 218;
+	final public int FLS_NOT_VERIFIED = 300;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";

@@ -14,6 +14,12 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
+import com.twilio.sdk.TwilioRestClient;
+import com.twilio.sdk.resource.factory.MessageFactory;
+import com.twilio.sdk.resource.instance.Message;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import connect.Connect;
 import pojos.GetNotificationsListResObj;
 import pojos.GetNotificationsResObj;
@@ -26,6 +32,7 @@ public class Event extends Connect{
 	String URL = FlsConfig.prefixUrl;
 	
 	public enum Notification_Type {
+		FLS_MAIL_FORGOT_PASSWORD,
 		FLS_MAIL_REGISTER,
 		FLS_MAIL_SIGNUP_VALIDATION,
 		FLS_MAIL_POST_ITEM,
@@ -48,13 +55,16 @@ public class Event extends Connect{
 		FLS_MAIL_GRANT_LEASE_TO,
 		FLS_MAIL_REJECT_LEASE_FROM,
 		FLS_MAIL_REJECT_LEASE_TO,
-		FLS_MAIL_FORGOT_PASSWORD,
 		FLS_MAIL_GRACE_PERIOD_OWNER,
 		FLS_MAIL_GRACE_PERIOD_REQUESTOR,
 		FLS_MAIL_RENEW_LEASE_OWNER,
 		FLS_MAIL_RENEW_LEASE_REQUESTOR,
 		FLS_NOMAIL_ADD_WISH_ITEM,
-		FLS_SMS_SIGNUP_VALIDATION
+		FLS_SMS_FORGOT_PASSWORD,
+		FLS_SMS_SIGNUP_VALIDATION,
+		FLS_SMS_REGISTER,
+		FLS_EMAIL_VERIFICATION,
+		FLS_MOBILE_VERIFICATION
 	}
 	
 	public enum Event_Type {
@@ -95,6 +105,8 @@ public class Event extends Connect{
 	}
 	
 	public void createEvent(String fromUserId, String toUserId, Event_Type eventType, Notification_Type notificationType, int itemId, String message){
+		
+		LOGGER.info("Inside createEvent Method");
 		
 		PreparedStatement ps = null;
 		Connection hcp = getConnectionFromPool();
@@ -139,6 +151,8 @@ public class Event extends Connect{
 	
 	public int changeReadStatus(int eventId, Read_Status readStatus){
 		
+		LOGGER.info("Inside changeReadStatus Method");
+		
 		PreparedStatement ps = null;
 		Connection hcp = getConnectionFromPool();
 		
@@ -178,8 +192,10 @@ public class Event extends Connect{
 		return 0;
 		
 	}
-	
-public int changeDeliveryStatus(int eventId, Delivery_Status deliveryStatus){
+		
+	public int changeDeliveryStatus(int eventId, Delivery_Status deliveryStatus){
+			
+		LOGGER.info("Inside changeDeliveryStatus Method");
 		
 		PreparedStatement ps = null;
 		Connection hcp = getConnectionFromPool();
@@ -220,318 +236,489 @@ public int changeDeliveryStatus(int eventId, Delivery_Status deliveryStatus){
 		return 0;
 		
 	}
-
-public GetNotificationsListResObj getNotifications(String userId, int limit, int offset) {
 	
-	PreparedStatement ps = null;
-	ResultSet rs = null;
-	Connection hcp = getConnectionFromPool();
-	
-	GetNotificationsListResObj response = new GetNotificationsListResObj();
-	
-	try{
-		String sqlGetNotifications = "SELECT tb1.*, tb2.user_profile_picture, tb2.user_full_name, tb3.item_uid FROM events tb1 LEFT JOIN users tb2 ON tb1.from_user_id=tb2.user_id LEFT JOIN items tb3 ON tb1.item_id=tb3.item_id WHERE to_user_id=? AND event_type IN (?,?) ORDER BY event_id DESC LIMIT ?,?";
-		ps = hcp.prepareStatement(sqlGetNotifications);
-		ps.setString(1, userId);
-		ps.setString(2, Event_Type.FLS_EVENT_NOTIFICATION.name());
-		ps.setString(3, Event_Type.FLS_EVENT_CHAT.name());
-		ps.setInt(4, offset);
-		ps.setInt(5, limit);
+	public GetNotificationsListResObj getNotifications(String userId, int limit, int offset) {
 		
-		rs = ps.executeQuery();
+		LOGGER.info("Inside getNotifications Method");
 		
-		if(rs.isBeforeFirst()){
-			while(rs.next()){
-				GetNotificationsResObj res = new GetNotificationsResObj();
-				res.setEventId(rs.getInt("event_id"));
-				res.setDatetime(rs.getString("datetime"));
-				res.setFromUserId(rs.getString("from_user_id"));
-				res.setToUserId(rs.getString("to_user_id"));
-				res.setProfilePic(rs.getString("user_profile_picture"));
-				res.setUid(rs.getString("item_uid"));
-				res.setFullName(rs.getString("user_full_name"));
-				res.setReadStatus(rs.getString("read_status"));
-				res.setItemId(rs.getInt("item_id"));
-				res.setNotificationMsg(rs.getString("message"));
-				res.setNotificationType(rs.getString("notification_type"));
-				response.addResList(res);
-				offset = offset + 1;
-			}
-			response.setOffset(offset);
-			response.setCode(FLS_SUCCESS);
-			response.setMessage(FLS_SUCCESS_M);
-		} else {
-			response.setCode(FLS_END_OF_DB);
-			response.setMessage(FLS_END_OF_DB_M);
-			LOGGER.warning(FLS_END_OF_DB_M);
-		}
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
 		
-	}catch(SQLException e){
-		response.setCode(FLS_SQL_EXCEPTION);
-		response.setMessage(FLS_SQL_EXCEPTION_M);
-		LOGGER.warning(e.getMessage());
-		e.printStackTrace();
-	}catch(NullPointerException e){
-		response.setCode(FLS_NULL_POINT);
-		response.setMessage(FLS_NULL_POINT_M);
-		LOGGER.warning(e.getMessage());
-		e.printStackTrace();
-	}finally{
-		try {
-			if(rs != null)rs.close();
-			if(ps != null)ps.close();
-			if(hcp != null)hcp.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	return response;
-}
-
-public GetUnreadEventsCountResObj getUnreadEventsCount(String userId) {
-	
-	GetUnreadEventsCountResObj response = new GetUnreadEventsCountResObj();
-	
-	PreparedStatement ps = null;
-	ResultSet rs = null;
-	Connection hcp = getConnectionFromPool();
-	
-	try{
-		String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=? AND event_type IN (?,?)";
-		ps = hcp.prepareStatement(sqlGetUnreadEventsCount);
-		ps.setString(1, userId);
-		ps.setString(2, Read_Status.FLS_UNREAD.name());
-		ps.setString(3, Event_Type.FLS_EVENT_NOTIFICATION.name());
-		ps.setString(4, Event_Type.FLS_EVENT_CHAT.name());
+		GetNotificationsListResObj response = new GetNotificationsListResObj();
 		
-		rs = ps.executeQuery();
-		
-		if(rs.next()){
-			response.setUnreadCount((int)rs.getLong(1));
-			response.setCode(FLS_SUCCESS);
-			response.setMessage(FLS_SUCCESS_M);
-		}else{
-			response.setCode(FLS_END_OF_DB);
-			response.setMessage(FLS_END_OF_DB_M);
-		}
-	}catch(SQLException e){
-		response.setCode(FLS_SQL_EXCEPTION);
-		response.setMessage(FLS_SQL_EXCEPTION_M);
-		e.printStackTrace();
-	}catch(NullPointerException e){
-		response.setCode(FLS_NULL_POINT);
-		response.setMessage(FLS_NULL_POINT_M);
-		e.printStackTrace();
-	}finally{
-		try {
-			if(rs != null)rs.close();
-			if(ps != null)ps.close();
-			if(hcp != null)hcp.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	return response;
-}
-
-public int getNextUndeliveredEvent(){
-	
-	PreparedStatement ps = null;
-	ResultSet rs = null;
-	Connection hcp = getConnectionFromPool();
-	
-	try{
-		String sqlGetUndeliveredEvent = "SELECT event_id FROM events WHERE delivery_status=? ORDER BY event_id ASC LIMIT 1";
-		ps = hcp.prepareStatement(sqlGetUndeliveredEvent);
-		ps.setString(1,Delivery_Status.FLS_UNDELIVERED.name());
-		
-		rs = ps.executeQuery();
-		
-		if(rs.next()){
-			return rs.getInt("event_id");
-		}else{
-			return -1;
-		}
-	}catch(SQLException e){
-		LOGGER.warning(FLS_SQL_EXCEPTION_M);
-		e.printStackTrace();
-	}finally{
-		try {
-			if(rs != null)rs.close();
-			if(ps != null)ps.close();
-			if(hcp != null)hcp.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	return -1;
-	
-}
-
-public boolean SendNotifications(int eventId){
-	
-	PreparedStatement ps = null;
-	ResultSet rs = null;
-	Connection hcp = getConnectionFromPool();
-	
-	try{
-		String sqlCheckUserNotificationType = "SELECT user_notification FROM events INNER JOIN users ON events.to_user_id = users.user_id WHERE event_id=?";
-		ps = hcp.prepareStatement(sqlCheckUserNotificationType);
-		ps.setInt(1, eventId);
-		
-		rs = ps.executeQuery();
-		
-		if(rs.next()){
-			switch(rs.getString("user_notification")){
-				case "EMAIL":
-					return sendEmail(eventId);
-				case "SMS":
-					return sendSms(eventId);
-				case "BOTH":
-					return sendEmail(eventId) || sendSms(eventId);
-				case "NONE":
-					return true;
-			}
-		}else{
-			return false;
-		}
-	}catch(SQLException e){
-		LOGGER.warning(FLS_SQL_EXCEPTION_M);
-		e.printStackTrace();
-	}finally{
-		try {
-			if(rs != null)rs.close();
-			if(ps != null)ps.close();
-			if(hcp != null)hcp.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	return false;
-}
-
-private boolean sendSms(int eventId){
-	LOGGER.info("Sms not sent");
-	return false;
-}
-
-private boolean sendEmail(int eventId){
-	
-	PreparedStatement ps = null;
-	ResultSet rs = null;
-	Connection hcp = getConnectionFromPool();
-
-	JSONObject obj = new JSONObject();
-	
-	try{
-		
-		String sqlGetAllData = "SELECT tb1.event_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
-		ps = hcp.prepareStatement(sqlGetAllData);
-		ps.setInt(1, eventId);
-		
-		rs = ps.executeQuery();
-		
-		if(rs.next()){
-			// Senders Data
-			obj.put("fromUserId", rs.getString("senders_user_id"));
-			obj.put("fromFullName", rs.getString("senders_full_name"));
-			obj.put("fromProfilePic", rs.getString("senders_profile_pic"));
-			obj.put("fromUserRefferalCode", rs.getString("senders_refferal_code"));
+		try{
+			String sqlGetNotifications = "SELECT tb1.*, tb2.user_profile_picture, tb2.user_full_name, tb3.item_uid FROM events tb1 LEFT JOIN users tb2 ON tb1.from_user_id=tb2.user_id LEFT JOIN items tb3 ON tb1.item_id=tb3.item_id WHERE to_user_id=? AND event_type IN (?,?) ORDER BY event_id DESC LIMIT ?,?";
+			ps = hcp.prepareStatement(sqlGetNotifications);
+			ps.setString(1, userId);
+			ps.setString(2, Event_Type.FLS_EVENT_NOTIFICATION.name());
+			ps.setString(3, Event_Type.FLS_EVENT_CHAT.name());
+			ps.setInt(4, offset);
+			ps.setInt(5, limit);
 			
-			// Receivers Data
-			obj.put("toUserId", rs.getString("user_id"));
-			obj.put("toUserName", rs.getString("user_full_name"));
-			obj.put("toProfilePic", rs.getString("user_profile_picture"));
-			obj.put("toUserActivation", rs.getString("user_activation"));
+			rs = ps.executeQuery();
 			
-			// Items Data
-			obj.put("itemId", rs.getInt("item_id"));
-			obj.put("title", rs.getString("item_name"));
-			obj.put("category", rs.getString("item_category"));
-			if(rs.getString("item_desc") == null || rs.getString("item_desc").equals(""))
-				obj.put("description", "");
-			else
-				obj.put("description", rs.getString("item_desc"));
-			obj.put("itemUserId", rs.getString("item_user_id"));
-			obj.put("leaseValue", rs.getInt("item_lease_value"));
-			obj.put("leaseTerm", rs.getString("item_lease_term"));
-			if(rs.getString("item_image") == null || rs.getString("item_image").equals(""))
-				obj.put("image", "");
-			else
-				obj.put("image", rs.getString("item_image"));
-			obj.put("uid", rs.getString("item_uid"));
-			obj.put("itemStatus", rs.getString("item_status"));
-			
-			// Events Data
-			obj.put("eventId", rs.getInt("event_id"));
-			obj.put("datetime", rs.getString("datetime"));
-			obj.put("notificationType", rs.getString("notification_type"));
-			obj.put("message", rs.getString("message"));
-			
-			
-			if(Notification_Type.valueOf(obj.getString("notificationType")).equals(Notification_Type.FLS_NOMAIL_ADD_WISH_ITEM)){
-				
-				List<JSONObject> listItems = new ArrayList<>();
-				
-				String itemLinks = "";
-				
-				MatchItems matchItems = new MatchItems();
-				listItems = matchItems.checkPostedItems(obj.getInt("itemId"));
-				
-				if(!listItems.isEmpty()){
-					try {
-						for(JSONObject p : listItems){
-							itemLinks = itemLinks + " <u><a href=\"" + URL + "/ItemDetails?uid=" + p.getString("uid") + "\">" + p.getString("title") + "</a></u>";
-						}
-						
-						Event event = new Event();
-						event.createEvent(obj.getString("toUserId"), obj.getString("toUserId"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_POST_ITEM, obj.getInt("itemId"), "Some items in the store" + itemLinks + " match your wished item <strong>'" + obj.getString("title") + "'</strong>");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			if(rs.isBeforeFirst()){
+				while(rs.next()){
+					GetNotificationsResObj res = new GetNotificationsResObj();
+					res.setEventId(rs.getInt("event_id"));
+					res.setDatetime(rs.getString("datetime"));
+					res.setFromUserId(rs.getString("from_user_id"));
+					res.setToUserId(rs.getString("to_user_id"));
+					res.setProfilePic(rs.getString("user_profile_picture"));
+					res.setUid(rs.getString("item_uid"));
+					res.setFullName(rs.getString("user_full_name"));
+					res.setReadStatus(rs.getString("read_status"));
+					res.setItemId(rs.getInt("item_id"));
+					res.setNotificationMsg(rs.getString("message"));
+					res.setNotificationType(rs.getString("notification_type"));
+					response.addResList(res);
+					offset = offset + 1;
 				}
-				
-				return true;
+				response.setOffset(offset);
+				response.setCode(FLS_SUCCESS);
+				response.setMessage(FLS_SUCCESS_M);
+			} else {
+				response.setCode(FLS_END_OF_DB);
+				response.setMessage(FLS_END_OF_DB_M);
+				LOGGER.warning(FLS_END_OF_DB_M);
+			}
+			
+		}catch(SQLException e){
+			response.setCode(FLS_SQL_EXCEPTION);
+			response.setMessage(FLS_SQL_EXCEPTION_M);
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}catch(NullPointerException e){
+			response.setCode(FLS_NULL_POINT);
+			response.setMessage(FLS_NULL_POINT_M);
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs != null)rs.close();
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return response;
+	}
+	
+	public GetUnreadEventsCountResObj getUnreadEventsCount(String userId) {
+		
+		LOGGER.info("Inside getUnreadEventsCount Method");
+		
+		GetUnreadEventsCountResObj response = new GetUnreadEventsCountResObj();
+		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=? AND event_type IN (?,?)";
+			ps = hcp.prepareStatement(sqlGetUnreadEventsCount);
+			ps.setString(1, userId);
+			ps.setString(2, Read_Status.FLS_UNREAD.name());
+			ps.setString(3, Event_Type.FLS_EVENT_NOTIFICATION.name());
+			ps.setString(4, Event_Type.FLS_EVENT_CHAT.name());
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()){
+				response.setUnreadCount((int)rs.getLong(1));
+				response.setCode(FLS_SUCCESS);
+				response.setMessage(FLS_SUCCESS_M);
 			}else{
-				if(Notification_Type.valueOf(obj.getString("notificationType")).equals(Notification_Type.FLS_MAIL_POST_ITEM)){
-					try{
-						// checking the wish list if this posted item matches someone's requirements
-						MatchItems matchItems = new MatchItems();
-						matchItems.checkWishlist(obj.getString("title"), obj.getString("itemUserId"), obj.getString("uid"), obj.getInt("itemId"));
-					}catch(Exception e){
-						LOGGER.warning(e.getMessage());
-					}
-				}
-				FlsEmail email = new FlsEmail();
-				return email.sendEmail(obj, Notification_Type.valueOf(obj.getString("notificationType")));
+				response.setCode(FLS_END_OF_DB);
+				response.setMessage(FLS_END_OF_DB_M);
 			}
-			
-			
-		}else{
-			return false;
+		}catch(SQLException e){
+			response.setCode(FLS_SQL_EXCEPTION);
+			response.setMessage(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		}catch(NullPointerException e){
+			response.setCode(FLS_NULL_POINT);
+			response.setMessage(FLS_NULL_POINT_M);
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs != null)rs.close();
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
-	}catch(SQLException e){
-		LOGGER.warning(FLS_SQL_EXCEPTION_M);
-		e.printStackTrace();
-	} catch (JSONException e) {
-		LOGGER.warning(FLS_JSON_EXCEPTION_M);
-		e.printStackTrace();
-	}finally{
-		try {
-			if(rs != null)rs.close();
-			if(ps != null)ps.close();
-			if(hcp != null)hcp.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		return response;
 	}
 	
-	return false;
-}
+	public int changeUserNotification(String userId, User_Notification userNotification){
+		
+		LOGGER.info("Inside changeUserNotification Method");
+		
+		PreparedStatement ps = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			hcp.setAutoCommit(false);
+			
+			String sqlNotification = "UPDATE users SET user_notification=? WHERE user_id=?";
+			ps = hcp.prepareStatement(sqlNotification);
+			ps.setString(1, userNotification.name());
+			ps.setString(2, userId);
+			
+			int count = ps.executeUpdate();
+			
+			if(count == 1)
+				hcp.commit();
+			else
+				hcp.rollback();
+			
+			return count;
+			
+		}catch(SQLException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}catch(NullPointerException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}finally{
+			try {
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return 0;
+	}
+	
+	public User_Notification getUserNotification(String userId){
+		
+		LOGGER.info("Inside GetUserNotification Method");
+		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			String getUserNotification = "SELECT user_notification from users WHERE user_id=?";
+			ps = hcp.prepareStatement(getUserNotification);
+			ps.setString(1, userId);
+			rs = ps.executeQuery();
+			
+			if(rs.next()){
+				return User_Notification.valueOf(rs.getString("user_notification"));
+			}else{
+				return User_Notification.NONE;
+			}
+			
+		}catch(SQLException e){
+			LOGGER.warning(e.getMessage());
+			e.printStackTrace();
+		}finally{
+			try {
+				if(ps != null)ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return User_Notification.NONE;
+		
+	}
+	
+	public int getNextUndeliveredEvent(){
+		
+		LOGGER.info("Inside getNextUndeliveredEvent Method");
+		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			String sqlGetUndeliveredEvent = "SELECT event_id FROM events WHERE delivery_status=? ORDER BY event_id ASC LIMIT 1";
+			ps = hcp.prepareStatement(sqlGetUndeliveredEvent);
+			ps.setString(1,Delivery_Status.FLS_UNDELIVERED.name());
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()){
+				LOGGER.info("Next Undelivered Event Id : " + rs.getInt("event_id"));
+				return rs.getInt("event_id");
+			}else{
+				return -1;
+			}
+		}catch(SQLException e){
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs != null)rs.close();
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return -1;
+		
+	}
+	
+	public boolean SendNotifications(int eventId){
+		
+		LOGGER.info("Inside SendNotifications Method");
+		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			String sqlNotificationType = "SELECT to_user_id,notification_type FROM events WHERE event_id=?";
+			ps = hcp.prepareStatement(sqlNotificationType);
+			ps.setInt(1, eventId);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()){
+				switch(Notification_Type.valueOf(rs.getString("notification_type"))){
+					case FLS_MAIL_FORGOT_PASSWORD:
+					case FLS_MAIL_REGISTER:
+					case FLS_MAIL_SIGNUP_VALIDATION:
+					case FLS_EMAIL_VERIFICATION:
+						return sendEmail(eventId);
+					case FLS_SMS_FORGOT_PASSWORD:
+					case FLS_SMS_SIGNUP_VALIDATION:
+					case FLS_SMS_REGISTER:
+					case FLS_MOBILE_VERIFICATION:
+						return sendSms(eventId);
+					default:
+						break;
+				}
+				switch(getUserNotification(rs.getString("to_user_id"))){
+					case EMAIL:
+						return sendEmail(eventId);
+					case SMS:
+						return sendSms(eventId);
+					case BOTH:
+						return sendEmail(eventId) || sendSms(eventId);
+					case NONE:
+						return true;
+				}
+			}else{
+				return false;
+			}
+		}catch(SQLException e){
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs != null)rs.close();
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
+	}
+	
+	private boolean sendSms(int eventId){
+		
+		LOGGER.info("Sending msg for this event id : " + eventId);
+
+		String ACCOUNT_SID = "AC133fd97e5cb38d1e4d3ebd176f2a0c71";
+		String AUTH_TOKEN = "84f1a1797a2e386aca2d8256e3f5ce6f";
+		
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try {
+			String sql = "SELECT user_mobile, user_sec_status, user_status, to_user_id, message FROM users INNER JOIN events ON users.user_id=events.to_user_id WHERE event_id=?";
+			ps = hcp.prepareStatement(sql);
+			ps.setInt(1, eventId);
+			
+			rs = ps.executeQuery();
+			
+			if(rs.next()){
+				String status = rs.getString("user_status");
+				String phone = null;
+				if(status.equals("mobile_pending") || status.equals("mobile_activated")){
+					phone = rs.getString("to_user_id");
+				}else if(rs.getInt("user_sec_status") == 1){
+					phone = rs.getString("user_mobile");
+				}else{
+					phone = null;
+				}
+				
+				if(phone != null){
+				    TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
+					
+				    List<NameValuePair> params = new ArrayList<NameValuePair>();
+				    params.add(new BasicNameValuePair("Body", rs.getString("message")));
+				    params.add(new BasicNameValuePair("To", "+91"+phone));
+				    params.add(new BasicNameValuePair("From", "+12015286546"));
+			    
+			    	MessageFactory messageFactory = client.getAccount().getMessageFactory();
+			        Message message = messageFactory.create(params);
+			        LOGGER.info(message.getSid());
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return true;
+	}
+	
+	private boolean sendEmail(int eventId){
+		
+		LOGGER.info("Sending email for this event id : " + eventId);
+		
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null, rs2 = null;
+		Connection hcp = getConnectionFromPool();
+	
+		JSONObject obj = new JSONObject();
+		
+		try{
+			
+			String sql = "SELECT user_email, user_sec_status, user_status, to_user_id, message FROM users INNER JOIN events ON users.user_id=events.to_user_id WHERE event_id=?";
+			ps1 = hcp.prepareStatement(sql);
+			ps1.setInt(1, eventId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				String status = rs1.getString("user_status");
+				String email = null;
+				if(status.equals("email_pending") || status.equals("email_activated") || status.equals("facebook") || status.equals("google")){
+					email = rs1.getString("to_user_id");
+				}else if(rs1.getInt("user_sec_status") == 1){
+					email = rs1.getString("user_email");
+				}else{
+					email = null;
+				}
+				
+				if(email != null){
+					String sqlGetAllData = "SELECT tb1.event_id, tb1.from_user_id, tb1.to_user_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
+					ps2 = hcp.prepareStatement(sqlGetAllData);
+					ps2.setInt(1, eventId);
+					
+					rs2 = ps2.executeQuery();
+					
+					if(rs2.next()){
+						// Senders Data
+						obj.put("fromUserId", rs2.getString("senders_user_id"));
+						obj.put("fromUserName", rs2.getString("senders_full_name"));
+						obj.put("fromProfilePic", rs2.getString("senders_profile_pic"));
+						obj.put("fromUserActivation", rs2.getString("senders_user_activation"));
+						obj.put("fromUserRefferalCode", rs2.getString("senders_refferal_code"));
+						
+						// Receivers Data
+						obj.put("toUserId", rs2.getString("user_id"));
+						obj.put("toUserName", rs2.getString("user_full_name"));
+						obj.put("toProfilePic", rs2.getString("user_profile_picture"));
+						obj.put("toUserActivation", rs2.getString("user_activation"));
+						
+						// Items Data
+						obj.put("itemId", rs2.getInt("item_id"));
+						obj.put("title", rs2.getString("item_name"));
+						obj.put("category", rs2.getString("item_category"));
+						if(rs2.getString("item_desc") == null || rs2.getString("item_desc").equals(""))
+							obj.put("description", "");
+						else
+							obj.put("description", rs2.getString("item_desc"));
+						obj.put("itemUserId", rs2.getString("item_user_id"));
+						obj.put("leaseValue", rs2.getInt("item_lease_value"));
+						obj.put("leaseTerm", rs2.getString("item_lease_term"));
+						if(rs2.getString("item_image") == null || rs2.getString("item_image").equals(""))
+							obj.put("image", "");
+						else
+							obj.put("image", rs2.getString("item_image"));
+						obj.put("uid", rs2.getString("item_uid"));
+						obj.put("itemStatus", rs2.getString("item_status"));
+						
+						// Events Data
+						obj.put("eventId", rs2.getInt("event_id"));
+						obj.put("from", rs2.getString("from_user_id"));
+						obj.put("to", rs2.getString("to_user_id"));
+						obj.put("datetime", rs2.getString("datetime"));
+						obj.put("notificationType", rs2.getString("notification_type"));
+						obj.put("message", rs2.getString("message"));
+						
+						
+						if(Notification_Type.valueOf(obj.getString("notificationType")).equals(Notification_Type.FLS_NOMAIL_ADD_WISH_ITEM)){
+							
+							List<JSONObject> listItems = new ArrayList<>();
+							
+							String itemLinks = "";
+							
+							MatchItems matchItems = new MatchItems();
+							listItems = matchItems.checkPostedItems(obj.getInt("itemId"));
+							
+							if(!listItems.isEmpty()){
+								try {
+									for(JSONObject p : listItems){
+										itemLinks = itemLinks + " <u><a href=\"" + URL + "/ItemDetails?uid=" + p.getString("uid") + "\">" + p.getString("title") + "</a></u>";
+									}
+									
+									Event event = new Event();
+									event.createEvent(obj.getString("toUserId"), obj.getString("toUserId"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MATCH_POST_ITEM, obj.getInt("itemId"), "Some items in the store" + itemLinks + " match your wished item <strong>'" + obj.getString("title") + "'</strong>");
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							}
+							
+							return true;
+						}else{
+							if(Notification_Type.valueOf(obj.getString("notificationType")).equals(Notification_Type.FLS_MAIL_POST_ITEM)){
+								try{
+									// checking the wish list if this posted item matches someone's requirements
+									MatchItems matchItems = new MatchItems();
+									matchItems.checkWishlist(obj.getString("title"), obj.getString("itemUserId"), obj.getString("uid"), obj.getInt("itemId"));
+								}catch(Exception e){
+									LOGGER.warning(e.getMessage());
+								}
+							}
+							FlsEmail mail = new FlsEmail();
+							return mail.sendEmail(obj, Notification_Type.valueOf(obj.getString("notificationType")));
+						}
+					}
+				}
+			}
+			
+		}catch(SQLException e){
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		} catch (JSONException e) {
+			LOGGER.warning(FLS_JSON_EXCEPTION_M);
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(rs2 != null)rs2.close();
+				if(ps2 != null)ps2.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+	}
 
 }

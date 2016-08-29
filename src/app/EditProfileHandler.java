@@ -50,19 +50,18 @@ public class EditProfileHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			String sql = "UPDATE users SET user_full_name=?, user_mobile=?, user_location=?, user_address=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=? , user_photo_id=? WHERE user_id=?";
+			String sql = "UPDATE users SET user_full_name=?, user_location=?, user_address=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=? , user_photo_id=? WHERE user_id=?";
 			LOGGER.info("Creating Statement...");
 			PreparedStatement ps = hcp.prepareStatement(sql);
 			ps.setString(1, rq.getFullName());
-			ps.setString(2, rq.getMobile());
-			ps.setString(3, rq.getLocation());
-			ps.setString(4, rq.getAddress());
-			ps.setString(5, rq.getLocality());
-			ps.setString(6, rq.getSublocality());
-			ps.setFloat(7, rq.getLat());
-			ps.setFloat(8, rq.getLng());
-			ps.setString(9, rq.getPhotoId());
-			ps.setString(10, rq.getUserId());
+			ps.setString(2, rq.getLocation());
+			ps.setString(3, rq.getAddress());
+			ps.setString(4, rq.getLocality());
+			ps.setString(5, rq.getSublocality());
+			ps.setFloat(6, rq.getLat());
+			ps.setFloat(7, rq.getLng());
+			ps.setString(8, rq.getPhotoId());
+			ps.setString(9, rq.getUserId());
 
 			LOGGER.info("statement created...executing update to users query");
 			int result = ps.executeUpdate();

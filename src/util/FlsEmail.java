@@ -78,7 +78,7 @@ public class FlsEmail extends Connect{
 		
 		try{
 			
-			TO = obj.getString("toUserId");
+			TO = obj.getString("to");
 			
 			credits = getCurrentCredits(TO);
 			
@@ -123,6 +123,14 @@ public class FlsEmail extends Connect{
 						+ "We are happy to have you. Now go and offer your dormant stuff on the platform!! <br/>"
 						+ "Remember, it will always be yours ... and will come back after enriching your friends, whenever you want!";
 				break;
+				
+			case FLS_EMAIL_VERIFICATION:
+				SUBJECT = " Email Verification";
+				BODY = "Hello " + obj.getString("fromUserName")
+						+ "Click on this link to activate this email. <br/>"
+						+ "<a href='" + EMAIL_VERIFICATION_URL + "?token=" + obj.getString("fromUserActivation") + "'>"
+						+ EMAIL_VERIFICATION_URL + "?token=" + obj.getString("fromUserActivation") + "</a>" + "<br/>";
+				break;
 
 			case FLS_MAIL_DELETE_ITEM:
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been deleted from the Friend Store");
@@ -130,7 +138,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : "
 						+ obj.getString("description") + "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>"
 						+ " Lease Term : " + obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+						+ "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
 				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
@@ -140,7 +148,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+						+ "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
 				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
@@ -150,7 +158,7 @@ public class FlsEmail extends Connect{
 						+ obj.getString("title") + "<br/>" + " Category : " + obj.getString("category") + "<br/>"
 						+ " Description : " + obj.getString("description") + "<br/>" + " Lease Value : "
 						+ obj.getInt("leaseValue") + "<br/>" + " Lease Term : " + obj.getString("leaseTerm") + "<br/>"
-						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img src=\"cid:image\" alt=" + obj.getString("title")
+						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title")
 						+ " ></img>" + "</body>");
 				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
@@ -169,7 +177,7 @@ public class FlsEmail extends Connect{
 							+ l.getString("description") + "<br/>" + " Lease Value : "
 							+ l.getInt("leaseValue") + "<br/>" + " Lease Term : "
 							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")
-							+ "<br/>" + "<img src=\"cid:image" + Integer.toString(i) + "\" alt="
+							+ "<br/>" + "<img style=\"width:50%;\" src=\"cid:image" + Integer.toString(i) + "\" alt="
 							+ l.getString("title") + " ></img><br/><br/>");
 					i++;
 					imageFiles.add(convertBinaryToImage(l.getString("image")));

@@ -2,7 +2,6 @@ package util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,5 +44,60 @@ public class LogCredit extends Connect{
 			stmt.close();
 			hcp.close();
 		}
+	}
+	
+	public int updateCredits(String referral, String referrer){
+		
+			Connection hcp = getConnectionFromPool();
+			PreparedStatement stmt= null,stmt1=null;
+			Integer send_val =1;
+			try {
+				
+				if(referrer!=null){
+					hcp.setAutoCommit(false);
+					
+					// add credit to existing user whose referral_code was used
+					int addReferrerCredit =0;
+					String sqladdReferrerCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
+					stmt = hcp.prepareStatement(sqladdReferrerCredit);
+					stmt.setString(1, referrer);
+					addReferrerCredit = stmt.executeUpdate();
+					LOGGER.info("Credits of Referer incremented by 10.....");
+					
+					
+					if(addReferrerCredit == 0){
+						send_val = 0;
+						hcp.rollback();
+						return send_val;
+					}
+					addLogCredit(referrer,10,"SignUp with Code","");
+					
+					// add credit to new user whose referral_code was generated
+					int addReferralCredit =0;
+					String sqladdReferralCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_referral_code=?";
+					stmt1 = hcp.prepareStatement(sqladdReferralCredit);
+					stmt1.setString(1, referral);
+					addReferralCredit = stmt1.executeUpdate();
+					LOGGER.info("Credits of new user incremented by 10.....");
+					
+					if(addReferralCredit == 0){
+						send_val = 0;
+						hcp.rollback();
+						return send_val;
+					}
+					addLogCredit(referral,10,"SignUp with Referral","");
+					hcp.commit();
+				}
+				
+			} catch (SQLException e) {
+			}finally{
+				try {
+					if(stmt!=null) stmt.close();
+					if(stmt1!=null) stmt1.close();
+					if(hcp!=null) hcp.close();
+				} catch (Exception e2) {
+				}
+			}
+			return send_val;
 	}
 }
