@@ -1,6 +1,6 @@
 var postItemApp = angular.module('myApp');
 
-postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', '$routeParams', 'modalService', function($scope, userFactory, $routeParams, modalService){
+postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', function($scope, userFactory, bannerService, $routeParams, modalService){
     
     var itemId = $routeParams.id;
     
@@ -119,15 +119,32 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', '$routeParams',
         $scope.item.leaseTerm = l;
     }
     
+    //beginning of image display
     $scope.uploadImage = function(file){
+        EXIF.getData(file, function(){
+            exif = EXIF.getAllTags(this);
+            picOrientation = exif.Orientation;
+		});
+        
         var reader = new FileReader();
         reader.onload = function(event) {
-            $scope.$apply(function() {
-                $scope.item.image = reader.result;
-            });
+            loadImage(reader.result,
+                function (canvas) {
+                    $scope.$apply(function() {
+                        $scope.item.image = canvas.toDataURL();
+                    });
+                },
+                {
+                    maxWidth: 300,
+                    maxHeight: 300,
+                    canvas: true,
+                    orientation: picOrientation
+                }
+            );
         }
         reader.readAsDataURL(file);
-    }
+    }		
+	//end of image display
     
     $scope.postItem = function(){
         
@@ -175,7 +192,8 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', '$routeParams',
                         modalService.showModal({}, {bodyText: "This item is successfully posted in friend store. Do you want to share this on facebook?", cancelButtonText:'NO', actionButtonText: 'YES'}).then(function(result){
                             shareOrNot(response.uid);
                         },function(result){
-                            window.location.replace("myapp.html#/");
+                            bannerService.updatebannerMessage("Your Item has been added to the friend store successfully!!", "myapp.html#/");
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
                         });
                     }else{
                         modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
@@ -214,7 +232,8 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', '$routeParams',
                     }else{
                         m = "Item sucessfully posted on Frrndlease";
                     }
-                    modalService.showModal({}, {headerText: "Success", bodyText: m,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    bannerService.updatebannerMessage(m, "myapp.html#/");
+					$("html, body").animate({ scrollTop: 0 }, "slow");
 				});
             }, {scope: 'email,public_profile,user_friends'});
 		}
