@@ -1,6 +1,6 @@
 var myFriendsListApp = angular.module('myApp');
 
-myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'modalService', 'eventsCount', function($scope, userFactory, modalService, eventsCount){
+myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'modalService', 'bannerService', 'eventsCount', function($scope, userFactory, modalService, bannerService, eventsCount){
     
     localStorage.setItem("prevPage","myapp.html#/myfriendslist");
     
@@ -333,7 +333,10 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 					}
 				}else if(reasonForAddFriend == "importGoogle"){
 					add_checked_friends_continued();
-				}
+				}else{
+                    bannerService.updatebannerMessage("Your Invitation has been sent to your friend.");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                }
             },
             error: function() {
                 console.log("Invalid Entry");
