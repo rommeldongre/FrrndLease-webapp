@@ -123,13 +123,14 @@ public class PostItemHandler extends Connect implements AppHandler {
 			stmt.setString(8, rq.getImage());
 			stmt.setFloat(9, lat);
 			stmt.setFloat(10, lng);
-			stmt.executeUpdate();
-			
+			int x = stmt.executeUpdate();
+			LOGGER.info("Saving the item in items table : " + x);
 			
 			// getting the last item inserted id and appending it with the title to generate a uid
 			ResultSet keys = stmt.getGeneratedKeys();
 			keys.next();
 			itemId = keys.getInt(1);
+			LOGGER.info("Item created with item id : " + itemId);
 			
 			uid = rq.getTitle()+ " " + itemId;
 			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
@@ -141,6 +142,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			s.setString(1, uid);
 			s.setInt(2, itemId);
 			uidAction = s.executeUpdate();
+			LOGGER.info("UID created for the item : " + uid);
 			
 			if(uidAction> 0){
 				String sqlInsertStoreID = "insert into store (store_item_id) values (?)";
