@@ -3,7 +3,6 @@ package util;
 import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import util.ReferralCode;
 
 import connect.Connect;
@@ -22,7 +21,7 @@ public class FlsConfig extends Connect{
 	
 	String getEnv() {
 
-		//TODO: select value from config where option = "env"
+		//select value from config where option = "env"
 		try {
 			getConnection();
 			String sql = null;
@@ -37,15 +36,14 @@ public class FlsConfig extends Connect{
 			}
 			sql_stmt.close();
 
-		} catch (SQLException e) {
-			// TODO: handle exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				// close and reset connection to null
 				connection.close();
 				connection = null;
-			} catch (SQLException e){
+			} catch (Exception e){
 				e.printStackTrace();
 			}
 		}
@@ -92,15 +90,14 @@ public class FlsConfig extends Connect{
 			}
 			sql_stmt.close();
 			
-		} catch (SQLException e) {
-			// TODO: handle exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				// close and reset connection to null
 				connection.close();
 				connection = null;
-			} catch (SQLException e){
+			} catch (Exception e){
 				e.printStackTrace();
 			}
 		} 
@@ -124,7 +121,7 @@ public class FlsConfig extends Connect{
 		if (dbBuild < 2001) {
 			//do new things - noop for this build
 			
-			//TODO: update config set value = 2001 where option = "build"
+			//update config set value = 2001 where option = "build"
 			dbBuild = 2001;
 		}
 		// add new build hooks one after the other in increasing order
@@ -137,8 +134,7 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps1 = connection.prepareStatement(sqlAddUid);
 				ps1.executeUpdate();
 				ps1.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			} finally {
@@ -146,7 +142,7 @@ public class FlsConfig extends Connect{
 					// close and reset connection to null
 					connection.close();
 					connection = null;
-				} catch (SQLException e){
+				} catch (Exception e){
 					e.printStackTrace();
 					System.out.println(e.getStackTrace());
 				}
@@ -171,7 +167,7 @@ public class FlsConfig extends Connect{
 				}
 				
 				ps2.close();
-			} catch(SQLException e){
+			} catch(Exception e){
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			} finally {
@@ -179,7 +175,7 @@ public class FlsConfig extends Connect{
 					// close and reset connection to null
 					connection.close();
 					connection = null;
-				} catch (SQLException e){
+				} catch (Exception e){
 					e.printStackTrace();
 					System.out.println(e.getStackTrace());
 				}
@@ -197,8 +193,7 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps1 = connection.prepareStatement(sqlAddUserCredit);
 				ps1.executeUpdate();
 				ps1.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			} finally {
@@ -206,7 +201,7 @@ public class FlsConfig extends Connect{
 					// close and reset connection to null
 					connection.close();
 					connection = null;
-				} catch (SQLException e){
+				} catch (Exception e){
 					e.printStackTrace();
 					System.out.println(e.getStackTrace());
 				}
@@ -223,8 +218,7 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps1 = connection.prepareStatement(sqlAddLeasePrimaryKey);
 				ps1.executeUpdate();
 				ps1.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			} finally {
@@ -232,7 +226,7 @@ public class FlsConfig extends Connect{
 					// close and reset connection to null
 					connection.close();
 					connection = null;
-				} catch (SQLException e){
+				} catch (Exception e){
 					e.printStackTrace();
 					System.out.println(e.getStackTrace());
 				}
@@ -250,7 +244,7 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sql_users_location_columns);
 				ps.executeUpdate();
 				ps.close();
-			}catch(SQLException e){
+			}catch(Exception e){
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			}finally{
@@ -258,7 +252,7 @@ public class FlsConfig extends Connect{
 					// close and reset connection to null
 					connection.close();
 					connection = null;
-				} catch (SQLException e){
+				} catch (Exception e){
 					e.printStackTrace();
 					System.out.println(e.getStackTrace());
 				}
@@ -271,7 +265,7 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sql_items_location_columns);
 				ps.executeUpdate();
 				ps.close();
-			}catch(SQLException e){
+			}catch(Exception e){
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			}finally{
@@ -279,7 +273,7 @@ public class FlsConfig extends Connect{
 					// close and reset connection to null
 					connection.close();
 					connection = null;
-				} catch (SQLException e){
+				} catch (Exception e){
 					e.printStackTrace();
 					System.out.println(e.getStackTrace());
 				}
@@ -298,7 +292,7 @@ public class FlsConfig extends Connect{
 				PreparedStatement ps = connection.prepareStatement(sql_edit_location_columns);
 				ps.executeUpdate();
 				ps.close();
-			}catch(SQLException e){
+			}catch(Exception e){
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			}finally{
@@ -306,7 +300,7 @@ public class FlsConfig extends Connect{
 					// close and reset connection to null
 					connection.close();
 					connection = null;
-				} catch (SQLException e){
+				} catch (Exception e){
 					e.printStackTrace();
 					System.out.println(e.getStackTrace());
 				}
@@ -326,8 +320,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddRefCode);
 						ps1.executeUpdate();
 						ps1.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
+					} catch (Exception e) {
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					} finally {
@@ -335,7 +328,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -364,7 +357,7 @@ public class FlsConfig extends Connect{
 						rs.close();
 						ps2.close();
 						System.out.println("REF_Codes Added");
-					} catch(SQLException e){
+					} catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					} finally {
@@ -372,7 +365,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -394,8 +387,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddPhotoId);
 						ps1.executeUpdate();
 						ps1.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
+					} catch (Exception e) {
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					} finally {
@@ -403,7 +395,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -424,8 +416,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddPhotoId);
 						ps1.executeUpdate();
 						ps1.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
+					} catch (Exception e) {
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					} finally {
@@ -433,7 +424,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -454,7 +445,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddAdminOps);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -462,7 +453,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -484,7 +475,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddPromoTable);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -492,7 +483,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -513,8 +504,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddPhotoId);
 						ps1.executeUpdate();
 						ps1.close();
-					} catch (SQLException e) {
-						// TODO Auto-generated catch block
+					} catch (Exception e) {
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					} finally {
@@ -522,7 +512,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -542,7 +532,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlItemLogTable);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -550,7 +540,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-						} catch (SQLException e){
+						} catch (Exception e){
 							e.printStackTrace();
 							System.out.println(e.getStackTrace());
 						}
@@ -570,7 +560,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlLiveStatusColumn);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -578,7 +568,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -602,7 +592,7 @@ public class FlsConfig extends Connect{
 						ps1.setString(2, key.toString());
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -610,7 +600,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -630,7 +620,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddFriendStatus);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -638,7 +628,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -656,7 +646,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlNotificationTable);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -664,7 +654,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -684,7 +674,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlUserNotification);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -692,7 +682,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -712,7 +702,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddNotificationEnum);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -720,7 +710,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -748,7 +738,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps3 = connection.prepareStatement(sqlChangeUserStatusEnum);
 						ps3.executeUpdate();
 						ps3.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 					}finally {
@@ -756,7 +746,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -775,7 +765,7 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddNotificationEnum);
 						ps1.executeUpdate();
 						ps1.close();
-					}catch(SQLException e){
+					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
 						System.exit(1);
@@ -784,7 +774,7 @@ public class FlsConfig extends Connect{
 							// close and reset connection to null
 							connection.close();
 							connection = null;
-							} catch (SQLException e){
+							} catch (Exception e){
 								e.printStackTrace();
 								System.out.println(e.getStackTrace());
 							}
@@ -807,7 +797,7 @@ public class FlsConfig extends Connect{
 			ps.close();
 			
 			System.out.println("dbBuild updated to "+version);
-		} catch(SQLException e){
+		} catch(Exception e){
 			e.printStackTrace();
 			System.out.println(e.getStackTrace());
 		} finally {
@@ -815,7 +805,7 @@ public class FlsConfig extends Connect{
 				// close and reset connection to null
 				connection.close();
 				connection = null;
-			} catch (SQLException e){
+			} catch (Exception e){
 				e.printStackTrace();
 				System.out.println(e.getStackTrace());
 			}

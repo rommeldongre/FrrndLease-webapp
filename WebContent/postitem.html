@@ -1,5 +1,5 @@
 <div class="container-fluid" id="midcontainer">
-    
+    <div class="content">
     <div class="row">
         <div class="left_title col-lg-6 col-md-6">
             <strong>Post Item</strong>
@@ -10,16 +10,16 @@
     <div class="row">
         <div class="col-lg-3 col-md-3"></div>
         <div class="col-lg-6 col-md-6">
-            <form class="form-horizontal" style="text-align: center;">
+            <form class="form-horizontal" id="itemform">
                 <div class="form-group">
                     <label for="item_image" id="image_label" class="col-sm-2 control-label">Add Picture</label>
                     <div class="col-sm-10">
-                        <input type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" />
+                       <input type="file" class="form-control" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])">
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-12" ng-init="item.image=''">
-                        <img img-fix-orientation="item.image" ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" width="300" height="300"/>
+                <div class="form-group" style="text-align:center;">
+                    <div class="col-md-12" ng-init="item.image=''">
+                        <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? '' : item.image}}" width="300" height="300" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -78,5 +78,6 @@
             </div>
         </div>
         <div class="col-lg-3 col-md-3"></div>
+    </div>
     </div>
 </div>
