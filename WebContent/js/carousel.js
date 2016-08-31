@@ -144,6 +144,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                 }
             },
             function(error){
+				//Error message in console.
                 console.log("Not able to get items " + error.message);
             });
     }

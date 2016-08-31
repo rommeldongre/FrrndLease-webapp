@@ -5,7 +5,8 @@ import java.util.Random;
 
 public class ReferralCode {
 	
-	public String createRandomCode(int codeLength, String id){   
+	public String createRandomCode(int codeLength){  
+		String id = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	     char[] chars = id.toCharArray();
 	        StringBuilder sb = new StringBuilder();
 	        Random random = new SecureRandom();
