@@ -9,6 +9,10 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     var userId = userFactory.user;
     var userAccessToken = userFactory.userAccessToken;
     
+    $scope.item = {};
+    
+    $scope.categories = [];
+    
     var getItemDetails = function(){
         var req = {
             table: "items",
@@ -40,12 +44,6 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             });
         }
     }
-    
-    getItemDetails();
-    
-    $scope.item = {};
-    
-    $scope.categories = [];
 
     var populateCategory = function(id){
         var req = {
@@ -64,7 +62,9 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             dataType: "json",
             success: function(response) {
                 if(response.Code === "FLS_SUCCESS") {
-                    $scope.categories.push(JSON.parse(response.Message).catName);
+                    $scope.$apply(function(){
+                        $scope.categories.push(JSON.parse(response.Message).catName);
+                    });
                     populateCategory(response.Id);
                 }
                 else{
@@ -101,7 +101,9 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             dataType: "json",
             success: function(response) {
                 if(response.Code === "FLS_SUCCESS") {
-                    $scope.leaseTerms.push(JSON.parse(response.Message).termName);
+                    $scope.$apply(function(){
+                        $scope.leaseTerms.push(JSON.parse(response.Message).termName);
+                    });
                     populateLeaseTerm(response.Id);
                 }
                 else{
@@ -292,5 +294,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     $scope.cancel = function(){
         window.location.replace("myapp.html#/");
     }
+    
+    getItemDetails();
     
 }]);
