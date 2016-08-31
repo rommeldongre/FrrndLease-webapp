@@ -38,50 +38,32 @@ public class PostItemHandler extends Connect implements AppHandler {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
+
+		LOGGER.info("Inside process method of Post Item Handler");
 		
-		// TODO Auto-generated method stub
 		PostItemReqObj rq = (PostItemReqObj) req;
 		PostItemResObj rs = new PostItemResObj();
+		
 		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null;
+		ResultSet keys = null, rs1 = null;
+		int rs2, rs3, rs4, rs5;
 		
-		String uid = null;
+		String userId = rq.getUserId();
 		int itemId = 0;
-
-		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getId());
+		String uid = null;
 		
-		// TODO: Core of the processing takes place here
-
-		LOGGER.info("Inside process method of Post Item");
-		if(rq.getCategory().contains("Category")){
-			
-			//if user does not select a category
-			
-			rs.setItemId(0);
-			rs.setCode(200);
-			rs.setUid("Error");
-			rs.setMessage("Item Not Posted as no Valid Category was selected");
-			return rs;
-		}
+		float lat = 0, lng = 0;
 		
-		final String userId;
-		String desciption = null;
-		desciption = rq.getDescription();
-		
-		if(rq.getDescription() == null){
+		String desciption = rq.getDescription();
+		if(desciption == null){
 			desciption = "";
 		}
 		
-		String sqlUserLatLng = "SELECT user_lat, user_lng FROM users WHERE user_id=?";
-		
-		userId = rq.getUserId();
-		String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image, item_lat, item_lng) values (?,?,?,?,?,?,?,?,?,?)";
-
 		try {
 			
 			OAuth oauth = new OAuth();
@@ -92,42 +74,38 @@ public class PostItemHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			float lat = 0, lng = 0;
-			
 			LOGGER.info("Creating statement for selecting users lat lng.....");
-			PreparedStatement s1 = hcp.prepareStatement(sqlUserLatLng);
+			String sqlUserLatLng = "SELECT user_lat, user_lng FROM users WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlUserLatLng);
+			ps1.setString(1, rq.getUserId());
+			rs1 = ps1.executeQuery();
 			
-			LOGGER.info("Statement created. Executing query.....");
-			s1.setString(1, rq.getUserId());
-			ResultSet r1 = s1.executeQuery();
-			
-			if(r1.next()){
-				lat = r1.getFloat("user_lat");
-				lng = r1.getFloat("user_lng");
+			if(rs1.next()){
+				lat = rs1.getFloat("user_lat");
+				lng = rs1.getFloat("user_lng");
 			}
 			
-			if(r1 != null)r1.close();
-			if(s1 != null)s1.close();
-			
-			LOGGER.info("Creating statement.....");
-			PreparedStatement stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-			LOGGER.info("Statement created. Executing query.....");
-			stmt.setString(1, rq.getTitle());
-			stmt.setString(2, rq.getCategory());
-			stmt.setString(3, desciption);
-			stmt.setString(4, rq.getUserId());
-			stmt.setInt(5, rq.getLeaseValue());
-			stmt.setString(6, rq.getLeaseTerm());
-			stmt.setString(7, rq.getStatus());
-			stmt.setString(8, rq.getImage());
-			stmt.setFloat(9, lat);
-			stmt.setFloat(10, lng);
-			int x = stmt.executeUpdate();
-			LOGGER.info("Saving the item in items table : " + x);
+			hcp.setAutoCommit(false);
+			
+			LOGGER.info("Creating statement to insert item......");
+			String sqlInsertItem = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image, item_lat, item_lng) values (?,?,?,?,?,?,?,?,?,?)";
+			ps2 = hcp.prepareStatement(sqlInsertItem, Statement.RETURN_GENERATED_KEYS);
+			ps2.setString(1, rq.getTitle());
+			ps2.setString(2, rq.getCategory());
+			ps2.setString(3, desciption);
+			ps2.setString(4, rq.getUserId());
+			ps2.setInt(5, rq.getLeaseValue());
+			ps2.setString(6, rq.getLeaseTerm());
+			ps2.setString(7, rq.getStatus());
+			ps2.setString(8, rq.getImage());
+			ps2.setFloat(9, lat);
+			ps2.setFloat(10, lng);
+			rs2 = ps2.executeUpdate();
+			LOGGER.info("Result of insertion query : " + rs2);
 			
 			// getting the last item inserted id and appending it with the title to generate a uid
-			ResultSet keys = stmt.getGeneratedKeys();
+			keys = ps2.getGeneratedKeys();
 			keys.next();
 			itemId = keys.getInt(1);
 			LOGGER.info("Item created with item id : " + itemId);
@@ -136,43 +114,22 @@ public class PostItemHandler extends Connect implements AppHandler {
 			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
 			
 			// updating the item_uid value of the last item inserted
-			int uidAction=0,storeAction=0;
 			String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
-			PreparedStatement s = hcp.prepareStatement(sqlUpdateUID);
-			s.setString(1, uid);
-			s.setInt(2, itemId);
-			uidAction = s.executeUpdate();
+			ps3 = hcp.prepareStatement(sqlUpdateUID);
+			ps3.setString(1, uid);
+			ps3.setInt(2, itemId);
+			rs3 = ps3.executeUpdate();
 			LOGGER.info("UID created for the item : " + uid);
 			
-			if(uidAction> 0){
+			if(rs2 == 1 && rs3 == 1){
 				String sqlInsertStoreID = "insert into store (store_item_id) values (?)";
-				PreparedStatement storeID = hcp.prepareStatement(sqlInsertStoreID);
-				storeID.setInt(1, itemId);
-				storeAction =storeID.executeUpdate();
-				storeID.close();
-				if(storeAction> 0){
-					LOGGER.info("Value in store table after UID query excecution: "+uidAction+" "+itemId);	
+				ps4 = hcp.prepareStatement(sqlInsertStoreID);
+				ps4.setInt(1, itemId);
+				rs4 = ps4.executeUpdate();
+				if(rs4 == 1){
+					LOGGER.info("Value in store table after UID query excecution: " + rs4 + " " + itemId);
 				}
-			}
-			String message;
-			message = "Item added into table";
-			LOGGER.warning(message);
-			
-			LogItem li = new LogItem();
-			li.addItemLog(itemId, rq.getStatus(), "", "");
-			
-			// to add credit in user_credit
-			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
-			PreparedStatement psCredit = hcp.prepareStatement(sqlAddCredit);
-			psCredit.setString(1, rq.getUserId());
-			psCredit.executeUpdate();
-			
-			LogCredit lc = new LogCredit();
-			lc.addLogCredit(rq.getUserId(),10,"Item Added In Store","");
-
-			String status_W = rq.getStatus(); // To be used to check if Request
-												// is from WishItem API.
-			if (!FLS_WISHLIST_ADD.equals(status_W)) {
+				hcp.commit();
 				try {
 					Event event = new Event();
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
@@ -180,52 +137,66 @@ public class PostItemHandler extends Connect implements AppHandler {
 					e.printStackTrace();
 				}
 			}
-
-			// returning the new id
-			int id=0;
-			sql = "SELECT MAX(item_id) FROM items";
-			Statement stmt1 = hcp.createStatement();
-			ResultSet resultset = stmt1.executeQuery(sql);
 			
-			while (resultset.next()) {
-				id = resultset.getInt(1);
+			LOGGER.warning("Item added into table");
+			
+			// Adding entry to item log
+			LogItem li = new LogItem();
+			li.addItemLog(itemId, rq.getStatus(), "", "");
+			
+			// adding credit to users account
+			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
+			ps5 = hcp.prepareStatement(sqlAddCredit);
+			ps5.setString(1, rq.getUserId());
+			rs5 = ps5.executeUpdate();
+			
+			if(rs5 == 1){
+				LOGGER.info("10 credits added to the users table");
+			}else{
+				LOGGER.info("Credits not added to the users table");
 			}
 			
-			rs.setItemId(id);
-			rs.setCode(0);
+			// Adding entry to Item log
+			LogCredit lc = new LogCredit();
+			lc.addLogCredit(rq.getUserId(),10,"Item Added In Friend Store","");
+
 			rs.setUid(uid);
-			rs.setMessage(message);
-			if(keys != null)keys.close();
-			if(resultset != null)resultset.close();
-			if(stmt != null)stmt.close();
-			if(stmt1 != null)stmt1.close();
-			if(psCredit != null)psCredit.close();
-			if(s != null)s.close();
+			rs.setCode(FLS_SUCCESS);
+			rs.setMessage(FLS_SUCCESS_M);
+			
 		} catch (SQLException e) {
 			LOGGER.warning("Couldnt create a statement");
-			if (e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG
-					&& e.getMessage().matches(".*\\bitem_image\\b.*")) {
+			if (e.getErrorCode() == MysqlErrorNumbers.ER_DATA_TOO_LONG && e.getMessage().matches(".*\\bitem_image\\b.*")) {
 				LOGGER.warning("The image size is too large. Please select image less than 16MB");
-				rs.setItemId(FLS_SQL_EXCEPTION_I);
 				rs.setCode(FLS_SQL_EXCEPTION_I);
-				rs.setUid("Error");
 				rs.setMessage(FLS_SQL_EXCEPTION_IMAGE);
-				LOGGER.warning(e.getErrorCode() + " " + e.getMessage());
+				rs.setUid("Error");
 			} else {
-				rs.setItemId(0);
 				rs.setCode(FLS_SQL_EXCEPTION);
 				rs.setUid("Error");
 				rs.setMessage(FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			}
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
 		} finally {
-			hcp.close();
+			try {
+				if(ps5 != null)ps5.close();
+				if(ps4 != null)ps4.close();
+				if(ps3 != null)ps3.close();
+				if(keys != null)keys.close();
+				if(ps2 != null)ps2.close();
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
-		LOGGER.info("Finished process method ");
+		LOGGER.info("Finished process method of post item handler");
 	
 		// return the response
 		return rs;
@@ -233,6 +204,5 @@ public class PostItemHandler extends Connect implements AppHandler {
 
 	@Override
 	public void cleanup() {
-		// TODO Auto-generated method stub
 	}
 }

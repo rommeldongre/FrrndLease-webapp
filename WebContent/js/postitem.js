@@ -1,6 +1,6 @@
 var postItemApp = angular.module('myApp');
 
-postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', function($scope, userFactory, bannerService, $routeParams, modalService){
+postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', 'logoutService', function($scope, userFactory, bannerService, $routeParams, modalService, logoutService){
     
     var itemId = $routeParams.id;
     
@@ -198,7 +198,10 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                             $("html, body").animate({ scrollTop: 0 }, "slow");
                         });
                     }else{
-                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                            if(response.code == 400)
+                                logoutService.logout();
+                        },function(){});
                     }
                 },
 
