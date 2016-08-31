@@ -212,43 +212,91 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_REJECT_REQUEST_FROM:
 				SUBJECT = (" Request removed");
-				BODY = "Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed as a lease might be granted. ";
+				BODY = ("<body> Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed as a lease might be granted. <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_REJECT_REQUEST_TO:
 				SUBJECT = (" Request removed");
-				BODY = "Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the owner as a lease might be granted. ";
+				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the owner as a lease might be granted. <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_DELETE_REQUEST_FROM:
 				SUBJECT = (" Request removed");
-				BODY = "Your Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed. ";
+				BODY = ("<body> Your Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed. Item Details are as follows<br/> <br/> " 
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_DELETE_REQUEST_TO:
 				SUBJECT = (" Request removed");
-				BODY = "Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed a Requestor. ";
+				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the Requestor. Item Details are as follows<br/> <br/> "
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_FROM:
 				SUBJECT = (" Lease granted to user [" + obj.getString("fromUserId") + "]");
-				BODY = "You have sucessfully leased an item to [" + obj.getString("fromUserId") + "] on Friend Lease - ";
+				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("fromUserId") + "] on Friend Lease - <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_TO:
 				SUBJECT = (" Lease granted to you by [" + obj.getString("fromUserId") + "]");
-				BODY = "An item has been leased by [" + obj.getString("fromUserId") + "] to you on Friend Lease - ";
+				BODY = ("<body> The following item has been leased by [" + obj.getString("fromUserId") + "] to you on Friend Lease - <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_REJECT_LEASE_FROM:
 				SUBJECT = (" Lease Cancelled to user [" + obj.getString("fromUserId") + "]");
-				BODY = "You have closed lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee ["
-						+ obj.getString("fromUserId") + "] on Friend Lease - ";
+				BODY = ("<body> You have closed lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee ["
+						+ obj.getString("fromUserId") + "] on Friend Lease - <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_REJECT_LEASE_TO:
 				SUBJECT = (" Lease Closed by the Owner");
-				BODY = "Lease has been closed by the Owner for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> ";
+				BODY = ("<body> Lease has been closed by the Owner for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:
@@ -273,17 +321,34 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_RENEW_LEASE_REQUESTOR:
 				SUBJECT = (" Lease Renewed");
-				BODY = "Lease has been renewed by the owner of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> ";
+				BODY = ("<body>Item Owner " +obj.getString("fromFullName") + " has renewed lease for the following item to you on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_FROM:
 				SUBJECT = (" Item Requested");
-				BODY = "You have sucessfully Requested an item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> on Friend Lease - ";
+				BODY = ("<body> You have sucessfully Requested the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> on Friend Lease - <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_TO:
 				SUBJECT = (" Item Requested");
-				BODY = "Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on Friend Lease - ";
+				BODY = ("<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on Friend Lease - <br/> <br/>"
+						+ " Title : " + obj.getString("title")
+						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
+						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
+				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			default:

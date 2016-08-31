@@ -345,7 +345,7 @@ public class FlsConfig extends Connect{
 							String ref_code = rs.getString("user_id");
 							int ref_code_length = 8;
 							ReferralCode rc = new ReferralCode();
-							ref_code = rc.createRandomCode(ref_code_length, ref_code);
+							ref_code = rc.createRandomCode(ref_code_length);
 							
 							String sqlUpdateRowReferralCode = "UPDATE users SET user_referral_code=? WHERE user_id=?";
 							PreparedStatement s = connection.prepareStatement(sqlUpdateRowReferralCode);
