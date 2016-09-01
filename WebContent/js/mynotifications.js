@@ -37,7 +37,6 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', 'eve
 			
 			success: function(response) {
                 if(response.code == 0){
-                    console.log(response.resList);
                     $scope.$apply(function(){
                         $scope.events.push.apply($scope.events, response.resList);
                         if(response.resList.length < Limit)
@@ -61,14 +60,13 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', 'eve
         getNotifications();
     }
     
-    $scope.readEvent = function(index){
-        if($scope.events[index].readStatus == 'FLS_UNREAD'){
-            $.ajax({
+    $scope.readEvent = function(index, s){
+        $.ajax({
                 url: '/flsv2/EventReadStatus',
                 type: 'post',
                 data: JSON.stringify({
                     eventId: $scope.events[index].eventId,
-                    readStatus: 'FLS_READ',
+                    readStatus: s,
                     userId:userFactory.user,
                     accessToken: userFactory.userAccessToken
                 }),
@@ -79,7 +77,11 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', 'eve
                     if(response.code == 0){
                         eventsCount.updateEventsCount();
                         $scope.$apply(function(){
-                            $scope.events[index].readStatus = 'FLS_READ';
+                            if($scope.events[index].readStatus == 'FLS_READ'){
+                                $scope.events[index].readStatus = 'FLS_UNREAD';
+                            }else{
+                                $scope.events[index].readStatus = 'FLS_READ';
+                            }
                         });
                     }
                 },
@@ -87,7 +89,6 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', 'eve
                 error: function() {
                 }
             });
-        }
     }
     
     initialPopulate();

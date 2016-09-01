@@ -19,8 +19,8 @@
                 </td>
                 <td class="ng-class:{'font-bold':(event.readStatus == 'FLS_UNREAD'),'font-normal':(event.readStatus == 'FLS_READ')}" ng-bind-html="event.notificationMsg | to_trusted"></td>
                 <td class="td-actions text-center">
-                    <button class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{event.readStatus == 'FLS_READ' ? 'Read' : 'Mark as read'}}" ng-click="readEvent($index)"><i class="ng-class:{'fa fa-lg fa-circle-o':(event.readStatus == 'FLS_UNREAD'),'fa fa-lg fa-dot-circle-o':(event.readStatus == 'FLS_READ')}"></i></button><br/>
-                    <span class="label label-default label-fill">{{event.datetime | date:'medium'}}</span>
+                    <button href="" class="label label-fill ng-class:{'label-primary':(event.readStatus == 'FLS_UNREAD'),'label-default':(event.readStatus == 'FLS_READ')}" title="{{event.readStatus == 'FLS_READ' ? 'Mark as unread' : 'Mark as read'}}" ng-click="(event.readStatus == 'FLS_UNREAD') ? readEvent($index,'FLS_READ') : readEvent($index,'FLS_UNREAD')">{{(event.readStatus == 'FLS_UNREAD') ? 'Mark as read' : 'Mark as unread'}}</button><br/>
+                    <span style="color:#999999" class="btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="{{event.datetime | date:'medium'}}">{{event.datetime | date}}</span>
                 </td>
               </tr>
         </tbody>
