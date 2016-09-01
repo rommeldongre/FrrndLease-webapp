@@ -57,7 +57,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
     }
     
     $scope.closeLease = function(ItemId, RequestorUserId, index){
-        if($scope.leases[index].status == 'LeaseStarted' || $scope.leases[index].status == 'LeaseEnded' || $scope.leases[index].status == 'LeaseReady'){
+        if($scope.leases[index].status == 'LeaseStarted' || $scope.leases[index].status == 'LeaseReady'){
             modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'YES'}).then(
                 function(result){
                     req = {
@@ -70,7 +70,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
                     closeLeaseSend(req, index);
                 },function(){});
         }else{
-            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseEnded or LeaseReady", showCancel:false, actionButtonText: 'OK'}).then(
+            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseReady", showCancel:false, actionButtonText: 'OK'}).then(
                 function(result){
                 },function(){});
         }
