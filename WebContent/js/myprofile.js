@@ -17,8 +17,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null,lastOffset = 0;
-	$("#openBtn").hide();
+    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null;
     
     $scope.user = {};
                                             
@@ -426,59 +425,6 @@ myProfile.controller('myProfileCtrl', ['$scope',
         }
         $scope.user.mobile = Mobile;
         $scope.user.error = '';
-    }
-	
-	$scope.showCredit = function(){
-		$("#openBtn").click();
-		$scope.showNext = true;
-		getCredit(lastOffset);
-	}
-    
-	var getCredit = function(Offset){
-		var req = {
-			userId : userFactory.user,
-			cookie: Offset,
-			limit: 3
-		}
-		
-		getCreditSend(req);
-	}
-	
-	var getCreditSend = function(req){
-		$.ajax({
-            url: '/flsv2/GetCreditTimeline',
-            type: 'post',
-            data: JSON.stringify(req),
-			contentType:"application/json",
-			dataType:"json",
-            success: function(response){
-				if(response.returnCode == 0){
-                if(lastOffset == 0){
-					$scope.$apply(function(){
-						$scope.creditsArray = [response.resList];
-					});
-                        getCredit(response.lastItemId);
-                    }else{
-						$scope.$apply(function(){
-						$scope.creditsArray.push(response.resList);
-						});
-                    }
-                    lastOffset = response.lastItemId;
-				}else{
-					$scope.showNext = false;
-					console.log("ReturnCode not Zero");
-                }
-            },
-            error: function(){
-                console.log("not able to get credit log data");
-            }
-	
-        });
-	}
-	
-	// called when Show More Credits button is clicked
-    $scope.loadNextCredit = function(){
-        getCredit(lastOffset);
     }
 	
     $scope.updateProfile = function(){

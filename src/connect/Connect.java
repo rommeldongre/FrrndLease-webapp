@@ -24,7 +24,7 @@ public class Connect extends ErrorCat {
 	// Local - Database
 	private static String url = "jdbc:mysql://127.0.0.1:3306/fls?autoReconnect=true";
 	private static String name = "root";
-	private static String pass = "root";
+	private static String pass = "";
 
 	// Amazon RDS Database
 	// private static String url =
@@ -81,7 +81,7 @@ public class Connect extends ErrorCat {
     		HikariConfig config = new HikariConfig();
     		config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
     		config.setUsername("root");
-    		config.setPassword("root");
+    		config.setPassword("");
     		config.setMaximumPoolSize(10);
     		config.setMinimumIdle(2);
     		config.setIdleTimeout(10);
