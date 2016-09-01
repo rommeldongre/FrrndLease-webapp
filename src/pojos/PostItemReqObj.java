@@ -1,11 +1,8 @@
 package pojos;
 
-import javax.validation.constraints.NotNull;
-
 public class PostItemReqObj extends ReqObj {
 	
 		// id of item
-		@NotNull
 		int id;
 		
 		//Title of Item

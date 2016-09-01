@@ -1,6 +1,6 @@
 var postItemApp = angular.module('myApp');
 
-postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', function($scope, userFactory, bannerService, $routeParams, modalService){
+postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', 'logoutService', function($scope, userFactory, bannerService, $routeParams, modalService, logoutService){
     
     var itemId = $routeParams.id;
     
@@ -8,6 +8,10 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     var userId = userFactory.user;
     var userAccessToken = userFactory.userAccessToken;
+    
+    $scope.item = {};
+    
+    $scope.categories = [];
     
     var getItemDetails = function(){
         var req = {
@@ -40,12 +44,6 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             });
         }
     }
-    
-    getItemDetails();
-    
-    $scope.item = {};
-    
-    $scope.categories = [];
 
     var populateCategory = function(id){
         var req = {
@@ -64,7 +62,9 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             dataType: "json",
             success: function(response) {
                 if(response.Code === "FLS_SUCCESS") {
-                    $scope.categories.push(JSON.parse(response.Message).catName);
+                    $scope.$apply(function(){
+                        $scope.categories.push(JSON.parse(response.Message).catName);
+                    });
                     populateCategory(response.Id);
                 }
                 else{
@@ -101,7 +101,9 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             dataType: "json",
             success: function(response) {
                 if(response.Code === "FLS_SUCCESS") {
-                    $scope.leaseTerms.push(JSON.parse(response.Message).termName);
+                    $scope.$apply(function(){
+                        $scope.leaseTerms.push(JSON.parse(response.Message).termName);
+                    });
                     populateLeaseTerm(response.Id);
                 }
                 else{
@@ -196,7 +198,10 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                             $("html, body").animate({ scrollTop: 0 }, "slow");
                         });
                     }else{
-                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                            if(response.code == 400)
+                                logoutService.logout();
+                        },function(){});
                     }
                 },
 
@@ -292,5 +297,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     $scope.cancel = function(){
         window.location.replace("myapp.html#/");
     }
+    
+    getItemDetails();
     
 }]);
