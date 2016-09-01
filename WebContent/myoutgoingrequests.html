@@ -73,7 +73,7 @@
                        </a>
                        <br/>
                        <a class="card-link">
-                           <p class="description">{{request.request_date}}</p>
+                           <p class="description">{{request.request_date | date}}</p>
                        </a>
                        <a class="card-link" href="">
                            <button ng-click="deleteRequest(request.request_id,$index)" class="btn btn-primary btn-simple">Delete</button>

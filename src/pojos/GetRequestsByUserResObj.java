@@ -2,6 +2,8 @@ package pojos;
 
 import javax.validation.constraints.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class GetRequestsByUserResObj extends ResObj{
@@ -231,7 +233,14 @@ public class GetRequestsByUserResObj extends ResObj{
 	}
 
 	public void setRequest_date(String request_date) {
-		Request_date = request_date;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(request_date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Request_date = Long.toString(date.getTime());
 	}
 
 	
