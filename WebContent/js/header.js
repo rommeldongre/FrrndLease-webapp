@@ -22,8 +22,9 @@ headerApp.controller('headerCtrl', ['$scope',
     // sign up starts here
     
     // variables for storing the location data
-    var UserId, Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0,Picture='',FriendId;
-    
+    var UserId, Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0,Picture='',FriendId,lastOffset = 0;
+    $("#openBtn").hide();
+	
     $scope.$on('signUpCheckReq', function(event, userId, email, password, name, picture, mobile, code, location, signUpStatus, friendId){
         UserId = userId;
         Email = email;
@@ -270,6 +271,59 @@ headerApp.controller('headerCtrl', ['$scope',
             $scope.navClassValue = "navbar navbar-default";
             $scope.showSearch = true;
         }
+    }
+	
+	$scope.showCredit = function(){
+		$("#openBtn").click();
+		$scope.showNext = true;
+		getCredit(lastOffset);
+	}
+    
+	var getCredit = function(Offset){
+		var req = {
+			userId : userFactory.user,
+			cookie: Offset,
+			limit: 3
+		}
+		
+		getCreditSend(req);
+	}
+	
+	var getCreditSend = function(req){
+		$.ajax({
+            url: '/flsv2/GetCreditTimeline',
+            type: 'post',
+            data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+            success: function(response){
+				if(response.returnCode == 0){
+                if(lastOffset == 0){
+					$scope.$apply(function(){
+						$scope.creditsArray = [response.resList];
+					});
+                        getCredit(response.lastItemId);
+                    }else{
+						$scope.$apply(function(){
+						$scope.creditsArray.push(response.resList);
+						});
+                    }
+                    lastOffset = response.lastItemId;
+				}else{
+					$scope.showNext = false;
+					console.log("ReturnCode not Zero");
+                }
+            },
+            error: function(){
+                console.log("not able to get credit log data");
+            }
+	
+        });
+	}
+	
+	// called when Show More Credits button is clicked
+    $scope.loadNextCredit = function(){
+        getCredit(lastOffset);
     }
     
     if(userFactory.user == "" || userFactory.user == null){

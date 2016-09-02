@@ -3,9 +3,6 @@
         <div class="left_title col-lg-2 col-md-2">
             <strong>My Profile</strong>
         </div>
-        <div class="col-lg-10 col-md-10" style="text-align: end;margin-top: 2%;">
-            <button type="button" class="btn btn-primary btn-simple" ng-click="showCredit()">Credits History</button>
-        </div>
     </div>
 	<hr/><br/><br/>
     <div class="row">
@@ -94,44 +91,4 @@
             <button type="button" class="btn btn-default btn-simple" ng-click="cancel()">Cancel</button>
         </div>
     </form>
-	
-	<!-- sample pop up starts here-->
-			<button href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
-
-			<div class="modal fade" id="myModalTable" data-backdrop="static" data-keyboard="false">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-					<h3 class="modal-title">Credit Timeline</h3>
-					</div>
-					<div class="modal-body">
-					<h5 class="text-center">Credit Timeline is as follows</h5>
-					<table id="creditLogTable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
-						<thead>
-							<tr>
-								<th class="tablecell" style="width: 50%">Credit Date</th>
-								<th class="tablecell" style="width: 25%">Credit Operation</th>
-								<th class="tablecell" style="width: 25%">Credit Type</th>
-							</tr>
-							
-						</thead>
-						<tbody ng-repeat="y in creditsArray">
-							<tr ng-repeat="x in y">
-								<td>{{ x.credit_date }}</td>
-								<td>{{ x.credit_amount }}</td>
-								<td>{{ x.credit_type }}</td>
-							</tr>
-						</tbody>
-					</table>
-					</div>
-					<div class="modal-footer">
-					<button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
-					<button class="btn btn-primary btn-fill" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextCredit()">Show More</button>
-					</div>
-							
-				</div><!-- /.modal-content -->
-				</div><!-- /.modal-dialog -->
-			</div><!-- /.modal -->
-			<!-- sample pop up ends here-->
 </div>
