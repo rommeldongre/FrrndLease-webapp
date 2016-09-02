@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetLeasesByXResObj extends ResObj{
 
 	int code;
@@ -145,7 +149,14 @@ public class GetLeasesByXResObj extends ResObj{
 	}
 
 	public void setLeaseExpiryDate(String leaseExpiryDate) {
-		this.leaseExpiryDate = leaseExpiryDate;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(leaseExpiryDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.leaseExpiryDate = Long.toString(date.getTime());
 	}
 
 	public int getItemId() {

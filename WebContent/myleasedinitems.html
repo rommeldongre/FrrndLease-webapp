@@ -77,10 +77,10 @@
                        </a>
                        <br/>
                        <a class="card-link">
-                           <p class="description">{{lease.leaseExpiryDate}}</p>
+                           <p class="description">{{lease.leaseExpiryDate | date}}</p>
                        </a>
                        <a class="card-link" href="">
-                           <button class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.ownerUserId, lease.requestorUserId, $index)">Request Cancel</button>
+                           <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.ownerUserId, lease.requestorUserId, $index)">Close</button>
                        </a>
                    </div>
                </div>

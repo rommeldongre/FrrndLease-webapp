@@ -73,7 +73,7 @@
                        </a>
                        <br/>
                        <a class="card-link">
-                           <p class="description">{{request.requestDate}}</p>
+                           <p class="description">{{request.requestDate | date}}</p>
                        </a>
                        <a class="card-link" href="">
                            <button ng-click="grantLease(request.requestItemId,request.requestorId,$index)" class="btn btn-primary btn-simple">Accept</button>
