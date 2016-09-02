@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetRequestsPlusResObj extends ResObj{
 	
 	int Code, RequestItemId,requestId;
@@ -117,7 +121,14 @@ public class GetRequestsPlusResObj extends ResObj{
 		return RequestDate;
 	}
 	public void setRequestDate(String requestDate) {
-		RequestDate = requestDate;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(requestDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		RequestDate = Long.toString(date.getTime());
 	}
 	public String getTitle() {
 		return Title;

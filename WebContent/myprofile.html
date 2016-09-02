@@ -32,14 +32,18 @@
                 <label ng-if="(status=='mobile_activated')" class="control-label">Email</label>
                 <div ng-if="(status=='mobile_activated')" class="input-group">
                     <input name="email" type="email" class="form-control" id="email" ng-model="user.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-change="emailTouched()" placeholder="Email">
-                    <span ng-if="changedText" class="input-group-addon btn btn-fill btn-info" ng-click="undoEmail()">Undo</span>
-                    <span class="input-group-addon btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(secForm.email.$touched && secForm.email.$valid) ? verifyEmail(user.email) : user.error='Not a valid email'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</span>
+                    <span class="input-group-btn">
+                        <button ng-if="changedText" class="btn btn-fill btn-info" ng-click="undoEmail()">Undo</button>
+                        <button class="btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(secForm.email.$touched && secForm.email.$valid) ? verifyEmail(user.email) : user.error='Not a valid email'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</button>
+                    </span>
                 </div>
                 <label ng-if="(status=='email_activated' || status == 'facebook' || status=='google')" class="control-label">Mobile</label>
                 <div name="mobile" ng-if="(status=='email_activated' || status == 'facebook' || status=='google')" class="input-group">
                     <input type="text" class="form-control" id="mobile" ng-model="user.mobile" ng-change="mobileTouched()" placeholder="Mobile">
-                    <span ng-if="changedText" class="input-group-addon btn btn-fill btn-info" ng-click="undoMobile()">Undo</span>
-                    <span class="input-group-addon btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(user.mobile.length == 10) ? verifyMobile(user.mobile) : user.error='Not a valid Mobile Number'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</span>
+                    <span class="input-group-btn">
+                        <button ng-if="changedText" class="btn btn-fill btn-info" ng-click="undoMobile()">Undo</button>
+                        <button class="btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(user.mobile.length == 10) ? verifyMobile(user.mobile) : user.error='Not a valid Mobile Number'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</button>
+                    </span>
                 </div>
             </form>
             <br/>
