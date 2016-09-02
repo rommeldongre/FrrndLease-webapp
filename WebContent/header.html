@@ -42,7 +42,7 @@
 
                         <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="See Notifications" style="font-size:16px;{{(head.unread == 0) ? '' : 'color:black;'}}" ng-click="openNotifications()"><strong ng-if="head.unread!=0">{{head.unread + " "}}</strong><i class="fa fa-bell"></i></li>
                         
-                        <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" style="color:#337ab7;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title="Credits"><strong>{{credits + " "}}</strong><i class="fa fa-diamond"></i></li>
+                        <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" style="color:#337ab7;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title="See Credit History" ng-click="showCredit()"><strong>{{credits + " "}}</strong><i class="fa fa-diamond"></i></li>
 
                         <li ng-if="isLoggedIn()" class="dropdown">
                             <a href="" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown"> 
@@ -67,6 +67,46 @@
                     
                 </div>
             </div>
+			
+			<!-- sample pop up starts here-->
+			<button href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
+
+			<div class="modal fade" id="myModalTable" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h3 class="modal-title">Credit History</h3>
+					</div>
+					<div class="modal-body">
+					<!--<h5 class="text-center">Credit Timeline is as follows</h5>-->
+					<table id="creditLogTable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
+						<thead>
+							<tr>
+								<th class="tablecell" style="width: 25%">Date</th>
+								<th class="tablecell" style="width: 25%">Amount</th>
+								<th class="tablecell" style="width: 50%">Reason</th>
+							</tr>
+							
+						</thead>
+						<tbody ng-repeat="y in creditsArray">
+							<tr ng-repeat="x in y">
+								<td>{{ x.credit_date }}</td>
+								<td>{{ x.credit_amount }}</td>
+								<td>{{ x.credit_type }}</td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
+					<button class="btn btn-primary btn-fill" style="text-align: end;margin-top: 0%;" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextCredit()">Show More</button>
+					</div>
+							
+				</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+			<!-- sample pop up ends here-->
 			
 			 <!-- Code for Success banner the alert notification which will be closed in 5 seconds -->
 			<div class="alert alert-success ng-hide" ng-show="bannerVal">
