@@ -188,25 +188,25 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_ADD_FRIEND_FROM:
-				SUBJECT = (" Your Friend '" + obj.getString("fromUserId")	+ "' has been added to your Friend List. ");
-				BODY = "You have added '" + obj.getString("fromUserId") + "' to your Friend List. You can now lease items to each other ";
+				SUBJECT = (" Your Friend '" + obj.getString("from")	+ "' has been added to your Friend List. ");
+				BODY = "You have added '" + obj.getString("from") + "' to your Friend List. You can now lease items to each other ";
 				break;
 
 			case FLS_MAIL_ADD_FRIEND_TO:
-				SUBJECT = (" Your Friend '" + obj.getString("fromUserId") + "' has added you to their Friend List");
-				BODY = "You are now in '" + obj.getString("fromUserId") + "'\'s Friend List. You can now lease items to each other <br/> <br/>"
+				SUBJECT = (" Your Friend '" + obj.getString("from") + "' has added you to their Friend List");
+				BODY = "You are now in '" + obj.getString("from") + "'\'s Friend List. You can now lease items to each other <br/> <br/>"
 						+ "Click here to Sign Up "+EMAIL_INVITATION_URL+obj.getString("fromUserRefferalCode");
 				break;
 
 			case FLS_MAIL_DELETE_FRIEND_FROM:
-				SUBJECT = (" Your Friend \'" + obj.getString("fromUserId") + "' has been removed from your Friend List");
-				BODY = "You have now removed " + obj.getString("fromUserId")
+				SUBJECT = (" Your Friend \'" + obj.getString("from") + "' has been removed from your Friend List");
+				BODY = "You have now removed " + obj.getString("from")
 						+ " from your Friend List. You can no longer lease items to each other. Tell us what went wrong! ";
 				break;
 
 			case FLS_MAIL_DELETE_FRIEND_TO:
-				SUBJECT = (" Your Friend '" + obj.getString("fromUserId") + "' removed you from thier Friend List");
-				BODY = "You have been removed from the Friend List of your Friend " + obj.getString("fromUserId")
+				SUBJECT = (" Your Friend '" + obj.getString("from") + "' removed you from thier Friend List");
+				BODY = "You have been removed from the Friend List of your Friend " + obj.getString("from")
 						+ ". You can no longer lease items to each other. Tell us what went wrong! ";
 				break;
 
@@ -255,8 +255,8 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_FROM:
-				SUBJECT = (" Lease granted to user [" + obj.getString("fromUserId") + "]");
-				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("fromUserId") + "] on Friend Lease - <br/> <br/>"
+				SUBJECT = (" Lease granted to user [" + obj.getString("from") + "]");
+				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("from") + "] on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
@@ -266,8 +266,8 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_TO:
-				SUBJECT = (" Lease granted to you by [" + obj.getString("fromUserId") + "]");
-				BODY = ("<body> The following item has been leased by [" + obj.getString("fromUserId") + "] to you on Friend Lease - <br/> <br/>"
+				SUBJECT = (" Lease granted to you by [" + obj.getString("from") + "]");
+				BODY = ("<body> The following item has been leased by [" + obj.getString("from") + "] to you on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
@@ -277,9 +277,9 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_REJECT_LEASE_FROM:
-				SUBJECT = (" Lease Cancelled to user [" + obj.getString("fromUserId") + "]");
+				SUBJECT = (" Lease Cancelled to user [" + obj.getString("from") + "]");
 				BODY = ("<body> You have closed lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee ["
-						+ obj.getString("fromUserId") + "] on Friend Lease - <br/> <br/>"
+						+ obj.getString("from") + "] on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
@@ -300,8 +300,8 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:
-				SUBJECT = (" Reminder to Renew Lease to user [" + obj.getString("fromUserId") + "]");
-				BODY = "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee [" + obj.getString("fromUserId") + "] on Friend Lease - ";
+				SUBJECT = (" Reminder to Renew Lease to user [" + obj.getString("from") + "]");
+				BODY = "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee [" + obj.getString("from") + "] on Friend Lease - ";
 				break;
 
 			case FLS_MAIL_GRACE_PERIOD_REQUESTOR:

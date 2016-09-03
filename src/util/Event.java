@@ -541,8 +541,7 @@ public class Event extends Connect{
 		String AUTH_TOKEN = "69d7e761d7361e35fe43afd55acff5ff";
 		
 		if(ENV_CONFIG.equals("dev")){
-			ACCOUNT_SID = "AC133fd97e5cb38d1e4d3ebd176f2a0c71";
-			AUTH_TOKEN = "84f1a1797a2e386aca2d8256e3f5ce6f";
+			return true;
 		}
 		
 		PreparedStatement ps = null;
@@ -567,19 +566,22 @@ public class Event extends Connect{
 					phone = null;
 				}
 				
+				LOGGER.info("Sending sms to phone number : " + phone);
 				if(phone != null){
 				    TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
 					
 				    List<NameValuePair> params = new ArrayList<NameValuePair>();
 				    params.add(new BasicNameValuePair("Body", rs.getString("message")));
 				    params.add(new BasicNameValuePair("To", "+91"+phone));
-				    params.add(new BasicNameValuePair("From", "+12015286546"));
+				    params.add(new BasicNameValuePair("From", "2015286546"));
 			    
 			    	MessageFactory messageFactory = client.getAccount().getMessageFactory();
 			        Message message = messageFactory.create(params);
 			        LOGGER.info(message.getSid());
 				}
 				
+			}else{
+				LOGGER.info("Event id doesnot exist!!");
 			}
 			
 		} catch (Exception e) {
