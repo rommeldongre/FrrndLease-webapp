@@ -9,6 +9,7 @@ headerApp.controller('headerCtrl', ['$scope',
 									'statsFactory', 
 									'loginSignupService',
                                     'logoutService',
+                                    'modalService',
 									function($scope, 
 									$timeout, 
 									userFactory, 
@@ -17,7 +18,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									searchService, 
 									statsFactory, 
 									loginSignupService,
-                                    logoutService){
+                                    logoutService,
+                                    modalService){
     
     // sign up starts here
     
@@ -460,6 +462,37 @@ headerApp.controller('headerCtrl', ['$scope',
     $scope.$on('updateEventsCount', function(event){
         displayUnreadNotifications();
     });
+                                        
+    $scope.$on('addPromoCredits', function(event, promoCode){
+        var req = {
+            userId: userFactory.user,
+            promoCode: promoCode,
+            accessToken: userFactory.userAccessToken
+        }
+        
+        $.ajax({
+            url: '/flsv2/AddPromoCredits',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType:"json",
+            success: function(response){
+                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(
+                    function(r){
+                        if(response.code == 0){
+                            $scope.credits = response.newCreditBalance;
+                            userFactory.userCreditsRes(response.newCreditBalance);
+                        }
+                        if(response.code == 400)
+                            logoutService.logout();
+                    }, function(){});
+            },
+            error: function(){
+                console.log("not able to add promo credit");
+            }
+        });
+        
+    });
     
 }]);
 
@@ -509,7 +542,7 @@ headerApp.factory('profileFactory', ['$http', function($http){
     return dataFactory;
 }]);
 
-headerApp.factory('userFactory', function(){
+headerApp.factory('userFactory', ['$rootScope', function($rootScope){
     
     var dataFactory = {};
     
@@ -519,8 +552,16 @@ headerApp.factory('userFactory', function(){
     
     dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
     
+    dataFactory.userCredits = function(promo){
+        $rootScope.$broadcast('addPromoCredits', promo);
+    }
+    
+    dataFactory.userCreditsRes = function(credits){
+        $rootScope.$broadcast('updatedCredits', credits);
+    }
+    
     return dataFactory;
-});
+}]);
 
 // service to implement modal
 headerApp.service('modalService', ['$uibModal',

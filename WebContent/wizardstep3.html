@@ -1,0 +1,51 @@
+<div class="container-fluid" id="midcontainer" ng-cloak>
+    
+    <div class="row">
+        <a class="btn btn-primary btn-simple" ng-click="importfb()"><u>Invite Facebook Friends</u></a><br/>
+		<a class="btn btn-primary btn-simple" ng-click="importgoogle()"><u>Add Gmail Friends</u></a><br/>
+        <a class="btn btn-primary btn-simple" ng-click="directImport()"><u>Add by Email</u></a><br/>
+	</div>
+    
+    <hr /><br /><br />
+	
+    <div class="form-group" style="float:right;">
+        <a type="button" ng-if="!invited" class="btn btn-default btn-simple" href="myapp.html#/mypostings">Skip this step</a>
+        <a type="button" ng-if="invited" class="btn btn-primary btn-fill" href="myapp.html#/mypostings">
+            Finish<span class="fa fa-chevron-right"></span>
+        </a>
+    </div>
+    
+	<!-- sample pop up starts here-->
+    <button href="#myModalTable" ng-hide="true" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
+    <div class="modal fade" id="myModalTable">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title">Import Google Contacts</h3>
+                </div>
+                <div class="modal-body">
+                    <h5 class="text-center">Please Select the Google Contacts you want to Import</h5>
+                    <table id="friendsoptionstable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
+						<thead>
+							<tr>
+								<th class="tablecell" style="width: 50%">Email</th>
+								<th class="tablecell" style="width: 15%">Name</th>
+								<th class="tablecell" style="width: 25%">Mobile</th>
+								<th class="tablecell" style="width: 12%">Import</th>
+							</tr>
+						</thead>
+						<tbody>
+                        </tbody>
+					</table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
+					<button class="btn btn-primary btn-fill" id="addcheckedfriends1" ng-click="add_checked_friends()">Save Selected Friends</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!-- sample pop up ends here-->
+    
+</div>
