@@ -1,6 +1,37 @@
 var postItemWizardApp = angular.module('myApp');
 
 postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', function($scope, modalService, userFactory, eventsCount){
+    
+//    var getItems = function(){
+//        var req = {
+//            cookie: 0,
+//            userId: userFactory.user,
+//			match_userId: null,
+//            category: null,
+//            limit: 1,
+//            lat: 0.0,
+//            lng: 0.0,
+//            searchString: "",
+//            itemStatus: ['InStore', 'OnHold']
+//        }
+//        
+//        $.ajax({
+//            url: '/flsv2/GetItemStoreByX',
+//            type:'post',
+//            data: JSON.stringify(req),
+//            contentType:"application/json",
+//            dataType: "json",
+//            success: function(response) {
+//                if(response.returnCode == 0)
+//                    window.location.replace('myapp.html#/');
+//            },
+//            error:function() {
+//            }
+//        });
+//    }
+//    
+//    getItems();
+    
     $scope.steps = [
         {
             templateUrl: 'wizardstep1.html',
@@ -16,7 +47,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }
     ];
     
-    $scope.posted = false;
+    $scope.posted = true;
     $scope.shared = false;
     $scope.invited = false;
     
@@ -165,11 +196,12 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }, {scope: 'email,public_profile,user_friends'});
     }
     
+    var testEmail = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
     var friendIdArray = [];
 	var friendArray = [];
     var lastFriendId = '';
 	var arrEmail = [];
-	var errCount = 0, len = 0,count=1;
+	var errCount = 0, len = 0,count=0;
 	var reasonForAddFriend = null, googleFriendsCounter = 0, counter = 0,checkcounter = 0;
 	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
 	var apiKey = 'API Code';
@@ -182,56 +214,106 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 	}
     
 	load_Gapi();
+	
+	var addFriendSetValues = function(name, mobile, email){
+		
+		if(email == '')
+			email = null;
+		if(name == '')
+			name = null;
+		if(mobile == '')
+			mobile = 0;
+		
+		var req = {
+			id: email,
+			fullName: name,
+			mobile: mobile,
+			userId: userFactory.user,
+			referralCode: localStorage.getItem("userReferralCode")
+		}
+		
+		addFriendSend(req);
+	}
+	
+	var addFriendSend = function(req){
+		$.ajax({
+            url: '/flsv2/AddFriend',
+            type:'get',
+            data: {req : JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                if(response.Code == 'FLS_SUCCESS'){
+                    count++;
+                }
+            },
+            error: function() {
+                console.log("Invalid Entry");
+            }
+        });
+    }
     
     $scope.directImport = function(){
         modalService.showModal({}, {submitting: true, labelText: 'Invite Friends by Email,comma separated. example1@xyz.com, example2@abc.net', actionButtonText: 'Submit'}).then(function(result){
-			var value = result;
-			reasonForAddFriend = "importEmail";
-			arrEmail = value.split(",");
+            
+			arrEmail = result.split(",");
 			len = arrEmail.length;
-			if(value != '' && value != ' '){
+            
+			if(result != '' && result != ' '){
 				if(len<=20){
-					directImport_continue();
+					for(var i in arrEmail){
+                        if(testEmail.test(arrEmail[i])){
+                            addFriendSetValues('-', '-', arrEmail[i]);
+                        }
+                    }
+                    if(count > 0){
+                        modalService.showModal({}, {bodyText: "Successfully imported "+count+" friends.", showCancel:false, actionButtonText: 'OK'}).then(function(result){
+                            eventsCount.updateEventsCount();
+                            $scope.invited = true;
+                            count = 0;
+                        }, function(){});
+                    }
 				}else{
 					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){}, function(){});
 				}
 			}
+            
             eventsCount.updateEventsCount();
+            
         }, function(){});
     }
 	
-	var directImport_continue = function(){
-        if(count == len){
-            var validEmail = len-errCount;
-            modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                eventsCount.updateEventsCount();
-                $scope.invited = true;
-            }, function(){});
-        }else{
-            var isValid = checkEmailValidity(arrEmail[count]);
-            if(checkEmailValidity(arrEmail[count])){
-                addFriendSetValues('-', '-', arrEmail[count], userFactory.user);
-            }else{
-                errCount = errCount+1;
-                count++;
-                directImport_continue();
-            }
-        }	
-	}
+//	var directImport_continue = function(){
+//        if(count == len){
+//            var validEmail = len-errCount;
+//            modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+//                eventsCount.updateEventsCount();
+//                $scope.invited = true;
+//            }, function(){});
+//        }else{
+//            var isValid = checkEmailValidity(arrEmail[count]);
+//            if(checkEmailValidity(arrEmail[count])){
+//                addFriendSetValues('-', '-', arrEmail[count], userFactory.user);
+//            }else{
+//                errCount = errCount+1;
+//                count++;
+//                directImport_continue();
+//            }
+//        }	
+//	}
     
 	$scope.importfb = function(){
         FB.login(function(response) {
-            var ref_code = localStorage.getItem("userReferralCode");
             // handle the response
 			// check whether user is logged in or not and ask for credentials if not.
             // send message to facebook friends using send request dialog
             FB.ui({
                 method: 'send',
-                link: 'http://www.frrndlease.com/index.html?ref_token='+ref_code,
+                link: 'http://www.frrndlease.com/index.html?ref_token='+localStorage.getItem("userReferralCode"),
             },function(response){
                 if (response && !response.error) {
                     //check 'response' to see if call was successful
-                    modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                    modalService.showModal({}, {bodyText: "Invitation successfully sent to Facebook Friend(s)" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
                         eventsCount.updateEventsCount();
                         $scope.invited = true;
                     }, function(){});
@@ -350,10 +432,10 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                 email = $("#email"+counter).text();
                 checkcounter++;
 					
-                addFriendSetValues(name, mobile, email, userFactory.user);
-            }else{
-                add_checked_friends_continued();		//basically just increment and call the same function again
+                addFriendSetValues(name, mobile, email);
             }
+            counter++;
+            $scope.add_checked_friends();
         }else{
             $('#myPleaseWait').modal('hide');
             modalService.showModal({}, {bodyText: "Success, Number of Friends Imported : "+checkcounter ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
@@ -362,71 +444,10 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             }, function(){});
         } 
 	}
-	
-	var add_checked_friends_continued = function(email){
-		counter++;
-		$scope.add_checked_friends();
-	}
     
-	var checkEmailValidity = function(email){
-		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return re.test(email);
-	}
-	
-	var addFriendSetValues = function(name, mobile, email, user){
-        var friendName =null, friendEmail =null, friendMobile=0;
-        
-        friendName = name;
-		friendEmail = email;
-		friendMobile = mobile;
-		userId = user;
-		code = localStorage.getItem("userReferralCode");
-		
-		if(friendName == '')
-			friendName = null;
-		if(friendEmail == '')
-			friendEmail = null;
-		if(friendMobile == '')
-			friendMobile = 0;
-		
-		var req = {
-			id: friendEmail,
-			fullName: friendName,
-			mobile: friendMobile,
-			userId: user,
-			referralCode: code
-		};
-		
-		addFriendSend(req);	
-	}
-	
-	var addFriendSend = function(req){
-		$.ajax({
-            url: '/flsv2/AddFriend',
-            type:'get',
-            data: {req : JSON.stringify(req)},
-            contentType:"application/json",
-            dataType: "json",
-            success: function(response) {
-				if(reasonForAddFriend == "importEmail"){
-					count++;
-					if(count == len){
-                        var validEmail = len-errCount;
-                        modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                            eventsCount.updateEventsCount();
-                            $scope.invited = true;
-                        }, function(){});
-                    }else{
-                        directImport_continue();
-                    }
-				}else if(reasonForAddFriend == "importGoogle"){
-					add_checked_friends_continued();
-				}
-            },
-            error: function() {
-                console.log("Invalid Entry");
-            }
-        });
-    }
+//	var checkEmailValidity = function(email){
+//		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//			return re.test(email);
+//	}
     
 }]);

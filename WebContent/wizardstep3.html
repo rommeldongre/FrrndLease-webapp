@@ -1,12 +1,16 @@
 <div class="container-fluid" id="midcontainer" ng-cloak>
     
-    <div class="row">
-        <a class="btn btn-primary btn-simple" ng-click="importfb()"><u>Invite Facebook Friends</u></a><br/>
-		<a class="btn btn-primary btn-simple" ng-click="importgoogle()"><u>Add Gmail Friends</u></a><br/>
-        <a class="btn btn-primary btn-simple" ng-click="directImport()"><u>Add by Email</u></a><br/>
-	</div>
+    <button class="btn btn-social btn-fill btn-facebook" ng-click="importfb()">
+        <i class="fa fa-facebook"></i> Invite Facebook Friends
+    </button><br/><br/>
+    <button class="btn btn-social btn-fill btn-google" ng-click="importgoogle()">
+        <i class="fa fa-google-plus"></i> Add Gmail Friends
+    </button><br/><br/>
+    <button class="btn btn-info btn-fill" ng-click="directImport()">
+        <i class="fa fa-envelope"></i> Add by Email
+    </button><br/><br/>
     
-    <hr /><br /><br />
+    <hr />
 	
     <div class="form-group" style="float:right;">
         <a type="button" ng-if="!invited" class="btn btn-default btn-simple" href="myapp.html#/mypostings">Skip this step</a>
