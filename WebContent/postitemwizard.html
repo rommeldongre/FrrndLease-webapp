@@ -1,0 +1,19 @@
+<multi-step-container steps="steps" id="midcontainer" class="container-fluid simple-prev-next" style="text-align:center;">
+    
+    <div class="row" style="padding-left: 20px;">
+        <div class="left_title">
+            <strong ng-bind-template="{{$getActiveStep().title}}"></strong>
+        </div>
+	</div>
+    
+    <hr /><br /><br />
+
+    <div class="row">
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="col-lg-10 col-md-10">
+            <main step-container></main>
+        </div>
+        <div class="col-lg-1 col-md-1"></div>
+    </div>
+    
+</multi-step-container>
