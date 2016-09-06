@@ -461,6 +461,7 @@ headerApp.controller('headerCtrl', ['$scope',
     
     $scope.$on('updateEventsCount', function(event){
         displayUnreadNotifications();
+        displayCredits();
     });
                                         
     $scope.$on('addPromoCredits', function(event, promoCode){

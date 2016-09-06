@@ -129,6 +129,8 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		} finally {
+			if(result4 != null) result4.close();
+			if(ps4 != null) ps4.close();
 			if(ps3 != null) ps3.close();
 			if(result3 != null) result3.close();
 			if(ps2 != null) ps2.close();

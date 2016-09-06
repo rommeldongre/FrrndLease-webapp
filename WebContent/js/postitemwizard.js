@@ -9,7 +9,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         },
         {
             templateUrl: 'wizardstep2.html',
-            title: 'Share this with friends to earn 10 credits'
+            title: 'Share this with friends (Earn 10 credits for the first time)'
         },
         {
             templateUrl: 'wizardstep3.html',
@@ -17,7 +17,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }
     ];
     
-    $scope.posted = true;
+    $scope.posted = false;
     $scope.shared = false;
     $scope.invited = false;
     
@@ -52,10 +52,8 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                     $scope.$apply(function(){
                         $scope.categories.push(JSON.parse(response.Message).catName);
                     });
+                    $scope.item.category = $scope.categories[$scope.selectedCategory];
                     populateCategory(response.Id);
-                }
-                else{
-                    //all categories are loaded
                 }
             },
             error:function() {}
