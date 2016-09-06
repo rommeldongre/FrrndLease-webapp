@@ -30,7 +30,7 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
 
                     modalService.showModal({}, {bodyText: data.data.message + ', Welcome to FrrndLease.',showCancel: false,actionButtonText: 'OK'}).then(
                         function(result){
-                            window.location.replace("myapp.html");
+                            window.location.replace("myapp.html#/wizard");
                         },
                     function(){});
                 }else{

@@ -2,48 +2,18 @@ var postItemWizardApp = angular.module('myApp');
 
 postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', function($scope, modalService, userFactory, eventsCount){
     
-//    var getItems = function(){
-//        var req = {
-//            cookie: 0,
-//            userId: userFactory.user,
-//			match_userId: null,
-//            category: null,
-//            limit: 1,
-//            lat: 0.0,
-//            lng: 0.0,
-//            searchString: "",
-//            itemStatus: ['InStore', 'OnHold']
-//        }
-//        
-//        $.ajax({
-//            url: '/flsv2/GetItemStoreByX',
-//            type:'post',
-//            data: JSON.stringify(req),
-//            contentType:"application/json",
-//            dataType: "json",
-//            success: function(response) {
-//                if(response.returnCode == 0)
-//                    window.location.replace('myapp.html#/');
-//            },
-//            error:function() {
-//            }
-//        });
-//    }
-//    
-//    getItems();
-    
     $scope.steps = [
         {
             templateUrl: 'wizardstep1.html',
-            title: 'Post your first item to earn 10 credits'
+            title: 'Post an item to earn 10 credits'
         },
         {
             templateUrl: 'wizardstep2.html',
-            title: 'Share this with friends to earn xx credits'
+            title: 'Share this with friends to earn 10 credits'
         },
         {
             templateUrl: 'wizardstep3.html',
-            title: 'Invite friends with your refferal to earn xx credits'
+            title: 'Invite friends & Earn credits'
         }
     ];
     
@@ -54,9 +24,13 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     var userId = userFactory.user;
     var userAccessToken = userFactory.userAccessToken;
     
+    $scope.refferalCode = localStorage.getItem("userReferralCode");
+    
     $scope.item = {};
     
     $scope.categories = [];
+    
+    $scope.selectedCategory = 0;
     
     var populateCategory = function(id){
         var req = {
@@ -91,8 +65,9 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     // called on the page load
     populateCategory('');
     
-    $scope.categorySelected = function(c){
-        $scope.item.category = c;
+    $scope.categorySelected = function(i){
+        $scope.selectedCategory = i;
+        $scope.item.category = $scope.categories[i];
     }
     
     //beginning of image display
@@ -151,7 +126,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 
                 success: function(response) {
                     if(response.code == 0){
-                        modalService.showModal({}, {bodyText: "Your Item has been added to the friend store successfully!!", showCancel:false, actionButtonText: 'OK'}).then(
+                        modalService.showModal({}, {bodyText: "Your account has been credited with 10 credits!!", showCancel:false, actionButtonText: 'OK'}).then(
                             function(result){
                                 $scope.posted = true;
                                 $scope.item.uid = response.uid;
@@ -186,12 +161,9 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             },function(response){
                 var m = "";
                 if (response && !response.error) {
-                    m = "Item sucessfully posted on Frrndlease and shared on Facebook";
+                    userFactory.userCredits("shared@10");
                     $scope.shared = true;
-                }else{
-                    m = "Item sucessfully posted on Frrndlease";
                 }
-                console.log(m);
             });
         }, {scope: 'email,public_profile,user_friends'});
     }
@@ -229,7 +201,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 			fullName: name,
 			mobile: mobile,
 			userId: userFactory.user,
-			referralCode: localStorage.getItem("userReferralCode")
+			referralCode: $scope.refferalCode
 		}
 		
 		addFriendSend(req);
@@ -309,11 +281,12 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             // send message to facebook friends using send request dialog
             FB.ui({
                 method: 'send',
-                link: 'http://www.frrndlease.com/index.html?ref_token='+localStorage.getItem("userReferralCode"),
+                link: 'http://www.frrndlease.com/index.html?ref_token='+$scope.refferalCode,
             },function(response){
                 if (response && !response.error) {
                     //check 'response' to see if call was successful
                     modalService.showModal({}, {bodyText: "Invitation successfully sent to Facebook Friend(s)" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                        userFactory.userCredits("invited@10");
                         eventsCount.updateEventsCount();
                         $scope.invited = true;
                     }, function(){});

@@ -132,7 +132,7 @@ headerApp.controller('headerCtrl', ['$scope',
                         if(SignUpStatus == "facebook")
                             getFacebookFriends(Email);
                         else
-                            window.location.replace("myapp.html#/");
+                            window.location.replace("myapp.html#/wizard");
                     }
 				}else{
                     if(response.Id == 200)
@@ -237,7 +237,7 @@ headerApp.controller('headerCtrl', ['$scope',
 
             success: function(response) {
                 loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
-                window.location.replace("myapp.html#/");
+                window.location.replace("myapp.html#/wizard");
             },
             error: function() {
                 window.location.replace("myapp.html#/");
@@ -854,7 +854,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
                             localStorage.setItem("userloggedin", response.userId);
                             localStorage.setItem("userloggedinName", response.name);
                             localStorage.setItem("userloggedinAccess", response.access_token);
-                            window.location.replace("myapp.html");
+                            window.location.replace("myapp.html#/wizard");
                         }
                     },
                     error: function() {

@@ -18,20 +18,14 @@
     </div>
     <div class="form-group">
         <label for="category" class="col-sm-2 control-label">Category*</label>
-        <div class="col-sm-10">
-            <div class="input-group-btn" ng-init="item.category='House'">
-                <button type="button" class="btn btn-default btn-simple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"required> {{item.category}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" style="text-align:center;">
-                    <li><a href="" ng-repeat="c in categories" ng-click="categorySelected(c)">{{c}}</a></li>
-                </ul>
-            </div>
+        <div class="col-sm-10" style="text">
+            <button type="button" class="btn btn-default ng-class:{'btn-fill':$index == selectedCategory,'btn-simple': $index != selectedCategory}" ng-click="categorySelected($index)" ng-repeat="c in categories" style="margin-right:10px;">{{c}}</button>
         </div>
     </div>
-    <br/><br/>
+    <hr/><br/><br/>
     <div class="form-group" style="float:right;">
         <button type="button" ng-if="!posted" class="btn btn-primary btn-fill" ng-click="postItem()">Post Item</button>
-        <a type="button" ng-if="!posted" class="btn btn-default btn-simple" href="myapp.html#/">Skip</a>
+        <a type="button" ng-if="!posted" class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="Click if not interested in earning free credits" href="myapp.html#/">Not interested</a>
         <button type="button" ng-if="posted" class="btn btn-primary btn-fill" ng-click="$nextStep()">
             Next<span class="fa fa-chevron-right"></span>
         </button>

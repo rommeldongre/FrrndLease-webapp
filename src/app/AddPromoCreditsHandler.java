@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import adminOps.Response;
@@ -46,16 +44,8 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 		AddPromoCreditsResObj rs = new AddPromoCreditsResObj();
 		Connection hcp = getConnectionFromPool();
 
-		PreparedStatement ps1 = null;
-		ResultSet result1 = null;
-		
-		PreparedStatement ps2 = null;
-		
-		PreparedStatement ps3 = null;
-		ResultSet result3 = null;
-		
-		PreparedStatement ps4 = null;
-		ResultSet result4 = null;
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null;
+		ResultSet result1 = null, result3 = null, result4 = null;
 
 		LOGGER.info("Inside Process Method " + rq.getUserId());
 
@@ -97,7 +87,13 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 					
 					if(result4.next()){
 						rs.setCode(FLS_INVALID_PROMO);
-						rs.setMessage("This promo can be used only once");
+						if(promoCode.equals("shared@10")){
+							rs.setMessage("You have successfully shared this item on facebook!!");
+						}else if(promoCode.equals("invited@10")){
+							rs.setMessage("You have successfully invited friends on facebook!!");
+						}else{
+							rs.setMessage("This promo can be used only once");
+						}
 					}else{
 						String sql2 = "UPDATE users SET user_credit=user_credit+? WHERE user_id=?";
 						ps2 = hcp.prepareStatement(sql2);
