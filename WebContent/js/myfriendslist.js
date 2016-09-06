@@ -3,7 +3,7 @@ var myFriendsListApp = angular.module('myApp');
 myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'modalService', 'bannerService', 'eventsCount', function($scope, userFactory, modalService, bannerService, eventsCount){
     
     localStorage.setItem("prevPage","myapp.html#/myfriendslist");
-    
+	
     var friendIdArray = [];
 	var friendArray = [];
     var lastFriendId = '';
@@ -14,7 +14,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
 	var apiKey = 'API Code';
 	var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
-	$("#openBtn").hide();
+	$("#openBtn_gmail").hide();
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
@@ -154,7 +154,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	
 	$scope.importgoogle = function(){
 		window.setTimeout(authorize);		//calls authorize()
-		$("#openBtn").click();	
+		$("#openBtn_gmail").click();	
 	}
 	
 	var authorize = function(){
@@ -248,7 +248,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 	$scope.add_checked_friends = function(){
 			if(counter==0){
 			process_dialog("Adding Gmail friends Please Wait");
-			$('#myModalTable').modal('toggle');
+			$('#myModalTable_gmail').modal('toggle');
 			}
 			reasonForAddFriend = "importGoogle";
 			if(counter<googleFriendsCounter){
