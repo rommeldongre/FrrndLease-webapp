@@ -5,7 +5,7 @@
             <button class="btn btn-social btn-fill btn-facebook" ng-click="importfb()">
                 <i class="fa fa-facebook"></i> Invite Facebook Friends (Earn 10 credits for the first use)
             </button><br/><br/>
-            <button class="btn btn-social btn-fill btn-google" ng-click="importgoogle()">
+            <button class="btn btn-social btn-fill btn-google" ng-click="importgoogle()" href="" data-toggle="modal" data-target="#importContacts">
                 <i class="fa fa-google-plus"></i> Add Gmail Friends (Earn 1 credit for each email invitation)
             </button><br/><br/>
             <button class="btn btn-info btn-fill" ng-click="directImport()">
@@ -25,37 +25,47 @@
         <a type="button" ng-if="invited" class="btn btn-primary btn-fill" href="myapp.html#/">Finish</a>
     </div>
     
-	<!-- sample pop up starts here-->
-    <button href="#myModalTable" ng-hide="true" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
-    <div class="modal fade" id="myModalTable">
+	<!-- Google Contacts modal starts here-->
+    <div class="modal fade" id="importContacts" tabindex="-1" role="dialog" aria-hidden="false" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 class="modal-title">Import Google Contacts</h3>
+                    <h3 class="modal-title">Select contacts you want to invite</h3>
                 </div>
                 <div class="modal-body">
-                    <h5 class="text-center">Please Select the Google Contacts you want to Import</h5>
-                    <table id="friendsoptionstable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
-						<thead>
-							<tr>
-								<th class="tablecell" style="width: 50%">Email</th>
-								<th class="tablecell" style="width: 15%">Name</th>
-								<th class="tablecell" style="width: 25%">Mobile</th>
-								<th class="tablecell" style="width: 12%">Import</th>
-							</tr>
-						</thead>
-						<tbody>
-                        </tbody>
-					</table>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="contact in contacts">
+                                    <td>{{$index}}</td>
+                                    <td>{{contact.name}}</td>
+                                    <td>{{contact.email}}</td>
+                                    <td>{{contact.mobile}}</td>
+                                    <td>
+                                        <input type="checkbox" ng-model="contact.selected">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
-					<button class="btn btn-primary btn-fill" id="addcheckedfriends1" ng-click="add_checked_friends()">Save Selected Friends</button>
+					<button class="btn btn-primary btn-fill" data-dismiss="modal" ng-click="inviteSelected()">Invite Selected Friends</button>
+                    <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <!-- sample pop up ends here-->
+            </div>
+        </div>
+    </div>
+    <!-- Google Contacts modal ends here-->
     
 </div>

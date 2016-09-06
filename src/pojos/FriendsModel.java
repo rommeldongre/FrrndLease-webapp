@@ -19,13 +19,11 @@ public class FriendsModel {
 	
 	private void extractData() {
 		try {
-			friendId = obj.getString("id");
-			fullName = obj.getString("fullName");
-			mobile = obj.getString("mobile");
-			userId = obj.getString("userId");
-			if(obj.has("referralCode")){
-			referralCode = obj.getString("referralCode");
-			}
+			if(obj.has("id"))friendId = obj.getString("id");
+			if(obj.has("fullName"))fullName = obj.getString("fullName");
+			if(obj.has("mobile"))mobile = obj.getString("mobile");
+			if(obj.has("userId"))userId = obj.getString("userId");
+			if(obj.has("referralCode"))referralCode = obj.getString("referralCode");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();

@@ -1,6 +1,6 @@
 var postItemWizardApp = angular.module('myApp');
 
-postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', function($scope, modalService, userFactory, eventsCount){
+postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', '$filter', function($scope, modalService, userFactory, eventsCount, $filter){
     
     $scope.steps = [
         {
@@ -17,7 +17,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }
     ];
     
-    $scope.posted = false;
+    $scope.posted = true;
     $scope.shared = false;
     $scope.invited = false;
     
@@ -167,14 +167,9 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     }
     
     var testEmail = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
-    var friendIdArray = [];
-	var friendArray = [];
-    var lastFriendId = '';
-	var arrEmail = [];
-	var errCount = 0, len = 0,count=0;
-	var reasonForAddFriend = null, googleFriendsCounter = 0, counter = 0,checkcounter = 0;
+	var count=0;
+	var counter = 0;
 	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
-	var apiKey = 'API Code';
 	var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
 	
 	var load_Gapi = function(){						//for google
@@ -215,6 +210,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             success: function(response) {
                 if(response.Code == 'FLS_SUCCESS'){
                     count++;
+                    eventsCount.updateEventsCount();
                 }
             },
             error: function() {
@@ -226,8 +222,8 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     $scope.directImport = function(){
         modalService.showModal({}, {submitting: true, labelText: 'Invite Friends by Email,comma separated. example1@xyz.com, example2@abc.net', actionButtonText: 'Submit'}).then(function(result){
             
-			arrEmail = result.split(",");
-			len = arrEmail.length;
+			var arrEmail = result.split(",");
+			var len = arrEmail.length;
             
 			if(result != '' && result != ' '){
 				if(len<=20){
@@ -252,25 +248,6 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             
         }, function(){});
     }
-	
-//	var directImport_continue = function(){
-//        if(count == len){
-//            var validEmail = len-errCount;
-//            modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-//                eventsCount.updateEventsCount();
-//                $scope.invited = true;
-//            }, function(){});
-//        }else{
-//            var isValid = checkEmailValidity(arrEmail[count]);
-//            if(checkEmailValidity(arrEmail[count])){
-//                addFriendSetValues('-', '-', arrEmail[count], userFactory.user);
-//            }else{
-//                errCount = errCount+1;
-//                count++;
-//                directImport_continue();
-//            }
-//        }	
-//	}
     
 	$scope.importfb = function(){
         FB.login(function(response) {
@@ -293,9 +270,10 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }, {scope: 'email,public_profile,user_friends'});
 	}
 	
+    $scope.contacts = [];
+    
 	$scope.importgoogle = function(){
-		window.setTimeout(authorize);		//calls authorize()
-		$("#openBtn").click();	
+		window.setTimeout(authorize);
 	}
 	
 	var authorize = function(){
@@ -307,118 +285,45 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 		if (authorizationResult && !authorizationResult.error) {
             $.get("https://www.google.com/m8/feeds/contacts/default/thin?alt=json&access_token=" + authorizationResult.access_token + "&max-results=500&v=3.0",
                 function(response){
-                //function for length of entry array  (for number of contacts)
-                var getLength = function(obj) {
-                    var i = 0, key;
-                    for (key in obj) {
-                        if (obj.hasOwnProperty(key)){
-                            i++;
+                    var arr = response.feed.entry;
+                    for(var i in arr){
+                        var contact = {};
+                        if(arr[i].gd$email){
+                            contact.user = response.feed.author[0].email.$t;
+
+                            try{
+                                contact.number = arr[i].gd$phoneNumber[0].$t;
+                            }catch(Exception){
+                                contact.number = "-";
+                            }
+                            try{
+                                contact.name = arr[i].gd$name.gd$fullName.$t;
+                            }catch (Exception){	
+                                contact.name = "-";
+                            }
+                            try{
+                                contact.email =  arr[i].gd$email[0].address;
+                            }catch(Exception){	
+                                contact.email = "-";
+                            }
+
+                            contact.selected = false;
                         }
-                    }
-                    return i;
-                };
-                var n = getLength(response.feed.entry);
-                var tp, user_email='',number='',email = '', name='';
-					
-                googleFriendsCounter = n;
-                
-                for(i=0;i<n;i++){
-                    if(response.feed.entry[i].gd$email){
-                        tp = i+1;
-                        
-                        user_email = JSON.stringify(response.feed.author[0].email.$t);
-						user_email = user_email.substring(1,user_email.length-1);
-						
-						try{
-							number = JSON.stringify(response.feed.entry[i].gd$phoneNumber[0].$t);
-							number = number.substring(1,number.length-1);
-						}catch(Exception){
-							//number = "Number do not Exist for Friend " + tp;
-							number = "-";
-						}
-						try{
-							name = JSON.stringify(response.feed.entry[i].gd$name.gd$fullName.$t);
-							name =  name.substring(1,name.length-1);
-						}catch (Exception){ 
-							//name = "Name do not Exist for Friend " +  tp;	 	
-							name = "-";
-						}
-						try{
-							email =  JSON.stringify(response.feed.entry[i].gd$email[0].address);
-							email = email.substring(1,email.length-1);
-						}catch(Exception){
-							//email = "Email do not Exist for Friend " +  tp;	
-							email = "-";
-						}
-						addFriendOptionToPage(email,name,number,user_email,i);
+                        $scope.$apply(function(){
+                            $scope.contacts.push(contact);
+                        });
                     }
                 }
-            });
+            );
         }	
 	}
 	
-	var addFriendOptionToPage = function(email,name,number,user_email,i){
-		var table = document.getElementById("friendsoptionstable");
-		var row = table.insertRow(1);
-		var cell0 = row.insertCell(0);
-		var cell1 = row.insertCell(1);
-		var cell2 = row.insertCell(2);
-		var cell3 = row.insertCell(3);
-		
-		var inputgp = document.createElement("div");
-		var checkbox = document.createElement("input");
-		inputgp.className = "input-group";
-		checkbox.setAttribute("type","checkbox");
-		inputgp.appendChild(checkbox);
-		checkbox.id = i;
-		
-		cell0.innerHTML = email;
-		cell1.innerHTML = name;
-		cell2.innerHTML = number;
-		cell3.appendChild(inputgp);
-		
-		cell0.id = "email"+i;
-		cell1.id = "name"+i;
-		cell2.id = "mobile"+i;
-		
-		cell0.className = "tablecellName";
-		cell1.className = "tablecellMobile";
-		cell2.className = "tablecellEmail";
-		cell3.className = "checkboxes";
-	}
-	
-	$scope.add_checked_friends = function(){
-        if(counter==0){
-			process_dialog("Adding Gmail friends Please Wait");
-			$('#myModalTable').modal('toggle');
+	$scope.inviteSelected = function(){
+        var selectedContacts = $filter('filter')($scope.contacts, {selected:true});
+        for(var i in selectedContacts){
+            addFriendSetValues(selectedContacts[i].name, selectedContacts[i].mobile, selectedContacts[i].email);
         }
-        
-        reasonForAddFriend = "importGoogle";
-        if(counter<googleFriendsCounter){
-            var ischecked = $("#"+counter).is(":checked");
-				
-            if(ischecked){
-                name = $("#name"+counter).text();
-                mobile = $("#mobile"+counter).text();
-                email = $("#email"+counter).text();
-                checkcounter++;
-					
-                addFriendSetValues(name, mobile, email);
-            }
-            counter++;
-            $scope.add_checked_friends();
-        }else{
-            $('#myPleaseWait').modal('hide');
-            modalService.showModal({}, {bodyText: "Success, Number of Friends Imported : "+checkcounter ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                eventsCount.updateEventsCount();
-                $scope.invited = true;
-            }, function(){});
-        } 
+        console.log(selectedContacts);
 	}
-    
-//	var checkEmailValidity = function(email){
-//		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//			return re.test(email);
-//	}
     
 }]);
