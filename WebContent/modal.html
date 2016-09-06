@@ -2,11 +2,11 @@
   <h3>{{modalOptions.headerText}}</h3>
 </div>
 <div class="modal-body">
-  <p ng-if="!modalOptions.submitting">{{modalOptions.bodyText}}</p>
+  <p id="body_text" ng-if="!modalOptions.submitting">{{modalOptions.bodyText}}</p>
   <label ng-if="modalOptions.submitting">{{modalOptions.labelText}}</label><br />
   <input type="text" class="form-control" ng-if="modalOptions.submitting" ng-model="submit.url">
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default btn-fill" ng-if="modalOptions.showCancel" data-ng-click="modalOptions.cancel()">{{modalOptions.cancelButtonText}}</button>
-    <button class="btn btn-primary btn-fill" data-ng-click="modalOptions.ok()">{{modalOptions.actionButtonText}}</button>
+    <button id="cancel_button" class="btn btn-default btn-fill" ng-if="modalOptions.showCancel" data-ng-click="modalOptions.cancel()">{{modalOptions.cancelButtonText}}</button>
+    <button id="confirm_button" class="btn btn-primary btn-fill" data-ng-click="modalOptions.ok()">{{modalOptions.actionButtonText}}</button>
 </div>

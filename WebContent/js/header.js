@@ -25,7 +25,7 @@ headerApp.controller('headerCtrl', ['$scope',
     
     // variables for storing the location data
     var UserId, Email, Password, Name, Mobile, Location, SignUpStatus, Address = '', Sublocality = '', Locality = '', Code='', Lat = 0.0, Lng = 0.0,Picture='',FriendId,lastOffset = 0;
-    $("#openBtn").hide();
+    $("#openBtn_credit").hide();
 	
     $scope.$on('signUpCheckReq', function(event, userId, email, password, name, picture, mobile, code, location, signUpStatus, friendId){
         UserId = userId;
@@ -276,7 +276,7 @@ headerApp.controller('headerCtrl', ['$scope',
     }
 	
 	$scope.showCredit = function(){
-		$("#openBtn").click();
+		$("#openBtn_credit").click();
 		$scope.showNext = true;
 		getCredit(lastOffset);
 	}
