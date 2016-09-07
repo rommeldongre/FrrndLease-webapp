@@ -9,7 +9,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         },
         {
             templateUrl: 'wizardstep2.html',
-            title: 'Share this with friends (Earn 10 credits for the first time)'
+            title: 'Share this with friends (Earn 10 credits for the first time you share)'
         },
         {
             templateUrl: 'wizardstep3.html',
@@ -17,7 +17,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }
     ];
     
-    $scope.posted = true;
+    $scope.posted = false;
     $scope.shared = false;
     $scope.invited = false;
     
@@ -323,7 +323,6 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         for(var i in selectedContacts){
             addFriendSetValues(selectedContacts[i].name, selectedContacts[i].mobile, selectedContacts[i].email);
         }
-        console.log(selectedContacts);
 	}
     
 }]);

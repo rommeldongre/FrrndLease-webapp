@@ -719,9 +719,10 @@ public class Event extends Connect{
 								try{
 									// checking the wish list if this posted item matches someone's requirements
 									MatchItems matchItems = new MatchItems();
-									matchItems.checkWishlist(obj.getString("title"), obj.getString("itemUserId"), obj.getString("uid"), obj.getInt("itemId"));
+									if(obj.has("title") && obj.has("itemUserId") && obj.has("uid") && obj.has("itemId") && !obj.isNull("title") && !obj.isNull("itemUserId") && !obj.isNull("uid") && !obj.isNull("itemId"))
+										matchItems.checkWishlist(obj.getString("title"), obj.getString("itemUserId"), obj.getString("uid"), obj.getInt("itemId"));
 								}catch(Exception e){
-									LOGGER.warning(e.getMessage());
+									e.printStackTrace();
 								}
 							}
 							FlsEmail mail = new FlsEmail();

@@ -113,8 +113,16 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 						rs.setCode(FLS_SUCCESS);
 						rs.setMessage(credit + " credits has been added to your frrndlease account.");
 
+						String msg = "Applied Promo Code - " + rq.getPromoCode();
+						
+						if(promoCode.equals("shared@10")){
+							msg = "Shared on facebook";
+						}else if(promoCode.equals("invited@10")){
+							msg = "Invited friends on facebook";
+						}
+						
 						LogCredit lc = new LogCredit();
-						lc.addLogCredit(userId, result1.getInt("credit"), "Promo Code", promoCode);
+						lc.addLogCredit(userId, result1.getInt("credit"), msg, promoCode);
 					}
 					
 				}
