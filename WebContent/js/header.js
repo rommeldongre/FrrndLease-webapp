@@ -237,7 +237,7 @@ headerApp.controller('headerCtrl', ['$scope',
 
             success: function(response) {
                 loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
-                window.location.replace("myapp.html#/wizard");
+                window.location.replace("myapp.html#/");
             },
             error: function() {
                 window.location.replace("myapp.html#/");
