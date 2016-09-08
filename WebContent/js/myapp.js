@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['headerApp', 'carouselApp', 'ngRoute', 'cp.ng.fix-image-orientation']);
+var myApp = angular.module('myApp', ['headerApp', 'carouselApp', 'ngRoute', 'cp.ng.fix-image-orientation', 'multiStepForm']);
 
 myApp.run(['userFactory', function(userFactory){
     
@@ -64,6 +64,11 @@ myApp.config(function($routeProvider){
     .when('/postitem/:id?', {
         templateUrl : 'postitem.html',
         controller : 'postItemCtrl'
+    })
+    
+    .when('/wizard', {
+        templateUrl : 'postitemwizard.html',
+        controller : 'postItemWizardCtrl'
     })
     
     .otherwise({redirectTo : '/'});

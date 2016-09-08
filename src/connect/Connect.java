@@ -69,7 +69,6 @@ public class Connect extends ErrorCat {
     	try {
     		DataSource ds = getDataSource();
     		conn = ds.getConnection();
-            	System.out.println("===> Got a pooled connection to the database! " + conn +  " Conn = "  + conn.isValid(0) );
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -89,7 +88,6 @@ public class Connect extends ErrorCat {
     		config.setValidationTimeout(1000);
     		
     		HikariDS = new HikariDataSource(config);
-        	System.out.println("===> Initialized Data Source");
     	}
     	return HikariDS;
     }

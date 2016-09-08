@@ -9,10 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -80,7 +76,7 @@ public class FlsEmail extends Connect{
 			
 			TO = obj.getString("to");
 			
-			credits = getCurrentCredits(TO);
+			credits = obj.getInt("toUserCredit");
 			
 			// starting velocity engine
 			VelocityEngine ve = new VelocityEngine();
@@ -509,36 +505,6 @@ public class FlsEmail extends Connect{
 	        try { tmpOs.close(); } catch (Exception e) {}
 	    }
 	    return tmp;
-	}
-	
-	private int getCurrentCredits(String userId){
-		int credit = -1;
-		
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		Connection hcp = getConnectionFromPool();
-		
-		try{
-			// getting the credits of the user
-			String sqlGetCredit = "SELECT user_credit FROM users WHERE user_id=?";
-			ps = hcp.prepareStatement(sqlGetCredit);
-			ps.setString(1, userId);
-			rs = ps.executeQuery();
-			if (rs.next()) {
-				credit = rs.getInt("user_credit");
-			}
-		} catch (SQLException e) {
-			LOGGER.warning("Not able to get credits");
-			e.printStackTrace();
-		} finally {
-			try { 
-				if(rs != null)rs.close();
-				if(ps != null)ps.close();
-				if(hcp != null)hcp.close(); 
-			} catch(SQLException e) {}
-		}
-		
-		return credit;
 	}
 	
 }

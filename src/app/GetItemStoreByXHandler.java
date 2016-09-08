@@ -60,7 +60,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			Float lat = rq.getLat(), lng = rq.getLng();
 			String searchString = rq.getSearchString();
 			
-			sql = "SELECT tb1.*";
+			sql = "SELECT DISTINCT tb1.*";
 			
 			if(match_userId == null)
 				sql = sql + ", false AS friendst";
@@ -93,6 +93,8 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%')";
 			
 			sql = sql + " ORDER BY friendst DESC, distance LIMIT "+offset+", "+limit;
+			
+			System.out.println(sql);
 			
 			sql_stmt = hcp.prepareStatement(sql);
 

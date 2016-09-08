@@ -25,34 +25,13 @@ myProfile.controller('myProfileCtrl', ['$scope',
     $scope.addCredits = function(){
         modalService.showModal({}, {actionButtonText: "submit", labelText: "Enter the promo code: ", submitting: true}).then(
             function(promo){
-                var req = {
-                    userId: userFactory.user,
-                    promoCode: promo,
-                    accessToken: userFactory.userAccessToken
-                }
-                
-                $.ajax({
-                    url: '/flsv2/AddPromoCredits',
-                    type: 'post',
-                    data: JSON.stringify(req),
-                    contentType:"application/json",
-                    dataType:"json",
-                    success: function(response){
-                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(
-                            function(r){
-                                if(response.code == 0)
-                                    $scope.credit = response.newCreditBalance;
-                                if(response.code == 400)
-                                    logoutService.logout();
-                            }, function(){});
-                    },
-                    error: function(){
-                        console.log("not able to add promo credit");
-                    }
-
-                });
+                userFactory.userCredits(promo);
             },function(){});
     }
+    
+    $scope.$on('updatedCredits', function(event, credits){
+        $scope.credit = credits;
+    });
     
     $scope.options = {
         country: 'in',

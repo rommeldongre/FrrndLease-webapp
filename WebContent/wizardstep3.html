@@ -1,0 +1,71 @@
+<div class="container-fluid" id="midcontainer" ng-cloak>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <button class="btn btn-social btn-fill btn-facebook" ng-click="importfb()">
+                <i class="fa fa-facebook"></i> Invite Facebook Friends (Earn 10 credits for the first time you invite)
+            </button><br/><br/>
+            <button class="btn btn-social btn-fill btn-google" ng-click="importgoogle()" href="" data-toggle="modal" data-target="#importContacts">
+                <i class="fa fa-google-plus"></i> Add Gmail Friends (Earn 1 credit for each email invitation)
+            </button><br/><br/>
+            <button class="btn btn-info btn-fill" ng-click="directImport()">
+                <i class="fa fa-envelope"></i> Add by Email (Earn 1 credit for each email invitation)
+            </button><br/><br/>
+        </div>
+        <ul class="sub_title col-md-6">
+            <li>Invite goes out with your refferal code - <strong>{{refferalCode}}</strong>.</li><br/>
+            <li>On sign up using your refferal code you and your friend get 10 credits each.</li><br/>
+        </ul>
+    </div>
+
+    <hr />
+	
+    <div class="form-group" style="float:right;">
+        <a type="button" ng-if="!invited" class="btn btn-default btn-simple" href="myapp.html#/">Skip this step</a>
+        <a type="button" ng-if="invited" class="btn btn-primary btn-fill" href="myapp.html#/">Finish</a>
+    </div>
+    
+	<!-- Google Contacts modal starts here-->
+    <div class="modal fade" id="importContacts" tabindex="-1" role="dialog" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title">Select contacts you want to invite</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="contact in contacts">
+                                    <td>{{$index}}</td>
+                                    <td>{{contact.name}}</td>
+                                    <td>{{contact.email}}</td>
+                                    <td>{{contact.mobile}}</td>
+                                    <td>
+                                        <input type="checkbox" ng-model="contact.selected">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+					<button class="btn btn-primary btn-fill" data-dismiss="modal" ng-click="inviteSelected()">Invite Selected Friends</button>
+                    <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Google Contacts modal ends here-->
+    
+</div>

@@ -129,13 +129,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 				if(rs4 == 1){
 					LOGGER.info("Value in store table after UID query excecution: " + rs4 + " " + itemId);
 				}
-				hcp.commit();
-				try {
-					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 			
 			LOGGER.warning("Item added into table");
@@ -144,21 +137,29 @@ public class PostItemHandler extends Connect implements AppHandler {
 			LogItem li = new LogItem();
 			li.addItemLog(itemId, rq.getStatus(), "", "");
 			
+			// Adding entry to Item log
+			LogCredit lc = new LogCredit();
+			lc.addLogCredit(rq.getUserId(),10,"Item Added In Friend Store","");
+			
 			// adding credit to users account
 			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
 			ps5 = hcp.prepareStatement(sqlAddCredit);
-			ps5.setString(1, rq.getUserId());
+			ps5.setString(1, rq.getUserId()+"");
 			rs5 = ps5.executeUpdate();
 			
 			if(rs5 == 1){
 				LOGGER.info("10 credits added to the users table");
+				hcp.commit();
+				try {
+					Event event = new Event();
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}else{
 				LOGGER.info("Credits not added to the users table");
+				hcp.rollback();
 			}
-			
-			// Adding entry to Item log
-			LogCredit lc = new LogCredit();
-			lc.addLogCredit(rq.getUserId(),10,"Item Added In Friend Store","");
 
 			rs.setUid(uid);
 			rs.setCode(FLS_SUCCESS);

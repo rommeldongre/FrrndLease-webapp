@@ -426,7 +426,9 @@ public class Event extends Connect{
 			e.printStackTrace();
 		}finally{
 			try {
+				if(rs != null)rs.close();
 				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -586,6 +588,14 @@ public class Event extends Connect{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				if(rs != null)rs.close();
+				if(ps != null)ps.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	
 		return true;
@@ -621,7 +631,7 @@ public class Event extends Connect{
 				}
 				
 				if(email != null){
-					String sqlGetAllData = "SELECT tb1.event_id, tb1.from_user_id, tb1.to_user_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
+					String sqlGetAllData = "SELECT tb1.event_id, tb1.from_user_id, tb1.to_user_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb3.user_credit, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
 					ps2 = hcp.prepareStatement(sqlGetAllData);
 					ps2.setInt(1, eventId);
 					
@@ -631,20 +641,33 @@ public class Event extends Connect{
 						// Senders Data
 						obj.put("fromUserId", rs2.getString("senders_user_id"));
 						obj.put("fromUserName", rs2.getString("senders_full_name"));
-						obj.put("fromProfilePic", rs2.getString("senders_profile_pic"));
+						if(rs2.getString("senders_profile_pic") == null || rs2.getString("senders_profile_pic").equals("") || rs2.getString("senders_profile_pic").equals("null"))
+							obj.put("fromProfilePic", "");
+						else
+							obj.put("fromProfilePic", rs2.getString("senders_profile_pic"));
 						obj.put("fromUserActivation", rs2.getString("senders_user_activation"));
 						obj.put("fromUserRefferalCode", rs2.getString("senders_refferal_code"));
 						
 						// Receivers Data
 						obj.put("toUserId", rs2.getString("user_id"));
 						obj.put("toUserName", rs2.getString("user_full_name"));
-						obj.put("toProfilePic", rs2.getString("user_profile_picture"));
+						if(rs2.getString("user_profile_picture") == null || rs2.getString("user_profile_picture").equals("") || rs2.getString("user_profile_picture").equals("null"))
+							obj.put("toProfilePic", "");
+						else
+							obj.put("toProfilePic", rs2.getString("user_profile_picture"));
 						obj.put("toUserActivation", rs2.getString("user_activation"));
+						obj.put("toUserCredit", rs2.getInt("user_credit"));
 						
 						// Items Data
 						obj.put("itemId", rs2.getInt("item_id"));
-						obj.put("title", rs2.getString("item_name"));
-						obj.put("category", rs2.getString("item_category"));
+						if(rs2.getString("item_name") == null || rs2.getString("item_name").equals("") || rs2.getString("item_name").equals("null"))
+							obj.put("title", "");
+						else
+							obj.put("title", rs2.getString("item_name"));
+						if(rs2.getString("item_category") == null || rs2.getString("item_category").equals("") || rs2.getString("item_category").equals("null"))
+							obj.put("category", "");
+						else
+							obj.put("category", rs2.getString("item_category"));
 						if(rs2.getString("item_desc") == null || rs2.getString("item_desc").equals("") || rs2.getString("item_desc").equals("null"))
 							obj.put("description", "");
 						else
@@ -662,7 +685,7 @@ public class Event extends Connect{
 						// Events Data
 						obj.put("eventId", rs2.getInt("event_id"));
 						obj.put("from", rs2.getString("from_user_id"));
-						obj.put("to", rs2.getString("to_user_id"));
+						obj.put("to", email);
 						obj.put("datetime", rs2.getString("datetime"));
 						obj.put("notificationType", rs2.getString("notification_type"));
 						obj.put("message", rs2.getString("message"));
@@ -696,9 +719,10 @@ public class Event extends Connect{
 								try{
 									// checking the wish list if this posted item matches someone's requirements
 									MatchItems matchItems = new MatchItems();
-									matchItems.checkWishlist(obj.getString("title"), obj.getString("itemUserId"), obj.getString("uid"), obj.getInt("itemId"));
+									if(obj.has("title") && obj.has("itemUserId") && obj.has("uid") && obj.has("itemId") && !obj.isNull("title") && !obj.isNull("itemUserId") && !obj.isNull("uid") && !obj.isNull("itemId"))
+										matchItems.checkWishlist(obj.getString("title"), obj.getString("itemUserId"), obj.getString("uid"), obj.getInt("itemId"));
 								}catch(Exception e){
-									LOGGER.warning(e.getMessage());
+									e.printStackTrace();
 								}
 							}
 							FlsEmail mail = new FlsEmail();
