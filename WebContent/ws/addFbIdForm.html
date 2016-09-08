@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Add FB ID Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="../js/JIC.js"></script>
+<script type="text/javascript">
+	var FbId = null;
+	var UserId = null;
+	
+	getData = function() {
+		//alert("Inside get Data");
+		FbId = document.getElementById("fb_id").value;
+		FbId = FbId+"@fb";
+		if (FbId === '') FbId = null;
+		
+		UserId = document.getElementById("userId").value;
+		if (UserId === '') UserId = null;
+		
+		Status = "InStore";
+	}
+	
+	fbId = function() {
+		
+		getData();
+		var req = {
+			userFbId:FbId,
+			userId: UserId,
+		};
+		
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send");
+		$.ajax({
+			url: '/flsv2/AddFbId',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message;
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> FB ID SERVICE FORM</h1>
+	<form>
+		FB ID : <input type="text" name="fb_id" id="fb_id" ><br/><br/>
+		User ID : <input type="text" name="userId" id="userId"><br/><br/>
+		<input type="button" value="Add FB ID" onclick="fbId()">
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message">
+	</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
