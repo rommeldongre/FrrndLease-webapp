@@ -1,0 +1,24 @@
+<form class="form-horizontal" style="text-align: center;">
+    <div ng-if="!shared" class="form-group" style="text-align:center;">
+        <button type="button" class="btn btn-social btn-fill btn-facebook btn-tooltip" ng-click="shareItem(item.uid)" data-toggle="tooltip" data-placement="top" title="Share on Facebook">
+            <i class="fa fa-facebook-square"></i> Share this on facebook
+        </button>
+    </div>
+    <div class="form-group" style="text-align:center;">
+        <div class="col-md-12">
+            <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? '' : item.image}}" />
+        </div>
+    </div>
+    <br/>
+    <h4 class="title">{{item.title}}<br></h4>
+    <p class="description text-center">
+        <i class="fa fa-envelope"></i>{{item.category}}<br>
+    </p>
+    <hr>
+    <div class="form-group" style="float:right;">
+        <button type="button" ng-if="!shared" class="btn btn-default btn-simple" ng-click="$nextStep()">Skip this step</button>
+        <button type="button" ng-if="shared" class="btn btn-primary btn-fill" ng-click="$nextStep()">
+            Next<span class="fa fa-chevron-right"></span>
+        </button>
+    </div>
+</form>

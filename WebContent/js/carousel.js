@@ -17,6 +17,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     $scope.search.show = false;
     $scope.showWishes = false;
     
+    $scope.notPosted = false;
+    
     var ItemStatus = ['InStore'];
     
     $scope.$on('searchDataChanged', function(event, lat, lng, s){
@@ -137,10 +139,16 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
                     }
                     lastItem = response.data.lastItemId;
 					$scope.showNext = true;
+                    $scope.notPosted = false;
                 }else{
 					$scope.showNext = false;
-                    if(lastItem == 0)
-                        $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
+                    if(lastItem == 0){
+                        if(category == null){
+                            $scope.notPosted = true;
+                        }else{
+                            $scope.itemsArray = [[{ image: 'images/emptycategory.jpg', title: 'Try selecting another category' }]];
+                        }
+                    }
                 }
             },
             function(error){
