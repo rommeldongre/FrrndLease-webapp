@@ -283,8 +283,13 @@ public class Users extends Connect {
 		referralCode = um.getReferralCode();
 		profilePicture = um.getProfilePicture();
 		friendId = um.getFriendId();
-
+		 
 		String userNotification = User_Notification.EMAIL.name();
+		String user_fb_id= null;
+		
+		if(friendId.contains("@fb")){
+			user_fb_id=friendId;
+		}
 		
 		if(status.equals("mobile_pending")){
 			Random rnd = new Random();
@@ -325,7 +330,7 @@ public class Users extends Connect {
 			int ref_code_length = 8;
 			ReferralCode rc = new ReferralCode();
 			String generated_ref_code = rc.createRandomCode(ref_code_length);
-			String sql = "insert into users (user_id,user_full_name,user_mobile,user_email,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status,user_notification) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into users (user_id,user_full_name,user_mobile,user_email,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status,user_notification,user_fb_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
@@ -348,6 +353,7 @@ public class Users extends Connect {
 			stmt.setString(17, profilePicture);
 			stmt.setInt(18, 1);
 			stmt.setString(19, userNotification);
+			stmt.setString(20, user_fb_id);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);
