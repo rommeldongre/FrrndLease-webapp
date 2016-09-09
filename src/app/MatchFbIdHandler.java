@@ -6,11 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
+
 import com.mysql.jdbc.MysqlErrorNumbers;
 
 import connect.Connect;
-import pojos.AddFbIdReqObj;
-import pojos.AddFbIdResObj;
+import pojos.MatchFbIdReqObj;
+import pojos.MatchFbIdResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.Event;
@@ -22,17 +27,17 @@ import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
 
-public class AddFbIdHandler extends Connect implements AppHandler {
+public class MatchFbIdHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(AddFbIdHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(MatchFbIdHandler.class.getName());
 
 	private String URL = FlsConfig.prefixUrl;
 	
-	private static AddFbIdHandler instance = null;
+	private static MatchFbIdHandler instance = null;
 
-	public static AddFbIdHandler getInstance() {
+	public static MatchFbIdHandler getInstance() {
 		if (instance == null)
-			instance = new AddFbIdHandler();
+			instance = new MatchFbIdHandler();
 		return instance;
 	}
 
@@ -45,8 +50,8 @@ public class AddFbIdHandler extends Connect implements AppHandler {
 
 		LOGGER.info("Inside process method of Add Fb Id Handler");
 		
-		AddFbIdReqObj rq = (AddFbIdReqObj) req;
-		AddFbIdResObj rs = new AddFbIdResObj();
+		MatchFbIdReqObj rq = (MatchFbIdReqObj) req;
+		MatchFbIdResObj rs = new MatchFbIdResObj();
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null, ps2 = null;
@@ -65,7 +70,7 @@ public class AddFbIdHandler extends Connect implements AppHandler {
 			}*/
 			
 			LOGGER.info("Creating statement for selecting users lat lng.....");
-			String sqlCheckFbId = "SELECT * FROM users WHERE user_fb_id=?";
+			/*String sqlCheckFbId = "SELECT * FROM users WHERE user_fb_id=?";
 			ps1 = hcp.prepareStatement(sqlCheckFbId);
 			ps1.setString(1, rq.getUserFbId());
 			rs1 = ps1.executeQuery();
@@ -92,12 +97,23 @@ public class AddFbIdHandler extends Connect implements AppHandler {
 			}else{
 				rs.setCode(FLS_DUPLICATE_ENTRY);
 				rs.setMessage(FLS_DUPLICATE_ENTRY_FB);
-			}
-		} catch (SQLException e) {
+			}*/
+			
+			// Grab the Scheduler instance from the Factory
+			Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+			JobKey matchjobKey = JobKey.jobKey("FlsMatchFbIdJob", "FlsMatchFbIdGroup");
+			scheduler.triggerJob(matchjobKey);
+			
+			rs.setCode(FLS_SUCCESS);
+			rs.setMessage(FLS_SUCCESS_M);
+		} catch(SchedulerException e){
+			LOGGER.warning("not able to get scheduler");
+			e.printStackTrace();
+		/*} catch (SQLException e) {
 			LOGGER.warning("Couldnt create a statement");
 				rs.setCode(FLS_SQL_EXCEPTION);
 				rs.setMessage(FLS_SQL_EXCEPTION_M);
-				e.printStackTrace();
+				e.printStackTrace();*/
 		} catch (NullPointerException e) {
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);

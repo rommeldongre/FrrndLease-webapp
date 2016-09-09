@@ -79,6 +79,13 @@ public class FlsServletContextListener implements ServletContextListener {
 	      	// adding the job to the scheduler without any trigger
 	  		scheduler.addJob(emailJob, true);
 	  		
+	  		// FlsMatchFbId key
+	      	JobKey matchjobKey = JobKey.jobKey("FlsMatchFbIdJob", "FlsMatchFbIdGroup");
+	      	// FlsEmailJob declaration
+	      	JobDetail matchFbJob = newJob(FlsMatchFbIdJob.class).withIdentity(matchjobKey).storeDurably().build();
+	      	// adding the job to the scheduler without any trigger
+	  		scheduler.addJob(matchFbJob, true);
+	  		
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

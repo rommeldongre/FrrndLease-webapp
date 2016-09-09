@@ -1,6 +1,6 @@
 package pojos;
 
-public class AddFbIdResObj extends ResObj{
+public class MatchFbIdResObj extends ResObj{
 
 	//Return code for PostItem
 	int code = 0;

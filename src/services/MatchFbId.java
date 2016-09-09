@@ -14,19 +14,19 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
-import pojos.AddFbIdReqObj;
-import pojos.AddFbIdResObj;
+import pojos.MatchFbIdReqObj;
+import pojos.MatchFbIdResObj;
 import util.FlsLogger;
-import app.AddFbIdHandler;
+import app.MatchFbIdHandler;
 import app.NotImplementedException;
 
 /**
- * Servlet implementation class AddFbId
+ * Servlet implementation class MatchFbId
  */
-@WebServlet(description = "Facebook Id for a given user", urlPatterns = { "/AddFbId" })
-public class AddFbId extends HttpServlet {
+@WebServlet(description = "Facebook Id for a given user", urlPatterns = { "/MatchFbId" })
+public class MatchFbId extends HttpServlet {
 
-	private FlsLogger LOGGER = new FlsLogger(AddFbId.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(MatchFbId.class.getName());
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,15 +40,15 @@ public class AddFbId extends HttpServlet {
 		LOGGER.info("Inside POST method");
 		// HTTP request to Service request pojo
 		ObjectMapper mapper = new ObjectMapper();
-		AddFbIdReqObj request = mapper.readValue(httprequest.getInputStream(), AddFbIdReqObj.class);
+		MatchFbIdReqObj request = mapper.readValue(httprequest.getInputStream(), MatchFbIdReqObj.class);
 		httpresponse.setContentType("application/json");
 
 		// application logic comes here --------
-		AddFbIdResObj Response = null;
+		MatchFbIdResObj Response = null;
 
 		try {
 			// App handler to process request and create Service response pojo
-			Response = (AddFbIdResObj) AddFbIdHandler.getInstance().process(request);
+			Response = (MatchFbIdResObj) MatchFbIdHandler.getInstance().process(request);
 
 			// Service response pojo to JSON
 			PrintWriter out = httpresponse.getWriter();
@@ -59,9 +59,9 @@ public class AddFbId extends HttpServlet {
 
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			LOGGER.warning("AddFbId process method not implemented");
+			LOGGER.warning("MatchFbId process method not implemented");
 			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,
-					"AddFbId process method not implemented");
+					"MatchFbId process method not implemented");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
