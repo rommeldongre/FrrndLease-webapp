@@ -4,7 +4,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									'$timeout', 
 									'userFactory', 
 									'profileFactory', 
-									'bannerService', 
+									'bannerService',
+									'matchFbIdService',
 									'searchService', 
 									'statsFactory', 
 									'loginSignupService',
@@ -15,6 +16,7 @@ headerApp.controller('headerCtrl', ['$scope',
 									userFactory, 
 									profileFactory, 
 									bannerService, 
+									matchFbIdService,
 									searchService, 
 									statsFactory, 
 									loginSignupService,
@@ -129,10 +131,12 @@ headerApp.controller('headerCtrl', ['$scope',
                         localStorage.setItem("userReferralCode", response.Id);
                         var obj = JSON.parse(response.Message);
                         localStorage.setItem("userloggedinAccess", obj.access_token);
-                        if(SignUpStatus == "facebook")
+                        if(SignUpStatus == "facebook"){
                             getFacebookFriends(Email);
-                        else
+							matchFbIdService.updateFbId();
+                        }else{
                             window.location.replace("myapp.html#/wizard");
+						}
                     }
 				}else{
                     if(response.Id == 200)
@@ -176,10 +180,12 @@ headerApp.controller('headerCtrl', ['$scope',
                     localStorage.setItem("userloggedinName", obj.fullName);
                     localStorage.setItem("userloggedinAccess", obj.access_token);
 					localStorage.setItem("userReferralCode", obj.referralCode);
-                    if(signUpStatus == "facebook")
+                    if(signUpStatus == "facebook"){
                         getFacebookFriends(obj.userId);
-                    else
+						matchFbIdService.updateFbId();
+					}else{
                         window.location.replace("myapp.html#/");
+					}
                 }
                 else{
                     loginSignupService.loginCheckRes(response.Message);
@@ -463,6 +469,31 @@ headerApp.controller('headerCtrl', ['$scope',
         displayUnreadNotifications();
         displayCredits();
     });
+	
+	$scope.$on('matchFbId', function(event){
+		var req = {
+			empty_pojo: ""
+		};
+		
+		$.ajax({
+			url: '/flsv2/MatchFbId',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code!=0){
+					console.log(response.code);
+					console.log(response.message);
+				}
+			},
+			error: function() {
+				alert('Not Working');
+			}
+		});
+		
+		
+    });
                                         
     $scope.$on('addPromoCredits', function(event, promoCode){
         var req = {
@@ -626,6 +657,13 @@ headerApp.service('bannerService', ['$rootScope', function($rootScope){
 		this.data = data;
 		this.page = page;
         $rootScope.$broadcast('bannerMessage', this.data, this.page);
+    }
+}]);
+
+headerApp.service('matchFbIdService', ['$rootScope', function($rootScope){
+    
+    this.updateFbId = function(){
+        $rootScope.$broadcast('matchFbId');
     }
 }]);
 

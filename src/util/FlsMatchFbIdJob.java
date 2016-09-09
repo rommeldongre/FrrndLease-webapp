@@ -83,7 +83,7 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
     	LOGGER.info("Inside Update Friend Id Method");
   	    Connection hcp = getConnectionFromPool();
   	    PreparedStatement psupdateFbId=null;
-	    //ResultSet resultupdateFbIds =null;
+  	    int renewFbIdAction = 0;
 	   
 	    try {
 	    	hcp.setAutoCommit(false);
@@ -95,8 +95,6 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
 			psupdateFbId.setString(1, Email);
 			psupdateFbId.setString(2, "signedup");
 			psupdateFbId.setString(3, Fb_id);
-			
-			int renewFbIdAction =0;
 			renewFbIdAction = psupdateFbId.executeUpdate();
 			
 			if(renewFbIdAction == 0 ){
@@ -114,9 +112,7 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
 			e.printStackTrace();
 		}finally {
 			try {
-				//if(resultupdateFbIds != null)resultupdateFbIds.close();
 				if(psupdateFbId != null)psupdateFbId.close();
-				
 				if(hcp != null)hcp.close();
 			} catch (Exception e){
 				e.printStackTrace();
