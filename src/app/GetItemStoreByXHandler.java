@@ -94,8 +94,6 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			
 			sql = sql + " ORDER BY friendst DESC, distance LIMIT "+offset+", "+limit;
 			
-			System.out.println(sql);
-			
 			sql_stmt = hcp.prepareStatement(sql);
 
 			dbResponse = sql_stmt.executeQuery();

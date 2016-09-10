@@ -32,6 +32,8 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     
     $scope.selectedCategory = 0;
     
+    var Image = null;
+    
     var populateCategory = function(id){
         var req = {
             operation:"getNext",
@@ -77,6 +79,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         
         var reader = new FileReader();
         reader.onload = function(event) {
+            Image = reader.result;
             loadImage(reader.result,
                 function (canvas) {
                     $scope.$apply(function() {
@@ -110,7 +113,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             leaseValue: 1000,
             leaseTerm: 'Month',
             status: "InStore",
-            image: $scope.item.image,
+            image: Image,
             accessToken: userAccessToken
         }
         
@@ -158,7 +161,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                 href: link,
             },function(response){
                 var m = "";
-                if (response && !response.error) {
+                if (response && !response.error_code) {
                     userFactory.userCredits("shared@10");
                     $scope.shared = true;
                 }
@@ -258,7 +261,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                 method: 'send',
                 link: 'http://www.frrndlease.com/index.html?ref_token='+$scope.refferalCode,
             },function(response){
-                if (response && !response.error) {
+                if (response && !response.error_code) {
                     //check 'response' to see if call was successful
                     modalService.showModal({}, {bodyText: "Invitation successfully sent to Facebook Friend(s)" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
                         userFactory.userCredits("invited@10");
