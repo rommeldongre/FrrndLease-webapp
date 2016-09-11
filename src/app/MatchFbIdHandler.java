@@ -50,22 +50,25 @@ public class MatchFbIdHandler extends Connect implements AppHandler {
 
 		LOGGER.info("Inside process method of Add Fb Id Handler");
 		
+		MatchFbIdReqObj rq = (MatchFbIdReqObj) req;
 		MatchFbIdResObj rs = new MatchFbIdResObj();
 		
 		try {
 			
-			/*OAuth oauth = new OAuth();
+			OAuth oauth = new OAuth();
 			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
 			if(!oauthcheck.equals(rq.getUserId())){
+				LOGGER.warning("OAuth failed");
 				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
 				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
 				return rs;
-			}*/
+			}
 			
 			// Grab the Scheduler instance from the Factory
 			Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 			JobKey matchjobKey = JobKey.jobKey("FlsMatchFbIdJob", "FlsMatchFbIdGroup");
 			scheduler.triggerJob(matchjobKey);
+			
 			
 			rs.setCode(FLS_SUCCESS);
 			rs.setMessage(FLS_SUCCESS_M);

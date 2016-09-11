@@ -29,14 +29,14 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
 	public void fbIdTask(){
     	
     	LOGGER.info("Inside Fb Id Task job");
-    	String user_fb_id=null,email_id=null;
+    	String user_fb_id=null,user_id=null;
     	
     	Connection hcp = getConnectionFromPool();
   	    PreparedStatement psgetFbId=null;
   	    ResultSet resultFbIds =null;
   	    
   	    try {
-  	    	String getFbIds ="SELECT user_email,user_fb_id FROM users WHERE user_fb_id IS NOT NULL";
+  	    	String getFbIds ="SELECT user_id,user_fb_id FROM users WHERE user_fb_id IS NOT NULL";
   	    	psgetFbId= hcp.prepareStatement(getFbIds);
     		
   	    	resultFbIds = psgetFbId.executeQuery();
@@ -52,10 +52,10 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
     		resultFbIds.beforeFirst();
     		while (resultFbIds.next()) {
       			LOGGER.info("Result Set not Empty..Getting data one by one");
-      			email_id = resultFbIds.getString("user_email");
+      			user_id = resultFbIds.getString("user_id");
       			user_fb_id = resultFbIds.getString("user_fb_id");
       			
-      			updateFriendId(email_id,user_fb_id);
+      			updateFriendId(user_id,user_fb_id);
       			
     		}
 			
@@ -78,7 +78,7 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
     	
     }
     
-    private void updateFriendId(String Email,String Fb_id){
+    private void updateFriendId(String User_id,String Fb_id){
     	
     	LOGGER.info("Inside Update Friend Id Method");
   	    Connection hcp = getConnectionFromPool();
@@ -87,13 +87,13 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
 	   
 	    try {
 	    	hcp.setAutoCommit(false);
-	    	String UpdateFriendUserIdql = "UPDATE `friends` SET friend_id=?, friend_status=? WHERE friend_id=?";
+	    	String UpdateFriendUserIdql = "UPDATE `friends` SET friend_id=?, friend_fb_id=? WHERE friend_id=?";
 			
 	    	psupdateFbId = hcp.prepareStatement(UpdateFriendUserIdql);
 			
 			LOGGER.info("Statement created. Executing renew query ...");
-			psupdateFbId.setString(1, Email);
-			psupdateFbId.setString(2, "signedup");
+			psupdateFbId.setString(1, User_id);
+			psupdateFbId.setString(2, Fb_id);
 			psupdateFbId.setString(3, Fb_id);
 			renewFbIdAction = psupdateFbId.executeUpdate();
 			

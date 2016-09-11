@@ -2,9 +2,14 @@ package pojos;
 
 public class MatchFbIdReqObj extends ReqObj{
 	
-	String empty_pojo;
+	String userId, accessToken;
 
-	public String getEmpty_pojo() {
-		return empty_pojo;
+	
+	public String getUserId() {
+		return userId;
+	}
+	
+	public String getAccessToken() {
+		return accessToken;
 	}
 }

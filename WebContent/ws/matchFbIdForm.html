@@ -5,10 +5,20 @@
 <title>Match FB ID Form</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
+	var AccessToken = null;
+	var UserId = null;
+	start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+		AccessToken = document.getElementById("accessToken").value;
+    }
+	
 	fbId = function() {
 		
+		UserId = document.getElementById("userId").value;
+		
 		var req = {
-			empty_pojo: ""
+			userId : UserId,
+			accessToken: AccessToken
 		};
 		
 		send(req);
@@ -35,10 +45,12 @@
 	
 </script>
 </head>
-<body>
+<body onload="start()">
 <h1> Match FB ID FORM</h1>
 	<form>
 		<p>Click below button to Match Facebook IDs </p>
+		User Id : <input type="text" name="userId" id="userId"><br />
+		<br /> Access Token: <input type="text" name="accessToken" id="accessToken" ><br/>
 		<input type="button" value="Add FB ID" onclick="fbId()">
 		
 		<h1>OUTPUT</h1>

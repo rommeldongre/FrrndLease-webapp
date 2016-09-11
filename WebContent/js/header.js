@@ -245,7 +245,7 @@ headerApp.controller('headerCtrl', ['$scope',
                 loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
 				$timeout(function(){
 					window.location.replace("myapp.html#/");
-				, 5000);
+				}, 5000);
             },
             error: function() {
                 window.location.replace("myapp.html#/");
@@ -474,7 +474,8 @@ headerApp.controller('headerCtrl', ['$scope',
 	
 	$scope.$on('matchFbId', function(event){
 		var req = {
-			empty_pojo: ""
+			userId: localStorage.getItem("userloggedin"),
+            accessToken: localStorage.getItem("userloggedinAccess")
 		};
 		
 		$.ajax({

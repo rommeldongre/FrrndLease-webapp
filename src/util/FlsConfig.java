@@ -818,7 +818,7 @@ public class FlsConfig extends Connect{
 				if(dbBuild < 2023){
 					
 					String sqlAddFbIdUsers = "ALTER TABLE `users` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `user_notification`";
-					String sqlAddFbIdFriends = "ALTER TABLE `friends` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `friend_status`";
+					String sqlAddFbIdFriends = "ALTER TABLE `friends` ADD `friend_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `friend_status`";
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlAddFbIdUsers);
