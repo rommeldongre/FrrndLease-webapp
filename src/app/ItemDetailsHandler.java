@@ -12,9 +12,6 @@ import pojos.ItemDetailsResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
-import util.FlsS3Bucket;
-import util.FlsS3Bucket.Bucket_Name;
-import util.FlsS3Bucket.Path_Name;
 
 public class ItemDetailsHandler extends Connect implements AppHandler {
 
@@ -65,6 +62,7 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setLeaseTerm(rs1.getString("item_lease_term"));
 				rs.setStatus(rs1.getString("item_status"));
 				rs.setImage(rs1.getString("item_image"));
+				rs.setImageLinks(rs1.getString("item_image_links"));
 				rs.setLeaseValue(Integer.parseInt(rs1.getString("item_lease_value")));
 				rs.setUid(rs1.getString("item_uid"));
 				rs.setCode(FLS_SUCCESS);
@@ -87,9 +85,6 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 					rs.setLocality(locality);
 					rs.setSublocality(sublocality);
 				}
-				
-				FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUid());
-				rs.setImageLinks(s3Bucket.getImagesFromS3Bucket(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST));
 				
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);

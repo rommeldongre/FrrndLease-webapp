@@ -4,6 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -172,9 +175,46 @@ public class FlsS3Bucket extends Connect {
 			System.out.println("Error Message: " + ace.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
+		} catch (Error e){
+			e.printStackTrace();
 		}
-
+		
 		return null;
+	}
+	
+	public void saveImages(String links){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1 = 0;
+		
+		try{
+			
+			String sqlSaveImageLinks = "UPDATE items SET item_image_links=? WHERE item_uid=?";
+			ps1 = hcp.prepareStatement(sqlSaveImageLinks);
+			ps1.setString(1, links);
+			ps1.setString(2, uid);
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1){
+				LOGGER.info("Item uid : " + uid + " links updated to : " + links);
+			}else{
+				LOGGER.info("Item uid : " + uid + " links not updated");
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	public String getImagesFromS3Bucket(Bucket_Name bucketName, Path_Name pathName){
@@ -189,7 +229,7 @@ public class FlsS3Bucket extends Connect {
 		String imagelink = "https://s3-us-west-2.amazonaws.com/" + BUCKET_NAME + "/" + PATH_NAME;
 		
 		int i = 0;
-		
+		long startTime = System.nanoTime();
 		for (S3ObjectSummary summary: S3Objects.withPrefix(s3Client, BUCKET_NAME, PATH_NAME)) {
 	        String s = summary.getKey();
 	        s = s.substring(s.lastIndexOf("/")+1);
@@ -201,6 +241,10 @@ public class FlsS3Bucket extends Connect {
 	        
 	        i++;
 		}
+		long endTime = System.nanoTime();
+		long duration = (endTime - startTime);
+		
+		System.out.println(duration);
 		
 		LOGGER.info(imageLinks);
 		
