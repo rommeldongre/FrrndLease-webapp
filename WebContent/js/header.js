@@ -687,6 +687,51 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
     
 }]);
 
+headerApp.directive('loadImage', ['$http', function($http){
+    return{
+        restrict:'A',
+        scope: {
+            'loadImage': '=',
+            'maxWidth': '=?',
+            'maxHeight': '=?'
+        },
+        link: function(scope, element, attrs){
+            
+            var MaxWidth = 300;
+            var MaxHeight = 300;
+            var ImgSrc = scope.loadImage;
+            
+            if(scope.maxWidth)
+                MaxWidth = scope.maxWidth;
+            if(scope.maxHeight)
+                MaxHeight = scope.maxHeight;
+            
+            if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null'){
+                
+                attrs.$set('width', MaxWidth);
+                attrs.$set('height', MaxHeight);
+                attrs.$set('ngSrc', 'images/imgplaceholder.png');
+                
+            }else{
+                
+                loadImage(
+                    ImgSrc,
+                    function(canvas){
+                        attrs.$set('ngSrc', canvas.toDataURL());
+                    },
+                    {
+                        maxWidth: MaxWidth,
+                        maxHeight: MaxHeight,
+                        canvas: true,
+                        crossOrigin: "anonymous"
+                    }
+                );
+                
+            }
+        }
+    }
+}]);
+
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
     var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;

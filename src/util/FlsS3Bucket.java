@@ -4,8 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -77,7 +75,12 @@ public class FlsS3Bucket extends Connect {
 				return "fls-items-live";
 			}
 		}else if(bucketName == Bucket_Name.USERS_BUCKET){
-			return "fls-users";
+			if(ENV_CONFIG.equals("dev")){
+				return "ak-fls-users";
+//				return "fls-users-dev";
+			}else{
+				return "fls-users-live";
+			}
 		}else{
 			return null;
 		}
@@ -108,17 +111,17 @@ public class FlsS3Bucket extends Connect {
 		if(fileName == File_Name.ITEM){
 			Random rnd = new Random();
 			int r = 1000 + rnd.nextInt(9000);
-			name = name + r + ".jpg";
+			name = name + r + ".png";
 		}else if(fileName == File_Name.LEASE_READY)
-			name = name + "LeaseReady.jpg";
+			name = name + "LeaseReady.png";
 		else if(fileName == File_Name.PICKED_UP_OUT)
-			name = name + "PickedUpOut.jpg";
+			name = name + "PickedUpOut.png";
 		else if(fileName == File_Name.LEASE_STARTED)
-			name = name + "LeaseStarted.jpg";
+			name = name + "LeaseStarted.png";
 		else if(fileName == File_Name.LEASE_ENDED)
-			name = name + "LeaseEnded.jpg";
+			name = name + "LeaseEnded.png";
 		else if(fileName == File_Name.PICKED_UP_IN)
-			name = name + "PickedUpIn.jpg";
+			name = name + "PickedUpIn.png";
 		else
 			name = null;
 			
@@ -174,20 +177,32 @@ public class FlsS3Bucket extends Connect {
 		return null;
 	}
 	
-	public List<String> getImagesFromS3Bucket(String bucketName, String pathName){
+	public String getImagesFromS3Bucket(Bucket_Name bucketName, Path_Name pathName){
 
 		LOGGER.info("Inside getImagesFromS3Bucket method");
 		
-		List<String> imageLinks = new ArrayList<String>();
+		String BUCKET_NAME = getBucketName(bucketName);
+		String PATH_NAME = getPathName(pathName);
 		
-		String imagelink = "https://s3-us-west-2.amazonaws.com/" + bucketName + "/" + pathName;
+		String imageLinks = null;
 		
-		for (S3ObjectSummary summary: S3Objects.withPrefix(s3Client, bucketName, pathName)) {
+		String imagelink = "https://s3-us-west-2.amazonaws.com/" + BUCKET_NAME + "/" + PATH_NAME;
+		
+		int i = 0;
+		
+		for (S3ObjectSummary summary: S3Objects.withPrefix(s3Client, BUCKET_NAME, PATH_NAME)) {
 	        String s = summary.getKey();
 	        s = s.substring(s.lastIndexOf("/")+1);
-	        imageLinks.add(imagelink + s);
-	        LOGGER.info(imageLinks.toString());
+	        
+	        if(i == 0)
+	        	imageLinks = imagelink + s;
+	        else
+	        	imageLinks = imageLinks + "," + imagelink + s;
+	        
+	        i++;
 		}
+		
+		LOGGER.info(imageLinks);
 		
 		return imageLinks;
 		
@@ -215,7 +230,7 @@ public class FlsS3Bucket extends Connect {
 
 			// write the image to a file
 			File file = new File(FileName);
-			ImageIO.write(image, "jpg", file);
+			ImageIO.write(image, "png", file);
 
 			return file;
 		} catch (IOException e) {

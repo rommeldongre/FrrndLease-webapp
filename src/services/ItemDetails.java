@@ -50,6 +50,7 @@ public class ItemDetails extends HttpServlet {
 				httprequest.setAttribute("uid", response.getUid());
 				httprequest.setAttribute("locality", response.getLocality());
 				httprequest.setAttribute("sublocality", response.getSublocality());
+				httprequest.setAttribute("imageLinks", response.getImageLinks());
 			} else {
 				httprequest.setAttribute("code", response.getCode());
 				httprequest.setAttribute("message", "This item does not exist");
@@ -60,8 +61,7 @@ public class ItemDetails extends HttpServlet {
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
 			LOGGER.warning("ItemDetails process method not implemented");
-			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,
-					"ItemDetails process method not implemented");
+			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,"ItemDetails process method not implemented");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
