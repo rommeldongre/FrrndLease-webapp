@@ -658,11 +658,17 @@ public class Users extends Connect {
 		check = null;
 		auth = um.getAuth();
 		profilePicture = um.getProfilePicture();
-		String dbProfilePicture = null;
-		int profilePicrs=0;
+		friendId =null;
+		String dbProfilePicture = null, user_fb_id=null;
+		int profilePicrs=0,FbIdrs=0;
 		LOGGER.info("Inside getUserInfo method");
 
-		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null,profilepicstmt=null;
+		if(um.getFriendId().contains("@fb")){
+			friendId = um.getFriendId();
+		}
+		
+		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null,
+				profilepicstmt=null,FbIdstmt=null;
 		ResultSet result1 = null, rs = null;
 		Connection hcp = getConnectionFromPool();
 
@@ -701,6 +707,7 @@ public class Users extends Connect {
 								json.put("location", rs.getString("user_location"));
 								json.put("referralCode", rs.getString("user_referral_code"));
 								dbProfilePicture = rs.getString("user_profile_picture");
+								user_fb_id = rs.getString("user_fb_id");
 								message = json.toString();
 								LOGGER.warning(message);
 								check = rs.getString("user_id");
@@ -719,6 +726,30 @@ public class Users extends Connect {
 
 									profilePicrs = profilepicstmt.executeUpdate();
 									if(profilePicrs!=0){
+										Code = FLS_SUCCESS;
+										Id = check;
+									}else{
+										Id = "0";
+										message = FLS_LOGIN_USER_F;
+										Code = FLS_END_OF_DB;
+									}
+							    }else{
+							    	Code = FLS_SUCCESS;
+									Id = check;
+							    }
+								
+								if(friendId!=null && user_fb_id==null){
+									String UpdateFbIdsql = "UPDATE users SET user_fb_id=? WHERE user_id = ? AND user_auth = ?";
+									LOGGER.info("Creating update Fb Id statement .....");
+									FbIdstmt = hcp.prepareStatement(UpdateFbIdsql);
+
+									LOGGER.info("update Fb Id Statement created. Executing  query...");
+									FbIdstmt.setString(1, friendId);
+									FbIdstmt.setString(2, token);
+									FbIdstmt.setString(3, auth);
+
+									FbIdrs = FbIdstmt.executeUpdate();
+									if(FbIdrs!=0){
 										Code = FLS_SUCCESS;
 										Id = check;
 									}else{
@@ -838,6 +869,7 @@ public class Users extends Connect {
 				if(rs!=null) rs.close();
 				if(s1!=null) s1.close();
 				if(profilepicstmt!=null) profilepicstmt.close();
+				if(FbIdstmt!=null) FbIdstmt.close();
 				if(stmt!=null) stmt.close();
 				if(stmt1!=null) stmt1.close();
 				if(hcp!=null) hcp.close();

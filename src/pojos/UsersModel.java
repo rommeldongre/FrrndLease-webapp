@@ -38,7 +38,12 @@ public class UsersModel {
 			if(obj.has("profilePicture"))profilePicture = obj.getString("profilePicture");
 			if(obj.has("liveStatus"))liveStatus = obj.getInt("liveStatus");
 			if(obj.has("verification"))verification = obj.getInt("verification");
-			if(obj.has("friendId"))friendId = obj.getString("friendId");
+			if(obj.has("friendId"))
+			if(obj.isNull("friendId")){
+				friendId = "";
+			}else{
+				friendId = obj.getString("friendId");
+			}
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();

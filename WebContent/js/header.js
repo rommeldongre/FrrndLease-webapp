@@ -151,6 +151,10 @@ headerApp.controller('headerCtrl', ['$scope',
     
     // login starts here
     $scope.$on('loginCheckReq', function(event, userId, password, picture, signUpStatus){
+		var user_fb_id= null;
+		if(signUpStatus =='facebook'){
+			user_fb_id = password+'@fb';
+		}
 	    password = (CryptoJS.MD5(password)).toString();
 		if(picture === undefined){
 			picture ="";
@@ -160,7 +164,8 @@ headerApp.controller('headerCtrl', ['$scope',
             signUpStatus: signUpStatus,
             row: {
                 auth: password,
-                profilePicture: picture
+                profilePicture: picture,
+				friendId: user_fb_id
             }
         }
         loginSend(req, signUpStatus);
