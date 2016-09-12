@@ -817,12 +817,16 @@ public class FlsConfig extends Connect{
 				// This block adds promo codes for sharing and invitation
 				if(dbBuild < 2023){
 					
-					String sqlAddFbId = "ALTER TABLE `users` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `user_notification`";
+					String sqlAddFbIdUsers = "ALTER TABLE `users` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `user_notification`";
+					String sqlAddFbIdFriends = "ALTER TABLE `friends` ADD `friend_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `friend_status`";
 					try{
 						getConnection();
-						PreparedStatement ps1 = connection.prepareStatement(sqlAddFbId);
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddFbIdUsers);
 						ps1.executeUpdate();
 						ps1.close();
+						PreparedStatement ps2 = connection.prepareStatement(sqlAddFbIdFriends);
+						ps2.executeUpdate();
+						ps2.close();
 					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
