@@ -4,7 +4,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									'$timeout', 
 									'userFactory', 
 									'profileFactory', 
-									'bannerService', 
+									'bannerService',
+									'matchFbIdService',
 									'searchService', 
 									'statsFactory', 
 									'loginSignupService',
@@ -15,6 +16,7 @@ headerApp.controller('headerCtrl', ['$scope',
 									userFactory, 
 									profileFactory, 
 									bannerService, 
+									matchFbIdService,
 									searchService, 
 									statsFactory, 
 									loginSignupService,
@@ -129,10 +131,12 @@ headerApp.controller('headerCtrl', ['$scope',
                         localStorage.setItem("userReferralCode", response.Id);
                         var obj = JSON.parse(response.Message);
                         localStorage.setItem("userloggedinAccess", obj.access_token);
-                        if(SignUpStatus == "facebook")
+                        if(SignUpStatus == "facebook"){
                             getFacebookFriends(Email);
-                        else
+							matchFbIdService.updateFbId();
+                        }else{
                             window.location.replace("myapp.html#/wizard");
+						}
                     }
 				}else{
                     if(response.Id == 200)
@@ -147,6 +151,10 @@ headerApp.controller('headerCtrl', ['$scope',
     
     // login starts here
     $scope.$on('loginCheckReq', function(event, userId, password, picture, signUpStatus){
+		var user_fb_id= null;
+		if(signUpStatus =='facebook'){
+			user_fb_id = password+'@fb';
+		}
 	    password = (CryptoJS.MD5(password)).toString();
 		if(picture === undefined){
 			picture ="";
@@ -156,7 +164,8 @@ headerApp.controller('headerCtrl', ['$scope',
             signUpStatus: signUpStatus,
             row: {
                 auth: password,
-                profilePicture: picture
+                profilePicture: picture,
+				friendId: user_fb_id
             }
         }
         loginSend(req, signUpStatus);
@@ -176,10 +185,12 @@ headerApp.controller('headerCtrl', ['$scope',
                     localStorage.setItem("userloggedinName", obj.fullName);
                     localStorage.setItem("userloggedinAccess", obj.access_token);
 					localStorage.setItem("userReferralCode", obj.referralCode);
-                    if(signUpStatus == "facebook")
+                    if(signUpStatus == "facebook"){
                         getFacebookFriends(obj.userId);
-                    else
+						matchFbIdService.updateFbId();
+					}else{
                         window.location.replace("myapp.html#/");
+					}
                 }
                 else{
                     loginSignupService.loginCheckRes(response.Message);
@@ -237,7 +248,9 @@ headerApp.controller('headerCtrl', ['$scope',
 
             success: function(response) {
                 loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
-                window.location.replace("myapp.html#/");
+                $timeout(function(){
+					window.location.replace("myapp.html#/");
+				}, 5000);
             },
             error: function() {
                 window.location.replace("myapp.html#/");
@@ -463,6 +476,32 @@ headerApp.controller('headerCtrl', ['$scope',
         displayUnreadNotifications();
         displayCredits();
     });
+	
+	$scope.$on('matchFbId', function(event){
+		var req = {
+			userId: localStorage.getItem("userloggedin"),
+            accessToken: localStorage.getItem("userloggedinAccess")
+		};
+		
+		$.ajax({
+			url: '/flsv2/MatchFbId',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code!=0){
+					console.log(response.code);
+					console.log(response.message);
+				}
+			},
+			error: function() {
+				alert('Not Working');
+			}
+		});
+		
+		
+    });
                                         
     $scope.$on('addPromoCredits', function(event, promoCode){
         var req = {
@@ -629,6 +668,13 @@ headerApp.service('bannerService', ['$rootScope', function($rootScope){
     }
 }]);
 
+headerApp.service('matchFbIdService', ['$rootScope', function($rootScope){
+    
+    this.updateFbId = function(){
+        $rootScope.$broadcast('matchFbId');
+    }
+}]);
+
 headerApp.service('eventsCount', ['$rootScope', function($rootScope){
     
     this.updateEventsCount = function(){
@@ -710,7 +756,7 @@ headerApp.directive('loadImage', ['$http', function($http){
                 if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
 
                     attrs.$set('width', MaxWidth);
-                    attrs.$set('height', MaxHeight);
+                    attrs.$set('height', 240);
                     attrs.$set('ngSrc', 'images/imgplaceholder.png');
 
                 }else{

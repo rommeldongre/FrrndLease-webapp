@@ -283,8 +283,13 @@ public class Users extends Connect {
 		referralCode = um.getReferralCode();
 		profilePicture = um.getProfilePicture();
 		friendId = um.getFriendId();
-
+		 
 		String userNotification = User_Notification.EMAIL.name();
+		String user_fb_id= null;
+		
+		if(friendId.contains("@fb")){
+			user_fb_id=friendId;
+		}
 		
 		if(status.equals("mobile_pending")){
 			Random rnd = new Random();
@@ -325,7 +330,7 @@ public class Users extends Connect {
 			int ref_code_length = 8;
 			ReferralCode rc = new ReferralCode();
 			String generated_ref_code = rc.createRandomCode(ref_code_length);
-			String sql = "insert into users (user_id,user_full_name,user_mobile,user_email,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status,user_notification) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into users (user_id,user_full_name,user_mobile,user_email,user_location,user_auth,user_activation,user_status,user_credit,user_lat,user_lng,user_address,user_locality,user_sublocality,user_referral_code,user_referrer_code,user_profile_picture,user_live_status,user_notification,user_fb_id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing query.....");
@@ -348,6 +353,7 @@ public class Users extends Connect {
 			stmt.setString(17, profilePicture);
 			stmt.setInt(18, 1);
 			stmt.setString(19, userNotification);
+			stmt.setString(20, user_fb_id);
 			stmt.executeUpdate();
 			message = "Entry added into users table";
 			LOGGER.warning(message);
@@ -652,11 +658,17 @@ public class Users extends Connect {
 		check = null;
 		auth = um.getAuth();
 		profilePicture = um.getProfilePicture();
-		String dbProfilePicture = null;
-		int profilePicrs=0;
+		friendId =null;
+		String dbProfilePicture = null, user_fb_id=null;
+		int profilePicrs=0,FbIdrs=0;
 		LOGGER.info("Inside getUserInfo method");
 
-		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null,profilepicstmt=null;
+		if(um.getFriendId().contains("@fb")){
+			friendId = um.getFriendId();
+		}
+		
+		PreparedStatement ps1 = null,s1 = null, stmt = null, stmt1 = null,
+				profilepicstmt=null,FbIdstmt=null;
 		ResultSet result1 = null, rs = null;
 		Connection hcp = getConnectionFromPool();
 
@@ -695,6 +707,7 @@ public class Users extends Connect {
 								json.put("location", rs.getString("user_location"));
 								json.put("referralCode", rs.getString("user_referral_code"));
 								dbProfilePicture = rs.getString("user_profile_picture");
+								user_fb_id = rs.getString("user_fb_id");
 								message = json.toString();
 								LOGGER.warning(message);
 								check = rs.getString("user_id");
@@ -713,6 +726,30 @@ public class Users extends Connect {
 
 									profilePicrs = profilepicstmt.executeUpdate();
 									if(profilePicrs!=0){
+										Code = FLS_SUCCESS;
+										Id = check;
+									}else{
+										Id = "0";
+										message = FLS_LOGIN_USER_F;
+										Code = FLS_END_OF_DB;
+									}
+							    }else{
+							    	Code = FLS_SUCCESS;
+									Id = check;
+							    }
+								
+								if(friendId!=null && user_fb_id==null){
+									String UpdateFbIdsql = "UPDATE users SET user_fb_id=? WHERE user_id = ? AND user_auth = ?";
+									LOGGER.info("Creating update Fb Id statement .....");
+									FbIdstmt = hcp.prepareStatement(UpdateFbIdsql);
+
+									LOGGER.info("update Fb Id Statement created. Executing  query...");
+									FbIdstmt.setString(1, friendId);
+									FbIdstmt.setString(2, token);
+									FbIdstmt.setString(3, auth);
+
+									FbIdrs = FbIdstmt.executeUpdate();
+									if(FbIdrs!=0){
 										Code = FLS_SUCCESS;
 										Id = check;
 									}else{
@@ -832,6 +869,7 @@ public class Users extends Connect {
 				if(rs!=null) rs.close();
 				if(s1!=null) s1.close();
 				if(profilepicstmt!=null) profilepicstmt.close();
+				if(FbIdstmt!=null) FbIdstmt.close();
 				if(stmt!=null) stmt.close();
 				if(stmt1!=null) stmt1.close();
 				if(hcp!=null) hcp.close();

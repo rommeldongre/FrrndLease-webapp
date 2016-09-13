@@ -106,10 +106,11 @@ public class Friends extends Connect {
 			}
 			
 			LOGGER.info("Creating Select statement from friends table");
-			String sqlSelectFriends = "SELECT * FROM friends WHERE friend_user_id=? AND friend_id=?";
+			String sqlSelectFriends = "SELECT * FROM friends WHERE friend_user_id=? AND (friend_id=? OR friend_fb_id=?)";
 			stmt2 = hcp.prepareStatement(sqlSelectFriends);
 			stmt2.setString(1, userId);
 			stmt2.setString(2, friendId);
+			stmt2.setString(3, friendId);
 			rs2 = stmt2.executeQuery();
 			
 			while (rs2.next()) {
