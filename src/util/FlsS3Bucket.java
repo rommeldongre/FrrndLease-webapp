@@ -19,8 +19,11 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
+import com.amazonaws.services.s3.model.GroupGrantee;
+import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import connect.Connect;
@@ -209,10 +212,13 @@ public class FlsS3Bucket extends Connect {
 					LOGGER.warning("bucket does not exist: " + BUCKET_NAME);
 				}
 				
+				AccessControlList acl = new AccessControlList();
+				acl.grantPermission(GroupGrantee.AllUsers, Permission.Read);
+				
 				// Copying object
 	            CopyObjectRequest copyObjRequest = new CopyObjectRequest(BUCKET_NAME, existingKey, BUCKET_NAME, PATH_NAME+FILE_NAME);
 	            LOGGER.info("Copying object.");
-	            s3Client.copyObject(copyObjRequest);
+	            s3Client.copyObject(copyObjRequest.withAccessControlList(acl));
 	            return "https://s3-us-west-2.amazonaws.com/" + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				
 			}
