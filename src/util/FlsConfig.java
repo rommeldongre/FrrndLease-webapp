@@ -12,7 +12,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2022;			
+	public final int appBuild = 2023;			
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -810,6 +810,39 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2022;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds promo codes for sharing and invitation
+				if(dbBuild < 2023){
+					
+					String sqlAddFbIdUsers = "ALTER TABLE `users` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `user_notification`";
+					String sqlAddFbIdFriends = "ALTER TABLE `friends` ADD `friend_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `friend_status`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddFbIdUsers);
+						ps1.executeUpdate();
+						ps1.close();
+						PreparedStatement ps2 = connection.prepareStatement(sqlAddFbIdFriends);
+						ps2.executeUpdate();
+						ps2.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2023;
 					updateDBBuild(dbBuild);
 					
 				}
