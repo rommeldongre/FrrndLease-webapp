@@ -196,16 +196,16 @@
 <h1> ITEMS SERVICE FORM</h1>
 	<form>
 		Item Id			: <input type="text" name="id" id="id" ><br/><br/>
-		Title       : <input type="text" name="title" id="title" ><br/><br/>
+		Title(*)       : <input type="text" name="title" id="title" ><br/><br/>
 		Category : <input type="text" name="category" id="category" ><br/><br/>
 		Description : <input type="text" name="description" id="description" ><br/><br/>
-		User ID : <input type="text" name="userId" id="userId"><br/><br/>
+		User ID(*) : <input type="text" name="userId" id="userId"><br/><br/>
 		Lease Terms : <input type="text" name="leaseTerms" id="leaseTerms"><br/><br/>
 		Lease Value : <input type="text" name="leaseValue" id="leaseValue"><br/><br/>
 		Status : <input type="text" name="status" id="status"><br/><br/>
 		<input type="button" value="Add" onclick="add()">
 		<input type="button" value="Edit" onclick="edit()">
-		<input type="button" value="Delete" onclick="deleteData()">
+		<input type="button" value="Delete" id="delete_item" onclick="deleteData()">
 		<input type="button" value="Get Next" onclick="getNext()">
 		<input type="button" value="Get Previous" onclick="getPrevious()"><br/><br/>
 		
