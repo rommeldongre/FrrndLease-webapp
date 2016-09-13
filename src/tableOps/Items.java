@@ -270,7 +270,7 @@ public class Items extends Connect {
 		title =im.getTitle();
 		check = 0;
 		LOGGER.info("Inside delete method....");
-		String sql = "DELETE FROM items, store USING items INNER JOIN `store` ON items.item_id = store.store_item_id WHERE items.item_id= ?";
+		String sql = "DELETE FROM items, store USING items INNER JOIN `store` ON items.item_id = store.store_item_id WHERE items.item_name= ?";
 
 		PreparedStatement stmt2 = null, stmt = null;
 		ResultSet rs = null;
@@ -292,7 +292,7 @@ public class Items extends Connect {
 				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query..." + check);
-				stmt.setInt(1, check);
+				stmt.setString(1, title);
 				stmt.executeUpdate();
 				status = "operation successfull deleted item id :" + check;
 				LOGGER.warning(status);
