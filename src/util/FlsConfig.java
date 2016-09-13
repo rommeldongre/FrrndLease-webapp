@@ -861,7 +861,7 @@ public class FlsConfig extends Connect{
 						while(rs1.next()){
 							if(!(rs1.getString("item_image").equals("null") || rs1.getString("item_image") == null || rs1.getString("item_image").equals(""))){
 								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
-								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rs1.getString("item_image"));
+								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rs1.getString("item_image"), null);
 								if(link != null){
 									String sqlSaveImageLink = "UPDATE items SET item_image_links=? WHERE item_uid=?";
 									ps2 = connection.prepareStatement(sqlSaveImageLink);

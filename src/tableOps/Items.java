@@ -19,8 +19,12 @@ import util.LogItem;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsS3Bucket.Bucket_Name;
+import util.FlsS3Bucket.File_Name;
+import util.FlsS3Bucket.Path_Name;
 import util.FlsConfig;
 import util.FlsLogger;
+import util.FlsS3Bucket;
 
 public class Items extends Connect {
 
@@ -167,7 +171,7 @@ public class Items extends Connect {
 			if(!checkWishItem_rs.next()){
 				
 				LOGGER.info("Creating statement.....");
-				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
+				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status) values (?,?,?,?,?,?,?)";
 				stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	
 				LOGGER.info("Statement created. Executing query.....");
@@ -178,7 +182,6 @@ public class Items extends Connect {
 				stmt.setInt(5, leaseValue);
 				stmt.setString(6, leaseTerm);
 				stmt.setString(7, status);
-				stmt.setString(8, image);
 				stmt.executeUpdate();
 				
 				// getting the last item inserted id and appending it with the title to generate a uid
@@ -208,6 +211,14 @@ public class Items extends Connect {
 	
 				Code = 000;
 	
+				if(!(image == null || image.equals(""))){
+					FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
+					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, image);
+					if(link != null){
+						s3Bucket.saveImages(link);
+					}
+				}
+				
 				String status_W = im.getStatus(); // To be used to check if Request
 													// is from WishItem API.
 				if (!FLS_WISHLIST_ADD.equals(status_W)) {
@@ -346,11 +357,8 @@ public class Items extends Connect {
 			stmt2.setInt(1, id);
 			stmt2.setString(2, userId);
 			rs = stmt2.executeQuery();
-			while (rs.next()) {
-				check = rs.getInt("item_id");
-			}
 
-			if (check != 0) {
+			if (rs.next()) {
 				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query...");
@@ -364,19 +372,28 @@ public class Items extends Connect {
 				stmt.setString(8, userId);
 				stmt.executeUpdate();
 				
-				String uid = title + " " + check;
+				String uid = title + " " + rs.getInt("item_id");
 				uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
 				
 				// updating the item_uid value of the last item inserted
 				String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
 				s = hcp.prepareStatement(sqlUpdateUID);
 				s.setString(1, uid);
-				s.setInt(2, check);
+				s.setInt(2, rs.getInt("item_id"));
 				s.executeUpdate();
+				
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
+				String existingImage = rs.getString("item_image_links");
+				if(existingImage != null)
+					existingImage = existingImage.substring(existingImage.lastIndexOf("/")+1);
+				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, image, existingImage);
+				if(link != null){
+					s3Bucket.saveImages(link);
+				}
 				
 				message = "operation successfull edited item id : " + id;
 				LOGGER.warning(message);
-				Id = String.valueOf(check);
+				Id = String.valueOf(rs.getInt("item_id"));
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT);
 				
@@ -638,6 +655,7 @@ public class Items extends Connect {
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
 				json.put("image", rs.getString("item_image"));
+				json.put("imageLink", rs.getString("item_image_links"));
 				json.put("fullName", rs.getString("user_full_name"));
 				json.put("location", rs.getString("user_location"));
 				json.put("uid", rs.getString("item_uid"));
@@ -894,6 +912,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs1.getInt("item_lease_value"));
 				json.put("leaseTerm", rs1.getString("item_lease_term"));
 				json.put("image", rs1.getString("item_image"));
+				json.put("imageLinks", rs1.getString("item_image_links"));
 				json.put("uid", rs1.getString("item_uid"));
 				
 				message = json.toString();

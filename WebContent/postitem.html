@@ -17,8 +17,8 @@
                     </div>
                 </div>
                 <div class="form-group" style="text-align:center;">
-                    <div class="col-md-12" ng-init="item.image=''">
-                        <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? '' : item.image}}" />
+                    <div class="col-md-12">
+                        <img load-image="item.imageLinks" ng-src="" alt="..." />
                     </div>
                 </div>
                 <div class="form-group">

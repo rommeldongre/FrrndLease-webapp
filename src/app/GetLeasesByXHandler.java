@@ -94,6 +94,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				rs.setLeaseValue(dbResponse.getString("item_lease_value"));
 				rs.setLeaseTerm(dbResponse.getString("item_lease_term"));
 				rs.setImage(dbResponse.getString("item_image"));
+				rs.setImageLink(dbResponse.getString("item_image_links"));
 				rs.setStatus(dbResponse.getString("item_status"));
 				rs.setUid(dbResponse.getString("item_uid"));
 				

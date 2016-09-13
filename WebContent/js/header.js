@@ -696,38 +696,42 @@ headerApp.directive('loadImage', ['$http', function($http){
             'maxHeight': '=?'
         },
         link: function(scope, element, attrs){
-            
-            var MaxWidth = 300;
-            var MaxHeight = 300;
-            var ImgSrc = scope.loadImage;
-            
-            if(scope.maxWidth)
-                MaxWidth = scope.maxWidth;
-            if(scope.maxHeight)
-                MaxHeight = scope.maxHeight;
-            
-            if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null'){
+            scope.$watch('loadImage', function(){
+                var MaxWidth = 300;
+                var MaxHeight = 300;
                 
-                attrs.$set('width', MaxWidth);
-                attrs.$set('height', MaxHeight);
-                attrs.$set('ngSrc', 'images/imgplaceholder.png');
-                
-            }else{
-                
-                loadImage(
-                    ImgSrc,
-                    function(canvas){
-                        attrs.$set('ngSrc', canvas.toDataURL());
-                    },
-                    {
-                        maxWidth: MaxWidth,
-                        maxHeight: MaxHeight,
-                        canvas: true,
-                        crossOrigin: "anonymous"
-                    }
-                );
-                
-            }
+                var ImgSrc = scope.loadImage;
+
+                if(scope.maxWidth)
+                    MaxWidth = scope.maxWidth;
+                if(scope.maxHeight)
+                    MaxHeight = scope.maxHeight;
+
+                if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
+
+                    attrs.$set('width', MaxWidth);
+                    attrs.$set('height', MaxHeight);
+                    attrs.$set('ngSrc', 'images/imgplaceholder.png');
+
+                }else{
+
+                    loadImage(
+                        ImgSrc,
+                        function(canvas){
+                            element.removeAttr('width');
+                            element.removeAttr('height');
+                            attrs.$set('ngSrc', canvas.toDataURL());
+                        },
+                        {
+                            maxWidth: MaxWidth,
+                            maxHeight: MaxHeight,
+                            canvas: true,
+                            crossOrigin: "anonymous"
+                        }
+                    );
+
+                }
+            });
         }
     }
 }]);

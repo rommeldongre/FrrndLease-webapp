@@ -13,6 +13,8 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     $scope.categories = [];
     
+    var Image = null;
+    
     var getItemDetails = function(){
         var req = {
             table: "items",
@@ -123,26 +125,12 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     //beginning of image display
     $scope.uploadImage = function(file){
-        EXIF.getData(file, function(){
-            exif = EXIF.getAllTags(this);
-            picOrientation = exif.Orientation;
-		});
-        
         var reader = new FileReader();
         reader.onload = function(event) {
-            loadImage(reader.result,
-                function (canvas) {
-                    $scope.$apply(function() {
-                        $scope.item.image = canvas.toDataURL();
-                    });
-                },
-                {
-                    maxWidth: 300,
-                    maxHeight: 300,
-                    canvas: true,
-                    orientation: picOrientation
-                }
-            );
+            Image = reader.result;
+            $scope.$apply(function(){
+                $scope.item.imageLinks = reader.result;
+            });
         }
         reader.readAsDataURL(file);
     }		
@@ -177,7 +165,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             leaseValue: item_lease_value,
             leaseTerm: item_lease_term,
             status: "InStore",
-            image: $scope.item.image,
+            image: Image,
             accessToken: userAccessToken
         }
         
@@ -273,7 +261,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             userId: userId,
             leaseValue: item_lease_value,
             leaseTerm: item_lease_term,
-            image: $scope.item.image
+            image: Image
         };
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to update this Item?'}).then(function(result){

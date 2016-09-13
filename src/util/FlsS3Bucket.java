@@ -19,10 +19,9 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import connect.Connect;
 
@@ -132,13 +131,17 @@ public class FlsS3Bucket extends Connect {
 		
 	}
 	
-	public String uploadImage(Bucket_Name bucketName, Path_Name pathName, File_Name fileName, String Image) {
+	public String uploadImage(Bucket_Name bucketName, Path_Name pathName, File_Name fileName, String Image, String existingName) {
 
 		LOGGER.info("Inside uploadImage method");
 
 		String BUCKET_NAME = getBucketName(bucketName);
 		String PATH_NAME = getPathName(pathName);
-		String FILE_NAME = getFileName(fileName);
+		String FILE_NAME;
+		if(existingName == null)
+			FILE_NAME = getFileName(fileName);
+		else
+			FILE_NAME = existingName;
 		
 		try {
 			
@@ -182,6 +185,64 @@ public class FlsS3Bucket extends Connect {
 		return null;
 	}
 	
+	public String copyImage(Bucket_Name bucketName, Path_Name pathName, File_Name fileName, String ImageLink) {
+
+		LOGGER.info("Inside uploadImage method");
+
+		String BUCKET_NAME = getBucketName(bucketName);
+		String PATH_NAME = getPathName(pathName);
+		String FILE_NAME = getFileName(fileName);
+		
+		String existingKey = ImageLink.substring(ordinalIndexOf(ImageLink, "/", 3)+1);
+		
+		try {
+			
+			LOGGER.warning("Bucket Name : " + BUCKET_NAME + ", Path Name : " + PATH_NAME + ", File Name : " + FILE_NAME);
+			
+			if(BUCKET_NAME != null && PATH_NAME != null && FILE_NAME != null){
+	
+				s3Client.setRegion(Region.getRegion(Regions.US_WEST_2));
+	
+				if (s3Client.doesBucketExist(BUCKET_NAME)) {
+					LOGGER.info("bucket exists: " + BUCKET_NAME);
+				} else {
+					LOGGER.warning("bucket does not exist: " + BUCKET_NAME);
+				}
+				
+				// Copying object
+	            CopyObjectRequest copyObjRequest = new CopyObjectRequest(BUCKET_NAME, existingKey, BUCKET_NAME, PATH_NAME+FILE_NAME);
+	            LOGGER.info("Copying object.");
+	            s3Client.copyObject(copyObjRequest);
+	            return "https://s3-us-west-2.amazonaws.com/" + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
+				
+			}
+
+		} catch (AmazonServiceException ase) {
+			System.out.println("Caught an AmazonServiceException, which" + " means your request made it " + "to Amazon S3, but was rejected with an error response" + " for some reason.");
+			System.out.println("Error Message:    " + ase.getMessage());
+			System.out.println("HTTP Status Code: " + ase.getStatusCode());
+			System.out.println("AWS Error Code:   " + ase.getErrorCode());
+			System.out.println("Error Type:       " + ase.getErrorType());
+			System.out.println("Request ID:       " + ase.getRequestId());
+		} catch (AmazonClientException ace) {
+			System.out.println("Caught an AmazonClientException, which means" + " the client encountered " + "an internal error while trying to " + "communicate with S3, " + "such as not being able to access the network.");
+			System.out.println("Error Message: " + ace.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} catch (Error e){
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	private int ordinalIndexOf(String str, String s, int n) {
+	    int pos = str.indexOf(s, 0);
+	    while (n-- > 0 && pos != -1)
+	        pos = str.indexOf(s, pos+1);
+	    return pos;
+	}
+	
 	public void saveImages(String links){
 		
 		Connection hcp = getConnectionFromPool();
@@ -214,41 +275,6 @@ public class FlsS3Bucket extends Connect {
 				e.printStackTrace();
 			}
 		}
-		
-	}
-	
-	public String getImagesFromS3Bucket(Bucket_Name bucketName, Path_Name pathName){
-
-		LOGGER.info("Inside getImagesFromS3Bucket method");
-		
-		String BUCKET_NAME = getBucketName(bucketName);
-		String PATH_NAME = getPathName(pathName);
-		
-		String imageLinks = null;
-		
-		String imagelink = "https://s3-us-west-2.amazonaws.com/" + BUCKET_NAME + "/" + PATH_NAME;
-		
-		int i = 0;
-		long startTime = System.nanoTime();
-		for (S3ObjectSummary summary: S3Objects.withPrefix(s3Client, BUCKET_NAME, PATH_NAME)) {
-	        String s = summary.getKey();
-	        s = s.substring(s.lastIndexOf("/")+1);
-	        
-	        if(i == 0)
-	        	imageLinks = imagelink + s;
-	        else
-	        	imageLinks = imageLinks + "," + imagelink + s;
-	        
-	        i++;
-		}
-		long endTime = System.nanoTime();
-		long duration = (endTime - startTime);
-		
-		System.out.println(duration);
-		
-		LOGGER.info(imageLinks);
-		
-		return imageLinks;
 		
 	}
 

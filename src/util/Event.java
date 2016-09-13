@@ -69,7 +69,7 @@ public class Event extends Connect{
 	}
 	
 	public enum Event_Type {
-		FLS_EVENT_NOT_NOTIFICATION,
+		FLS_EVENT_NOT_NOTIFICATION, // for no In App notifications but emails and sms go out
 		FLS_EVENT_NOTIFICATION,
 		FLS_EVENT_CHAT
 	}
