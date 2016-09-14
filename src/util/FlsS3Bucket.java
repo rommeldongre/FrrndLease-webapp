@@ -37,7 +37,9 @@ public class FlsS3Bucket extends Connect {
 	private String uid = null;
 	private int leaseId = -1;
 	
-	private BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAJDC5ZDNCUEBKRIIA","jsv482TT0LwICxlrj/5aE5LKOj9VMXg3kV4dEBCc");
+	private String BASE_URL = "http://s3-ap-southeast-1.amazonaws.com/";
+	
+	private BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAJMC2WRKPB6UEF5DA","obuoy6YGu6YUSLRrIHoe7E5M9QdzyKjZ1u0mc6m2");
 	private AmazonS3 s3Client = new AmazonS3Client(credentials);
 	
 	public enum Bucket_Name{
@@ -74,15 +76,13 @@ public class FlsS3Bucket extends Connect {
 		
 		if(bucketName == Bucket_Name.ITEMS_BUCKET){
 			if(ENV_CONFIG.equals("dev")){
-				return "ak-fls-images";
-//				return "fls-items-dev";
+				return "fls-items-dev";
 			}else{
 				return "fls-items-live";
 			}
 		}else if(bucketName == Bucket_Name.USERS_BUCKET){
 			if(ENV_CONFIG.equals("dev")){
-				return "ak-fls-users";
-//				return "fls-users-dev";
+				return "fls-users-dev";
 			}else{
 				return "fls-users-live";
 			}
@@ -154,7 +154,7 @@ public class FlsS3Bucket extends Connect {
 				
 				File imageFile = convertBinaryToImage(Image, FILE_NAME);
 	
-				s3Client.setRegion(Region.getRegion(Regions.US_WEST_2));
+				s3Client.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1));
 	
 				if (s3Client.doesBucketExist(BUCKET_NAME)) {
 					LOGGER.info("bucket exists: " + BUCKET_NAME);
@@ -164,7 +164,7 @@ public class FlsS3Bucket extends Connect {
 				
 				if (imageFile != null) {
 					s3Client.putObject(new PutObjectRequest(BUCKET_NAME, PATH_NAME + FILE_NAME, imageFile).withCannedAcl(CannedAccessControlList.PublicRead));
-					return "https://s3-us-west-2.amazonaws.com/" + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
+					return BASE_URL + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				}
 				
 			}
@@ -204,7 +204,7 @@ public class FlsS3Bucket extends Connect {
 			
 			if(BUCKET_NAME != null && PATH_NAME != null && FILE_NAME != null){
 	
-				s3Client.setRegion(Region.getRegion(Regions.US_WEST_2));
+				s3Client.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1));
 	
 				if (s3Client.doesBucketExist(BUCKET_NAME)) {
 					LOGGER.info("bucket exists: " + BUCKET_NAME);
@@ -219,7 +219,7 @@ public class FlsS3Bucket extends Connect {
 	            CopyObjectRequest copyObjRequest = new CopyObjectRequest(BUCKET_NAME, existingKey, BUCKET_NAME, PATH_NAME+FILE_NAME);
 	            LOGGER.info("Copying object.");
 	            s3Client.copyObject(copyObjRequest.withAccessControlList(acl));
-	            return "https://s3-us-west-2.amazonaws.com/" + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
+	            return BASE_URL + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				
 			}
 

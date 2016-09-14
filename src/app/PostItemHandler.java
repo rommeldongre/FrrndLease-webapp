@@ -126,12 +126,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 			LOGGER.info("UID created for the item : " + uid);
 			
 			if(rs2 == 1 && rs3 == 1){
-				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
-				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rq.getImage(), null);
-				if(link != null){
-					s3Bucket.saveImages(link);
-				}
-				
 				String sqlInsertStoreID = "insert into store (store_item_id) values (?)";
 				ps4 = hcp.prepareStatement(sqlInsertStoreID);
 				ps4.setInt(1, itemId);
@@ -160,6 +154,11 @@ public class PostItemHandler extends Connect implements AppHandler {
 			if(rs5 == 1){
 				LOGGER.info("10 credits added to the users table");
 				hcp.commit();
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
+				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rq.getImage(), null);
+				if(link != null){
+					s3Bucket.saveImages(link);
+				}
 				try {
 					Event event = new Event();
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
