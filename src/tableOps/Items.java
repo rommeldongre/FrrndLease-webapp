@@ -266,9 +266,11 @@ public class Items extends Connect {
 
 	private void Delete() {
 		id = im.getId();
+		userId= im.getUserId();
+		title =im.getTitle();
 		check = 0;
 		LOGGER.info("Inside delete method....");
-		String sql = "DELETE FROM items WHERE item_id = ?";
+		String sql = "DELETE FROM items, store USING items INNER JOIN `store` ON items.item_id = store.store_item_id WHERE items.item_name= ?";
 
 		PreparedStatement stmt2 = null, stmt = null;
 		ResultSet rs = null;
@@ -277,9 +279,10 @@ public class Items extends Connect {
 			LOGGER.info("Creating statement...");
 
 			// checking whether the input id is present in table
-			String sql2 = "SELECT * FROM items WHERE item_id=?";
+			String sql2 = "SELECT * FROM items WHERE item_user_id=? AND item_name=?";
 			stmt2 = hcp.prepareStatement(sql2);
-			stmt2.setInt(1, id);
+			stmt2.setString(1, userId);
+			stmt2.setString(2, title);
 			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
@@ -289,9 +292,9 @@ public class Items extends Connect {
 				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing delete query..." + check);
-				stmt.setInt(1, id);
+				stmt.setString(1, title);
 				stmt.executeUpdate();
-				status = "operation successfull deleted item id :" + id;
+				status = "operation successfull deleted item id :" + check;
 				LOGGER.warning(status);
 				Id = String.valueOf(check);
 				message = status;
