@@ -816,8 +816,41 @@ public class FlsConfig extends Connect{
 					
 				}
 				
-				// This block adds a column item_image_links
+				// This block adds promo codes for sharing and invitation
 				if(dbBuild < 2023){
+					
+					String sqlAddFbIdUsers = "ALTER TABLE `users` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `user_notification`";
+					String sqlAddFbIdFriends = "ALTER TABLE `friends` ADD `friend_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `friend_status`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddFbIdUsers);
+						ps1.executeUpdate();
+						ps1.close();
+						PreparedStatement ps2 = connection.prepareStatement(sqlAddFbIdFriends);
+						ps2.executeUpdate();
+						ps2.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2023;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds a column item_image_links
+				if(dbBuild < 2024){
 					
 					String sqlCreateLinksColumn = "ALTER TABLE `items` ADD `item_image_links` VARCHAR(1024) NULL DEFAULT NULL AFTER `item_image`";
 					try{
@@ -840,13 +873,13 @@ public class FlsConfig extends Connect{
 							}
 					}
 					// The dbBuild version value is changed in the database
-					dbBuild = 2023;
+					dbBuild = 2024;
 					updateDBBuild(dbBuild);
 					
 				}
 				
 				// This block adds a uploads all images to s3 and saves their link in items table
-				if(dbBuild < 2024){
+				if(dbBuild < 2025){
 					
 					String sqlSelectAllItems = "SELECT item_uid, item_image FROM items";
 					
@@ -891,41 +924,8 @@ public class FlsConfig extends Connect{
 							}
 					}
 					// The dbBuild version value is changed in the database
-					dbBuild = 2024;
-					updateDBBuild(dbBuild);
-				}
-				
-				// This block adds promo codes for sharing and invitation
-				if(dbBuild < 2025){
-					
-					String sqlAddFbIdUsers = "ALTER TABLE `users` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `user_notification`";
-					String sqlAddFbIdFriends = "ALTER TABLE `friends` ADD `friend_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `friend_status`";
-					try{
-						getConnection();
-						PreparedStatement ps1 = connection.prepareStatement(sqlAddFbIdUsers);
-						ps1.executeUpdate();
-						ps1.close();
-						PreparedStatement ps2 = connection.prepareStatement(sqlAddFbIdFriends);
-						ps2.executeUpdate();
-						ps2.close();
-					}catch(Exception e){
-						e.printStackTrace();
-						System.out.println(e.getStackTrace());
-						System.exit(1);
-					}finally {
-						try {
-							// close and reset connection to null
-							connection.close();
-							connection = null;
-							} catch (Exception e){
-								e.printStackTrace();
-								System.out.println(e.getStackTrace());
-							}
-					}
-					// The dbBuild version value is changed in the database
 					dbBuild = 2025;
 					updateDBBuild(dbBuild);
-					
 				}
 	}
 	
