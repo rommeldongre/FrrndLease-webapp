@@ -160,6 +160,7 @@ public class FlsS3Bucket extends Connect {
 					LOGGER.info("bucket exists: " + BUCKET_NAME);
 				} else {
 					LOGGER.warning("bucket does not exist: " + BUCKET_NAME);
+					return null;
 				}
 				
 				if (imageFile != null) {
@@ -210,6 +211,7 @@ public class FlsS3Bucket extends Connect {
 					LOGGER.info("bucket exists: " + BUCKET_NAME);
 				} else {
 					LOGGER.warning("bucket does not exist: " + BUCKET_NAME);
+					return null;
 				}
 				
 				AccessControlList acl = new AccessControlList();
@@ -249,11 +251,14 @@ public class FlsS3Bucket extends Connect {
 	    return pos;
 	}
 	
-	public void saveImages(String links){
+	public void saveImageLink(String links){
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
 		int rs1 = 0;
+		
+		if(links == null || links.equals("") || links.equals("null"))
+			return;
 		
 		try{
 			

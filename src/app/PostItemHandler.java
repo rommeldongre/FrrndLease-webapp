@@ -157,7 +157,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
 				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rq.getImage(), null);
 				if(link != null){
-					s3Bucket.saveImages(link);
+					s3Bucket.saveImageLink(link);
 				}
 				try {
 					Event event = new Event();

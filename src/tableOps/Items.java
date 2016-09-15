@@ -171,7 +171,7 @@ public class Items extends Connect {
 			if(!checkWishItem_rs.next()){
 				
 				LOGGER.info("Creating statement.....");
-				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status) values (?,?,?,?,?,?,?)";
+				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 				stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	
 				LOGGER.info("Statement created. Executing query.....");
@@ -182,6 +182,7 @@ public class Items extends Connect {
 				stmt.setInt(5, leaseValue);
 				stmt.setString(6, leaseTerm);
 				stmt.setString(7, status);
+				stmt.setString(8, image);
 				stmt.executeUpdate();
 				
 				// getting the last item inserted id and appending it with the title to generate a uid
@@ -215,7 +216,7 @@ public class Items extends Connect {
 					FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
 					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, image);
 					if(link != null){
-						s3Bucket.saveImages(link);
+						s3Bucket.saveImageLink(link);
 					}
 				}
 				
@@ -388,7 +389,7 @@ public class Items extends Connect {
 					existingImage = existingImage.substring(existingImage.lastIndexOf("/")+1);
 				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, image, existingImage);
 				if(link != null){
-					s3Bucket.saveImages(link);
+					s3Bucket.saveImageLink(link);
 				}
 				
 				message = "operation successfull edited item id : " + id;
