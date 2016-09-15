@@ -17,25 +17,14 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     
     $scope.item = {};
     
-    $scope.item.image = $window.image;
+    $scope.item.image = $window.imageLinks;
     $scope.item.title = $window.title;
 	$scope.item.description = $window.description;
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
-	
+                                                
     $scope.item_id = $window.item_id;
-    
-    $scope.uploadImage = function(file){
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            $scope.$apply(function() {
-                $scope.item.image = reader.result;
-            });
-        }
-        reader.readAsDataURL(file);
-        
-    }
         
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){

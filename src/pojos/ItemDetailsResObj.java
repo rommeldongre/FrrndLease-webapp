@@ -5,6 +5,8 @@ public class ItemDetailsResObj extends ResObj {
 	private String title, category, description, userId, leaseTerm, status, image, message,uid, locality, sublocality;
 	int id, leaseValue, code;
 
+	String imageLinks;
+	
 	public String getTitle() {
 		return title;
 	}
@@ -115,6 +117,14 @@ public class ItemDetailsResObj extends ResObj {
 
 	public void setSublocality(String sublocality) {
 		this.sublocality = sublocality;
+	}
+
+	public String getImageLinks() {
+		return imageLinks;
+	}
+
+	public void setImageLinks(String imageLinks) {
+		this.imageLinks = imageLinks;
 	}
 
 }

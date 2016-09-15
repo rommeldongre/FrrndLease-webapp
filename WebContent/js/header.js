@@ -248,7 +248,7 @@ headerApp.controller('headerCtrl', ['$scope',
 
             success: function(response) {
                 loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
-				$timeout(function(){
+                $timeout(function(){
 					window.location.replace("myapp.html#/");
 				}, 5000);
             },
@@ -731,6 +731,55 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
         $rootScope.$broadcast('signUpCheckRes', message);
     }
     
+}]);
+
+headerApp.directive('loadImage', ['$http', function($http){
+    return{
+        restrict:'A',
+        scope: {
+            'loadImage': '=',
+            'maxWidth': '=?',
+            'maxHeight': '=?'
+        },
+        link: function(scope, element, attrs){
+            scope.$watch('loadImage', function(){
+                var MaxWidth = 300;
+                var MaxHeight = 300;
+                
+                var ImgSrc = scope.loadImage;
+
+                if(scope.maxWidth)
+                    MaxWidth = scope.maxWidth;
+                if(scope.maxHeight)
+                    MaxHeight = scope.maxHeight;
+
+                if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
+
+                    attrs.$set('width', MaxWidth);
+                    attrs.$set('height', 240);
+                    attrs.$set('ngSrc', 'images/imgplaceholder.png');
+
+                }else{
+
+                    loadImage(
+                        ImgSrc,
+                        function(canvas){
+                            element.removeAttr('width');
+                            element.removeAttr('height');
+                            attrs.$set('ngSrc', canvas.toDataURL());
+                        },
+                        {
+                            maxWidth: MaxWidth,
+                            maxHeight: MaxHeight,
+                            canvas: true,
+                            crossOrigin: "anonymous"
+                        }
+                    );
+
+                }
+            });
+        }
+    }
 }]);
 
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){

@@ -18,6 +18,10 @@ import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsConfig;
 import util.FlsLogger;
+import util.FlsS3Bucket;
+import util.FlsS3Bucket.Bucket_Name;
+import util.FlsS3Bucket.File_Name;
+import util.FlsS3Bucket.Path_Name;
 import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
@@ -150,6 +154,11 @@ public class PostItemHandler extends Connect implements AppHandler {
 			if(rs5 == 1){
 				LOGGER.info("10 credits added to the users table");
 				hcp.commit();
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
+				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rq.getImage(), null);
+				if(link != null){
+					s3Bucket.saveImageLink(link);
+				}
 				try {
 					Event event = new Event();
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_POST_ITEM, itemId, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + rq.getTitle() + "</a> has been added to the Friend Store");
@@ -182,7 +191,11 @@ public class PostItemHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
-		} finally {
+		} catch (Exception e){
+			e.printStackTrace();
+			rs.setCode(FLS_INVALID_OPERATION);
+			rs.setMessage(FLS_INVALID_OPERATION_M);
+		}finally {
 			try {
 				if(ps5 != null)ps5.close();
 				if(ps4 != null)ps4.close();

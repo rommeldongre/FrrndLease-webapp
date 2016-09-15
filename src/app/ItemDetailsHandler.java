@@ -1,11 +1,11 @@
 package app;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import adminOps.Response;
 import connect.Connect;
 import pojos.ItemDetailsReqObj;
 import pojos.ItemDetailsResObj;
@@ -17,8 +17,6 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(ItemDetailsHandler.class.getName());
 
-	private Response res = new Response();
-
 	private static ItemDetailsHandler instance = null;
 
 	public static ItemDetailsHandler getInstance() {
@@ -29,81 +27,90 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
-		// TODO Auto-generated method stub
 
-		LOGGER.info("Inside Post Method");
+		LOGGER.info("Inside Post Method of ItemDetailsHandler");
 
 		ItemDetailsReqObj rq = (ItemDetailsReqObj) req;
-
 		ItemDetailsResObj rs = new ItemDetailsResObj();
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null, rs2 = null;
+		
+		String locality = "", sublocality = "";
 
 		try {
 
+			LOGGER.info("Creating sql statement for fetching items details");
 			String itemDetailsSql = "SELECT * FROM items WHERE item_uid=?";
-			LOGGER.info("Creating Statement");
 
-			PreparedStatement ps = getConnectionFromPool().prepareStatement(itemDetailsSql);
-			ps.setString(1, rq.getUid());
-			LOGGER.info("Created statement...executing select from items query");
+			ps1 = hcp.prepareStatement(itemDetailsSql);
+			ps1.setString(1, rq.getUid());
 
-			ResultSet result = ps.executeQuery();
-			LOGGER.info(result.toString());
+			rs1 = ps1.executeQuery();
 
-			if (result.next()) {
+			if (rs1.next()) {
+				rs.setId(Integer.parseInt(rs1.getString("item_id")));
+				rs.setTitle(rs1.getString("item_name"));
+				rs.setCategory(rs1.getString("item_category"));
+				rs.setDescription(rs1.getString("item_desc"));
+				rs.setUserId(rs1.getString("item_user_id"));
+				rs.setLeaseTerm(rs1.getString("item_lease_term"));
+				rs.setStatus(rs1.getString("item_status"));
+				rs.setImage(rs1.getString("item_image"));
+				rs.setImageLinks(rs1.getString("item_image_links"));
+				rs.setLeaseValue(Integer.parseInt(rs1.getString("item_lease_value")));
+				rs.setUid(rs1.getString("item_uid"));
 				rs.setCode(FLS_SUCCESS);
-				rs.setId(Integer.parseInt(result.getString("item_id")));
-				rs.setTitle(result.getString("item_name"));
-				rs.setCategory(result.getString("item_category"));
-				rs.setDescription(result.getString("item_desc"));
-				rs.setUserId(result.getString("item_user_id"));
-				rs.setLeaseTerm(result.getString("item_lease_term"));
-				rs.setStatus(result.getString("item_status"));
-				rs.setImage(result.getString("item_image"));
-				rs.setLeaseValue(Integer.parseInt(result.getString("item_lease_value")));
-				rs.setUid(result.getString("item_uid"));
+				
+				if(rs.getUserId() != "" || rs.getUserId() != null){
+					
+					LOGGER.info("Creating statement to select user location data.....");
+					String userLocationData = "SELECT user_locality, user_sublocality FROM users WHERE user_id=?";
+					
+					ps2 = hcp.prepareStatement(userLocationData);
+					ps2.setString(1, rs.getUserId());
+					
+					rs2 = ps2.executeQuery();
+					
+					if(rs2.next()){
+						locality = rs2.getString("user_locality");
+						sublocality = rs2.getString("user_sublocality");
+					}
+					
+					rs.setLocality(locality);
+					rs.setSublocality(sublocality);
+				}
+				
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 			}
-			
-			
-			String locality = "", sublocality = "";
-			
-			if(rs.getUserId() != "" || rs.getUserId() != null){
-				LOGGER.info("Creating statement to select user location data.....");
-				String userLocationData = "SELECT user_locality, user_sublocality FROM users WHERE user_id=?";
-				
-				LOGGER.info("Created statement...executing select from items query");
-				PreparedStatement ps1 = getConnectionFromPool().prepareStatement(userLocationData);
-				ps1.setString(1, rs.getUserId());
-				
-				ResultSet r1 = ps1.executeQuery();
-				
-				if(r1.next()){
-					locality = r1.getString("user_locality");
-					sublocality = r1.getString("user_sublocality");
-				}
-				
-				rs.setLocality(locality);
-				rs.setSublocality(sublocality);
-				
-				r1.close();
-				ps1.close();
-			}
-			
-			result.close();
-			ps.close();
 
 		} catch (SQLException e) {
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-			LOGGER.warning("Error Check Stacktrace");
+			rs.setCode(FLS_SQL_EXCEPTION);
+			rs.setMessage(FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
+		} catch (Exception e) {
+			rs.setCode(FLS_INVALID_OPERATION);
+			rs.setMessage(FLS_INVALID_OPERATION_M);
+			e.printStackTrace();
+		} finally {
+			try{
+				if(rs2 != null) rs2.close();
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
+		
 		LOGGER.info("Finished process method ");
 		// return the response
 		return rs;
@@ -111,7 +118,6 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 
 	@Override
 	public void cleanup() {
-		// TODO Auto-generated method stub
 	}
 
 }

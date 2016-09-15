@@ -80,7 +80,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
 				leaseValue: 0,
 				leaseTerm: '',
 				status: 'Wished',
-				image: ''
+				image: null
             }
             sendAddWishItem(req);
         }, function(){});

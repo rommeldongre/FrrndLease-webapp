@@ -88,7 +88,7 @@
                     <div class="card-user col-lg-8 col-md-8" style="padding-top:50px" ng-if="!showError">
                         <div class="content">
                             <div class="author">
-                                <img class="img-rounded" ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? 'images/imgplaceholder.png' : item.image}}" alt="..."/>
+                                <img class="img-rounded" load-image="item.image" ng-src="" alt="..."/>
                                 <h4 class="title"><br />
                                     <strong>${title}</strong>
                                 </h4>
@@ -186,6 +186,7 @@
 		var category = "${category}";
 		var leaseValue = "${leaseValue}";
 		var leaseTerm = "${leaseTerm}";
+        var imageLinks = "${imageLinks}";
 		
         var item_id = "${itemId}";
 
@@ -246,6 +247,7 @@
     <script async src="js/tawk.js"></script>
 	<script src="js/bootstrap.min.js"></script>
     <!-- For Autocomplete Feature -->
+    <script src="js/load-image.all.min.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
     <script src="js/ngAutocomplete.js"></script>
 </body>

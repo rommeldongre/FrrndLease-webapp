@@ -47,6 +47,15 @@ public class GetItemStoreByXResObj extends ResObj{
 	
 	// distance of item from current searched location
 	String distance;
+
+	//leaseValue of item
+	int leaseValue;
+	
+	//status of item
+	String status;
+	
+	//image of item
+	String image, imageLink;
 	
 	boolean friendStatus;
 	
@@ -198,13 +207,12 @@ public class GetItemStoreByXResObj extends ResObj{
 		this.image = image;
 	}
 
-	//leaseValue of item
-	int leaseValue;
-	
-	//status of item
-	String status;
-	
-	//image of item
-	String image;
+	public String getImageLink() {
+		return imageLink;
+	}
+
+	public void setImageLink(String imageLink) {
+		this.imageLink = imageLink;
+	}
 	
 }

@@ -6,59 +6,58 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class GetRequestsByUserResObj extends ResObj{
-	
-	//Return code for GetRequestsByUser
+public class GetRequestsByUserResObj extends ResObj {
+
+	// Return code for GetRequestsByUser
 	int ReturnCode = 0;
-	
-	//Error String
+
+	// Error String
 	String ErrorString;
-	
-	
+
 	String title;
-	
+
 	// description of item
 	String desc;
-	
+
 	// number of items, default is 1
 	int quantity = 1;
-	
-	// Request id 
-		int request_id;
-		
+
+	// Request id
+	int request_id;
+
 	// ID of request
 	// TBD: need to change type
 	@NotNull
 	int request_item_id;
-	
+
 	// user posting item
 	// TBD: change to user id type
 	@NotNull
 	String owner_Id;
-	
-	//user requesting item
+
+	// user requesting item
 	String user_Id;
-	
+
 	// Cookie
 	// TBD: change to user id type
 	@NotNull
 	int cookie;
-			
-	//Request Status
+
+	// Request Status
 	String Request_status;
-	
-	//Request date
+
+	// Request date
 	String Request_date;
-	
-	//Owner Name
+
+	// Owner Name
 	String owner_name;
-	
+
 	// more items details
-	String category, leaseValue, leaseTerm, image ,uid;
-	
+	String category, leaseValue, leaseTerm, image, uid, imageLink;
+
 	// more items owners details
 	String owner_mobile, owner_address, owner_locality, owner_sublocality;
-	
+
 	public String getCategory() {
 		return category;
 	}
@@ -89,6 +88,14 @@ public class GetRequestsByUserResObj extends ResObj{
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public String getImageLink() {
+		return imageLink;
+	}
+
+	public void setImageLink(String imageLink) {
+		this.imageLink = imageLink;
 	}
 
 	public String getUid() {
@@ -178,8 +185,7 @@ public class GetRequestsByUserResObj extends ResObj{
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-    
-	
+
 	public int getRequest_id() {
 		return request_id;
 	}
@@ -243,5 +249,4 @@ public class GetRequestsByUserResObj extends ResObj{
 		Request_date = Long.toString(date.getTime());
 	}
 
-	
 }

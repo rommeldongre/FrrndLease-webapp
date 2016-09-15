@@ -4,7 +4,9 @@ import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import util.ReferralCode;
-
+import util.FlsS3Bucket.Bucket_Name;
+import util.FlsS3Bucket.File_Name;
+import util.FlsS3Bucket.Path_Name;
 import connect.Connect;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 
@@ -12,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2023;			
+	public final int appBuild = 2025;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -814,8 +816,87 @@ public class FlsConfig extends Connect{
 					
 				}
 				
-				// This block adds promo codes for sharing and invitation
+				// This block adds a column item_image_links
 				if(dbBuild < 2023){
+					
+					String sqlCreateLinksColumn = "ALTER TABLE `items` ADD `item_image_links` VARCHAR(1024) NULL DEFAULT NULL AFTER `item_image`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateLinksColumn);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2023;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds a uploads all images to s3 and saves their link in items table
+				if(dbBuild < 2024){
+					
+					String sqlSelectAllItems = "SELECT item_uid, item_image FROM items";
+					
+					PreparedStatement ps1 = null, ps2 = null;
+					ResultSet rs1 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlSelectAllItems);
+						rs1 = ps1.executeQuery();
+						
+						while(rs1.next()){
+							if(!(rs1.getString("item_image").equals("null") || rs1.getString("item_image") == null || rs1.getString("item_image").equals(""))){
+								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
+								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rs1.getString("item_image"), null);
+								if(link != null){
+									String sqlSaveImageLink = "UPDATE items SET item_image_links=? WHERE item_uid=?";
+									ps2 = connection.prepareStatement(sqlSaveImageLink);
+									ps2.setString(1, link);
+									ps2.setString(2, rs1.getString("item_uid"));
+									
+									ps2.executeUpdate();
+								}
+							}
+						}
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							if(ps2 != null) ps2.close();
+							if(rs1 != null) rs1.close();
+							if(ps1 != null) ps1.close();
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2024;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds promo codes for sharing and invitation
+				if(dbBuild < 2025){
 					
 					String sqlAddFbIdUsers = "ALTER TABLE `users` ADD `user_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `user_notification`";
 					String sqlAddFbIdFriends = "ALTER TABLE `friends` ADD `friend_fb_id` VARCHAR(255) NULL DEFAULT NULL AFTER `friend_status`";
@@ -842,7 +923,7 @@ public class FlsConfig extends Connect{
 							}
 					}
 					// The dbBuild version value is changed in the database
-					dbBuild = 2023;
+					dbBuild = 2025;
 					updateDBBuild(dbBuild);
 					
 				}

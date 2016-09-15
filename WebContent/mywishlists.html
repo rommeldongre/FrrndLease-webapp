@@ -15,15 +15,15 @@
     <h4 ng-if="wishList.length == 0">You have not wished any item. You can add the items you wish. </h4>
 
     <div class="row" ng-repeat="wish in wishList">
-        <div class="col-lg-2 col-md-2"></div>
-        <div class="card col-lg-8 col-md-8" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
-            <div class="row">
-               <div class="col-lg-4 col-md-4 col-sm-3">
-                   <div class="image">
-                       <img ng-src="{{(wish.image === '' || wish.image === null || wish.image === NULL || wish.image === 'null') ? 'images/imgplaceholder.png' : wish.image}}" alt="...">
-                    </div>
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
+            <div class="row" style="display: flex;flex-wrap: wrap;">
+               <div class="col-lg-4 col-md-4 col-sm-4">
+                   <a class="image">
+                       <img class="img-rounded" load-image="wish.imageLink" ng-src="" alt="..."/>
+                   </a>
                 </div>
-                <div class="col-lg-6 col-md-5 col-sm-6">
+                <div class="col-lg-6 col-md-6 col-sm-6">
                    <div class="content">
                        <a class="card-link">
                           <h4 class="title">{{wish.title}}</h4>
@@ -50,7 +50,7 @@
                        </a>
                    </div>
                </div>
-               <div class="col-lg-2 col-md-3 col-sm-3">
+               <div class="col-lg-2 col-md-2 col-sm-2">
                    <div class="content">
                        <a class="card-link" href="">
                            <button ng-click="showItemDetails(wish.itemId)" class="btn btn-primary btn-simple">Edit</button>
@@ -62,7 +62,7 @@
                </div>
            </div>
         </div>
-        <div class="col-lg-2 col-md-2"></div>
+        <div class="col-lg-1 col-md-1"></div>
     </div>
     
 </div>

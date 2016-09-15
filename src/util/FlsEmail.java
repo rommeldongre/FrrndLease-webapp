@@ -56,12 +56,6 @@ public class FlsEmail extends Connect{
 		
 		int credits;
 		
-		// this variable is used to store the image
-		File imageFile = null;
-		
-		// this variable is used to store list of files
-		List<File> imageFiles = new ArrayList<>();
-		
 		EMAIL_VERIFICATION_URL = URL + "/emailverification.html";
 		EMAIL_INVITATION_URL = URL + "/ref_token=";
 		EMAIL_FORGOT_PASSWORD = URL + "/forgotpassword.html";
@@ -134,8 +128,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : "
 						+ obj.getString("description") + "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>"
 						+ " Lease Term : " + obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_POST_ITEM:
@@ -144,8 +137,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_MATCH_WISHLIST_ITEM:
@@ -154,9 +146,8 @@ public class FlsEmail extends Connect{
 						+ obj.getString("title") + "<br/>" + " Category : " + obj.getString("category") + "<br/>"
 						+ " Description : " + obj.getString("description") + "<br/>" + " Lease Value : "
 						+ obj.getInt("leaseValue") + "<br/>" + " Lease Term : " + obj.getString("leaseTerm") + "<br/>"
-						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img style=\"width:50%;\" src=\"cid:image\" alt=" + obj.getString("title")
+						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title")
 						+ " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
 				break;
 
 			case FLS_MAIL_MATCH_POST_ITEM:
@@ -173,10 +164,9 @@ public class FlsEmail extends Connect{
 							+ l.getString("description") + "<br/>" + " Lease Value : "
 							+ l.getInt("leaseValue") + "<br/>" + " Lease Term : "
 							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")
-							+ "<br/>" + "<img style=\"width:50%;\" src=\"cid:image" + Integer.toString(i) + "\" alt="
+							+ "<br/>" + "<img width=\"300\" src='" + l.getString("imageLinks") + "' alt="
 							+ l.getString("title") + " ></img><br/><br/>");
 					i++;
-					imageFiles.add(convertBinaryToImage(l.getString("image")));
 				}
 
 				BODY = BODY + ("</body>");
@@ -213,8 +203,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_REJECT_REQUEST_TO:
@@ -224,8 +213,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_DELETE_REQUEST_FROM:
@@ -235,8 +223,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_DELETE_REQUEST_TO:
@@ -246,8 +233,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_FROM:
@@ -257,8 +243,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_TO:
@@ -268,8 +253,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_REJECT_LEASE_FROM:
@@ -280,8 +264,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_REJECT_LEASE_TO:
@@ -291,8 +274,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:
@@ -311,8 +293,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 				
 			case FLS_MAIL_RENEW_LEASE_REQUESTOR:
@@ -321,8 +302,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_FROM:
@@ -332,8 +312,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_TO:
@@ -343,8 +322,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img src=\"cid:image\" alt=" + obj.getString("title") + " ></img>" + "</body>");
-				imageFile = convertBinaryToImage(obj.getString("image"));
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			default:
@@ -386,67 +364,41 @@ public class FlsEmail extends Connect{
 			logo.setContentID("<logo>");
 			logo.setDisposition(MimeBodyPart.INLINE);
 			multipart.addBodyPart(logo);
-			            
-			if (imageFiles.isEmpty()) {
-				if (imageFile != null) {
-					MimeBodyPart imagePart = new MimeBodyPart();
-					LOGGER.warning("Sending Image!!");
-					imagePart.attachFile(imageFile);
-					imagePart.setContentID("<image>");
-					imagePart.setDisposition(MimeBodyPart.INLINE);
-					multipart.addBodyPart(imagePart);
-					imageFile = null;
-					}
-				} else {
-					int len = imageFiles.size();
-					for (int j = 0; j < len; j++) {
-						// Image part if the message has an image
-						if(imageFiles.get(j) != null){
-							MimeBodyPart imagePart = new MimeBodyPart();
-							LOGGER.warning("Sending Image!!");
-							imagePart.attachFile(imageFiles.get(j));
-							imagePart.setContentID("<image" + Integer.toString(j) + ">");
-							imagePart.setDisposition(MimeBodyPart.INLINE);
-							multipart.addBodyPart(imagePart);
-							imageFile = null;
-						}
-					}
-				}
 			           
-				template.merge(context, writer);
+			template.merge(context, writer);
 				
-			    /* you can add html tags in your text to decorate it. */
-			    body.setContent(writer.toString(), "text/html");
-			      
-				message.setContent(multipart, "text/html");
+			/* you can add html tags in your text to decorate it. */
+			body.setContent(writer.toString(), "text/html");
 
-				// converting the mime message into ram message
-				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-				message.writeTo(outputStream);
-				RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
+			message.setContent(multipart, "text/html");
 
-				// Assemble the email.
-				SendRawEmailRequest request = new SendRawEmailRequest(rawMessage);
+			// converting the mime message into ram message
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			message.writeTo(outputStream);
+			RawMessage rawMessage = new RawMessage(ByteBuffer.wrap(outputStream.toByteArray()));
 
-				try {
-					BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAITVFAR4O56SFRG6A", "F1M+ak2jT+qmFygNtXmwuomqsDpA8ZaNy/GBviF/");
-					// Instantiate an Amazon SES client, which will make the service
-					// call with the supplied AWS credentials.
-					AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(credentials);
+			// Assemble the email.
+			SendRawEmailRequest request = new SendRawEmailRequest(rawMessage);
+
+			try {
+				BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAITVFAR4O56SFRG6A", "F1M+ak2jT+qmFygNtXmwuomqsDpA8ZaNy/GBviF/");
+				// Instantiate an Amazon SES client, which will make the service
+				// call with the supplied AWS credentials.
+				AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(credentials);
 					
-					Region REGION = Region.getRegion(Regions.US_WEST_2);
-					client.setRegion(REGION);
+				Region REGION = Region.getRegion(Regions.US_WEST_2);
+				client.setRegion(REGION);
 
-					// Send the email.
-					client.sendRawEmail(request);
-					LOGGER.warning("====> Email sent!");
+				// Send the email.
+				client.sendRawEmail(request);
+				LOGGER.warning("====> Email sent!");
 					
-					return true;
-					
-				} catch (Throwable e) {
-					LOGGER.warning("====> " + e.getMessage());
-					e.printStackTrace(System.out);
-				}			
+				return true;
+			
+			} catch (Throwable e) {
+				LOGGER.warning("====> " + e.getMessage());
+				e.printStackTrace(System.out);
+			}			
 			
 		}catch(Exception e){
 			LOGGER.warning("====> The email was not sent.");

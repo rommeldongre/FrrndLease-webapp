@@ -5,11 +5,8 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/mysql-connector-java-5.1.35-bin.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.json.jar"/>
-	<classpathentry kind="lib" path="lib/twilio-java-sdk-3.3.12.jar"/>
-	<classpathentry kind="lib" path="lib/twilio-java-sdk-7.0.0-rc-10-jar-with-dependencies.jar"/>
-	<classpathentry kind="lib" path="lib/twilio-java-sdk-7.0.0-rc-10-sources.jar"/>
 	<classpathentry kind="lib" path="lib/twilio-java-sdk-6.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/httpcore-4.3.jar"/>
+	<classpathentry kind="lib" path="lib/aws-java-sdk-1.9.17.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
@@ -23,7 +20,5 @@
 	<classpathentry kind="lib" path="lib/quartz-jobs-2.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/HikariCP-2.4.6.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup-1.8.3.jar"/>
-	<classpathentry kind="lib" path="lib/aws-java-sdk-1.9.17.jar"/>
-	<classpathentry kind="lib" path="lib/twilio-java-sdk-7.0.0-rc-10.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
