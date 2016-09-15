@@ -909,7 +909,6 @@ public class FlsConfig extends Connect{
 						
 					}catch(Exception e){
 						e.printStackTrace();
-						System.out.println(e.getMessage());
 						System.exit(1);
 					}finally {
 						try {
