@@ -892,7 +892,8 @@ public class FlsConfig extends Connect{
 						rs1 = ps1.executeQuery();
 						
 						while(rs1.next()){
-							if(!(rs1.getString("item_image").equals("null") || rs1.getString("item_image") == null || rs1.getString("item_image").equals(""))){
+							String image = rs1.getString("item_image");
+							if(image != null && !image.isEmpty() && !image.equals("null")){
 								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
 								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rs1.getString("item_image"), null);
 								if(link != null){
@@ -901,14 +902,13 @@ public class FlsConfig extends Connect{
 									ps2.setString(1, link);
 									ps2.setString(2, rs1.getString("item_uid"));
 									
-									ps2.executeUpdate();
+									System.out.println(ps2.executeUpdate());
 								}
 							}
 						}
 						
 					}catch(Exception e){
 						e.printStackTrace();
-						System.out.println(e.getStackTrace());
 						System.exit(1);
 					}finally {
 						try {
