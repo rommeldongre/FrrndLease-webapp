@@ -619,6 +619,7 @@ headerApp.service('modalService', ['$uibModal',
             showCancel: true,
 			labelText: 'Default Label Text',
             submitting: false,
+			messaging: false,
             cancelButtonText: 'Cancel',
             headerText: 'Frrndlease Says',
             bodyText: 'Perform this action?'
@@ -647,6 +648,9 @@ headerApp.service('modalService', ['$uibModal',
                     $scope.modalOptions = tempModalOptions;
                     $scope.modalOptions.ok = function (result) {
                         $uibModalInstance.close($scope.submit.url);
+                    };
+					$scope.modalOptions.ok = function (result) {
+						$uibModalInstance.close($scope.submit.message);
                     };
                     $scope.modalOptions.cancel = function () {
                         $uibModalInstance.dismiss('cancel');

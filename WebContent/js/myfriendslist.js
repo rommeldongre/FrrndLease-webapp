@@ -359,5 +359,52 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 		localStorage.setItem("friend_details", friendArray[index]);
         window.location.replace('myfrienddetails.html');
     }
+	
+	$scope.sendFriendMessage = function(index){
+		modalService.showModal({}, {messaging: true, bodyText: 'Type Message for friend', actionButtonText: 'Send'}).then(function(result){
+            var message = result;
+			var friend_name = $scope.friends[index].fullName;
+			var item_id=0;
+            if(message == "" || message == undefined)
+                message = "";
+            
+			if(friend_name == "" || friend_name == undefined || friend_name=="-")
+                friend_name = "";
+			
+			if($scope.friends[index].friendId != '-')
+				var friendId = $scope.friends[index].friendId;
+				
+		   var req = {
+                userId: userFactory.user,
+                message: message,
+				friendId: friendId,
+				friendName: friend_name,
+				itemId : item_id,
+				accessToken: userFactory.userAccessToken
+            }
+			sendMessage(req);	
+        }, function(){});
+    }
+	
+	var sendMessage = function(req){
+		
+		$.ajax({
+			url: '/flsv2/SendMessage',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code==0){
+					modalService.showModal({}, {bodyText: "Success, Message to Friend sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+						}, function(){});
+				}
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	}
     
 }]);

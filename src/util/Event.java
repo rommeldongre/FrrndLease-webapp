@@ -65,7 +65,11 @@ public class Event extends Connect{
 		FLS_SMS_SIGNUP_VALIDATION,
 		FLS_SMS_REGISTER,
 		FLS_EMAIL_VERIFICATION,
-		FLS_MOBILE_VERIFICATION
+		FLS_MOBILE_VERIFICATION,
+		FLS_MAIL_MESSAGE_FRIEND_FROM,
+		FLS_MAIL_MESSAGE_FRIEND_TO,
+		FLS_MAIL_MESSAGE_ITEM_FROM,
+		FLS_MAIL_MESSAGE_ITEM_TO
 	}
 	
 	public enum Event_Type {
@@ -95,7 +99,8 @@ public class Event extends Connect{
 		FLS_USER,
 		FLS_TIME,
 		FLS_POSITIVE,
-		FLS_NEGATIVE
+		FLS_NEGATIVE,
+		FLS_MESSAGE
 	}
 	
 	public enum User_Notification {

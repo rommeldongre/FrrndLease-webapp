@@ -195,6 +195,16 @@ public class FlsEmail extends Connect{
 				BODY = "You have been removed from the Friend List of your Friend " + obj.getString("from")
 						+ ". You can no longer lease items to each other. Tell us what went wrong! ";
 				break;
+				
+			case FLS_MAIL_MESSAGE_FRIEND_FROM:
+				SUBJECT = (" Your Friend '" + obj.getString("from")	+ "' has been sent a Message on Frrndlease. ");
+				BODY = obj.getString("message");
+				break;
+
+			case FLS_MAIL_MESSAGE_FRIEND_TO:
+				SUBJECT = (" Your Friend '" + obj.getString("from") + "' has sent you a Message on Frrndlease.");
+				BODY = obj.getString("message");
+				break;
 
 			case FLS_MAIL_REJECT_REQUEST_FROM:
 				SUBJECT = (" Request removed");
