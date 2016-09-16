@@ -288,8 +288,8 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_RENEW_LEASE_OWNER:
-				SUBJECT = (" Renewed Lease to user [" + obj.getString("fromFullName") + "]");
-				BODY = ("<body>You have renewed lease to user " + obj.getString("fromFullName") + " for the following item on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
+				SUBJECT = (" Renewed Lease to user [" + obj.getString("fromUserName") + "]");
+				BODY = ("<body>You have renewed lease to user " + obj.getString("fromUserName") + " for the following item on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
@@ -298,7 +298,7 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_RENEW_LEASE_REQUESTOR:
 				SUBJECT = (" Lease Renewed");
-				BODY = ("<body>Item Owner " +obj.getString("fromFullName") + " has renewed lease for the following item to you on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
+				BODY = ("<body>Item Owner " +obj.getString("fromUserName") + " has renewed lease for the following item to you on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
