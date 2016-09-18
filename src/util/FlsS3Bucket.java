@@ -22,6 +22,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -53,7 +54,8 @@ public class FlsS3Bucket extends Connect {
 	}
 	
 	public enum File_Name{
-		ITEM,
+		ITEM_PRIMARY,
+		ITEM_NORMAL,
 		LEASE_READY,
 		PICKED_UP_OUT,
 		LEASE_STARTED,
@@ -113,9 +115,12 @@ public class FlsS3Bucket extends Connect {
 		
 		String name = uid + "-";
 		
-		if(fileName == File_Name.ITEM){
-			Random rnd = new Random();
-			int r = 1000 + rnd.nextInt(9000);
+		Random rnd = new Random();
+		int r = 1000 + rnd.nextInt(9000);
+		
+		if(fileName == File_Name.ITEM_PRIMARY){
+			name = name + "primary-" + r + ".png";
+		}else if(fileName == File_Name.ITEM_NORMAL){
 			name = name + r + ".png";
 		}else if(fileName == File_Name.LEASE_READY)
 			name = name + "LeaseReady.png";
@@ -191,7 +196,7 @@ public class FlsS3Bucket extends Connect {
 	
 	public String copyImage(Bucket_Name bucketName, Path_Name pathName, File_Name fileName, String ImageLink) {
 
-		LOGGER.info("Inside uploadImage method");
+		LOGGER.info("Inside copyImage method");
 
 		String BUCKET_NAME = getBucketName(bucketName);
 		String PATH_NAME = getPathName(pathName);
@@ -219,7 +224,7 @@ public class FlsS3Bucket extends Connect {
 				
 				// Copying object
 	            CopyObjectRequest copyObjRequest = new CopyObjectRequest(BUCKET_NAME, existingKey, BUCKET_NAME, PATH_NAME+FILE_NAME);
-	            LOGGER.info("Copying object.");
+	            LOGGER.info("Copying Image.");
 	            s3Client.copyObject(copyObjRequest.withAccessControlList(acl));
 	            return BASE_URL + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				
@@ -242,6 +247,56 @@ public class FlsS3Bucket extends Connect {
 		}
 		
 		return null;
+	}
+	
+	public int deleteImage(Bucket_Name bucketName, String ImageLink){
+		
+		LOGGER.info("Inside deleteImage method");
+
+		String BUCKET_NAME = getBucketName(bucketName);
+		
+		String existingKey = ImageLink.substring(ordinalIndexOf(ImageLink, "/", 3)+1);
+		
+		try {
+			
+			LOGGER.warning("Bucket Name : " + BUCKET_NAME);
+			
+			if(BUCKET_NAME != null){
+	
+				s3Client.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1));
+	
+				if (s3Client.doesBucketExist(BUCKET_NAME)) {
+					LOGGER.info("bucket exists: " + BUCKET_NAME);
+				} else {
+					LOGGER.warning("bucket does not exist: " + BUCKET_NAME);
+					return 0;
+				}
+				
+				// Deleting object
+	            DeleteObjectRequest deleteObjRequest = new DeleteObjectRequest(BUCKET_NAME, existingKey);
+	            LOGGER.info("Deleting Image.");
+	            s3Client.deleteObject(deleteObjRequest);
+	            return 1;
+				
+			}
+
+		} catch (AmazonServiceException ase) {
+			System.out.println("Caught an AmazonServiceException, which" + " means your request made it " + "to Amazon S3, but was rejected with an error response" + " for some reason.");
+			System.out.println("Error Message:    " + ase.getMessage());
+			System.out.println("HTTP Status Code: " + ase.getStatusCode());
+			System.out.println("AWS Error Code:   " + ase.getErrorCode());
+			System.out.println("Error Type:       " + ase.getErrorType());
+			System.out.println("Request ID:       " + ase.getRequestId());
+		} catch (AmazonClientException ace) {
+			System.out.println("Caught an AmazonClientException, which means" + " the client encountered " + "an internal error while trying to " + "communicate with S3, " + "such as not being able to access the network.");
+			System.out.println("Error Message: " + ace.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} catch (Error e){
+			e.printStackTrace();
+		}
+		
+		return 0;
 	}
 	
 	private int ordinalIndexOf(String str, String s, int n) {

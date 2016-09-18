@@ -14,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2025;
+	public final int appBuild = 2026;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -895,7 +895,7 @@ public class FlsConfig extends Connect{
 							String image = rs1.getString("item_image");
 							if(image != null && !image.isEmpty() && !image.equals("null")){
 								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
-								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rs1.getString("item_image"), null);
+								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, rs1.getString("item_image"), null);
 								if(link != null){
 									String sqlSaveImageLink = "UPDATE items SET item_image_links=? WHERE item_uid=?";
 									ps2 = connection.prepareStatement(sqlSaveImageLink);
@@ -925,6 +925,63 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2025;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates column for primary images link and renames the existing images in s3
+				if(dbBuild < 2026){
+					
+					String sqlCreatePrimaryImageColumn = "ALTER TABLE `items` ADD `item_primary_image` VARCHAR(255) NULL DEFAULT NULL AFTER `item_image`";
+					String sqlSelectAllItems = "SELECT item_uid, item_image_links FROM items";
+					
+					PreparedStatement ps1 = null, ps2 = null, ps3 = null;
+					ResultSet rs2 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlCreatePrimaryImageColumn);
+						ps1.executeUpdate();
+						
+						ps2 = connection.prepareStatement(sqlSelectAllItems);
+						rs2 = ps2.executeQuery();
+						
+						while(rs2.next()){
+							String imageLink = rs2.getString("item_image_links");
+							if(imageLink != null && !imageLink.isEmpty() && !imageLink.equals("null")){
+								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs2.getString("item_uid"));
+								String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, imageLink);
+								if(link != null){
+									s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, imageLink);
+									String sqlSaveImageLink = "UPDATE items SET item_primary_image=?, item_image_links=? WHERE item_uid=?";
+									ps3 = connection.prepareStatement(sqlSaveImageLink);
+									ps3.setString(1, link);
+									ps3.setString(2, null);
+									ps3.setString(3, rs2.getString("item_uid"));
+									
+									System.out.println(ps3.executeUpdate());
+								}
+							}
+						}
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps3 != null) ps3.close();
+							if(rs2 != null) rs2.close();
+							if(ps2 != null) ps2.close();
+							if(ps1 != null) ps1.close();
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2026;
 					updateDBBuild(dbBuild);
 				}
 	}

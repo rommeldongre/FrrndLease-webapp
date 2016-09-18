@@ -214,7 +214,7 @@ public class Items extends Connect {
 	
 				if(!(image == null || image.equals(""))){
 					FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
-					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, image);
+					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image);
 					if(link != null){
 						s3Bucket.saveImageLink(link);
 					}
@@ -390,7 +390,7 @@ public class Items extends Connect {
 				String existingImage = rs.getString("item_image_links");
 				if(existingImage != null)
 					existingImage = existingImage.substring(existingImage.lastIndexOf("/")+1);
-				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, image, existingImage);
+				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image, existingImage);
 				if(link != null){
 					s3Bucket.saveImageLink(link);
 				}

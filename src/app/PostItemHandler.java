@@ -155,7 +155,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 				LOGGER.info("10 credits added to the users table");
 				hcp.commit();
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
-				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rq.getImage(), null);
+				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, rq.getImage(), null);
 				if(link != null){
 					s3Bucket.saveImageLink(link);
 				}
