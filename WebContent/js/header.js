@@ -782,6 +782,25 @@ headerApp.directive('loadImage', ['$http', function($http){
     }
 }]);
 
+headerApp.directive('uploadImages', function() {
+    return {
+        scope: {
+            uploadImages: '='
+        },
+        link: function(scope, element, attrs) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.uploadImages.push({data: loadEvent.target.result,link: ""});
+                    });
+                }
+                reader.readAsDataURL(changeEvent.target.files[0]);
+            });
+        }
+    };
+});
+
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
     var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;

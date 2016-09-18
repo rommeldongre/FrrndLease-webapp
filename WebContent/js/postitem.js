@@ -13,7 +13,13 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     $scope.categories = [];
     
+    $scope.images = [];
+    
     var Image = null;
+    
+    $scope.deleteImage = function(index){
+        $scope.images.splice(index, 1);
+    }
     
     var getItemDetails = function(){
         var req = {

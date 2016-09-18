@@ -6,6 +6,38 @@
 	</div>
     
     <hr /><br /><br />
+    <div class="row" style="display: flex;flex-wrap: wrap;">
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="col-lg-5 col-md-5 loaded-img">
+            <img load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="Primary Pic">
+            <div class="actions">
+                <label class="primary-file-input-label" for="primary-file-input">
+                    <button class="btn btn-simple">
+                        <i class="fa fa-image" aria-hidden="true" width="150" height="150" style="display:initial;"></i> Change Primary
+                    </button>
+                </label>
+                <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" style="display:none;" />
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div ng-if="images.length != 0">
+                <div class="loaded-img" ng-repeat="image in images">
+                    <img load-image="image.data" max-width="150" max-height="150" ng-src="" alt="..."/>
+                    <div class="actions">
+                        <button type="button" class="btn btn-danger btn-simple" ng-click="deleteImage($index)">
+                            <i class="fa fa-times"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="images.length < 6">
+                <label for="file-input">
+                    <i class="fa fa-camera btn" aria-hidden="true" width="150" height="150" style="display:initial;padding:10px;"></i>
+                </label>
+                <input id="file-input" type="file" upload-images="images" style="display: none;" />
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-3 col-md-3"></div>
         <div class="col-lg-6 col-md-6">
@@ -15,9 +47,6 @@
                     <div class="col-sm-10">
                        <input type="file" id="img_file" class="form-control" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])">
                     </div>
-                </div>
-                <div class="form-group">
-                    <upload ng-model="item.id"></upload>
                 </div>
                 <div class="form-group" style="text-align:center;">
                     <div class="col-md-12">

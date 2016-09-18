@@ -216,7 +216,7 @@ public class Items extends Connect {
 					FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
 					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image);
 					if(link != null){
-						s3Bucket.saveImageLink(link);
+						s3Bucket.saveNormalImageLink(link);
 					}
 				}
 				
@@ -388,11 +388,9 @@ public class Items extends Connect {
 				
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
 				String existingImage = rs.getString("item_image_links");
-				if(existingImage != null)
-					existingImage = existingImage.substring(existingImage.lastIndexOf("/")+1);
 				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image, existingImage);
 				if(link != null){
-					s3Bucket.saveImageLink(link);
+					s3Bucket.saveNormalImageLink(link);
 				}
 				
 				message = "operation successfull edited item id : " + id;
@@ -916,6 +914,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs1.getInt("item_lease_value"));
 				json.put("leaseTerm", rs1.getString("item_lease_term"));
 				json.put("image", rs1.getString("item_image"));
+				json.put("primaryImageLink", rs1.getString("item_primary_image_link"));
 				json.put("imageLinks", rs1.getString("item_image_links"));
 				json.put("uid", rs1.getString("item_uid"));
 				

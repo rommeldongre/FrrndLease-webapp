@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
@@ -146,16 +147,17 @@ public class FlsS3Bucket extends Connect {
 		String BUCKET_NAME = getBucketName(bucketName);
 		String PATH_NAME = getPathName(pathName);
 		String FILE_NAME;
+
 		if(existingName == null)
 			FILE_NAME = getFileName(fileName);
 		else
-			FILE_NAME = existingName;
+			FILE_NAME = existingName.substring(existingName.lastIndexOf("/")+1);
 		
 		try {
 			
 			LOGGER.warning("Bucket Name : " + BUCKET_NAME + ", Path Name : " + PATH_NAME + ", File Name : " + FILE_NAME);
 			
-			if(BUCKET_NAME != null && PATH_NAME != null && FILE_NAME != null){
+			if(BUCKET_NAME != null && PATH_NAME != null && FILE_NAME != null && Image != null){
 				
 				File imageFile = convertBinaryToImage(Image, FILE_NAME);
 	
@@ -173,6 +175,9 @@ public class FlsS3Bucket extends Connect {
 					return BASE_URL + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				}
 				
+			}else{
+				if(Image == null)
+					LOGGER.info("Image Link is null");
 			}
 
 		} catch (AmazonServiceException ase) {
@@ -202,13 +207,13 @@ public class FlsS3Bucket extends Connect {
 		String PATH_NAME = getPathName(pathName);
 		String FILE_NAME = getFileName(fileName);
 		
-		String existingKey = ImageLink.substring(ordinalIndexOf(ImageLink, "/", 3)+1);
-		
 		try {
 			
 			LOGGER.warning("Bucket Name : " + BUCKET_NAME + ", Path Name : " + PATH_NAME + ", File Name : " + FILE_NAME);
 			
-			if(BUCKET_NAME != null && PATH_NAME != null && FILE_NAME != null){
+			if(BUCKET_NAME != null && PATH_NAME != null && FILE_NAME != null && ImageLink != null){
+				
+				String existingKey = ImageLink.substring(ordinalIndexOf(ImageLink, "/", 3)+1);
 	
 				s3Client.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1));
 	
@@ -228,6 +233,9 @@ public class FlsS3Bucket extends Connect {
 	            s3Client.copyObject(copyObjRequest.withAccessControlList(acl));
 	            return BASE_URL + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				
+			}else{
+				if(ImageLink == null)
+					LOGGER.info("Image Link is null");
 			}
 
 		} catch (AmazonServiceException ase) {
@@ -306,28 +314,28 @@ public class FlsS3Bucket extends Connect {
 	    return pos;
 	}
 	
-	public void saveImageLink(String links){
+	public void savePrimaryImageLink(String link){
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
 		int rs1 = 0;
 		
-		if(links == null || links.equals("") || links.equals("null"))
+		if(link.isEmpty() || link.equals("null"))
 			return;
 		
 		try{
 			
-			String sqlSaveImageLinks = "UPDATE items SET item_image_links=? WHERE item_uid=?";
+			String sqlSaveImageLinks = "UPDATE items SET item_primary_image_link=? WHERE item_uid=?";
 			ps1 = hcp.prepareStatement(sqlSaveImageLinks);
-			ps1.setString(1, links);
+			ps1.setString(1, link);
 			ps1.setString(2, uid);
 			
 			rs1 = ps1.executeUpdate();
 			
 			if(rs1 == 1){
-				LOGGER.info("Item uid : " + uid + " links updated to : " + links);
+				LOGGER.info("Item uid : " + uid + " primary image link updated to : " + link);
 			}else{
-				LOGGER.info("Item uid : " + uid + " links not updated");
+				LOGGER.info("Item uid : " + uid + " primary image link not updated");
 			}
 			
 		}catch(SQLException e){
@@ -341,7 +349,171 @@ public class FlsS3Bucket extends Connect {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void saveNormalImageLink(String links){
 		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2 = 0;
+		
+		if(links.isEmpty() || links.equals("null"))
+			return;
+		
+		try{
+			
+			String sqlSelectImageLinks = "SELECT item_image_Links FROM items WHERE item_uid=?";
+			ps1 = hcp.prepareStatement(sqlSelectImageLinks);
+			ps1.setString(1, uid);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				String existingLinks = rs1.getString("item_image_links");
+				if(existingLinks != null)
+					existingLinks = existingLinks + "," + links;
+				else
+					existingLinks = links;
+				
+				String sqlSaveImageLinks = "UPDATE items SET item_image_links=? WHERE item_uid=?";
+				ps2 = hcp.prepareStatement(sqlSaveImageLinks);
+				ps2.setString(1, existingLinks);
+				ps2.setString(2, uid);
+				
+				rs2 = ps2.executeUpdate();
+			}
+			
+			if(rs2 == 1){
+				LOGGER.info("Item uid : " + uid + " links updated to : " + links);
+			}else{
+				LOGGER.info("Item uid : " + uid + " links not updated");
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deletePrimaryImageLink(){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		
+		try{
+			
+			String sqlDeletePrimaryImage = "UPDATE items SET item_primary_image_link=? WHERE item_uid=?";
+			ps1 = hcp.prepareStatement(sqlDeletePrimaryImage);
+			ps1.setString(1, uid);
+			
+			int result = ps1.executeUpdate();
+			
+			if(result == 1){
+				LOGGER.info("Item's primary image link deleted");
+			}else{
+				LOGGER.info("Item's primary image link not deleted");
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deleteNormalImageLink(String link){
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		
+		if(link.isEmpty() || link.equals("null"))
+			return;
+		
+		try{
+			
+			String sqlSelectImageLinks = "SELECT item_image_links FROM items WHERE item_uid=?";
+			ps1 = hcp.prepareStatement(sqlSelectImageLinks);
+			ps1.setString(1, uid);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				
+				String existingLinks = rs1.getString("item_image_links");
+				
+				String newLinks = "";
+				
+				String[] arr;
+				
+				if(existingLinks != null){
+					arr = existingLinks.split(",");
+					int i = 0;
+					for(String e : arr){
+						if(e.equals(link)){
+							arr[i] = null;
+							break;
+						}
+						i++;
+					}
+					if(arr.length == 0){
+						newLinks = null;
+					}else{
+						for(int j = 0; j < arr.length; j++){
+							if(j == 0)
+								newLinks = arr[j];
+							else
+								newLinks = newLinks + "," + arr[j];
+						}
+					}
+				}
+				
+				if(!newLinks.isEmpty()){
+					String sqlDeletePrimaryImage = "UPDATE items SET item_image_links=? WHERE item_uid=?";
+					ps2 = hcp.prepareStatement(sqlDeletePrimaryImage);
+					ps2.setString(1, newLinks);
+					ps2.setString(2, uid);
+					
+					int result = ps1.executeUpdate();
+					
+					if(result == 1){
+						LOGGER.info("Item's image link - " + link + " deleted");
+					}else{
+						LOGGER.info("Item's image link - " + link + " not deleted");
+					}
+				}
+				
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private File convertBinaryToImage(String imageString, String FileName) {

@@ -931,7 +931,7 @@ public class FlsConfig extends Connect{
 				// This block creates column for primary images link and renames the existing images in s3
 				if(dbBuild < 2026){
 					
-					String sqlCreatePrimaryImageColumn = "ALTER TABLE `items` ADD `item_primary_image` VARCHAR(255) NULL DEFAULT NULL AFTER `item_image`";
+					String sqlCreatePrimaryImageColumn = "ALTER TABLE `items` ADD `item_primary_image_link` VARCHAR(255) NULL DEFAULT NULL AFTER `item_image`";
 					String sqlSelectAllItems = "SELECT item_uid, item_image_links FROM items";
 					
 					PreparedStatement ps1 = null, ps2 = null, ps3 = null;
@@ -952,7 +952,7 @@ public class FlsConfig extends Connect{
 								String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, imageLink);
 								if(link != null){
 									s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, imageLink);
-									String sqlSaveImageLink = "UPDATE items SET item_primary_image=?, item_image_links=? WHERE item_uid=?";
+									String sqlSaveImageLink = "UPDATE items SET item_primary_image_link=?, item_image_links=? WHERE item_uid=?";
 									ps3 = connection.prepareStatement(sqlSaveImageLink);
 									ps3.setString(1, link);
 									ps3.setString(2, null);
