@@ -64,12 +64,11 @@ public class SendMessageHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			if(rq.getMessage()!=null ||rq.getMessage()!="" ||rq.getMessage()!="null"){
+			if(rq.getMessage()!=null ||!rq.getMessage().isEmpty() ||rq.getMessage()!="null"){
 				
 				Event event = new Event();
 				event.createEvent(rq.getFriendId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_FROM, 0, "Your friend <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + rq.getFriendId() + "</a> has been sent a message. The message is:- <br> <i>"+"'"+rq.getMessage()+"' </i>");
 				event.createEvent(rq.getUserId(), rq.getFriendId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_TO, 0, "Your friend <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + rq.getUserId() + "</a> sent you a message. The message is:- <br> <i>"+"'"+rq.getMessage()+"' </i>");
-				//createEvent(String fromUserId, String toUserId, Event_Type eventType, Notification_Type notificationType, int itemId, String message);
 				LOGGER.info("Relevant Info: "+rq.getUserId()+" "+rq.getFriendId()+" "+rq.getFriendName()+" "+rq.getMessage()+" "+rq.getItemId());
 			}
 			rs.setCode(FLS_SUCCESS);
@@ -81,13 +80,9 @@ public class SendMessageHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 		} catch(Exception e){
 			LOGGER.warning("not able to get scheduler");
+			rs.setCode(FLS_SQL_EXCEPTION);
+			rs.setMessage(FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
-		}finally{
-			try {
-				
-			} catch (Exception e2) {
-				// TODO: handle exception
-			}
 		}
 		
 		LOGGER.info("Finished process method of Send Message handler");

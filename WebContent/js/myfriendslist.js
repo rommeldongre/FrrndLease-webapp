@@ -396,13 +396,17 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
 			dataType: "json",
 			success: function(response) {
 				if(response.code==0){
-					modalService.showModal({}, {bodyText: "Success, Message to Friend sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+					bannerService.updatebannerMessage("Success, Message to Friend sent");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+					
+				}else{
+					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
 						}, function(){});
 				}
 			},
 		
 			error: function() {
-				alert('Not Working');
+				console.log("Not able to send message");
 			}
 		});
 	}
