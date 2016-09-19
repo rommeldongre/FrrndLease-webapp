@@ -649,9 +649,6 @@ headerApp.service('modalService', ['$uibModal',
                     $scope.modalOptions.ok = function (result) {
                         $uibModalInstance.close($scope.submit.url);
                     };
-					$scope.modalOptions.ok = function (result) {
-						$uibModalInstance.close($scope.submit.message);
-                    };
                     $scope.modalOptions.cancel = function () {
                         $uibModalInstance.dismiss('cancel');
                     };
