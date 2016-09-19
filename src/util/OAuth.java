@@ -79,7 +79,7 @@ public class OAuth extends Connect{
 			Date expiry = claims.getExpiration();
 			
 			if(expiry.compareTo(new Date()) < 1){
-				return null;
+				return "";
 			}
 			LOGGER.info(claims.getIssuer());
 			return claims.getIssuer();
@@ -88,7 +88,7 @@ public class OAuth extends Connect{
 			System.out.println(e.getMessage());
 		}
 		
-		return null;
+		return "";
 	}
 	
 }

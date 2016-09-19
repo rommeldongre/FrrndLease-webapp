@@ -1,6 +1,17 @@
 var myNotifications = angular.module('myApp');
 
-myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', 'eventsCount', function($scope, userFactory, eventsCount){
+myNotifications.controller('myNotificationsCtrl', ['$scope', 
+													'userFactory',
+													'modalService',
+													'bannerService',
+													'logoutService',
+													'eventsCount',
+													function($scope,
+													userFactory,
+													modalService,
+													bannerService,
+													logoutService,
+													eventsCount){
     
     var offset = 0;
     var Limit = 5;
@@ -90,6 +101,60 @@ myNotifications.controller('myNotificationsCtrl', ['$scope', 'userFactory', 'eve
                 }
             });
     }
+	
+	$scope.replyFriendMessage = function(index){
+		modalService.showModal({}, {messaging: true, bodyText: 'Type Message Reply for friend', actionButtonText: 'Send'}).then(function(result){
+            var message = result;
+			var friend_name = $scope.events[index].fullName;
+			var item_id=0;
+            if(message == "" || message == undefined)
+                message = "";
+            
+			if(friend_name == "" || friend_name == undefined || friend_name=="-")
+                friend_name = "";
+			
+			if($scope.events[index].fromUserId != '-')
+				var friendId = $scope.events[index].fromUserId;
+				
+		   var req = {
+                userId: userFactory.user,
+                message: message,
+				friendId: friendId,
+				friendName: friend_name,
+				itemId : item_id,
+				accessToken: userFactory.userAccessToken
+            }
+			sendMessage(req);	
+        }, function(){});
+    }
+	
+	var sendMessage = function(req){
+		
+		$.ajax({
+			url: '/flsv2/SendMessage',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code==0){
+					bannerService.updatebannerMessage("Success, Message to Friend sent");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+					
+				}else{
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+						if(response.code == 400){
+							logoutService.logout();
+						}
+					}, function(){});
+				}
+			},
+		
+			error: function() {
+				console.log("Not able to send message");
+			}
+		});
+	}
     
     initialPopulate();
     

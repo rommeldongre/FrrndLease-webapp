@@ -14,19 +14,19 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
-import pojos.ImportWishlistReqObj;
-import pojos.ImportWishlistResObj;
+import pojos.SendMessageReqObj;
+import pojos.SendMessageResObj;
 import util.FlsLogger;
-import app.ImportWishlistHandler;
+import app.SendMessageHandler;
 import app.NotImplementedException;
 
 /**
- * Servlet implementation class GetRequestsByUser
+ * Servlet implementation class SendMessage
  */
-@WebServlet(description = "List Item Requests for a given UserId", urlPatterns = { "/ImportWishlist" })
-public class ImportWishlist extends HttpServlet {
+@WebServlet(description = "Facebook Id for a given user", urlPatterns = { "/SendMessage" })
+public class SendMessage extends HttpServlet {
 
-	private FlsLogger LOGGER = new FlsLogger(ImportWishlist.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(SendMessage.class.getName());
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,28 +40,28 @@ public class ImportWishlist extends HttpServlet {
 		LOGGER.info("Inside POST method");
 		// HTTP request to Service request pojo
 		ObjectMapper mapper = new ObjectMapper();
-		ImportWishlistReqObj request = mapper.readValue(httprequest.getInputStream(), ImportWishlistReqObj.class);
+		SendMessageReqObj request = mapper.readValue(httprequest.getInputStream(), SendMessageReqObj.class);
 		httpresponse.setContentType("application/json");
 
 		// application logic comes here --------
-		ImportWishlistResObj Response = null;
+		SendMessageResObj Response = null;
 
 		try {
 			// App handler to process request and create Service response pojo
-			Response = (ImportWishlistResObj) ImportWishlistHandler.getInstance().process(request);
+			Response = (SendMessageResObj) SendMessageHandler.getInstance().process(request);
 
 			// Service response pojo to JSON
 			PrintWriter out = httpresponse.getWriter();
 			httpresponse.setContentType("text/json");
 			httpresponse.setContentType("application/json; charset=UTF-8");
 			mapper.writeValue(out, Response);
-			LOGGER.info("Finished POST method of ImportWishlist");
+			LOGGER.info("Finished POST method ");
 
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			LOGGER.warning("ImportWishlist process method not implemented");
+			LOGGER.warning("SendMessage process method not implemented");
 			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED,
-					"ImportWishlist process method not implemented");
+					"SendMessage process method not implemented");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
