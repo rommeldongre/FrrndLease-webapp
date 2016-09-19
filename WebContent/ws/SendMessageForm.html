@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Send Message Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var AccessToken = null;
+	var UserId = null;
+	var FriendId= null;
+	var FriendName= null;
+	var Message = null;
+	var itemId= 0;
+	
+	start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+		AccessToken = document.getElementById("accessToken").value;
+    }
+	
+	getData = function() {
+		UserId = document.getElementById("userId").value;
+		FriendId = document.getElementById("friendId").value;
+		FriendName = document.getElementById("friendName").value;
+		Message = document.getElementById("message").value;
+		itemId = document.getElementById("itemId").value;
+		if(itemId==null || itemId==0){
+			itemId=0;
+		}
+	}
+	
+	sendMessage = function() {
+		
+		getData();
+		
+		var req = {
+			userId : UserId,
+			message: Message,
+			friendId: FriendId,
+			friendName: FriendName,
+			itemId : itemId,
+			accessToken: AccessToken
+		};
+		
+		send(req);
+	};
+	
+	send = function(req) {
+		alert("Inside send");
+		$.ajax({
+			url: '/flsv2/SendMessage',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message;
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body onload="start()">
+<h1> Send Message FORM</h1>
+	<form>
+		<p>Fill in the below details to send your friend Message </p>
+		User Id(*) : <input type="text" name="userId" id="userId"><br /><br />
+		Friend Id(*) : <input type="text" name="friendId" id="friendId"><br /><br />
+		Friend Name : <input type="text" name="friendName" id="friendName"><br /><br />
+		Item Id : <input type="text" name="itemId" id="itemId"><br /><br />
+		Message(*) : <input type="text" name="message" id="message"><br /><br />
+		<br /> Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br />
+		<input type="button" value="Send Message" onclick="sendMessage()">
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message">
+	</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

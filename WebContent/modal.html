@@ -5,6 +5,7 @@
   <p id="body_text" ng-if="!modalOptions.submitting">{{modalOptions.bodyText}}</p>
   <label ng-if="modalOptions.submitting">{{modalOptions.labelText}}</label><br />
   <input type="text" class="form-control" ng-if="modalOptions.submitting" ng-model="submit.url">
+  <textarea class="form-control" ng-if="modalOptions.messaging" ng-model="submit.url" maxlength="500" ></textarea>
 </div>
 <div class="modal-footer">
     <button id="cancel_button" class="btn btn-default btn-fill" ng-if="modalOptions.showCancel" data-ng-click="modalOptions.cancel()">{{modalOptions.cancelButtonText}}</button>
