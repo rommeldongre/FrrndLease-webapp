@@ -4,11 +4,13 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 													'userFactory',
 													'modalService',
 													'bannerService',
+													'logoutService',
 													'eventsCount',
 													function($scope,
 													userFactory,
 													modalService,
 													bannerService,
+													logoutService,
 													eventsCount){
     
     var offset = 0;
@@ -140,8 +142,11 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
-					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
-						}, function(){});
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+						if(response.code == 400){
+							logoutService.logout();
+						}
+					}, function(){});
 				}
 			},
 		
