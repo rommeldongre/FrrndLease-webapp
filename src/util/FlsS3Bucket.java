@@ -263,14 +263,14 @@ public class FlsS3Bucket extends Connect {
 
 		String BUCKET_NAME = getBucketName(bucketName);
 		
-		String existingKey = ImageLink.substring(ordinalIndexOf(ImageLink, "/", 3)+1);
-		
 		try {
 			
 			LOGGER.warning("Bucket Name : " + BUCKET_NAME);
 			
-			if(BUCKET_NAME != null){
+			if(BUCKET_NAME != null || ImageLink != null){
 	
+				String existingKey = ImageLink.substring(ordinalIndexOf(ImageLink, "/", 3)+1);
+				
 				s3Client.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1));
 	
 				if (s3Client.doesBucketExist(BUCKET_NAME)) {

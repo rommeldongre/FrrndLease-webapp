@@ -93,7 +93,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			hcp.setAutoCommit(false);
 			
 			LOGGER.info("Creating statement to insert item......");
-			String sqlInsertItem = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image, item_lat, item_lng) values (?,?,?,?,?,?,?,?,?,?)";
+			String sqlInsertItem = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_lat, item_lng) values (?,?,?,?,?,?,?,?,?)";
 			ps2 = hcp.prepareStatement(sqlInsertItem, Statement.RETURN_GENERATED_KEYS);
 			ps2.setString(1, rq.getTitle());
 			ps2.setString(2, rq.getCategory());
@@ -102,9 +102,8 @@ public class PostItemHandler extends Connect implements AppHandler {
 			ps2.setInt(5, rq.getLeaseValue());
 			ps2.setString(6, rq.getLeaseTerm());
 			ps2.setString(7, rq.getStatus());
-			ps2.setString(8, rq.getImage());
-			ps2.setFloat(9, lat);
-			ps2.setFloat(10, lng);
+			ps2.setFloat(8, lat);
+			ps2.setFloat(9, lng);
 			rs2 = ps2.executeUpdate();
 			LOGGER.info("Result of insertion query : " + rs2);
 			

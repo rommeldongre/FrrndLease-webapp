@@ -68,13 +68,15 @@ public class SaveImageInS3Handler extends Connect implements AppHandler {
 			String link = null;
 
 			if (rq.isPrimary()){
-				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, image, existingLink);
-				if(link != null)
-					s3Bucket.savePrimaryImageLink(link);
+				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, image, link);
+				if(link != null){
+					if(s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, existingLink) == 1)
+						s3Bucket.savePrimaryImageLink(link);
+				}
 			}else{
-				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image, existingLink);
-				if(link != null)
-					s3Bucket.saveNormalImageLink(link);
+				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image, link);
+				if(link != null && !link.equals(existingLink))
+						s3Bucket.saveNormalImageLink(link);
 			}
 			
 			if (link != null) {
@@ -83,9 +85,9 @@ public class SaveImageInS3Handler extends Connect implements AppHandler {
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
 			} else {
-				LOGGER.warning("Entry not found");
+				LOGGER.warning("Not able to upload image");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				rs.setMessage("Please check your internet connection!!");
 			}
 
 		} catch (NullPointerException e) {
@@ -100,6 +102,7 @@ public class SaveImageInS3Handler extends Connect implements AppHandler {
 			rs.setMessage(FLS_INVALID_OPERATION_M);
 		}
 
+		LOGGER.info("Finished process method");
 		return rs;
 	}
 

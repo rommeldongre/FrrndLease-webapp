@@ -130,13 +130,49 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     }
     
     //beginning of image display
-    $scope.uploadImage = function(file){
+    $scope.uploadPrimaryImage = function(file){
         var reader = new FileReader();
         reader.onload = function(event) {
             Image = reader.result;
-            $scope.$apply(function(){
-                $scope.item.imageLinks = reader.result;
-            });
+            if(itemId != undefined){
+                var req = {
+                    userId: userFactory.user,
+                    accessToken: userFactory.userAccessToken,
+                    image: Image,
+                    uid: $scope.item.uid,
+                    existingLink: $scope.item.primaryImageLink,
+                    primary: true
+                }
+                
+                $scope.$apply(function(){
+                    $scope.item.primaryImageLink = "loading";
+                });
+                
+                $.ajax({
+                    url: '/flsv2/SaveImageInS3',
+                    type: 'post',
+                    data: JSON.stringify(req),
+                    contentType: "application/x-www-form-urlencoded",
+                    dataType: "json",
+
+                    success: function(response) {
+                        if(response.code == 0){
+                            $scope.$apply(function(){
+                                $scope.item.primaryImageLink = response.imageLink;
+                            });
+                        }else{
+                            modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                if(response.code == 400)
+                                    logoutService.logout();
+                            },function(){});
+                        }
+                    },
+
+                    error: function() {
+                        modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    }
+                });
+            }
         }
         reader.readAsDataURL(file);
     }		
@@ -266,8 +302,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             category: item_category,
             userId: userId,
             leaseValue: item_lease_value,
-            leaseTerm: item_lease_term,
-            image: Image
+            leaseTerm: item_lease_term
         };
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to update this Item?'}).then(function(result){

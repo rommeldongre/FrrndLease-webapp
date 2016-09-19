@@ -11,15 +11,34 @@
     display: none;
 }
 
-.loaded-img:hover .actions{
+.loaded-img .loading-actions{
     z-index: 2;
+    position: absolute;
     display: inline-block;
-    background-color: rgba(255, 255, 255, 0.65);
+    background-color: rgba(255, 255, 255, 0.5);
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     text-align: center;
+    font-size: xx-large;
+}
+
+.loaded-img .loading-actions .loading-image{
+    position: relative;
+    top: 50%;
+}
+
+.loaded-img:hover .actions{
+    z-index: 2;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.15);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: xx-large;
 }
 
 .loaded-img .actions .btn{
@@ -30,6 +49,8 @@
 .loaded-img .actions .primary-file-input-label{
     position: relative;
     top: 50%;
+    cursor: pointer;
+    color: #ffffff;
 }
 
 .pink{
