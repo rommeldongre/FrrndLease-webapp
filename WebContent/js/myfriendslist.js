@@ -1,6 +1,17 @@
 var myFriendsListApp = angular.module('myApp');
 
-myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'modalService', 'bannerService', 'eventsCount', function($scope, userFactory, modalService, bannerService, eventsCount){
+myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
+												'userFactory',
+												'modalService',
+												'bannerService',
+												'logoutService',
+												'eventsCount',
+												function($scope,
+												userFactory,
+												modalService,
+												bannerService,
+												logoutService,
+												eventsCount){
     
     localStorage.setItem("prevPage","myapp.html#/myfriendslist");
 	
@@ -400,8 +411,11 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
-					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
-						}, function(){});
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+						if(response.code == 400){
+							logoutService.logout();
+						}
+					}, function(){});
 				}
 			},
 		

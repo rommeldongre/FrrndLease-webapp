@@ -48,7 +48,7 @@ public class SendMessageHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 
-		LOGGER.info("Inside process method of Add Fb Id Handler");
+		LOGGER.info("Inside process method of Send Message Handler");
 		
 		SendMessageReqObj rq = (SendMessageReqObj) req;
 		SendMessageResObj rs = new SendMessageResObj();
@@ -75,11 +75,12 @@ public class SendMessageHandler extends Connect implements AppHandler {
 			rs.setMessage(FLS_SUCCESS_M);
 		
 		} catch (NullPointerException e) {
+			LOGGER.warning("Null Pointer Exception in Send Message App Handler");
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
 			e.printStackTrace();
 		} catch(Exception e){
-			LOGGER.warning("not able to get scheduler");
+			LOGGER.warning("not able to get scheduler inside Send Message App Handler");
 			rs.setCode(FLS_SQL_EXCEPTION);
 			rs.setMessage(FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
