@@ -896,8 +896,10 @@ public class Items extends Connect {
 				json.put("leaseTerm", rs1.getString("item_lease_term"));
 				json.put("image", rs1.getString("item_image"));
 				json.put("primaryImageLink", rs1.getString("item_primary_image_link"));
-				json.put("imageLinks", rs1.getString("item_image_links"));
 				json.put("uid", rs1.getString("item_uid"));
+				
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
+				json.put("imageLinks", s3Bucket.getImagesLinks());
 				
 				message = json.toString();
 				

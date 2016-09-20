@@ -14,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2027;
+	public final int appBuild = 2028;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1005,9 +1005,47 @@ public class FlsConfig extends Connect{
 								System.out.println(e.getStackTrace());
 							}
 					}
+					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2027;
 					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates a table for image links
+				if(dbBuild < 2028){
+					
+					String sqlImageLinksTable = "CREATE TABLE `fls`.`images` (`item_id` INT NOT NULL AUTO_INCREMENT , `item_uid` VARCHAR(255) NULL DEFAULT NULL , `item_image_link` VARCHAR(255) NULL DEFAULT NULL , PRIMARY KEY (`item_id`))";
+					String sqlDeleteImageLinksColumn = "ALTER TABLE `items` DROP COLUMN `item_image_links`";
+					
+					PreparedStatement ps1 = null, ps2 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlImageLinksTable);
+						ps1.executeUpdate();
+						
+						ps2 = connection.prepareStatement(sqlDeleteImageLinksColumn);
+						ps2.executeUpdate();
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps2 != null) ps2.close();
+							if(ps1 != null) ps1.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2028;
+					updateDBBuild(dbBuild);
+					
 				}
 	}
 	

@@ -13,7 +13,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     $scope.categories = [];
     
-    $scope.images = [];
+    $scope.images = [{link:""}, {link:""}, {link:""}, {link:""}, {link:""}, {link:""}];
     
     var Image = null;
     
@@ -42,6 +42,11 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                         $scope.$apply(function(){
                             $scope.item = JSON.parse(response.Message);
                             $scope.editable = true;
+                            if($scope.item.imageLinks != ""){
+                                for(var i in $scope.item.imageLinks){
+                                    $scope.images[i].link = $scope.item.imageLinks[i];
+                                }
+                            }
                         });
                     }
                     else{
@@ -177,6 +182,18 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
         reader.readAsDataURL(file);
     }		
 	//end of image display
+    
+//    $scope.uploadImage = function(file, index){
+//        var reader = new FileReader();
+//        reader.onload = function (event) {
+//            $scope.$apply(function () {
+//                $scope.images[index] = {
+//                    link: reader.result
+//                };
+//            });
+//        }
+//        reader.readAsDataURL(file);
+//    }
     
     $scope.postItem = function(){
         

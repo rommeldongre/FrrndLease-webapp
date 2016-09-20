@@ -3,7 +3,7 @@ package pojos;
 public class DeleteImageFromS3ReqObj extends ReqObj{
 
 	String userId, accessToken, uid;
-	String [] links;
+	String[] links;
 	boolean primary;
 
 	public String getUserId() {

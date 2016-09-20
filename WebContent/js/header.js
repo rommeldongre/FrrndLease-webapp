@@ -783,27 +783,61 @@ headerApp.directive('loadImage', ['$http', function($http){
     }
 }]);
 
-headerApp.directive('uploadImage', function() {
+headerApp.directive('uploadImage', ['userFactory', 'modalService', function(userFactory, modalService) {
     return {
         scope: {
             uploadImage: '=',
-            primary: '=?',
-            existingLink: '=?',
-            uid: '=?'
+            uid: '@',
+            id: '@'
         },
         link: function(scope, element, attrs) {
             element.bind("change", function (changeEvent) {
                 var reader = new FileReader();
                 reader.onload = function (loadEvent) {
+                    
+                    var req = {
+                        userId: userFactory.user,
+                        accessToken: userFactory.userAccessToken,
+                        image: loadEvent.target.result,
+                        uid: scope.uid,
+                        existingLink: scope.uploadImage.link,
+                        primary: false
+                    }
+
                     scope.$apply(function () {
-                        scope.uploadImage.push({data: loadEvent.target.result,link: ""});
+                        scope.uploadImage.link = "loading";
+                    });
+
+                    $.ajax({
+                        url: '/flsv2/SaveImageInS3',
+                        type: 'post',
+                        data: JSON.stringify(req),
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "json",
+
+                        success: function(response) {
+                            if(response.code == 0){
+                                scope.$apply(function () {
+                                    scope.uploadImage.link = response.imageLink;
+                                });
+                            }else{
+                                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                    if(response.code == 400)
+                                        logoutService.logout();
+                                },function(){});
+                            }
+                        },
+
+                        error: function() {
+                            modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        }
                     });
                 }
                 reader.readAsDataURL(changeEvent.target.files[0]);
             });
         }
     };
-});
+}]);
 
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     

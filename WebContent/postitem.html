@@ -23,21 +23,22 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-6">
-            <div ng-if="images.length != 0">
-                <div class="loaded-img" ng-repeat="image in images">
-                    <img load-image="image.data" max-width="150" max-height="150" ng-src="" alt="..."/>
-                    <div class="actions">
-                        <button type="button" class="btn btn-danger btn-simple" ng-click="deleteImage($index)">
-                            <i class="fa fa-times"></i> Delete
-                        </button>
+            <div class="loaded-img" ng-repeat="image in images">
+                <img load-image="image.link" max-width="150" max-height="150" ng-src="" alt="..."/>
+                <div ng-if="image.link=='loading'" class="loading-actions">
+                    <div class="loading-image">
+                        <i class="fa fa-refresh fa-spin" aria-hidden="true" width="150" height="150" style="display:initial;"></i>
                     </div>
                 </div>
-            </div>
-            <div ng-if="images.length < 6">
-                <label for="file-input">
-                    <i class="fa fa-camera btn" aria-hidden="true" width="150" height="150" style="display:initial;padding:10px;"></i>
-                </label>
-                <input id="file-input" type="file" upload-images="images" style="display: none;" />
+                <div ng-if="image.link!='loading'" class="actions">
+                    <button type="button" class="btn btn-danger btn-simple" ng-click="deleteImage($index)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <label for="{{$index}}" class="file-input-label">
+                        <i class="fa fa-image" aria-hidden="true" style="display:initial;"></i> Change Image
+                    </label>
+                    <input id="{{$index}}" type="file" upload-image="image" uid="{{item.uid}}" style="display:none;" />
+                </div>
             </div>
         </div>
     </div>
