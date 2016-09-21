@@ -186,6 +186,7 @@
 		var leaseValue = "${leaseValue}";
 		var leaseTerm = "${leaseTerm}";
         var primaryImageLink = "${primaryImageLink}";
+        var imageLinks = "${imageLinks}";
 		
         var item_id = "${itemId}";
 

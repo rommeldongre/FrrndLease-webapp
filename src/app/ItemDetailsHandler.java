@@ -2,7 +2,6 @@ package app;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -12,6 +11,7 @@ import pojos.ItemDetailsResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.FlsS3Bucket;
 
 public class ItemDetailsHandler extends Connect implements AppHandler {
 
@@ -64,6 +64,10 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setPrimaryImageLink(rs1.getString("item_primary_image_link"));
 				rs.setLeaseValue(Integer.parseInt(rs1.getString("item_lease_value")));
 				rs.setUid(rs1.getString("item_uid"));
+				
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
+				rs.setImageLinks(s3Bucket.getImagesLinks());
+				
 				rs.setCode(FLS_SUCCESS);
 				
 				if(rs.getUserId() != "" || rs.getUserId() != null){

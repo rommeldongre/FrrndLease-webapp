@@ -23,6 +23,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
+    $scope.item.imageLinks = $window.imageLinks.split(",");
                                                 
     $scope.item_id = $window.item_id;
         

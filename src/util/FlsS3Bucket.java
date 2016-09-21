@@ -504,22 +504,23 @@ public class FlsS3Bucket extends Connect {
 			
 			rs1 = ps1.executeQuery();
 			
-			String links = "";
+			String links = null;
 			
 			while(rs1.next()){
 				if(rs1.getString("item_image_link") != null){
-					if(links.equals(""))
+					if(links == null)
 						links = rs1.getString("item_image_link");
 					else
 						links = links + "," + rs1.getString("item_image_link");
 				}
 			}
 			
-			imagesLinks = links.split(",");
+			if(links != null)
+				imagesLinks = links.split(",");
 			
-		}catch(SQLException e){
+		}catch(Exception e){
 			e.printStackTrace();
-			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+			LOGGER.warning(e.getMessage());
 		}finally{
 			try{
 				if(rs1 != null)	rs1.close();

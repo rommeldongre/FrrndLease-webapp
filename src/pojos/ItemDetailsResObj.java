@@ -4,6 +4,8 @@ public class ItemDetailsResObj extends ResObj {
 
 	private String title, category, description, userId, leaseTerm, status, primaryImageLink, message, uid, locality, sublocality;
 	int id, leaseValue, code;
+	
+	String[] imageLinks;
 
 	public String getTitle() {
 		return title;
@@ -75,6 +77,14 @@ public class ItemDetailsResObj extends ResObj {
 
 	public void setPrimaryImageLink(String primaryImageLink) {
 		this.primaryImageLink = primaryImageLink;
+	}
+
+	public String[] getImageLinks() {
+		return imageLinks;
+	}
+
+	public void setImageLinks(String[] imageLinks) {
+		this.imageLinks = imageLinks;
 	}
 
 	public int getId() {
