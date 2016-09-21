@@ -754,15 +754,7 @@ headerApp.directive('loadImage', ['$http', function($http){
                 if(scope.maxHeight)
                     MaxHeight = scope.maxHeight;
 
-                if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
-
-                    attrs.$set('width', MaxWidth);
-                    attrs.$set('height', MaxHeight);
-                    attrs.$set('ngSrc', 'images/imgplaceholder.png');
-
-                }else if(ImgSrc === 'loading'){
-                    
-                }else{
+                if(ImgSrc != 'loading' && ImgSrc != '' && ImgSrc != null && ImgSrc != 'null' && ImgSrc != undefined){
                     loadImage(
                         ImgSrc,
                         function(canvas){
@@ -778,6 +770,7 @@ headerApp.directive('loadImage', ['$http', function($http){
                         }
                     );
                 }
+                
             });
         }
     }

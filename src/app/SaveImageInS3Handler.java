@@ -80,10 +80,10 @@ public class SaveImageInS3Handler extends Connect implements AppHandler {
 				if(link != null){
 					if(existingLink != null){
 						s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, existingLink);
-						s3Bucket.deleteNormalImageLink(existingLink);
+						s3Bucket.replaceNormalImageLink(link, existingLink);
+					}else{
+						s3Bucket.saveNormalImageLink(link);
 					}
-						
-					s3Bucket.saveNormalImageLink(link);
 				}
 			}
 			

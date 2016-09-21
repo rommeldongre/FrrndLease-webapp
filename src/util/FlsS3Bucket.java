@@ -320,10 +320,10 @@ public class FlsS3Bucket extends Connect {
 		PreparedStatement ps1 = null;
 		int rs1 = 0;
 		
-		if(link.isEmpty() || link.equals("null"))
-			return;
-		
 		try{
+
+			if(link.isEmpty() || link.equals("null"))
+				return;
 			
 			String sqlSaveImageLinks = "UPDATE items SET item_primary_image_link=? WHERE item_uid=?";
 			ps1 = hcp.prepareStatement(sqlSaveImageLinks);
@@ -355,11 +355,11 @@ public class FlsS3Bucket extends Connect {
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
-		
-		if(link.isEmpty() || link.equals("null"))
-			return;
-		
+
 		try{
+
+			if(link.isEmpty() || link.equals("null"))
+				return;
 			
 			String sqlInsertImageLink = "INSERT INTO images (item_uid, item_image_link) VALUES (?,?)";
 			ps1 = hcp.prepareStatement(sqlInsertImageLink);
@@ -424,10 +424,9 @@ public class FlsS3Bucket extends Connect {
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
 		
-		if(link.isEmpty() || link.equals("null"))
-			return;
-		
 		try{
+			if(link.isEmpty() || link.equals("null"))
+				return;
 			
 			String sqlDeleteImageLink = "DELETE FROM `images` WHERE item_image_link=?";
 			ps1 = hcp.prepareStatement(sqlDeleteImageLink);
@@ -440,6 +439,40 @@ public class FlsS3Bucket extends Connect {
 			}else{
 				LOGGER.info("Item's image link - " + link + " not deleted");
 			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void replaceNormalImageLink(String newLink, String existingLink){
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+
+		try{
+			if(newLink.isEmpty() || newLink == null || existingLink.isEmpty() || existingLink == null || existingLink.equals("null") || newLink.equals("null"))
+				return;
+			
+			String sqlReplaceImageLink = "UPDATE images SET item_image_link=? WHERE item_image_link=?";
+			ps1 = hcp.prepareStatement(sqlReplaceImageLink);
+			ps1.setString(1, newLink);
+			ps1.setString(2, existingLink);
+			
+			int result = ps1.executeUpdate();
+
+			if(result == 1)
+				LOGGER.info("Item's image link - " + existingLink + " replaced with - " + newLink);
+			else
+				LOGGER.info("Item's image link - " + existingLink + " not replaced");
 			
 		}catch(SQLException e){
 			e.printStackTrace();

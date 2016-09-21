@@ -25,12 +25,18 @@
         <div class="col-lg-6 col-md-6">
             <div class="loaded-img" ng-repeat="image in images">
                 <img load-image="image.link" max-width="150" max-height="150" ng-src="" alt="..."/>
+                <div ng-if="image.link == '' || image.link == null || image.link == 'null' || image.link == undefined" class="empty-actions">
+                    <label for="{{$index}}" class="file-input-label">
+                        <i class="fa fa-image" aria-hidden="true" style="display:initial;"></i> Add Image
+                    </label>
+                    <input id="{{$index}}" type="file" upload-image="image" uid="{{item.uid}}" style="display:none;" />
+                </div>
                 <div ng-if="image.link=='loading'" class="loading-actions">
                     <div class="loading-image">
                         <i class="fa fa-refresh fa-spin" aria-hidden="true" width="150" height="150" style="display:initial;"></i>
                     </div>
                 </div>
-                <div ng-if="image.link!='loading'" class="actions">
+                <div ng-if="image.link!='loading' && image.link != '' && image.link != null && image.link != 'null' && image.link != undefined" class="actions">
                     <button type="button" class="btn btn-danger btn-simple" ng-click="deleteImage($index)">
                         <i class="fa fa-times"></i>
                     </button>
