@@ -88,7 +88,7 @@
                     <div class="card-user col-lg-8 col-md-8" style="padding-top:50px" ng-if="!showError">
                         <div class="content">
                             <div class="author">
-                                <img class="img-rounded" load-image="item.image" ng-src="" alt="..."/>
+                                <img class="img-rounded" load-image="item.primaryImageLink" ng-src="" alt="..."/>
                                 <h4 class="title"><br />
                                     <strong>${title}</strong>
                                 </h4>
@@ -180,13 +180,12 @@
         
         var code = "${code}";
         var userId = "${userId}";
-        var image = "${image}";
 		var title = "${title}";
         var description = "${description}";
 		var category = "${category}";
 		var leaseValue = "${leaseValue}";
 		var leaseTerm = "${leaseTerm}";
-        var imageLinks = "${imageLinks}";
+        var primaryImageLink = "${primaryImageLink}";
 		
         var item_id = "${itemId}";
 

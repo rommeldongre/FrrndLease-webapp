@@ -59,7 +59,7 @@ public class SaveImageInS3Handler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			if (existingLink.equals("null") || existingLink.isEmpty()){
+			if (existingLink.isEmpty() || existingLink.equals("null")){
 				existingLink = null;
 			}
 

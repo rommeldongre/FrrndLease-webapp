@@ -61,8 +61,7 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setUserId(rs1.getString("item_user_id"));
 				rs.setLeaseTerm(rs1.getString("item_lease_term"));
 				rs.setStatus(rs1.getString("item_status"));
-				rs.setImage(rs1.getString("item_image"));
-				rs.setImageLinks(rs1.getString("item_image_links"));
+				rs.setPrimaryImageLink(rs1.getString("item_primary_image_link"));
 				rs.setLeaseValue(Integer.parseInt(rs1.getString("item_lease_value")));
 				rs.setUid(rs1.getString("item_uid"));
 				rs.setCode(FLS_SUCCESS);

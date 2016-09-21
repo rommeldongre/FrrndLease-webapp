@@ -396,7 +396,8 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlDeletePrimaryImage = "UPDATE items SET item_primary_image_link=? WHERE item_uid=?";
 			ps1 = hcp.prepareStatement(sqlDeletePrimaryImage);
-			ps1.setString(1, uid);
+			ps1.setString(1, null);
+			ps1.setString(2, uid);
 			
 			int result = ps1.executeUpdate();
 			

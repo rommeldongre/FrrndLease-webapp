@@ -754,6 +754,9 @@ headerApp.directive('loadImage', ['$http', function($http){
                 if(scope.maxHeight)
                     MaxHeight = scope.maxHeight;
 
+                attrs.$set('width', MaxWidth);
+                attrs.$set('height', MaxHeight);
+                
                 if(ImgSrc != 'loading' && ImgSrc != '' && ImgSrc != null && ImgSrc != 'null' && ImgSrc != undefined){
                     loadImage(
                         ImgSrc,
@@ -785,46 +788,67 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
         },
         link: function(scope, element, attrs) {
             element.bind("change", function (changeEvent) {
+                
+                EXIF.getData(file, function(){
+                    exif = EXIF.getAllTags(this);
+                    picOrientation = exif.Orientation;
+                });
+                
                 var reader = new FileReader();
-                reader.onload = function (loadEvent) {
-                    
-                    var req = {
-                        userId: userFactory.user,
-                        accessToken: userFactory.userAccessToken,
-                        image: loadEvent.target.result,
-                        uid: scope.uid,
-                        existingLink: scope.uploadImage.link,
-                        primary: false
-                    }
-
-                    scope.$apply(function () {
-                        scope.uploadImage.link = "loading";
-                    });
-
-                    $.ajax({
-                        url: '/flsv2/SaveImageInS3',
-                        type: 'post',
-                        data: JSON.stringify(req),
-                        contentType: "application/x-www-form-urlencoded",
-                        dataType: "json",
-
-                        success: function(response) {
-                            if(response.code == 0){
-                                scope.$apply(function () {
-                                    scope.uploadImage.link = response.imageLink;
-                                });
-                            }else{
-                                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                                    if(response.code == 400)
-                                        logoutService.logout();
-                                },function(){});
+                reader.onload = function (loadEvent) {                   
+                    loadImage(
+                        loadEvent.target.result,
+                        function(canvas){
+                            var req = {
+                                userId: userFactory.user,
+                                accessToken: userFactory.userAccessToken,
+                                image: canvas.toDataURL(),
+                                uid: scope.uid,
+                                existingLink: scope.uploadImage.link,
+                                primary: false
                             }
-                        },
 
-                        error: function() {
-                            modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                            scope.$apply(function () {
+                                scope.uploadImage.link = "loading";
+                            });
+
+                            $.ajax({
+                                url: '/flsv2/SaveImageInS3',
+                                type: 'post',
+                                data: JSON.stringify(req),
+                                contentType: "application/x-www-form-urlencoded",
+                                dataType: "json",
+
+                                success: function(response) {
+                                    if(response.code == 0){
+                                        scope.$apply(function () {
+                                            scope.uploadImage.link = response.imageLink;
+                                        });
+                                    }else{
+                                        scope.$apply(function () {
+                                            scope.uploadImage.link = "";
+                                        });
+                                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                            if(response.code == 400)
+                                                logoutService.logout();
+                                        },function(){});
+                                    }
+                                },
+
+                                error: function() {
+                                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                                }
+                            });
+                        },
+                        {
+                            maxWidth: 450,
+                            maxHeight: 450,
+                            canvas: true,
+                            crossOrigin: "anonymous",
+                            orientation: picOrientation
                         }
-                    });
+                    );
+                    
                 }
                 reader.readAsDataURL(changeEvent.target.files[0]);
             });

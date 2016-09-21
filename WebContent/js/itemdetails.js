@@ -17,7 +17,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     
     $scope.item = {};
     
-    $scope.item.image = $window.imageLinks;
+    $scope.item.primaryImageLink = $window.primaryImageLink;
     $scope.item.title = $window.title;
 	$scope.item.description = $window.description;
 	$scope.item.category = $window.category;

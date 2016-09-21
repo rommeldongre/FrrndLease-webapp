@@ -109,10 +109,6 @@ public class MatchItems extends Connect {
 					item.put("leaseValue", rs2.getInt("item_lease_value"));
 					item.put("leaseTerm", rs2.getString("item_lease_term"));
 					item.put("status", rs2.getString("item_status"));
-					if(rs2.getString("item_image") == null || rs2.getString("item_image").equals(""))
-						item.put("image", "");
-					else
-						item.put("image", rs2.getString("item_image"));
 					if(rs2.getString("item_primary_image_link") == null || rs2.getString("item_primary_image_link").equals(""))
 						item.put("imageLinks", "");
 					else
