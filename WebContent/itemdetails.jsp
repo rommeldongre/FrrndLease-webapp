@@ -114,6 +114,7 @@
                             <div class="row" style="padding:20px;">
                                 <button ng-if="!userMatch" class="btn btn-primary btn-fill" ng-click="requestItem()" style="padding:10px;">Request Item</button>
                                 <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:10px;">Add to Wishlist</button>
+								<button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="sendItemMessage()" style="padding:10px;">Message</button>
                                 <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:10px;">Edit Item</button>
                                 <button ng-if="userMatch" class="btn btn-primary btn-simple" ng-click="deleteItem()" style="padding:10px;">Delete</button>
                                 <button class="btn btn-primary btn-simple" onclick="cancel()" style="padding:10px;">Cancel</button>
@@ -189,7 +190,8 @@
         var imageLinks = "${imageLinks}";
 		
         var item_id = "${itemId}";
-
+		var uid = "${uid}";
+		
 		function start() {
 
             $('.btn-tooltip').tooltip();

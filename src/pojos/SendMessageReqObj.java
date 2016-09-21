@@ -2,7 +2,7 @@ package pojos;
 
 public class SendMessageReqObj extends ReqObj{
 	
-	String userId,friendId,friendName,accessToken,message;
+	String userId,friendId,friendName,accessToken,message,itemName,itemUid;
 	int itemId;
 	public String getUserId() {
 		return userId;
@@ -40,4 +40,17 @@ public class SendMessageReqObj extends ReqObj{
 	public void setItemId(int itemId) {
 		this.itemId = itemId;
 	}
+	public String getItemName() {
+		return itemName;
+	}
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+	public String getItemUid() {
+		return itemUid;
+	}
+	public void setItemUid(String itemUid) {
+		this.itemUid = itemUid;
+	}
+	
 }
