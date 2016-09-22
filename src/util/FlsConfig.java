@@ -14,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2026;
+	public final int appBuild = 2027;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -953,6 +953,53 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2026;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds full name to friends table where name is empty
+				if(dbBuild < 2027){
+					
+					PreparedStatement afps1 = null, afps2 = null;
+					ResultSet afrs1 = null;
+					
+					String sqlAddFriendsName = "SELECT * FROM `friends` WHERE friend_full_name ='-' AND friend_id LIKE '%@%'";
+					try{
+						getConnection();
+						afps1 = connection.prepareStatement(sqlAddFriendsName);
+						afrs1 = afps1.executeQuery();
+						
+						while(afrs1.next()){
+							String friendId = afrs1.getString("friend_id");
+							String[] parts = friendId.split("@");
+							String friendName= parts[0];
+								if(friendName != null){
+									String sqlSaveFriendName = "UPDATE friends SET friend_full_name=? WHERE friend_id=?";
+									afps2 = connection.prepareStatement(sqlSaveFriendName);
+									afps2.setString(1, friendName);
+									afps2.setString(2, friendId);
+									afps2.executeUpdate();
+								}
+							
+						}
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							if(afps2 != null) afps2.close();
+							if(afrs1 != null) afrs1.close();
+							if(afps1 != null) afps1.close();
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2027;
 					updateDBBuild(dbBuild);
 				}
 	}

@@ -36,9 +36,9 @@
                     <!-- Dropdown starts here -->
                     <ul class="nav navbar-nav navbar-right">
 
-                        <li ng-if="isAnonymous()"><a id="headerfooteroptions" href="" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        <li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Login');" href="" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 
-                        <li ng-if="isAnonymous()"><a id="headerfooteroptions" href="" data-toggle="modal" data-target="#registerModal"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
+                        <li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Signup');" href="" data-toggle="modal" data-target="#registerModal"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
 
                         <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="See Notifications" style="font-size:16px;{{(head.unread == 0) ? '' : 'color:black;'}}" ng-click="openNotifications()"><strong ng-if="head.unread!=0">{{head.unread + " "}}</strong><i class="fa fa-bell"></i></li>
                         
