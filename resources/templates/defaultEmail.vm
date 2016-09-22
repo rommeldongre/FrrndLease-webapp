@@ -4,12 +4,14 @@
         	<th><img src="cid:logo" style="width:10%;"><h1>FrrndLease</h1></th>
         </tr>
         <tr style="text-align:center;">
-        	<td><h2>$body</h2></td>
+        	<td><h2>$subject</h2></td>
         </tr>
         <tr style="text-align:center;">
         	<td valign="top" style="padding-bottom:20px;">
         		<u>Account Status</u>: <br>
         		You have <strong>$credits credits</strong> left to spend on frrndlease.<br><br>
+        		<u>Activity</u>: <br>
+            	$body
             </td>
          </tr>
          <tr style="text-align:center;">

@@ -9,7 +9,7 @@ import util.Event.Icon_Type;
 public class GetNotificationsResObj {
 
 	int eventId, itemId;
-	String datetime, fromUserId, toUserId, readStatus, notificationMsg, uid, title, profilePic, fullName, notificationType;
+	String datetime, fromUserId, toUserId, readStatus, notificationMsg, uid, profilePic, fullName, notificationType;
 
 	public int getEventId() {
 		return eventId;
@@ -79,14 +79,6 @@ public class GetNotificationsResObj {
 
 	public void setUid(String uid) {
 		this.uid = uid;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public String getProfilePic() {

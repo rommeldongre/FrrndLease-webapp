@@ -55,7 +55,7 @@ public class GetItemStoreByXResObj extends ResObj{
 	String status;
 	
 	//image of item
-	String image, imageLink;
+	String primaryImageLink;
 	
 	boolean friendStatus;
 	
@@ -199,20 +199,12 @@ public class GetItemStoreByXResObj extends ResObj{
 		this.status = status;
 	}
 
-	public String getImage() {
-		return image;
+	public String getPrimaryImageLink() {
+		return primaryImageLink;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public String getImageLink() {
-		return imageLink;
-	}
-
-	public void setImageLink(String imageLink) {
-		this.imageLink = imageLink;
+	public void setPrimaryImageLink(String primaryImageLink) {
+		this.primaryImageLink = primaryImageLink;
 	}
 	
 }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Delete Image From S3 Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+    var UserId = null;
+	
+    start = function(){
+        document.getElementById("userId").value = localStorage.getItem("userloggedin");
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
+	getData = function (){
+        UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+        
+        var AccessToken = document.getElementById("accessToken").value;
+        
+        var Links = document.getElementById("links").value;
+        if(Links == null || Links == '' || Links == 'null')
+            Links = null;
+        
+        var Uid = document.getElementById("uid").value;
+        if(Uid == null || Uid == '' || Uid == 'null')
+            Uid = null;
+        
+        var Primary = document.getElementById("primary").checked;
+        
+        req = {
+            userId: UserId,
+            accessToken: AccessToken,
+            links: Links.split(","),
+            uid: Uid,
+            primary: Primary
+        }
+        
+        DeleteImageFromS3(req);
+	};
+		
+	DeleteImageFromS3 = function(req) {
+		$.ajax({
+			url: '/flsv2/DeleteImageFromS3',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+                document.getElementById("code").value = response.code;
+                document.getElementById("message").value = response.message;
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body onload="start()">
+<h1>Delete Image From S3 Form</h1>
+	<form>
+        User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
+		Links: <input type="text" name="links" id="links" ><br/><br/>
+		Uid: <input type="text" name="uid" id="uid" ><br/><br/>
+		Existing Link: <input type="text" name="existingLink" id="existingLink" ><br/><br/>
+        <input type="checkbox" name="primary" id="primary">Primary Image<br><br/>
+		<input type="button" value="Save Image In S3" onclick="getData()">
+    </form>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+    
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
