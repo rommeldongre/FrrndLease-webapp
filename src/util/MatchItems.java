@@ -113,10 +113,10 @@ public class MatchItems extends Connect {
 						item.put("image", "");
 					else
 						item.put("image", rs2.getString("item_image"));
-					if(rs2.getString("item_primary_image_link") == null || rs2.getString("item_primary_image_link").equals(""))
+					if(rs2.getString("item_image_links") == null || rs2.getString("item_image_links").equals(""))
 						item.put("imageLinks", "");
 					else
-						item.put("imageLinks", rs2.getString("item_primary_image_link"));
+						item.put("imageLinks", rs2.getString("item_image_links"));
 					item.put("uid", rs2.getString("item_uid"));
 					
 					listItems.add(item);

@@ -636,7 +636,7 @@ public class Event extends Connect{
 				}
 				
 				if(email != null){
-					String sqlGetAllData = "SELECT tb1.event_id, tb1.from_user_id, tb1.to_user_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_primary_image_link, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb3.user_credit, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
+					String sqlGetAllData = "SELECT tb1.event_id, tb1.from_user_id, tb1.to_user_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_image, tb2.item_image_links, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb3.user_credit, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
 					ps2 = hcp.prepareStatement(sqlGetAllData);
 					ps2.setInt(1, eventId);
 					
@@ -684,10 +684,10 @@ public class Event extends Connect{
 							obj.put("image", "");
 						else
 							obj.put("image", rs2.getString("item_image"));
-						if(rs2.getString("item_primary_image_link") == null || rs2.getString("item_primary_image_link").equals("") || rs2.getString("item_primary_image_link").equals("null"))
+						if(rs2.getString("item_image_links") == null || rs2.getString("item_image_links").equals("") || rs2.getString("item_image_links").equals("null"))
 							obj.put("imageLinks", "");
 						else
-							obj.put("imageLinks", rs2.getString("item_primary_image_link"));
+							obj.put("imageLinks", rs2.getString("item_image_links"));
 						obj.put("uid", rs2.getString("item_uid"));
 						obj.put("itemStatus", rs2.getString("item_status"));
 						

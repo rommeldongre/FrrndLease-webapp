@@ -757,12 +757,11 @@ headerApp.directive('loadImage', ['$http', function($http){
                 if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
 
                     attrs.$set('width', MaxWidth);
-                    attrs.$set('height', MaxHeight);
+                    attrs.$set('height', 240);
                     attrs.$set('ngSrc', 'images/imgplaceholder.png');
 
-                }else if(ImgSrc === 'loading'){
-                    
                 }else{
+
                     loadImage(
                         ImgSrc,
                         function(canvas){
@@ -777,33 +776,12 @@ headerApp.directive('loadImage', ['$http', function($http){
                             crossOrigin: "anonymous"
                         }
                     );
+
                 }
             });
         }
     }
 }]);
-
-headerApp.directive('uploadImage', function() {
-    return {
-        scope: {
-            uploadImage: '=',
-            primary: '=?',
-            existingLink: '=?',
-            uid: '=?'
-        },
-        link: function(scope, element, attrs) {
-            element.bind("change", function (changeEvent) {
-                var reader = new FileReader();
-                reader.onload = function (loadEvent) {
-                    scope.$apply(function () {
-                        scope.uploadImage.push({data: loadEvent.target.result,link: ""});
-                    });
-                }
-                reader.readAsDataURL(changeEvent.target.files[0]);
-            });
-        }
-    };
-});
 
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
