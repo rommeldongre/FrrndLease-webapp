@@ -103,13 +103,10 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
     }
 	
 	$scope.replyFriendMessage = function(index){
-		modalService.showModal({}, {messaging: true, bodyText: 'Reply to this message', actionButtonText: 'Send'}).then(function(result){
+		modalService.showModal({}, {messaging: true, bodyText: 'Type Message Reply for friend', actionButtonText: 'Send'}).then(function(result){
             var message = result;
-			var friend_name = ""
-			var item_id= $scope.events[index].itemId;
-			var item_name = $scope.events[index].title;
-			var item_uid = $scope.events[index].uid;
-			
+			var friend_name = $scope.events[index].fullName;
+			var item_id=0;
             if(message == "" || message == undefined)
                 message = "";
             
@@ -125,12 +122,9 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 				friendId: friendId,
 				friendName: friend_name,
 				itemId : item_id,
-				title: item_name,
-				uid: item_uid,
 				accessToken: userFactory.userAccessToken
             }
-			
-			sendMessage(req);			
+			sendMessage(req);	
         }, function(){});
     }
 	
@@ -144,9 +138,9 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 			dataType: "json",
 			success: function(response) {
 				if(response.code==0){
-					initialPopulate();
 					bannerService.updatebannerMessage("Success, Message to Friend sent");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
+					
 				}else{
 					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
 						if(response.code == 400){

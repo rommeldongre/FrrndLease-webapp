@@ -96,14 +96,13 @@ public class Friends extends Connect {
 		
 		try {
 			LOGGER.info("Checking if friend is signed up");
-			String sqlCheckUser = "SELECT user_id,user_full_name FROM users WHERE user_id=?";
+			String sqlCheckUser = "SELECT user_id FROM users WHERE user_id=?";
 			stmt1 = hcp.prepareStatement(sqlCheckUser);
 			stmt1.setString(1, friendId);
 			rs1 = stmt1.executeQuery();
 			
 			if(rs1.next()){
 				status = "signedup";
-				fullName = rs1.getString("user_full_name");
 			}
 			
 			LOGGER.info("Creating Select statement from friends table");

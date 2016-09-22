@@ -32,8 +32,6 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     
     $scope.selectedCategory = 0;
     
-    var Image = null;
-    
     var populateCategory = function(id){
         var req = {
             operation:"getNext",
@@ -79,7 +77,6 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         
         var reader = new FileReader();
         reader.onload = function(event) {
-            Image = reader.result;
             loadImage(reader.result,
                 function (canvas) {
                     $scope.$apply(function() {
@@ -87,8 +84,8 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                     });
                 },
                 {
-                    maxWidth: 300,
-                    maxHeight: 300,
+                    maxWidth: 450,
+                    maxHeight: 450,
                     canvas: true,
                     orientation: picOrientation
                 }
@@ -113,7 +110,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             leaseValue: 1000,
             leaseTerm: 'Month',
             status: "InStore",
-            image: Image,
+            image: $scope.item.image,
             accessToken: userAccessToken
         }
         

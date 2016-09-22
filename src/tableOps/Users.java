@@ -367,12 +367,11 @@ public class Users extends Connect {
 				lc.updateCredits(generated_ref_code,referrer_code);
 			}
 			
-			String sqlChangeFriendStatus = "UPDATE friends SET friend_id=?, friend_status=? , friend_full_name=? WHERE friend_id=?";
+			String sqlChangeFriendStatus = "UPDATE friends SET friend_id=?, friend_status=? WHERE friend_id=?";
 			stmt3 = hcp.prepareStatement(sqlChangeFriendStatus);
 			stmt3.setString(1, userId);
 			stmt3.setString(2, "signedup");
-			stmt3.setString(3, fullName);
-			stmt3.setString(4, friendId);
+			stmt3.setString(3, friendId);
 			stmt3.executeUpdate();
 			
 			try {
