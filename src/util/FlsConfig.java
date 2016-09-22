@@ -955,7 +955,7 @@ public class FlsConfig extends Connect{
 				}
 				
 				// This block adds full name to friends table where name is empty
-				if(dbBuild < 2029){
+				if(dbBuild < 2027){
 					
 					PreparedStatement afps1 = null, afps2 = null;
 					ResultSet afrs1 = null;
@@ -997,103 +997,103 @@ public class FlsConfig extends Connect{
 							}
 					}
 					// The dbBuild version value is changed in the database
-					dbBuild = 2029;
+					dbBuild = 2027;
 					updateDBBuild(dbBuild);
 				}
 
 				//This block creates column for primary images link and renames the existing images in s3
-//				if(dbBuild < 2028){
-//					
-//					String sqlCreatePrimaryImageColumn = "ALTER TABLE `items` ADD `item_primary_image_link` VARCHAR(255) NULL DEFAULT NULL AFTER `item_image`";
-//					String sqlSelectAllItems = "SELECT item_uid, item_image_links FROM items";
-//					
-//					PreparedStatement ps1 = null, ps2 = null, ps3 = null;
-//					ResultSet rs2 = null;
-//					
-//					try{
-//						getConnection();
-//						ps1 = connection.prepareStatement(sqlCreatePrimaryImageColumn);
-//						ps1.executeUpdate();
-//						
-//						ps2 = connection.prepareStatement(sqlSelectAllItems);
-//						rs2 = ps2.executeQuery();
-//						
-//						while(rs2.next()){
-//							String imageLink = rs2.getString("item_image_links");
-//							if(imageLink != null && !imageLink.isEmpty() && !imageLink.equals("null")){
-//								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs2.getString("item_uid"));
-//								String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, imageLink);
-//								if(link != null){
-//									s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, imageLink);
-//									String sqlSaveImageLink = "UPDATE items SET item_primary_image_link=?, item_image_links=? WHERE item_uid=?";
-//									ps3 = connection.prepareStatement(sqlSaveImageLink);
-//									ps3.setString(1, link);
-//									ps3.setString(2, null);
-//									ps3.setString(3, rs2.getString("item_uid"));
-//									
-//									System.out.println(ps3.executeUpdate());
-//								}
-//							}
-//						}
-//						
-//					}catch(Exception e){
-//						e.printStackTrace();
-//						System.exit(1);
-//					}finally {
-//						try {
-//							if(ps3 != null) ps3.close();
-//							if(rs2 != null) rs2.close();
-//							if(ps2 != null) ps2.close();
-//							if(ps1 != null) ps1.close();
-//							connection.close();
-//							connection = null;
-//							} catch (Exception e){
-//								e.printStackTrace();
-//								System.out.println(e.getStackTrace());
-//							}
-//					}
-//					
-//					// The dbBuild version value is changed in the database
-//					dbBuild = 2028;
-//					updateDBBuild(dbBuild);
-//				}
-//				
-//				// This block creates a table for image links
-//				if(dbBuild < 2029){
-//					
-//					String sqlImageLinksTable = "CREATE TABLE `fls`.`images` (`item_id` INT NOT NULL AUTO_INCREMENT , `item_uid` VARCHAR(255) NULL DEFAULT NULL , `item_image_link` VARCHAR(255) NULL DEFAULT NULL , PRIMARY KEY (`item_id`))";
-//					String sqlDeleteImageLinksColumn = "ALTER TABLE `items` DROP COLUMN `item_image_links`";
-//					
-//					PreparedStatement ps1 = null, ps2 = null;
-//					
-//					try{
-//						getConnection();
-//						ps1 = connection.prepareStatement(sqlImageLinksTable);
-//						ps1.executeUpdate();
-//						
-//						ps2 = connection.prepareStatement(sqlDeleteImageLinksColumn);
-//						ps2.executeUpdate();
-//						
-//					}catch(Exception e){
-//						e.printStackTrace();
-//						System.exit(1);
-//					}finally {
-//						try {
-//							if(ps2 != null) ps2.close();
-//							if(ps1 != null) ps1.close();
-//							connection.close();
-//							connection = null;
-//							} catch (Exception e){
-//								e.printStackTrace();
-//								System.out.println(e.getStackTrace());
-//							}
-//					}
-//					
-//					// The dbBuild version value is changed in the database
-//					dbBuild = 2029;
-//					updateDBBuild(dbBuild);
-//					
-//				}
+				if(dbBuild < 2028){
+					
+					String sqlCreatePrimaryImageColumn = "ALTER TABLE `items` ADD `item_primary_image_link` VARCHAR(255) NULL DEFAULT NULL AFTER `item_image`";
+					String sqlSelectAllItems = "SELECT item_uid, item_image_links FROM items";
+					
+					PreparedStatement ps1 = null, ps2 = null, ps3 = null;
+					ResultSet rs2 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlCreatePrimaryImageColumn);
+						ps1.executeUpdate();
+						
+						ps2 = connection.prepareStatement(sqlSelectAllItems);
+						rs2 = ps2.executeQuery();
+						
+						while(rs2.next()){
+							String imageLink = rs2.getString("item_image_links");
+							if(imageLink != null && !imageLink.isEmpty() && !imageLink.equals("null")){
+								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs2.getString("item_uid"));
+								String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, imageLink);
+								if(link != null){
+									s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, imageLink);
+									String sqlSaveImageLink = "UPDATE items SET item_primary_image_link=?, item_image_links=? WHERE item_uid=?";
+									ps3 = connection.prepareStatement(sqlSaveImageLink);
+									ps3.setString(1, link);
+									ps3.setString(2, null);
+									ps3.setString(3, rs2.getString("item_uid"));
+									
+									System.out.println(ps3.executeUpdate());
+								}
+							}
+						}
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps3 != null) ps3.close();
+							if(rs2 != null) rs2.close();
+							if(ps2 != null) ps2.close();
+							if(ps1 != null) ps1.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2028;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates a table for image links
+				if(dbBuild < 2029){
+					
+					String sqlImageLinksTable = "CREATE TABLE `fls`.`images` (`item_id` INT NOT NULL AUTO_INCREMENT , `item_uid` VARCHAR(255) NULL DEFAULT NULL , `item_image_link` VARCHAR(255) NULL DEFAULT NULL , PRIMARY KEY (`item_id`))";
+					String sqlDeleteImageLinksColumn = "ALTER TABLE `items` DROP COLUMN `item_image_links`";
+					
+					PreparedStatement ps1 = null, ps2 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlImageLinksTable);
+						ps1.executeUpdate();
+						
+						ps2 = connection.prepareStatement(sqlDeleteImageLinksColumn);
+						ps2.executeUpdate();
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps2 != null) ps2.close();
+							if(ps1 != null) ps1.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2029;
+					updateDBBuild(dbBuild);
+					
+				}
 	}
 	
 	private void updateDBBuild(int version){
