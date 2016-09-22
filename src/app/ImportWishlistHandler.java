@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.regex.*;
 
 import connect.Connect;
@@ -18,12 +17,8 @@ import adminOps.Response;
 import tableOps.Items;
 import tableOps.Wishlist;
 import util.FlsLogger;
-import util.FlsS3Bucket;
 import util.BufferImage;
 import util.LogCredit;
-import util.FlsS3Bucket.Bucket_Name;
-import util.FlsS3Bucket.File_Name;
-import util.FlsS3Bucket.Path_Name;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -194,9 +189,9 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			execution_count = execution_count + 1;
 			if (dbResponse.next() == false) {
 				LOGGER.info("Item: " + Iname + "for user: " + User + " does not exist");
-				String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status) values (?,?,?,?,?,?,?)";
+				String sql1 = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 				LOGGER.info("Creating Insert statement of ImportWishlistHandler.....");
-				PreparedStatement stmt1 = hcp.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS);
+				PreparedStatement stmt1 = hcp.prepareStatement(sql1);
 
 				LOGGER.info("Statement created. Executing query.....");
 				stmt1.setString(1, Iname);
@@ -206,37 +201,12 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				stmt1.setInt(5, 0);
 				stmt1.setString(6, "");
 				stmt1.setString(7, "Wished");
+				stmt1.setString(8, Image);
 				insertcount = stmt1.executeUpdate();
 				stmt1.close();
 				
 				// System.out.println("Entry added into items table:
 				// "+insertcount);
-				
-				// For saving the uid and the image in s3
-				ResultSet keys = stmt1.getGeneratedKeys();
-				keys.next();
-				int itemId = keys.getInt(1);
-				
-				String uid = Iname + " " + itemId;
-				uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
-				
-				// updating the item_uid value of the last item inserted
-				String sqlUpdateUID = "UPDATE items SET item_uid=? WHERE item_id=?";
-				PreparedStatement ps5 = hcp.prepareStatement(sqlUpdateUID);
-				ps5.setString(1, uid);
-				ps5.setInt(2, itemId);
-				ps5.executeUpdate();
-				
-				keys.close();
-				ps5.close();
-				
-				if(!(Image == null || Image.equals(""))){
-					FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
-					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, Image);
-					if(link != null){
-						s3Bucket.savePrimaryImageLink(link);
-					}
-				}
 				
 				// to add credit in user_credit
 				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";

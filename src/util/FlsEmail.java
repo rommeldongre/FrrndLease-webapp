@@ -205,6 +205,16 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Your Friend '" + obj.getString("from") + "' has sent you a Message on Frrndlease.");
 				BODY = obj.getString("message");
 				break;
+				
+			case FLS_MAIL_MESSAGE_ITEM_FROM:
+				SUBJECT = (" Message regarding item [" + obj.getString("title") + "] has been sent by you on Frrndlease. ");
+				BODY = obj.getString("message");
+				break;
+
+			case FLS_MAIL_MESSAGE_ITEM_TO:
+				SUBJECT = (" A message regarding item [" + obj.getString("title") + "] has sent to you on Frrndlease.");
+				BODY = obj.getString("message");
+				break;
 
 			case FLS_MAIL_REJECT_REQUEST_FROM:
 				SUBJECT = (" Request removed");

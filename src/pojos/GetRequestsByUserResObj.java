@@ -53,7 +53,7 @@ public class GetRequestsByUserResObj extends ResObj {
 	String owner_name;
 
 	// more items details
-	String category, leaseValue, leaseTerm, uid, primaryImageLink;
+	String category, leaseValue, leaseTerm, image, uid, imageLink;
 
 	// more items owners details
 	String owner_mobile, owner_address, owner_locality, owner_sublocality;
@@ -82,12 +82,20 @@ public class GetRequestsByUserResObj extends ResObj {
 		this.leaseTerm = leaseTerm;
 	}
 
-	public String getPrimaryImageLink() {
-		return primaryImageLink;
+	public String getImage() {
+		return image;
 	}
 
-	public void setPrimaryImageLink(String primaryImageLink) {
-		this.primaryImageLink = primaryImageLink;
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+	public String getImageLink() {
+		return imageLink;
+	}
+
+	public void setImageLink(String imageLink) {
+		this.imageLink = imageLink;
 	}
 
 	public String getUid() {

@@ -59,7 +59,7 @@ public class SaveImageInS3Handler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			if (existingLink.isEmpty() || existingLink.equals("null")){
+			if (existingLink.equals("null") || existingLink.isEmpty()){
 				existingLink = null;
 			}
 
@@ -70,21 +70,13 @@ public class SaveImageInS3Handler extends Connect implements AppHandler {
 			if (rq.isPrimary()){
 				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, image, link);
 				if(link != null){
-					if(existingLink != null)
-						s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, existingLink);
-					
-					s3Bucket.savePrimaryImageLink(link);
+					if(s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, existingLink) == 1)
+						s3Bucket.savePrimaryImageLink(link);
 				}
 			}else{
 				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image, link);
-				if(link != null){
-					if(existingLink != null){
-						s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, existingLink);
-						s3Bucket.replaceNormalImageLink(link, existingLink);
-					}else{
+				if(link != null && !link.equals(existingLink))
 						s3Bucket.saveNormalImageLink(link);
-					}
-				}
 			}
 			
 			if (link != null) {

@@ -108,10 +108,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 							obj1.put("id", dbResponse.getString("item_id"));
 							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
 							obj1.put("status", "InStore");
-							if(dbResponse.getString("item_primary_image_link") == null || dbResponse.getString("item_primary_image_link").equals("null"))
-								obj1.put("primaryImageLink", "");
-							else
-								obj1.put("primaryImageLink", dbResponse.getString("item_primary_image_link"));
+							obj1.put("image", dbResponse.getString("item_image"));
 							obj1.put("uid", dbResponse.getString("item_uid"));
 
 							im.getData(obj1);

@@ -14,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2028;
+	public final int appBuild = 2027;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -895,7 +895,7 @@ public class FlsConfig extends Connect{
 							String image = rs1.getString("item_image");
 							if(image != null && !image.isEmpty() && !image.equals("null")){
 								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
-								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, rs1.getString("item_image"), null);
+								String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM, rs1.getString("item_image"), null);
 								if(link != null){
 									String sqlSaveImageLink = "UPDATE items SET item_image_links=? WHERE item_uid=?";
 									ps2 = connection.prepareStatement(sqlSaveImageLink);
@@ -928,6 +928,7 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 				}
 				
+				// This block adds notification_type enum in events table for Sending Messages between friends
 				if(dbBuild < 2026){
 					
 					String sqlAddNotificationEnum = "ALTER TABLE `events` CHANGE `notification_type` `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRANT_LEASE_FROM','FLS_MAIL_GRANT_LEASE_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER','FLS_EMAIL_VERIFICATION','FLS_MOBILE_VERIFICATION','FLS_MAIL_MESSAGE_FRIEND_FROM','FLS_MAIL_MESSAGE_FRIEND_TO','FLS_MAIL_MESSAGE_ITEM_FROM','FLS_MAIL_MESSAGE_ITEM_TO')";
@@ -942,6 +943,7 @@ public class FlsConfig extends Connect{
 						System.exit(1);
 					}finally {
 						try {
+							// close and reset connection to null
 							connection.close();
 							connection = null;
 							} catch (Exception e){
@@ -953,51 +955,42 @@ public class FlsConfig extends Connect{
 					dbBuild = 2026;
 					updateDBBuild(dbBuild);
 				}
-
-				//This block creates column for primary images link and renames the existing images in s3
+				
+				// This block adds full name to friends table where name is empty
 				if(dbBuild < 2027){
 					
-					String sqlCreatePrimaryImageColumn = "ALTER TABLE `items` ADD `item_primary_image_link` VARCHAR(255) NULL DEFAULT NULL AFTER `item_image`";
-					String sqlSelectAllItems = "SELECT item_uid, item_image_links FROM items";
+					PreparedStatement afps1 = null, afps2 = null;
+					ResultSet afrs1 = null;
 					
-					PreparedStatement ps1 = null, ps2 = null, ps3 = null;
-					ResultSet rs2 = null;
-					
+					String sqlAddFriendsName = "SELECT * FROM `friends` WHERE friend_full_name ='-' AND friend_id LIKE '%@%'";
 					try{
 						getConnection();
-						ps1 = connection.prepareStatement(sqlCreatePrimaryImageColumn);
-						ps1.executeUpdate();
+						afps1 = connection.prepareStatement(sqlAddFriendsName);
+						afrs1 = afps1.executeQuery();
 						
-						ps2 = connection.prepareStatement(sqlSelectAllItems);
-						rs2 = ps2.executeQuery();
-						
-						while(rs2.next()){
-							String imageLink = rs2.getString("item_image_links");
-							if(imageLink != null && !imageLink.isEmpty() && !imageLink.equals("null")){
-								FlsS3Bucket s3Bucket = new FlsS3Bucket(rs2.getString("item_uid"));
-								String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, imageLink);
-								if(link != null){
-									s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, imageLink);
-									String sqlSaveImageLink = "UPDATE items SET item_primary_image_link=?, item_image_links=? WHERE item_uid=?";
-									ps3 = connection.prepareStatement(sqlSaveImageLink);
-									ps3.setString(1, link);
-									ps3.setString(2, null);
-									ps3.setString(3, rs2.getString("item_uid"));
-									
-									System.out.println(ps3.executeUpdate());
+						while(afrs1.next()){
+							String friendId = afrs1.getString("friend_id");
+							String[] parts = friendId.split("@");
+							String friendName= parts[0];
+								if(friendName != null){
+									String sqlSaveFriendName = "UPDATE friends SET friend_full_name=? WHERE friend_id=?";
+									afps2 = connection.prepareStatement(sqlSaveFriendName);
+									afps2.setString(1, friendName);
+									afps2.setString(2, friendId);
+									afps2.executeUpdate();
 								}
-							}
+							
 						}
-						
 					}catch(Exception e){
 						e.printStackTrace();
+						System.out.println(e.getStackTrace());
 						System.exit(1);
 					}finally {
 						try {
-							if(ps3 != null) ps3.close();
-							if(rs2 != null) rs2.close();
-							if(ps2 != null) ps2.close();
-							if(ps1 != null) ps1.close();
+							if(afps2 != null) afps2.close();
+							if(afrs1 != null) afrs1.close();
+							if(afps1 != null) afps1.close();
+							// close and reset connection to null
 							connection.close();
 							connection = null;
 							} catch (Exception e){
@@ -1005,47 +998,9 @@ public class FlsConfig extends Connect{
 								System.out.println(e.getStackTrace());
 							}
 					}
-					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2027;
 					updateDBBuild(dbBuild);
-				}
-				
-				// This block creates a table for image links
-				if(dbBuild < 2028){
-					
-					String sqlImageLinksTable = "CREATE TABLE `fls`.`images` (`item_id` INT NOT NULL AUTO_INCREMENT , `item_uid` VARCHAR(255) NULL DEFAULT NULL , `item_image_link` VARCHAR(255) NULL DEFAULT NULL , PRIMARY KEY (`item_id`))";
-					String sqlDeleteImageLinksColumn = "ALTER TABLE `items` DROP COLUMN `item_image_links`";
-					
-					PreparedStatement ps1 = null, ps2 = null;
-					
-					try{
-						getConnection();
-						ps1 = connection.prepareStatement(sqlImageLinksTable);
-						ps1.executeUpdate();
-						
-						ps2 = connection.prepareStatement(sqlDeleteImageLinksColumn);
-						ps2.executeUpdate();
-						
-					}catch(Exception e){
-						e.printStackTrace();
-						System.exit(1);
-					}finally {
-						try {
-							if(ps2 != null) ps2.close();
-							if(ps1 != null) ps1.close();
-							connection.close();
-							connection = null;
-							} catch (Exception e){
-								e.printStackTrace();
-								System.out.println(e.getStackTrace());
-							}
-					}
-					
-					// The dbBuild version value is changed in the database
-					dbBuild = 2028;
-					updateDBBuild(dbBuild);
-					
 				}
 	}
 	

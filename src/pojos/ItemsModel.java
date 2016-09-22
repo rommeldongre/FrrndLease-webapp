@@ -9,7 +9,7 @@ public class ItemsModel {
 	
 	private FlsLogger LOGGER = new FlsLogger(ItemsModel.class.getName());
 	
-	private String title, category, description,userId,leaseTerm,status, uid, primaryImageLink, image;
+	private String title, category, description,userId,leaseTerm,status,image, uid;
 
 	int id, leaseValue;
 	private JSONObject obj;
@@ -36,9 +36,8 @@ public class ItemsModel {
 			if(obj.has("id"))id = obj.getInt("id");
 			if(obj.has("leaseValue"))leaseValue = obj.getInt("leaseValue");
 			if(obj.has("status"))status = obj.getString("status");
+			if(obj.has("image"))image = obj.getString("image");
 			if(obj.has("uid")) uid = obj.getString("uid");
-			if(obj.has("image")) image = obj.getString("image");
-			if(obj.has("primaryImageLink")) primaryImageLink = obj.getString("primaryImageLink");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse row object of JSON");
 			e.printStackTrace();
@@ -77,15 +76,11 @@ public class ItemsModel {
 		return this.status;
 	}
 	
+	public String getImage() {
+		return this.image;
+	}
+	
 	public String getUid() {
 		return uid;
-	}
-
-	public String getPrimaryImageLink() {
-		return primaryImageLink;
-	}
-
-	public String getImage() {
-		return image;
 	}
 }
