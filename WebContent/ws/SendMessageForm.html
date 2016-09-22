@@ -10,9 +10,7 @@
 	var FriendId= null;
 	var FriendName= null;
 	var Message = null;
-	var ItemId= 0;
-	var ItemName = null;
-	var ItemUid = null;
+	var itemId= 0;
 	
 	start = function(){
         document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
@@ -24,19 +22,9 @@
 		FriendId = document.getElementById("friendId").value;
 		FriendName = document.getElementById("friendName").value;
 		Message = document.getElementById("message").value;
-		ItemId = document.getElementById("itemId").value;
-		if(ItemId == null || ItemId==""){
-			ItemId=0;
-		}
-		
-		ItemName = document.getElementById("itemName").value;
-		if(ItemName==null || ItemName==""){
-			ItemName=null;
-		}
-		
-		ItemUid = document.getElementById("itemUid").value;
-		if(ItemUid==null || ItemUid==""){
-			ItemUid=null;
+		itemId = document.getElementById("itemId").value;
+		if(itemId==null || itemId==0){
+			itemId=0;
 		}
 	}
 	
@@ -49,13 +37,10 @@
 			message: Message,
 			friendId: FriendId,
 			friendName: FriendName,
-			itemName: ItemName,
-			itemUid : ItemUid,
 			itemId : itemId,
 			accessToken: AccessToken
 		};
 		
-		console.log(req);
 		send(req);
 	};
 	
@@ -87,9 +72,7 @@
 		User Id(*) : <input type="text" name="userId" id="userId"><br /><br />
 		Friend Id(*) : <input type="text" name="friendId" id="friendId"><br /><br />
 		Friend Name : <input type="text" name="friendName" id="friendName"><br /><br />
-		Item Name : <input type="text" name="itemName" id="itemName"><br /><br />
 		Item Id : <input type="text" name="itemId" id="itemId"><br /><br />
-		Item UID : <input type="text" name="itemUid" id="itemUid"><br /><br />
 		Message(*) : <input type="text" name="message" id="message"><br /><br />
 		<br /> Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br />
 		<input type="button" value="Send Message" onclick="sendMessage()">
