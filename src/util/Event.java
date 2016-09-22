@@ -254,7 +254,7 @@ public class Event extends Connect{
 		GetNotificationsListResObj response = new GetNotificationsListResObj();
 		
 		try{
-			String sqlGetNotifications = "SELECT tb1.*, tb2.user_profile_picture, tb2.user_full_name, tb3.item_uid FROM events tb1 LEFT JOIN users tb2 ON tb1.from_user_id=tb2.user_id LEFT JOIN items tb3 ON tb1.item_id=tb3.item_id WHERE to_user_id=? AND event_type IN (?,?) ORDER BY event_id DESC LIMIT ?,?";
+			String sqlGetNotifications = "SELECT tb1.*, tb2.user_profile_picture, tb2.user_full_name, tb3.item_uid,tb3.item_name FROM events tb1 LEFT JOIN users tb2 ON tb1.from_user_id=tb2.user_id LEFT JOIN items tb3 ON tb1.item_id=tb3.item_id WHERE to_user_id=? AND event_type IN (?,?) ORDER BY event_id DESC LIMIT ?,?";
 			ps = hcp.prepareStatement(sqlGetNotifications);
 			ps.setString(1, userId);
 			ps.setString(2, Event_Type.FLS_EVENT_NOTIFICATION.name());
@@ -273,6 +273,7 @@ public class Event extends Connect{
 					res.setToUserId(rs.getString("to_user_id"));
 					res.setProfilePic(rs.getString("user_profile_picture"));
 					res.setUid(rs.getString("item_uid"));
+					res.setTitle(rs.getString("item_name"));
 					res.setFullName(rs.getString("user_full_name"));
 					res.setReadStatus(rs.getString("read_status"));
 					res.setItemId(rs.getInt("item_id"));

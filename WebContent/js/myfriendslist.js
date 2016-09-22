@@ -376,6 +376,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
             var message = result;
 			var friend_name = $scope.friends[index].fullName;
 			var item_id=0;
+            var Uid=null,Title=null;
             if(message == "" || message == undefined)
                 message = "";
             
@@ -390,6 +391,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
                 message: message,
 				friendId: friendId,
 				friendName: friend_name,
+                title: Title,
+                uid: Uid,
 				itemId : item_id,
 				accessToken: userFactory.userAccessToken
             }
@@ -411,7 +414,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
-					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 						if(response.code == 400){
 							logoutService.logout();
 						}
