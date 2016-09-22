@@ -17,21 +17,12 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     
     $scope.item = {};
     
-    $scope.item.primaryImageLink = $window.primaryImageLink;
+    $scope.item.image = $window.imageLinks;
     $scope.item.title = $window.title;
 	$scope.item.description = $window.description;
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
-    $scope.item.imageLinks = $window.imageLinks.split(",");
-                                   
-    if($scope.item.primaryImageLink != null){
-        $scope.item.imageLinks.unshift($scope.item.primaryImageLink);
-    }
-                                                
-    $scope.selectedImage = function(index){
-        $scope.item.primaryImageLink = $scope.item.imageLinks[index];
-    }
                                                 
     $scope.item_id = $window.item_id;
         

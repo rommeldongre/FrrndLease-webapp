@@ -171,7 +171,7 @@ public class Items extends Connect {
 			if(!checkWishItem_rs.next()){
 				
 				LOGGER.info("Creating statement.....");
-				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status) values (?,?,?,?,?,?,?)";
+				String sql = "insert into items (item_name, item_category, item_desc, item_user_id, item_lease_value, item_lease_term, item_status, item_image) values (?,?,?,?,?,?,?,?)";
 				stmt = hcp.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 	
 				LOGGER.info("Statement created. Executing query.....");
@@ -182,6 +182,7 @@ public class Items extends Connect {
 				stmt.setInt(5, leaseValue);
 				stmt.setString(6, leaseTerm);
 				stmt.setString(7, status);
+				stmt.setString(8, image);
 				stmt.executeUpdate();
 				
 				// getting the last item inserted id and appending it with the title to generate a uid
@@ -213,9 +214,9 @@ public class Items extends Connect {
 	
 				if(!(image == null || image.equals(""))){
 					FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
-					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, image);
+					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image);
 					if(link != null){
-						s3Bucket.savePrimaryImageLink(link);
+						s3Bucket.saveNormalImageLink(link);
 					}
 				}
 				
@@ -344,6 +345,7 @@ public class Items extends Connect {
 		leaseTerm = im.getLeaseTerm();
 		leaseValue = im.getLeaseValue();
 		status = im.getStatus();
+		image = im.getImage();
 
 		LOGGER.info("Inside edit method...");
 		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=? WHERE item_id=? AND item_user_id=?";
@@ -416,6 +418,7 @@ public class Items extends Connect {
 		check = 0;
 		id = im.getId();
 		status = im.getStatus();
+		image = im.getImage();
 
 		LOGGER.info("Inside edit stat method...");
 		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
@@ -634,10 +637,8 @@ public class Items extends Connect {
 				json.put("leaseValue", rs.getInt("item_lease_value"));
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
-				if(rs.getString("item_primary_image_link") == null || rs.getString("item_primary_image_link").equals("null"))
-					json.put("primaryImageLink", "");
-				else
-					json.put("primaryImageLink", rs.getString("item_primary_image_link"));
+				json.put("image", rs.getString("item_image"));
+				json.put("imageLink", rs.getString("item_image_links"));
 				json.put("fullName", rs.getString("user_full_name"));
 				json.put("location", rs.getString("user_location"));
 				json.put("uid", rs.getString("item_uid"));
@@ -708,10 +709,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs.getInt("item_lease_value"));
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
-				if(rs.getString("item_primary_image_link") == null || rs.getString("item_primary_image_link").equals("null"))
-					json.put("primaryImageLink", "");
-				else
-					json.put("primaryImageLink", rs.getString("item_primary_image_link"));
+				json.put("image", rs.getString("item_image"));
 				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();
@@ -896,14 +894,10 @@ public class Items extends Connect {
 				json.put("description", rs1.getString("item_desc"));
 				json.put("leaseValue", rs1.getInt("item_lease_value"));
 				json.put("leaseTerm", rs1.getString("item_lease_term"));
-				if(rs1.getString("item_primary_image_link") == null || rs1.getString("item_primary_image_link").equals("null"))
-					json.put("primaryImageLink", "");
-				else
-					json.put("primaryImageLink", rs1.getString("item_primary_image_link"));
+				json.put("image", rs1.getString("item_image"));
+				json.put("primaryImageLink", rs1.getString("item_primary_image_link"));
+				json.put("imageLinks", rs1.getString("item_image_links"));
 				json.put("uid", rs1.getString("item_uid"));
-				
-				FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
-				json.put("imageLinks", s3Bucket.getImagesLinks());
 				
 				message = json.toString();
 				
@@ -1034,10 +1028,7 @@ public class Items extends Connect {
 				json.put("leaseValue", rs.getInt("item_lease_value"));
 				json.put("leaseTerm", rs.getString("item_lease_term"));
 				json.put("status", rs.getString("item_status"));
-				if(rs.getString("item_primary_image_link") == null || rs.getString("item_primary_image_link").equals("null"))
-					json.put("primaryImageLink", "");
-				else
-					json.put("primaryImageLink", rs.getString("item_primary_image_link"));
+				json.put("image", rs.getString("item_image"));
 				json.put("uid", rs.getString("item_uid"));
 
 				message = json.toString();

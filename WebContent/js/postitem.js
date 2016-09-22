@@ -13,9 +13,13 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     $scope.categories = [];
     
-    $scope.images = [{link:""}, {link:""}, {link:""}, {link:""}, {link:""}, {link:""}];
+    $scope.images = [];
     
     var Image = null;
+    
+    $scope.deleteImage = function(index){
+        $scope.images.splice(index, 1);
+    }
     
     var getItemDetails = function(){
         var req = {
@@ -27,7 +31,6 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
             }
         }
         if(itemId != undefined){
-            $scope.isEdit = true;
             $.ajax({
                 url: '/flsv2/AdminOps',
                 type:'get',
@@ -39,11 +42,6 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                         $scope.$apply(function(){
                             $scope.item = JSON.parse(response.Message);
                             $scope.editable = true;
-                            if($scope.item.imageLinks != ""){
-                                for(var i in $scope.item.imageLinks){
-                                    $scope.images[i].link = $scope.item.imageLinks[i];
-                                }
-                            }
                         });
                     }
                     else{
@@ -52,8 +50,6 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                 },
                 error:function() {}
             });
-        }else{
-            $scope.isEdit = false;
         }
     }
 
@@ -135,145 +131,52 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     //beginning of image display
     $scope.uploadPrimaryImage = function(file){
-        EXIF.getData(file, function(){
-            exif = EXIF.getAllTags(this);
-            picOrientation = exif.Orientation;
-		});
-        
         var reader = new FileReader();
         reader.onload = function(event) {
-            loadImage(
-                event.target.result,
-                function(canvas){
-                    Image = canvas.toDataURL();
-
-                    if(itemId != undefined){
-                        var req = {
-                            userId: userFactory.user,
-                            accessToken: userFactory.userAccessToken,
-                            image: Image,
-                            uid: $scope.item.uid,
-                            existingLink: $scope.item.primaryImageLink,
-                            primary: true
-                        }
-
-                        $scope.$apply(function(){
-                            $scope.item.primaryImageLink = "loading";
-                        });
-
-                        $.ajax({
-                            url: '/flsv2/SaveImageInS3',
-                            type: 'post',
-                            data: JSON.stringify(req),
-                            contentType: "application/x-www-form-urlencoded",
-                            dataType: "json",
-
-                            success: function(response) {
-                                if(response.code == 0){
-                                    $scope.$apply(function(){
-                                        $scope.item.primaryImageLink = response.imageLink;
-                                    });
-                                }else{
-                                    $scope.$apply(function(){
-                                        $scope.item.primaryImageLink = "";
-                                    });
-                                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                                        if(response.code == 400)
-                                            logoutService.logout();
-                                    },function(){});
-                                }
-                            },
-
-                            error: function() {
-                                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
-                            }
-                        });
-                    }
-                },
-                {
-                    maxWidth: 450,
-                    maxHeight: 450,
-                    canvas: true,
-                    orientation: picOrientation
+            Image = reader.result;
+            if(itemId != undefined){
+                var req = {
+                    userId: userFactory.user,
+                    accessToken: userFactory.userAccessToken,
+                    image: Image,
+                    uid: $scope.item.uid,
+                    existingLink: $scope.item.primaryImageLink,
+                    primary: true
                 }
-            );
+                
+                $scope.$apply(function(){
+                    $scope.item.primaryImageLink = "loading";
+                });
+                
+                $.ajax({
+                    url: '/flsv2/SaveImageInS3',
+                    type: 'post',
+                    data: JSON.stringify(req),
+                    contentType: "application/x-www-form-urlencoded",
+                    dataType: "json",
+
+                    success: function(response) {
+                        if(response.code == 0){
+                            $scope.$apply(function(){
+                                $scope.item.primaryImageLink = response.imageLink;
+                            });
+                        }else{
+                            modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                if(response.code == 400)
+                                    logoutService.logout();
+                            },function(){});
+                        }
+                    },
+
+                    error: function() {
+                        modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    }
+                });
+            }
         }
         reader.readAsDataURL(file);
     }		
 	//end of image display
-    
-    $scope.deletePrimaryImage = function(){
-        
-        var req = {
-            userId: userFactory.user,
-            accessToken: userFactory.userAccessToken,
-            uid: $scope.item.uid,
-            link: $scope.item.primaryImageLink,
-            primary: true
-        }
-        
-        $scope.item.primaryImageLink = "loading";
-        
-        $.ajax({
-            url: '/flsv2/DeleteImageFromS3',
-            type: 'post',
-            data: JSON.stringify(req),
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "json",
-            success: function(response) {
-                if(response.code == 0){
-                    $scope.$apply(function(){
-                        $scope.item.primaryImageLink = '';
-                    });
-                }else{
-                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                        if(response.code == 400)
-                            logoutService.logout();
-                    },function(){});
-                }
-            },
-            error: function() {
-                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
-            }
-        });
-        
-    }
-    
-    $scope.deleteImage = function(index){
-        
-        var req = {
-            userId: userFactory.user,
-            accessToken: userFactory.userAccessToken,
-            uid: $scope.item.uid,
-            link: $scope.images[index].link,
-            primary: false
-        }
-        
-        $scope.images[index].link = "loading";
-        
-        $.ajax({
-            url: '/flsv2/DeleteImageFromS3',
-            type: 'post',
-            data: JSON.stringify(req),
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "json",
-            success: function(response) {
-                if(response.code == 0){
-                    $scope.$apply(function(){
-                        $scope.images[index].link = '';
-                    });
-                }else{
-                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                        if(response.code == 400)
-                            logoutService.logout();
-                    },function(){});
-                }
-            },
-            error: function() {
-                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
-            }
-        });
-    }
     
     $scope.postItem = function(){
         
