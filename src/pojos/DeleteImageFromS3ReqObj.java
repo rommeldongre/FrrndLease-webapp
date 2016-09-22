@@ -1,9 +1,9 @@
 package pojos;
 
-public class DeleteImageFromS3ReqObj extends ReqObj {
+public class DeleteImageFromS3ReqObj extends ReqObj{
 
 	String userId, accessToken, uid;
-	String link;
+	String [] links;
 	boolean primary;
 
 	public String getUserId() {
@@ -30,12 +30,12 @@ public class DeleteImageFromS3ReqObj extends ReqObj {
 		this.uid = uid;
 	}
 
-	public String getLink() {
-		return link;
+	public String[] getLinks() {
+		return links;
 	}
 
-	public void setLink(String link) {
-		this.link = link;
+	public void setLinks(String[] links) {
+		this.links = links;
 	}
 
 	public boolean isPrimary() {
@@ -45,5 +45,5 @@ public class DeleteImageFromS3ReqObj extends ReqObj {
 	public void setPrimary(boolean primary) {
 		this.primary = primary;
 	}
-
+	
 }

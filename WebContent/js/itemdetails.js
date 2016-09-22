@@ -17,23 +17,15 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     
     $scope.item = {};
     
-    $scope.item.primaryImageLink = $window.primaryImageLink;
+    $scope.item.image = $window.imageLinks;
     $scope.item.title = $window.title;
 	$scope.item.description = $window.description;
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
-    $scope.item.imageLinks = $window.imageLinks.split(",");
-                                   
-    if($scope.item.primaryImageLink != null){
-        $scope.item.imageLinks.unshift($scope.item.primaryImageLink);
-    }
-                                                
-    $scope.selectedImage = function(index){
-        $scope.item.primaryImageLink = $scope.item.imageLinks[index];
-    }
                                                 
     $scope.item_id = $window.item_id;
+	$scope.user_id = $window.userId;
         
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){
@@ -226,5 +218,55 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     $scope.loadNextItemTimeline = function(){
         getItemTimeline(lastOffset);
     }
+	
+	$scope.sendItemMessage = function(){
+		modalService.showModal({}, {messaging: true, bodyText: 'Type Message to Item Owner', actionButtonText: 'Send'}).then(function(result){
+            var message = result;
+			var friend_name = "";
+			var item_id= parseInt($scope.item_id);
+            if(message == "" || message == undefined)
+                message = "";
+            	
+			if($scope.user_id!= '-' && $scope.user_id!=null && $scope.user_id!="null")
+				var friendId = $scope.user_id;
+				
+		   var req = {
+                userId: userFactory.user,
+                message: message,
+				friendId: friendId,
+				friendName: friend_name,
+				itemId: item_id,
+				title: $scope.item.title,
+				uid: $window.uid,
+				accessToken: userFactory.userAccessToken
+            }
+			sendMessage(req);	
+        }, function(){});
+    }
+	
+	var sendMessage = function(req){
+		
+		$.ajax({
+			url: '/flsv2/SendMessage',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code==0){
+					bannerService.updatebannerMessage("Success, Message to Owner sent");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+					
+				}else{
+					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){});
+				}
+			},
+		
+			error: function() {
+				console.log("Not able to send message");
+			}
+		});
+	}
     
 }]);

@@ -41,16 +41,16 @@ public class DeleteImageFromS3Handler extends Connect implements AppHandler {
 				return rs;
 			}
 
-			String link = rq.getLink();
+			String[] links = rq.getLinks();
 			String uid = rq.getUid();
 
 			if (uid == null || uid.isEmpty()) {
 				rs.setCode(FLS_INVALID_OPERATION);
-				rs.setMessage("Please try refreshing the page!!");
+				rs.setMessage("This uid is invalid!!");
 				return rs;
 			}
 			
-			if (link.equals("null") || link.isEmpty() || link == null || link.equals("")){
+			if (links.equals("null") || links.length == 0 || links == null){
 				rs.setCode(FLS_INVALID_OPERATION);
 				rs.setMessage("Not able to delete this image!!");
 				return rs;
@@ -58,13 +58,15 @@ public class DeleteImageFromS3Handler extends Connect implements AppHandler {
 
 			FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
 			
-			int result = s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, link);
-			
-			if(result == 1){
-				if (rq.isPrimary()){
-					s3Bucket.deletePrimaryImageLink();
-				}else{
-					s3Bucket.deleteNormalImageLink(link);
+			for(String link : links){
+				int result = s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, link);
+				
+				if(result == 1){
+					if (rq.isPrimary()){
+						s3Bucket.deletePrimaryImageLink();
+					}else{
+						s3Bucket.deleteNormalImageLink(link);
+					}
 				}
 			}
 			
@@ -83,7 +85,6 @@ public class DeleteImageFromS3Handler extends Connect implements AppHandler {
 			rs.setMessage(FLS_INVALID_OPERATION_M);
 		}
 
-		LOGGER.info("process method completed");
 		return rs;
 	}
 

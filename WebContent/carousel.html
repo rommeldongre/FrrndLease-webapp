@@ -8,7 +8,7 @@
                                 <button class="btn btn-primary btn-fill">"{{search.string}}" &nbsp;&nbsp;&nbsp; x</button>
                             </span>
                             <span class="categoryfilters" ng-repeat="c in categories" ng-click="categorySelected($index)">
-                                <button class="btn ng-class:{'btn-default': !c.active, 'btn-fill btn-primary': c.active}" id="All">{{c.label}}</button>
+                                <button class="btn ng-class:{'btn-default': !c.active, 'btn-fill btn-primary': c.active}" onclick="ga('send', 'event', 'index', 'click', 'ItemCategory');" id="All">{{c.label}}</button>
                             </span>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                             <div class="card card-product">
                                 <div class="image">
                                     <a href="">
-                                        <img load-image="item.primaryImageLink" ng-src="" id="{{item.itemId}}">
+                                        <img load-image="item.imageLink" ng-src="" id="{{item.itemId}}">
                                     </a>
                                 </div>
                                 <div class="content">
@@ -61,7 +61,7 @@
 			</div>
             <div class="row">
                 <div ng-if="showNext" style="text-align:center;">
-                    <button ng-click="loadNextSlide()" class="btn btn-default btn-round btn-fill" id="successBtn" >Load more...</button>
+                    <button ng-click="loadNextSlide()" onclick="ga('send', 'event', 'index', 'click', 'LoadMore');" class="btn btn-default btn-round btn-fill" id="successBtn" >Load more...</button>
                 </div>
                 <div class="alert alert-success btn-tooltip" ng-if="showWishes" style="margin-top: 20px;" ng-click="offerStuffClicked()" data-toggle="tooltip" data-placement="top" title="Add your items to the store">
                     <div class="container">Top Ten Wished Items - 
