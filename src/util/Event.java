@@ -273,7 +273,7 @@ public class Event extends Connect{
 					res.setToUserId(rs.getString("to_user_id"));
 					res.setProfilePic(rs.getString("user_profile_picture"));
 					res.setUid(rs.getString("item_uid"));
-					res.setItemName(rs.getString("item_name"));
+					res.setTitle(rs.getString("item_name"));
 					res.setFullName(rs.getString("user_full_name"));
 					res.setReadStatus(rs.getString("read_status"));
 					res.setItemId(rs.getInt("item_id"));

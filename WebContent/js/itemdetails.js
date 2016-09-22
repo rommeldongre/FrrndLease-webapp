@@ -236,8 +236,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				friendId: friendId,
 				friendName: friend_name,
 				itemId: item_id,
-				itemName: $scope.item.title,
-				itemUid: $window.uid,
+				title: $scope.item.title,
+				uid: $window.uid,
 				accessToken: userFactory.userAccessToken
             }
 			sendMessage(req);	

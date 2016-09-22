@@ -376,7 +376,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
             var message = result;
 			var friend_name = $scope.friends[index].fullName;
 			var item_id=0;
-			var ItemUid=null,ItemName=null;
+			var Uid=null,Title=null;
             if(message == "" || message == undefined)
                 message = "";
             
@@ -391,12 +391,11 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
                 message: message,
 				friendId: friendId,
 				friendName: friend_name,
-				itemName: ItemName,
-				itemUid: ItemUid,
+				title: Title,
+				uid: Uid,
 				itemId : item_id,
 				accessToken: userFactory.userAccessToken
             }
-			console.log(req);
 			sendMessage(req);	
         }, function(){});
     }

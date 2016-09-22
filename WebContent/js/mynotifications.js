@@ -103,11 +103,11 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
     }
 	
 	$scope.replyFriendMessage = function(index){
-		modalService.showModal({}, {messaging: true, bodyText: 'Type Message Reply for friend or item', actionButtonText: 'Send'}).then(function(result){
+		modalService.showModal({}, {messaging: true, bodyText: 'Reply to this message', actionButtonText: 'Send'}).then(function(result){
             var message = result;
 			var friend_name = ""
 			var item_id= $scope.events[index].itemId;
-			var item_name = $scope.events[index].itemName;
+			var item_name = $scope.events[index].title;
 			var item_uid = $scope.events[index].uid;
 			
             if(message == "" || message == undefined)
@@ -125,8 +125,8 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 				friendId: friendId,
 				friendName: friend_name,
 				itemId : item_id,
-				itemName: item_name,
-				itemUid: item_uid,
+				title: item_name,
+				uid: item_uid,
 				accessToken: userFactory.userAccessToken
             }
 			
