@@ -24,6 +24,14 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
     $scope.item.imageLinks = $window.imageLinks.split(",");
+                                   
+    if($scope.item.primaryImageLink != null){
+        $scope.item.imageLinks.unshift($scope.item.primaryImageLink);
+    }
+                                                
+    $scope.selectedImage = function(index){
+        $scope.item.primaryImageLink = $scope.item.imageLinks[index];
+    }
                                                 
     $scope.item_id = $window.item_id;
         

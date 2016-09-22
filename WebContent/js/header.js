@@ -753,9 +753,6 @@ headerApp.directive('loadImage', ['$http', function($http){
                     MaxWidth = scope.maxWidth;
                 if(scope.maxHeight)
                     MaxHeight = scope.maxHeight;
-
-                attrs.$set('width', MaxWidth);
-                attrs.$set('height', MaxHeight);
                 
                 if(ImgSrc != 'loading' && ImgSrc != '' && ImgSrc != null && ImgSrc != 'null' && ImgSrc != undefined){
                     loadImage(
@@ -772,6 +769,9 @@ headerApp.directive('loadImage', ['$http', function($http){
                             crossOrigin: "anonymous"
                         }
                     );
+                }else if(ImgSrc == '' || ImgSrc == null || ImgSrc == 'null' || ImgSrc == undefined){
+                    attrs.$set('width', MaxWidth);
+                    attrs.$set('height', MaxHeight);
                 }
                 
             });
