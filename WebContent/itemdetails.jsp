@@ -164,7 +164,7 @@
                                 </div>
                             </div>
                         </div>
-                        <hr/>
+                        <hr/>s
                         <div class="text-center">
                             <div class="row" style="padding-bottom:20px;">
                                 <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()" style="padding:20px;"><u>Show Item Timeline</u></button>
