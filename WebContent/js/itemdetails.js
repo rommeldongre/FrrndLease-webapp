@@ -23,7 +23,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
-    $scope.item.imageLinks = $window.imageLinks.split(",");
+                                                
+    if($window.imageLinks != '' && $window.imageLinks != null)
+        $scope.item.imageLinks = $window.imageLinks.split(",");
+    else
+        $scope.item.imageLinks = [];
                                    
     if($scope.item.primaryImageLink != null){
         $scope.item.imageLinks.unshift($scope.item.primaryImageLink);
