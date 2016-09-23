@@ -90,85 +90,83 @@
                                 <div class="row" style="display: flex;flex-wrap: wrap;">
                                     <div class="col-lg-6 col-md-6">
                                         <img class="img-rounded" load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="..."/>
-                                        <h4 class="title"><br />
+                                        <h3 class="title"><br />
                                             <strong>${title}</strong>
-                                        </h4>
+                                        </h3>
                                     </div>
                                     <div class="col-lg-6 col-md-6">
-                                        <img class="loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
+                                        <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
                                     </div>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="info">
-                                        <div class="icon icon-green">
+                                <div class="col-xs-3">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                                        <div class="icon icon-sm">
                                             <i class="fa fa-filter" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
-                                            <h3>${category}</h3>
-                                            <p style="color:lightgray;"> Category </p>
+                                            <h5>${category}</h5>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-6">
-                                    <div class="info">
-                                        <div class="icon icon-blue">
+                                <div class="col-xs-3">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location">
+                                        <div class="icon icon-sm">
                                             <i class="fa fa-location-arrow" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
-                                            <h3>${sublocality} , ${locality}</h3>
-                                            <p style="color:lightgray;"> Location </p>
+                                            <h5>${sublocality}, ${locality}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
+                                        <div class="icon icon-sm">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="description">
+                                            <h5>${leaseTerm} Lease</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value">
+                                        <div class="icon icon-sm">
+                                            <i class="fa fa-rupee" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="description">
+                                            <h5>${leaseValue}</h5>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="info">
-                                        <div class="icon icon-orange">
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                                        </div>
-                                        <div class="description">
-                                            <h3>${leaseTerm} Lease</h3>
-                                            <p style="color:lightgray;"> Lease Term </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="info">
-                                        <div class="icon icon-red">
-                                            <i class="fa fa-rupee" aria-hidden="true"></i>
-                                        </div>
-                                        <div class="description">
-                                            <h3>${leaseValue}</h3>
-                                            <p style="color:lightgray;"> Resonable Replacement Value </p>
-                                        </div>
-                                    </div>
+                            <hr/>
+                            <div class="text-center">
+                                <div class="row" style="padding-top:10px;padding-bottom:10px;">
+                                    <button ng-if="!userMatch" class="btn btn-primary btn-fill" ng-click="requestItem()" style="padding:8px;">Request Item</button>
+                                    <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:8px;">Add to Wishlist</button>
+                                    <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="sendItemMessage()" style="padding:8px;">Message</button>
+                                    <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:8px;">Edit Item</button>
+                                    <button type="button" class="btn btn-social btn-fill btn-facebook" ng-click="shareItem(${uid})">
+                                        <i class="fa fa-facebook-square"></i> Share
+                                    </button>
+                                    <button ng-if="userMatch" class="btn btn-simple" ng-click="deleteItem()" style="padding:8px;">Delete</button>
+                                    <button class="btn btn-simple" onclick="cancel()" style="padding:8px;">Cancel</button>
                                 </div>
                             </div>
                             <hr ng-if="'${description}' != '' && '${description}' != null"/>
                             <div ng-if="'${description}' != '' && '${description}' != null" class="info">
-                                <div class="icon icon-pink">
-                                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                </div>
                                 <div class="description">
-                                    <h3>Description</h3>
-                                    <p> ${description} </p>
+                                    <h4 style="color:gray">Description</h4>
+                                    <h5><i class="fa fa-quote-left" aria-hidden="true"></i> ${description} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
                                 </div>
                             </div>
                         </div>
                         <hr/>
                         <div class="text-center">
-                            <div class="row" style="padding-top:20px;padding-bottom:20px;">
-                                <button ng-if="!userMatch" class="btn btn-primary btn-fill" ng-click="requestItem()" style="padding:10px;">Request Item</button>
-                                <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:10px;">Add to Wishlist</button>
-                                <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="sendItemMessage()" style="padding:10px;">Message</button>
-                                <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:10px;">Edit Item</button>
-                                <button ng-if="userMatch" class="btn btn-primary btn-simple" ng-click="deleteItem()" style="padding:10px;">Delete</button>
-                                <button class="btn btn-primary btn-simple" onclick="cancel()" style="padding:10px;">Cancel</button>
-                                <hr/>
+                            <div class="row" style="padding-bottom:20px;">
                                 <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()" style="padding:20px;"><u>Show Item Timeline</u></button>
                             </div>
                         </div>
