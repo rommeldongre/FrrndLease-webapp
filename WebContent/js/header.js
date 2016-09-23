@@ -769,7 +769,7 @@ headerApp.directive('loadImage', ['$http', function($http){
                             crossOrigin: "anonymous"
                         }
                     );
-                }else if(ImgSrc == '' || ImgSrc == null || ImgSrc == 'null' || ImgSrc == undefined){
+                }else if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
                     attrs.$set('width', MaxWidth);
                     attrs.$set('height', MaxHeight);
                 }

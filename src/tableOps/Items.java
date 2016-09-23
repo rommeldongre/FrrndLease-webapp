@@ -213,7 +213,11 @@ public class Items extends Connect {
 	
 				if(!(image == null || image.equals(""))){
 					FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
-					String link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, image);
+					String link = null;
+					if(image.startsWith("http"))
+						link = s3Bucket.copyImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, image);
+					else
+						link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, image, null);
 					if(link != null){
 						s3Bucket.savePrimaryImageLink(link);
 					}

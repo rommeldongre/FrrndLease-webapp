@@ -105,8 +105,6 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 	$scope.replyFriendMessage = function(index){
 		modalService.showModal({}, {messaging: true, bodyText: 'Reply to this message', actionButtonText: 'Send'}).then(function(result){
             var message = result;
-			var friend_name = $scope.events[index].fullName;
-			var item_id=0;
             var friend_name = "";
             var item_id= $scope.events[index].itemId;
             var item_name = $scope.events[index].title;
