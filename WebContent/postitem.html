@@ -110,7 +110,7 @@
                     <button id="post_item_button"  class="btn btn-primary btn-fill" ng-click="postItem()">Add Item</button>
                 </div >
                 <div ng-if="editable" class="col-lg-3 col-md-3 col-md-offset-2" >
-                    <button class="btn btn-primary btn-fill" ng-click="editItem()">Edit Item</button>
+                    <button ng-disabled="item.primaryImageLink=='loading' || disableEdit" class="btn btn-primary btn-fill" ng-click="editItem()">Edit Item</button>
                 </div >
                 <div class="col-lg-3 col-md-3 col-md-offset-1">
                     <button class="btn btn-default btn-fill" ng-click="cancel()">Cancel</button>

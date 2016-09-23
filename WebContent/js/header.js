@@ -789,7 +789,7 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
         link: function(scope, element, attrs) {
             element.bind("change", function (changeEvent) {
                 
-                EXIF.getData(file, function(){
+                EXIF.getData(changeEvent.target.files[0], function(){
                     exif = EXIF.getAllTags(this);
                     picOrientation = exif.Orientation;
                 });

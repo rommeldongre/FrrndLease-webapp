@@ -426,4 +426,16 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     getItemDetails();
     
+    $scope.$watch('images', function(){
+        for(var i in $scope.images){
+            if($scope.images[i].link === 'loading'){
+                $scope.disableEdit = true;
+                break;
+            }
+            else{
+                $scope.disableEdit = false;
+            }
+        }
+    }, true);
+    
 }]);
