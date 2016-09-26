@@ -241,7 +241,10 @@ public class Requests extends Connect {
 								obj1.put("id", dbResponse.getString("item_id"));
 								obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
 								obj1.put("status", "InStore");
-								obj1.put("image", " ");
+								if(dbResponse.getString("item_primary_image_link") == null || dbResponse.getString("item_primary_image_link").equals("null"))
+									obj1.put("primaryImageLink", "");
+								else
+									obj1.put("primaryImageLink", dbResponse.getString("item_primary_image_link"));
 
 								im.getData(obj1);
 								LOGGER.warning("Json parsed for FLS_MAIL_MAKE_REQUEST_TO");
@@ -503,7 +506,10 @@ public class Requests extends Connect {
 							obj1.put("id", dbResponse.getString("item_id"));
 							obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
 							obj1.put("status", "InStore");
-							obj1.put("image", " ");
+							if(dbResponse.getString("item_primary_image_link") == null || dbResponse.getString("item_primary_image_link").equals("null"))
+								obj1.put("primaryImageLink", "");
+							else
+								obj1.put("primaryImageLink", dbResponse.getString("item_primary_image_link"));
 
 							im.getData(obj1);
 							LOGGER.info("Json parsed for FLS_MAIL_REJECT_REQUEST_TO");

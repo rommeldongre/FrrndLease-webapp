@@ -2,11 +2,11 @@ package pojos;
 
 public class ItemDetailsResObj extends ResObj {
 
-	private String title, category, description, userId, leaseTerm, status, image, message,uid, locality, sublocality;
+	private String title, category, description, userId, leaseTerm, status, primaryImageLink, message, uid, locality, sublocality;
 	int id, leaseValue, code;
-
-	String imageLinks;
 	
+	String[] imageLinks;
+
 	public String getTitle() {
 		return title;
 	}
@@ -71,12 +71,20 @@ public class ItemDetailsResObj extends ResObj {
 		this.status = status;
 	}
 
-	public String getImage() {
-		return image;
+	public String getPrimaryImageLink() {
+		return primaryImageLink;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
+	public void setPrimaryImageLink(String primaryImageLink) {
+		this.primaryImageLink = primaryImageLink;
+	}
+
+	public String[] getImageLinks() {
+		return imageLinks;
+	}
+
+	public void setImageLinks(String[] imageLinks) {
+		this.imageLinks = imageLinks;
 	}
 
 	public int getId() {
@@ -117,14 +125,6 @@ public class ItemDetailsResObj extends ResObj {
 
 	public void setSublocality(String sublocality) {
 		this.sublocality = sublocality;
-	}
-
-	public String getImageLinks() {
-		return imageLinks;
-	}
-
-	public void setImageLinks(String imageLinks) {
-		this.imageLinks = imageLinks;
 	}
 
 }

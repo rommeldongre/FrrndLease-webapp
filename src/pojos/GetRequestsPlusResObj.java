@@ -10,7 +10,7 @@ public class GetRequestsPlusResObj extends ResObj {
 	String Id, Message, RequestorId, RequestUserName, RequestUserId, RequestDate, Title, Description;
 
 	// more items details
-	String category, leaseValue, leaseTerm, image, uid, imageLink;
+	String category, leaseValue, leaseTerm, uid, primaryImageLink;
 
 	// more items owners details
 	String requestor_mobile, requestor_address, requestor_locality, requestor_sublocality;
@@ -39,20 +39,12 @@ public class GetRequestsPlusResObj extends ResObj {
 		this.leaseTerm = leaseTerm;
 	}
 
-	public String getImage() {
-		return image;
+	public String getPrimaryImageLink() {
+		return primaryImageLink;
 	}
 
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public String getImageLink() {
-		return imageLink;
-	}
-
-	public void setImageLink(String imageLink) {
-		this.imageLink = imageLink;
+	public void setPrimaryImageLink(String primaryImageLink) {
+		this.primaryImageLink = primaryImageLink;
 	}
 
 	public String getUid() {

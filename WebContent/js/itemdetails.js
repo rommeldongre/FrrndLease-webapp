@@ -17,15 +17,28 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     
     $scope.item = {};
     
-    $scope.item.image = $window.imageLinks;
+    $scope.item.primaryImageLink = $window.primaryImageLink;
     $scope.item.title = $window.title;
 	$scope.item.description = $window.description;
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
                                                 
+    if($window.imageLinks != '' && $window.imageLinks != null)
+        $scope.item.imageLinks = $window.imageLinks.split(",");
+    else
+        $scope.item.imageLinks = [];
+                                   
+    if($scope.item.primaryImageLink != null){
+        $scope.item.imageLinks.unshift($scope.item.primaryImageLink);
+    }
+                                                
+    $scope.selectedImage = function(index){
+        $scope.item.primaryImageLink = $scope.item.imageLinks[index];
+    }
+                                                
     $scope.item_id = $window.item_id;
-	$scope.user_id = $window.userId;
+    $scope.user_id = $window.userId;
         
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){
@@ -218,8 +231,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     $scope.loadNextItemTimeline = function(){
         getItemTimeline(lastOffset);
     }
-	
-	$scope.sendItemMessage = function(){
+    
+    $scope.sendItemMessage = function(){
 		modalService.showModal({}, {messaging: true, bodyText: 'Type Message to Item Owner', actionButtonText: 'Send'}).then(function(result){
             var message = result;
 			var friend_name = "";
@@ -269,4 +282,30 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 		});
 	}
     
+    $scope.shareItem = function(uid){
+        var link = null;
+
+        if(window.location.href.indexOf("frrndlease.com") > -1){
+            link = 'http://www.frrndlease.com/ItemDetails?uid='+uid;
+        }else{
+            link = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
+            console.log('http://localhost:8080/flsv2/ItemDetails?uid='+uid);
+        }
+
+        FB.login(function(response) {
+            // Facebook checks whether user is logged in or not and asks for credentials if not.
+            // Share item listing with facebook friends using share dialog
+            FB.ui({
+                method: 'share',
+                href: link,
+            },function(response){
+                var m = "";
+                if (response && !response.error_code) {
+                    userFactory.userCredits("shared@10");
+                    $scope.shared = true;
+                }
+            });
+        }, {scope: 'email,public_profile,user_friends'});
+    }
+
 }]);
