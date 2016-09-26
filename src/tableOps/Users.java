@@ -173,7 +173,7 @@ public class Users extends Connect {
 							ps2.executeUpdate();
 							try {
 								Event event = new Event();
-								event.createEvent(userId, mobile, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
+								event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
 								res.setData(FLS_SUCCESS, "0", "An OTP has been sent to this number");
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -191,7 +191,7 @@ public class Users extends Connect {
 								ps3.executeUpdate();
 								try {
 									Event event = new Event();
-									event.createEvent(userId, mobile, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
+									event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MOBILE_VERIFICATION, 0, "Here is the OTP for your mobile verification: " + activation);
 									res.setData(FLS_SUCCESS, "0", "An OTP has been sent to this number");
 								} catch (Exception e) {
 									e.printStackTrace();
@@ -215,7 +215,7 @@ public class Users extends Connect {
 							ps2.executeUpdate();
 							try {
 								Event event = new Event();
-								event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
+								event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
 								res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -230,7 +230,7 @@ public class Users extends Connect {
 								ps3.executeUpdate();
 								try {
 									Event event = new Event();
-									event.createEvent(userId, email, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
+									event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_EMAIL_VERIFICATION, 0, "Click on the link sent to this email id.");
 									res.setData(FLS_SUCCESS, "0", "Click on the link sent to this email id.");
 								} catch (Exception e) {
 									e.printStackTrace();
