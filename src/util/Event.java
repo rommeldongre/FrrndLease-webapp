@@ -574,8 +574,8 @@ public class Event extends Connect{
 					phone = null;
 				}
 				
-				LOGGER.info("Sending sms to phone number : " + phone);
 				if(phone != null){
+					System.out.println("Sending sms to phone number : " + phone);
 				    TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
 					
 				    List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -585,7 +585,7 @@ public class Event extends Connect{
 			    
 			    	MessageFactory messageFactory = client.getAccount().getMessageFactory();
 			        Message message = messageFactory.create(params);
-			        LOGGER.info(message.getSid());
+			        System.out.println(message.getSid());
 				}
 				
 			}else{
