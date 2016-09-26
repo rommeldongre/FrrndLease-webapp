@@ -772,6 +772,7 @@ headerApp.directive('loadImage', ['$http', function($http){
                 }else if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
                     attrs.$set('width', MaxWidth);
                     attrs.$set('height', MaxHeight);
+                    attrs.$set('ngSrc', 'images/imgplaceholder.png');
                 }
                 
             });
