@@ -44,13 +44,31 @@ public class ItemDetails extends HttpServlet {
 				httprequest.setAttribute("description", response.getDescription());
 				httprequest.setAttribute("leaseValue", response.getLeaseValue());
 				httprequest.setAttribute("leaseTerm", response.getLeaseTerm());
-				httprequest.setAttribute("image", response.getImage());
 				httprequest.setAttribute("userId", response.getUserId());
 				httprequest.setAttribute("itemId", response.getId());
 				httprequest.setAttribute("uid", response.getUid());
 				httprequest.setAttribute("locality", response.getLocality());
 				httprequest.setAttribute("sublocality", response.getSublocality());
-				httprequest.setAttribute("imageLinks", response.getImageLinks());
+				httprequest.setAttribute("primaryImageLink", response.getPrimaryImageLink());
+				
+				String[] arr = response.getImageLinks();
+
+				String links = null;
+				
+				if(arr != null){
+					for(int i = 0; i < arr.length; i++){
+						if(links == null)
+							links = arr[i];
+						else
+							links = links + "," + arr[i];
+					}
+				}
+				
+				if(links == null)
+					httprequest.setAttribute("imageLinks", "");
+				else
+					httprequest.setAttribute("imageLinks", links);
+				
 			} else {
 				httprequest.setAttribute("code", response.getCode());
 				httprequest.setAttribute("message", "This item does not exist");

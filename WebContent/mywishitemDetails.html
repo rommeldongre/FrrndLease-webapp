@@ -565,14 +565,23 @@
 			
 			//display the picture of the item begins here
 			
-			if(obj.image){
-				url = obj.image;
-				var img = new Image();
+			if(obj.primaryImageLink){
+				url = obj.primaryImageLink;
 				
-				img.src = url;
-				if(img.src != null || img.src != "null"){
-					drawImage(img);
-				}
+                loadImage(
+                    url,
+                    function(canvas){
+                        element.removeAttr('width');
+                        element.removeAttr('height');
+                        drawImage(canvas.toDataURL());
+                    },
+                    {
+                        maxWidth: 300,
+                        maxHeight: 300,
+                        canvas: true,
+                        crossOrigin: "anonymous"
+                    }
+                );
 				
 			}
 			//display the picture of the item ends here

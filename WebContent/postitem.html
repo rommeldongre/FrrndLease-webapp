@@ -1,29 +1,67 @@
 <div class="container-fluid" id="midcontainer">
     <div class="row">
         <div class="left_title col-lg-6 col-md-6">
-            <strong>Post Item</strong>
+            <strong>Edit Item</strong>
         </div>
 	</div>
     
     <hr /><br /><br />
+    <div class="row" style="display: flex;flex-wrap: wrap;">
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="col-lg-5 col-md-5 loaded-img">
+            <img load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="">
+            <div ng-if="item.primaryImageLink == '' || item.primaryImageLink == null || item.primaryImageLink == 'null' || item.primaryImageLink == undefined" class="empty-actions">
+                <label class="primary-file-input-label" for="primary-file-input">
+                    <i class="fa fa-plus" aria-hidden="true" width="150" height="150" style="display:initial;"></i> ADD IMAGE
+                </label>
+                <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadPrimaryImage(files[0])" style="display:none;" />
+            </div>
+            <div ng-if="item.primaryImageLink=='loading'" class="loading-actions">
+                <div class="loading-primary-image">
+                    <i class="fa fa-refresh fa-spin" aria-hidden="true" width="150" height="150" style="display:initial;"></i> Please Wait..
+                </div>
+            </div>
+            <div ng-if="item.primaryImageLink != 'loading' && item.primaryImageLink != '' && item.primaryImageLink != null && item.primaryImageLink != 'null' && item.primaryImageLink != undefined" class="actions">
+                <button type="button" class="btn btn-danger btn-simple" ng-click="deletePrimaryImage()">
+                    <i class="fa fa-times"></i>
+                </button>
+                <label class="primary-file-input-label" for="primary-file-input">
+                    <i class="fa fa-image" aria-hidden="true" width="150" height="150" style="display:initial;"></i> CHANGE IMAGE
+                </label>
+                <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadPrimaryImage(files[0])" style="display:none;" />
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div ng-if="isEdit" class="loaded-img" style="margin-right:5px;" ng-repeat="image in images">
+                <img load-image="image.link" max-width="150" max-height="150" ng-src="" alt="..."/>
+                <div ng-if="image.link == '' || image.link == null || image.link == 'null' || image.link == undefined" class="empty-actions">
+                    <label for="{{$index}}" class="file-input-label">
+                        <i class="fa fa-plus" aria-hidden="true" style="display:initial;"></i> ADD IMAGE
+                    </label>
+                    <input id="{{$index}}" type="file" upload-image="image" uid="{{item.uid}}" style="display:none;" />
+                </div>
+                <div ng-if="image.link=='loading'" class="loading-actions">
+                    <div class="loading-image">
+                        <i class="fa fa-refresh fa-spin" aria-hidden="true" style="display:initial;"></i> Please Wait..
+                    </div>
+                </div>
+                <div ng-if="image.link!='loading' && image.link != '' && image.link != null && image.link != 'null' && image.link != undefined" class="actions">
+                    <button type="button" class="btn btn-danger btn-simple" ng-click="deleteImage($index)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <label for="{{$index}}" class="file-input-label">
+                        <i class="fa fa-image" aria-hidden="true" style="display:initial;"></i> CHANGE IMAGE
+                    </label>
+                    <input id="{{$index}}" type="file" upload-image="image" uid="{{item.uid}}" style="display:none;" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
     <div class="row">
         <div class="col-lg-3 col-md-3"></div>
         <div class="col-lg-6 col-md-6">
             <form class="form-horizontal" style="text-align: center;">
-                <div class="form-group">
-                    <label for="item_image" id="image_label" class="col-sm-2 control-label">Add Picture</label>
-                    <div class="col-sm-10">
-                       <input type="file" id="img_file" class="form-control" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <upload ng-model="item.id"></upload>
-                </div>
-                <div class="form-group" style="text-align:center;">
-                    <div class="col-md-12">
-                        <img load-image="item.imageLinks" ng-src="" alt="..." />
-                    </div>
-                </div>
                 <div class="form-group">
                     <label for="title" class="col-sm-2 control-label">Title</label>
                     <div class="col-sm-10">
@@ -72,7 +110,7 @@
                     <button id="post_item_button"  class="btn btn-primary btn-fill" ng-click="postItem()">Add Item</button>
                 </div >
                 <div ng-if="editable" class="col-lg-3 col-md-3 col-md-offset-2" >
-                    <button class="btn btn-primary btn-fill" ng-click="editItem()">Edit Item</button>
+                    <button ng-disabled="item.primaryImageLink=='loading' || disableEdit" class="btn btn-primary btn-fill" ng-click="editItem()">Edit Item</button>
                 </div >
                 <div class="col-lg-3 col-md-3 col-md-offset-1">
                     <button class="btn btn-default btn-fill" ng-click="cancel()">Cancel</button>
