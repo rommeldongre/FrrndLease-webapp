@@ -549,6 +549,7 @@ public class Event extends Connect{
 		String AUTH_TOKEN = "69d7e761d7361e35fe43afd55acff5ff";
 		
 		if(ENV_CONFIG.equals("dev")){
+			LOGGER.warning("Sms Sent in dev environment");
 			return true;
 		}
 		
@@ -557,7 +558,7 @@ public class Event extends Connect{
 		Connection hcp = getConnectionFromPool();
 		
 		try {
-			String sql = "SELECT user_mobile, user_sec_status, user_status, to_user_id, message FROM users INNER JOIN events ON users.user_id=events.to_user_id WHERE event_id=?";
+			String sql = "SELECT user_mobile, user_sec_status, user_status, to_user_id, message, notification_type FROM users INNER JOIN events ON users.user_id=events.to_user_id WHERE event_id=?";
 			ps = hcp.prepareStatement(sql);
 			ps.setInt(1, eventId);
 			
@@ -570,12 +571,14 @@ public class Event extends Connect{
 					phone = rs.getString("to_user_id");
 				}else if(rs.getInt("user_sec_status") == 1){
 					phone = rs.getString("user_mobile");
+				}else if(Notification_Type.valueOf(rs.getString("notification_type")).equals(Notification_Type.FLS_MOBILE_VERIFICATION)){
+					phone = rs.getString("user_mobile");
 				}else{
 					phone = null;
 				}
 				
 				if(phone != null){
-					System.out.println("Sending sms to phone number : " + phone);
+					LOGGER.warning("Sending sms to phone number : " + phone);
 				    TwilioRestClient client = new TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN);
 					
 				    List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -585,11 +588,11 @@ public class Event extends Connect{
 			    
 			    	MessageFactory messageFactory = client.getAccount().getMessageFactory();
 			        Message message = messageFactory.create(params);
-			        System.out.println(message.getSid());
+			        LOGGER.warning(message.getSid());
 				}
 				
 			}else{
-				LOGGER.info("Event id doesnot exist!!");
+				LOGGER.warning("Event id doesnot exist!!");
 			}
 			
 		} catch (Exception e) {
@@ -619,7 +622,7 @@ public class Event extends Connect{
 		
 		try{
 			
-			String sql = "SELECT user_email, user_sec_status, user_status, to_user_id, message FROM users INNER JOIN events ON users.user_id=events.to_user_id WHERE event_id=?";
+			String sql = "SELECT user_email, user_sec_status, user_status, to_user_id, message, notification_type FROM users INNER JOIN events ON users.user_id=events.to_user_id WHERE event_id=?";
 			ps1 = hcp.prepareStatement(sql);
 			ps1.setInt(1, eventId);
 			
@@ -631,6 +634,8 @@ public class Event extends Connect{
 				if(status.equals("email_pending") || status.equals("email_activated") || status.equals("facebook") || status.equals("google")){
 					email = rs1.getString("to_user_id");
 				}else if(rs1.getInt("user_sec_status") == 1){
+					email = rs1.getString("user_email");
+				}else if(Notification_Type.valueOf(rs1.getString("notification_type")).equals(Notification_Type.FLS_EMAIL_VERIFICATION)){
 					email = rs1.getString("user_email");
 				}else{
 					email = null;

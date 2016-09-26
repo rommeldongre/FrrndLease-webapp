@@ -11,7 +11,7 @@ public class FlsEmailJob extends Connect implements org.quartz.Job {
 	private FlsLogger LOGGER = new FlsLogger(FlsEmailJob.class.getName());
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        LOGGER.info("Fls Email Job Started");
+        LOGGER.warning("Fls Email Job Started");
         try {
         	
         	Event event = new Event();
@@ -24,9 +24,9 @@ public class FlsEmailJob extends Connect implements org.quartz.Job {
         		
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.info("Fls Email Job Failed");
+			LOGGER.warning("Fls Email Job Failed");
 		} finally{
-			LOGGER.info("Fls Email Job Ended");
+			LOGGER.warning("Fls Email Job Ended");
 		}
     }
 }

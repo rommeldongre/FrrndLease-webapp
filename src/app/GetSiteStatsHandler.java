@@ -53,7 +53,6 @@ public class GetSiteStatsHandler extends Connect implements AppHandler {
 			result = ps.executeQuery();
 
 			if (result.next()) {
-				System.out.println(result.getInt("item_count"));
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage("Success");
 				rs.setItemCount(result.getInt("item_count"));
