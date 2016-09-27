@@ -61,8 +61,6 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 			dbResponse = stmt.executeQuery();
 
 			if (!dbResponse.next()) {
-				//check = dbResponse.getString("request_item_id");
-				System.out.println("Empty result while firing select query on 1st table(requests)");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
