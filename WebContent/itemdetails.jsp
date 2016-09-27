@@ -159,7 +159,7 @@
                                     <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:8px;">Add to Wishlist</button>
                                     <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="sendItemMessage()" style="padding:8px;">Message</button>
                                     <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:8px;">Edit Item</button>
-                                    <button type="button" class="btn btn-social btn-fill btn-facebook" ng-click="shareItem(${uid})">
+                                    <button type="button" class="btn btn-social btn-fill btn-facebook" ng-click="shareItem()">
                                         <i class="fa fa-facebook-square"></i> Share
                                     </button>
                                     <button ng-if="userMatch" class="btn btn-simple" ng-click="deleteItem()" style="padding:8px;">Delete</button>
