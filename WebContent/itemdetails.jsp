@@ -10,7 +10,7 @@
     <!--Meta tags For Facebook start here-->
         <meta property="og:title" content="New Item Posted on Frrndlease"/>
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="images/fls-logo.png" />
+        <meta property="og:image" content="${primaryImageLink}" />
         <meta property="og:url" content="http://www.frrndlease.com/ItemDetails?uid=${uid}" />
         <meta property="og:description" content="${title}" />
 		<meta property="fb:app_id" content="107934726217988" />
@@ -183,7 +183,7 @@
                     </div>
                     <!-- Item Details ends -->
 					
-					<div id="FC" class="fb-comments" data-href="" data-width="100%" data-numposts="5"></div>
+					<div id="FC" class="fb-comments" data-href="" style="z-index:4;" data-width="100%" data-numposts="5"></div>
                             
                     <!-- sample pop up starts here-->
                     <button ng-hide="true" href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
