@@ -1,8 +1,8 @@
 var fbId = null;
 if(window.location.href.indexOf("frrndlease.com") > -1){
-				fbId = '107934726217988';
+				fbId = '107934726217988';   //Live App Id
 			}else{
-				fbId = '256875104657282';
+				fbId = '256875104657282';   //Dev App Id
 			}
 
 window.fbAsyncInit = function() {
@@ -10,7 +10,8 @@ window.fbAsyncInit = function() {
                 appId: fbId,
                 status: true,
                 cookie: true,
-                xfbml: true
+                xfbml: true,
+				version : 'v2.7'
             });
         };
 
