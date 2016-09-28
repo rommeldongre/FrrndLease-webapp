@@ -1,6 +1,6 @@
 <form class="form-horizontal" style="text-align: center;">
     <div ng-if="!shared" class="form-group" style="text-align:center;">
-        <button type="button" class="btn btn-social btn-fill btn-facebook btn-tooltip" ng-click="shareItem(item.uid)" data-toggle="tooltip" data-placement="top" title="Share on Facebook">
+        <button type="button" class="btn btn-social btn-fill btn-facebook btn-tooltip" ng-click="shareItem()" data-toggle="tooltip" data-placement="top" title="Share on Facebook">
             <i class="fa fa-facebook-square"></i> Share this on facebook
         </button>
     </div>
@@ -16,7 +16,7 @@
     </p>
     <hr>
     <div class="form-group" style="float:right;">
-        <button type="button" ng-if="!shared" class="btn btn-default btn-simple" ng-click="$nextStep()">Skip this step</button>
+        <button type="button" id="skip_button" ng-if="!shared" class="btn btn-default btn-simple" ng-click="$nextStep()">Skip this step</button>
         <button type="button" ng-if="shared" class="btn btn-primary btn-fill" ng-click="$nextStep()">
             Next<span class="fa fa-chevron-right"></span>
         </button>
