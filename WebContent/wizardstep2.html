@@ -16,7 +16,7 @@
     </p>
     <hr>
     <div class="form-group" style="float:right;">
-        <button type="button" ng-if="!shared" class="btn btn-default btn-simple" ng-click="$nextStep()">Skip this step</button>
+        <button type="button" id="skip_button" ng-if="!shared" class="btn btn-default btn-simple" ng-click="$nextStep()">Skip this step</button>
         <button type="button" ng-if="shared" class="btn btn-primary btn-fill" ng-click="$nextStep()">
             Next<span class="fa fa-chevron-right"></span>
         </button>
