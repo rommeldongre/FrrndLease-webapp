@@ -100,12 +100,23 @@
                                 <div class="row" style="display: flex;flex-wrap: wrap;">
                                     <div class="col-lg-6 col-md-6">
                                         <img class="img-rounded" load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="..."/>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
+                                    </div>
+                                </div>
+                                <div class="row" style="display: flex;flex-wrap: wrap;">
+                                    <div class="col-lg-6 col-md-6">
                                         <h3 class="title"><br />
                                             <strong>${title}</strong>
                                         </h3>
                                     </div>
                                     <div class="col-lg-6 col-md-6">
-                                        <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
+                                        <h4 ng-if="raters > 0">
+                                            <span>{{rating}}</span>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <strong>{{raters}} Ratings</strong>
+                                        </h4>
                                     </div>
                                 </div>
                             </div>

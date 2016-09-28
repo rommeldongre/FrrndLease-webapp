@@ -55,6 +55,35 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
         $scope.userMatch = false;
     }
     
+    var getItemsRating = function(){
+        
+        var req = {
+            itemId:$scope.item_id,
+            fromDate: null
+        }
+        
+        $.ajax({
+            url: '/flsv2/GetItemRating',
+            type: 'post',
+            data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+            success: function(response){
+				if(response.code == 0){
+                    $scope.$apply(function(){
+                        $scope.raters = response.totalRaters;
+                        $scope.rating = response.totalRating/$scope.raters;
+                    });
+				}
+            },
+            error: function(){
+            }
+	
+        });
+    }
+    
+    getItemsRating();
+    
     $scope.requestItem = function(){
         modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
             function(result){
