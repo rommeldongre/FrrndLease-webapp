@@ -166,11 +166,11 @@
                                     <button class="btn btn-simple" onclick="cancel()" style="padding:8px;">Cancel</button>
                                 </div>
                             </div>
-                            <hr ng-if="'${description}' != '' && '${description}' != null"/>
-                            <div ng-if="'${description}' != '' && '${description}' != null" class="info">
+                            <hr ng-if="item.description && item.description.length > 0"/>
+                            <div ng-if="item.description && item.description.length > 0" class="info">
                                 <div class="description">
                                     <h4 style="color:gray">Description</h4>
-                                    <h5><i class="fa fa-quote-left" aria-hidden="true"></i> ${description} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
+                                    <h5><i class="fa fa-quote-left" aria-hidden="true"></i> {{item.description}} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
                                 </div>
                             </div>
                         </div>

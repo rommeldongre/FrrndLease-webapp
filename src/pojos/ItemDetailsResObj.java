@@ -40,7 +40,7 @@ public class ItemDetailsResObj extends ResObj {
 	}
 
 	public String getDescription() {
-		return description;
+		return description.replaceAll("(\\n)+", " ");
 	}
 
 	public void setDescription(String description) {
