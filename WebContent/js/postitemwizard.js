@@ -129,6 +129,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                                 $scope.posted = true;
                                 $scope.item.uid = response.uid;
                                 eventsCount.updateEventsCount();
+								postToWall();
                             },function(result){});
                     }
                 },
@@ -140,6 +141,28 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         },function(){});
     }
     
+	var postToWall = function () {
+	
+		if(window.location.href.indexOf("frrndlease.com") > -1){
+			var params = {};
+			params['message'] = "New Item "+$scope.item.title+" posted on Frrndlease";
+			params['access_token'] = 'EAABiKoMD4QQBAC2ZBFRpZB6TKdPB8K56VBIjuqbzRlZAfHsBFllZAvSx5gBfKc1ZC1s4wiN9GenaqdrS0eAxbOJmVOhG1RGPRngUltPSJZAKjMdOaeH5ZAjY2cgfXNKslF3AhIyVCmPL04ZCUN5hvh0CyQIzVMmaHRaohpZBV0KBHBgZDZD';
+			params['link'] = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid ;
+	
+			FB.api('/1127097583974287/feed', 'post', params, function(response) {
+				if (!response || response.error) {
+					console.log('Error occured while posting Item on Facebook Page');
+				}else {
+					//Item posted on facebook page Sucessfully
+				}
+			});
+		
+		}else{
+			//LocalHost Test Case
+			console.log('Posting Item on Facebook Page not supported in Localhost');
+		}
+    }
+	
     $scope.shareItem = function(uid){
         var link = null;
 			
