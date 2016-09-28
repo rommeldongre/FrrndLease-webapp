@@ -214,7 +214,9 @@ headerApp.controller('headerCtrl', ['$scope',
 							}
 						}
 					}else{
-						loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
+						if(friends>0){
+							loginSignupService.loginCheckRes("You have " + friends + " Facebook friends in your FrrndLease friendlist");
+						}
 						window.location.replace("myapp.html#/");
 					}
                 }
