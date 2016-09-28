@@ -129,6 +129,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                                 $scope.posted = true;
                                 $scope.item.uid = response.uid;
                                 eventsCount.updateEventsCount();
+								postToWall();
                             },function(result){});
                     }
                 },
@@ -140,30 +141,52 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         },function(){});
     }
     
-    $scope.shareItem = function(uid){
+	var postToWall = function () {
+	
+		if(window.location.href.indexOf("frrndlease.com") > -1){
+			var params = {};
+			params['message'] = "New Item "+$scope.item.title+" posted on Frrndlease";
+			params['access_token'] = 'EAABiKoMD4QQBAC2ZBFRpZB6TKdPB8K56VBIjuqbzRlZAfHsBFllZAvSx5gBfKc1ZC1s4wiN9GenaqdrS0eAxbOJmVOhG1RGPRngUltPSJZAKjMdOaeH5ZAjY2cgfXNKslF3AhIyVCmPL04ZCUN5hvh0CyQIzVMmaHRaohpZBV0KBHBgZDZD';
+			params['link'] = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid ;
+	
+			FB.api('/1127097583974287/feed', 'post', params, function(response) {
+				if (!response || response.error) {
+					console.log('Error occured while posting Item on Facebook Page');
+				}else {
+					//Item posted on facebook page Sucessfully
+				}
+			});
+		
+		}else{
+			//LocalHost Test Case
+			console.log('Posting Item on Facebook Page not supported in Localhost');
+		}
+    }
+	
+    $scope.shareItem = function(){
         var link = null;
-			
+
         if(window.location.href.indexOf("frrndlease.com") > -1){
-            link = 'http://www.frrndlease.com/ItemDetails?uid='+uid;
+            link = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.uid;
+			
+			FB.login(function(response) {
+				// Facebook checks whether user is logged in or not and asks for credentials if not.
+				// Share item listing with facebook friends using share dialog
+				FB.ui({
+					method: 'share',
+					href: link,
+				},function(response){
+					var m = "";
+					if (response && !response.error_code) {
+						userFactory.userCredits("shared@10");
+						$scope.shared = true;
+					}
+				});
+			}, {scope: 'email,public_profile,user_friends'});
         }else{
-            link = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
-            console.log('http://localhost:8080/flsv2/ItemDetails?uid='+uid);
+			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){});
         }
-        
-        FB.login(function(response) {
-            // Facebook checks whether user is logged in or not and asks for credentials if not.
-            // Share item listing with facebook friends using share dialog
-            FB.ui({
-                method: 'share',
-                href: link,
-            },function(response){
-                var m = "";
-                if (response && !response.error_code) {
-                    userFactory.userCredits("shared@10");
-                    $scope.shared = true;
-                }
-            });
-        }, {scope: 'email,public_profile,user_friends'});
     }
     
     var testEmail = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
