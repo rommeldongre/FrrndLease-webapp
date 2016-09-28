@@ -14,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2029;
+	public final int appBuild = 2030;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1091,6 +1091,38 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2029;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates a table for items rating
+				if(dbBuild < 2030){
+					
+					String sqlItemsRatingTable = "CREATE TABLE `fls`.`items_rating` ( `rating_id` INT NOT NULL AUTO_INCREMENT , `item_id` INT(32) NULL , `leasee_id` VARCHAR(255) NULL DEFAULT NULL , `item_rating` ENUM('1','2','3','4') NOT NULL , `feedback` VARCHAR(255) NULL DEFAULT NULL , `datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`rating_id`)) ";
+					
+					PreparedStatement ps1 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlItemsRatingTable);
+						ps1.executeUpdate();
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps1 != null) ps1.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2030;
 					updateDBBuild(dbBuild);
 					
 				}
