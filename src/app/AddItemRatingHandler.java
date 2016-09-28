@@ -53,12 +53,6 @@ public class AddItemRatingHandler extends Connect implements AppHandler	{
 			int rating = rq.getRating();
 			String feedback = rq.getFeedback();
 			
-			if(leaseeId.isEmpty())
-				leaseeId = null;
-			
-			if(feedback.isEmpty())
-				feedback = null;
-			
 			String sqlInsertRating = "INSERT INTO items_rating (item_id, leasee_id, item_rating, feedback) VALUES (?,?,?,?)";
 			ps1 = hcp.prepareStatement(sqlInsertRating);
 			ps1.setInt(1, itemId);
