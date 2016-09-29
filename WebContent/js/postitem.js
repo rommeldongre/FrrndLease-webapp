@@ -177,7 +177,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                                     $scope.$apply(function(){
                                         $scope.item.primaryImageLink = "";
                                     });
-                                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                                         if(response.code == 400)
                                             logoutService.logout();
                                     },function(){});
@@ -185,7 +185,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                             },
 
                             error: function() {
-                                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                             }
                         });
                     }
@@ -226,14 +226,14 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                         $scope.item.primaryImageLink = '';
                     });
                 }else{
-                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                         if(response.code == 400)
                             logoutService.logout();
                     },function(){});
                 }
             },
             error: function() {
-                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
             }
         });
         
@@ -263,14 +263,14 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                         $scope.images[index].link = '';
                     });
                 }else{
-                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                         if(response.code == 400)
                             logoutService.logout();
                     },function(){});
                 }
             },
             error: function() {
-                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
             }
         });
     }
@@ -325,7 +325,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                             $("html, body").animate({ scrollTop: 0 }, "slow");
                         });
                     }else{
-                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                             if(response.code == 400)
                                 logoutService.logout();
                         },function(){});
@@ -333,7 +333,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                 },
 
                 error: function() {
-                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                 }
             });
         },function(){});
@@ -409,12 +409,12 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                     contentType: "application/x-www-form-urlencoded",
                     dataType: "json",
                     success:function(response){
-                        modalService.showModal({}, {bodyText: response.Message,showCancel: false, actionButtonText: 'OK'}).then(function(result){
+                        modalService.showModal({}, {bodyText: response.Message,showCancel: false, actionButtonText: 'Ok'}).then(function(result){
                             window.location.replace("ItemDetails?uid="+$scope.item.uid);
 							},function(){});
                          },
                     error: function(){
-                        modalService.showModal({}, {bodyText: "Something is Wrong",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: "Something is Wrong",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                         }
                    });
             },function(){});

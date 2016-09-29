@@ -124,7 +124,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 
                 success: function(response) {
                     if(response.code == 0){
-                        modalService.showModal({}, {bodyText: "Your account has been credited with 10 credits!!", showCancel:false, actionButtonText: 'OK'}).then(
+                        modalService.showModal({}, {bodyText: "Your account has been credited with 10 credits!!", showCancel:false, actionButtonText: 'Ok'}).then(
                             function(result){
                                 $scope.posted = true;
                                 $scope.item.uid = response.uid;
@@ -135,7 +135,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                 },
 
                 error: function() {
-                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                 }
             });
         },function(){});
@@ -184,7 +184,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 				});
 			}, {scope: 'email,public_profile,user_friends'});
         }else{
-			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						}, function(){});
         }
     }
@@ -256,14 +256,14 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                         }
                     }
                     if(count > 0){
-                        modalService.showModal({}, {bodyText: "Successfully imported "+count+" friends.", showCancel:false, actionButtonText: 'OK'}).then(function(result){
+                        modalService.showModal({}, {bodyText: "Successfully imported "+count+" friends.", showCancel:false, actionButtonText: 'Ok'}).then(function(result){
                             eventsCount.updateEventsCount();
                             $scope.invited = true;
                             count = 0;
                         }, function(){});
                     }
 				}else{
-					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){}, function(){});
+					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){}, function(){});
 				}
 			}
             
@@ -283,7 +283,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             },function(response){
                 if (response && !response.error_code) {
                     //check 'response' to see if call was successful
-                    modalService.showModal({}, {bodyText: "Invitation successfully sent to Facebook Friend(s)" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                    modalService.showModal({}, {bodyText: "Invitation successfully sent to Facebook Friend(s)" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                         userFactory.userCredits("invited@10");
                         eventsCount.updateEventsCount();
                         $scope.invited = true;

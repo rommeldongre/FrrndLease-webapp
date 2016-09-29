@@ -147,7 +147,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 					bannerService.updatebannerMessage("Success, Message to Friend sent");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 				}else{
-					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){eventsCount.updateEventsCount();
 						if(response.code == 400){
 							logoutService.logout();
 						}

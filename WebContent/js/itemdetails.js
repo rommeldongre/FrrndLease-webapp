@@ -70,13 +70,13 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
-							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 								window.location.replace("/flsv2/index.html");
 							},function(){});
 					}
                     },
                     function error(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                     });
             }, 
             function(){
@@ -137,12 +137,12 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							contentType: "application/x-www-form-urlencoded",
 							dataType: "json",
 							success:function(response){
-								modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+								modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 									 window.location.replace("myapp.html#/mywishlists");
 								},function(){});
 							},
 							error: function(){
-								modalService.showModal({}, {bodyText: "Not Working",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+								modalService.showModal({}, {bodyText: "Not Working",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
 							}
 						});
             },
@@ -166,13 +166,13 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
-							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 								window.location.replace("/flsv2/index.html");
 							},function(){});
 						}
                     },
                     function error(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                     });
             }, 
             function(){
@@ -272,7 +272,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
-					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						}, function(){});
 				}
 			},
@@ -304,7 +304,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				});
 			}, {scope: 'email,public_profile,user_friends'});
         }else{
-			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						}, function(){});
         }
     }

@@ -112,7 +112,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 				if(len<=20){
 					directImport_continue();
 				}else{
-					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 					}, function(){});
 				}
 			}
@@ -124,7 +124,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 		
 				if(count == len){
 					var validEmail = len-errCount;
-					modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						$scope.friends = [];
 						initialPopulate();
                         eventsCount.updateEventsCount();
@@ -156,7 +156,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 				},function(response){
 					if (response && !response.error) {
 						//check 'response' to see if call was successful
-						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){eventsCount.updateEventsCount();
 						}, function(){});
 						}
 				});
@@ -334,7 +334,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 					count++;
 					if(count == len){
 							var validEmail = len-errCount;
-							modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 							$scope.friends = [];
 							initialPopulate();
                             eventsCount.updateEventsCount();
@@ -414,7 +414,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
-					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						if(response.code == 400){
 							logoutService.logout();
 						}

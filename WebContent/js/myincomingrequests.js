@@ -70,7 +70,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
     
     $scope.grantLease = function(itemId, reqUserId, index){
         
-        modalService.showModal({}, {bodyText: "Are you sure you want to lease the Item?",actionButtonText: 'YES'}).then(
+        modalService.showModal({}, {bodyText: "Are you sure you want to lease the Item?",actionButtonText: 'Yes'}).then(
             function(result){
                 var req = {
                     reqUserId: reqUserId,
@@ -96,7 +96,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
 					initialPopulate();
 					$("html, body").animate({ scrollTop: 0 }, "slow");
 				}else{
-                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
+                modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(
                     function(result){
                         if(response.code == 400)
                             logoutService.logout();
@@ -112,7 +112,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
     
     $scope.rejectLease = function(itemId, reqUserId, index){
         
-        modalService.showModal({}, {bodyText: "Are you sure you want to reject the Request?",actionButtonText: 'YES'}).then(
+        modalService.showModal({}, {bodyText: "Are you sure you want to reject the Request?",actionButtonText: 'Yes'}).then(
             function(result){
                 if(itemId === '')
                     itemId = null;
@@ -144,7 +144,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
 					initialPopulate();
 					$("html, body").animate({ scrollTop: 0 }, "slow");
 				}else{
-                modalService.showModal({}, {bodyText: response.Message, showCancel:false, actionButtonText: 'OK'}).then(
+                modalService.showModal({}, {bodyText: response.Message, showCancel:false, actionButtonText: 'Ok'}).then(
                     function(result){
                         initialPopulate();
                     },function(){});
