@@ -50,7 +50,7 @@ public class GetItemRatingHandler extends Connect implements AppHandler {
 			ps1.setInt(1, rq.getItemId());
 			rs1 = ps1.executeQuery();
 			
-			int totalRating = -1;
+			int totalRating = 0;
 			int totalRaters = 0;
 			
 			while(rs1.next()){
@@ -61,7 +61,7 @@ public class GetItemRatingHandler extends Connect implements AppHandler {
 			LOGGER.info("Got total ratings for item id " + rq.getItemId() + " ---- " + totalRating);
 			LOGGER.info("Total number of raters for this item id are " + totalRaters);
 			
-			if(totalRating != -1){
+			if(totalRating != 0){
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
 				rs.setTotalRating(totalRating);
