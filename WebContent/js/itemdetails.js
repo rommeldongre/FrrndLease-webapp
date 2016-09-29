@@ -73,7 +73,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				if(response.code == 0){
                     $scope.$apply(function(){
                         $scope.raters = response.totalRaters;
-                        $scope.rating = response.totalRating/$scope.raters;
+                        $scope.rating = Math.round(response.totalRating/$scope.raters);
                     });
 				}
             },

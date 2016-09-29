@@ -637,6 +637,8 @@ public class Event extends Connect{
 					email = rs1.getString("user_email");
 				}else if(Notification_Type.valueOf(rs1.getString("notification_type")).equals(Notification_Type.FLS_EMAIL_VERIFICATION)){
 					email = rs1.getString("user_email");
+				}else if (Notification_Type.valueOf(rs1.getString("notification_type")).equals(Notification_Type.FLS_MAIL_ADD_FRIEND_TO)){
+					email = rs1.getString("to_user_id");
 				}else{
 					email = null;
 				}
