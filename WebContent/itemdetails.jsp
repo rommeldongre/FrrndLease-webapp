@@ -109,20 +109,21 @@
                                     <h5 class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="raters > 0" style="text-align:center;">
                                         <span ng-if="rating == 1">
                                             <img src="images/very-unhappy-n.jpg" style="width:10%;">
-                                            <strong>Very unhappy</strong>
+                                            Average User Experience for this item is<strong> Very unhappy</strong>
                                         </span>
                                         <span ng-if="rating == 2">
                                             <img src="images/unhappy-n.jpg" style="width:10%;">
-                                            <strong>Unhappy</strong>
+                                            Average User Experience for this item is<strong> Unhappy</strong>
                                         </span>
                                         <span ng-if="rating == 3">
                                             <img src="images/happy-n.jpg" style="width:10%;">
-                                            <strong>Happy</strong>
+                                            Average User Experience for this item is<strong> Happy</strong>
                                         </span>
                                         <span ng-if="rating == 4">
                                             <img src="images/very-happy-n.jpg" style="width:10%;">
-                                            <strong>Very happy</strong>
+                                            Average User Experience for this item is<strong> Very happy</strong>
                                         </span>
+                                        <br/>
                                         <span style="color:#ccc"> ({{raters}} Ratings)</span>
                                     </h5>
                                 </div>

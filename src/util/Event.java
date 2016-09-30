@@ -491,7 +491,7 @@ public class Event extends Connect{
 		Connection hcp = getConnectionFromPool();
 		
 		try{
-			String sqlNotificationType = "SELECT to_user_id,notification_type FROM events WHERE event_id=?";
+			String sqlNotificationType = "SELECT from_user_id,to_user_id,notification_type FROM events WHERE event_id=?";
 			ps = hcp.prepareStatement(sqlNotificationType);
 			ps.setInt(1, eventId);
 			
@@ -509,6 +509,8 @@ public class Event extends Connect{
 					case FLS_SMS_REGISTER:
 					case FLS_MOBILE_VERIFICATION:
 						return sendSms(eventId);
+					case FLS_MAIL_ADD_FRIEND_TO:
+						return sendEmailToFriend(rs.getString("from_user_id"), rs.getString("to_user_id"));
 					default:
 						break;
 				}
@@ -637,14 +639,12 @@ public class Event extends Connect{
 					email = rs1.getString("user_email");
 				}else if(Notification_Type.valueOf(rs1.getString("notification_type")).equals(Notification_Type.FLS_EMAIL_VERIFICATION)){
 					email = rs1.getString("user_email");
-				}else if (Notification_Type.valueOf(rs1.getString("notification_type")).equals(Notification_Type.FLS_MAIL_ADD_FRIEND_TO)){
-					email = rs1.getString("to_user_id");
 				}else{
 					email = null;
 				}
 				
 				if(email != null){
-					String sqlGetAllData = "SELECT tb1.event_id, tb1.from_user_id, tb1.to_user_id, tb1.datetime, tb1.notification_type, tb1.message, tb2.item_id, tb2.item_name, tb2.item_category, tb2.item_desc, tb2.item_user_id, tb2.item_lease_value, tb2.item_lease_term, tb2.item_primary_image_link, tb2.item_uid, tb2.item_status, tb3.user_id, tb3.user_full_name, tb3.user_profile_picture, tb3.user_activation, tb3.user_credit, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
+					String sqlGetAllData = "SELECT tb1.*, tb2.*, tb3.*, tb4.user_id AS senders_user_id, tb4.user_full_name AS senders_full_name, tb4.user_profile_picture AS senders_profile_pic, tb4.user_activation AS senders_user_activation, tb4.user_referral_code AS senders_refferal_code FROM events tb1 LEFT JOIN items tb2 ON tb1.item_id=tb2.item_id LEFT JOIN users tb3 ON tb1.to_user_id=tb3.user_id LEFT JOIN users tb4 ON tb1.from_user_id=tb4.user_id WHERE event_id=?";
 					ps2 = hcp.prepareStatement(sqlGetAllData);
 					ps2.setInt(1, eventId);
 					
@@ -764,6 +764,56 @@ public class Event extends Connect{
 		}
 		
 		return true;
+	}
+	
+	private boolean sendEmailToFriend(String fromUserId, String toUserId){
+		
+		LOGGER.info("Sending email to friend : " + toUserId);
+		
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
+	
+		JSONObject obj = new JSONObject();
+		
+		try{
+			
+			String sqlSelectUserInfo = "SELECT user_full_name, user_referral_code FROM users WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlSelectUserInfo);
+			ps1.setString(1, fromUserId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				
+				obj.put("to", toUserId);
+				obj.put("toUserCredit", 0);
+				obj.put("from", rs1.getString("user_full_name"));
+				obj.put("fromUserRefferalCode", rs1.getString("user_referral_code"));
+				
+				FlsEmail mail = new FlsEmail();
+				return mail.sendEmail(obj, Notification_Type.FLS_MAIL_ADD_FRIEND_TO);
+				
+			}
+			
+		}catch(SQLException e){
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		} catch (JSONException e) {
+			LOGGER.warning(FLS_JSON_EXCEPTION_M);
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return true;
+		
 	}
 
 }

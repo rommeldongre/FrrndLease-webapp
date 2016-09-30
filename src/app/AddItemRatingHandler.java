@@ -1,14 +1,12 @@
 package app;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
 import connect.Connect;
 import pojos.AddItemRatingReqObj;
 import pojos.AddItemRatingResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.FlsRating;
 import util.OAuth;
 
 public class AddItemRatingHandler extends Connect implements AppHandler	{
@@ -35,10 +33,6 @@ public class AddItemRatingHandler extends Connect implements AppHandler	{
 		AddItemRatingReqObj rq = (AddItemRatingReqObj) req;
 		AddItemRatingResObj rs = new AddItemRatingResObj();
 		
-		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		int rs1;
-		
 		try{
 			OAuth oauth = new OAuth();
 			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
@@ -48,21 +42,10 @@ public class AddItemRatingHandler extends Connect implements AppHandler	{
 				return rs;
 			}
 			
-			int itemId = rq.getItemId();
-			String leaseeId = rq.getLeaseeId();
-			int rating = rq.getRating();
-			String feedback = rq.getFeedback();
+			FlsRating rating = new FlsRating(rq.getItemId());
+			int response = rating.addItemRating(rq.getLeaseeId(), rq.getRating(), rq.getFeedback());
 			
-			String sqlInsertRating = "INSERT INTO items_rating (item_id, leasee_id, item_rating, feedback) VALUES (?,?,?,?)";
-			ps1 = hcp.prepareStatement(sqlInsertRating);
-			ps1.setInt(1, itemId);
-			ps1.setString(2, leaseeId);
-			ps1.setInt(3, rating);
-			ps1.setString(4, feedback);
-			
-			rs1 = ps1.executeUpdate();
-			
-			if(rs1 == 1){
+			if(response == 1){
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
 			}else{
@@ -74,15 +57,9 @@ public class AddItemRatingHandler extends Connect implements AppHandler	{
 			e.printStackTrace();
 			rs.setCode(FLS_SQL_EXCEPTION);
 			rs.setMessage(FLS_SQL_EXCEPTION_M);
-		}finally{
-			try{
-				if(ps1 != null) ps1.close();
-				if(hcp != null) hcp.close();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
 		}
 		
+		LOGGER.info("Completion of AddItemRatingHandler");
 		return rs;
 	}
 

@@ -13,6 +13,7 @@ import pojos.GetItemStoreByXResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.FlsRating;
 
 public class GetItemStoreByXHandler extends Connect implements AppHandler {
 
@@ -117,6 +118,10 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs1.setSublocality(dbResponse.getString("user_sublocality"));
 					rs1.setDistance(dbResponse.getFloat("distance"));
 					rs1.setFriendStatus(dbResponse.getBoolean("friendst"));
+					
+					FlsRating rating = new FlsRating(rs1.getItemId());
+					rs1.setItemsAvgRating(rating.getItemsAvgRating());
+					
 					rs.addResList(rs1);
 					offset = offset + 1;
 				}

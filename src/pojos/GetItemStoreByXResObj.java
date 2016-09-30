@@ -57,6 +57,9 @@ public class GetItemStoreByXResObj extends ResObj{
 	//image of item
 	String primaryImageLink;
 	
+	// Avg Rating
+	int itemsAvgRating;
+	
 	boolean friendStatus;
 	
 	public boolean isFriendStatus() {
@@ -205,6 +208,14 @@ public class GetItemStoreByXResObj extends ResObj{
 
 	public void setPrimaryImageLink(String primaryImageLink) {
 		this.primaryImageLink = primaryImageLink;
+	}
+
+	public int getItemsAvgRating() {
+		return itemsAvgRating;
+	}
+
+	public void setItemsAvgRating(int itemsAvgRating) {
+		this.itemsAvgRating = itemsAvgRating;
 	}
 	
 }
