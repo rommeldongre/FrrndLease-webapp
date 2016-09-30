@@ -94,19 +94,38 @@
                     <!-- Error Message Display ends -->
 
                     <!-- Item Details starts -->
-                    <div class="row card-user" style="padding-top:50px" ng-if="!showError">
+                    <div class="row" style="padding-top:50px" ng-if="!showError">
                         <div class="content">
-                            <div class="author">
-                                <div class="row" style="display: flex;flex-wrap: wrap;">
-                                    <div class="col-lg-6 col-md-6">
-                                        <img class="img-rounded" load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="..."/>
-                                        <h3 class="title"><br />
-                                            <strong>${title}</strong>
-                                        </h3>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
-                                    </div>
+                            <div class="row" style="display: flex;flex-wrap: wrap;text-align:center;">
+                                <div class="col-lg-6 col-md-6" style="border-right: 1px solid #ccc;">
+                                    <img class="img-rounded" load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="..."/>
+                                    <h3 class="title">
+                                        <strong>${title}</strong>
+                                    </h3>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
+                                    <hr/>
+                                    <h5 class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="raters > 0" style="text-align:center;">
+                                        <span ng-if="rating == 1">
+                                            <img src="images/very-unhappy-n.jpg" style="width:10%;">
+                                            Average User Experience for this item is<strong> Very unhappy</strong>
+                                        </span>
+                                        <span ng-if="rating == 2">
+                                            <img src="images/unhappy-n.jpg" style="width:10%;">
+                                            Average User Experience for this item is<strong> Unhappy</strong>
+                                        </span>
+                                        <span ng-if="rating == 3">
+                                            <img src="images/happy-n.jpg" style="width:10%;">
+                                            Average User Experience for this item is<strong> Happy</strong>
+                                        </span>
+                                        <span ng-if="rating == 4">
+                                            <img src="images/very-happy-n.jpg" style="width:10%;">
+                                            Average User Experience for this item is<strong> Very happy</strong>
+                                        </span>
+                                        <br/>
+                                        <span style="color:#ccc"> ({{raters}} Ratings)</span>
+                                    </h5>
                                 </div>
                             </div>
                             <hr/>
@@ -142,7 +161,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value">
                                         <div class="icon icon-sm">
                                             <i class="fa fa-rupee" aria-hidden="true"></i>
                                         </div>
@@ -152,34 +171,32 @@
                                     </div>
                                 </div>
                             </div>
+                            <div ng-init='item.description = "${description}"'>
+                                <hr ng-if='"${description}" != null && "${description}" != ""'/>
+                                <div ng-if='"${description}" != null && "${description}" != ""' class="info">
+                                    <div class="description">
+                                        <h4 style="color:gray">Description</h4>
+                                        <h5><i class="fa fa-quote-left" aria-hidden="true"></i> ${description} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
+                                    </div>
+                                </div>
+                            </div>
                             <hr/>
                             <div class="text-center">
                                 <div class="row" style="padding-top:10px;padding-bottom:10px;">
                                     <button ng-if="!userMatch" class="btn btn-primary btn-fill" ng-click="requestItem()" style="padding:8px;">Request Item</button>
-                                    <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="wishItem()" style="padding:8px;">Add to Wishlist</button>
-                                    <button ng-if="!userMatch" class="btn btn-simple btn-fill" ng-click="sendItemMessage()" style="padding:8px;">Message</button>
                                     <button ng-if="userMatch" class="btn btn-primary btn-fill" ng-click="editItem()" style="padding:8px;">Edit Item</button>
                                     <button type="button" class="btn btn-social btn-fill btn-facebook" ng-click="shareItem()">
                                         <i class="fa fa-facebook-square"></i> Share
                                     </button>
+                                    <button ng-if="!userMatch" class="btn btn-simple" ng-click="sendItemMessage()" style="padding:8px;">Message</button>
+                                    <button ng-if="!userMatch" class="btn btn-simple" ng-click="wishItem()" style="padding:8px;">Add to Wishlist</button>
+                                    <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()" style="padding:8px;">Show Item Timeline</button>
                                     <button ng-if="userMatch" class="btn btn-simple" ng-click="deleteItem()" style="padding:8px;">Delete</button>
                                     <button class="btn btn-simple" onclick="cancel()" style="padding:8px;">Cancel</button>
                                 </div>
                             </div>
-                            <hr ng-if="'${description}' != '' && '${description}' != null"/>
-                            <div ng-if="'${description}' != '' && '${description}' != null" class="info">
-                                <div class="description">
-                                    <h4 style="color:gray">Description</h4>
-                                    <h5><i class="fa fa-quote-left" aria-hidden="true"></i> ${description} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
-                                </div>
-                            </div>
                         </div>
                         <hr/>
-                        <div class="text-center">
-                            <div class="row" style="padding-bottom:20px;">
-                                <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()" style="padding:20px;"><u>Show Item Timeline</u></button>
-                            </div>
-                        </div>
                     </div>
                     <!-- Item Details ends -->
 					
@@ -241,7 +258,6 @@
         var code = "${code}";
         var userId = "${userId}";
 		var title = "${title}";
-        var description = "${description}";
 		var category = "${category}";
 		var leaseValue = "${leaseValue}";
 		var leaseTerm = "${leaseTerm}";
