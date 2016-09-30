@@ -19,7 +19,6 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     
     $scope.item.primaryImageLink = $window.primaryImageLink;
     $scope.item.title = $window.title;
-	$scope.item.description = $window.description;
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;

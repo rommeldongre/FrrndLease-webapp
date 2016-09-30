@@ -170,11 +170,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr ng-if="item.description && item.description.length > 0"/>
-                            <div ng-if="item.description && item.description.length > 0" class="info">
-                                <div class="description">
-                                    <h4 style="color:gray">Description</h4>
-                                    <h5><i class="fa fa-quote-left" aria-hidden="true"></i> {{item.description}} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
+                            <div ng-init='item.description = "${description}"'>
+                                <hr ng-if='"${description}" != null && "${description}" != ""'/>
+                                <div ng-if='"${description}" != null && "${description}" != ""' class="info">
+                                    <div class="description">
+                                        <h4 style="color:gray">Description</h4>
+                                        <h5><i class="fa fa-quote-left" aria-hidden="true"></i> ${description} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
+                                    </div>
                                 </div>
                             </div>
                             <hr/>
@@ -255,7 +257,6 @@
         var code = "${code}";
         var userId = "${userId}";
 		var title = "${title}";
-        var description = "${description}";
 		var category = "${category}";
 		var leaseValue = "${leaseValue}";
 		var leaseTerm = "${leaseTerm}";
