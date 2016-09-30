@@ -36,8 +36,8 @@
                                 </div>
                                 <div class="content">
                                     <a href="">
-                                        <h5 class="title" id="{{item.itemId}}" style="text-align:center;">
-                                            <b>{{item.title}}</b>
+                                        <h5 class="title" id="{{item.itemId}}" style="text-align:center;word-wrap: break-word;">
+                                            <b>{{item.title | limitTo: 20}}</b>
                                         </h5>
                                     </a>
                                     <p class="category btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;">

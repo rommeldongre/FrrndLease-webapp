@@ -98,7 +98,7 @@
                         <div class="content">
                             <div class="row" style="display: flex;flex-wrap: wrap;text-align:center;">
                                 <div class="col-lg-6 col-md-6" style="border-right: 1px solid #ccc;">
-                                    <img class="img-rounded" load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="..."/>
+                                    <img class="img-rounded" load-image="item.primaryImageLink" scale="45" ng-src="" alt="..."/>
                                     <h3 class="title" style="word-wrap: break-word;">
                                         <strong>${title}</strong>
                                     </h3>
