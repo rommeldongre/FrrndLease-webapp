@@ -304,7 +304,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				});
 			}, {scope: 'email,public_profile,user_friends'});
         }else{
-			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 						}, function(){});
         }
     }
