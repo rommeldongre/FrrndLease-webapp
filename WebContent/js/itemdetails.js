@@ -19,7 +19,6 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     
     $scope.item.primaryImageLink = $window.primaryImageLink;
     $scope.item.title = $window.title;
-	$scope.item.description = $window.description;
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
@@ -55,6 +54,35 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     }else{
         $scope.userMatch = false;
     }
+    
+    var getItemsRating = function(){
+        
+        var req = {
+            itemId:$scope.item_id,
+            fromDate: null
+        }
+        
+        $.ajax({
+            url: '/flsv2/GetItemRating',
+            type: 'post',
+            data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+            success: function(response){
+				if(response.code == 0){
+                    $scope.$apply(function(){
+                        $scope.raters = response.totalRaters;
+                        $scope.rating = Math.round(response.totalRating/$scope.raters);
+                    });
+				}
+            },
+            error: function(){
+            }
+	
+        });
+    }
+    
+    getItemsRating();
     
     $scope.requestItem = function(){
         modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
