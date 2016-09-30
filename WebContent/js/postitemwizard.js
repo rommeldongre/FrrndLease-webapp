@@ -9,7 +9,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         },
         {
             templateUrl: 'wizardstep2.html',
-            title: 'Share this with friends (Earn 10 credits for the first time you share)'
+            title: 'Let your friends know (Earn 10 credits for the first time you share)'
         },
         {
             templateUrl: 'wizardstep3.html',
@@ -118,31 +118,33 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             accessToken: userAccessToken
         }
         
-        modalService.showModal({}, {bodyText: 'Are you sure you want to Post this Item?'}).then(function(result){
-            $.ajax({
-                url: '/flsv2/PostItem',
-                type: 'post',
-                data: JSON.stringify(req),
-                contentType: "application/x-www-form-urlencoded",
-                dataType: "json",
+        $.ajax({
+            url: '/flsv2/PostItem',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
 
-                success: function(response) {
-                    if(response.code == 0){
-                        modalService.showModal({}, {bodyText: "Your account has been credited with 10 credits!!", showCancel:false, actionButtonText: 'OK'}).then(
-                            function(result){
-                                $scope.posted = true;
-                                $scope.item.uid = response.uid;
-                                eventsCount.updateEventsCount();
-								postToWall();
-                            },function(result){});
-                    }
-                },
-
-                error: function() {
-                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+            success: function(response) {
+                if(response.code == 0){
+                    modalService.showModal({}, {bodyText: "Your account has been credited with 10 credits!!", showCancel:false, actionButtonText: 'OK'}).then(
+                        function(result){
+                            $scope.posted = true;
+                            $scope.item.uid = response.uid;
+                            eventsCount.updateEventsCount();
+							postToWall();
+                        },function(result){});
                 }
-            });
-        },function(){});
+            },
+
+            error: function() {
+                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+            }
+        });
+    }
+    
+    $scope.editItem = function(){
+        window.location.replace("ItemDetails?uid="+$scope.item.uid);
     }
     
 	var postToWall = function () {

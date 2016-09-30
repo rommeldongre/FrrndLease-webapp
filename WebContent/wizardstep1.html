@@ -29,9 +29,12 @@
     <hr/>
     <div class="form-group" style="float:right;">
         <button ng-if="!posted" id="post_item_button" class="btn btn-primary btn-fill" ng-click="form.title.$valid ? postItem() : ''">Post Item</button>
-        <a type="button" ng-if="!posted" class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="Click if not interested in earning free credits" href="myapp.html#/">Not interested</a>
-        <button type="button" id="next_button" ng-if="posted" class="btn btn-primary btn-fill" ng-click="$nextStep()">
-            Next<span class="fa fa-chevron-right"></span>
+        <button type="button" ng-if="posted" class="btn btn-primary btn-fill" ng-click="editItem()">
+            Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
         </button>
+        <button type="button" id="next_button" ng-if="posted" class="btn btn-primary btn-fill" ng-click="$nextStep()">
+            Next <span class="fa fa-chevron-right"></span>
+        </button>
+        <a type="button" ng-if="!posted" class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="Click if not interested in earning free credits" href="myapp.html#/">Not interested</a>
     </div>
 </form>
