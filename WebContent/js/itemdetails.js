@@ -308,5 +308,5 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						}, function(){});
         }
     }
-
+	
 }]);
