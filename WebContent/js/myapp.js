@@ -61,9 +61,9 @@ myApp.config(function($routeProvider){
         controller : 'myNotificationsCtrl'
     })
     
-    .when('/postitem/:id?', {
-        templateUrl : 'postitem.html',
-        controller : 'postItemCtrl'
+    .when('/edititem/:id?', {
+        templateUrl : 'edititem.html',
+        controller : 'editItemCtrl'
     })
     
     .when('/wizard', {

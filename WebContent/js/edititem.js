@@ -1,6 +1,6 @@
-var postItemApp = angular.module('myApp');
+var editItemApp = angular.module('myApp');
 
-postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', 'logoutService', function($scope, userFactory, bannerService, $routeParams, modalService, logoutService){
+editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', 'logoutService', function($scope, userFactory, bannerService, $routeParams, modalService, logoutService){
     
     var itemId = $routeParams.id;
     
