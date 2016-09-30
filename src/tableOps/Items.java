@@ -189,7 +189,10 @@ public class Items extends Connect {
 				keys.next();
 				int itemId = keys.getInt(1);
 				
-				String uid = title + " " + itemId;
+				String uidTitle = title;
+				uidTitle = uidTitle.substring(0, Math.min(uidTitle.length(), 10));
+				
+				String uid = uidTitle + " " + itemId;
 				uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
 				
 				// updating the item_uid value of the last item inserted
