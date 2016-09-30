@@ -58,7 +58,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
     
     $scope.closeLease = function(ItemId, RequestorUserId, index){
         if($scope.leases[index].status == 'LeaseStarted' || $scope.leases[index].status == 'LeaseReady'){
-            modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'YES'}).then(
+            modalService.showModal({}, {bodyText: "Are you sure you want to close the lease on the Item?",actionButtonText: 'Yes'}).then(
                 function(result){
                     req = {
                         itemId: ItemId,
@@ -70,7 +70,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
                     closeLeaseSend(req, index);
                 },function(){});
         }else{
-            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseReady", showCancel:false, actionButtonText: 'OK'}).then(
+            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseReady", showCancel:false, actionButtonText: 'Ok'}).then(
                 function(result){
                 },function(){});
         }
@@ -91,7 +91,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
 					$scope.leases = [];
                     initialPopulate();
 				}else{
-					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
+					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(
 					function(result){
                         if(response.code == 400)
                             logoutService.logout();
@@ -110,7 +110,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
     
     $scope.renewLease = function(ItemId, RequestorUserId, index){
         if($scope.leases[index].status == 'LeaseStarted' || $scope.leases[index].status == 'LeaseEnded' || $scope.leases[index].status == 'LeaseReady'){
-            modalService.showModal({}, {bodyText: "Are you sure you want to renew the lease on the Item?",actionButtonText: 'YES'}).then(
+            modalService.showModal({}, {bodyText: "Are you sure you want to renew the lease on the Item?",actionButtonText: 'Yes'}).then(
                 function(result){
                     req = {
                         itemId: ItemId,
@@ -122,7 +122,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
                     renewLeaseSend(req);
                 },function(){});
         }else{
-            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseEnded or LeaseReady", showCancel:false, actionButtonText: 'OK'}).then(
+            modalService.showModal({}, {bodyText: "Can only be closed when lease status is LeaseStarted or LeaseEnded or LeaseReady", showCancel:false, actionButtonText: 'Ok'}).then(
                 function(result){
                 },function(){});
         }
@@ -142,7 +142,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
 					$scope.leases = [];
                     initialPopulate();
 				}else{
-					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
+					modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(
 					function(result){
 						if(response.code == 400)
                             logoutService.logout();
