@@ -98,8 +98,12 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     $scope.postItem = function(){
         
         var item_title = $scope.item.title;
-        if(item_title == '')
+        if(item_title == '' || item_title == undefined)
             item_title = null;
+        
+        var item_image = $scope.item.image;
+        if(item_image == '' || item_image == undefined)
+            item_image = null;
 
         var req = {
             id: 0,
@@ -110,7 +114,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             leaseValue: 1000,
             leaseTerm: 'Month',
             status: "InStore",
-            image: $scope.item.image,
+            image: item_image,
             accessToken: userAccessToken
         }
         
