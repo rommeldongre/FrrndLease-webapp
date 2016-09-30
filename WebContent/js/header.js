@@ -519,7 +519,7 @@ headerApp.controller('headerCtrl', ['$scope',
             contentType:"application/json",
             dataType:"json",
             success: function(response){
-                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(
+                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(
                     function(r){
                         if(response.code == 0){
                             $scope.credits = response.newCreditBalance;
@@ -617,7 +617,7 @@ headerApp.service('modalService', ['$uibModal',
         };
 
         var modalOptions = {
-            actionButtonText: 'YES',
+            actionButtonText: 'Yes',
             showCancel: true,
 			labelText: 'Default Label Text',
             submitting: false,
@@ -848,7 +848,7 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
                                         scope.$apply(function () {
                                             scope.uploadImage.link = "";
                                         });
-                                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                                             if(response.code == 400)
                                                 logoutService.logout();
                                         },function(){});
@@ -856,7 +856,7 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
                                 },
 
                                 error: function() {
-                                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                                 }
                             });
                         },

@@ -99,7 +99,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
 					$scope.wishList = [];
 					initialPopulate();
 				}else{
-					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						$scope.wishList = [];
 						initialPopulate();
 					}, function(){});
@@ -147,7 +147,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
     }
     
     $scope.deleteWishItem = function(itemId, index){
-        modalService.showModal({}, {bodyText: "Are you sure you want to delete this WishItem?",actionButtonText: 'YES'}).then(function(result){
+        modalService.showModal({}, {bodyText: "Are you sure you want to delete this WishItem?",actionButtonText: 'Yes'}).then(function(result){
             var req = {
                 id: itemId,
                 userId: userFactory.user
@@ -173,7 +173,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
 						$scope.wishList.splice(index, 1);
 					});
 				}else{
-					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						$scope.wishList.splice(index, 1);
 					}, function(){});
 				}
