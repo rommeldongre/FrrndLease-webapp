@@ -39,6 +39,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                                                 
     $scope.item_id = $window.item_id;
     $scope.user_id = $window.userId;
+	$scope.uid     = $window.uid;
         
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){
@@ -69,13 +70,13 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
-							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 								window.location.replace("/flsv2/index.html");
 							},function(){});
 					}
                     },
                     function error(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                     });
             }, 
             function(){
@@ -136,12 +137,12 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							contentType: "application/x-www-form-urlencoded",
 							dataType: "json",
 							success:function(response){
-								modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+								modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 									 window.location.replace("myapp.html#/mywishlists");
 								},function(){});
 							},
 							error: function(){
-								modalService.showModal({}, {bodyText: "Not Working",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+								modalService.showModal({}, {bodyText: "Not Working",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
 							}
 						});
             },
@@ -165,13 +166,13 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
-							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 								window.location.replace("/flsv2/index.html");
 							},function(){});
 						}
                     },
                     function error(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                     });
             }, 
             function(){
@@ -271,7 +272,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
-					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						}, function(){});
 				}
 			},
@@ -282,30 +283,30 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 		});
 	}
     
-    $scope.shareItem = function(uid){
+    $scope.shareItem = function(){
         var link = null;
 
         if(window.location.href.indexOf("frrndlease.com") > -1){
-            link = 'http://www.frrndlease.com/ItemDetails?uid='+uid;
+            link = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.uid;
+			
+			FB.login(function(response) {
+				// Facebook checks whether user is logged in or not and asks for credentials if not.
+				// Share item listing with facebook friends using share dialog
+				FB.ui({
+					method: 'share',
+					href: link,
+				},function(response){
+					var m = "";
+					if (response && !response.error_code) {
+						userFactory.userCredits("shared@10");
+						$scope.shared = true;
+					}
+				});
+			}, {scope: 'email,public_profile,user_friends'});
         }else{
-            link = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
-            console.log('http://localhost:8080/flsv2/ItemDetails?uid='+uid);
+			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+						}, function(){});
         }
-
-        FB.login(function(response) {
-            // Facebook checks whether user is logged in or not and asks for credentials if not.
-            // Share item listing with facebook friends using share dialog
-            FB.ui({
-                method: 'share',
-                href: link,
-            },function(response){
-                var m = "";
-                if (response && !response.error_code) {
-                    userFactory.userCredits("shared@10");
-                    $scope.shared = true;
-                }
-            });
-        }, {scope: 'email,public_profile,user_friends'});
     }
 
 }]);
