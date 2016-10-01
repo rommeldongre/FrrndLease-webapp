@@ -151,11 +151,14 @@ public class GetNotificationsResObj {
 				this.notificationType = Icon_Type.FLS_TIME.name();
 				break;
 			case "FLS_MAIL_MESSAGE_FRIEND_FROM":
-			case "FLS_MAIL_MESSAGE_FRIEND_TO":
 			case "FLS_MAIL_MESSAGE_ITEM_FROM":
-			case "FLS_MAIL_MESSAGE_ITEM_TO":
-				this.notificationType = Icon_Type.FLS_MESSAGE.name();
+				this.notificationType = Icon_Type.FLS_MESSAGE_FROM.name();
 				break;
+			case "FLS_MAIL_MESSAGE_FRIEND_TO":
+			case "FLS_MAIL_MESSAGE_ITEM_TO":
+				this.notificationType = Icon_Type.FLS_MESSAGE_TO.name();
+				break;
+				
 			default:
 				this.notificationType = Icon_Type.FLS_DEFAULT.name();
 				break;

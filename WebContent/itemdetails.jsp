@@ -203,9 +203,9 @@
 					<div id="FC" class="fb-comments" data-href="" style="z-index:4;" data-width="100%" data-numposts="5"></div>
                             
                     <!-- sample pop up starts here-->
-                    <button ng-hide="true" href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
+                    <button ng-hide="true" href="#myModalTable_item" id="openBtn_item" data-toggle="modal" class="btn btn-default">Modal</button>
 
-                    <div class="modal fade" id="myModalTable" data-backdrop="static" data-keyboard="false">
+                    <div class="modal fade" id="myModalTable_item" data-backdrop="static" data-keyboard="false">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">

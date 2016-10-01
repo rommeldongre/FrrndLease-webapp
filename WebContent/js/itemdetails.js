@@ -211,7 +211,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     var lastOffset = 0;
     
     $scope.showItemTimeline = function(){
-		$("#openBtn").click();
+		$("#openBtn_item").click();
 		$scope.showNext = true;
 		getItemTimeline(lastOffset);
 	}
