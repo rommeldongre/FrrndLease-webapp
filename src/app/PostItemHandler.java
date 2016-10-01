@@ -113,7 +113,10 @@ public class PostItemHandler extends Connect implements AppHandler {
 			itemId = keys.getInt(1);
 			LOGGER.info("Item created with item id : " + itemId);
 			
-			uid = rq.getTitle()+ " " + itemId;
+			String uidTitle = rq.getTitle();
+			uidTitle = uidTitle.substring(0, Math.min(uidTitle.length(), 10));
+			
+			uid = uidTitle+ " " + itemId;
 			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
 			
 			// updating the item_uid value of the last item inserted

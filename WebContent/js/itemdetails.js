@@ -180,7 +180,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     }
     
     $scope.editItem = function(){
-        window.location.replace("myapp.html#/postitem/"+$scope.item_id);
+        window.location.replace("myapp.html#/edititem/"+$scope.item_id);
     }
     
     $scope.deleteItem = function(){

@@ -220,7 +220,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             $('#loginModal').modal('show');
         }
         else{
-            window.location.replace("myapp.html#/postitem");
+            window.location.replace("myapp.html#/wizard");
         }
     }
     

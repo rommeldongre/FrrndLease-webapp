@@ -742,7 +742,8 @@ headerApp.directive('loadImage', ['$http', function($http){
         scope: {
             'loadImage': '=',
             'maxWidth': '=?',
-            'maxHeight': '=?'
+            'maxHeight': '=?',
+            'scale': '=?'
         },
         link: function(scope, element, attrs){
             scope.$watch('loadImage', function(){
@@ -750,6 +751,22 @@ headerApp.directive('loadImage', ['$http', function($http){
                 var MaxHeight = 300;
                 
                 var ImgSrc = scope.loadImage;
+                
+                if(scope.scale){
+                    if($(window).width()>=991){
+                        //for desktops
+                        MaxWidth = 1000*(scope.scale/100);
+                        MaxHeight = 1000*(scope.scale/100);
+                    }else if($(window).width()<=500){
+                        //for mobiles
+                        MaxWidth = 650*(scope.scale/100);
+                        MaxHeight = 650*(scope.scale/100);
+                    }else{
+                        //for tablets
+                        MaxWidth = 850*(scope.scale/100);
+                        MaxHeight = 850*(scope.scale/100);
+                    }
+                }
 
                 if(scope.maxWidth)
                     MaxWidth = scope.maxWidth;
