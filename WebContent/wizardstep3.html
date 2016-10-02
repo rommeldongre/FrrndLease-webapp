@@ -1,18 +1,39 @@
 <div class="container-fluid" id="midcontainer" ng-cloak>
     
-    <div class="row">
-        <div class="col-md-6">
-            <button class="btn btn-social btn-fill btn-facebook" ng-click="importfb()">
-                <i class="fa fa-facebook"></i> Invite Facebook Friends (Earn 10 credits for the first time you invite)
-            </button><br/><br/>
-            <button class="btn btn-social btn-fill btn-google" ng-click="importgoogle()" href="" data-toggle="modal" data-target="#importContacts">
-                <i class="fa fa-google-plus"></i> Add Gmail Friends (Earn 1 credit for each email invitation)
-            </button><br/><br/>
-            <button class="btn btn-info btn-fill" ng-click="directImport()">
-                <i class="fa fa-envelope"></i> Add by Email (Earn 1 credit for each email invitation)
-            </button><br/><br/>
+    <div class="row" style="display: flex;flex-wrap: wrap;">
+        <div class="col-xs-6">
+            <div class="row">
+                <div class="col-xs-6">
+                    <button class="btn btn-social btn-fill btn-facebook btn-block" ng-click="importfb()">
+                        <i class="fa fa-facebook"></i> Invite Facebook Friends
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    (Earn 10 credits for the first time you invite)
+                </div>
+            </div><br/><br/>
+            <div class="row">
+                <div class="col-xs-6">
+                    <button class="btn btn-social btn-fill btn-google btn-block" ng-click="importgoogle()" href="" data-toggle="modal" data-target="#importContacts">
+                        <i class="fa fa-google-plus"></i> Add Gmail Friends
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    (Earn 1 credit for each email invitation)
+                </div>
+            </div><br/><br/>
+            <div class="row">
+                <div class="col-xs-6">
+                    <button class="btn btn-info btn-fill btn-block" ng-click="directImport()">
+                        <i class="fa fa-envelope"></i> Add by Email
+                    </button>
+                </div>
+                <div class="col-xs-6">
+                    (Earn 1 credit for each email invitation)
+                </div>
+            </div><br/><br/>
         </div>
-        <ul class="sub_title col-md-6">
+        <ul class="sub_title col-xs-6" style="border-left: 1px solid #ccc;">
             <li>Invite goes out with your refferal code - <strong>{{refferalCode}}</strong>.</li><br/>
             <li>On sign up using your refferal code you and your friend get 10 credits each.</li><br/>
         </ul>
