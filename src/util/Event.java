@@ -100,7 +100,8 @@ public class Event extends Connect{
 		FLS_TIME,
 		FLS_POSITIVE,
 		FLS_NEGATIVE,
-		FLS_MESSAGE
+		FLS_MESSAGE_FROM,
+		FLS_MESSAGE_TO,
 	}
 	
 	public enum User_Notification {

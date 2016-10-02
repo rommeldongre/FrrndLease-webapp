@@ -71,6 +71,11 @@ public class Friends extends Connect {
 				e.printStackTrace();
 			}
 			break;
+			
+		case "reinvite":
+			LOGGER.info("Reinvite op is selected..");
+			Reinvite();
+			break;
 
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
@@ -119,7 +124,7 @@ public class Friends extends Connect {
 				LOGGER.info("Printing check val: "+check+" "+rs2.getString("friend_full_name"));
 			}
 			
-			if (check == null) {
+			if (check == null  & !userId.equals(friendId)) {
 				LOGGER.info("Creating statement.....");
 				String sqlAddFriends = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status) values (?,?,?,?,?)";
 				stmt3 = hcp.prepareStatement(sqlAddFriends);
@@ -156,14 +161,6 @@ public class Friends extends Connect {
 				LOGGER.warning("Friend Already exists.....");
 				res.setData(FLS_SUCCESS, check, FLS_SUCCESS_M);
 			}
-			
-			if (!(friendId.contains("@fb") || friendId.contains("@google"))) {
-				source = "@email";
-				Event event = new Event();
-				event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
-				event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
-			}
-			
 		} catch (SQLException e) {
 			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
@@ -437,5 +434,31 @@ public class Friends extends Connect {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void Reinvite() {
+		
+		friendId = fm.getFriendId();
+		fullName = fm.getFullName();
+		mobile = fm.getMobile();
+		userId = fm.getUserId();
+		
+		try {
+			
+			Event event = new Event();
+			event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
+			event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
+			
+			message = "Reinvite to friend Sent";
+			LOGGER.warning(message);
+			Id = friendId;
+			res.setData(FLS_SUCCESS, Id, message);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+		
 	}
 }
