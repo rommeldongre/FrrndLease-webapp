@@ -126,11 +126,8 @@ headerApp.controller('headerCtrl', ['$scope',
                     else if(SignUpStatus == "mobile_pending")
                         loginSignupService.signUpCheckRes("OTP has been sent to your phone!!");
                     else{
-                        localStorage.setItem("userloggedin", UserId);
-                        localStorage.setItem("userloggedinName", Name);
-                        localStorage.setItem("userReferralCode", response.Id);
                         var obj = JSON.parse(response.Message);
-                        localStorage.setItem("userloggedinAccess", obj.access_token);
+						userFactory.setLocalStorageValues(UserId,Name,obj.access_token,response.Id);
                         if(SignUpStatus == "facebook"){
                             getFacebookFriends(Email);
 							matchFbIdService.updateFbId();
@@ -181,10 +178,7 @@ headerApp.controller('headerCtrl', ['$scope',
             success: function(response) {
                 if(response.Code === "FLS_SUCCESS") {
                     var obj = JSON.parse(response.Message);
-                    localStorage.setItem("userloggedin", obj.userId);
-                    localStorage.setItem("userloggedinName", obj.fullName);
-                    localStorage.setItem("userloggedinAccess", obj.access_token);
-					localStorage.setItem("userReferralCode", obj.referralCode);
+					userFactory.setLocalStorageValues(obj.userId,obj.fullName,obj.access_token,obj.referralCode)
                     if(signUpStatus == "facebook"){
                         getFacebookFriends(obj.userId);
 						matchFbIdService.updateFbId();
@@ -481,8 +475,8 @@ headerApp.controller('headerCtrl', ['$scope',
 	
 	$scope.$on('matchFbId', function(event){
 		var req = {
-			userId: localStorage.getItem("userloggedin"),
-            accessToken: localStorage.getItem("userloggedinAccess")
+			userId: userFactory.user,
+            accessToken: userFactory.userAccessToken
 		};
 		
 		$.ajax({
@@ -598,6 +592,17 @@ headerApp.factory('userFactory', ['$rootScope', function($rootScope){
     
     dataFactory.userCreditsRes = function(credits){
         $rootScope.$broadcast('updatedCredits', credits);
+    }
+	
+	dataFactory.setLocalStorageValues = function(userId,fullName,access_token,referralCode){
+		localStorage.setItem("userloggedin",userId);
+        localStorage.setItem("userloggedinName",fullName);
+        localStorage.setItem("userloggedinAccess",access_token);
+		localStorage.setItem("userReferralCode",referralCode);
+		
+		dataFactory.user = localStorage.getItem("userloggedin");
+		dataFactory.userName = localStorage.getItem("userloggedinName");
+		dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
     }
     
     return dataFactory;
