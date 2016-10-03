@@ -226,7 +226,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                         });
                     }, function(){});
                 }else{
-                    modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(
+                    modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'Ok'}).then(
                             function(r){}, function(){});
                 }
             },
@@ -473,7 +473,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
 				bannerService.updatebannerMessage(dialogText,"");
 				$("html, body").animate({ scrollTop: 0 }, "slow");
             }else{
-				modalService.showModal({}, {bodyText:response.data.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+				modalService.showModal({}, {bodyText:response.data.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                     if(response.data.code == 400)
                         logoutService.logout();
                     else

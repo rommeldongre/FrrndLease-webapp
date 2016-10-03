@@ -519,7 +519,7 @@ headerApp.controller('headerCtrl', ['$scope',
             contentType:"application/json",
             dataType:"json",
             success: function(response){
-                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(
+                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(
                     function(r){
                         if(response.code == 0){
                             $scope.credits = response.newCreditBalance;
@@ -617,7 +617,7 @@ headerApp.service('modalService', ['$uibModal',
         };
 
         var modalOptions = {
-            actionButtonText: 'YES',
+            actionButtonText: 'Yes',
             showCancel: true,
 			labelText: 'Default Label Text',
             submitting: false,
@@ -742,7 +742,8 @@ headerApp.directive('loadImage', ['$http', function($http){
         scope: {
             'loadImage': '=',
             'maxWidth': '=?',
-            'maxHeight': '=?'
+            'maxHeight': '=?',
+            'scale': '=?'
         },
         link: function(scope, element, attrs){
             scope.$watch('loadImage', function(){
@@ -750,6 +751,22 @@ headerApp.directive('loadImage', ['$http', function($http){
                 var MaxHeight = 300;
                 
                 var ImgSrc = scope.loadImage;
+                
+                if(scope.scale){
+                    if($(window).width()>=991){
+                        //for desktops
+                        MaxWidth = 1000*(scope.scale/100);
+                        MaxHeight = 1000*(scope.scale/100);
+                    }else if($(window).width()<=500){
+                        //for mobiles
+                        MaxWidth = 650*(scope.scale/100);
+                        MaxHeight = 650*(scope.scale/100);
+                    }else{
+                        //for tablets
+                        MaxWidth = 850*(scope.scale/100);
+                        MaxHeight = 850*(scope.scale/100);
+                    }
+                }
 
                 if(scope.maxWidth)
                     MaxWidth = scope.maxWidth;
@@ -831,7 +848,7 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
                                         scope.$apply(function () {
                                             scope.uploadImage.link = "";
                                         });
-                                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                                             if(response.code == 400)
                                                 logoutService.logout();
                                         },function(){});
@@ -839,7 +856,7 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
                                 },
 
                                 error: function() {
-                                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'Ok'}).then(function(result){},function(){});
                                 }
                             });
                         },

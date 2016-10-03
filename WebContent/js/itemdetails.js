@@ -180,7 +180,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     }
     
     $scope.editItem = function(){
-        window.location.replace("myapp.html#/postitem/"+$scope.item_id);
+        window.location.replace("myapp.html#/edititem/"+$scope.item_id);
     }
     
     $scope.deleteItem = function(){
@@ -211,7 +211,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     var lastOffset = 0;
     
     $scope.showItemTimeline = function(){
-		$("#openBtn").click();
+		$("#openBtn_item").click();
 		$scope.showNext = true;
 		getItemTimeline(lastOffset);
 	}
@@ -336,5 +336,9 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						}, function(){});
         }
     }
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> eb2fa7bbceef13d931f4d603ea799be2d1262ab4
 }]);

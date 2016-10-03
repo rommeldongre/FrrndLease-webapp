@@ -1,33 +1,41 @@
-<form name="form" class="form-horizontal" style="text-align: center;">
-    <div class="form-group">
-        <label for="item_image" id="image_label" class="col-sm-2 control-label">Add Picture</label>
-        <div class="col-sm-10">
-           <input id="img_file" type="file" class="form-control" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])">
+<form name="form" class="form-horizontal">
+    <div class="loaded-img" style="margin-bottom:20px;">
+        <img load-image="item.image" ng-src="" alt="">
+        <div ng-if="item.image == '' || item.image == null || item.image == 'null' || item.image == undefined" class="empty-actions">
+            <label class="primary-file-input-label" for="primary-file-input" style="font-size: x-large;">
+                <i class="fa fa-plus" aria-hidden="true" style="display:initial;"></i> ADD IMAGE
+            </label>
+            <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" style="display:none;" />
         </div>
-    </div>
-    <div class="form-group" style="text-align:center;" ng-init="item.image = ''">
-        <div class="col-md-12" >
-            <img ng-src="{{(item.image === '' || item.image === null || item.image === 'null') ? '' : item.image}}" />
+        <div ng-if="item.image != 'loading' && item.image != '' && item.image != null && item.image != 'null' && item.image != undefined" class="actions">
+            <label class="primary-file-input-label" for="primary-file-input" style="font-size: x-large;">
+                <i class="fa fa-image" aria-hidden="true" style="display:initial;"></i> CHANGE IMAGE
+            </label>
+            <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" style="display:none;" />
         </div>
     </div>
     <div class="form-group">
         <label for="title" class="col-sm-2 control-label">Title*</label>
-        <div class="col-sm-10">
+        <div class="col-sm-10" style="text-align:left;">
             <input id="postItem_title" name="title" type="text" class="form-control" ng-model="item.title" placeholder="Enter Title" required />
+            <span style="color:#ccc;">Once you post this item, you can add more details and images to it from the item details page.</span>
         </div>
     </div>
     <div class="form-group">
         <label for="category" class="col-sm-2 control-label">Category*</label>
-        <div class="col-sm-10" style="text">
+        <div class="col-sm-10" style="text-align: left;">
             <button type="button" class="btn btn-default ng-class:{'btn-fill':$index == selectedCategory,'btn-simple': $index != selectedCategory}" ng-click="categorySelected($index)" ng-repeat="c in categories" style="margin-right:10px;">{{c}}</button>
         </div>
     </div>
-    <hr/><br/><br/>
+    <hr/>
     <div class="form-group" style="float:right;">
         <button ng-if="!posted" id="post_item_button" class="btn btn-primary btn-fill" ng-click="form.title.$valid ? postItem() : ''">Post Item</button>
-        <a type="button" ng-if="!posted" class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="Click if not interested in earning free credits" href="myapp.html#/">Not interested</a>
-        <button type="button" id="next_button" ng-if="posted" class="btn btn-primary btn-fill" ng-click="$nextStep()">
-            Next<span class="fa fa-chevron-right"></span>
+        <button type="button" ng-if="posted" class="btn btn-primary btn-fill" ng-click="editItem()">
+            Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
         </button>
+        <button type="button" id="next_button" ng-if="posted" class="btn btn-primary btn-fill" ng-click="$nextStep()">
+            Next <span class="fa fa-chevron-right"></span>
+        </button>
+        <a type="button" ng-if="!posted" class="btn btn-default btn-simple btn-tooltip" data-toggle="tooltip" data-placement="top" title="Click if not interested in earning free credits" href="myapp.html#/">Not interested</a>
     </div>
 </form>

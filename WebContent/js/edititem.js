@@ -1,6 +1,6 @@
-var postItemApp = angular.module('myApp');
+var editItemApp = angular.module('myApp');
 
-postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', 'logoutService', function($scope, userFactory, bannerService, $routeParams, modalService, logoutService){
+editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService', '$routeParams', 'modalService', 'logoutService', function($scope, userFactory, bannerService, $routeParams, modalService, logoutService){
     
     var itemId = $routeParams.id;
     
@@ -57,6 +57,8 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
         }
     }
 
+    $scope.selectedCategory = 0;
+    
     var populateCategory = function(id){
         var req = {
             operation:"getNext",
@@ -77,10 +79,8 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                     $scope.$apply(function(){
                         $scope.categories.push(JSON.parse(response.Message).catName);
                     });
+                    $scope.item.category = $scope.categories[$scope.selectedCategory];
                     populateCategory(response.Id);
-                }
-                else{
-                    //all categories are loaded
                 }
             },
             error:function() {}
@@ -90,11 +90,13 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     // called on the page load
     populateCategory('');
     
-    $scope.categorySelected = function(c){
-        $scope.item.category = c;
+    $scope.categorySelected = function(i){
+        $scope.selectedCategory = i;
+        $scope.item.category = $scope.categories[i];
     }
     
     $scope.leaseTerms = [];
+    $scope.selectedLeaseTerm = 0;
     
     var populateLeaseTerm = function(id){
         var req = {
@@ -116,6 +118,7 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
                     $scope.$apply(function(){
                         $scope.leaseTerms.push(JSON.parse(response.Message).termName);
                     });
+                    $scope.item.leaseTerm = $scope.leaseTerms[$scope.selectedLeaseTerm];
                     populateLeaseTerm(response.Id);
                 }
                 else{
@@ -129,8 +132,9 @@ postItemApp.controller('postItemCtrl', ['$scope', 'userFactory', 'bannerService'
     // called on the page load
     populateLeaseTerm('');
     
-    $scope.leaseTermSelected = function(l){
-        $scope.item.leaseTerm = l;
+    $scope.leaseTermSelected = function(i){
+        $scope.selectedLeaseTerm = i;
+        $scope.item.leaseTerm = $scope.LeaseTerms[i];
     }
     
     //beginning of image display

@@ -9,7 +9,7 @@
     <div class="row" style="display: flex;flex-wrap: wrap;">
         <div class="col-lg-1 col-md-1"></div>
         <div class="col-lg-5 col-md-5 loaded-img">
-            <img load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="">
+            <img load-image="item.primaryImageLink" scale="45" ng-src="" alt="">
             <div ng-if="item.primaryImageLink == '' || item.primaryImageLink == null || item.primaryImageLink == 'null' || item.primaryImageLink == undefined" class="empty-actions">
                 <label class="primary-file-input-label" for="primary-file-input">
                     <i class="fa fa-plus" aria-hidden="true" width="150" height="150" style="display:initial;"></i> ADD IMAGE
@@ -61,7 +61,7 @@
     <div class="row">
         <div class="col-lg-3 col-md-3"></div>
         <div class="col-lg-6 col-md-6">
-            <form class="form-horizontal" style="text-align: center;">
+            <form class="form-horizontal">
                 <div class="form-group">
                     <label for="title" class="col-sm-2 control-label">Title</label>
                     <div class="col-sm-10">
@@ -71,30 +71,22 @@
                 <div class="form-group">
                     <label for="category" class="col-sm-2 control-label">Category</label>
                     <div class="col-sm-10">
-                        <div class="input-group-btn" ng-init="item.category='House'">
-                            <button type="button" class="btn btn-default btn-simple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"required> {{item.category}} <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" style="text-align:center;">
-                                <li><a href="" ng-repeat="c in categories" ng-click="categorySelected(c)">{{c}}</a></li>
-                            </ul>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default ng-class:{'btn-fill':$index == selectedCategory,'btn-simple': $index != selectedCategory}" ng-click="categorySelected($index)" ng-repeat="c in categories" style="margin-right:10px;">{{c}}</button>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="lease_value" class="col-sm-2 control-label">Lease Value</label>
+                    <label for="lease_value" class="col-sm-2 control-label">Insurance</label>
                     <div class="col-sm-10" ng-init="item.leaseValue=1000">
-                        <input type="number" class="form-control" ng-model="item.leaseValue" placeholder="Lease Value">
+                        <input type="number" class="form-control" ng-model="item.leaseValue" placeholder="Insurance">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="category" class="col-sm-2 control-label">Lease Term</label>
                     <div class="col-sm-10">
-                        <div class="input-group-btn" ng-init="item.leaseTerm='Annual'">
-                            <button type="button" class="btn btn-default btn-simple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"required> {{item.leaseTerm}} <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" style="text-align:center;">
-                                <li><a href="" ng-repeat="l in leaseTerms" ng-click="leaseTermSelected(l)">{{l}}</a></li>
-                            </ul>
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default ng-class:{'btn-fill':$index == selectedLeaseTerm,'btn-simple': $index != selectedLeaseTerm}" ng-click="leaseTermSelected($index)" ng-repeat="l in leaseTerms" style="margin-right:10px;">{{l}}</button>
                         </div>
                     </div>
                 </div>
@@ -110,10 +102,10 @@
                     <button id="post_item_button"  class="btn btn-primary btn-fill" ng-click="postItem()">Add Item</button>
                 </div >
                 <div ng-if="editable" class="col-lg-3 col-md-3 col-md-offset-2" >
-                    <button ng-disabled="item.primaryImageLink=='loading' || disableEdit" class="btn btn-primary btn-fill" ng-click="editItem()">Edit Item</button>
+                    <button ng-disabled="item.primaryImageLink=='loading' || disableEdit" class="btn btn-primary btn-fill" ng-click="editItem()">Save</button>
                 </div >
                 <div class="col-lg-3 col-md-3 col-md-offset-1">
-                    <button class="btn btn-default btn-fill" ng-click="cancel()">Cancel</button>
+                    <button class="btn btn-default btn-simple" ng-click="cancel()">Cancel</button>
                 </div>
             </div>
         </div>

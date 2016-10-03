@@ -99,7 +99,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 	
     $scope.reinviteFriend = function(i){
         if($scope.friends[i].friendId != '-')
-            addFriendSetValues($scope.friends[i].fullName, $scope.friends[i].mobile, $scope.friends[i].friendId, userFactory.user);
+            reinviteFriendSetValues($scope.friends[i].fullName, $scope.friends[i].mobile, $scope.friends[i].friendId, userFactory.user);
     }
     
     $scope.directImport = function(){
@@ -112,7 +112,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 				if(len<=20){
 					directImport_continue();
 				}else{
-					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: "Sorry, Please enter emails less than or equal to 20" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 					}, function(){});
 				}
 			}
@@ -124,7 +124,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 		
 				if(count == len){
 					var validEmail = len-errCount;
-					modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						$scope.friends = [];
 						initialPopulate();
                         eventsCount.updateEventsCount();
@@ -156,7 +156,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 				},function(response){
 					if (response && !response.error) {
 						//check 'response' to see if call was successful
-						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){eventsCount.updateEventsCount();
+						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){eventsCount.updateEventsCount();
 						}, function(){});
 						}
 				});
@@ -334,7 +334,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 					count++;
 					if(count == len){
 							var validEmail = len-errCount;
-							modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 							$scope.friends = [];
 							initialPopulate();
                             eventsCount.updateEventsCount();
@@ -355,6 +355,69 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
         });
 		
 	}
+	
+	var reinviteFriendSetValues = function(name, mobile, email, user){
+	
+	var friendName =null,friendEmail =null,friendMobile=0;
+	
+		friendName = name;
+		friendEmail = email;
+		friendMobile = mobile;
+		userId = user;
+		code = localStorage.getItem("userReferralCode");
+		
+		if(friendName == '')
+			friendName = null;
+		if(friendEmail == '')
+			friendEmail = null;
+		if(friendMobile == '')
+			friendMobile = 0;
+		
+		var req = {
+			id: friendEmail,
+			fullName: friendName,
+			mobile: friendMobile,
+			userId: user,
+			referralCode: code
+		};
+		
+		reinviteFriendSend(req);	
+	}
+	
+	var reinviteFriendSend = function(req){
+		$.ajax({
+            url: '/flsv2/AddFriend',
+            type:'get',
+            data: {req : JSON.stringify(req)},
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+				if(reasonForAddFriend == "importEmail"){
+					count++;
+					if(count == len){
+							var validEmail = len-errCount;
+							modalService.showModal({}, {bodyText: "Success, Number of email(s) imported: "+validEmail+" ,Number of Invalid email(s): "+errCount ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+							$scope.friends = [];
+							initialPopulate();
+                            eventsCount.updateEventsCount();
+							}, function(){});
+					}else{
+						directImport_continue();
+					}
+				}else if(reasonForAddFriend == "importGoogle"){
+					add_checked_friends_continued();
+				}else{
+                    bannerService.updatebannerMessage("Your Invitation has been sent to your friend.");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                }
+            },
+            error: function() {
+                console.log("Invalid Entry");
+            }
+        });
+		
+	}
+	
     $scope.addFriend = function(){
         localStorage.setItem("prevFunc", "addFriend");
         window.location.replace("myfrienddetails.html");
@@ -414,7 +477,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
-					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						if(response.code == 400){
 							logoutService.logout();
 						}

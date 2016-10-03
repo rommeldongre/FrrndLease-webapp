@@ -97,13 +97,13 @@
                     <div class="row" style="padding-top:50px" ng-if="!showError">
                         <div class="content">
                             <div class="row" style="display: flex;flex-wrap: wrap;text-align:center;">
-                                <div class="col-lg-6 col-md-6" style="border-right: 1px solid #ccc;">
-                                    <img class="img-rounded" load-image="item.primaryImageLink" max-width="450" max-height="450" ng-src="" alt="..."/>
-                                    <h3 class="title">
+                                <div class="col-lg-6 col-md-6">
+                                    <img class="img-rounded" load-image="item.primaryImageLink" scale="45" ng-src="" alt="..."/>
+                                    <h3 class="title" style="word-wrap: break-word;">
                                         <strong>${title}</strong>
                                     </h3>
                                 </div>
-                                <div class="col-lg-6 col-md-6">
+                                <div class="col-lg-6 col-md-6" style="border-left: 1px solid #ccc;">
                                     <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
                                     <hr/>
                                     <h5 class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="raters > 0" style="text-align:center;">
@@ -203,9 +203,9 @@
 					<div id="FC" class="fb-comments" data-href="" style="z-index:4;" data-width="100%" data-numposts="5"></div>
                             
                     <!-- sample pop up starts here-->
-                    <button ng-hide="true" href="#myModalTable" id="openBtn" data-toggle="modal" class="btn btn-default">Modal</button>
+                    <button ng-hide="true" href="#myModalTable_item" id="openBtn_item" data-toggle="modal" class="btn btn-default">Modal</button>
 
-                    <div class="modal fade" id="myModalTable" data-backdrop="static" data-keyboard="false">
+                    <div class="modal fade" id="myModalTable_item" data-backdrop="static" data-keyboard="false">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">

@@ -126,17 +126,17 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been deleted from the Friend Store");
 				BODY = ("<body>You have deleted the following item on FrrndLease<br/> <br/>" + " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : "
-						+ obj.getString("description") + "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>"
+						+ obj.getString("description") + "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>"
 						+ " Lease Term : " + obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_POST_ITEM:
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been added to the Friend Store");
-				BODY = ("<body>You have added the following item on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body>You have added the following item on FrrndLease <br/>" + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
@@ -144,7 +144,7 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Item [" + obj.getString("title") + "] has been added to the Friend Store");
 				BODY = ("<body>Someone has posted this item that matches your wishlist. <br/> <br/>" + " Title : "
 						+ obj.getString("title") + "<br/>" + " Category : " + obj.getString("category") + "<br/>"
-						+ " Description : " + obj.getString("description") + "<br/>" + " Lease Value : "
+						+ " Description : " + obj.getString("description") + "<br/>" + " Insurance : "
 						+ obj.getInt("leaseValue") + "<br/>" + " Lease Term : " + obj.getString("leaseTerm") + "<br/>"
 						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title")
 						+ " ></img>" + "</body>");
@@ -161,7 +161,7 @@ public class FlsEmail extends Connect{
 				for (JSONObject l : listItems) {
 					BODY = BODY + (" Title : " + l.getString("title") + "<br/>" + " Category : "
 							+ l.getString("category") + "<br/>" + " Description : "
-							+ l.getString("description") + "<br/>" + " Lease Value : "
+							+ l.getString("description") + "<br/>" + " Insurance : "
 							+ l.getInt("leaseValue") + "<br/>" + " Lease Term : "
 							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")
 							+ "<br/>" + "<img width=\"300\" src='" + l.getString("imageLinks") + "' alt="
@@ -221,7 +221,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed as a lease might be granted. <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -231,7 +231,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the owner as a lease might be granted. <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -241,7 +241,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> Your Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed. Item Details are as follows<br/> <br/> " 
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -251,7 +251,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the Requestor. Item Details are as follows<br/> <br/> "
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -261,7 +261,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("from") + "] on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -271,7 +271,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> The following item has been leased by [" + obj.getString("from") + "] to you on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -282,7 +282,7 @@ public class FlsEmail extends Connect{
 						+ obj.getString("from") + "] on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -292,7 +292,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> Lease has been closed by the Owner for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -311,7 +311,7 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Renewed Lease to user [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body>You have renewed lease to user " + obj.getString("fromUserName") + " for the following item on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -320,7 +320,7 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Lease Renewed");
 				BODY = ("<body>Item Owner " +obj.getString("fromUserName") + " has renewed lease for the following item to you on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -330,7 +330,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> You have sucessfully Requested the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
@@ -340,7 +340,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Lease Value : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
+						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;

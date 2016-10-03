@@ -15,8 +15,8 @@
                     <img style="width:50px;height:50px;" class="img-circle" ng-src="{{(event.profilePic === '' || event.profilePic === null || event.profilePic === NULL || event.profilePic === 'null') ? 'images/user_icon.png' : event.profilePic}}" alt="..">
                 </td>
                 <td class="text-center">
-                    <i class="ng-class:{'pink fa fa-lg fa-user':(event.notificationType=='FLS_USER'),'green fa fa-lg fa-thumbs-up':(event.notificationType=='FLS_POSITIVE'),'red fa fa-lg fa-thumbs-down':(event.notificationType=='FLS_NEGATIVE'),'blue fa fa-lg fa-info-circle':(event.notificationType=='FLS_DEFAULT'),'purple fa fa-lg fa-clock-o':(event.notificationType=='FLS_TIME'),'orange fa fa-lg fa-cubes':(event.notificationType=='FLS_ITEM'),'yellow fa fa-envelope-o':(event.notificationType=='FLS_MESSAGE')}"></i><br/><br/>
-					<button ng-if="event.notificationType=='FLS_MESSAGE'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="replyFriendMessage($index)" data-toggle="tooltip" data-placement="top" title="Reply">
+                    <i class="ng-class:{'pink fa fa-lg fa-user':(event.notificationType=='FLS_USER'),'green fa fa-lg fa-thumbs-up':(event.notificationType=='FLS_POSITIVE'),'red fa fa-lg fa-thumbs-down':(event.notificationType=='FLS_NEGATIVE'),'blue fa fa-lg fa-info-circle':(event.notificationType=='FLS_DEFAULT'),'purple fa fa-lg fa-clock-o':(event.notificationType=='FLS_TIME'),'orange fa fa-lg fa-cubes':(event.notificationType=='FLS_ITEM'),'blue fa fa-upload':(event.notificationType=='FLS_MESSAGE_FROM'),'blue fa fa-download':(event.notificationType=='FLS_MESSAGE_TO')}"></i><br/><br/>
+					<button ng-if="event.notificationType=='FLS_MESSAGE_FROM' || event.notificationType=='FLS_MESSAGE_TO'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="replyFriendMessage($index)" data-toggle="tooltip" data-placement="top" title="Reply">
                     <i class="fa fa-reply"></i>
 					</button>
 				</td>
@@ -29,5 +29,7 @@
               </tr>
         </tbody>
     </table>
-    <button ng-if="loadMore" ng-click="loadmore()" class="btn btn-default btn-simple" style="text-align:center;">Show more..</button>
+    <div class="row" style="text-align:center;padding-bottom: 20px;">
+        <button ng-if="loadMore" ng-click="loadmore()" class="btn btn-primary btn-round btn-fill">Load more..</button>
+    </div>
 </div>
