@@ -63,7 +63,7 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
             $('#loginModal').modal('show');
         }
         else{
-            window.location.replace("myapp.html#/postitem");
+            window.location.replace("myapp.html#/edititem");
         }
     }
     
