@@ -589,9 +589,7 @@ headerApp.factory('userFactory', ['$rootScope', function($rootScope){
     var dataFactory = {};
     
     dataFactory.user = localStorage.getItem("userloggedin");
-    
     dataFactory.userName = localStorage.getItem("userloggedinName");
-    
     dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
     
     dataFactory.userCredits = function(promo){
