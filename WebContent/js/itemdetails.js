@@ -336,9 +336,4 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						}, function(){});
         }
     }
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> eb2fa7bbceef13d931f4d603ea799be2d1262ab4
 }]);
