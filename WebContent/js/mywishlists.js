@@ -5,63 +5,71 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
 											'userFactory', 
 											'bannerService', 
 											'modalService', 
+                                            'getItemsForCarousel',
 											function($scope, 
 											$timeout, 
 											userFactory, 
 											bannerService, 
-											modalService){
+											modalService,
+                                            getItemsForCarousel){
     
     localStorage.setItem("prevPage","myapp.html#/mywishlists");
     
     var itemNextId = 0;
     
     $scope.wishList = [];
-    
-    var initialPopulate = function(){
-        
+                                                
+    // populate the carousel with initital array
+    var initWishlist = function(){
         itemNextId = 0;
         
-        getWishListItem(itemNextId);
+        $scope.wishList = [];
         
+        $scope.loadMore = false;
+        
+        populateWishlist(itemNextId);
     }
     
-    var getWishListItem = function(id){
+    var populateWishlist = function(token){
         
         var req = {
-            operation: "BrowseN",
-            token: id
-        }
-        
-        displayWishListItem(req);
+            cookie: token,
+            userId: userFactory.user,
+			match_userId: null,
+            category: null,
+            limit: 5,
+            lat: 0.0,
+            lng: 0.0,
+            searchString: '',
+            itemStatus: ['Wished']
+        };
+        displayWishlist(req);
         
     }
     
-    var displayWishListItem = function(req){
-        $.ajax({
-            url: '/flsv2/GetItemWishlist',
-            type: 'get',
-            data: {req : JSON.stringify(req)},
-            contentType:"application/json",
-            dataType:"json",
-            success: function(response) {
-                if(response.Code == "FLS_SUCCESS") {
-                    var obj = JSON.parse(response.Message);
-                    
-                    if(obj.userId == userFactory.user)
-                        $scope.$apply(function(){
-                           $scope.wishList.unshift(obj); 
-                        });
-                    
-                    itemNextId = obj.itemId;
-                    getWishListItem(itemNextId);
+    var displayWishlist = function(req){
+        getItemsForCarousel.getItems(req).then(
+            function(response){
+                if(response.data.returnCode == 0){
+                    $scope.wishList.push.apply($scope.wishList, response.data.resList);
+                    itemNextId = response.data.lastItemId;
+					$scope.loadMore = true;
+                }else{
+					$scope.loadMore = false;
                 }
             },
-            error: function() {
-            }
-        });
+            function(error){
+				//Error message in console.
+                console.log("Not able to get items " + error.message);
+            });
     }
     
-    initialPopulate();
+    // called when next carousel button is clicked
+    $scope.loadNextWishItems = function(){
+        populateWishlist(itemNextId);
+    }
+    
+    initWishlist();
     
 	$scope.addWishItem = function(){
         modalService.showModal({}, {submitting: true, labelText: 'Add Wish Item Name', actionButtonText: 'Submit'}).then(function(result){
