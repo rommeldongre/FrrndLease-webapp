@@ -74,6 +74,7 @@ public class ErrorCat {
 	final public String FLS_ACCESS_TOKEN_FAILED_M = "Session Expired!! Please login again";
 	final public String FLS_NULL_POINT_M = "Wrong data!!";
 	final public String FLS_DUPLICATE_ENTRY_FB = "FB ID already added";
+	final public String FLS_DUPLICATE_ENTRY_LEAD = "Email already added";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

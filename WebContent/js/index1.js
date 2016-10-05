@@ -1,4 +1,4 @@
-var indexApp = angular.module('indexApp', ['headerApp', 'carouselApp', 'ngAutocomplete']);
+var indexApp = angular.module('indexApp', ['headerApp', 'carouselApp', 'footerApp', 'ngAutocomplete']);
 
 indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItemsForCarousel', 'searchService', function($scope, $timeout, userFactory, getItemsForCarousel, searchService){
     
@@ -79,4 +79,44 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
         $scope.search.string = data;
     });
     
+}]);
+
+indexApp.controller('pricingCtrl', ['$scope', '$timeout', 'modalService', function($scope, $timeout, modalService){
+	
+	$scope.primeLead = function(){
+		modalService.showModal({}, {submitting: true, labelText: 'Enter Email for recieve Updates', actionButtonText: 'Submit'}).then(function(result){
+            var Lead_email = result;
+			var Lead_type= "prime";
+				
+		   var req = {
+                lead_email : Lead_email,
+				lead_type: Lead_type
+            }
+			sendLeadEmail(req);	
+        }, function(){});
+    }
+	
+	var sendLeadEmail = function(req){
+		
+		$.ajax({
+			url: '/flsv2/AddLead',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code==0 || response.code==225){
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+					}, function(){});
+				}else{
+					modalService.showModal({}, {bodyText: "Some Error Occured. Please try after some time" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+					}, function(){});
+				}
+			},
+		
+			error: function() {
+				console.log("Not able to send message");
+			}
+		});
+	}
 }]);

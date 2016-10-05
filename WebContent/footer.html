@@ -1,116 +1,134 @@
-	<footer class="footer footer-big footer-transparent">
-
-            <!-- .footer-black is another class for the footer, for the transparent version, we recommend you to change the url of the image with your favourite image.          -->
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3 col-md-offset-1">
-                        <h5 class="title">Company</h5>
-                        <nav>
-                        <ul>
-                            <li>
-                                <a href="aboutus.html">
-                                    About Us
-                                </a>
-                            </li>
-                            <li>
-                                <a href="team.html">
-                                    Team
-                                </a>
-                            </li>
-                            <li>
-                                <a href="contact.html">
-                                   Contact Us
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.facebook.com/frrndlease">
-                                   Blog
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://www.surveymonkey.com/r/Y9GSGLJ" class="text-info">
-                                  Survey
-                                </a>
-                            </li>
-                        </ul>
-                        </nav>
-                    </div>
-                    <div class="col-md-3">
-                        <h5 class="title" onclick="ga('send', 'event', 'index', 'click', 'ProductHelp');" >Product Help</h5>
-                        <nav>
-                            <ul>
+<div ng-app="footerApp">
+    <div ng-controller="footerCtrl">
+		<footer class="footer footer-big footer-transparent">
+	
+			<!-- .footer-black is another class for the footer, for the transparent version, we recommend you to change the url of the image with your favourite image.          -->
+	
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<h5 class="title">Subscribe</h5>
+						<form name="form" style="text-align: center;">
+						<div class="form-group">
+							<input name="lead_email" type="text" value="" ng-model="lead_email" class="form-control" ng-pattern="/^([_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,5}))|(\d+$)$/" ng-change="error=''" placeholder="Enter your email..." required><br>
+						</div>
+						<p ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
+						<div class="form-group">
+							<button type="button" ng-click="(form.lead_email.$touched && form.lead_email.$valid) ? newsLetterLead(lead_email) : error='Please Enter correct email'" class="btn btn-primary btn-fill">Subscribe Now!</button>
+						</div>
+						
+						</form>
+	
+					</div>
+					<div class="col-md-2 col-md-offset-1">
+						<h5 class="title">Company</h5>
+						<nav>
+						<ul>
+							<li>
+								<a href="aboutus.html">
+									About Us
+								</a>
+							</li>
+							<li>
+								<a href="team.html">
+									Team
+								</a>
+							</li>
+							<li>
+								<a href="contact.html">
+								Contact Us
+								</a>
+							</li>
+							<li>
+								<a href="https://www.facebook.com/frrndlease">
+								Blog
+								</a>
+							</li>
+							<li>
+								<a href="https://www.surveymonkey.com/r/Y9GSGLJ" class="text-info">
+								Survey
+								</a>
+							</li>
+						</ul>
+						</nav>
+					</div>
+					<div class="col-md-3">
+						<h5 class="title" onclick="ga('send', 'event', 'index', 'click', 'ProductHelp');" >Product Help</h5>
+						<nav>
+							<ul>
 								<li>
 									<a href="benefits.html" onclick="ga('send', 'event', 'index', 'click', 'Benefits');">
 										Benefits
 									</a>
 								</li>
-                                <li>
-                                    <a href="howitworks.html" onclick="ga('send', 'event', 'index', 'click', 'HowItWorks');">
-                                       How it works
-                                    </a>
-                                </li>
 								<li>
-                                    <a href="pricing.html" onclick="ga('send', 'event', 'index', 'click', 'Pricing');">
-                                        Pricing
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="testimonial.html" onclick="ga('send', 'event', 'index', 'click', 'Testimonials');">
+									<a href="howitworks.html" onclick="ga('send', 'event', 'index', 'click', 'HowItWorks');">
+									How it works
+									</a>
+								</li>
+								<li>
+									<a href="pricing.html" onclick="ga('send', 'event', 'index', 'click', 'Pricing');">
+										Pricing
+									</a>
+								</li>
+								<li>
+									<a href="testimonial.html" onclick="ga('send', 'event', 'index', 'click', 'Testimonials');">
 										Testimonials
-                                        
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="termsdiv.html" onclick="ga('send', 'event', 'index', 'click', 'T&C');">
-										Terms & Conditions
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="privacydiv.html" onclick="ga('send', 'event', 'index', 'click', 'PrivacyPolicy');">
-                                    	Privacy Policy
-                                    </a>
-                                </li>
+										
+									</a>
+								</li>
 								<li>
-                                    <a href="#" onclick="ga('send', 'event', 'index', 'click', 'Faq');">
-                                       FAQ
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+									<a href="termsdiv.html" onclick="ga('send', 'event', 'index', 'click', 'T&C');">
+										Terms & Conditions
+									</a>
+								</li>
+								<li>
+									<a href="privacydiv.html" onclick="ga('send', 'event', 'index', 'click', 'PrivacyPolicy');">
+										Privacy Policy
+									</a>
+								</li>
+								<li>
+									<a href="#" onclick="ga('send', 'event', 'index', 'click', 'Faq');">
+									FAQ
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
 					<div class="col-md-3">
 					<h5 class="title">Follow us on</h5>
-                    <nav>
-                        <ul>
-                            <li>
-                                <a href="https://www.facebook.com/frrndlease" class="btn btn-social btn-facebook btn-simple">
-                                    <i class="fa fa-facebook-square"></i> Facebook
-                                </a>
-                            </li>
-                             <li>
-                                 <a href="https://www.linkedin.com/company/grey-labs" class="btn btn-social btn-linkedin btn-simple">
-                                    <i class="fa fa-linkedin"></i> LinkedIn
-                                </a>
-                            </li>
-                            <li>
-                               <a href="https://www.twitter.com/rommeldongre" class="btn btn-social btn-twitter btn-simple">
-                                    <i class="fa fa-twitter"></i> Twitter
-                                </a>
-                            </li>
-                            <li>
-                                 <a href="#" class="btn btn-social btn-reddit btn-simple">
-                                    <i class="fa fa-google-plus-square"></i> Google+
-                                </a>
-                            </li>
-
-                        </ul>
-                    </nav>
-                    </div>
-                </div>
-                <hr />
-                <div class="copyright">
-                    &copy; 2015-2016 Grey Labs LLP. All Rights Reserved.
-                </div>
-            </div>
-        </footer>
+					<nav>
+						<ul>
+							<li>
+								<a href="https://www.facebook.com/frrndlease" class="btn btn-social btn-facebook btn-simple">
+									<i class="fa fa-facebook-square"></i> Facebook
+								</a>
+							</li>
+							<li>
+								<a href="https://www.linkedin.com/company/grey-labs" class="btn btn-social btn-linkedin btn-simple">
+									<i class="fa fa-linkedin"></i> LinkedIn
+								</a>
+							</li>
+							<li>
+							<a href="https://www.twitter.com/rommeldongre" class="btn btn-social btn-twitter btn-simple">
+									<i class="fa fa-twitter"></i> Twitter
+								</a>
+							</li>
+							<li>
+								<a href="#" class="btn btn-social btn-reddit btn-simple">
+									<i class="fa fa-google-plus-square"></i> Google+
+								</a>
+							</li>
+	
+						</ul>
+					</nav>
+					</div>
+				</div>
+				<hr />
+				<div class="copyright">
+					&copy; 2015-2016 Grey Labs LLP. All Rights Reserved.
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
