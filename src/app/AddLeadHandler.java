@@ -46,7 +46,6 @@ public class AddLeadHandler extends Connect implements AppHandler {
 		PreparedStatement ps1 = null,ps2=null;
 		ResultSet rs1 = null;
 		int rs2=0;
-		String lead_Email_Check= null;
 		try {
 			
 				LOGGER.info("Select statement for checking if email exists or not .....");
@@ -55,12 +54,9 @@ public class AddLeadHandler extends Connect implements AppHandler {
 				ps1.setString(1, rq.getLead_email());
 				rs1 = ps1.executeQuery();
 				
-				while(rs1.next()){
-					lead_Email_Check = rs1.getString("lead_email");
-				}
 				
-				if(lead_Email_Check == null){
-					LOGGER.info("Inserrt statement for adding email to leads table .....");
+				if(!rs1.next()){
+					LOGGER.info("Insert statement for adding email to leads table .....");
 					String sqlAddLeadEmail = "insert into leads (lead_email, lead_type) values (?,?)";
 					ps2 = hcp.prepareStatement(sqlAddLeadEmail);
 					ps2.setString(1, rq.getLead_email());
