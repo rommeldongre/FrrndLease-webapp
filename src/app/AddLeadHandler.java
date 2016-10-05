@@ -47,7 +47,6 @@ public class AddLeadHandler extends Connect implements AppHandler {
 		ResultSet rs1 = null;
 		int rs2=0;
 		String lead_Email_Check= null;
-		String userName ="",friendName="";
 		try {
 			
 				LOGGER.info("Select statement for checking if email exists or not .....");

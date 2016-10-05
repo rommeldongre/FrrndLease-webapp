@@ -81,7 +81,7 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
     
 }]);
 
-indexApp.controller('pricingCtrl', ['$scope', '$timeout', 'modalService', function($scope, $timeout, modalService){
+indexApp.controller('pricingCtrl', ['$scope', 'modalService', function($scope, modalService){
 	
 	$scope.primeLead = function(){
 		modalService.showModal({}, {submitting: true, labelText: 'Enter Email for recieve Updates', actionButtonText: 'Submit'}).then(function(result){

@@ -1,6 +1,6 @@
 var footerApp = angular.module('footerApp', []);
 
-footerApp.controller('footerCtrl', ['$scope', '$timeout', 'modalService', function($scope, $timeout, modalService){
+footerApp.controller('footerCtrl', ['$scope', 'modalService', function($scope, modalService){
 	
 	$scope.newsLetterLead = function(){
 		var Lead_type="news_letter";
@@ -8,7 +8,6 @@ footerApp.controller('footerCtrl', ['$scope', '$timeout', 'modalService', functi
                 lead_email: $scope.lead_email,
 				lead_type: "news_letter"
             }
-			console.log(req);
 			sendLeadEmail(req);	
     }
           
