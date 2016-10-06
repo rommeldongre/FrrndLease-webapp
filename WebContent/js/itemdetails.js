@@ -152,7 +152,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                         leaseValue: item_lease_value,
                         leaseTerm: item_lease_term,
 						status: item_status,
-                        image: $scope.item.image};
+                        image: $scope.item.primaryImageLink};
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to add this Item to your Wishlist?'}).then(
             function(result){
@@ -336,9 +336,4 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						}, function(){});
         }
     }
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> eb2fa7bbceef13d931f4d603ea799be2d1262ab4
 }]);

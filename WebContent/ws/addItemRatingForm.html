@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Add Item Rating Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+    var UserId = null;
+    var ItemId = null;
+    var Rating = null;
+    var LeaseeId = null;
+    var Feedback = null;
+	
+    start = function(){
+        document.getElementById("userId").value = localStorage.getItem("userloggedin");
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
+	getData = function (){
+        UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+        
+        var AccessToken = document.getElementById("accessToken").value;
+        
+        ItemId = document.getElementById("itemId").value;
+        if(ItemId == null || ItemId == '' || ItemId == 'null')
+            ItemId = null;
+        
+        Rating = document.getElementById("rating").value;
+        if(Rating == null || Rating == '' || Rating == 'null')
+            Rating = null;
+        
+        LeaseeId = document.getElementById("leaseeId").value;
+        if(LeaseeId == null || LeaseeId == '' || LeaseeId == 'null')
+            LeaseeId = null;
+        
+        Feedback = document.getElementById("feedback").value;
+        if(Feedback == null || Feedback == '' || Feedback == 'null')
+            Feedback = null;
+        
+        req = {
+            userId: UserId,
+            accessToken: AccessToken,
+            itemId: ItemId,
+            rating: Rating,
+            leaseeId: LeaseeId,
+            feedback: Feedback
+        }
+        
+        AddItemRating(req);
+	};
+		
+	AddItemRating = function(req) {
+		$.ajax({
+            url: '/flsv2/AddItemRating',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType: "application/json",
+            dataType: "json",
+            success: function(response) {
+                document.getElementById("code").value = response.code;
+                document.getElementById("message").value = response.message;
+            },
+            error:function() {
+                alert("Not Working");
+            }
+        });
+	};
+	
+</script>
+</head>
+<body onload="start()">
+<h1>Add Item Rating Form</h1>
+	<form>
+        User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
+		ItemId: <input type="text" name="itemId" id="itemId" ><br/><br/>
+		LeaseeId: <input type="text" name="leaseeId" id="leaseeId" ><br/><br/>
+		Rating: <input type="text" name="rating" id="rating" ><br/><br/>
+		Feedback: <input type="text" name="feedback" id="feedback" ><br/><br/>
+		<input type="button" value="Add Item Rating" onclick="getData()">
+    </form>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+    
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

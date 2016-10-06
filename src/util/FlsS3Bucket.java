@@ -567,5 +567,58 @@ public class FlsS3Bucket extends Connect {
 
 		return null;
 	}
+	
+	public void deleteImages(){
+		
+		LOGGER.info("Deleting images from images table");
+		
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			String sqlSelectImages = "SELECT item_image_link FROM images WHERE item_uid=?";
+			ps1 = hcp.prepareStatement(sqlSelectImages);
+			ps1.setString(1, uid);
+			
+			rs1 = ps1.executeQuery();
+			
+			while(rs1.next()){
+				
+				if(rs1.getString("item_image_link") != null){
+					int d = deleteImage(Bucket_Name.ITEMS_BUCKET, rs1.getString("item_image_link"));
+					
+					if(d == 1){
+						String sqlDeleteImage = "DELETE FROM images WHERE item_image_link=?";
+						ps2 = hcp.prepareStatement(sqlDeleteImage);
+						ps2.setString(1, rs1.getString("item_image_link"));
+						
+						rs2 = ps2.executeUpdate();
+						
+						if(rs2 == 1)
+							LOGGER.warning("Image deleted from images table for item uid :" + uid);
+						else
+							LOGGER.warning("Image not deleted from images table for item uid : " + uid);
+					}
+				}
+				
+			}
+			
+		}catch(Exception e){
+			LOGGER.warning("not able to delete images from table");
+			e.printStackTrace();
+		}finally{
+			try{
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
 
 }

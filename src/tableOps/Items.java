@@ -283,41 +283,72 @@ public class Items extends Connect {
 	}
 
 	private void Delete() {
+		
 		id = im.getId();
 		userId= im.getUserId();
 		title =im.getTitle();
-		check = 0;
+		
 		LOGGER.info("Inside delete method....");
-		String sql = "DELETE FROM items, store USING items INNER JOIN `store` ON items.item_id = store.store_item_id WHERE items.item_name= ?";
-
-		PreparedStatement stmt2 = null, stmt = null;
-		ResultSet rs = null;
+		
+		PreparedStatement stmt1 = null, stmt2 = null, stmt3 = null, stmt4 = null;
+		ResultSet rs1 = null, rs2 = null, rs3 = null;
+		int rs4;
 		Connection hcp = getConnectionFromPool();
+		
 		try {
-			LOGGER.info("Creating statement...");
+			LOGGER.info("Checking if leases and requests exist...");
 
-			// checking whether the input id is present in table
-			String sql2 = "SELECT * FROM items WHERE item_user_id=? AND item_name=?";
-			stmt2 = hcp.prepareStatement(sql2);
-			stmt2.setString(1, userId);
-			stmt2.setString(2, title);
-			rs = stmt2.executeQuery();
-			while (rs.next()) {
-				check = rs.getInt("item_id");
+			String sqlCheckLease = "SELECT * FROM leases WHERE lease_item_id=?";
+			stmt1 = hcp.prepareStatement(sqlCheckLease);
+			stmt1.setInt(1, id);
+			rs1 = stmt1.executeQuery();
+			if(rs1.next()) {
+				res.setData(FLS_DUPLICATE_ENTRY, "0", "Cannot delete. This item is in leases table!!");
+				return;
 			}
+			
+			String sqlCheckRequests = "SELECT * FROM requests WHERE request_item_id=?";
+			stmt2 = hcp.prepareStatement(sqlCheckRequests);
+			stmt2.setInt(1, id);
+			rs2 = stmt2.executeQuery();
+			if(rs2.next()) {
+				res.setData(FLS_DUPLICATE_ENTRY, "0", "Cannot delete. This item is in requests table!!");
+				return;
+			}
+			
+			String sqlCheckItems = "SELECT * FROM items WHERE item_id=?";
+			stmt3 = hcp.prepareStatement(sqlCheckItems);
+			stmt3.setInt(1, id);
+			rs3 = stmt3.executeQuery();			
 
-			if (check != 0) {
-				stmt = hcp.prepareStatement(sql);
+			if (rs3.next()) {
 
-				LOGGER.info("Statement created. Executing delete query..." + check);
-				stmt.setString(1, title);
-				stmt.executeUpdate();
-				status = "operation successfull deleted item id :" + check;
-				LOGGER.warning(status);
-				Id = String.valueOf(check);
-				message = status;
-				Code = 001;
-				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_DELETE);
+				if(rs3.getString("item_uid") != null && rs3.getString("item_primary_image_link") != null){
+					FlsS3Bucket s3Bucket = new FlsS3Bucket(rs3.getString("item_uid"));
+					int d = s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, rs3.getString("item_primary_image_link"));
+					if(d == 1){
+						LOGGER.info("item image deleted from s3");
+						s3Bucket.deleteImages();
+					}else{
+						res.setData(FLS_INVALID_OPERATION, "0", "Not Able to delete images");
+						return;
+					}
+					
+				}
+				
+				LOGGER.info("Deleting item from items table");
+				String sqlDeleteItem = "DELETE FROM items WHERE item_id=?";
+
+				stmt4 = hcp.prepareStatement(sqlDeleteItem);
+				stmt4.setInt(1, id);
+				rs4 = stmt4.executeUpdate();
+
+				if(rs4 == 1){
+					res.setData(FLS_SUCCESS, "0", FLS_ITEMS_DELETE);
+				}else{
+					res.setData(FLS_INVALID_OPERATION, "0", "Not able to delete from items table");
+				}
+				
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
@@ -328,14 +359,15 @@ public class Items extends Connect {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		}finally{
 			try {
-				rs.close();
-				
-				stmt.close();
-				stmt2.close();
-				
-				hcp.close();
+				if(rs3 != null) rs3.close();
+				if(rs2 != null) rs2.close();
+				if(rs1 != null) rs1.close();
+				if(stmt4 != null) stmt4.close();
+				if(stmt3 != null) stmt3.close();
+				if(stmt2 != null) stmt2.close();
+				if(stmt1 != null) stmt1.close();
+				if(hcp != null) hcp.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
