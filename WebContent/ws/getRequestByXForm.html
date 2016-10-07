@@ -12,10 +12,10 @@
 	
 	getData = function (){
 		Token = document.getElementById("token").value;
-		Token = parseInt(Token);
-        if(Token == null)
+        if(isNaN(Token) || Token=="")
             Token = 0;
         UserId = document.getElementById("UserId").value;
+		
         if(UserId == null)
             UserId = "";
         ReqUserId = document.getElementById("ReqUserId").value;
@@ -31,7 +31,6 @@
             reqUserId: ReqUserId,
 			status: Status
         };
-        console.log(req);
         getRequestByX(req);
 	};
 		
@@ -44,7 +43,6 @@
 			dataType:"json",
 			
 			success: function(response) {
-				console.log(response);
                 if(response.code == 0){
                     document.getElementById("code").value = response.code;
                     document.getElementById("message").value = response.message;
@@ -108,7 +106,7 @@
 <body>
 <h1> Get Requests By X Form</h1>
 	<form>
-		Token : <input type="text" name="token" id="token" ><br/><br/>
+		Token : <input type="number" name="token" id="token" ><br/><br/>
 		Status : <input type="text" name="status" id="status" ><br/><br/>
 		User Id : <input type="text" name="eUserId" id="UserId" ><br/><br/>
 		Requestor User Id : <input type="text" name="ReqUserId" id="ReqUserId" ><br/><br/>
