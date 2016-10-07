@@ -14,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2030;
+	public final int appBuild = 2031;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1123,6 +1123,38 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2030;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates a table for email newsletter
+				if(dbBuild < 2031){
+					
+					String sqlLeadTable = "CREATE TABLE `fls`.`leads` ( `lead_id` INT NOT NULL AUTO_INCREMENT , `lead_email` VARCHAR(255), `lead_type` VARCHAR(255) NULL DEFAULT NULL , `lead_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`lead_id`)) ";
+					
+					PreparedStatement ps1 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlLeadTable);
+						ps1.executeUpdate();
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps1 != null) ps1.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2031;
 					updateDBBuild(dbBuild);
 					
 				}
