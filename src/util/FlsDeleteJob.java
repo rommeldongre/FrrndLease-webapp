@@ -12,6 +12,8 @@ import connect.Connect;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
 
+import util.LogItem;
+
 public class FlsDeleteJob extends Connect implements org.quartz.Job {
 
 	private FlsLogger LOGGER = new FlsLogger(FlsDeleteJob.class.getName());
@@ -33,25 +35,44 @@ public class FlsDeleteJob extends Connect implements org.quartz.Job {
 		LOGGER.info("Checking old items");
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null, ps2 = null;
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null;
 		ResultSet rs1 = null, rs2 = null;
 		
 		try{
 			
-			String sqlSelectItemsToWarn = "SELECT item_id FROM items WHERE item_status IN ('InStore') AND item_lastmodified BETWEEN (CURRENT_TIMESTAMP - INTERVAL 6 YEAR_MONTH + INTERVAL 144 DAY_HOUR) AND (CURRENT_TIMESTAMP - INTERVAL 6 YEAR_MONTH + INTERVAL 192 DAY_HOUR)";
+			String sqlSelectItemsToWarn = "SELECT * FROM items WHERE item_status IN ('InStore') AND item_lastmodified BETWEEN (CURRENT_TIMESTAMP - INTERVAL 6 YEAR_MONTH + INTERVAL 144 DAY_HOUR) AND (CURRENT_TIMESTAMP - INTERVAL 6 YEAR_MONTH + INTERVAL 192 DAY_HOUR)";
 			ps1 = hcp.prepareStatement(sqlSelectItemsToWarn);
 			rs1 = ps1.executeQuery();
 			
 			while(rs1.next()){
-				LOGGER.info(rs1.getInt("item_id") + "----");
+				LOGGER.info("Sending a warning to the onwer about the item id --- " + rs1.getInt("item_id"));
+				try {
+					Event event = new Event();
+					event.createEvent(rs1.getString("item_user_id"), rs1.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OLD_ITEM_WARN, rs1.getInt("item_id"), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs1.getString("item_uid") + "\">" + rs1.getString("item_name") + "</a>. has been inactive for past 6 months.");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
-			String sqlSelectOldItems = "SELECT item_id FROM items WHERE item_status IN ('InStore') AND item_lastmodified <= (CURRENT_TIMESTAMP - INTERVAL 6 YEAR_MONTH)";
+			String sqlSelectOldItems = "SELECT * FROM items WHERE item_status IN ('InStore') AND item_lastmodified <= (CURRENT_TIMESTAMP - INTERVAL 6 YEAR_MONTH)";
 			ps2 = hcp.prepareStatement(sqlSelectOldItems);
 			rs2 = ps2.executeQuery();
 			
 			while(rs2.next()){
-				LOGGER.info(rs2.getInt("item_id") + "----");
+				LOGGER.info("Archiving item id --- " + rs2.getInt("item_id"));
+				
+				String sqlArchiveItem = "UPDATE `items` SET `item_status`='Archived' WHERE item_id = ?";
+				ps3 = hcp.prepareStatement(sqlArchiveItem);
+				ps3.setInt(1, rs2.getInt("item_id"));
+				ps3.executeUpdate();
+				
+				// logging item status to archived
+				LogItem li = new LogItem();
+				li.addItemLog(rs2.getInt("item_id"), "Archived", "", "");
+				
+				Event event = new Event();
+				event.createEvent(rs2.getString("item_user_id"), rs2.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, rs2.getInt("item_id"), "Your Item " + rs2.getInt("item_id") + " has been deleted from frrndlease store.");
+				
 			}
 			
 		}catch(SQLException e){

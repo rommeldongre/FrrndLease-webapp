@@ -873,7 +873,7 @@ public class Items extends Connect {
 					li.addItemLog(id, "Archived", "", "");
 					
 					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from from frrndlease store.");
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from frrndlease store.");
 					break;
 
 				case "Leased":

@@ -347,8 +347,8 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_OLD_ITEM_WARN:
 				SUBJECT = (" No Item's History");
-				BODY = "<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has had no activity for months.<br/>"
-						+ "This item will be deleted from the Store if it remains inactive for 1 more week. " + "</body>";
+				BODY = "<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has not been inactive for past 6 months.<br/>"
+						+ "It will be deleted from the Store if it remains inactive for 1 more week. " + "</body>";
 				break;
 				
 			case FLS_MAIL_OLD_REQUEST_WARN:
