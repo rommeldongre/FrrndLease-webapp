@@ -345,6 +345,24 @@ public class FlsEmail extends Connect{
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
+			case FLS_MAIL_OLD_ITEM_WARN:
+				SUBJECT = (" No Item's History");
+				BODY = "<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has had no activity for months.<br/>"
+						+ "This item will be deleted from the Store if it remains inactive for 1 more week. " + "</body>";
+				break;
+				
+			case FLS_MAIL_OLD_REQUEST_WARN:
+				SUBJECT = (" Pending Request");
+				BODY = "<body> You have not responded to the request for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> .<br/>"
+						+ "If is remains inactive for 2 more days we will delete this request on your behalf." + "</body>";
+				break;
+				
+			case FLS_MAIL_OLD_LEASE_WARN:
+				SUBJECT = (" Awaiting Pickup of this item");
+				BODY = "<body> You have not picked up this item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> for which got the lease .<br/>"
+						+ "You will not get your lease agreement until the item is confirmed 'PickedUp'. If the status remains 'LeaseReady' we will delete this lease after 2 days." + "</body>";
+				break;
+				
 			default:
 				SUBJECT = (" Default Subject");
 				BODY = "Default Message ... Contact us, you should never get this! ";

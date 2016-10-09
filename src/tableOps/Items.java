@@ -871,6 +871,9 @@ public class Items extends Connect {
 					// logging item status to archived
 					LogItem li = new LogItem();
 					li.addItemLog(id, "Archived", "", "");
+					
+					Event event = new Event();
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from from frrndlease store.");
 					break;
 
 				case "Leased":
@@ -897,7 +900,10 @@ public class Items extends Connect {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-		}finally{
+		} catch (Exception e) {
+			e.printStackTrace();
+			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
+		} finally{
 			try {
 				rs.close();
 				stmt.close();

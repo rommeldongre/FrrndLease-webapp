@@ -144,6 +144,9 @@ public class GetNotificationsResObj {
 			case "FLS_MAIL_DELETE_REQUEST_TO":
 			case "FLS_MAIL_REJECT_LEASE_FROM":
 			case "FLS_MAIL_REJECT_LEASE_TO":
+			case "FLS_MAIL_OLD_ITEM_WARN":
+			case "FLS_MAIL_OLD_REQUEST_WARN":
+			case "FLS_MAIL_OLD_LEASE_WARN":
 				this.notificationType = Icon_Type.FLS_NEGATIVE.name();
 				break;
 			case "FLS_MAIL_GRACE_PERIOD_OWNER":

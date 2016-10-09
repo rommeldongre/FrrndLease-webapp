@@ -14,7 +14,7 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2030;
+	public final int appBuild = 2032;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1125,6 +1125,69 @@ public class FlsConfig extends Connect{
 					dbBuild = 2030;
 					updateDBBuild(dbBuild);
 					
+				}
+				
+				// This block creates last modified columns
+				if(dbBuild < 2031){
+					
+					String sqlItemsLastmodified = "ALTER TABLE `items` ADD `item_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `item_lng`";
+					String sqlRequestsLastmodified = "ALTER TABLE `requests` ADD `request_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `request_status`";
+					
+					PreparedStatement ps1 = null, ps2 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlItemsLastmodified);
+						ps1.executeUpdate();
+						
+						ps2 = connection.prepareStatement(sqlRequestsLastmodified);
+						ps2.executeUpdate();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps2 != null) ps2.close();
+							if(ps1 != null) ps1.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2031;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates notifications types for delete job in events table
+				if(dbBuild < 2032){
+					
+					String sqlAddNotificationEnum = "ALTER TABLE `events` CHANGE `notification_type` `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRANT_LEASE_FROM','FLS_MAIL_GRANT_LEASE_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER','FLS_EMAIL_VERIFICATION','FLS_MOBILE_VERIFICATION','FLS_MAIL_MESSAGE_FRIEND_FROM','FLS_MAIL_MESSAGE_FRIEND_TO','FLS_MAIL_MESSAGE_ITEM_FROM','FLS_MAIL_MESSAGE_ITEM_TO','FLS_MAIL_OLD_ITEM_WARN','FLS_MAIL_OLD_REQUEST_WARN','FLS_MAIL_OLD_LEASE_WARN')";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddNotificationEnum);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2032;
+					updateDBBuild(dbBuild);
 				}
 	}
 	
