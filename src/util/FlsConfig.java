@@ -14,7 +14,8 @@ public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
-	public final int appBuild = 2032;
+
+	public final int appBuild = 2033;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1126,9 +1127,40 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 					
 				}
+
+				// This block creates a table for email newsletter
+				if(dbBuild < 2031){
+					
+					String sqlLeadTable = "CREATE TABLE `fls`.`leads` ( `lead_id` INT NOT NULL AUTO_INCREMENT , `lead_email` VARCHAR(255), `lead_type` VARCHAR(255) NULL DEFAULT NULL , `lead_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`lead_id`)) ";
+					
+					PreparedStatement ps1 = null;
+					
+					try{
+						getConnection();
+						ps1 = connection.prepareStatement(sqlLeadTable);
+						ps1.executeUpdate();
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.exit(1);
+					}finally {
+						try {
+							if(ps1 != null) ps1.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2031;
+					updateDBBuild(dbBuild);
+				}
 				
 				// This block creates last modified columns
-				if(dbBuild < 2031){
+				if(dbBuild < 2032){
 					
 					String sqlItemsLastmodified = "ALTER TABLE `items` ADD `item_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `item_lng`";
 					String sqlRequestsLastmodified = "ALTER TABLE `requests` ADD `request_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `request_status`";
@@ -1158,13 +1190,13 @@ public class FlsConfig extends Connect{
 					}
 					
 					// The dbBuild version value is changed in the database
-					dbBuild = 2031;
+					dbBuild = 2032;
 					updateDBBuild(dbBuild);
 					
 				}
 				
 				// This block creates notifications types for delete job in events table
-				if(dbBuild < 2032){
+				if(dbBuild < 2033){
 					
 					String sqlAddNotificationEnum = "ALTER TABLE `events` CHANGE `notification_type` `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRANT_LEASE_FROM','FLS_MAIL_GRANT_LEASE_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER','FLS_EMAIL_VERIFICATION','FLS_MOBILE_VERIFICATION','FLS_MAIL_MESSAGE_FRIEND_FROM','FLS_MAIL_MESSAGE_FRIEND_TO','FLS_MAIL_MESSAGE_ITEM_FROM','FLS_MAIL_MESSAGE_ITEM_TO','FLS_MAIL_OLD_ITEM_WARN','FLS_MAIL_OLD_REQUEST_WARN','FLS_MAIL_OLD_LEASE_WARN')";
 					try{
@@ -1186,9 +1218,11 @@ public class FlsConfig extends Connect{
 							}
 					}
 					// The dbBuild version value is changed in the database
-					dbBuild = 2032;
+					dbBuild = 2033;
 					updateDBBuild(dbBuild);
+					
 				}
+				
 	}
 	
 	private void updateDBBuild(int version){
