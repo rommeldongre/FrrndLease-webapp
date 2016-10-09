@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.JSONObject;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+import adminOps.AdminOpsHandler;
+import adminOps.Response;
 import connect.Connect;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
@@ -173,20 +176,40 @@ public class FlsDeleteJob extends Connect implements org.quartz.Job {
 		
 		try{
 			
-			String sqlSelectLeasesToWarn = "SELECT item_id FROM items WHERE item_status IN ('LeaseReady') AND item_lastmodified BETWEEN (CURRENT_TIMESTAMP - INTERVAL 168 DAY_HOUR + INTERVAL 24 DAY_HOUR) AND (CURRENT_TIMESTAMP - INTERVAL 168 DAY_HOUR + INTERVAL 72 DAY_HOUR)";
+			String sqlSelectLeasesToWarn = "SELECT tb1.*, tb2.* FROM items tb1 INNER JOIN (SELECT * FROM leases WHERE lease_status='Active') tb2 ON tb1.item_id=tb2.lease_item_id WHERE item_status IN ('LeaseReady') AND item_lastmodified BETWEEN (CURRENT_TIMESTAMP - INTERVAL 168 DAY_HOUR + INTERVAL 24 DAY_HOUR) AND (CURRENT_TIMESTAMP - INTERVAL 168 DAY_HOUR + INTERVAL 72 DAY_HOUR)";
 			ps1 = hcp.prepareStatement(sqlSelectLeasesToWarn);
 			rs1 = ps1.executeQuery();
 			
 			while(rs1.next()){
-				LOGGER.info(rs1.getInt("item_id") + "----");
+				LOGGER.info("Sending a warning to the leasee about item - " + rs1.getInt("item_id") + " not picked up.");
+				try {
+					Event event = new Event();
+					event.createEvent(rs1.getString("lease_requser_id"), rs1.getString("lease_requser_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OLD_LEASE_WARN, rs1.getInt("item_id"), "You have not picked up the leased item " + rs1.getString("item_name") + ". This lease will be removed in 2 days.");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
-			String sqlSelectOldLeases = "SELECT item_id FROM items WHERE item_status IN ('LeaseReady') AND item_lastmodified <= (CURRENT_TIMESTAMP - INTERVAL 168 DAY_HOUR)";
+			String sqlSelectOldLeases = "SELECT tb1.*, tb2.* FROM items tb1 INNER JOIN (SELECT * FROM leases WHERE lease_status='Active') tb2 ON tb1.item_id=tb2.lease_item_id WHERE item_status IN ('LeaseReady') AND item_lastmodified <= (CURRENT_TIMESTAMP - INTERVAL 168 DAY_HOUR)";
 			ps2 = hcp.prepareStatement(sqlSelectOldLeases);
 			rs2 = ps2.executeQuery();
 			
 			while(rs2.next()){
-				LOGGER.info(rs2.getInt("item_id") + "----");
+				LOGGER.info("Archiving lease id --- " + rs2.getInt("lease_id"));
+				
+				AdminOpsHandler aoh = new AdminOpsHandler();
+				
+				JSONObject json = new JSONObject();
+				json.put("operation", "closelease");
+				
+				JSONObject row = new JSONObject();
+				row.put("reqUserId", rs2.getString("lease_requser_id"));
+				row.put("itemId", Integer.toString(rs2.getInt("item_id")));
+				row.put("userId", rs2.getString("lease_user_id"));
+				row.put("status", "");
+				json.put("row", row);
+				
+				aoh.getInfo("leases", json);
 			}
 			
 		}catch(SQLException e){
