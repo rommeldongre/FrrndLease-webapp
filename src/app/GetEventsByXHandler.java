@@ -63,12 +63,15 @@ public class GetEventsByXHandler extends Connect implements AppHandler {
 			//already getting all data from events table
 			sql = "SELECT tb1.* FROM events tb1 WHERE ";
 			
-			if(fromDate != "" && toDate !=""){
+			if(fromDate.equals(toDate)){
+				sql = sql + "datetime LIKE '"+fromDate+"%' AND ";
+			}else{
 				sql = sql + "datetime BETWEEN '"+fromDate+"' AND '"+toDate+"' AND ";
 			}
 			
 			sql = sql + "tb1.archived='" + status + "' ORDER BY tb1.event_id LIMIT " + offset + ","+limit;
 			
+			LOGGER.info(sql);
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
