@@ -85,7 +85,6 @@
 			dataType:"json",
 			
 			success: function(response) {
-				alert('Working');
 				console.log(response);
 				document.getElementById("size").value = response.resList.length;
 				document.getElementById("Code").value = response.returnCode;
