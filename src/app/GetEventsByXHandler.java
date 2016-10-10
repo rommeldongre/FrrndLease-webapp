@@ -98,7 +98,7 @@ public class GetEventsByXHandler extends Connect implements AppHandler {
 				}
 				rs.setLastItemId(offset);
 			} else {
-				rs.setReturnCode(404);
+				rs.setCode(404);
 				LOGGER.warning("End of DB");
 			}
 

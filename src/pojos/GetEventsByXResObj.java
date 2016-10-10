@@ -2,18 +2,12 @@ package pojos;
 
 public class GetEventsByXResObj extends ResObj{
 	
-	int code,quantity = 1;
+	int quantity = 1;
 	String message;
 	
 	int eventId,itemId;
 	String eventLogDate,fromUserId,toUserId,eventType,readStatus,deliveryStatus,notificationType,eventMessage,status;
 	
-	public int getCode() {
-		return code;
-	}
-	public void setCode(int code) {
-		this.code = code;
-	}
 	public int getQuantity() {
 		return quantity;
 	}

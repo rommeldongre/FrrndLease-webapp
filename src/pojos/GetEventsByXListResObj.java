@@ -6,10 +6,10 @@ import java.util.List;
 public class GetEventsByXListResObj extends ResObj{
 	
 	// Return code for GetRequestsByUser
-	int ReturnCode = 0,lastEventId;
+	int code = 0,lastEventId;
 
 	// Error String
-	String ErrorString;
+	String message;
 	
 	List<GetEventsByXResObj> resList = new ArrayList<>();
 
@@ -20,21 +20,20 @@ public class GetEventsByXListResObj extends ResObj{
 	public void setLastItemId(int lastEventId) {
 		this.lastEventId = lastEventId;
 	}
-
-	public int getReturnCode() {
-		return ReturnCode;
+	public int getCode() {
+		return code;
 	}
 
-	public void setReturnCode(int returnCode) {
-		ReturnCode = returnCode;
+	public void setCode(int code) {
+		this.code = code;
 	}
 
-	public String getErrorString() {
-		return ErrorString;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setErrorString(String errorString) {
-		ErrorString = errorString;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	public List<GetEventsByXResObj> getResList() {
