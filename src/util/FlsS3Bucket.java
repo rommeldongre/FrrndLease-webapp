@@ -368,6 +368,8 @@ public class FlsS3Bucket extends Connect {
 			
 			int result = ps1.executeUpdate();
 			
+			updateItemsTable();
+			
 			if(result == 1){
 				LOGGER.info("Item uid : " + uid + " link : " + link + " added into images table.");
 			}else{
@@ -435,6 +437,8 @@ public class FlsS3Bucket extends Connect {
 			
 			int result = ps1.executeUpdate();
 
+			updateItemsTable();
+			
 			if(result == 1){
 				LOGGER.info("Item's image link - " + link + " deleted");
 			}else{
@@ -470,6 +474,8 @@ public class FlsS3Bucket extends Connect {
 			
 			int result = ps1.executeUpdate();
 
+			updateItemsTable();
+			
 			if(result == 1)
 				LOGGER.info("Item's image link - " + existingLink + " replaced with - " + newLink);
 			else
@@ -596,6 +602,8 @@ public class FlsS3Bucket extends Connect {
 						
 						rs2 = ps2.executeUpdate();
 						
+						updateItemsTable();
+						
 						if(rs2 == 1)
 							LOGGER.warning("Image deleted from images table for item uid :" + uid);
 						else
@@ -612,6 +620,34 @@ public class FlsS3Bucket extends Connect {
 			try{
 				if(ps2 != null) ps2.close();
 				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	private void updateItemsTable(){
+		
+		LOGGER.info("Updating items table");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		
+		try{
+			
+			String sqlUpdateItemsTable = "UPDATE items SET item_lastmodified=now() WHERE item_uid=?";
+			ps1 = hcp.prepareStatement(sqlUpdateItemsTable);
+			ps1.setString(1, uid);
+			
+			ps1.executeUpdate();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try{
 				if(ps1 != null) ps1.close();
 				if(hcp != null) hcp.close();
 			}catch(Exception e){
