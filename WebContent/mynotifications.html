@@ -26,6 +26,11 @@
                     <button href="" class="label label-fill ng-class:{'label-primary':(event.readStatus == 'FLS_UNREAD'),'label-default':(event.readStatus == 'FLS_READ')}" title="{{event.readStatus == 'FLS_READ' ? 'Mark as unread' : 'Mark as read'}}" ng-click="(event.readStatus == 'FLS_UNREAD') ? readEvent($index,'FLS_READ') : readEvent($index,'FLS_UNREAD')">{{(event.readStatus == 'FLS_UNREAD') ? 'Mark as read' : 'Mark as unread'}}</button><br/>
                     <span style="color:#999999" class="btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="{{event.datetime | date:'medium'}}">{{event.datetime | date}}</span>
                 </td>
+				<td class="td-actions text-center">
+                    <button class="btn btn-danger btn-simple btn-xs btn-tooltip" data-toggle="tooltip" data-placement="top" title="Delete Notification" ng-click="deleteNotification(event.eventId,$index)">
+                        <i class="fa fa-times "></i>
+                    </button>
+                </td>
               </tr>
         </tbody>
     </table>
