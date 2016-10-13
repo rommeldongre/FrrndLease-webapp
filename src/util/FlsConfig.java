@@ -15,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2033;
+	public final int appBuild = 2035;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1219,6 +1219,67 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2033;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates column for user plan
+				if(dbBuild < 2034){
+					
+					String sqlPlacesTable = "CREATE TABLE `fls`.`places` ( `place_id` INT NOT NULL AUTO_INCREMENT , `locality` VARCHAR(255) NULL , PRIMARY KEY (`place_id`))";
+					String sqlUsersPlanColumn = "ALTER TABLE `users` ADD `user_plan` ENUM('FLS_SELFIE','FLS_PRIME','FLS_UBER') NOT NULL DEFAULT 'FLS_SELFIE' AFTER `user_id`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlPlacesTable);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlUsersPlanColumn);
+						ps2.executeUpdate();
+						ps2.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2034;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates column for image link in Item log
+				if(dbBuild < 2035){
+					
+					String sqlImageLink = "ALTER TABLE item_log ADD item_log_image_link VARCHAR(255) after item_log_image";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlImageLink);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2035;
 					updateDBBuild(dbBuild);
 					
 				}

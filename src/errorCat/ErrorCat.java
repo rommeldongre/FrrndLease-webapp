@@ -49,6 +49,7 @@ public class ErrorCat {
 	final public String FLS_REQUEST_ITEM = "Request added successfully";
 	final public String FLS_SIGNUP = "Signup successfull";
 	final public String FLS_WISH_ITEM = "Item added to wishlist";
+	final public String FLS_DELETE_EVENT = " Success, Notification Successfully Deleted";
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "Couldn't create statement or couldn't execute query (sql exception)";

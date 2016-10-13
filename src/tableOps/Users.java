@@ -18,6 +18,7 @@ import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.Event.User_Notification;
 import util.FlsLogger;
+import util.FlsPlan;
 import util.LogCredit;
 import util.OAuth;
 import util.ReferralCode;
@@ -374,6 +375,9 @@ public class Users extends Connect {
 			stmt3.setString(3, fullName);
 			stmt3.setString(4, friendId);
 			stmt3.executeUpdate();
+			
+			FlsPlan plan = new FlsPlan();
+			plan.checkPlan(userId);
 			
 			try {
 				Event event = new Event();
@@ -1053,6 +1057,9 @@ public class Users extends Connect {
 				else
 					message = "1";
 			}
+			
+			FlsPlan plan = new FlsPlan();
+			plan.checkPlan(userId);
 			
 			res.setData(FLS_SUCCESS, "0", message);
 			

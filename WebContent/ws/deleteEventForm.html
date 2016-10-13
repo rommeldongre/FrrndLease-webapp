@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Delete Request form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var EventId = null;
+	var UserId = null;
+	var AccessToken = null;
+    
+    start = function(){
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
+	getData = function (){
+		EventId = document.getElementById("eventId").value;
+		EventId = parseInt(EventId);
+		if (EventId === '') EventId = 0;
+		
+		UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+        
+        AccessToken = document.getElementById("accessToken").value;
+	};
+	
+	deleteEvent = function() {
+		getData();
+		var req = {
+            eventId: EventId,
+			userId: UserId,
+            accessToken: AccessToken
+		};
+		
+		send(req);
+	};
+	
+	send = function(req) {
+		$.ajax({
+			url: '/flsv2/DeleteEvent',
+			type:'POST',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType: "json",
+			success: function(response) {
+				console.log(response);
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message;
+			},
+			
+			error: function() {
+				alert("not working");
+			}
+		});
+	};
+	
+</script>
+</head>
+<body onload="start()">
+	<h1>Delete Event Form</h1>
+	<form>
+		Event Id : <input type="text" name="eventId" id="eventId"><br/><br/>
+		User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
+		<input type="button" value="Delete Event" onclick="deleteEvent()"><br/><br/>
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+	</form>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
