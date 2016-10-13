@@ -10,6 +10,7 @@ import pojos.EditProfileResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.FlsPlan;
 import util.OAuth;
 
 public class EditProfileHandler extends Connect implements AppHandler {
@@ -82,6 +83,9 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			ps1.executeUpdate();
 			ps1.close();
 
+			FlsPlan plan = new FlsPlan();
+			plan.checkPlan(rq.getUserId());
+			
 			if (result == 1) {
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
