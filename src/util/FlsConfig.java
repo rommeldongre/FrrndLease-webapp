@@ -15,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2034;
+	public final int appBuild = 2035;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1252,6 +1252,34 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2034;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates column for image link in Item log
+				if(dbBuild < 2035){
+					
+					String sqlImageLink = "ALTER TABLE item_log ADD item_log_image_link VARCHAR(255) after item_log_image";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlImageLink);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2035;
 					updateDBBuild(dbBuild);
 					
 				}
