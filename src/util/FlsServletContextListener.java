@@ -63,7 +63,7 @@ public class FlsServletContextListener implements ServletContextListener {
 	      						.build();
 	      	*/
 	  					   
-	     	//For production every day at 5am			   
+	     	//For production every day at 1am			   
 	      	Trigger trigger = newTrigger()
 	      						    .withIdentity("FlsTrigger1", "FlsGroup1")
 	      						    .withSchedule(CronScheduleBuilder.cronSchedule("0 0 1 * * ?"))
@@ -85,6 +85,17 @@ public class FlsServletContextListener implements ServletContextListener {
 	      	JobDetail matchFbJob = newJob(FlsMatchFbIdJob.class).withIdentity(matchjobKey).storeDurably().build();
 	      	// adding the job to the scheduler without any trigger
 	  		scheduler.addJob(matchFbJob, true);
+	  		
+	  		// defining delete job and tie it to FlsDeleteJob.class
+	  		JobKey deleteJobKey = JobKey.jobKey("FlsDeleteJob", "FlsDeleteGroup");
+	  		// FlsDeleteJob declaration
+	  		JobDetail deleteJob = newJob(FlsDeleteJob.class).withIdentity(deleteJobKey).build();
+	  		// A trigger for delete job
+	  		Trigger deleteTrigger = newTrigger().withIdentity("FlsDeteTrigger", "FlsDeleteGroup")
+	  				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 5 * * ?"))
+	  				.build();
+	  		// scheduling the delete job
+	  		scheduler.scheduleJob(deleteJob, deleteTrigger);
 	  		
 		} catch (SchedulerException e) {
 			e.printStackTrace();
