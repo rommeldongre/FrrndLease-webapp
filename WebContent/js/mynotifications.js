@@ -1,12 +1,14 @@
 var myNotifications = angular.module('myApp');
 
 myNotifications.controller('myNotificationsCtrl', ['$scope', 
+													'$timeout',
 													'userFactory',
 													'modalService',
 													'bannerService',
 													'logoutService',
 													'eventsCount',
 													function($scope,
+													$timeout,
 													userFactory,
 													modalService,
 													bannerService,
@@ -146,6 +148,51 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
                     initialPopulate();
 					bannerService.updatebannerMessage("Success, Message to Friend sent");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
+				}else{
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){eventsCount.updateEventsCount();
+						if(response.code == 400){
+							logoutService.logout();
+						}
+					}, function(){});
+				}
+			},
+		
+			error: function() {
+				console.log("Not able to send message");
+			}
+		});
+	}
+	
+	$scope.deleteNotification = function(id,index){
+		modalService.showModal({}, {bodyText: "Are you sure you want to delete this Notification?",actionButtonText: 'Yes'}).then(
+			function(result){
+				var EventId = id;
+				if(EventId === '')
+					EventId = 0;
+				
+				var req = {
+					eventId: EventId,
+					userId: userFactory.user,
+					accessToken: userFactory.userAccessToken
+				};
+				deleteNotificationSend(req,index);
+        },function(){});
+	}
+	
+	var deleteNotificationSend = function(req,index){
+		$.ajax({
+			url: '/flsv2/DeleteEvent',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code==0){
+					bannerService.updatebannerMessage(response.message,"");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+					$timeout(function () {
+						$scope.events.splice(index, 1);
+					});
 				}else{
 					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){eventsCount.updateEventsCount();
 						if(response.code == 400){
