@@ -11,11 +11,17 @@
             <br/>
             <div id="userId" style="text-align:center;">
                 <i class="fa fa-user"></i><b style="font-size:16px"> {{'  '+ userId }}</b>
+            </div>
+            <div style="text-align:center;">
                 <span class="label label-warning label-fill btn-tooltip" ng-model="label" ng-if="label == false" style="text-align:right;" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified">Not Verified</span>
                 <span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
+                <i ng-if="label == false" class="fa fa-question-circle-o btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified"></i>
             </div>
-            <div>
-                {{plan}}
+            <div style="text-align:center;">
+                <span class="label label-danger label-fill" ng-if="plan == 'FLS_SELFIE'">SELFIE USER</span>
+                <span class="label label-info label-fill" ng-if="plan == 'FLS_PRIME'">PRIME USER</span>
+                <i ng-if="plan == 'FLS_SELFIE'" class="fa fa-question-circle-o btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Selfie User"></i>
+                <i ng-if="plan == 'FLS_PRIME'" class="fa fa-question-circle-o btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Prime User"></i>
             </div>
         </div>
         <div class="col-lg-6 col-md-6">
