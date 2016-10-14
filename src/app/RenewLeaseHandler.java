@@ -62,6 +62,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		case "close":
 		
 			int itemAction = 0;
+			String item_image_link=null;
 			PreparedStatement psItemSelect = null, psItemUpdate = null, ps1 = null;
 			ResultSet dbResponseitems = null, rs1 = null;
 			Connection hcp = getConnectionFromPool();
@@ -92,6 +93,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 					hcp.rollback();
 					return rs;
+				}else{
+					item_image_link = dbResponseitems.getString("item_primary_image_link");
 				}
 				
 				String updateItemsSql = "UPDATE items SET item_status=? WHERE item_id=?";
@@ -117,7 +120,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				
 				// logging item status to lease ended
 				LogItem li = new LogItem();
-				li.addItemLog(rq.getItemId(), "LeaseEnded", "", "");
+				li.addItemLog(rq.getItemId(), "LeaseEnded", "", item_image_link);
 				
 				// fetching the uid
 				String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";

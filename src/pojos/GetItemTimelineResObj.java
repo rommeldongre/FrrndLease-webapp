@@ -10,7 +10,7 @@ public class GetItemTimelineResObj{
 	
 	String itemLogDesc;
 	
-	String itemLogImage;
+	String itemLogImageLink;
 
 	public int getItemId() {
 		return itemId;
@@ -44,12 +44,11 @@ public class GetItemTimelineResObj{
 		this.itemLogDesc = itemLogDesc;
 	}
 
-	public String getItemLogImage() {
-		return itemLogImage;
+	public String getItemLogImageLink() {
+		return itemLogImageLink;
 	}
 
-	public void setItemLogImage(String itemLogImage) {
-		this.itemLogImage = itemLogImage;
+	public void setItemLogImageLink(String itemLogImageLink) {
+		this.itemLogImageLink = itemLogImageLink;
 	}
-	
 }

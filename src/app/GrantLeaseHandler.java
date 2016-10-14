@@ -57,6 +57,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				psAddCredit = null, psDebitCredit = null, psItemStatus = null;
 		ResultSet result1 = null, result2 = null, result3 = null, result4 = null, result5 = null;
 		int RequestAction = 0, StoreAction = 0, ItemAction = 0, LeaseAction = 0, addCredit = 0, subCredit = 0;
+		String item_primary_image_link=null;
 		
 		try {
 			
@@ -191,7 +192,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 							
 			result3 = psItemSelect.executeQuery();
 			LOGGER.info(result3.toString());
-							
+			
 			if (!result3.next()) {
 				System.out.println("Empty result while firing select query on 3rd table(items)");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
@@ -199,6 +200,8 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
 				return rs;
+			}else{
+				item_primary_image_link = result3.getString("item_primary_image_link");
 			}
 								
 			String updateItemStatusSql = "UPDATE items SET item_status=? WHERE item_id=?";
@@ -222,7 +225,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			// logging item status to lease ready
 			LogItem li = new LogItem();
-			li.addItemLog(rq.getItemId(), "LeaseReady", "", "");
+			li.addItemLog(rq.getItemId(), "LeaseReady", "", item_primary_image_link);
 									
 			int days;
             String term = getLeaseTerm((rq.getItemId()));

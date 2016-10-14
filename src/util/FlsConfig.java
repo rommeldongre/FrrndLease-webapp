@@ -1260,11 +1260,16 @@ public class FlsConfig extends Connect{
 				if(dbBuild < 2035){
 					
 					String sqlImageLink = "ALTER TABLE item_log ADD item_log_image_link VARCHAR(255) after item_log_image";
+					String updateDatetimeDefault = "ALTER TABLE item_log MODIFY COLUMN item_log_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlImageLink);
 						ps1.executeUpdate();
 						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(updateDatetimeDefault);
+						ps2.executeUpdate();
+						ps2.close();
 					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());

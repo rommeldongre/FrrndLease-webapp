@@ -124,9 +124,11 @@ public class Leases extends Connect {
 	
 	private void CloseLease(){
 		int leaseAction = 0, itemAction = 0, storeAction = 0;
+		String item_image_primary_link=null;
 		PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null, ps1 = null;
 		ResultSet dbResponseLease =  null, dbResponseitems = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
+	
 		try {
 			hcp.setAutoCommit(false);
 		} catch (SQLException e) {
@@ -182,6 +184,8 @@ public class Leases extends Connect {
 				hcp.rollback();
 				hcp.close();
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}else{
+				item_image_primary_link = dbResponseitems.getString("item_primary_image_link"); 
 			}
 			
 			String updateItemsSql = "UPDATE items SET item_status=? WHERE item_id=?";
@@ -220,7 +224,7 @@ public class Leases extends Connect {
 			
 			// logging item status to back instore
 			LogItem li = new LogItem();
-			li.addItemLog(Integer.parseInt(lm.getItemId()), "InStore", "", "");
+			li.addItemLog(Integer.parseInt(lm.getItemId()), "InStore", "", item_image_primary_link);
 
 			// fetching the uid
 			String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
