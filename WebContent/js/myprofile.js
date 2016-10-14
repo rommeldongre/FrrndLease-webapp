@@ -112,6 +112,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         profileFactory.getProfile(userFactory.user).then(
         function(response){
             if (response.data.code == 0) {
+                $scope.plan = response.data.plan;
                 $scope.userId = userFactory.user;
                 $scope.fullname = response.data.fullName;
 				$scope.user.mobile = response.data.mobile;

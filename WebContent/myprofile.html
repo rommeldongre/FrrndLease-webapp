@@ -5,7 +5,7 @@
         </div>
     </div>
 	<hr/><br/><br/>
-    <div class="row">
+    <div class="row" style="display:flex;flex-wrap:wrap;">
         <div class="col-lg-6 col-md-6">
             <img ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}" alt="Profile Pic" style="display:block;margin:auto;width:200px;height:200px;">
             <br/>
@@ -13,6 +13,9 @@
                 <i class="fa fa-user"></i><b style="font-size:16px"> {{'  '+ userId }}</b>
                 <span class="label label-warning label-fill btn-tooltip" ng-model="label" ng-if="label == false" style="text-align:right;" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified">Not Verified</span>
                 <span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
+            </div>
+            <div>
+                {{plan}}
             </div>
         </div>
         <div class="col-lg-6 col-md-6">

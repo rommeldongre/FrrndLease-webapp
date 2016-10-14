@@ -118,197 +118,136 @@ public class Requests extends Connect {
 	private void Add() {
 		userId = rm.getUserId();
 		itemId = rm.getItemId();
-		check = null;
 
-		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String date = sdf.format(cal.getTime());
-
-		String sql1 = "SELECT * FROM requests WHERE request_item_id=? AND request_requser_id=? AND request_status = ? ";
-
-		String sql = "insert into requests (request_requser_id,request_item_id,request_date) values (?,?,?)"; //
-		PreparedStatement stmt = null,stmt1 = null,stmt2 = null, stmt3 = null,stmt4=null, stmt5 = null;
-		ResultSet rs = null, rslease = null, dbResponse = null, rs1=null, rs2 = null;
+		PreparedStatement  ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null;
+		ResultSet rs1 = null, rs2 = null, rs3 = null;
+		int rs4;
 		boolean user_verified=false;
 		Connection hcp = getConnectionFromPool();
 
 		try {
-			LOGGER.info("Creating Select statement to if item is InStore.....");
-			String checkItemStatus = "SELECT item_status FROM `items` WHERE item_id=?";
-			stmt5 = hcp.prepareStatement(checkItemStatus);
-			stmt5.setInt(1, Integer.parseInt(itemId));
-			rs2 = stmt5.executeQuery();
+			LOGGER.info("Checking if this request already exists...");
+			String sqlCheckingRequest = "SELECT tb1.*,(CASE WHEN tb1.request_item_id=? THEN true ELSE false END) AS itemCheck FROM requests tb1 WHERE tb1.request_requser_id=? AND tb1.request_status=?";
+			ps1 = hcp.prepareStatement(sqlCheckingRequest);
+			ps1.setString(1, itemId);
+			ps1.setString(2, userId);
+			ps1.setString(3, "Active");
+			
+			rs1 = ps1.executeQuery();
+			
+			int i = 0;
+			while(rs1.next()){
+				if(rs1.getBoolean("itemCheck")){
+					res.setData(FLS_DUPLICATE_ENTRY, "0", FLS_DUPLICATE_ENTRY_M);
+					return;
+				}else{
+					i++;
+					if(i >= 3){
+						res.setData(FLS_REQUEST_LIMIT, "0", FLS_REQUEST_LIMIT_M);
+						return;
+					}
+				}
+			}
+			
+			LOGGER.info("Getting Item and Item owner data...");
+			String sqlSelectItemData = "SELECT tb1.*, tb2.* FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id=tb2.user_id WHERE item_id=?";
+			ps2 = hcp.prepareStatement(sqlSelectItemData);
+			ps2.setInt(1, Integer.parseInt(itemId));
+			
+			rs2 = ps2.executeQuery();
 			
 			if(rs2.next()){
-				if(!(rs2.getString("item_status")).equals("InStore")){
-					message = FLS_ITEM_ON_HOLD_M;
-					Code = FLS_ITEM_ON_HOLD;
-					Id = "0";
-					res.setData(Code, Id, message);
+				if(!(rs2.getString("item_status").equals("InStore"))){
+					LOGGER.info("Item is not InStore..");
+					res.setData(FLS_ITEM_ON_HOLD, "0", FLS_ITEM_ON_HOLD_M);
 					return;
-				}
-			}
-			
-			LOGGER.info("Creating Select statement to check user profile status.....");
-			String checkUserStatus="SELECT user_verified_flag FROM `users` WHERE user_id=?";
-			stmt4 = hcp.prepareStatement(checkUserStatus);
-			stmt4.setString(1, userId);
-			
-			rs1 = stmt4.executeQuery();
-			
-			while (rs1.next()) {
-				user_verified = rs1.getBoolean("user_verified_flag");
-			}
-			
-			if(!user_verified){
-				message = FLS_INVALID_USER_M;
-				Code = FLS_INVALID_USER_I;
-				Id = "0";
-				res.setData(Code, Id, message);
-				return;
-			}
-			
-			LOGGER.info("Creating select statement to check entry exists in requests table.....");
-			stmt1 = hcp.prepareStatement(sql1);
-			stmt1.setString(1, itemId);
-			stmt1.setString(2, userId);
-			stmt1.setString(3, "Active");
-
-			rs = stmt1.executeQuery();
-
-			while (rs.next()) {
-				check = rs.getString("request_requser_id");
-			}
-
-			if (check != null){
-				message = FLS_DUPLICATE_ENTRY_M;
-				Code = FLS_DUPLICATE_ENTRY;
-				Id = "0";
-				res.setData(Code, Id, message);
-				return;
-			}
-
-				// code to check whether item has been already leased out not
-				String checklease = null;
-				LOGGER.info("Creating statement to check if lease exists.....");
-				String sql3 = "SELECT * FROM leases WHERE lease_item_id=? AND lease_requser_id=? AND lease_status =?";
-				stmt3 = hcp.prepareStatement(sql3);
-				stmt3.setString(1, itemId);
-				stmt3.setString(2, userId);
-				stmt3.setString(3, "Active");
-
-				rslease = stmt3.executeQuery();
-
-				while (rslease.next()) {
-					checklease = rslease.getString("lease_id");
-				}
-				// code to check whether item has been already leased out not
-				// ends here
-				if (checklease != null){
-					message = FLS_DUPLICATE_ENTRY_L;
-					Code = FLS_DUPLICATE_ENTRY;
-					Id = "0";
-					res.setData(Code, Id, message);
-					return;
-				}
-
-					// code for populating item pojo for sending owner email
-					String ownerUserId;
-					ItemsModel im = new ItemsModel();
-					String sql2 = "SELECT * FROM items WHERE item_id=?";
-					LOGGER.info("Creating a statement .....");
-					stmt2 = hcp.prepareStatement(sql2);
-
-					LOGGER.info("Statement created. Executing select row query...");
-					stmt2.setString(1, itemId);
-
-					dbResponse = stmt2.executeQuery();
-					LOGGER.info("Query to request pojos fired into requests table");
-					if (dbResponse.next()) {
-
-						if (dbResponse.getString("item_id") != null) {
-							LOGGER.info("Inside Nested check1 statement");
-
-							// Populate the response
-							try {
-								JSONObject obj1 = new JSONObject();
-								obj1.put("title", dbResponse.getString("item_name"));
-								obj1.put("description", dbResponse.getString("item_desc"));
-								obj1.put("category", dbResponse.getString("item_category"));
-								obj1.put("userId", dbResponse.getString("item_user_id"));
-								obj1.put("uid", dbResponse.getString("item_uid"));
-								obj1.put("leaseTerm", dbResponse.getString("item_lease_term"));
-								obj1.put("id", dbResponse.getString("item_id"));
-								obj1.put("leaseValue", dbResponse.getString("item_lease_value"));
-								obj1.put("status", "InStore");
-								if(dbResponse.getString("item_primary_image_link") == null || dbResponse.getString("item_primary_image_link").equals("null"))
-									obj1.put("primaryImageLink", "");
-								else
-									obj1.put("primaryImageLink", dbResponse.getString("item_primary_image_link"));
-
-								im.getData(obj1);
-								LOGGER.warning("Json parsed for FLS_MAIL_MAKE_REQUEST_TO");
-							} catch (JSONException e) {
-								LOGGER.warning("Couldn't parse/retrieve JSON for FLS_MAIL_MAKE_REQUEST_TO");
-								e.printStackTrace();
+				}else{
+					LOGGER.info("Getting requestor's data...");
+					String sqlRequestorData = "SELECT * FROM users WHERE user_id=?";
+					ps3 = hcp.prepareStatement(sqlRequestorData);
+					ps3.setString(1, userId);
+					
+					rs3 = ps3.executeQuery();
+					
+					if(rs3.next()){
+						if(rs2.getString("user_locality").equals(rs3.getString("user_locality"))){
+							if(rs2.getString("user_plan").equals(rs3.getString("user_plan"))){
+								
+								String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id) values (?,?)";
+								ps4 = hcp.prepareStatement(sqlAddRequest);
+								ps4.setString(1, userId);
+								ps4.setString(2, itemId);
+								
+								rs4 = ps4.executeUpdate();
+								
+								if(rs4 == 1){
+									LOGGER.info("Entry added into requests table");
+									res.setData(FLS_SUCCESS, "0", "Your request has been sent to the owner!!");
+									
+									String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+									ps5 = hcp.prepareStatement(sqlAddCredit);
+									ps5.setString(1, userId);
+									
+									ps5.executeUpdate();
+									
+									LogCredit lc = new LogCredit();
+									lc.addLogCredit(userId,1,"Item Requested","");
+									
+									try {
+										String ownerUserId;
+										ownerUserId = rs2.getString("item_user_id");
+										Event event = new Event();
+										event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> on Friend Lease");
+										event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease");
+									} catch (Exception e) {
+										e.printStackTrace();
+										res.setData(FLS_DUPLICATE_ENTRY, "0", "Something wrong with us we'll get back to you ASAP!!");
+									}
+									
+								}else{
+									LOGGER.info("Entry not added into requests table");
+									res.setData(FLS_DUPLICATE_ENTRY, "0", "Something wrong with us we'll get back to you ASAP!!");
+								}
+								
+							}else{
+								LOGGER.warning("Users dont have the same plan");
+								res.setData(FLS_INVALID_OPERATION, "0", "The onwer must be registered for the same plan as yours.");
+								return;
 							}
-
+						}else{
+							LOGGER.warning("Users are not in the same locality");
+							res.setData(FLS_INVALID_OPERATION, "0", "The owner is not in this city!!");
+							return;
 						}
+					}else{
+						LOGGER.warning("Not able to get requestors data from users table!!");
+						res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+						return;
 					}
-					// code for populating item pojo for sending owner email
-					// ends here
-					
-					// add credit to user reuesting item
-					String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-					PreparedStatement s1 = hcp.prepareStatement(sqlAddCredit);
-					s1.setString(1, userId);
-					s1.executeUpdate();
-					
-					stmt = hcp.prepareStatement(sql);
-					
-					LogCredit lc = new LogCredit();
-					lc.addLogCredit(userId,1,"Item Requested","");
-	
-					LOGGER.info("Statement created. Executing query.....");
-					stmt.setString(1, userId);
-					stmt.setString(2, itemId);
-					stmt.setString(3, date);
-					stmt.executeUpdate();
-					LOGGER.warning("Entry added into requests table");
-	
-					message = FLS_SUCCESS_M;
-					Code = FLS_SUCCESS;
-					Id = itemId;
-	
-					try {
-						ownerUserId = im.getUserId();
-						Event event = new Event();
-						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> on Friend Lease");
-						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been requested on Friend Lease");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-			res.setData(Code, Id, message);
-		}catch(SQLException e){
-		LOGGER.warning("Couldn't create statement");
-		res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-		e.printStackTrace();
+				}
+			}else{
+				LOGGER.warning("Not able to get items data from items table!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+				return;
+			}
+		}catch(Exception e){
+			LOGGER.warning("Couldn't create statement");
+			res.setData(FLS_SQL_EXCEPTION, "0", "Something wrong with us we'll get back to you ASAP!!");
+			e.printStackTrace();
 	    }finally{
 			try {
-				if(rs2 != null)	rs2.close();
-				if(stmt5 != null) stmt5.close();
-				if(rs!=null) rs.close();
-				if(rs1!=null) rs1.close();
-				if(rslease!=null) rslease.close();
-				if(stmt!=null) stmt.close();
-				if(stmt1!=null) stmt1.close();
-				if(stmt2!=null) stmt2.close();
-				if(stmt3!=null) stmt3.close();
-				if(stmt4!=null) stmt4.close();
-				if(hcp!=null) hcp.close();
+				if(rs3 != null)	rs3.close();
+				if(rs2 != null) rs2.close();
+				if(rs1 != null) rs1.close();
+				if(ps5 != null)	ps5.close();
+				if(ps4 != null)	ps4.close();
+				if(ps3 != null)	ps3.close();
+				if(ps2 != null)	ps2.close();
+				if(ps1 != null)	ps1.close();
+				if(hcp != null) hcp.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				res.setData(FLS_SQL_EXCEPTION, "0", "Something wrong with us we'll get back to you ASAP!!");
 			}
 		}
 	}
@@ -584,7 +523,7 @@ public class Requests extends Connect {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getString("request_item_id"));
 				json.put("userId", rs.getString("request_requser_id"));
-				json.put("date", rs.getString("request_date"));
+				json.put("date", rs.getString("request_lastmodified"));
 
 				message = json.toString();
 				LOGGER.info(message);
@@ -641,7 +580,7 @@ public class Requests extends Connect {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getString("request_item_id"));
 				json.put("userId", rs.getString("request_requser_id"));
-				json.put("date", rs.getString("request_date"));
+				json.put("date", rs.getString("request_lastmodified"));
 
 				message = json.toString();
 				LOGGER.info(message);
@@ -700,7 +639,7 @@ public class Requests extends Connect {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getString("request_item_id"));
 				json.put("userId", rs.getString("request_requser_id"));
-				json.put("date", rs.getString("request_date"));
+				json.put("date", rs.getString("request_lastmodified"));
 				json.put("requser_name", rs.getString("user_full_name"));
 
 				message = json.toString();
@@ -760,7 +699,7 @@ public class Requests extends Connect {
 				JSONObject json = new JSONObject();
 				json.put("itemId", rs.getString("request_item_id"));
 				json.put("userId", rs.getString("request_requser_id"));
-				json.put("date", rs.getString("request_date"));
+				json.put("date", rs.getString("request_lastmodified"));
 
 				message = json.toString();
 				LOGGER.info(message);
