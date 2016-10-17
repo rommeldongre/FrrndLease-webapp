@@ -156,83 +156,83 @@ public class Requests extends Connect {
 			
 			rs2 = ps2.executeQuery();
 			
-			if(rs2.next()){
-				if(!(rs2.getString("item_status").equals("InStore"))){
-					LOGGER.info("Item is not InStore..");
-					res.setData(FLS_ITEM_ON_HOLD, "0", FLS_ITEM_ON_HOLD_M);
-					return;
-				}else{
-					LOGGER.info("Getting requestor's data...");
-					String sqlRequestorData = "SELECT * FROM users WHERE user_id=?";
-					ps3 = hcp.prepareStatement(sqlRequestorData);
-					ps3.setString(1, userId);
-					
-					rs3 = ps3.executeQuery();
-					
-					if(rs3.next()){
-						if(rs2.getString("user_locality").equals(rs3.getString("user_locality"))){
-							if(rs2.getString("user_plan").equals(rs3.getString("user_plan"))){
-								
-								String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id) values (?,?)";
-								ps4 = hcp.prepareStatement(sqlAddRequest);
-								ps4.setString(1, userId);
-								ps4.setString(2, itemId);
-								
-								rs4 = ps4.executeUpdate();
-								
-								if(rs4 == 1){
-									LOGGER.info("Entry added into requests table");
-									res.setData(FLS_SUCCESS, "0", "Your request has been sent to the owner!!");
-									
-									String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-									ps5 = hcp.prepareStatement(sqlAddCredit);
-									ps5.setString(1, userId);
-									
-									ps5.executeUpdate();
-									
-									LogCredit lc = new LogCredit();
-									lc.addLogCredit(userId,1,"Item Requested","");
-									
-									try {
-										String ownerUserId;
-										ownerUserId = rs2.getString("item_user_id");
-										Event event = new Event();
-										event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> on Friend Lease");
-										event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease");
-									} catch (Exception e) {
-										e.printStackTrace();
-										res.setData(FLS_DUPLICATE_ENTRY, "0", "Something wrong with us we'll get back to you ASAP!!");
-									}
-									
-								}else{
-									LOGGER.info("Entry not added into requests table");
-									res.setData(FLS_DUPLICATE_ENTRY, "0", "Something wrong with us we'll get back to you ASAP!!");
-								}
-								
-							}else{
-								LOGGER.warning("Users dont have the same plan");
-								res.setData(FLS_INVALID_OPERATION, "0", "The onwer must be registered for the same plan as yours.");
-								return;
-							}
-						}else{
-							LOGGER.warning("Users are not in the same locality");
-							res.setData(FLS_INVALID_OPERATION, "0", "The owner is not in this city!!");
-							return;
-						}
-					}else{
-						LOGGER.warning("Not able to get requestors data from users table!!");
-						res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
-						return;
-					}
-				}
-			}else{
+			if(!(rs2.next())){
 				LOGGER.warning("Not able to get items data from items table!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 				return;
 			}
+
+			if(!(rs2.getString("item_status").equals("InStore"))){
+				LOGGER.info("Item is not InStore..");
+				res.setData(FLS_ITEM_ON_HOLD, "0", FLS_ITEM_ON_HOLD_M);
+				return;
+			}else{
+				LOGGER.info("Getting requestor's data...");
+				String sqlRequestorData = "SELECT * FROM users WHERE user_id=?";
+				ps3 = hcp.prepareStatement(sqlRequestorData);
+				ps3.setString(1, userId);
+					
+				rs3 = ps3.executeQuery();
+			
+				if(!(rs3.next())){
+					LOGGER.warning("Not able to get requestors data from users table!!");
+					res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+					return;
+				}
+				
+				if(!(rs2.getString("user_locality").equals(rs3.getString("user_locality")))){
+					LOGGER.warning("Users are not in the same locality");
+					res.setData(FLS_UNLIKE_LOCATION, "0", FLS_UNLIKE_LOCATION_M);
+					return;
+				}
+						
+				if(!(rs2.getString("user_plan").equals(rs3.getString("user_plan")))){
+					LOGGER.warning("Users dont have the same plan");
+					res.setData(FLS_UNLIKE_PLAN, "0", FLS_UNLIKE_PLAN_M);
+					return;
+				}
+								
+				String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id) values (?,?)";
+				ps4 = hcp.prepareStatement(sqlAddRequest);
+				ps4.setString(1, userId);
+				ps4.setString(2, itemId);
+							
+				rs4 = ps4.executeUpdate();
+				
+				if(rs4 == 1){
+					LOGGER.info("Entry added into requests table");
+					res.setData(FLS_SUCCESS, "0", "Your request has been sent to the owner!!");
+						
+					String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
+					ps5 = hcp.prepareStatement(sqlAddCredit);
+					ps5.setString(1, userId);
+									
+					ps5.executeUpdate();
+					
+					LogCredit lc = new LogCredit();
+					lc.addLogCredit(userId,1,"Item Requested","");
+									
+					try {
+						String ownerUserId;
+						ownerUserId = rs2.getString("item_user_id");
+						Event event = new Event();
+						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> on Friend Lease");
+						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease");
+					} catch (Exception e) {
+						e.printStackTrace();
+						res.setData(FLS_DUPLICATE_ENTRY, "0", "Something is wrong with us we'll get back to you ASAP!!");
+					}
+									
+				}else{
+					LOGGER.info("Entry not added into requests table");
+					res.setData(FLS_DUPLICATE_ENTRY, "0", "Something is wrong with us we'll get back to you ASAP!!");
+				}
+				
+			}
+			
 		}catch(Exception e){
 			LOGGER.warning("Couldn't create statement");
-			res.setData(FLS_SQL_EXCEPTION, "0", "Something wrong with us we'll get back to you ASAP!!");
+			res.setData(FLS_SQL_EXCEPTION, "0", "Something is wrong with us we'll get back to you ASAP!!");
 			e.printStackTrace();
 	    }finally{
 			try {
