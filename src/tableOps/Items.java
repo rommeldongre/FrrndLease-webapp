@@ -492,7 +492,15 @@ public class Items extends Connect {
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT_STAT);
 				
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(item_uid);
-				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_NORMAL, image, null);
+				if(status.equals("PickedUpOut")){
+					String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.PICKED_UP_OUT, image, null);
+				}else if(status.equals("LeaseStarted")){
+					String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.LEASE_STARTED, image, null);
+				}else if(status.equals("PickedUpIn")){
+					String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.PICKED_UP_IN, image, null);
+				}else if(status.equals("LeaseEnded")){
+					String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.LEASE_ENDED, image, null);
+				}
 				
 				// logging item status
 				LogItem li = new LogItem();
