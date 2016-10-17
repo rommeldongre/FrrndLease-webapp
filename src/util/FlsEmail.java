@@ -354,13 +354,13 @@ public class FlsEmail extends Connect{
 			case FLS_MAIL_OLD_REQUEST_WARN:
 				SUBJECT = (" Pending Request");
 				BODY = "<body> You have not responded to the request for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> .<br/>"
-						+ "If is remains inactive for 2 more days we will delete this request on your behalf." + "</body>";
+						+ "If is remains inactive for more than 2 days we will delete this request on your behalf." + "</body>";
 				break;
 				
 			case FLS_MAIL_OLD_LEASE_WARN:
 				SUBJECT = (" Awaiting Pickup of this item");
 				BODY = "<body> You have not picked up this item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> for which got the lease .<br/>"
-						+ "You will not get your lease agreement until the item is confirmed 'PickedUp'. If the status remains 'LeaseReady' we will delete this lease after 2 days." + "</body>";
+						+ "You will not get your lease agreement until the item is confirmed 'PickedUp'. If the status remains 'LeaseReady' we will delete this lease after less than 2 days." + "</body>";
 				break;
 				
 			default:
