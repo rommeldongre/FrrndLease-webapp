@@ -49,7 +49,7 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside GetRequests process method");
 
 		try {
-			String sql = "SELECT tb1.request_date, tb1.request_item_id, tb1.request_id, tb1.request_requser_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb2.item_category, tb2.item_lease_value, tb2.item_lease_term, tb2.item_primary_image_link, tb2.item_uid, tb3.user_full_name, tb3.user_mobile, tb3.user_address, tb3.user_locality, tb3.user_sublocality FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb1.request_requser_id = tb3.user_id WHERE tb2.item_user_id=? AND tb1.request_id>? HAVING tb1.request_status=? ORDER by tb1.request_id ASC LIMIT 1";
+			String sql = "SELECT tb1.request_lastmodified, tb1.request_item_id, tb1.request_id, tb1.request_requser_id, tb1.request_status, tb2.item_name, tb2.item_desc, tb2.item_user_id, tb2.item_category, tb2.item_lease_value, tb2.item_lease_term, tb2.item_primary_image_link, tb2.item_uid, tb3.user_full_name, tb3.user_mobile, tb3.user_address, tb3.user_locality, tb3.user_sublocality FROM requests tb1 INNER JOIN items tb2 on tb1.request_item_id = tb2.item_id INNER JOIN users tb3 on tb1.request_requser_id = tb3.user_id WHERE tb2.item_user_id=? AND tb1.request_id>? HAVING tb1.request_status=? ORDER by tb1.request_id ASC LIMIT 1";
 			LOGGER.info("Creating a statement .....");
 		    stmt = hcp.prepareStatement(sql);
 
@@ -71,7 +71,7 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 			rs.setCode(FLS_SUCCESS);
 			rs.setId(rq.getUserId());
 			rs.setMessage(FLS_SUCCESS_M);
-			rs.setRequestDate(dbResponse.getString("request_date"));
+			rs.setRequestDate(dbResponse.getString("request_lastmodified"));
 			rs.setRequestorId(dbResponse.getString("request_requser_id"));
 			rs.setRequestUserId(dbResponse.getString("item_user_id"));
 			rs.setRequestUserName(dbResponse.getString("user_full_name"));

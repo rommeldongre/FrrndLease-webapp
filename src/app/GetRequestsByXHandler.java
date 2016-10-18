@@ -86,7 +86,7 @@ public class GetRequestsByXHandler extends Connect implements AppHandler {
 				rs.setOwnerSublocality(dbResponse.getString("OwnerSublocality"));
 				rs.setOwnerProfilePic(dbResponse.getString("OwnerProfilePic"));
 				
-				rs.setRequestDate(dbResponse.getString("request_date"));
+				rs.setRequestDate(dbResponse.getString("request_lastmodified"));
 				
 				rs.setItemId(dbResponse.getInt("item_id"));
 				rs.setTitle(dbResponse.getString("item_name"));

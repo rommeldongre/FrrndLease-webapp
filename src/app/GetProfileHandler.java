@@ -56,6 +56,7 @@ public class GetProfileHandler extends Connect implements AppHandler {
 			LOGGER.info(result.toString());
 
 			if (result.next()) {
+				rs.setPlan(result.getString("user_plan"));
 				rs.setFullName(result.getString("user_full_name"));
 				rs.setMobile(result.getString("user_mobile"));
 				rs.setEmail(result.getString("user_email"));

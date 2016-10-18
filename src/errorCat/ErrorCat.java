@@ -25,6 +25,9 @@ public class ErrorCat {
 	final public int FLS_ACCESS_TOKEN_FAILED = 400;
 	final public int FLS_NULL_POINT = 218;
 	final public int FLS_NOT_VERIFIED = 300;
+	final public int FLS_REQUEST_LIMIT = 219;
+	final public int FLS_UNLIKE_LOCATION = 220;
+	final public int FLS_UNLIKE_PLAN = 221;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -76,6 +79,9 @@ public class ErrorCat {
 	final public String FLS_NULL_POINT_M = "Wrong data!!";
 	final public String FLS_DUPLICATE_ENTRY_FB = "FB ID already added";
 	final public String FLS_DUPLICATE_ENTRY_LEAD = "Email already added";
+	final public String FLS_REQUEST_LIMIT_M = "You cannot have more than 3 requests.";
+	final public String FLS_UNLIKE_LOCATION_M = "The owner is not in this city!!";
+	final public String FLS_UNLIKE_PLAN_M = "The onwer must be registered for the same plan as yours.";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";
