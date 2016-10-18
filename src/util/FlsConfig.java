@@ -1162,8 +1162,8 @@ public class FlsConfig extends Connect{
 				// This block creates last modified columns
 				if(dbBuild < 2032){
 					
-					String sqlItemsLastmodified = "ALTER TABLE `items` ADD `item_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `item_lng`";
-					String sqlRequestsLastmodified = "ALTER TABLE `requests` ADD `request_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `request_status`";
+					String sqlItemsLastmodified = "ALTER TABLE `items` ADD `item_lastmodified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `item_lng`";
+					String sqlRequestsLastmodified = "ALTER TABLE `requests` ADD `request_lastmodified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `request_status`";
 					
 					PreparedStatement ps1 = null, ps2 = null;
 					
