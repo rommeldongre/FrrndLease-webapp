@@ -1319,6 +1319,7 @@ public class FlsConfig extends Connect{
 					
 					String updateDatetimeDefault = "ALTER TABLE item_log MODIFY COLUMN item_log_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
 					try{
+						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(updateDatetimeDefault);
 						ps1.executeUpdate();
 						ps1.close();
