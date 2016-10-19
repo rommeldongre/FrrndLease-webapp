@@ -460,7 +460,8 @@ public class Items extends Connect {
 		image = im.getImage();
 		String item_uid=null;
 		String link =null;
-
+		int Lease_Id= im.getLeaseId();
+		
 		LOGGER.info("Inside edit stat method...");
 		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
 
@@ -492,15 +493,15 @@ public class Items extends Connect {
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT_STAT);
 				
-				FlsS3Bucket s3Bucket = new FlsS3Bucket(item_uid);
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(item_uid,Lease_Id);
 				if(status.equals("PickedUpOut")){
-					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.PICKED_UP_OUT, image, null);
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.PICKED_UP_OUT, image, null);
 				}else if(status.equals("LeaseStarted")){
-					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.LEASE_STARTED, image, null);
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.LEASE_STARTED, image, null);
 				}else if(status.equals("PickedUpIn")){
-					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.PICKED_UP_IN, image, null);
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.PICKED_UP_IN, image, null);
 				}else if(status.equals("LeaseEnded")){
-					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.LEASE_ENDED, image, null);
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.LEASE_ENDED, image, null);
 				}
 				
 				// logging item status
