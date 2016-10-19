@@ -59,7 +59,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 		
 		String userId = rq.getUserId();
 		int itemId = 0;
-		String uid = null;
+		String uid = null,link;
 		
 		float lat = 0, lng = 0;
 		
@@ -139,10 +139,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 			
 			LOGGER.warning("Item added into table");
 			
-			// Adding entry to item log
-			LogItem li = new LogItem();
-			li.addItemLog(itemId, rq.getStatus(), "", "");
-			
 			// Adding entry to Item log
 			LogCredit lc = new LogCredit();
 			lc.addLogCredit(rq.getUserId(),10,"Item Added In Friend Store","");
@@ -157,7 +153,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 				LOGGER.info("10 credits added to the users table");
 				hcp.commit();
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
-				String link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, rq.getImage(), null);
+				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, rq.getImage(), null);
 				if(link != null){
 					s3Bucket.savePrimaryImageLink(link);
 				}
@@ -167,6 +163,10 @@ public class PostItemHandler extends Connect implements AppHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				// Adding entry to item log
+				LogItem li = new LogItem();
+				li.addItemLog(itemId, rq.getStatus(), "", link);
 			}else{
 				LOGGER.info("Credits not added to the users table");
 				hcp.rollback();

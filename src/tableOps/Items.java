@@ -383,7 +383,8 @@ public class Items extends Connect {
 		leaseTerm = im.getLeaseTerm();
 		leaseValue = im.getLeaseValue();
 		status = im.getStatus();
-
+		String item_image_primary_link=null;
+		
 		LOGGER.info("Inside edit method...");
 		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=? WHERE item_id=? AND item_user_id=?";
 
@@ -400,6 +401,7 @@ public class Items extends Connect {
 			rs = stmt2.executeQuery();
 
 			if (rs.next()) {
+				item_image_primary_link = rs.getString("item_primary_image_link");
 				stmt = hcp.prepareStatement(sql);
 
 				LOGGER.info("Statement created. Executing edit query...");
@@ -420,7 +422,7 @@ public class Items extends Connect {
 				
 				// logging item status to item edited
 				LogItem li = new LogItem();
-				li.addItemLog(id, "Item Edited", "", image);
+				li.addItemLog(id, "Item Edited", "", item_image_primary_link);
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
@@ -455,7 +457,11 @@ public class Items extends Connect {
 		check = 0;
 		id = im.getId();
 		status = im.getStatus();
-
+		image = im.getImage();
+		String item_uid=null;
+		String link =null;
+		int Lease_Id= im.getLeaseId();
+		
 		LOGGER.info("Inside edit stat method...");
 		String sql = "UPDATE items SET item_status=? WHERE item_id=?";
 
@@ -471,6 +477,7 @@ public class Items extends Connect {
 			rs = stmt2.executeQuery();
 			while (rs.next()) {
 				check = rs.getInt("item_id");
+				item_uid = rs.getString("item_uid");
 			}
 
 			if (check != 0) {
@@ -486,9 +493,20 @@ public class Items extends Connect {
 				Code = 002;
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_EDIT_STAT);
 				
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(item_uid,Lease_Id);
+				if(status.equals("PickedUpOut")){
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.PICKED_UP_OUT, image, null);
+				}else if(status.equals("LeaseStarted")){
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.LEASE_STARTED, image, null);
+				}else if(status.equals("PickedUpIn")){
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.PICKED_UP_IN, image, null);
+				}else if(status.equals("LeaseEnded")){
+					link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_LEASE, File_Name.LEASE_ENDED, image, null);
+				}
+				
 				// logging item status
 				LogItem li = new LogItem();
-				li.addItemLog(id, status, "", image);
+				li.addItemLog(id, status, "", link);
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
@@ -825,6 +843,7 @@ public class Items extends Connect {
 		id = im.getId();
 		userId = im.getUserId();
 		String check2 = null;
+		String item_image_link=null;
 		LOGGER.info("Inside delete posting method....");
 
 		PreparedStatement stmt = null, stmt2 = null;
@@ -842,6 +861,7 @@ public class Items extends Connect {
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 				check2 = rs.getString("item_status");
+				item_image_link = rs.getString("item_primary_image_link");
 				LOGGER.warning(check2);
 			}
 
@@ -870,7 +890,7 @@ public class Items extends Connect {
 					
 					// logging item status to archived
 					LogItem li = new LogItem();
-					li.addItemLog(id, "Archived", "", "");
+					li.addItemLog(id, "Archived", "", item_image_link);
 					
 					Event event = new Event();
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from frrndlease store.");

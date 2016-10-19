@@ -1,4 +1,4 @@
-var itemDetailsApp = angular.module('itemDetailsApp', ['headerApp']);
+var itemDetailsApp = angular.module('itemDetailsApp', ['headerApp', 'footerApp']);
 
 itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											'$window', 
