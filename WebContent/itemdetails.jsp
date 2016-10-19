@@ -27,6 +27,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
     <script src="js/header.js"></script>
+	 <script src="js/footer.js"></script>
     <!-- Angularjs api ends -->
 
     <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
@@ -226,8 +227,8 @@
                                             <tr ng-repeat="x in y">
                                                 <td>{{ x.itemLogDate }}</td>
                                                 <td>{{ x.itemLogType }}</td>
-                                                <td><img ng-src="{{((x.itemLogType == 'InStore' || x.itemLogType == 'LeaseReady') ? item.image : ((x.itemLogImage === '' || x.itemLogImage === null || x.itemLogImage === NULL || x.itemLogImage === 'null') ? 'images/imgplaceholder.png' : x.itemLogImage))}}" style="width:50px;"></td>
-                                            </tr>
+                                                <td><img load-image="x.itemLogImageLink" ng-src="" max-width="50" max-height="50"></td>
+											</tr>
                                         </tbody>
                                     </table>
                                 </div>

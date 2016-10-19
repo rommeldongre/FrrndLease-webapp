@@ -15,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2036;
+	public final int appBuild = 2037;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1310,6 +1310,33 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2036;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block alters column image link in Item log
+				if(dbBuild < 2037){
+					
+					String updateDatetimeDefault = "ALTER TABLE item_log MODIFY COLUMN item_log_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
+					try{
+						PreparedStatement ps1 = connection.prepareStatement(updateDatetimeDefault);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2037;
 					updateDBBuild(dbBuild);
 					
 				}

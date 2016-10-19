@@ -19,6 +19,7 @@ public class GetLeasesByXResObj extends ResObj{
 	
 	// lease details
 	String leaseExpiryDate;
+	int leaseId;
 	
 	// item details
 	int itemId;
@@ -157,6 +158,14 @@ public class GetLeasesByXResObj extends ResObj{
 			e.printStackTrace();
 		}
 		this.leaseExpiryDate = Long.toString(date.getTime());
+	}
+	
+	public int getLeaseId() {
+		return leaseId;
+	}
+
+	public void setLeaseId(int leaseId) {
+		this.leaseId = leaseId;
 	}
 
 	public int getItemId() {

@@ -122,7 +122,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
     private void closeOrRenewLease(String lease_requser_id, String lease_user_id,int lease_item_id, String lease_expiry_date, int user_credit){
     	
     	LOGGER.info("Inside Expire Method");
-  		String term,date;
+  		String term,date,item_primary_image_link=null;
   	    int days=0;
   	    Calendar gracePeroidCal = Calendar.getInstance();
   	    
@@ -139,7 +139,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
     	try {
     		
     		// fetching the uid
-			String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
+			String sqlUid = "SELECT item_uid,item_name,item_primary_image_link FROM items WHERE item_id=?";
 			ps1 = hcp.prepareStatement(sqlUid);
 			ps1.setInt(1, lease_item_id);
 			rs1 = ps1.executeQuery();
@@ -148,6 +148,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
 			if(rs1.next()){
 				uid = rs1.getString("item_uid");
 				title = rs1.getString("item_name");
+				item_primary_image_link = rs1.getString("item_primary_image_link");
 			}
 			
     		hcp.setAutoCommit(false);
@@ -217,7 +218,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				lc.addLogCredit(lease_requser_id,-10,"Lease Renewed","");
 				
 				// logging item status to renewed
-				li.addItemLog(lease_item_id, "Lease Renewed", "", "");
+				li.addItemLog(lease_item_id, "Lease Renewed", "", item_primary_image_link);
 				
 				RenewLeaseReqObj rq = new RenewLeaseReqObj();
 				rq.setItemId(lease_item_id);
@@ -288,7 +289,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
 					return;
 				}
 				
-				li.addItemLog(lease_item_id, "LeaseEnded", "", "");
+				li.addItemLog(lease_item_id, "LeaseEnded", "", item_primary_image_link);
 				
 				RenewLeaseReqObj rq = new RenewLeaseReqObj();
 				rq.setItemId(lease_item_id);

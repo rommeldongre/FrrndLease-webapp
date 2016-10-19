@@ -67,7 +67,7 @@ public class GetItemTimelineHandler extends Connect implements AppHandler {
 							rs1.setItemLogDate(dbResponse.getString("item_log_date"));
 							rs1.setItemLogType(dbResponse.getString("item_log_type"));
 							rs1.setItemLogDesc(dbResponse.getString("item_log_desc"));
-							rs1.setItemLogImage(dbResponse.getString("item_log_image"));
+							rs1.setItemLogImageLink(dbResponse.getString("item_log_image_link"));
 							rs.addResList(rs1);
 							offset = offset + 1;
 						}

@@ -11,7 +11,7 @@ public class ItemsModel {
 	
 	private String title, category, description,userId,leaseTerm,status, uid, primaryImageLink, image;
 
-	int id, leaseValue;
+	int id, leaseValue,leaseId;
 	private JSONObject obj;
 	
 	public void getData(JSONObject ob) {
@@ -29,6 +29,12 @@ public class ItemsModel {
 					description = "";
 				}else{
 					description = obj.getString("description");
+				}
+			if(obj.has("leaseId"))
+				if(obj.isNull("leaseId")){
+					leaseId = 0;
+				}else{
+					leaseId = obj.getInt("leaseId");
 				}
 			if(obj.has("category"))category = obj.getString("category");
 			if(obj.has("userId"))userId = obj.getString("userId");
@@ -87,5 +93,9 @@ public class ItemsModel {
 
 	public String getImage() {
 		return image;
+	}
+
+	public int getLeaseId() {
+		return leaseId;
 	}
 }
