@@ -6,22 +6,22 @@
     </div>
 	<hr/><br/><br/>
     <div class="row" style="display:flex;flex-wrap:wrap;">
-        <div class="col-lg-4 col-md-4 col-md-offset-2 col-lg-offset-2">
-            <img ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}" alt="Profile Pic" style="display:block;width:200px;height:200px;">
+        <div class="col-lg-6 col-md-6" style="text-align:-webkit-center;">
+            <div><img ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}" alt="Profile Pic" style="display:block;width:200px;height:200px;"></div>
             <br/>
-            <div id="userId">
-                <i class="fa fa-user"></i><b style="font-size:16px"> {{'  '+ userId }}</b>
+            <div id="userId" style="font-size:large;margin:5px;">
+                <i class="fa fa-user"></i><b> {{'  '+ userId }}</b>
             </div>
-            <div>
-                <span class="label label-warning label-fill btn-tooltip" ng-model="label" ng-if="label == false" style="text-align:right;" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified">Not Verified</span>
-                <span class="label label-success label-fill" ng-model="label" ng-if="label == true">Verified</span>
-                <i ng-if="label == false" class="fa fa-question-circle-o btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Upload photo below to get verified"></i>
-            </div>
-            <div>
-                <span class="label label-danger label-fill" ng-if="plan == 'FLS_SELFIE'">SELFIE USER</span>
-                <span class="label label-info label-fill" ng-if="plan == 'FLS_PRIME'">PRIME USER</span>
-                <i ng-if="plan == 'FLS_SELFIE'" class="fa fa-question-circle-o btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Selfie User"></i>
+            <div style="margin:5px;">
+                <span style="font-size:initial;" class="label label-warning label-fill" ng-if="plan == 'FLS_SELFIE'">SELFIE USER</span>
+                <span style="font-size:initial;" class="label label-success label-fill" ng-if="plan == 'FLS_PRIME'">PRIME USER</span>
+                <i ng-if="plan == 'FLS_SELFIE'" class="fa fa-check-circle btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Selfie User"></i>
                 <i ng-if="plan == 'FLS_PRIME'" class="fa fa-question-circle-o btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Prime User"></i>
+            </div>
+            <div style="font-size:large;margin:5px;">
+                {{locality}}
+                <i ng-if="label == true" class="fa fa-check-circle btn-tooltip" style="color:#05AE0E;" data-toggle="tooltip" data-placement="top" title="Verified Location"></i>
+                <i ng-if="label == false" class="fa fa-exclamation-triangle btn-tooltip" style="color:#FF3B30;" data-toggle="tooltip" data-placement="top" title="Upload photo below to get verified"></i>
             </div>
         </div>
         <div class="col-lg-6 col-md-6">

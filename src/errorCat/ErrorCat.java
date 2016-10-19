@@ -28,6 +28,8 @@ public class ErrorCat {
 	final public int FLS_REQUEST_LIMIT = 219;
 	final public int FLS_UNLIKE_LOCATION = 220;
 	final public int FLS_UNLIKE_PLAN = 221;
+	final public int FLS_ACTIVE_REQUEST = 222;
+	final public int FLS_ACTIVE_LEASE = 223;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -82,6 +84,8 @@ public class ErrorCat {
 	final public String FLS_REQUEST_LIMIT_M = "You cannot have more than 3 requests.";
 	final public String FLS_UNLIKE_LOCATION_M = "The owner is not in this city!!";
 	final public String FLS_UNLIKE_PLAN_M = "The onwer must be registered for the same plan as yours.";
+	final public String FLS_ACTIVE_REQUEST_M = "You have pending requests. Please resolve them to update your location.";
+	final public String FLS_ACTIVE_LEASE_M = "You can change location only if there are no active leases.";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

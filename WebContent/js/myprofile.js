@@ -118,6 +118,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
 				$scope.user.mobile = response.data.mobile;
                 $scope.user.email = response.data.email;
 				$scope.location = response.data.address;
+                $scope.locality = response.data.locality;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
 				$scope.label = response.data.photoIdVerified;
@@ -470,9 +471,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         profileFactory.updateProfile(req).then(
         function(response){
             if (response.data.code == 0) {
-                dialogText = 'Your Profile Has Been Updated!!';
-				bannerService.updatebannerMessage(dialogText,"");
-				$("html, body").animate({ scrollTop: 0 }, "slow");
+                window.location.reload();
             }else{
 				modalService.showModal({}, {bodyText:response.data.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                     if(response.data.code == 400)

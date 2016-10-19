@@ -1284,17 +1284,21 @@ public class FlsConfig extends Connect{
 					
 				}
 				
-
-				
 				// This block deletes request_date column from requests table
 				if(dbBuild < 2036){
 					
 					String sqlDeleteRequestDate = "ALTER TABLE `requests` DROP `request_date`";
+					String sqlAddPlace = "INSERT INTO `places` (`locality`) VALUES ('Pune')";
+					
 					try{
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlDeleteRequestDate);
 						ps1.executeUpdate();
 						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlAddPlace);
+						ps2.executeUpdate();
+						ps2.close();
 					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
