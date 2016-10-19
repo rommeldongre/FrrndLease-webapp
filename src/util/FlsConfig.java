@@ -1265,7 +1265,6 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps1 = connection.prepareStatement(sqlImageLink);
 						ps1.executeUpdate();
 						ps1.close();
-						
 					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
