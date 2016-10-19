@@ -15,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2035;
+	public final int appBuild = 2036;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1162,8 +1162,8 @@ public class FlsConfig extends Connect{
 				// This block creates last modified columns
 				if(dbBuild < 2032){
 					
-					String sqlItemsLastmodified = "ALTER TABLE `items` ADD `item_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `item_lng`";
-					String sqlRequestsLastmodified = "ALTER TABLE `requests` ADD `request_lastmodified` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `request_status`";
+					String sqlItemsLastmodified = "ALTER TABLE `items` ADD `item_lastmodified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `item_lng`";
+					String sqlRequestsLastmodified = "ALTER TABLE `requests` ADD `request_lastmodified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `request_status`";
 					
 					PreparedStatement ps1 = null, ps2 = null;
 					
@@ -1285,6 +1285,36 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2035;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+
+				
+				// This block deletes request_date column from requests table
+				if(dbBuild < 2036){
+					
+					String sqlDeleteRequestDate = "ALTER TABLE `requests` DROP `request_date`";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlDeleteRequestDate);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2036;
 					updateDBBuild(dbBuild);
 					
 				}
