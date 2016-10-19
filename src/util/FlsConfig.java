@@ -15,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2037;
+	public final int appBuild = 2038;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1342,6 +1342,35 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2037;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds selfie and prime columns in lease table
+				if(dbBuild < 2038){
+					
+					String sqlLeaseColumns = "ALTER TABLE `leases` ADD `lease_plan` ENUM('FLS_SELFIE','FLS_PRIME','FLS_UBER') NOT NULL DEFAULT 'FLS_SELFIE' AFTER `lease_expiry_date`, ADD `delivery_plan` ENUM('FLS_SELF','FLS_OPS') NOT NULL DEFAULT 'FLS_SELF' AFTER `lease_plan`, ADD `owner_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `delivery_plan`, ADD `Leasee_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `owner_pickup_status`";
+					
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlLeaseColumns);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2038;
 					updateDBBuild(dbBuild);
 					
 				}
