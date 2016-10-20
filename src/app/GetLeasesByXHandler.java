@@ -87,6 +87,9 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				
 				rs.setLeaseExpiryDate(dbResponse.getString("lease_expiry_date"));
 				rs.setLeaseId(dbResponse.getInt("lease_id"));
+				rs.setDeliveryPlan(dbResponse.getString("delivery_plan"));
+				rs.setOwnerPickupStatus(dbResponse.getBoolean("owner_pickup_status"));
+				rs.setLeaseePickupStatus(dbResponse.getBoolean("leasee_pickup_status"));
 				
 				rs.setItemId(dbResponse.getInt("item_id"));
 				rs.setTitle(dbResponse.getString("item_name"));

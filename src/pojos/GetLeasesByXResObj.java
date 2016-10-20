@@ -24,6 +24,13 @@ public class GetLeasesByXResObj extends ResObj{
 	// item details
 	int itemId;
 	String title, description, category, leaseValue, leaseTerm, primaryImageLink, status, uid;
+	
+	//Delivery Plan
+	String deliveryPlan;
+	
+	//Delivery Status
+	boolean ownerPickupStatus;
+	boolean leaseePickupStatus;
 
 	public int getCode() {
 		return code;
@@ -254,5 +261,29 @@ public class GetLeasesByXResObj extends ResObj{
 
 	public void setOwnerProfilePic(String ownerProfilePic) {
 		this.ownerProfilePic = ownerProfilePic;
+	}
+
+	public String getDeliveryPlan() {
+		return deliveryPlan;
+	}
+
+	public void setDeliveryPlan(String deliveryPlan) {
+		this.deliveryPlan = deliveryPlan;
+	}
+
+	public boolean isOwnerPickupStatus() {
+		return ownerPickupStatus;
+	}
+
+	public void setOwnerPickupStatus(boolean ownerPickupStatus) {
+		this.ownerPickupStatus = ownerPickupStatus;
+	}
+
+	public boolean isLeaseePickupStatus() {
+		return leaseePickupStatus;
+	}
+
+	public void setLeaseePickupStatus(boolean leaseePickupStatus) {
+		this.leaseePickupStatus = leaseePickupStatus;
 	}
 }

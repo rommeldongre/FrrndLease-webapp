@@ -16,6 +16,12 @@ public class FlsPlan extends Connect{
 		FLS_UBER
 	}
 	
+	public enum Delivery_Plan{
+		FLS_NONE,
+		FLS_SELF,
+		FLS_OPS
+	}
+	
 	public void checkPlan(String userId){
 		
 		LOGGER.info("Inside check plan for the user id : " + userId);

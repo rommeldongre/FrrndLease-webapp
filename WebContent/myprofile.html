@@ -10,7 +10,8 @@
             <div><img ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}" alt="Profile Pic" style="display:block;width:200px;height:200px;"></div>
             <br/>
             <div id="userId" style="font-size:large;margin:5px;">
-                <i class="fa fa-user"></i><b> {{'  '+ userId }}</b>
+                <i class="fa fa-user"></i><b> {{'  '+ userId }}</b><i ng-if="label == true" class="fa fa-check-circle btn-tooltip" style="color:#05AE0E;" data-toggle="tooltip" data-placement="top" title="Verified Location"></i>
+                <i ng-if="label == false" class="fa fa-exclamation-triangle btn-tooltip" style="color:#FF3B30;" data-toggle="tooltip" data-placement="top" title="Upload photo below to get verified"></i>
             </div>
             <div style="margin:5px;">
                 <span style="font-size:initial;" class="label label-warning label-fill" ng-if="plan == 'FLS_SELFIE'">SELFIE USER</span>
@@ -20,8 +21,6 @@
             </div>
             <div style="font-size:large;margin:5px;">
                 {{locality}}
-                <i ng-if="label == true" class="fa fa-check-circle btn-tooltip" style="color:#05AE0E;" data-toggle="tooltip" data-placement="top" title="Verified Location"></i>
-                <i ng-if="label == false" class="fa fa-exclamation-triangle btn-tooltip" style="color:#FF3B30;" data-toggle="tooltip" data-placement="top" title="Upload photo below to get verified"></i>
             </div>
         </div>
         <div class="col-lg-6 col-md-6">

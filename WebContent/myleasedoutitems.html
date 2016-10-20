@@ -85,6 +85,11 @@
                        <a class="card-link" href="">
                            <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">Renew</button>
                        </a>
+                       <a ng-if="lease.status=='LeaseReady' && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
+                           <div class="switch" data-on-label="<i class='fa fa-check'></i>" data-off-label="<i class='fa fa-times'></i>">
+                               <input type="checkbox"/>
+                           </div>
+                       </a>
                    </div>
                </div>
             </div>
