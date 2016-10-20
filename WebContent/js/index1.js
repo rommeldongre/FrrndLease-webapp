@@ -99,7 +99,7 @@ indexApp.controller('pricingCtrl', ['$scope', 'modalService', function($scope, m
 	var sendLeadEmail = function(req){
 		
 		$.ajax({
-			url: '/flsv2/AddLead',
+			url: '/AddLead',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",

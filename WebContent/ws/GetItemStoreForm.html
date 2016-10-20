@@ -35,7 +35,7 @@
 		canvasCtx = document.getElementById("panel").getContext("2d");
 		alert("Inside send");
 		$.ajax({
-			url: '/flsv2/GetItemStore',
+			url: '/GetItemStore',
 			type: 'get',
 			data: {req : JSON.stringify(req)},
 			contentType:"application/json",

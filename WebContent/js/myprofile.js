@@ -164,7 +164,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         }
         
         $.ajax({
-            url: '/flsv2/AdminOps',
+            url: '/AdminOps',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -192,7 +192,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         }
         
         $.ajax({
-            url: '/flsv2/AdminOps',
+            url: '/AdminOps',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -201,7 +201,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 if(response.Code == 0){
                     modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
                         $.ajax({
-                            url: '/flsv2/Verification',
+                            url: '/Verification',
                             type:'POST',
                             data: JSON.stringify({verification : result+"_n"}),
                             contentType:"application/json",
@@ -267,7 +267,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     break;
             }
             $.ajax({
-                url: '/flsv2/ChangeUserNotification',
+                url: '/ChangeUserNotification',
                 type: 'post',
                 data: JSON.stringify({userId:userFactory.user, notification: n, accessToken: userFactory.userAccessToken}),
                 contentType:"application/json",
@@ -318,7 +318,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     break;
             }
             $.ajax({
-                url: '/flsv2/ChangeUserNotification',
+                url: '/ChangeUserNotification',
                 type: 'post',
                 data: JSON.stringify({userId:userFactory.user, notification: n, accessToken: userFactory.userAccessToken}),
                 contentType:"application/json",

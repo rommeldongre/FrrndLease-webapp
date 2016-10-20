@@ -32,7 +32,7 @@
 	requestsend = function(req) {
 		alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/GetRequestsPlus',
+			url: '/GetRequestsPlus',
 			type:'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",

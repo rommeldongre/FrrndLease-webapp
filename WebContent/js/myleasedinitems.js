@@ -36,7 +36,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
     
     var getLeasedInItemsSend = function(req){
         $.ajax({
-			url: '/flsv2/GetLeasesByX',
+			url: '/GetLeasesByX',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",
@@ -80,7 +80,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
     
     var closeLeaseSend = function(req, index){
         $.ajax({
-            url: '/flsv2/RenewLease',
+            url: '/RenewLease',
             type:'post',
             data: JSON.stringify(req),
             contentType:"application/json",

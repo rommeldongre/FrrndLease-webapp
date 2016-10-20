@@ -40,7 +40,7 @@
 	send = function(req) {
 		alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/GrantLease',
+			url: '/GrantLease',
 			type:'POST',
 			data: JSON.stringify(req),
 			contentType:"application/json",
