@@ -173,7 +173,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     var displayCategory = function(req){
         $.ajax({
-            url: '/flsv2/GetCategoryList',
+            url: '/GetCategoryList',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -242,7 +242,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     var sendToWishList = function(req){
         $.ajax({
-			url: '/flsv2/WishItem',
+			url: '/WishItem',
 			type: 'post',
 			data: {req : JSON.stringify(req)},
 			contentType: "application/x-www-form-urlencoded",
@@ -262,7 +262,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     var getRecentWishes = function(req){
         $.ajax({
-            url: '/flsv2/GetRecentWishes',
+            url: '/GetRecentWishes',
             type: 'post',
             data: JSON.stringify(req),
             contentType: "application/x-www-form-urlencoded",
@@ -288,7 +288,7 @@ carouselApp.factory('getItemsForCarousel', ['$http', function($http){
     var getItems = {};
     
     getItems.getItems = function(req){
-        return $http.post('/flsv2/GetItemStoreByX', JSON.stringify(req));
+        return $http.post('/GetItemStoreByX', JSON.stringify(req));
     }
     
     return getItems;

@@ -29,7 +29,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
         if(itemId != undefined){
             $scope.isEdit = true;
             $.ajax({
-                url: '/flsv2/AdminOps',
+                url: '/AdminOps',
                 type:'get',
                 data: {req: JSON.stringify(req)},
                 contentType:"application/json",
@@ -69,7 +69,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     var displayCategory = function(req){
         $.ajax({
-            url: '/flsv2/GetCategoryList',
+            url: '/GetCategoryList',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -108,7 +108,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     var displayLeaseTerm = function(req){
         $.ajax({
-            url: '/flsv2/GetLeaseTerms',
+            url: '/GetLeaseTerms',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -166,7 +166,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
                         });
 
                         $.ajax({
-                            url: '/flsv2/SaveImageInS3',
+                            url: '/SaveImageInS3',
                             type: 'post',
                             data: JSON.stringify(req),
                             contentType: "application/x-www-form-urlencoded",
@@ -219,7 +219,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
         $scope.item.primaryImageLink = "loading";
         
         $.ajax({
-            url: '/flsv2/DeleteImageFromS3',
+            url: '/DeleteImageFromS3',
             type: 'post',
             data: JSON.stringify(req),
             contentType: "application/x-www-form-urlencoded",
@@ -256,7 +256,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
         $scope.images[index].link = "loading";
         
         $.ajax({
-            url: '/flsv2/DeleteImageFromS3',
+            url: '/DeleteImageFromS3',
             type: 'post',
             data: JSON.stringify(req),
             contentType: "application/x-www-form-urlencoded",
@@ -314,7 +314,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to Post this Item?'}).then(function(result){
             $.ajax({
-                url: '/flsv2/PostItem',
+                url: '/PostItem',
                 type: 'post',
                 data: JSON.stringify(req),
                 contentType: "application/x-www-form-urlencoded",
@@ -352,7 +352,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
 				link = 'http://www.frrndlease.com/ItemDetails?uid='+uid;
 			}else{
 				link = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
-				console.log('http://localhost:8080/flsv2/ItemDetails?uid='+uid);
+				console.log('http://localhost:8080/ItemDetails?uid='+uid);
 			}
 			
 			FB.login(function(response) {		
@@ -407,7 +407,7 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
         };
         
         modalService.showModal({}, {bodyText: 'Are you sure you want to update this Item?'}).then(function(result){
-            $.ajax({url: '/flsv2/EditPosting',
+            $.ajax({url: '/EditPosting',
                     type: 'post',
                     data: {req : JSON.stringify(req)},
                     contentType: "application/x-www-form-urlencoded",

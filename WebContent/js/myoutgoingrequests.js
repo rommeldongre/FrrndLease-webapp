@@ -44,7 +44,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
     
     var displayOutRequests = function(req){
         $.ajax({
-            url: '/flsv2/GetRequestsByUser',
+            url: '/GetRequestsByUser',
             type:'POST',
             data: JSON.stringify(req),
             contentType:"application/json",
@@ -84,7 +84,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
     
     var deleteRequest = function(req, index){
         $.ajax({
-            url: '/flsv2/DeleteRequest',
+            url: '/DeleteRequest',
             type:'POST',
             data: JSON.stringify(req),
             contentType:"application/json",

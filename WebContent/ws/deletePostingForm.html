@@ -39,7 +39,7 @@
 	send = function(req) {
 		alert("Inside send");
 		$.ajax({
-			url: '/flsv2/DeletePosting',
+			url: '/DeletePosting',
 			type: 'get',
 			data: {req : JSON.stringify(req)},
 			contentType:"application/json",

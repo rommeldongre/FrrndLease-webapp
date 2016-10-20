@@ -96,7 +96,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
 	
 	var sendAddWishItem = function(req){
         $.ajax({
-            url: '/flsv2/WishItem',
+            url: '/WishItem',
             type:'post',
             data: {req : JSON.stringify(req)},
             contentType:"application/x-www-form-urlencoded",
@@ -137,7 +137,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
     
     var sendImportWishListUrl = function(req){
         $.ajax({
-            url: '/flsv2/ImportWishlist',
+            url: '/ImportWishlist',
             type:'POST',
             data: JSON.stringify(req),
             contentType:"application/json",
@@ -168,7 +168,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
     
     var sendDeleteWishItem = function(req, index){
         $.ajax({
-            url: '/flsv2/DeleteWishlist',
+            url: '/DeleteWishlist',
             type: 'get',
             data: {req : JSON.stringify(req)},
             contentType:"application/json",

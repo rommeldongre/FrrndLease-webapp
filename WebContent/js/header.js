@@ -113,7 +113,7 @@ headerApp.controller('headerCtrl', ['$scope',
     
     var signUpSend = function(req){
         $.ajax({
-            url: '/flsv2/SignUp',
+            url: '/SignUp',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -170,7 +170,7 @@ headerApp.controller('headerCtrl', ['$scope',
     
     var loginSend = function(req, signUpStatus){
         $.ajax({
-            url: '/flsv2/LoginUser',
+            url: '/LoginUser',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -236,7 +236,7 @@ headerApp.controller('headerCtrl', ['$scope',
 
     var addFriendSend = function(req, friends){
         $.ajax({
-            url: '/flsv2/AddFriend',
+            url: '/AddFriend',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -274,7 +274,7 @@ headerApp.controller('headerCtrl', ['$scope',
             $scope.showSearch = true;
         }
     }else{
-        if(window.location.pathname == '/flsv2/index.html' || window.location.pathname == '/flsv2/'){
+        if(window.location.pathname == '/index.html' || window.location.pathname == '/'){
             $scope.navClassValue = "navbar navbar-static";
             $scope.showSearch = false;
         }
@@ -302,7 +302,7 @@ headerApp.controller('headerCtrl', ['$scope',
 	
 	var getCreditSend = function(req){
 		$.ajax({
-            url: '/flsv2/GetCreditTimeline',
+            url: '/GetCreditTimeline',
             type: 'post',
             data: JSON.stringify(req),
 			contentType:"application/json",
@@ -412,7 +412,7 @@ headerApp.controller('headerCtrl', ['$scope',
     
     var displayUnreadNotifications = function(){
         $.ajax({
-			url: '/flsv2/GetUnreadEventsCount',
+			url: '/GetUnreadEventsCount',
 			type: 'post',
 			data: JSON.stringify({userId: userFactory.user}),
 			contentType:"application/json",
@@ -480,7 +480,7 @@ headerApp.controller('headerCtrl', ['$scope',
 		};
 		
 		$.ajax({
-			url: '/flsv2/MatchFbId',
+			url: '/MatchFbId',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",
@@ -507,7 +507,7 @@ headerApp.controller('headerCtrl', ['$scope',
         }
         
         $.ajax({
-            url: '/flsv2/AddPromoCredits',
+            url: '/AddPromoCredits',
             type: 'post',
             data: JSON.stringify(req),
             contentType:"application/json",
@@ -557,7 +557,7 @@ headerApp.factory('statsFactory', ['$http', function($http){
     var dataFactory = {};
     
     dataFactory.getStats = function(){
-        return $http.post('/flsv2/GetSiteStats', JSON.stringify({empty_pojo: ""}));
+        return $http.post('/GetSiteStats', JSON.stringify({empty_pojo: ""}));
     }
     return dataFactory;
 }]);
@@ -568,11 +568,11 @@ headerApp.factory('profileFactory', ['$http', function($http){
     var dataFactory = {};
     
     dataFactory.getProfile = function(user){
-        return $http.post('/flsv2/GetProfile', JSON.stringify({userId : user}));
+        return $http.post('/GetProfile', JSON.stringify({userId : user}));
     }
     
     dataFactory.updateProfile = function(req){
-        return $http.post('/flsv2/EditProfile', JSON.stringify(req));
+        return $http.post('/EditProfile', JSON.stringify(req));
     }
     
     return dataFactory;
@@ -616,7 +616,7 @@ headerApp.service('modalService', ['$uibModal',
             animation: true,
             backdrop: true,
             keyboard: true,
-            templateUrl: '/flsv2/modal.html'
+            templateUrl: '/modal.html'
         };
 
         var modalOptions = {
@@ -836,7 +836,7 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
                             });
 
                             $.ajax({
-                                url: '/flsv2/SaveImageInS3',
+                                url: '/SaveImageInS3',
                                 type: 'post',
                                 data: JSON.stringify(req),
                                 contentType: "application/x-www-form-urlencoded",
@@ -929,7 +929,7 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalSe
             else
                 process_dialog("Sending OTP to reset the password!!");
             $.ajax({
-                url: '/flsv2/ForgotPassword',
+                url: '/ForgotPassword',
                 type:'POST',
                 data: JSON.stringify({userId:userId}),
                 contentType:"application/json",
@@ -942,7 +942,7 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalSe
                         modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
                             if(response.code == 300){
                                 $.ajax({
-                                    url: '/flsv2/Verification',
+                                    url: '/Verification',
                                     type:'POST',
                                     data: JSON.stringify({verification : result+"_u"}),
                                     contentType:"application/json",
@@ -1037,7 +1037,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
             $('#registerModal').modal('hide');
             modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
                 $.ajax({
-                    url: '/flsv2/Verification',
+                    url: '/Verification',
                     type:'POST',
                     data: JSON.stringify({verification : result+"_u"}),
                     contentType:"application/json",

@@ -62,7 +62,7 @@
 	send = function(req) {
 		alert("Inside send");
 		$.ajax({
-			url: '/flsv2/SendMessage',
+			url: '/SendMessage',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",

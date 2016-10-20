@@ -60,7 +60,7 @@
 	send = function(req) {
 		alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/GetRequestsByUser',
+			url: '/GetRequestsByUser',
 			type:'POST',
 			data: JSON.stringify(req),
 			contentType:"application/json",
