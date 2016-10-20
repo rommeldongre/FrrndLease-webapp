@@ -24,7 +24,6 @@ This README would normally document whatever steps are necessary to get your app
 
 <Context path="" docBase="flsv3" reloadable="true"></Context>
 ```
-"
     * Save the file and restart the server.
 ### Contribution guidelines ###
 
