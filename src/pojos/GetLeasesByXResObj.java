@@ -31,6 +31,10 @@ public class GetLeasesByXResObj extends ResObj{
 	//Delivery Status
 	boolean ownerPickupStatus;
 	boolean leaseePickupStatus;
+	
+	//User Plan
+	String ownerPlan;
+	String requestorPlan;
 
 	public int getCode() {
 		return code;
@@ -285,5 +289,21 @@ public class GetLeasesByXResObj extends ResObj{
 
 	public void setLeaseePickupStatus(boolean leaseePickupStatus) {
 		this.leaseePickupStatus = leaseePickupStatus;
+	}
+
+	public String getOwnerPlan() {
+		return ownerPlan;
+	}
+
+	public void setOwnerPlan(String ownerPlan) {
+		this.ownerPlan = ownerPlan;
+	}
+
+	public String getRequestorPlan() {
+		return requestorPlan;
+	}
+
+	public void setRequestorPlan(String requestorPlan) {
+		this.requestorPlan = requestorPlan;
 	}
 }

@@ -55,7 +55,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			String status = rq.getStatus();
 			
 			//already getting all data from tb1. for tb3 add new coloum
-			sql = "SELECT tb1.*, tb2.*, tb3.user_full_name AS OwnerName, tb3.user_address AS OwnerAddress, tb3.user_mobile AS OwnerMobile, tb3.user_locality AS OwnerLocality, tb3.user_sublocality AS OwnerSublocality, tb3.user_profile_picture as OwnerProfilePic, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id = tb4.item_id WHERE ";
+			sql = "SELECT tb1.*, tb2.*, tb3.user_full_name AS OwnerName, tb3.user_address AS OwnerAddress, tb3.user_mobile AS OwnerMobile, tb3.user_locality AS OwnerLocality, tb3.user_sublocality AS OwnerSublocality, tb3.user_profile_picture as OwnerProfilePic, tb3.user_plan as OwnerPlan, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id = tb4.item_id WHERE ";
 			
 			if(leaseUserId != "")
 				sql = sql + "tb1.lease_user_id='" + leaseUserId + "' AND ";
@@ -76,6 +76,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				rs.setRequestorLocality(dbResponse.getString("user_locality"));
 				rs.setRequestorSublocality(dbResponse.getString("user_sublocality"));
 				rs.setRequestorProfilePic(dbResponse.getString("user_profile_picture"));
+				rs.setRequestorPlan(dbResponse.getString("user_plan"));
 				
 				rs.setOwnerUserId(dbResponse.getString("lease_user_id"));
 				rs.setOwnerFullName(dbResponse.getString("OwnerName"));
@@ -84,6 +85,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				rs.setOwnerLocality(dbResponse.getString("OwnerLocality"));
 				rs.setOwnerSublocality(dbResponse.getString("OwnerSublocality"));
 				rs.setOwnerProfilePic(dbResponse.getString("OwnerProfilePic"));
+				rs.setOwnerPlan(dbResponse.getString("OwnerPlan"));
 				
 				rs.setLeaseExpiryDate(dbResponse.getString("lease_expiry_date"));
 				rs.setLeaseId(dbResponse.getInt("lease_id"));

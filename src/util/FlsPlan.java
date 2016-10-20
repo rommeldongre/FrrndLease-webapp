@@ -114,6 +114,45 @@ public class FlsPlan extends Connect{
 				e.printStackTrace();
 			}
 		}
+		
+	}
+	
+	public int changeDeliveryPlan(int leaseId, Delivery_Plan delivery_plan){
+		
+		LOGGER.info("Changing delivery plan to : " + delivery_plan);
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1 = 0;
+		
+		try{
+			
+			String sql = "UPDATE leases SET delivery_plan=? WHERE lease_id=?";
+			ps1 = hcp.prepareStatement(sql);
+			ps1.setString(1, delivery_plan.name());
+			ps1.setInt(2, leaseId);
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1)
+				LOGGER.info("delivery plan updated to : " + delivery_plan);
+			else
+				LOGGER.info("Not able to change delivery plan for lease id : " + leaseId);
+			
+		}catch(Exception e){
+			LOGGER.warning("Exception occured while checking plan");
+			e.printStackTrace();
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		return rs1;
+		
 	}
 	
 }

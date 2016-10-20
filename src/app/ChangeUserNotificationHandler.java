@@ -55,6 +55,8 @@ public class ChangeUserNotificationHandler extends Connect implements AppHandler
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			rs.setCode(FLS_INVALID_OPERATION);
+			rs.setMessage(FLS_INVALID_OPERATION_M);
 			LOGGER.warning("Error occured in changeUserNotification handler");
 		}
 
