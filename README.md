@@ -11,14 +11,15 @@ This README would normally document whatever steps are necessary to get your app
 ### How do I get set up? ###
 
 * Summary of set up
-* Configuration 
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions: 1)Go to <catalina_home>/conf/ location. 
-                           2)In file server.xml add the following line after opening <Host> tag
-                              "<Context path="" docBase="flsv3" reloadable="true"></Context>"
-                           3) Save the file and restart the server.
+* Configuration: None
+* Dependencies : None
+* Database configuration : None
+* How to run tests : None
+* Deployment instructions: 
+     1)Go to <catalina_home>/conf/ location. 
+     2)In file server.xml add the following line after opening <Host> tag
+           "<Context path="" docBase="flsv3" reloadable="true"></Context>"
+     3) Save the file and restart the server.
 
 ### Contribution guidelines ###
 
