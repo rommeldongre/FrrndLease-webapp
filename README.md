@@ -17,15 +17,15 @@ This README would normally document whatever steps are necessary to get your app
 * How to run tests : None
 * Deployment instructions: 
       * Go to <catalina_home>/conf/ location. 
-      * In file server.xml add the following line after opening <Host> tag
-           "
+      * In file server.xml add the following xml code after opening <Host> tag 
+      * Save the file and restart the server.
+            
 ```
 #!xml
 
 <Context path="" docBase="flsv3" reloadable="true"></Context>
 ```
-   
-      * Save the file and restart the server.
+
 ### Contribution guidelines ###
 
 * Writing tests
