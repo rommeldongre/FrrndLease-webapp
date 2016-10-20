@@ -18,7 +18,13 @@ This README would normally document whatever steps are necessary to get your app
 * Deployment instructions: 
      1)Go to <catalina_home>/conf/ location. 
      2)In file server.xml add the following line after opening <Host> tag
-           "<Context path="" docBase="flsv3" reloadable="true"></Context>"
+           "
+```
+#!xml
+
+<Context path="" docBase="flsv3" reloadable="true"></Context>
+```
+"
      3) Save the file and restart the server.
 
 ### Contribution guidelines ###
