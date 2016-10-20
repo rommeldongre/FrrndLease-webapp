@@ -16,7 +16,7 @@ This README would normally document whatever steps are necessary to get your app
 * Database configuration : None
 * How to run tests : None
 * Deployment instructions: 
-      * Go to <catalina_home>/conf/ location. 
+      * Go to path <catalina_home>/conf/ in your computer.
       * In file server.xml add the following xml code after opening <Host> tag 
       * Save the file and restart the server.
             
