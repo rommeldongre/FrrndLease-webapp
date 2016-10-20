@@ -96,7 +96,7 @@ itemDbCreate = function(){									//for storing in db/localstorage
 function postItemSend(req) {
 	
 		$.ajax({
-			url: '/flsv2/PostItem',
+			url: '/PostItem',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",
@@ -155,7 +155,7 @@ function getPrevItem(i){
 getItemSend = function(req) {
 	
 	$.ajax({
-		url: '/flsv2/GetItemStore',
+		url: '/GetItemStore',
 		type: 'get',
 		data: {req : JSON.stringify(req)},
 		contentType:"application/json",
@@ -294,7 +294,7 @@ function editItemDbCreate(){
 
 function editItemSend(req){
 	$.ajax({
-		url: '/flsv2/EditPosting',
+		url: '/EditPosting',
 		type: 'post',
 		data: {req : JSON.stringify(req)},
 		contentType: "application/x-www-form-urlencoded",
@@ -335,7 +335,7 @@ function deleteItemDbCreate(){
 
 function deleteItemSend(req){
 	$.ajax({
-		url: '/flsv2/DeletePosting',
+		url: '/DeletePosting',
 		type: 'get',
 		data: {req : JSON.stringify(req)},
 		contentType:"application/json",
@@ -381,7 +381,7 @@ function requestItemDbCreate(){
 function requestItemSend(req){
 	
 	$.ajax({
-		url: '/flsv2/RequestItem',
+		url: '/RequestItem',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -424,7 +424,7 @@ function rejectRequestSetValues(i, req){
 
 function rejectRequestSend(req){
 	$.ajax({
-		url: '/flsv2/RejectRequest',
+		url: '/RejectRequest',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -476,7 +476,7 @@ function leaseItemDbCreate(){
 function leaseItemSend(req){
 		
 		$.ajax({
-			url: '/flsv2/GrantLease',
+			url: '/GrantLease',
 			type:'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",
@@ -513,7 +513,7 @@ function getLeaseItem(i){
 function getLeaseItemSend(req){
 	
 	$.ajax({
-		url: '/flsv2/GetLeases',
+		url: '/GetLeases',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -575,7 +575,7 @@ function renewLeaseDbCreate(){
 function renewLeaseSend(req){
 	
 	$.ajax({
-		url: '/flsv2/RenewLease',
+		url: '/RenewLease',
 		type:'post',
 		data: JSON.stringify(req),
 		contentType:"application/json",
@@ -610,7 +610,7 @@ function closeLeaseDbCreate(){
 
 function closeLeaseSend(req){
 	$.ajax({
-		url: '/flsv2/RenewLease',
+		url: '/RenewLease',
 		type:'post',
 		data: JSON.stringify(req),
 		contentType:"application/json",
@@ -673,7 +673,7 @@ function searchItemDbCreate(){
 function searchItemSend(req){
 	
 	$.ajax({
-		url: '/flsv2/SearchItem',
+		url: '/SearchItem',
 		type: 'post',
 		data: {req : JSON.stringify(req)},
 		contentType: "application/x-www-form-urlencoded",
@@ -775,7 +775,7 @@ function searchItemByDescriptionDbCreate(){
 function searchItemByDescriptionSend(req){
 	
 	$.ajax({
-		url: '/flsv2/SearchItem',
+		url: '/SearchItem',
 		type: 'post',
 		data: {req : JSON.stringify(req)},
 		contentType: "application/x-www-form-urlencoded",
@@ -858,7 +858,7 @@ wishItemDbCreate = function(){									//for storing in db/localstorage
 function wishItemSend(req){
 		
 		$.ajax({
-			url: '/flsv2/WishItem',
+			url: '/WishItem',
 			type: 'post',
 			data: {req : JSON.stringify(req)},
 			contentType: "application/x-www-form-urlencoded",
@@ -900,7 +900,7 @@ function wishItemSend(req){
 	
 	function getWishItemSend(req){
 		$.ajax({
-			url: '/flsv2/GetItemWishlist',
+			url: '/GetItemWishlist',
 			type: 'get',
 			data: {req : JSON.stringify(req)},
 			contentType:"application/json",
@@ -988,7 +988,7 @@ function editWishItemDbCreate(){
 function editWishItemSend(req){
 	
 	$.ajax({
-			url: '/flsv2/EditWishlist',
+			url: '/EditWishlist',
 			type: 'post',
 			data: {req : JSON.stringify(req)},
 			contentType: "application/x-www-form-urlencoded",
@@ -1033,7 +1033,7 @@ function deleteWishItemDbCreate(){
 function deleteWishItemSend(req){
 	
 	$.ajax({
-		url: '/flsv2/DeleteWishlist',
+		url: '/DeleteWishlist',
 		type: 'get',
 		data: {req : JSON.stringify(req)},
 		contentType:"application/json",
@@ -1096,7 +1096,7 @@ function addFriendDbCreate(){
 
 function addFriendSend(req){
 	$.ajax({
-		url: '/flsv2/AddFriend',
+		url: '/AddFriend',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -1165,7 +1165,7 @@ function getPrevFriend(i){
 
 function getFriendSend(req){
 	$.ajax({
-		url: '/flsv2/GetFriends',
+		url: '/GetFriends',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -1234,7 +1234,7 @@ function editFriendDbCreate(){
 function editFriendSend(req){
 	
 	$.ajax({
-		url: '/flsv2/EditFriend',
+		url: '/EditFriend',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -1283,7 +1283,7 @@ function deleteFriendDbCreate(){
 function deleteFriendSend(req){
 	
 	$.ajax({
-		url: '/flsv2/DeleteFriend',
+		url: '/DeleteFriend',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -1323,7 +1323,7 @@ function getNextCategory(i){
 
 function getNextCategorySend(req){
 	$.ajax({
-		url: '/flsv2/GetCategoryList',
+		url: '/GetCategoryList',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -1371,7 +1371,7 @@ function getNextLeaseTerm(i){
 function getNextLeaseTermSend(req){
 	
 	$.ajax({
-		url: '/flsv2/GetLeaseTerms',
+		url: '/GetLeaseTerms',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -1424,7 +1424,7 @@ function signUpSend(req){
 	//alert(req.auth);			//password going well
 	
 	$.ajax({
-		url: '/flsv2/SignUp',
+		url: '/SignUp',
 		type:'get',
 		data: {req: JSON.stringify(req)},
 		contentType:"application/json",
@@ -1461,7 +1461,7 @@ function loginDbCreate(){
 function loginSend(req){	
 	//alert("loginSend called");
 	$.ajax({
-			url: '/flsv2/LoginUser',
+			url: '/LoginUser',
 			type:'get',
 			data: {req: JSON.stringify(req)},
 			contentType:"application/json",
@@ -1511,7 +1511,7 @@ function getNextOutItem(i,j){
 getOutRequest = function(req) {
 		//alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/GetRequestsByUser',
+			url: '/GetRequestsByUser',
 			type:'POST',
 			data: JSON.stringify(req),
 			contentType:"application/json",
@@ -1554,7 +1554,7 @@ function getWishlist(i,j){
 getWishlistRequest = function(req) {
 		//alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/ImportWishlist',
+			url: '/ImportWishlist',
 			type:'POST',
 			data: JSON.stringify(req),
 			contentType:"application/json",
@@ -1596,7 +1596,7 @@ function deleteRequestSetValues(i, req){
 
 function deleteRequestSend(req){
 	$.ajax({
-		url: '/flsv2/DeleteRequest',
+		url: '/DeleteRequest',
 		type:'POST',
 		data: JSON.stringify(req),
 		contentType:"application/json",
@@ -1654,7 +1654,7 @@ function getNextItemCarousel(i,user,cat,Limit){
 
 function getNextItemCarouselSend(req){
 	$.ajax({
-		url: '/flsv2/GetItemStoreByX',
+		url: '/GetItemStoreByX',
 		type:'POST',
 		data: JSON.stringify(req),
 		contentType:"application/json",
@@ -1747,7 +1747,7 @@ function getRequestPlusItem(i,j){
 getInRequest = function(req) {
 		//alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/GetRequestsPlus',
+			url: '/GetRequestsPlus',
 			type:'POST',
 			data: JSON.stringify(req),
 			contentType:"application/json",

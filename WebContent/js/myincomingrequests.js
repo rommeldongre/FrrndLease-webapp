@@ -44,7 +44,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
     
     var displayInRequests = function(req){
         $.ajax({
-            url: '/flsv2/GetRequestsPlus',
+            url: '/GetRequestsPlus',
             type:'POST',
             data: JSON.stringify(req),
             contentType:"application/json",
@@ -85,7 +85,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
     
     var grantLeaseSend = function(req, index){
         $.ajax({
-            url: '/flsv2/GrantLease',
+            url: '/GrantLease',
             type:'post',
             data: JSON.stringify(req),
             contentType:"application/json",
@@ -133,7 +133,7 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
     
     var rejectLeaseSend = function(req, index){
         $.ajax({
-            url: '/flsv2/RejectRequest',
+            url: '/RejectRequest',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",

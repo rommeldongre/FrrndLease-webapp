@@ -63,7 +63,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
         }
         
         $.ajax({
-            url: '/flsv2/GetItemRating',
+            url: '/GetItemRating',
             type: 'post',
             data: JSON.stringify(req),
 			contentType:"application/json",
@@ -91,15 +91,15 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 					$('#loginModal').modal('show');
 				else
                     $http({
-                        url:'/flsv2/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
+                        url:'/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
                         method:"GET"
                     }).then(function success(response){
 						if(response.data.Code== 0){
-							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
+							bannerService.updatebannerMessage(response.data.Message,"/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
 							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-								window.location.replace("/flsv2/index.html");
+								window.location.replace("/index.html");
 							},function(){});
 					}
                     },
@@ -159,7 +159,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
 					$('#loginModal').modal('show');
 				else
-					$.ajax({ url: '/flsv2/WishItem',
+					$.ajax({ url: '/WishItem',
 							type: 'post',
 							data: {req : JSON.stringify(req)},
 							contentType: "application/x-www-form-urlencoded",
@@ -187,15 +187,15 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
         modalService.showModal({}, {bodyText: 'Are you sure you want to delete the Item?'}).then(
             function(result){
                     $http({
-                        url:'/flsv2/DeletePosting?req='+JSON.stringify({id:$scope.item_id,userId:userFactory.user}),
+                        url:'/DeletePosting?req='+JSON.stringify({id:$scope.item_id,userId:userFactory.user}),
                         method:"GET"
                     }).then(function success(response){
 						if(response.data.Code==0){
-							bannerService.updatebannerMessage(response.data.Message,"/flsv2/index.html");
+							bannerService.updatebannerMessage(response.data.Message,"/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
 							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-								window.location.replace("/flsv2/index.html");
+								window.location.replace("/index.html");
 							},function(){});
 						}
                     },
@@ -228,7 +228,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	
 	var getItemTimelineSend = function(req){
 		$.ajax({
-            url: '/flsv2/GetItemTimeline',
+            url: '/GetItemTimeline',
             type: 'post',
             data: JSON.stringify(req),
 			contentType:"application/json",
@@ -289,7 +289,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	var sendMessage = function(req){
 		
 		$.ajax({
-			url: '/flsv2/SendMessage',
+			url: '/SendMessage',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",

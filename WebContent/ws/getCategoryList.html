@@ -30,7 +30,7 @@
 	send = function(req) {
 		alert("Inside send function.");
 		$.ajax({
-			url: '/flsv2/GetCategoryList',
+			url: '/GetCategoryList',
 			type:'get',
 			data: {req: JSON.stringify(req)},
 			contentType:"application/json",

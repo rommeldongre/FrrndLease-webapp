@@ -18,7 +18,7 @@ emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$locati
     
     var token = getQueryVariable("token");
     
-    $http.post('/flsv2/Verification', JSON.stringify({verification : token})).then(
+    $http.post('/Verification', JSON.stringify({verification : token})).then(
         function(data){
             $scope.response = data.data;
             

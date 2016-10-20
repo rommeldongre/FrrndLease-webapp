@@ -42,7 +42,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
     
     getNotificationsSend = function(req) {
 		$.ajax({
-			url: '/flsv2/GetNotifications',
+			url: '/GetNotifications',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",
@@ -75,7 +75,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
     
     $scope.readEvent = function(index, s){
         $.ajax({
-                url: '/flsv2/EventReadStatus',
+                url: '/EventReadStatus',
                 type: 'post',
                 data: JSON.stringify({
                     eventId: $scope.events[index].eventId,
@@ -138,7 +138,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 	var sendMessage = function(req){
 		
 		$.ajax({
-			url: '/flsv2/SendMessage',
+			url: '/SendMessage',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",
@@ -181,7 +181,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 	
 	var deleteNotificationSend = function(req,index){
 		$.ajax({
-			url: '/flsv2/DeleteEvent',
+			url: '/DeleteEvent',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",

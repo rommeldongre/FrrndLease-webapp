@@ -31,7 +31,7 @@ forgotPasswordApp.controller('forgotPasswordCtrl', ['$scope', '$http', '$locatio
             token: (CryptoJS.MD5(activation)).toString()
         }
         $.ajax({
-            url: '/flsv2/AdminOps',
+            url: '/AdminOps',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",

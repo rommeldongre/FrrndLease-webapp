@@ -58,7 +58,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
     
     var displayFriendsList = function(req){
         $.ajax({
-                url: '/flsv2/GetFriends',
+                url: '/GetFriends',
                 type:'get',
                 data: {req: JSON.stringify(req)},
                 contentType:"application/json",
@@ -324,7 +324,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 	
 	var addFriendSend = function(req){
 		$.ajax({
-            url: '/flsv2/AddFriend',
+            url: '/AddFriend',
             type:'get',
             data: {req : JSON.stringify(req)},
             contentType:"application/json",
@@ -386,7 +386,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 	
 	var reinviteFriendSend = function(req){
 		$.ajax({
-            url: '/flsv2/AddFriend',
+            url: '/AddFriend',
             type:'get',
             data: {req : JSON.stringify(req)},
             contentType:"application/json",
@@ -466,7 +466,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 	var sendMessage = function(req){
 		
 		$.ajax({
-			url: '/flsv2/SendMessage',
+			url: '/SendMessage',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType: "application/x-www-form-urlencoded",

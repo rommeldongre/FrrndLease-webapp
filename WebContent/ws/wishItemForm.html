@@ -91,7 +91,7 @@
 	send = function(req) {
 		alert("Inside send");
 		$.ajax({
-			url: '/flsv2/WishItem',
+			url: '/WishItem',
 			type: 'post',
 			data: {req : JSON.stringify(req)},
 			contentType: "application/x-www-form-urlencoded",

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html> 
 	<head>
-		<title>flsv2 Web Platform</title>
+		<title>fls Web Platform</title>
 		<meta charset="ISO-8859-1">
 		<script type="text/javascript" src="js/jquery-1.7.min.js"></script>
 		<script src="js/md5.js"></script>
@@ -19,7 +19,7 @@
 		send = function(req) {
 				alert("Inside send function.");
 				$.ajax({
-					url: '/flsv2/GetSiteStats',
+					url: '/GetSiteStats',
 					type:'post',
 					data: JSON.stringify(req),
 					contentType:"application/json",
@@ -47,7 +47,7 @@
 		
 </script>
 	
-		<h1> flsv2 Web APIs</h1>
+		<h1> fls Web APIs</h1>
 			<h2>Admin Ops</h2>
 				<a href="ws/getSiteStatsForm.html">Get Site Stats Form </a><br>
 				<A href="ws/matchFbIdForm.html">Match Fb Id</A><br/>

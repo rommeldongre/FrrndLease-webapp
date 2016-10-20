@@ -42,7 +42,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     
     var displayCategory = function(req){
         $.ajax({
-            url: '/flsv2/GetCategoryList',
+            url: '/GetCategoryList',
             type:'get',
             data: {req: JSON.stringify(req)},
             contentType:"application/json",
@@ -119,7 +119,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }
         
         $.ajax({
-            url: '/flsv2/PostItem',
+            url: '/PostItem',
             type: 'post',
             data: JSON.stringify(req),
             contentType: "application/x-www-form-urlencoded",
@@ -231,7 +231,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 	
 	var addFriendSend = function(req){
 		$.ajax({
-            url: '/flsv2/AddFriend',
+            url: '/AddFriend',
             type:'get',
             data: {req : JSON.stringify(req)},
             contentType:"application/json",
