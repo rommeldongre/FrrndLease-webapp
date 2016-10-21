@@ -125,7 +125,23 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
         
         modalService.showModal({}, {bodyText: "Are you sure you want to change your pick up status?", actionButtonText: 'Yes', cancelButtonText: 'No'}).then(
             function(result){
-                $scope.leases[i].leaseePickupStatus = s;
+                $.ajax({
+                    url: '/ChangePickupStatus',
+                    type: 'post',
+                    data: JSON.stringify(req),
+                    contentType:"application/json",
+                    dataType:"json",
+
+                    success: function(response){
+                        if(response.code == 0){
+                            window.location.reload();
+                        }else{
+                            modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){},function(){});
+                        }
+                    },
+
+                    error: function() {}
+                });
             }, function(){}
         );
     }

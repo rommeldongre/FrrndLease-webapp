@@ -303,10 +303,16 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			try {
 				Event event = new Event();
-				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
-				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				if(result4.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name())){
+					
+				}else{
+					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
+					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				rs.setCode(FLS_INVALID_OPERATION);
+				rs.setMessage(FLS_INVALID_OPERATION_M);
 			}						
 			
 		} catch (SQLException e) {
@@ -320,6 +326,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		} catch (NullPointerException e) {
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
+			e.printStackTrace();
 		} finally{
 			
 			if(result1 != null)result1.close();

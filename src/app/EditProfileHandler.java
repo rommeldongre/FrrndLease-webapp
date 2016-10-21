@@ -52,14 +52,16 @@ public class EditProfileHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			if(!hasSameLocality(rq.getUserId(), rq.getLocality())){
-				if(havePendingRequests(rq.getUserId())){
+			if(havePendingRequests(rq.getUserId())){
+				if(!hasSameLocality(rq.getUserId(), rq.getLocality())){
 					rs.setCode(FLS_ACTIVE_REQUEST);
 					rs.setMessage(FLS_ACTIVE_REQUEST_M);
 					return rs;
 				}
-				
-				if(havePendingLeases(rq.getUserId())){
+			}
+			
+			if(havePendingLeases(rq.getUserId())){
+				if(!hasSameLocality(rq.getUserId(), rq.getLocality())){
 					rs.setCode(FLS_ACTIVE_LEASE);
 					rs.setMessage(FLS_ACTIVE_LEASE_M);
 					return rs;

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Change Pickup Status Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+    var UserId = null;
+	
+    start = function(){
+        document.getElementById("userId").value = localStorage.getItem("userloggedin");
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
+	getData = function (){
+        UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+        
+        var AccessToken = document.getElementById("accessToken").value;
+        
+        var LeaseUserId = document.getElementById("leaseUserId").value;
+        if(LeaseUserId == null || LeaseUserId == '' || LeaseUserId == 'null')
+            LeaseUserId = null;
+        
+        var LeaseReqUserId = document.getElementById("leaseReqUserId").value;
+        if(LeaseReqUserId == null || LeaseReqUserId == '' || LeaseReqUserId == 'null')
+            LeaseReqUserId = null;
+        
+        var LeaseId = document.getElementById("leaseId").value;
+        if(LeaseId == null || LeaseId == '' || LeaseId == 'null')
+            LeaseId = null;
+        
+        var PickupStatus = document.getElementById("pickupStatus").value;
+        if(PickupStatus == null || PickupStatus == '' || PickupStatus == 'null')
+            PickupStatus = null;
+        
+        req = {
+            userId: UserId,
+            accessToken: AccessToken,
+            leaseUserId: LeaseUserId,
+            leaseReqUserId: leaseReqUserId,
+            leaseId: LeaseId,
+            pickupStatus: PickupStatus
+        }
+        
+        changePickupStatus(req);
+	};
+		
+	changePickupStatus = function(req) {
+		$.ajax({
+			url: '/ChangePickupStatus',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+                document.getElementById("code").value = response.code;
+                document.getElementById("message").value = response.message;
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body onload="start()">
+<h1>Change Pickup Status Form</h1>
+	<form>
+        User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
+		Lease User Id: <input type="text" name="leaseUserId" id="leaseUserId" ><br/><br/>
+		Lease Req User Id: <input type="text" name="leaseReqUserId" id="leaseReqUserId" ><br/><br/>
+		Lease Id: <input type="text" name="leaseId" id="leaseId" ><br/><br/>
+		Pickup Status: <input type="checkbox" name="pickupStatus" id="pickupStatus" ><br/><br/>
+		<input type="button" value="Change Pickup Status" onclick="getData()">
+    </form>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+    
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

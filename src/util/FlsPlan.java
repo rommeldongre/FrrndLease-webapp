@@ -40,11 +40,10 @@ public class FlsPlan extends Connect{
 			
 			if(rs1.next()){
 				if(rs1.getInt("user_verified_flag") == 1){
-					String userLocality = (rs1.getString("user_locality")).toLowerCase();
 					String sqlCheckPlaces = "SELECT * FROM places WHERE locality=?";
 					
 					ps2 = hcp.prepareStatement(sqlCheckPlaces);
-					ps2.setString(1, userLocality);
+					ps2.setString(1, rs1.getString("user_locality"));
 					
 					rs2 = ps2.executeQuery();
 					

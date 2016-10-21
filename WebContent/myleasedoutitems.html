@@ -86,8 +86,8 @@
                            <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">Renew</button>
                        </a><br/>
                        <a ng-if="lease.status=='LeaseReady' && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
-                           Item Pick Up Status:<br/> <strong>{{(lease.ownerPickupStatus ? 'Picked Up' : 'Not Picked Up')}}</strong> <br/>
-                           <button class="btn btn-warning btn-fill btn-xs" ng-click="changePickupStatus(!lease.ownerPickupStatus, $index)">Change Status</button>
+                           Item Pick Up Status:<br/>
+                           <button class="btn btn-fill btn-xs ng-class:{'btn-success':lease.ownerPickupStatus,'btn-danger':!lease.ownerPickupStatus}" ng-click="changePickupStatus(!lease.ownerPickupStatus, $index)">{{(lease.ownerPickupStatus ? 'Picked Up' : 'Not Picked Up')}}</button>
                        </a>
                    </div>
                </div>
