@@ -155,4 +155,54 @@ public class FlsPlan extends Connect{
 		
 	}
 	
+	public int changePickupStatus(int leaseId, String leaseUserId, String leaseReqUserId, boolean pickupStatus){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1 = 0;
+		
+		if(leaseUserId != ""){
+			LOGGER.info("Changing pickup status of leaseId : " + leaseId + " for leaseUserId : " + leaseUserId + " to " + pickupStatus);
+		}else if(leaseReqUserId != ""){
+			LOGGER.info("Changing pickup status of leaseId : " + leaseId + " for leaseReqUserId : " + leaseReqUserId + " to " + pickupStatus);
+		}else{
+			return rs1;
+		}
+
+		try{
+			
+			String sql = "UPDATE leases SET ";
+			if(leaseUserId != ""){
+				sql = sql + "owner_pickup_status=? WHERE lease_id=?";
+			}else if(leaseReqUserId != ""){
+				sql = sql + "leasee_pickup_status=? WHERE lease_id=?";
+			}
+			
+			ps1 = hcp.prepareStatement(sql);
+			ps1.setBoolean(1, pickupStatus);
+			ps1.setInt(2, leaseId);
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1)
+				LOGGER.info("changed pickup status");
+			else
+				LOGGER.info("Not able to change pickup status");
+			
+		}catch(Exception e){
+			LOGGER.warning("Exception occured while checking plan");
+			e.printStackTrace();
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		return rs1;
+		
+	}
+	
 }
