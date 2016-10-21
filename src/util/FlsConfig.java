@@ -1342,7 +1342,7 @@ public class FlsConfig extends Connect{
 					
 				}
 				
-				// This block alters column image link in Item log
+				// This block drops Store and Wishlist table
 				if(dbBuild < 2038){
 					
 					String deleteStoreWishlist = "DROP TABLE IF EXISTS store,wishlist";

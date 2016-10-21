@@ -43,7 +43,6 @@ public class GetSiteStatsHandler extends Connect implements AppHandler {
 		ResultSet result = null;
 		Connection hcp = getConnectionFromPool();
 		try {
-			/*SELECT COUNT(item_status),item_status FROM items group by item_status*/
 			String GetStatsSql = "SELECT ( SELECT COUNT(*) FROM users ) AS user_count, ( SELECT COUNT(*) FROM items where item_status='InStore' ) AS item_count, ( SELECT COUNT(*) FROM requests WHERE request_status='Active' ) AS request_count, ( SELECT COUNT(*) FROM leases WHERE lease_status='Active' ) AS lease_count FROM dual";
 			LOGGER.info("Creating Statement");
 
