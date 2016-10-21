@@ -62,6 +62,7 @@ public class ChangeDeliveryPlanHandler extends Connect implements AppHandler {
 			LOGGER.warning("Error occured in ChangeDeliveryPlan handler");
 		}
 		
+		LOGGER.info("Finished process method of ChangeDeliveryPlanHandler");
 		return rs;
 	}
 

@@ -111,4 +111,23 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
     $scope.showItemDetails = function(uid){
         window.location.replace("ItemDetails?uid="+uid);
     }
+    
+    $scope.changePickupStatus = function(s, i){
+        
+        req = {
+            userId: userFactory.user,
+            accessToken: userFactory.userAccessToken,
+            leaseUserId: "",
+            leaseReqUserId: userFactory.user,
+            leaseId: $scope.leases[i].leaseId,
+            pickupStatus: s
+        }
+        
+        modalService.showModal({}, {bodyText: "Are you sure you want to change your pick up status?", actionButtonText: 'Yes', cancelButtonText: 'No'}).then(
+            function(result){
+                $scope.leases[i].leaseePickupStatus = s;
+            }, function(){}
+        );
+    }
+    
 }]);

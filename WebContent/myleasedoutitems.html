@@ -21,7 +21,7 @@
                       <img class="img-rounded" load-image="lease.primaryImageLink" ng-src="" alt="..."/>
                    </a>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-3">
+                <div class="col-lg-2 col-md-2 col-sm-2">
                    <div class="content">
                        <a class="card-link" href="" ng-click="showItemDetails(lease.uid)">
                           <h5 class="title">{{lease.title}}</h5>
@@ -70,7 +70,7 @@
                       </a>
                   </div>
                </div>
-               <div class="col-lg-2 col-md-2 col-sm-2">
+               <div class="col-lg-3 col-md-3 col-sm-3">
                    <div class="content" style="text-align:center;">
                        <a class="card-link">
                          <span class="label label-default label-fill">Expiry Date</span>
@@ -81,14 +81,13 @@
                        </a>
                        <a class="card-link" href="">
                            <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">Close</button>
-                       </a>
+                       </a><br/>
                        <a class="card-link" href="">
                            <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">Renew</button>
-                       </a>
+                       </a><br/>
                        <a ng-if="lease.status=='LeaseReady' && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
-                           <div class="switch" data-on-label="<i class='fa fa-check'></i>" data-off-label="<i class='fa fa-times'></i>">
-                               <input type="checkbox"/>
-                           </div>
+                           Item Pick Up Status:<br/> <strong>{{(lease.ownerPickupStatus ? 'Picked Up' : 'Not Picked Up')}}</strong> <br/>
+                           <button class="btn btn-warning btn-fill btn-xs" ng-click="changePickupStatus(!lease.ownerPickupStatus, $index)">Change Status</button>
                        </a>
                    </div>
                </div>

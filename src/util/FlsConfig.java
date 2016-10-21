@@ -1349,7 +1349,7 @@ public class FlsConfig extends Connect{
 				// This block adds selfie and prime columns in lease table
 				if(dbBuild < 2038){
 					
-					String sqlLeaseColumns = "ALTER TABLE `leases` ADD `delivery_plan` ENUM('FLS_NONE','FLS_SELF','FLS_OPS') NOT NULL DEFAULT 'FLS_NONE' AFTER `lease_expiry_date`, ADD `owner_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `delivery_plan`, ADD `Leasee_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `owner_pickup_status`";
+					String sqlLeaseColumns = "ALTER TABLE `leases` ADD `delivery_plan` ENUM('FLS_NONE','FLS_SELF','FLS_OPS') NOT NULL DEFAULT 'FLS_NONE' AFTER `lease_expiry_date`, ADD `owner_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `delivery_plan`, ADD `leasee_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `owner_pickup_status`";
 					
 					try{
 						getConnection();

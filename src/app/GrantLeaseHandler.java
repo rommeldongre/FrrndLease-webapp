@@ -17,6 +17,8 @@ import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsConfig;
 import util.FlsLogger;
+import util.FlsPlan.Delivery_Plan;
+import util.FlsPlan.Fls_Plan;
 import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
@@ -87,7 +89,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			
 			int credit = 0;
-			String sqlCheckCredit = "SELECT user_credit FROM users WHERE user_id=?";
+			String sqlCheckCredit = "SELECT * FROM users WHERE user_id=?";
 			psLeaseSelect = hcp.prepareStatement(sqlCheckCredit);
 			psLeaseSelect.setString(1, rq.getReqUserId());
 			result4 = psLeaseSelect.executeQuery();
@@ -235,7 +237,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String date = sdf.format(cal.getTime());
 
-			String AddLeasesql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date) values (?,?,?,?)"; //
+			String AddLeasesql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date,delivery_plan) values (?,?,?,?,?)"; //
 			LOGGER.info("Creating final statement.....");
 			psLeaseUpdate = hcp.prepareStatement(AddLeasesql);
 
@@ -244,6 +246,10 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			psLeaseUpdate.setInt(2, rq.getItemId());
 			psLeaseUpdate.setString(3, rq.getUserId());
 			psLeaseUpdate.setString(4, date);
+			if(result4.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name()))
+				psLeaseUpdate.setString(5, Delivery_Plan.FLS_SELF.name());
+			else
+				psLeaseUpdate.setString(5, Delivery_Plan.FLS_NONE.name());
 									
 			LeaseAction = psLeaseUpdate.executeUpdate();
 				

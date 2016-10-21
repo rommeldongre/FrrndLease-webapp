@@ -158,18 +158,32 @@ public class FlsPlan extends Connect{
 	public int changePickupStatus(int leaseId, String leaseUserId, String leaseReqUserId, boolean pickupStatus){
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		int rs1 = 0;
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2 = 0;
 		
 		if(leaseUserId != ""){
 			LOGGER.info("Changing pickup status of leaseId : " + leaseId + " for leaseUserId : " + leaseUserId + " to " + pickupStatus);
 		}else if(leaseReqUserId != ""){
 			LOGGER.info("Changing pickup status of leaseId : " + leaseId + " for leaseReqUserId : " + leaseReqUserId + " to " + pickupStatus);
 		}else{
-			return rs1;
+			return rs2;
 		}
 
 		try{
+			
+			String sqlgetBothStatus = "SELECT * FROM leases WHERE lease_id=? AND lease_status=? AND owner_pickup_status=? AND leasee_pickup_status=?";
+			ps1 = hcp.prepareStatement(sqlgetBothStatus);
+			ps1.setInt(1, leaseId);
+			ps1.setString(2, "Active");
+			ps1.setBoolean(3, true);
+			ps1.setBoolean(4, true);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				return rs2;
+			}
 			
 			String sql = "UPDATE leases SET ";
 			if(leaseUserId != ""){
@@ -178,13 +192,13 @@ public class FlsPlan extends Connect{
 				sql = sql + "leasee_pickup_status=? WHERE lease_id=?";
 			}
 			
-			ps1 = hcp.prepareStatement(sql);
-			ps1.setBoolean(1, pickupStatus);
-			ps1.setInt(2, leaseId);
+			ps2 = hcp.prepareStatement(sql);
+			ps2.setBoolean(1, pickupStatus);
+			ps2.setInt(2, leaseId);
 			
-			rs1 = ps1.executeUpdate();
+			rs2 = ps2.executeUpdate();
 			
-			if(rs1 == 1)
+			if(rs2 == 1)
 				LOGGER.info("changed pickup status");
 			else
 				LOGGER.info("Not able to change pickup status");
@@ -201,7 +215,7 @@ public class FlsPlan extends Connect{
 			}
 		}
 		
-		return rs1;
+		return rs2;
 		
 	}
 	
