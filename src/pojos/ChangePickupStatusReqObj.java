@@ -2,42 +2,8 @@ package pojos;
 
 public class ChangePickupStatusReqObj extends ReqObj {
 
-	String userId, accessToken;
-	String leaseUserId, leaseReqUserId;
 	int leaseId;
-	boolean pickupStatus;
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
-
-	public String getLeaseUserId() {
-		return leaseUserId;
-	}
-
-	public void setLeaseUserId(String leaseUserId) {
-		this.leaseUserId = leaseUserId;
-	}
-
-	public String getLeaseReqUserId() {
-		return leaseReqUserId;
-	}
-
-	public void setLeaseReqUserId(String leaseReqUserId) {
-		this.leaseReqUserId = leaseReqUserId;
-	}
+	boolean owner, pickupStatus;
 
 	public int getLeaseId() {
 		return leaseId;
@@ -53,6 +19,14 @@ public class ChangePickupStatusReqObj extends ReqObj {
 
 	public void setPickupStatus(boolean pickupStatus) {
 		this.pickupStatus = pickupStatus;
+	}
+
+	public boolean isOwner() {
+		return owner;
+	}
+
+	public void setOwner(boolean owner) {
+		this.owner = owner;
 	}
 
 }

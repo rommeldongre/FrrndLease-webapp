@@ -1,4 +1,4 @@
-var emailVerificationApp = angular.module('emailVerificationApp', ['headerApp']);
+var emailVerificationApp = angular.module('emailVerificationApp', ['headerApp', 'footerApp']);
 
 emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$location', 'modalService', function($scope, $http, $location, modalService){
     

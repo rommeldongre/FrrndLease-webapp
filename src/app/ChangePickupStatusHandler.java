@@ -7,7 +7,6 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 import util.FlsPlan;
-import util.OAuth;
 
 public class ChangePickupStatusHandler extends Connect implements AppHandler{
 
@@ -35,16 +34,8 @@ public class ChangePickupStatusHandler extends Connect implements AppHandler{
 		
 		try{
 			
-			OAuth oauth = new OAuth();
-			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
-			if(!oauthcheck.equals(rq.getUserId())){
-				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
-				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
-				return rs;
-			}
-			
 			FlsPlan plan = new FlsPlan();
-			int result = plan.changePickupStatus(rq.getLeaseId(), rq.getLeaseUserId(), rq.getLeaseReqUserId(), rq.isPickupStatus());
+			int result = plan.changePickupStatus(rq.getLeaseId(), rq.isOwner(), rq.isPickupStatus());
 			
 			if(result == 1){
 				rs.setCode(FLS_SUCCESS);

@@ -132,6 +132,10 @@ public class GetNotificationsResObj {
 				break;
 			case "FLS_MAIL_GRANT_REQUEST_FROM":
 			case "FLS_MAIL_GRANT_REQUEST_TO":
+			case "FLS_MAIL_GRANT_LEASE_FROM_SELF":
+			case "FLS_MAIL_GRANT_LEASE_TO_SELF":
+			case "FLS_MAIL_FROM_LEASE_STARTED":
+			case "FLS_MAIL_TO_LEASE_STARTED":
 			case "FLS_MAIL_GRANT_LEASE_FROM":
 			case "FLS_MAIL_GRANT_LEASE_TO":
 			case "FLS_MAIL_RENEW_LEASE_OWNER":

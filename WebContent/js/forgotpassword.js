@@ -1,4 +1,4 @@
-var forgotPasswordApp = angular.module('forgotPasswordApp', ['headerApp']);
+var forgotPasswordApp = angular.module('forgotPasswordApp', ['headerApp', 'footerApp']);
 
 forgotPasswordApp.controller('forgotPasswordCtrl', ['$scope', '$http', '$location', 'modalService', function($scope, $http, $location, modalService){
     

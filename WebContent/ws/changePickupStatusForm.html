@@ -5,26 +5,12 @@
 <title>Change Pickup Status Form</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
-    var UserId = null;
-	
-    start = function(){
-        document.getElementById("userId").value = localStorage.getItem("userloggedin");
-        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
-    }
     
 	getData = function (){
-        UserId = document.getElementById("userId").value;
-		if (UserId ==='') UserId = null;
         
-        var AccessToken = document.getElementById("accessToken").value;
-        
-        var LeaseUserId = document.getElementById("leaseUserId").value;
-        if(LeaseUserId == null || LeaseUserId == '' || LeaseUserId == 'null')
-            LeaseUserId = null;
-        
-        var LeaseReqUserId = document.getElementById("leaseReqUserId").value;
-        if(LeaseReqUserId == null || LeaseReqUserId == '' || LeaseReqUserId == 'null')
-            LeaseReqUserId = null;
+        var IsOwner = document.getElementById("isOwner").value;
+        if(IsOwner == null || IsOwner == '' || IsOwner == 'null')
+            IsOwner = null;
         
         var LeaseId = document.getElementById("leaseId").value;
         if(LeaseId == null || LeaseId == '' || LeaseId == 'null')
@@ -35,10 +21,7 @@
             PickupStatus = null;
         
         req = {
-            userId: UserId,
-            accessToken: AccessToken,
-            leaseUserId: LeaseUserId,
-            leaseReqUserId: leaseReqUserId,
+            owner: IsOwner,
             leaseId: LeaseId,
             pickupStatus: PickupStatus
         }
@@ -67,15 +50,12 @@
 	
 </script>
 </head>
-<body onload="start()">
+<body>
 <h1>Change Pickup Status Form</h1>
 	<form>
-        User Id : <input type="text" name="userId" id="userId"><br/><br/>
-		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
-		Lease User Id: <input type="text" name="leaseUserId" id="leaseUserId" ><br/><br/>
-		Lease Req User Id: <input type="text" name="leaseReqUserId" id="leaseReqUserId" ><br/><br/>
+		Is Owner: <input type="text" name="isOwner" id="isOwner" ><br/><br/>
 		Lease Id: <input type="text" name="leaseId" id="leaseId" ><br/><br/>
-		Pickup Status: <input type="checkbox" name="pickupStatus" id="pickupStatus" ><br/><br/>
+		Pickup Status: <input type="text" name="pickupStatus" id="pickupStatus" ><br/><br/>
 		<input type="button" value="Change Pickup Status" onclick="getData()">
     </form>
 		

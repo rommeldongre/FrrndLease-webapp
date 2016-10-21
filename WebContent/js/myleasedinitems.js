@@ -115,10 +115,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
     $scope.changePickupStatus = function(s, i){
         
         req = {
-            userId: userFactory.user,
-            accessToken: userFactory.userAccessToken,
-            leaseUserId: "",
-            leaseReqUserId: userFactory.user,
+            owner: false,
             leaseId: $scope.leases[i].leaseId,
             pickupStatus: s
         }

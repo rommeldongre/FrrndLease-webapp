@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="forgotPasswordApp">
+<html lang="en" ng-app="confirmPickupApp">
 
 <head>
 <meta charset="utf-8">
@@ -22,45 +22,28 @@
 <!--Loading Animation code CSS & JS Links ends here  -->
 
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<title>Forgot Password</title>
+<title>Pickup Confirmation</title>
     
 <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
 </head>
 
 <body>
 	<div id="main">
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span> 
-                        <span class="icon-bar"></span> 
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="index.html" class="navbar-brand" id="icon"><b>frrndLease</b></a>
-                </div>
-			</div>
-		</nav>
+		<!--header starts---------------------------------------->
+		<div ng-include="'header.html'"></div>
+		<!--header ends----------------------------------------->
 
 		<div class="container-fluid" id="midcontainer" style="margin: 10px 20px 10px 20px;min-height: 500px;">
 		
-			<div ng-controller="forgotPasswordCtrl">
+			<div ng-controller="pickupCtrl">
 				<div id="heading">
-					<strong>Reset Password</strong>
+					<strong>Pickup Confirmation</strong>
 				</div>
 				<br />
 
-				<p ng-if="error != ''" style="color:red;padding:10px;">{{error}}<a ng-if="indexLink" href="index.html">Frrndlease.com</a></p>
-                <form name="form">
-                    <div class="form-group">
-                        <input name="password" type="password" class="form-control" ng-model="password" ng-change="(form.password.$dirty && form.password.$valid) ? error='' : error='Invalid Password'" placeholder="Password" required/>
-                    </div>
-                    <div class="form-group">
-                        <input name="retypepassword" type="password" class="form-control" ng-model="retypepassword"  ng-change="(password == retypepassword) ? error='' : error='Both passwords not same'" placeholder="Retype the Password" required>
-                    </div>
-                    <button type="button" class="btn btn-primary btn-fill btn-block" ng-click="(form.$dirty && error=='') ? resetPassword(password) : error='Please enter correct password!!'"> Reset </button>
-                </form>
+				<div id="heading">
+					<span>{{response.message}}</span>
+				</div>
 			</div>
 	
 		</div>
@@ -77,10 +60,9 @@
     <!-- Angularjs api ends -->
     
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/forgotpassword.js"></script>
+	<script src="js/confirmpickup.js"></script>
 	<script src="js/bootstrap.min.js"></script>
     <script src="js/index.js"></script>
-    <script src="js/md5.js"></script>
     <script src="js/footer.js"></script>
     
     <link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
