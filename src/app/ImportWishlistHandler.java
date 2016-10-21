@@ -16,7 +16,6 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import adminOps.Response;
 import tableOps.Items;
-import tableOps.Wishlist;
 import util.FlsLogger;
 import util.FlsS3Bucket;
 import util.BufferImage;

@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import connect.Connect;
 import adminOps.Response;
-import tableOps.Store;
 import pojos.ItemsModel;
 import util.LogItem;
 import util.Event;
@@ -1016,9 +1015,6 @@ public class Items extends Connect {
 			}
 
 			if (check != 0) {
-				Wishlist wish = new Wishlist();
-				wish.DeleteW(id);
-
 				String sql = "DELETE FROM items WHERE item_id = ? AND item_user_id = ?";
 				stmt = hcp.prepareStatement(sql);
 
