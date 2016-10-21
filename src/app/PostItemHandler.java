@@ -53,9 +53,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 		PostItemResObj rs = new PostItemResObj();
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null;
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps5 = null;
 		ResultSet keys = null, rs1 = null;
-		int rs2, rs3, rs4, rs5;
+		int rs2, rs3,rs5;
 		
 		String userId = rq.getUserId();
 		int itemId = 0;
@@ -127,16 +127,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs3 = ps3.executeUpdate();
 			LOGGER.info("UID created for the item : " + uid);
 			
-			if(rs2 == 1 && rs3 == 1){
-				String sqlInsertStoreID = "insert into store (store_item_id) values (?)";
-				ps4 = hcp.prepareStatement(sqlInsertStoreID);
-				ps4.setInt(1, itemId);
-				rs4 = ps4.executeUpdate();
-				if(rs4 == 1){
-					LOGGER.info("Value in store table after UID query excecution: " + rs4 + " " + itemId);
-				}
-			}
-			
 			LOGGER.warning("Item added into table");
 			
 			// Adding entry to Item log
@@ -200,7 +190,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 		}finally {
 			try {
 				if(ps5 != null)ps5.close();
-				if(ps4 != null)ps4.close();
 				if(ps3 != null)ps3.close();
 				if(keys != null)keys.close();
 				if(ps2 != null)ps2.close();

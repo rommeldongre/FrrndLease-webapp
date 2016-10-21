@@ -128,7 +128,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
   	    
   	    Connection hcp = getConnectionFromPool();
 		
-  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null,psStoreUpdate=null,psAddCredit=null,psDebitCredit=null, ps1 = null;
+  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null,psAddCredit=null,psDebitCredit=null, ps1 = null;
   	    ResultSet dbResponseitems=null, rs1 = null;
 		SimpleDateFormat sdfCal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		GrantLeaseHandler GLH = new GrantLeaseHandler();
@@ -274,21 +274,6 @@ public class FlsJob extends Connect implements org.quartz.Job {
 		            return;
 				}
 					
-				String insertStoreSql = "insert into store (store_item_id) values (?)"; //
-				LOGGER.info("Creating insert statement store table.....");
-				psStoreUpdate = hcp.prepareStatement(insertStoreSql);
-
-				LOGGER.info("Statement created. Executing update query on store table.....");
-				psStoreUpdate.setInt(1,lease_item_id);
-				int storeAction=0;
-				storeAction = psStoreUpdate.executeUpdate();
-				
-				if(storeAction == 0){
-					LOGGER.warning("Error occured while firing update query on store table");
-					hcp.rollback();
-					return;
-				}
-				
 				li.addItemLog(lease_item_id, "LeaseEnded", "", item_primary_image_link);
 				
 				RenewLeaseReqObj rq = new RenewLeaseReqObj();
@@ -322,7 +307,6 @@ public class FlsJob extends Connect implements org.quartz.Job {
   				
   				if(psItemSelect != null)psItemSelect.close();
   				if(psItemUpdate != null)psItemUpdate.close();
-  				if(psStoreUpdate != null)psStoreUpdate.close();
   				
   				if(hcp != null)hcp.close();
   			} catch (SQLException e){

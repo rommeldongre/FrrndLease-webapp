@@ -870,8 +870,6 @@ public class Items extends Connect {
 				switch (check2) {
 
 				case "InStore":
-					Store st = new Store();
-					st.DeleteP(id);// deletes entry from store table
 
 					String sql = "UPDATE `items` SET `item_status`='Archived' WHERE item_id = ? AND item_user_id = ?";
 					stmt = hcp.prepareStatement(sql);
