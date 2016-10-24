@@ -70,7 +70,7 @@ public class AddLeadHandler extends Connect implements AppHandler {
 					}
 					
 					rs.setCode(FLS_SUCCESS);
-					rs.setMessage(FLS_SUCCESS_M);
+					rs.setMessage(FLS_ADD_LEAD);
 				}else{
 					rs.setCode(FLS_DUPLICATE_ENTRY);
 					rs.setMessage(FLS_DUPLICATE_ENTRY_LEAD);
