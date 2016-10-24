@@ -43,8 +43,7 @@ public class GetSiteStatsHandler extends Connect implements AppHandler {
 		ResultSet result = null;
 		Connection hcp = getConnectionFromPool();
 		try {
-
-			String GetStatsSql = "SELECT ( SELECT COUNT(*) FROM users ) AS user_count, ( SELECT COUNT(*) FROM store ) AS item_count, ( SELECT COUNT(*) FROM requests WHERE request_status='Active' ) AS request_count, ( SELECT COUNT(*) FROM leases WHERE lease_status='Active' ) AS lease_count FROM dual";
+			String GetStatsSql = "SELECT ( SELECT COUNT(*) FROM users ) AS user_count, ( SELECT COUNT(*) FROM items where item_status='InStore' ) AS item_count, ( SELECT COUNT(*) FROM requests WHERE request_status='Active' ) AS request_count, ( SELECT COUNT(*) FROM leases WHERE lease_status='Active' ) AS lease_count FROM dual";
 			LOGGER.info("Creating Statement");
 
 			ps = hcp.prepareStatement(GetStatsSql);

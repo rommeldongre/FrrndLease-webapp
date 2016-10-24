@@ -141,7 +141,7 @@ public class DeleteRequestHandler extends Connect implements AppHandler {
 					Event event = new Event();
 					event.createEvent(im.getUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_FROM, im.getId(), "Your Request for item having id <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed. ");
 					event.createEvent(rq.getUserId(), im.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_REQUEST_TO, im.getId(), "Request for item having id <a href=\"" + URL + "/ItemDetails?uid=" + im.getUid() + "\">" + im.getTitle() + "</a> has been removed by the Requestor. ");
-					rs.setMessage(FLS_SUCCESS_M);
+					rs.setMessage(FLS_DELETE_REQUEST);
 					rs.setCode(FLS_SUCCESS);
 				} catch (Exception e) {
 					e.printStackTrace();

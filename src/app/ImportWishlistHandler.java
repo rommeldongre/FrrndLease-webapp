@@ -16,7 +16,6 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import adminOps.Response;
 import tableOps.Items;
-import tableOps.Wishlist;
 import util.FlsLogger;
 import util.FlsS3Bucket;
 import util.BufferImage;
@@ -281,39 +280,9 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 			
 			// res.setData(Code,Id,message);
 		    	if (insertcount == 1) {
-
-				Integer itemId = wm.getItemId();
-
-				String sql3 = "insert into wishlist (wishlist_item_id) values (?)"; //
-
-				try {
-					// System.out.println("Creating statement.....");
-					LOGGER.info("Creating statement.....");
-					PreparedStatement stmt3 = hcp.prepareStatement(sql3);
-
-					// System.out.println("Statement created. Executing
-					// query.....");
-					LOGGER.info("Statement created. Executing query.....");
-					stmt3.setInt(1, itemId);
-					stmt3.executeUpdate();
-					stmt3.close();
-					// System.out.println("Entry added into wishlist table:
-					// "+insertcount);
-					LOGGER.info("Entry added into wishlist table: " + insertcount);
-					newItemCount = newItemCount + 1;
-					// message = "Entry added into wishlist table";
-					// Code = 33;
-					// Id = String.valueOf(itemId);
-					// res.setData(FLS_SUCCESS,Id,FLS_SUCCESS_M);
-				} catch (SQLException e) {
-					LOGGER.warning("Couldn't create statement");
-					res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-					e.printStackTrace();
-				}
+		    		newItemCount = newItemCount + 1;
 			} else {
-				// System.out.println("Wishlist op not performed as Add item not
-				// performed");
-				LOGGER.info("Wishlist op not performed as Add item not performed");
+				LOGGER.info("Add item not performed");
 			}
 		    	
 		    	stmt.close();
