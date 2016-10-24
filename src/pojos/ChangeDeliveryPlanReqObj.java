@@ -2,24 +2,8 @@ package pojos;
 
 public class ChangeDeliveryPlanReqObj extends ReqObj{
 
-	String userId, accessToken, deliveryPlan;
+	String deliveryPlan;
 	int leaseId;
-
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
 
 	public String getDeliveryPlan() {
 		return deliveryPlan;

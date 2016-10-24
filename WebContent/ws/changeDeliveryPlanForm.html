@@ -5,18 +5,8 @@
 <title>Change Delivery Plan Form</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
-    var UserId = null;
-	
-    start = function(){
-        document.getElementById("userId").value = localStorage.getItem("userloggedin");
-        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
-    }
     
 	getData = function (){
-        UserId = document.getElementById("userId").value;
-		if (UserId ==='') UserId = null;
-        
-        var AccessToken = document.getElementById("accessToken").value;
         
         var DeliveryPlan = document.getElementById("deliveryPlan").value;
         if(DeliveryPlan == null || DeliveryPlan == '' || DeliveryPlan == 'null')
@@ -27,8 +17,6 @@
             LeaseId = null;
         
         req = {
-            userId: UserId,
-            accessToken: AccessToken,
             deliveryPlan: DeliveryPlan,
             leaseId: LeaseId
         }
@@ -57,11 +45,9 @@
 	
 </script>
 </head>
-<body onload="start()">
+<body>
 <h1>Change Delivery Plan Form</h1>
 	<form>
-        User Id : <input type="text" name="userId" id="userId"><br/><br/>
-		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
 		Delivery Plan: <input type="text" name="deliveryplan" id="deliveryPlan" ><br/><br/>
 		Lease Id: <input type="text" name="leaseId" id="leaseId" ><br/><br/>
 		<input type="button" value="Change Delivery Plan" onclick="getData()">

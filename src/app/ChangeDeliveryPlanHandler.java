@@ -7,7 +7,6 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 import util.FlsPlan;
-import util.OAuth;
 import util.FlsPlan.Delivery_Plan;
 
 public class ChangeDeliveryPlanHandler extends Connect implements AppHandler {
@@ -35,14 +34,6 @@ public class ChangeDeliveryPlanHandler extends Connect implements AppHandler {
 		ChangeDeliveryPlanResObj rs = new ChangeDeliveryPlanResObj();
 		
 		try{
-			
-			OAuth oauth = new OAuth();
-			String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
-			if(!oauthcheck.equals(rq.getUserId())){
-				rs.setCode(FLS_ACCESS_TOKEN_FAILED);
-				rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
-				return rs;
-			}
 			
 			FlsPlan plan = new FlsPlan();
 			int result = plan.changeDeliveryPlan(rq.getLeaseId(), Delivery_Plan.valueOf(rq.getDeliveryPlan()));

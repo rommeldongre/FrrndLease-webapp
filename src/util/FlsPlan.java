@@ -123,28 +123,66 @@ public class FlsPlan extends Connect{
 		LOGGER.info("Changing delivery plan to : " + delivery_plan);
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		int rs1 = 0;
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2 = 0;
 		
 		try{
 			
+			String sqlGetLease = "SELECT tb1.*, tb2.* FROM leases tb1 INNER JOIN items tb2 ON tb1.lease_item_id=tb2.item_id WHERE lease_id=? AND lease_status=?";
+			ps1 = hcp.prepareStatement(sqlGetLease);
+			ps1.setInt(1, leaseId);
+			ps1.setString(2, "Active");
+			
+			rs1 = ps1.executeQuery();
+			
+			if(!rs1.next()){
+				LOGGER.info("Not able to find the leaseId - " + leaseId + " in the lease table.");
+				return rs2;
+			}
+
+			if(!rs1.getString("item_status").equals("LeaseReady")){
+				LOGGER.info("Item status is not LeaseReady!!");
+				return rs2;
+			}
+
+			if(!rs1.getString("delivery_plan").equals("FLS_NONE")){
+				LOGGER.info("Delivery Plan is not FLS_NONE so it is already changed..");
+				return rs2;
+			}
+
 			String sql = "UPDATE leases SET delivery_plan=? WHERE lease_id=?";
-			ps1 = hcp.prepareStatement(sql);
-			ps1.setString(1, delivery_plan.name());
-			ps1.setInt(2, leaseId);
-			
-			rs1 = ps1.executeUpdate();
-			
-			if(rs1 == 1)
+			ps2 = hcp.prepareStatement(sql);
+			ps2.setString(1, delivery_plan.name());
+			ps2.setInt(2, leaseId);
+						
+			rs2 = ps2.executeUpdate();
+						
+			if(rs2 == 1){
 				LOGGER.info("delivery plan updated to : " + delivery_plan);
-			else
+				
+				String reqUser = rs1.getString("lease_requser_id");
+				String user = rs1.getString("lease_user_id");
+				int itemId = rs1.getInt("item_id");
+				
+				Event event = new Event();
+				if(rs1.getString("delivery_plan").equals(Delivery_Plan.FLS_SELF.name())){
+					event.createEvent(reqUser, user, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_SELF, itemId, "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
+					event.createEvent(user, reqUser, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_SELF, itemId, "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				}else{
+					event.createEvent("ops@frrndlease.com", "ops@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_PICKUP_READY, itemId, "The lease item - " + itemId + " is ready to be picked up.");
+				}
+			}else{
 				LOGGER.info("Not able to change delivery plan for lease id : " + leaseId);
-			
+			}
+
 		}catch(Exception e){
 			LOGGER.warning("Exception occured while checking plan");
 			e.printStackTrace();
 		}finally{
 			try{
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
 				if(ps1 != null) ps1.close();
 				if(hcp != null) hcp.close();
 			}catch(Exception e){
@@ -152,7 +190,7 @@ public class FlsPlan extends Connect{
 			}
 		}
 		
-		return rs1;
+		return rs2;
 		
 	}
 	
@@ -275,15 +313,15 @@ public class FlsPlan extends Connect{
 				
 				String sqlStartLease = "UPDATE items SET item_status=? WHERE item_id=?";
 				ps2 = hcp.prepareStatement(sqlStartLease);
-				ps2.setString(1, "LeaseReady");
+				ps2.setString(1, "LeaseStarted");
 				ps2.setInt(2, itemId);
 				
 				rs2 = ps2.executeUpdate();
 				
 				if(rs2 == 1){
 					Event event = new Event();
-					event.createEvent(rs1.getString("lease_requser_id"), rs1.getString("lease_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_FROM_LEASE_STARTED, itemId, "The lease : " + leaseId + "has been started.");
-					event.createEvent(rs1.getString("lease_user_id"), rs1.getString("lease_requser_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_TO_LEASE_STARTED, itemId, "Your lease : " + leaseId + "has been started.");
+					event.createEvent(rs1.getString("lease_requser_id"), rs1.getString("lease_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_FROM_LEASE_STARTED, itemId, "The lease : " + leaseId + " has been started.");
+					event.createEvent(rs1.getString("lease_user_id"), rs1.getString("lease_requser_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_TO_LEASE_STARTED, itemId, "Your lease : " + leaseId + " has been started.");
 				}else{
 					LOGGER.warning("Not able to start lease for leaseId : " + leaseId);
 				}

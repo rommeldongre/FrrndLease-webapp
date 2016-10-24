@@ -33,7 +33,7 @@ confirmPickupApp.controller('pickupCtrl', ['$scope', '$location', function($scop
         
         success: function(response){
             if(response.code == 0){
-                $scope.response.message = "Your pickup status has been changed successfully!!";
+                $scope.response.message = "Your pickup status has been confirmed!!";
             }else{
                 $scope.response.message = response.message;
             }

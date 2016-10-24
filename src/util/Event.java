@@ -58,6 +58,7 @@ public class Event extends Connect{
 		FLS_MAIL_GRANT_LEASE_TO_PRIME,
 		FLS_MAIL_FROM_LEASE_STARTED,
 		FLS_MAIL_TO_LEASE_STARTED,
+		FLS_MAIL_OPS_PICKUP_READY,
 		FLS_MAIL_REJECT_LEASE_FROM,
 		FLS_MAIL_REJECT_LEASE_TO,
 		FLS_MAIL_GRACE_PERIOD_OWNER,
@@ -841,6 +842,9 @@ public class Event extends Connect{
 			
 			String sqlGetActiveLease = "SELECT lease_id FROM leases WHERE lease_item_id=? AND lease_status=?";
 			ps1 = hcp.prepareStatement(sqlGetActiveLease);
+			ps1.setInt(1, itemId);
+			ps1.setString(2, "Active");
+			
 			rs1 = ps1.executeQuery();
 			
 			if(rs1.next()){

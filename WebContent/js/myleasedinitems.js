@@ -112,6 +112,43 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
         window.location.replace("ItemDetails?uid="+uid);
     }
     
+    $scope.changeDeliveryPlan = function(plan, i){
+        
+        var p = "Are you sure you want to pick up the item?";
+        
+        if(plan=='FLS_OPS')
+            p = "Are you sure you want frrndlease to pick up the item?";
+        
+        modalService.showModal({}, {bodyText: p, actionButtonText: 'Ok'}).then(function(result)  {
+            req = {
+                deliveryPlan: plan,
+                leaseId: $scope.leases[i].leaseId
+            }
+
+            $.ajax({
+                url: '/ChangeDeliveryPlan',
+                type: 'post',
+                data: JSON.stringify(req),
+                contentType:"application/json",
+                dataType:"json",
+
+                success: function(response) {
+                    if(response.code == 0){
+                        window.location.reload();
+                    }else{
+                        modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){
+                            window.location.reload();
+                        },function(){});
+                    }
+                },
+
+                error: function() {}
+            });
+            
+        },function(){});
+        
+    }
+    
     $scope.changePickupStatus = function(s, i){
         
         req = {
@@ -120,27 +157,24 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
             pickupStatus: s
         }
         
-        modalService.showModal({}, {bodyText: "Are you sure you want to change your pick up status?", actionButtonText: 'Yes', cancelButtonText: 'No'}).then(
-            function(result){
-                $.ajax({
-                    url: '/ChangePickupStatus',
-                    type: 'post',
-                    data: JSON.stringify(req),
-                    contentType:"application/json",
-                    dataType:"json",
-
-                    success: function(response){
-                        if(response.code == 0){
-                            window.location.reload();
-                        }else{
-                            modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){},function(){});
-                        }
-                    },
-
-                    error: function() {}
-                });
-            }, function(){}
-        );
+        $.ajax({
+            url: '/ChangePickupStatus',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType:"json",
+        
+            success: function(response){
+                if(response.code == 0){
+                    window.location.reload();
+                }else{
+                    modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){
+                        window.location.reload();
+                    },function(){});
+                }
+            },
+            error: function() {}
+        });
     }
     
 }]);
