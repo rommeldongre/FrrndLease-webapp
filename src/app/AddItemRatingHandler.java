@@ -47,7 +47,7 @@ public class AddItemRatingHandler extends Connect implements AppHandler	{
 			
 			if(response == 1){
 				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
+				rs.setMessage(FLS_ADD_ITEM_RATING);
 			}else{
 				rs.setCode(FLS_INVALID_OPERATION);
 				rs.setMessage(FLS_INVALID_OPERATION_M);

@@ -91,7 +91,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
             dataType: "json",
             success: function(response) {
                 if(response.code == 0){
-					bannerService.updatebannerMessage("Request Deleted successfully","");
+					bannerService.updatebannerMessage(response.message,"");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
                     initialPopulate();
                 }else{
