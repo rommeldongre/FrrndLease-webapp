@@ -96,24 +96,6 @@ public class AdminOpsHandler extends ErrorCat {
 			res = request.selectOp(operation, rm, jsonobj2);
 			break;
 
-		case "store":
-			Store store = new Store();
-			StoreModel sm = new StoreModel();
-
-			LOGGER.info("Store table is selected");
-			sm.getData(jsonobj1);
-			res = store.selectOp(operation, sm, jsonobj2);
-			break;
-
-		case "wishlist":
-			Wishlist wish = new Wishlist();
-			WishlistModel wm = new WishlistModel();
-			
-			LOGGER.info("Wishlist table is selected");
-			wm.getData(jsonobj1);
-			res = wish.selectOp(operation, wm, jsonobj2);
-			break;
-
 		case "users":
 			Users user = new Users();
 			UsersModel um = new UsersModel();

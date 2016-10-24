@@ -28,10 +28,8 @@ public class WishItem extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private AdminOpsHandler aoh1 = new AdminOpsHandler();
-	private AdminOpsHandler aoh2 = new AdminOpsHandler();
 
 	private Response res1 = new Response();
-	private Response res2 = new Response();
 
 	private ErrorCat e = new ErrorCat();
 
@@ -67,26 +65,11 @@ public class WishItem extends HttpServlet {
 			res1 = aoh1.getInfo(table, obj1);
 			LOGGER.info(res1.getCode());
 			if (res1.getIntCode() == e.FLS_SUCCESS) {
-				LOGGER.warning("Item added to items table..");
-				JSONObject obj2 = new JSONObject();
-				row.put("itemId", Integer.parseInt(res1.getId()));
-				table = "wishlist";
-				obj2.put("table", table);
-				obj2.put("operation", "add");
-				obj2.put("row", row);
-				res2 = aoh2.getInfo(table, obj2);
-
-				if (res2.getIntCode() == e.FLS_SUCCESS) {
 					LOGGER.warning("Item added to store...");
-					Id = res2.getId();
+					Id = res1.getId();
 					Message = e.FLS_WISH_ITEM;
 					Code = 0;
-				} else {
-					LOGGER.warning("Couldn't perform WishItem");
-				}
-			}
-
-			else {
+			}else {
 				LOGGER.warning("Couldn't perform WishItem");
 			}
 

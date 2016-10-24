@@ -88,7 +88,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
 				leaseValue: 0,
 				leaseTerm: '',
 				status: 'Wished',
-				image: null
+				image: ''
             }
             sendAddWishItem(req);
         }, function(){});
@@ -105,11 +105,11 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
 				if(response.Code == 0){
 					bannerService.updatebannerMessage("Item Successfully added to Wish List","");
 					$scope.wishList = [];
-					initialPopulate();
+					initWishlist();
 				}else{
 					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 						$scope.wishList = [];
-						initialPopulate();
+						initWishlist();
 					}, function(){});
 				}
             },
@@ -145,7 +145,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
             success: function(response) {
                 modalService.showModal({}, {bodyText: response.wishItemCount+" out of "+response.totalWishItemCount+" Amazon Wishlist Items Imported",showCancel: false,actionButtonText: 'OK'}).then(function(result){
                     $scope.wishList = [];
-                    initialPopulate();
+                    initWishlist();
                 }, function(){});
             },
             error: function() {

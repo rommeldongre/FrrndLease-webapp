@@ -123,9 +123,9 @@ public class Leases extends Connect {
 	}
 	
 	private void CloseLease(){
-		int leaseAction = 0, itemAction = 0, storeAction = 0;
+		int leaseAction = 0, itemAction = 0;
 		String item_image_primary_link=null;
-		PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, psStoreUpdate = null, ps1 = null;
+		PreparedStatement psLeaseSelect = null, psLeaseUpdate = null, psItemSelect = null, psItemUpdate = null, ps1 = null;
 		ResultSet dbResponseLease =  null, dbResponseitems = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
 	
@@ -202,22 +202,7 @@ public class Leases extends Connect {
 				hcp.close();
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
 			}
-			
-			String insertStoreSql = "insert into store (store_item_id) values (?)"; //
-			LOGGER.info("Creating insert statement store table.....");
-			psStoreUpdate = hcp.prepareStatement(insertStoreSql);
-
-			LOGGER.info("Statement created. Executing update query on store table.....");
-			psStoreUpdate.setInt(1, Integer.parseInt(lm.getItemId()));
-			storeAction = psStoreUpdate.executeUpdate();
-			
-			if(storeAction == 0){
-				System.out.println("Error occured while firing update query on store table");
-				hcp.rollback();
-				hcp.close();
-				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
-			}
-			
+				
 			res.setData(FLS_SUCCESS, "0", FLS_SUCCESS_M);
 			hcp.commit();
 			//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
@@ -265,7 +250,6 @@ public class Leases extends Connect {
 				if(psLeaseUpdate != null)psLeaseUpdate.close();
 				if(psItemSelect != null)psItemSelect.close();
 				if(psItemUpdate != null)psItemUpdate.close();
-				if(psStoreUpdate != null)psStoreUpdate.close();
 				
 				if(hcp != null)hcp.close();
 			} catch (SQLException e) {
@@ -339,8 +323,8 @@ public class Leases extends Connect {
 
 				try {
 					Event event = new Event();
-					event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, Integer.parseInt(itemId), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + reqUserId + "</a> on Friend Lease ");
-					event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, Integer.parseInt(itemId), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + userId + "</a> to you on Friend Lease ");
+					event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_PRIME, Integer.parseInt(itemId), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + reqUserId + "</a> on Friend Lease ");
+					event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_PRIME, Integer.parseInt(itemId), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + userId + "</a> to you on Friend Lease ");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

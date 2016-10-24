@@ -15,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2038;
+	public final int appBuild = 2040;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1346,8 +1346,36 @@ public class FlsConfig extends Connect{
 					
 				}
 				
-				// This block adds selfie and prime columns in lease table
+				// This block drops Store and Wishlist table
 				if(dbBuild < 2038){
+					
+					String deleteStoreWishlist = "DROP TABLE IF EXISTS store,wishlist";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(deleteStoreWishlist);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2038;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds selfie and prime columns in lease table
+				if(dbBuild < 2039){
 					
 					String sqlLeaseColumns = "ALTER TABLE `leases` ADD `delivery_plan` ENUM('FLS_NONE','FLS_SELF','FLS_OPS') NOT NULL DEFAULT 'FLS_NONE' AFTER `lease_expiry_date`, ADD `owner_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `delivery_plan`, ADD `leasee_pickup_status` BOOLEAN NOT NULL DEFAULT FALSE AFTER `owner_pickup_status`";
 					
@@ -1370,7 +1398,35 @@ public class FlsConfig extends Connect{
 							}
 					}
 					// The dbBuild version value is changed in the database
-					dbBuild = 2038;
+					dbBuild = 2039;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates notifications types for delete job in events table
+				if(dbBuild < 2040){
+					
+					String sqlAddNotificationEnum = "ALTER TABLE `events` CHANGE `notification_type` `notification_type` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_REJECT_LEASE_FROM','FLS_MAIL_REJECT_LEASE_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER','FLS_EMAIL_VERIFICATION','FLS_MOBILE_VERIFICATION','FLS_MAIL_MESSAGE_FRIEND_FROM','FLS_MAIL_MESSAGE_FRIEND_TO','FLS_MAIL_MESSAGE_ITEM_FROM','FLS_MAIL_MESSAGE_ITEM_TO','FLS_MAIL_OLD_ITEM_WARN','FLS_MAIL_OLD_REQUEST_WARN','FLS_MAIL_OLD_LEASE_WARN','FLS_MAIL_GRANT_LEASE_FROM_SELF','FLS_MAIL_GRANT_LEASE_TO_SELF','FLS_MAIL_GRANT_LEASE_FROM_PRIME','FLS_MAIL_GRANT_LEASE_TO_PRIME','FLS_MAIL_FROM_LEASE_STARTED','FLS_MAIL_TO_LEASE_STARTED')";
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddNotificationEnum);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2040;
 					updateDBBuild(dbBuild);
 					
 				}

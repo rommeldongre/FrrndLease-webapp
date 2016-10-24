@@ -1042,7 +1042,7 @@ function deleteWishItemSend(req){
 		success: function(response) {
 			//alert(response.Id+" "+response.Code+" "+response.Message);
 			if(response.Code == 0){
-				$("#successBanner").text(msg);
+				$("#successBanner").text(response.Message);
 				$("#bannerVal").show();
 				$("html, body").animate({ scrollTop: 0 }, "slow");
 				setTimeout(function(){

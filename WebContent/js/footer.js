@@ -24,7 +24,7 @@ footerApp.controller('footerCtrl', ['$scope', 'modalService', function($scope, m
 					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 					}, function(){});
 				}else if(response.code==0){
-					modalService.showModal({}, {bodyText: "You have succesfully signed up for updates" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
 					}, function(){});
 				}else{
 					modalService.showModal({}, {bodyText: "Error Occured. Please try later" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){

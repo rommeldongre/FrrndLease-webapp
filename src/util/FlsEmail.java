@@ -289,7 +289,7 @@ public class FlsEmail extends Connect{
 				SUBJECT = ("Lease Started");
 				BODY = ("<body>The lease has been started.</body>");
 				
-			case FLS_MAIL_GRANT_LEASE_FROM:
+			case FLS_MAIL_GRANT_LEASE_FROM_PRIME:
 				SUBJECT = (" Lease granted to user [" + obj.getString("from") + "]");
 				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("from") + "] on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")
@@ -299,7 +299,7 @@ public class FlsEmail extends Connect{
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
-			case FLS_MAIL_GRANT_LEASE_TO:
+			case FLS_MAIL_GRANT_LEASE_TO_PRIME:
 				SUBJECT = (" Lease granted to you by [" + obj.getString("from") + "]");
 				BODY = ("<body> The following item has been leased by [" + obj.getString("from") + "] to you on Friend Lease - <br/> <br/>"
 						+ " Title : " + obj.getString("title")

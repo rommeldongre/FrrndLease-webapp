@@ -54,11 +54,11 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		Connection hcp = getConnectionFromPool();
 		hcp.setAutoCommit(false);
 		
-		PreparedStatement psReqSelect = null, psReqUpdate = null, psStoreSelect = null, psStoreUpdate = null, psItemSelect = null, 
+		PreparedStatement psReqSelect = null, psReqUpdate = null, psItemSelect = null, 
 				psItemUpdate = null, psLeaseSelect = null, psLeaseUpdate = null, 
 				psAddCredit = null, psDebitCredit = null, psItemStatus = null;
-		ResultSet result1 = null, result2 = null, result3 = null, result4 = null, result5 = null;
-		int RequestAction = 0, StoreAction = 0, ItemAction = 0, LeaseAction = 0, addCredit = 0, subCredit = 0;
+		ResultSet result1 = null, result3 = null, result4 = null, result5 = null;
+		int RequestAction = 0, ItemAction = 0, LeaseAction = 0, addCredit = 0, subCredit = 0;
 		String item_primary_image_link=null;
 		
 		try {
@@ -152,41 +152,6 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			String SelectfromStoreSql = "SELECT * FROM store WHERE store_item_id=?";
-			psStoreSelect = hcp.prepareStatement(SelectfromStoreSql);
-		    psStoreSelect.setInt(1, rq.getItemId());
-			LOGGER.info("Created statement...executing select query on Store table");
-					
-			result2 = psStoreSelect.executeQuery();
-			LOGGER.info(result2.toString());
-					
-			if (!result2.next()) {
-				System.out.println("Empty result while firing select query on 2nd table(store)");
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("404");
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				hcp.rollback();
-				return rs;
-			}
-				
-			String DeletefromStoreSql = "DELETE FROM store WHERE store_item_id=?";
-			LOGGER.info("Creating 4th Statement of Grant Lease");
-						
-			psStoreUpdate = hcp.prepareStatement(DeletefromStoreSql);
-			psStoreUpdate.setInt(1, rq.getItemId());
-			LOGGER.info("Created statement...executing delete query on Store table");
-						
-			StoreAction = psStoreUpdate.executeUpdate();
-						
-			if (StoreAction == 0) {
-				System.out.println("Error occured while firing update query on 2nd table(store)");
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("500");
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				hcp.rollback();
-				return rs;
-			}
-			
 			String SelectfromItemsSql = "SELECT * FROM items WHERE item_id=?";
 			psItemSelect = hcp.prepareStatement(SelectfromItemsSql);
 			psItemSelect.setInt(1, rq.getItemId());
@@ -207,7 +172,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			}
 								
 			String updateItemStatusSql = "UPDATE items SET item_status=? WHERE item_id=?";
-			LOGGER.info("Creating 6th Statement of Grant Lease");
+			LOGGER.info("Creating 4th Statement of Grant Lease");
 								
 			psItemUpdate = hcp.prepareStatement(updateItemStatusSql);
 			psItemUpdate.setString(1, "LeaseReady");
@@ -307,8 +272,8 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_SELF, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
 					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_SELF, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
 				}else{
-					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
-					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_PRIME, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
+					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_PRIME, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -331,15 +296,12 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		} finally{
 			
 			if(result1 != null)result1.close();
-			if(result2 != null)result2.close();
 			if(result3 != null)result3.close();
 			if(result4 != null)result4.close();
 			if(result5 != null)result5.close();
 			
 			if(psReqSelect != null)psReqSelect.close();
 			if(psReqUpdate != null)psReqUpdate.close();
-			if(psStoreSelect != null)psStoreSelect.close();
-			if(psStoreUpdate != null)psStoreUpdate.close();
 			if(psItemSelect != null)psItemSelect.close();
 			if(psItemUpdate != null)psItemUpdate.close();
 			if(psLeaseSelect != null)psLeaseSelect.close();
