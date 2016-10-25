@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="flsv2" default="main" basedir=".">
+
+  <property name="src.java" value="${basedir}/src/"/>
+  <property name="build.dir" value="${basedir}/build"/>
+  <property name="jar.dir" value="${build.dir}/jar"/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="lib.dir" value="${basedir}/lib"/>
+  <property name="tp.dir" value="${jar.dir}/thirdparty"/>
+
+  <property name="jar.name" value="${ant.project.name}.jar"/>
+  <property name="jar.file" value="${jar.dir}/${jar.name}"/>
+  <property name="war.file" value="${build.dir}/${ant.project.name}.war"/>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="setup">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${jar.dir}"/>
+  <!--
+    <for list="${dependencies}" trim="true" param="dependency">
+      <sequential>
+        <echo message="___ Building dependency @{dependency} ___"/>
+        <ant antfile="@{dependency}/build.xml" inheritall="false" target="jar"/>
+        <copy todir="${jar.dir}">
+          <fileset dir="@{dependency}/${jar.dir}"/>
+        </copy>
+      </sequential>
+    </for>
+    -->
+    <copy todir="${tp.dir}/">
+      <fileset dir="${lib.dir}"/>
+    </copy>
+    <path id="classpath">
+      <fileset dir="${jar.dir}" includes="**/*.jar"/>
+    </path>
+  </target>
+
+  <target name="compile" depends="setup">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="${src.java}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false" debug="${compile.debug}" debuglevel="lines,vars,source"/>
+  </target>
+
+  <target name="test-compile" depends="compile">
+    <mkdir dir="${test.classes.dir}"/>
+    <path id="test.compile.classpath">
+      <pathelement path="${classes.dir}"/>
+      <pathelement location="${test.testng.jar}"/>
+      <path refid="classpath"/>
+    </path>
+    <javac srcdir="${test.src.java}" destdir="${test.classes.dir}" classpathref="test.compile.classpath" includeantruntime="false"/>
+  </target>
+
+  <target name="test-run" depends="test-compile">
+    <path id="test.run.classpath">
+      <pathelement path="${test.classes.dir}"/>
+      <path refid="test.compile.classpath"/>
+    </path>
+    <testng classpathref="test.run.classpath" outputdir="${test.report.dir}" haltonfailure="true">
+      <classfileset dir="${test.classes.dir}" includes="**/*.class"/>
+    </testng>
+  </target>
+	
+  <target name="jar" depends="compile">
+    <pathconvert property="runtime.classpath" refid="classpath">
+      <regexpmapper from=".+/jar/(.+)" to="\1"/>
+    </pathconvert>
+    <manifestclasspath property="manifest.classpath" jarfile="${broken.on.purpose}">
+      <classpath>
+        <pathelement path="${runtime.classpath}"/>
+      </classpath>
+    </manifestclasspath>
+    <jar destfile="${jar.file}" basedir="${classes.dir}">
+      <manifest>
+        <attribute name="Build-Version" value="${build.version}"/>
+        <attribute name="Class-Path" value="${manifest.classpath}"/>
+      </manifest>
+    	<zipfileset dir="${basedir}/resources" />
+    </jar>
+  </target>
+
+  <target name="war" depends="jar">
+    <war destfile="${war.file}" webxml="${basedir}/WebContent/WEB-INF/web.xml">
+      <lib dir="${jar.dir}" includes="*.jar"/>
+      <lib dir="${tp.dir}" includes="*.jar">
+        <exclude name="servlet-api.jar"/>
+        <exclude name="javax.servlet-3.0.jar"/>
+      </lib>
+      <zipfileset dir="${basedir}/WebContent"
+      	excludes="WEB-INF/web*.xml"
+      />
+    </war>
+  </target>
+
+  <target name="main" depends="clean, war"/>
+
+</project>
