@@ -69,7 +69,7 @@ public class EditItemStatus extends HttpServlet {
 			JSONObject json = new JSONObject();
 			if (res.getIntCode() == e.FLS_SUCCESS) {
 				json.put("Code", "FLS_SUCCESS");
-				json.put("Message", e.FLS_SUCCESS_M);
+				json.put("Message", e.FLS_EDIT_ITEM_STATUS);
 			}
 
 			else {
