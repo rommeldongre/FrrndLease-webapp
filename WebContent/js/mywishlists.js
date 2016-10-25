@@ -103,7 +103,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
             dataType: "JSON",
             success: function(response) {
 				if(response.Code == 0){
-					bannerService.updatebannerMessage("Item Successfully added to Wish List","");
+					bannerService.updatebannerMessage(response.Message,"");
 					$scope.wishList = [];
 					initWishlist();
 				}else{

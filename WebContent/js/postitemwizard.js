@@ -127,7 +127,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 
             success: function(response) {
                 if(response.code == 0){
-                    modalService.showModal({}, {bodyText: "Your account has been credited with 10 credits!!", showCancel:false, actionButtonText: 'OK'}).then(
+                    modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
                         function(result){
                             $scope.posted = true;
                             $scope.item.uid = response.uid;
