@@ -12,6 +12,7 @@ import app.GrantLeaseHandler;
 import app.RenewLeaseHandler;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsPlan.Delivery_Plan;
 import connect.Connect;
 
 import org.quartz.*;
@@ -128,8 +129,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
   	    
   	    Connection hcp = getConnectionFromPool();
 		
-  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null,psAddCredit=null,psDebitCredit=null, ps1 = null;
-  	    ResultSet dbResponseitems=null, rs1 = null;
+  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null,psAddCredit=null,psDebitCredit=null, ps1 = null, ps2 = null;
+  	    ResultSet dbResponseitems=null, rs1 = null, rs2 = null;
 		SimpleDateFormat sdfCal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		GrantLeaseHandler GLH = new GrantLeaseHandler();
 		RenewLeaseHandler RLH = new RenewLeaseHandler();
@@ -276,14 +277,29 @@ public class FlsJob extends Connect implements org.quartz.Job {
 					
 				li.addItemLog(lease_item_id, "LeaseEnded", "", item_primary_image_link);
 				
-				RenewLeaseReqObj rq = new RenewLeaseReqObj();
-				rq.setItemId(lease_item_id);
-				rq.setFlag("close");
-				rq.setReqUserId(lease_requser_id);
-				rq.setUserId(lease_user_id);
-				Event event = new Event();
-				event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease ");
-				event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+				//getting lease delivery plan
+				String sqlDeliveryPlan = "SELECT delivery_plan FROM leases WHERE lease_item_id=? AND lease_status=?";
+				ps2 = hcp.prepareStatement(sqlDeliveryPlan);
+				ps2.setInt(1, lease_item_id);
+				ps2.setString(2, "Active");
+				
+				rs2 = ps2.executeQuery();
+				
+				if(rs2.next()){
+					
+					String deliveryPlan = rs2.getString("delivery_plan");
+					
+					Event event = new Event();
+					
+					if(Delivery_Plan.FLS_SELF.name().equals(deliveryPlan)){
+						event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_FROM_SELF, lease_item_id, "You have closed leased of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease ");
+						event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_TO_SELF, lease_item_id, "Lease has been closed by the Owner for the item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+					}else{
+						event.createEvent("admin@frrndlease.com", "ops@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_PICKUP_CLOSE, lease_item_id, "The lease item - " + lease_item_id + " is ready to be picked up.");
+						event.createEvent("ops@frrndlease.com", "admin@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_PICKUP_CLOSE, lease_item_id, "The lease item - " + lease_item_id + " is ready to be picked up.");
+					}
+
+				}
 			}
 		    
 			hcp.commit();
@@ -296,6 +312,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
   		}finally {
   			try {
   				
+  				if(rs2 != null) rs2.close();
+  				if(ps2 != null) ps2.close();
   				if(rs1 != null)rs1.close();
   				if(ps1 != null)ps1.close();
   				if(dbResponseitems != null)dbResponseitems.close();

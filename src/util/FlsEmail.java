@@ -316,11 +316,11 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_OPS_PICKUP_READY:
-				SUBJECT = "Lease is ready to be picked up";
+				SUBJECT = "Lease item is ready to be picked up";
 				BODY = "<body> Lease id - " + obj.getInt("leaseId") + " for the item - " + obj.getString("title") + " is ready to be picked up.</body>";
 				break;
 
-			case FLS_MAIL_REJECT_LEASE_FROM:
+			case FLS_MAIL_CLOSE_LEASE_FROM_SELF:
 				SUBJECT = (" Lease Cancelled to user [" + obj.getString("from") + "]");
 				BODY = ("<body> You have closed lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee ["
 						+ obj.getString("from") + "] on Friend Lease - <br/> <br/>"
@@ -328,17 +328,26 @@ public class FlsEmail extends Connect{
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
+						+ "Please confirm pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=true&leaseId=" + obj.getInt("leaseId") + "'>"
+						+ "Click to confirm</a>");
 				break;
 
-			case FLS_MAIL_REJECT_LEASE_TO:
+			case FLS_MAIL_CLOSE_LEASE_TO_SELF:
 				SUBJECT = (" Lease Closed by the Owner");
 				BODY = ("<body> Lease has been closed by the Owner for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> <br/> <br/>"
 						+ " Title : " + obj.getString("title")
 						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
 						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
-						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
+						+ "Please confirm pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=false&leaseId=" + obj.getInt("leaseId") + "'>"
+						+ "Click to confirm</a>");
+				break;
+				
+			case FLS_MAIL_OPS_PICKUP_CLOSE:
+				SUBJECT = "Lease item is ready to be picked up";
+				BODY = "<body> Lease id - " + obj.getInt("leaseId") + " for the item - " + obj.getString("title") + " is ready to be picked up.</body>";
 				break;
 				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:

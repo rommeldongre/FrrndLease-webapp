@@ -86,7 +86,7 @@
                            <button class="btn btn-primary btn-fill" ng-click="changeDeliveryPlan('FLS_SELF', $index)">Self Pickup</button>
                            <button class="btn btn-primary btn-fill" ng-click="changeDeliveryPlan('FLS_OPS', $index)">Frrndlease Pickup</button>
                        </a>
-                       <a ng-if="lease.status=='LeaseReady' && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
+                       <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
                            Item Pick Up Status:<br/>{{(lease.leaseePickupStatus ? 'Picked Up' : 'Pending')}}
                            <form>
                                <switch id="enabled" name="enabled" ng-model="lease.leaseePickupStatus" ng-change="changePickupStatus(lease.leaseePickupStatus, $index)" class="green"></switch>

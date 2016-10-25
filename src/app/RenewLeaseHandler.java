@@ -20,6 +20,7 @@ import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsConfig;
 import util.FlsLogger;
+import util.FlsPlan.Delivery_Plan;
 import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
@@ -63,8 +64,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		
 			int itemAction = 0;
 			String item_image_link=null;
-			PreparedStatement psItemSelect = null, psItemUpdate = null, ps1 = null;
-			ResultSet dbResponseitems = null, rs1 = null;
+			PreparedStatement psItemSelect = null, psItemUpdate = null, ps1 = null, ps2 = null;
+			ResultSet dbResponseitems = null, rs1 = null, rs2 = null;
 			Connection hcp = getConnectionFromPool();
 			hcp.setAutoCommit(false);
 			
@@ -122,41 +123,57 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				LogItem li = new LogItem();
 				li.addItemLog(rq.getItemId(), "LeaseEnded", "", item_image_link);
 				
-				// fetching the uid
-				String sqlUid = "SELECT item_uid,item_name FROM items WHERE item_id=?";
-				ps1 = hcp.prepareStatement(sqlUid);
-				ps1.setInt(1, rq.getItemId());
-				rs1 = ps1.executeQuery();
-				String uid = null;
-				String title = null;
-				if(rs1.next()){
-					uid = rs1.getString("item_uid");
-					title = rs1.getString("item_name");
-				}
+				//getting lease delivery plan
+				String sqlDeliveryPlan = "SELECT delivery_plan FROM leases WHERE lease_item_id=? AND lease_status=?";
+				ps2 = hcp.prepareStatement(sqlDeliveryPlan);
+				ps2.setInt(1, rq.getItemId());
+				ps2.setString(2, "Active");
 				
-				Event event = new Event();
-				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_FROM, rq.getItemId(), "You have closed leased of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + rq.getReqUserId() + "</strong> on Friend Lease ");
-				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_LEASE_TO, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+				rs2 = ps2.executeQuery();
+				
+				if(rs2.next()){
+					
+					String deliveryPlan = rs2.getString("delivery_plan");
+					
+					// fetching the uid and title
+					String uid = dbResponseitems.getString("item_uid");
+					String title = dbResponseitems.getString("item_name");
+					
+					Event event = new Event();
+					
+					if(Delivery_Plan.FLS_SELF.name().equals(deliveryPlan)){
+						event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_FROM_SELF, rq.getItemId(), "You have closed leased of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + rq.getReqUserId() + "</strong> on Friend Lease ");
+						event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_TO_SELF, rq.getItemId(), "Lease has been closed by the Owner for the item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+					}else{
+						event.createEvent("admin@frrndlease.com", "ops@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_PICKUP_CLOSE, rq.getItemId(), "The lease item - " + rq.getItemId() + " is ready to be picked up.");
+						event.createEvent("ops@frrndlease.com", "admin@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_PICKUP_CLOSE, rq.getItemId(), "The lease item - " + rq.getItemId() + " is ready to be picked up.");
+					}
+
+				}
+
 					
 			} catch (SQLException e) {
-				LOGGER.info("SQL Exception encountered....");
+				LOGGER.warning("SQL Exception encountered....");
 				rs.setCode(FLS_SQL_EXCEPTION);
 				rs.setMessage(FLS_SQL_EXCEPTION_M);
 				e.printStackTrace();
 			} catch (NullPointerException e) {
 				rs.setCode(FLS_NULL_POINT);
 				rs.setMessage(FLS_NULL_POINT_M);
+				e.printStackTrace();
 			} catch (Exception e) {
-				LOGGER.info("AWS SES Exception encountered....");
+				LOGGER.warning("AWS SES Exception encountered....");
+				rs.setCode(FLS_INVALID_OPERATION);
+				rs.setMessage(FLS_INVALID_OPERATION_M);
 				e.printStackTrace();
 			}finally{
-				
+				if(rs2 != null) rs2.close();
+				if(ps2 != null) ps2.close();
 				if(rs1 != null)rs1.close();
 				if(ps1 != null)ps1.close();
 				if(dbResponseitems != null)dbResponseitems.close();
 				if(psItemSelect != null)psItemSelect.close();
 				if(psItemUpdate != null)psItemUpdate.close();
-				
 				if(hcp != null)hcp.close();
 			}
 			break;

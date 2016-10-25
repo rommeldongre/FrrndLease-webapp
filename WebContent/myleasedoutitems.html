@@ -85,7 +85,7 @@
                        <a class="card-link" href="">
                            <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">Renew</button>
                        </a><br/>
-                       <a ng-if="lease.status=='LeaseReady' && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
+                       <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
                            Item Pick Up Status:<br/>{{(lease.ownerPickupStatus ? 'Picked Up' : 'Pending')}}
                            <form>
                                <switch id="enabled" name="enabled" ng-change="changePickupStatus(lease.ownerPickupStatus, $index)" ng-model="lease.ownerPickupStatus" class="green"></switch>
