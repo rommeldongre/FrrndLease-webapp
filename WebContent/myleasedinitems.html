@@ -89,7 +89,7 @@
                        <a ng-if="lease.status=='LeaseReady' && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
                            Item Pick Up Status:<br/>{{(lease.leaseePickupStatus ? 'Picked Up' : 'Pending')}}
                            <form>
-                               <switch id="enabled" name="enabled" ng-model="lease.leaseePickupStatus" ng-change="changePickupStatus(!lease.leaseePickupStatus, $index)" class="green"></switch>
+                               <switch id="enabled" name="enabled" ng-model="lease.leaseePickupStatus" ng-change="changePickupStatus(lease.leaseePickupStatus, $index)" class="green"></switch>
                            </form>
                        </a>
                    </div>

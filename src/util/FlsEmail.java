@@ -312,12 +312,12 @@ public class FlsEmail extends Connect{
 						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "Please choose one of the options for delivery - <br/><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=self&leaseId=" + obj.getInt("leaseId") + "'>"
-						+ "Self Pickup</a><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=prime&leaseId=" + obj.getInt("leaseId") + "'>Frrndlease Pickup</a>");
+						+ "Self Pickup</a><br/>or<br/><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=prime&leaseId=" + obj.getInt("leaseId") + "'>Frrndlease Pickup</a>");
 				break;
 				
 			case FLS_MAIL_OPS_PICKUP_READY:
 				SUBJECT = "Lease is ready to be picked up";
-				BODY = "<body> Lease id - " + obj.getInt("leaseId") + " for the item - " + obj.getInt("title") + " is ready to be picked up.</body>";
+				BODY = "<body> Lease id - " + obj.getInt("leaseId") + " for the item - " + obj.getString("title") + " is ready to be picked up.</body>";
 				break;
 
 			case FLS_MAIL_REJECT_LEASE_FROM:
