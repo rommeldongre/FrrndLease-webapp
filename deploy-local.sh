@@ -5,8 +5,8 @@ echo "+++ Shutting down Tomcat ..."
 sleep 5
 
 echo "+++ Installing new war ..."
-rm -rf /Applications/tomcatstack-8.0.38-0/apache-tomcat/webapps/flsv2*
-cp build/flsv2.war /Applications/tomcatstack-8.0.38-0/apache-tomcat/webapps/
+rm -rf /Applications/tomcatstack-8.0.38-0/apache-tomcat/webapps/fls-3*
+cp target/fls-3.0.0.war /Applications/tomcatstack-8.0.38-0/apache-tomcat/webapps/
 
 echo "+++ Starting up Tomcat ..."
 rm /Applications/tomcatstack-8.0.38-0/apache-tomcat/logs/*
