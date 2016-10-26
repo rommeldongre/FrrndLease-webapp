@@ -85,7 +85,7 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			
 			if(rs1 == 1){
 				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
+				rs.setMessage(FLS_EDIT_PROFILE);
 				LOGGER.info("Users table updated for : " + rq.getUserId());
 			}
 			else{

@@ -74,7 +74,7 @@ public class PromoCode extends Connect {
 				
 				ps2.executeUpdate();
 				
-				res.setData(FLS_SUCCESS, "0", FLS_SUCCESS_M);
+				res.setData(FLS_SUCCESS, "0", FLS_ADD_PROMO_CODE);
 			}
 			
 		}catch(SQLException e){

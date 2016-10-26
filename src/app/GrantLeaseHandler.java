@@ -263,7 +263,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			rs.setCode(FLS_SUCCESS);
 			rs.setId(rq.getReqUserId());
-			rs.setMessage(FLS_SUCCESS_M);
+			rs.setMessage(FLS_GRANT_LEASE);
 			hcp.commit();
 			
 			try {

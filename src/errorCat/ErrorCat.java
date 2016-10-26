@@ -47,6 +47,7 @@ public class ErrorCat {
 	final public String FLS_DELETE_FRIEND = "Friend deleted";
 	final public String FLS_EDIT_FRIEND = "Friend edited";
 	final public String FLS_EDIT_POST = "Edit posting successfull";
+	final public String FLS_EDIT_ITEM_STATUS = "Item Status edited sucessfully";
 	final public String FLS_EDIT_WISH = "Edit wishlist successfull";
 	final public String FLS_GRANT_LEASE = "Lease granted";
 	final public String FLS_POST_ITEM = "Item posted in store";
@@ -61,6 +62,8 @@ public class ErrorCat {
 	final public String FLS_POST_ITEM_M = "Your account has been credited with 10 credits!!";
 	final public String FLS_ADD_ITEM_RATING = "Thanks for rating";
 	final public String FLS_DELETE_REQUEST = "Request Deleted successfully";
+	final public String FLS_ADD_PROMO_CODE = "Promo Code Generated successfully";
+	final public String FLS_EDIT_PROFILE = "Your Profile Has Been Updated!!";
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "Couldn't create statement or couldn't execute query (sql exception)";

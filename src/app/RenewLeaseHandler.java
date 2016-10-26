@@ -115,7 +115,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				}
 				
 				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
+				rs.setMessage(FLS_CLOSE_LEASE);
 				hcp.commit();
 				//res.setData(FLS_SUCCESS, Id, FLS_SUCCESS_M);
 				
@@ -332,7 +332,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				LOGGER.info("Debit Credit query executed successfully...");
 				rs.setCode(FLS_SUCCESS);
 				rs.setId(rq.getReqUserId());
-				rs.setMessage(FLS_SUCCESS_M);
+				rs.setMessage(FLS_RENEW_LEASE);
 				LOGGER.info("renew Lease query executed successfully...");
 				hcp.commit();
 				
