@@ -88,7 +88,7 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			
 			if (result == 1) {
 				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
+				rs.setMessage(FLS_EDIT_PROFILE);
 				LOGGER.warning("Profile Updated!!");
 			} else {
 				rs.setCode(FLS_ENTRY_NOT_FOUND);

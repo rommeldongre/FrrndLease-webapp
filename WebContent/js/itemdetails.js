@@ -99,7 +99,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
 							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-								window.location.replace("/index.html");
+								window.location.replace("index.html");
 							},function(){});
 					}
                     },
@@ -195,7 +195,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
 							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-								window.location.replace("/index.html");
+								window.location.replace("index.html");
 							},function(){});
 						}
                     },

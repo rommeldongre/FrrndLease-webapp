@@ -470,8 +470,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         profileFactory.updateProfile(req).then(
         function(response){
             if (response.data.code == 0) {
-                dialogText = 'Your Profile Has Been Updated!!';
-				bannerService.updatebannerMessage(dialogText,"");
+				bannerService.updatebannerMessage(response.data.message,"");
 				$("html, body").animate({ scrollTop: 0 }, "slow");
             }else{
 				modalService.showModal({}, {bodyText:response.data.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
