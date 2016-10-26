@@ -83,8 +83,8 @@
                            <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.ownerUserId, lease.requestorUserId, $index)">Close</button>
                        </a><br/>
                        <a ng-if="lease.status=='LeaseReady' && lease.deliveryPlan=='FLS_NONE'" class="card-link" href="">
-                           <button class="btn btn-primary btn-fill" ng-click="changeDeliveryPlan('FLS_SELF', $index)">Self Pickup</button>
-                           <button class="btn btn-primary btn-fill" ng-click="changeDeliveryPlan('FLS_OPS', $index)">Frrndlease Pickup</button>
+                           <button class="btn btn-primary btn-simple" ng-click="changeDeliveryPlan('FLS_SELF', $index)">Self Pickup</button>
+                           <button class="btn btn-primary btn-simple" ng-click="changeDeliveryPlan('FLS_OPS', $index)">Prime Pickup</button>
                        </a>
                        <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
                            Item Pick Up Status:<br/>{{(lease.leaseePickupStatus ? 'Picked Up' : 'Pending')}}

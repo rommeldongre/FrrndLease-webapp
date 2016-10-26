@@ -139,6 +139,8 @@ public class GetNotificationsResObj {
 			case "FLS_MAIL_FROM_LEASE_STARTED":
 			case "FLS_MAIL_TO_LEASE_STARTED":
 			case "FLS_MAIL_OPS_PICKUP_READY":
+			case "FLS_MAIL_ITEM_INSTORE_FROM":
+			case "FLS_MAIL_ITEM_INSTORE_TO":
 			case "FLS_MAIL_RENEW_LEASE_OWNER":
 			case "FLS_MAIL_RENEW_LEASE_REQUESTOR":
 				this.notificationType = Icon_Type.FLS_POSITIVE.name();

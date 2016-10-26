@@ -463,8 +463,8 @@ public class FlsPlan extends Connect{
 							String uid = rs4.getString("item_uid");
 							String title = rs4.getString("item_name");
 							Event event = new Event();
-							event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_FROM_SELF, itemId, "You have closed leased of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + reqUserId + "</strong> on Friend Lease ");
-							event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_TO_SELF, itemId, "Lease has been closed by the Owner for the item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+							event.createEvent(reqUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_INSTORE_FROM, itemId, "Your item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> is back InStore.");
+							event.createEvent(userId, reqUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_INSTORE_TO, itemId, "The item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> is back InStore.");
 						}else{
 							LOGGER.info("Not able to get item details for item id - " + rs1.getInt("lease_item_id"));
 						}

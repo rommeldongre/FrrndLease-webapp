@@ -350,6 +350,16 @@ public class FlsEmail extends Connect{
 				BODY = "<body> Lease id - " + obj.getInt("leaseId") + " for the item - " + obj.getString("title") + " is ready to be picked up.</body>";
 				break;
 				
+			case FLS_MAIL_ITEM_INSTORE_FROM:
+				SUBJECT = "Lease closed for the item";
+				BODY = "<body>Your item which was leased is back InStore.</body>";
+				break;
+				
+			case FLS_MAIL_ITEM_INSTORE_TO:
+				SUBJECT = "Lease closed for the item";
+				BODY = "<body>The item whose lease you had is back InStore.</body>";
+				break;
+				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:
 				SUBJECT = (" Reminder to Renew Lease to user [" + obj.getString("from") + "]");
 				BODY = "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee [" + obj.getString("from") + "] on Friend Lease - ";

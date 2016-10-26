@@ -229,8 +229,8 @@ public class Leases extends Connect {
 			rq.setReqUserId(lm.getReqUserId());
 			rq.setUserId(lm.getUserId());
 			Event event = new Event();
-			event.createEvent(lm.getReqUserId(), lm.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_FROM_SELF, Integer.parseInt(lm.getItemId()), "You have closed leased of item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> and leasee <strong>" + lm.getReqUserId() + "</strong> on Friend Lease ");
-			event.createEvent(lm.getUserId(), lm.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_CLOSE_LEASE_TO_SELF, Integer.parseInt(lm.getItemId()), "Lease has been closed by the Owner for the item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> ");
+			event.createEvent(lm.getReqUserId(), lm.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_INSTORE_FROM, Integer.parseInt(lm.getItemId()), "Your item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> is back InStore.");
+			event.createEvent(lm.getUserId(), lm.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_INSTORE_TO, Integer.parseInt(lm.getItemId()), "The item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a> is back InStore.");
 				
 		} catch (SQLException e) {
 			LOGGER.info("SQL Exception encountered....");
