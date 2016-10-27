@@ -5,8 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Font.FontFamily;
+
 import connect.Connect;
-import pojos.RenewLeaseReqObj;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
 
@@ -496,6 +503,31 @@ public class FlsPlan extends Connect{
 			}
 		}
 		
+	}
+	
+	public Document getLeaseAgreement(Document doc, int leaseId){
+		
+		//create some special styles and font sizes
+		Font bfBold18 = new Font(FontFamily.TIMES_ROMAN, 18, Font.BOLD, new BaseColor(0, 0, 0));
+		
+		try{
+			//document header properties
+			doc.addAuthor("Blue Marble");
+			doc.addCreationDate();
+			doc.addCreator("frrndlease.com");
+			doc.addTitle("Lease Agreement");
+			doc.setPageSize(PageSize.A4);
+			doc.open();
+			
+			//add a new paragraph
+			doc.add( new Paragraph("Lease Agreement", bfBold18));
+		}catch(DocumentException e){
+			e.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return doc;
 	}
 	
 }
