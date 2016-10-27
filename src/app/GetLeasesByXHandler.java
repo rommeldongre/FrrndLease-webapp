@@ -59,8 +59,10 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			
 			if(leaseUserId != "")
 				sql = sql + "tb1.lease_user_id='" + leaseUserId + "' AND ";
-			else if(leaseReqUserId != "")
+			else if(leaseReqUserId != "" && !(leaseReqUserId.equals("ops@frrndlease.com") || leaseReqUserId.equals("admin@frrndlease.com")))
 				sql = sql + "tb1.lease_requser_id='" + leaseReqUserId + "' AND ";
+			else if(leaseReqUserId.equals("ops@frrndlease.com"))
+				sql = sql + "tb1.delivery_plan='FLS_OPS' AND ";
 			
 			sql = sql + " tb1.lease_status='" + status + "' ORDER BY tb1.lease_id LIMIT " + offset + ", 1";
 			
