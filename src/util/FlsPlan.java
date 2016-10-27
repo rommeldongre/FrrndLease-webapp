@@ -1,5 +1,7 @@
 package util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,9 +11,11 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 
 import connect.Connect;
 import util.Event.Event_Type;
@@ -521,6 +525,21 @@ public class FlsPlan extends Connect{
 			
 			//add a new paragraph
 			doc.add( new Paragraph("Lease Agreement", bfBold18));
+			
+			PdfReader pdfTemplate = new PdfReader("mytemplate.pdf");
+			FileOutputStream fileOutputStream = new FileOutputStream("test.pdf");
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			PdfStamper stamper = new PdfStamper(pdfTemplate, fileOutputStream);
+			stamper.setFormFlattening(true);
+
+			stamper.getAcroFields().setField("name", "Ashwin Kumar");
+			stamper.getAcroFields().setField("id", "1\n2\n3\n");
+			stamper.getAcroFields().setField("friendname",
+					"kumar\nsirisha\nsuresh\n");
+			stamper.getAcroFields().setField("relation", "self\nwife\nfriend\n");
+
+			stamper.close();
+			pdfTemplate.close();
 		}catch(DocumentException e){
 			e.printStackTrace();
 		}catch(Exception e){

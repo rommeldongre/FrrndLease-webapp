@@ -38,11 +38,7 @@ deliveryPlanApp.controller('deliveryCtrl', ['$scope', '$location', function($sco
         dataType:"json",
         
         success: function(response){
-            if(response.code == 0){
-                $scope.response.message = "Your delivery plan has been saved!!";
-            }else{
-                $scope.response.message = response.message;
-            }
+            $scope.response.message = response.message;
         },
         error: function() {}
     });

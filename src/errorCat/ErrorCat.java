@@ -64,6 +64,8 @@ public class ErrorCat {
 	final public String FLS_DELETE_REQUEST = "Request Deleted successfully";
 	final public String FLS_ADD_PROMO_CODE = "Promo Code Generated successfully";
 	final public String FLS_EDIT_PROFILE = "Your Profile Has Been Updated!!";
+	final public String FLS_CHANGE_PICKUP_STATUS = "Your pickup status has been changed!!";
+	final public String FLS_DELIVERY_PLAN_CHANGED = "Your delivery plan has been saved!!";
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "Couldn't create statement or couldn't execute query (sql exception)";

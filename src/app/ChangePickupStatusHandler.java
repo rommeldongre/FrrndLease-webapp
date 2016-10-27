@@ -39,7 +39,7 @@ public class ChangePickupStatusHandler extends Connect implements AppHandler{
 			
 			if(result == 1){
 				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
+				rs.setMessage(FLS_CHANGE_PICKUP_STATUS);
 			}else{
 				rs.setCode(FLS_CHANGE_PICKUP_STATUS_FAIL);
 				rs.setMessage(FLS_CHANGE_PICKUP_STATUS_FAIL_M);

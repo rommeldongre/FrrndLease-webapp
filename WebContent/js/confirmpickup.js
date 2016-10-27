@@ -32,11 +32,7 @@ confirmPickupApp.controller('pickupCtrl', ['$scope', '$location', function($scop
         dataType:"json",
         
         success: function(response){
-            if(response.code == 0){
-                $scope.response.message = "Your pickup status has been confirmed!!";
-            }else{
-                $scope.response.message = response.message;
-            }
+            $scope.response.message = response.message;
         },
         error: function() {}
     });

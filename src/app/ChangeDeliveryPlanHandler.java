@@ -40,7 +40,7 @@ public class ChangeDeliveryPlanHandler extends Connect implements AppHandler {
 			
 			if(result == 1){
 				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
+				rs.setMessage(FLS_DELIVERY_PLAN_CHANGED);
 			}else{
 				rs.setCode(FLS_DELIVERY_STATUS_FAIL);
 				rs.setMessage(FLS_DELIVERY_STATUS_FAIL_M);

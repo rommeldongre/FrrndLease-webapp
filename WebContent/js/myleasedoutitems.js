@@ -180,11 +180,12 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
             dataType:"json",
 
             success: function(response){
-                if(response.code == 0){
-                    window.location.reload();
-                }else{
+                if(response.code != 0){
                     modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){
-                        window.location.reload();
+                        if(s == true)
+                            $scope.leases[i].ownerPickupStatus = false;
+                        else
+                            $scope.leases[i].ownerPickupStatus = true;
                     },function(){});
                 }
             },
