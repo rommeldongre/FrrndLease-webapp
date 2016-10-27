@@ -49,6 +49,14 @@ $(function(){
                   $('#gsd_contact').html(response);
             });
 			
+			$.get("faqdiv.html", function(response) {
+                  $('#gsd_faq').html(response);
+            });
+			
+			$.get("termsdiv.html", function(response) {
+                  $('#gsd_terms').html(response);
+            });
+			
 			var link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
