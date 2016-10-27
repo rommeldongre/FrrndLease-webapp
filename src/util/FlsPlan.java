@@ -1,21 +1,19 @@
 package util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.net.URL;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStamper;
 
 import connect.Connect;
 import util.Event.Event_Type;
@@ -523,23 +521,18 @@ public class FlsPlan extends Connect{
 			doc.setPageSize(PageSize.A4);
 			doc.open();
 			
+			//Add Image
+			String imageUrl = "http://s3-ap-southeast-1.amazonaws.com/fls-items-dev/house-260/post/house-260-primary-4028.png";
+		    Image image1 = Image.getInstance(new URL(imageUrl));
+		    //Fixed Positioning
+		    image1.setAbsolutePosition(100f, 550f);
+		    //Scale to new height and new width of image
+		    image1.scaleAbsolute(200, 200);
+		    //Add to document
+		    doc.add(image1);
+			
 			//add a new paragraph
 			doc.add( new Paragraph("Lease Agreement", bfBold18));
-			
-			PdfReader pdfTemplate = new PdfReader("mytemplate.pdf");
-			FileOutputStream fileOutputStream = new FileOutputStream("test.pdf");
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			PdfStamper stamper = new PdfStamper(pdfTemplate, fileOutputStream);
-			stamper.setFormFlattening(true);
-
-			stamper.getAcroFields().setField("name", "Ashwin Kumar");
-			stamper.getAcroFields().setField("id", "1\n2\n3\n");
-			stamper.getAcroFields().setField("friendname",
-					"kumar\nsirisha\nsuresh\n");
-			stamper.getAcroFields().setField("relation", "self\nwife\nfriend\n");
-
-			stamper.close();
-			pdfTemplate.close();
 		}catch(DocumentException e){
 			e.printStackTrace();
 		}catch(Exception e){
