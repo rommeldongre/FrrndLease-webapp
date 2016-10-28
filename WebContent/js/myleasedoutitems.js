@@ -164,4 +164,33 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
         window.location.replace("ItemDetails?uid="+uid);
     }
     
+    $scope.changePickupStatus = function(s, i){
+        
+        req = {
+            owner: true,
+            leaseId: $scope.leases[i].leaseId,
+            pickupStatus: s
+        }
+        
+        $.ajax({
+            url: '/ChangePickupStatus',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType:"json",
+
+            success: function(response){
+                if(response.code != 0){
+                    modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){
+                        if(s == true)
+                            $scope.leases[i].ownerPickupStatus = false;
+                        else
+                            $scope.leases[i].ownerPickupStatus = true;
+                    },function(){});
+                }
+            },
+            error: function() {}
+        });
+    }
+    
 }]);

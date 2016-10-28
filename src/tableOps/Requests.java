@@ -185,12 +185,6 @@ public class Requests extends Connect {
 					res.setData(FLS_UNLIKE_LOCATION, "0", FLS_UNLIKE_LOCATION_M);
 					return;
 				}
-						
-				if(!(rs2.getString("user_plan").equals(rs3.getString("user_plan")))){
-					LOGGER.warning("Users dont have the same plan");
-					res.setData(FLS_UNLIKE_PLAN, "0", FLS_UNLIKE_PLAN_M);
-					return;
-				}
 								
 				String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id) values (?,?)";
 				ps4 = hcp.prepareStatement(sqlAddRequest);

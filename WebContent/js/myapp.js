@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['headerApp', 'carouselApp', 'footerApp', 'ngRoute', 'cp.ng.fix-image-orientation', 'multiStepForm']);
+var myApp = angular.module('myApp', ['headerApp', 'carouselApp', 'footerApp', 'ngRoute', 'cp.ng.fix-image-orientation', 'multiStepForm', 'uiSwitch']);
 
 myApp.run(['userFactory', function(userFactory){
     

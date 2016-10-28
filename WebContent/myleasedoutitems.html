@@ -21,7 +21,7 @@
                       <img class="img-rounded" load-image="lease.primaryImageLink" ng-src="" alt="..."/>
                    </a>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-3">
+                <div class="col-lg-2 col-md-2 col-sm-2">
                    <div class="content">
                        <a class="card-link" href="" ng-click="showItemDetails(lease.uid)">
                           <h5 class="title">{{lease.title}}</h5>
@@ -70,7 +70,7 @@
                       </a>
                   </div>
                </div>
-               <div class="col-lg-2 col-md-2 col-sm-2">
+               <div class="col-lg-3 col-md-3 col-sm-3">
                    <div class="content" style="text-align:center;">
                        <a class="card-link">
                          <span class="label label-default label-fill">Expiry Date</span>
@@ -81,9 +81,15 @@
                        </a>
                        <a class="card-link" href="">
                            <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">Close</button>
-                       </a>
+                       </a><br/>
                        <a class="card-link" href="">
                            <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">Renew</button>
+                       </a><br/>
+                       <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
+                           Item Pick Up Status:<br/>{{(lease.ownerPickupStatus ? 'Picked Up' : 'Pending')}}
+                           <form>
+                               <switch id="enabled" name="enabled" ng-change="changePickupStatus(lease.ownerPickupStatus, $index)" ng-model="lease.ownerPickupStatus" class="green"></switch>
+                           </form>
                        </a>
                    </div>
                </div>

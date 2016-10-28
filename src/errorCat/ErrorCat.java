@@ -28,6 +28,10 @@ public class ErrorCat {
 	final public int FLS_REQUEST_LIMIT = 219;
 	final public int FLS_UNLIKE_LOCATION = 220;
 	final public int FLS_UNLIKE_PLAN = 221;
+	final public int FLS_ACTIVE_REQUEST = 222;
+	final public int FLS_ACTIVE_LEASE = 223;
+	final public int FLS_DELIVERY_STATUS_FAIL = 224;
+	final public int FLS_CHANGE_PICKUP_STATUS_FAIL = 225;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -60,6 +64,8 @@ public class ErrorCat {
 	final public String FLS_DELETE_REQUEST = "Request Deleted successfully";
 	final public String FLS_ADD_PROMO_CODE = "Promo Code Generated successfully";
 	final public String FLS_EDIT_PROFILE = "Your Profile Has Been Updated!!";
+	final public String FLS_CHANGE_PICKUP_STATUS = "Your pickup status has been changed!!";
+	final public String FLS_DELIVERY_PLAN_CHANGED = "Your delivery plan has been saved!!";
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "Couldn't create statement or couldn't execute query (sql exception)";
@@ -89,6 +95,10 @@ public class ErrorCat {
 	final public String FLS_REQUEST_LIMIT_M = "You cannot have more than 3 requests.";
 	final public String FLS_UNLIKE_LOCATION_M = "The owner is not in this city!!";
 	final public String FLS_UNLIKE_PLAN_M = "The onwer must be registered for the same plan as yours.";
+	final public String FLS_ACTIVE_REQUEST_M = "You have pending requests. Please resolve them to update your location.";
+	final public String FLS_ACTIVE_LEASE_M = "You can change location only if there are no active leases.";
+	final public String FLS_DELIVERY_STATUS_FAIL_M = "Not able to change delivery status. Please try again later.";
+	final public String FLS_CHANGE_PICKUP_STATUS_FAIL_M = "The pickup status cannot be changed.";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

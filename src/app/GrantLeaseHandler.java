@@ -17,6 +17,8 @@ import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsConfig;
 import util.FlsLogger;
+import util.FlsPlan.Delivery_Plan;
+import util.FlsPlan.Fls_Plan;
 import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
@@ -87,7 +89,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			
 			int credit = 0;
-			String sqlCheckCredit = "SELECT user_credit FROM users WHERE user_id=?";
+			String sqlCheckCredit = "SELECT * FROM users WHERE user_id=?";
 			psLeaseSelect = hcp.prepareStatement(sqlCheckCredit);
 			psLeaseSelect.setString(1, rq.getReqUserId());
 			result4 = psLeaseSelect.executeQuery();
@@ -200,7 +202,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String date = sdf.format(cal.getTime());
 
-			String AddLeasesql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date) values (?,?,?,?)"; //
+			String AddLeasesql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date,delivery_plan) values (?,?,?,?,?)"; //
 			LOGGER.info("Creating final statement.....");
 			psLeaseUpdate = hcp.prepareStatement(AddLeasesql);
 
@@ -209,6 +211,10 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			psLeaseUpdate.setInt(2, rq.getItemId());
 			psLeaseUpdate.setString(3, rq.getUserId());
 			psLeaseUpdate.setString(4, date);
+			if(result4.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name()))
+				psLeaseUpdate.setString(5, Delivery_Plan.FLS_SELF.name());
+			else
+				psLeaseUpdate.setString(5, Delivery_Plan.FLS_NONE.name());
 									
 			LeaseAction = psLeaseUpdate.executeUpdate();
 				
@@ -262,10 +268,17 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			try {
 				Event event = new Event();
-				event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
-				event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				if(result4.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name())){
+					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_SELF, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
+					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_SELF, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				}else{
+					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_PRIME, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
+					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_PRIME, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
+				rs.setCode(FLS_INVALID_OPERATION);
+				rs.setMessage(FLS_INVALID_OPERATION_M);
 			}						
 			
 		} catch (SQLException e) {
@@ -279,6 +292,7 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		} catch (NullPointerException e) {
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
+			e.printStackTrace();
 		} finally{
 			
 			if(result1 != null)result1.close();

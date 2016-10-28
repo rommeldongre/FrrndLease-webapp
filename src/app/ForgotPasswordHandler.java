@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.Random;
+
 import connect.Connect;
 import pojos.ForgotPasswordReqObj;
 import pojos.ForgotPasswordResObj;
@@ -46,7 +48,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 		Event event = new Event();
 
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
+		PreparedStatement ps1 = null, ps2 = null;
 		ResultSet rs1 = null;
 
 		try {
@@ -60,6 +62,7 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 			if(rs1.next()){
 				String status = rs1.getString("user_status");
 				String activation = rs1.getString("user_activation");
+				Random rnd = new Random();
 				switch(status){
 					case "google":
 						rs.setCode(FLS_INVALID_USER_I);
@@ -82,6 +85,12 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 						rs.setMessage("This email was not verified from the link sent during sign up.");
 						break;
 					case "email_activated":
+						activation =  100000000 + rnd.nextInt(900000000)+"";
+						String updateUserAct = "UPDATE users SET user_activation=? WHERE user_id=?";
+						ps2 = hcp.prepareStatement(updateUserAct);
+						ps2.setString(1, activation+"_u");
+						ps2.setString(2, userId);
+						ps2.executeUpdate();
 						try{
 							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "A link has been sent to your registered email account for reseting the password.");
 						} catch (Exception e) {
@@ -102,6 +111,12 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 						rs.setMessage("This mobile number is not verified. Please enter the otp sent to your mobile number to verify the same.");
 						break;
 					case "mobile_activated":
+						activation =  100000 + rnd.nextInt(900000)+"";
+						String updateUserCode = "UPDATE users SET user_activation=? WHERE user_id=?";
+						ps2 = hcp.prepareStatement(updateUserCode);
+						ps2.setString(1, activation+"_u");
+						ps2.setString(2, userId);
+						ps2.executeUpdate();
 						try{
 							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_FORGOT_PASSWORD, 0, "Please use this OTP for reseting your password.");
 						}catch(Exception e){
@@ -122,9 +137,20 @@ public class ForgotPasswordHandler extends Connect implements AppHandler {
 			}
 			
 		} catch (SQLException e) {
-
+			e.printStackTrace();
+			rs.setCode(FLS_SQL_EXCEPTION);
+			rs.setMessage(FLS_SQL_EXCEPTION_M);
 		} finally {
-			if (rs1 != null)rs1.close();
+			try{
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+				rs.setCode(FLS_INVALID_OPERATION);
+				rs.setMessage(FLS_INVALID_OPERATION_M);
+			}
 		}
 
 		LOGGER.info("Inside Process Method of Forgot Password with userId: " + rq.getUserId());
