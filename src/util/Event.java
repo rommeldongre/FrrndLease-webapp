@@ -52,10 +52,18 @@ public class Event extends Connect{
 		FLS_MAIL_ADD_FRIEND_TO,
 		FLS_MAIL_DELETE_FRIEND_FROM,
 		FLS_MAIL_DELETE_FRIEND_TO,
-		FLS_MAIL_GRANT_LEASE_FROM,
-		FLS_MAIL_GRANT_LEASE_TO,
-		FLS_MAIL_REJECT_LEASE_FROM,
-		FLS_MAIL_REJECT_LEASE_TO,
+		FLS_MAIL_GRANT_LEASE_FROM_SELF,
+		FLS_MAIL_GRANT_LEASE_TO_SELF,
+		FLS_MAIL_GRANT_LEASE_FROM_PRIME,
+		FLS_MAIL_GRANT_LEASE_TO_PRIME,
+		FLS_MAIL_FROM_LEASE_STARTED,
+		FLS_MAIL_TO_LEASE_STARTED,
+		FLS_MAIL_OPS_PICKUP_READY,
+		FLS_MAIL_CLOSE_LEASE_FROM_SELF,
+		FLS_MAIL_CLOSE_LEASE_TO_SELF,
+		FLS_MAIL_OPS_PICKUP_CLOSE,
+		FLS_MAIL_ITEM_INSTORE_FROM,
+		FLS_MAIL_ITEM_INSTORE_TO,
 		FLS_MAIL_GRACE_PERIOD_OWNER,
 		FLS_MAIL_GRACE_PERIOD_REQUESTOR,
 		FLS_MAIL_RENEW_LEASE_OWNER,
@@ -708,6 +716,10 @@ public class Event extends Connect{
 						obj.put("notificationType", rs2.getString("notification_type"));
 						obj.put("message", rs2.getString("message"));
 						
+						int leaseId = getLeaseId(obj.getInt("itemId"));
+						if(leaseId != -1){
+							obj.put("leaseId", leaseId);
+						}
 						
 						if(Notification_Type.valueOf(obj.getString("notificationType")).equals(Notification_Type.FLS_NOMAIL_ADD_WISH_ITEM)){
 							
@@ -818,6 +830,43 @@ public class Event extends Connect{
 		}
 		
 		return true;
+		
+	}
+	
+	private int getLeaseId(int itemId){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		int leaseId = -1;
+		
+		try{
+			
+			String sqlGetActiveLease = "SELECT lease_id FROM leases WHERE lease_item_id=?";
+			ps1 = hcp.prepareStatement(sqlGetActiveLease);
+			ps1.setInt(1, itemId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				leaseId = rs1.getInt("lease_id");
+			}
+			
+		}catch(SQLException e){
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return leaseId;
 		
 	}
 

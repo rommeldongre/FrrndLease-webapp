@@ -111,4 +111,71 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
     $scope.showItemDetails = function(uid){
         window.location.replace("ItemDetails?uid="+uid);
     }
+    
+    $scope.changeDeliveryPlan = function(plan, i){
+        
+        var p = "Are you sure you want to pick up the item?";
+        
+        if(plan=='FLS_OPS')
+            p = "Are you sure you want frrndlease to pick up the item?";
+        
+        modalService.showModal({}, {bodyText: p, actionButtonText: 'Ok'}).then(function(result)  {
+            req = {
+                deliveryPlan: plan,
+                leaseId: $scope.leases[i].leaseId
+            }
+
+            $.ajax({
+                url: '/ChangeDeliveryPlan',
+                type: 'post',
+                data: JSON.stringify(req),
+                contentType:"application/json",
+                dataType:"json",
+
+                success: function(response) {
+                    if(response.code == 0){
+                        window.location.reload();
+                    }else{
+                        modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){
+                            window.location.reload();
+                        },function(){});
+                    }
+                },
+
+                error: function() {}
+            });
+            
+        },function(){});
+        
+    }
+    
+    $scope.changePickupStatus = function(s, i){
+        
+        req = {
+            owner: false,
+            leaseId: $scope.leases[i].leaseId,
+            pickupStatus: s
+        }
+        
+        $.ajax({
+            url: '/ChangePickupStatus',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType:"json",
+        
+            success: function(response){
+                if(response.code != 0){
+                    modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'Ok'}).then(function(result){
+                        if(s == true)
+                            $scope.leases[i].leaseePickupStatus = false;
+                        else
+                            $scope.leases[i].leaseePickupStatus = true;
+                    },function(){});
+                }
+            },
+            error: function() {}
+        });
+    }
+    
 }]);

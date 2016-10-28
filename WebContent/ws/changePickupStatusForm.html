@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Change Pickup Status Form</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+    
+	getData = function (){
+        
+        var IsOwner = document.getElementById("isOwner").value;
+        if(IsOwner == null || IsOwner == '' || IsOwner == 'null')
+            IsOwner = null;
+        
+        var LeaseId = document.getElementById("leaseId").value;
+        if(LeaseId == null || LeaseId == '' || LeaseId == 'null')
+            LeaseId = null;
+        
+        var PickupStatus = document.getElementById("pickupStatus").value;
+        if(PickupStatus == null || PickupStatus == '' || PickupStatus == 'null')
+            PickupStatus = null;
+        
+        req = {
+            owner: IsOwner,
+            leaseId: LeaseId,
+            pickupStatus: PickupStatus
+        }
+        
+        changePickupStatus(req);
+	};
+		
+	changePickupStatus = function(req) {
+		$.ajax({
+			url: '/ChangePickupStatus',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+                document.getElementById("code").value = response.code;
+                document.getElementById("message").value = response.message;
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1>Change Pickup Status Form</h1>
+	<form>
+		Is Owner: <input type="text" name="isOwner" id="isOwner" ><br/><br/>
+		Lease Id: <input type="text" name="leaseId" id="leaseId" ><br/><br/>
+		Pickup Status: <input type="text" name="pickupStatus" id="pickupStatus" ><br/><br/>
+		<input type="button" value="Change Pickup Status" onclick="getData()">
+    </form>
+		
+		<h1>OUTPUT</h1>
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message"><br/><br/>
+    
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>

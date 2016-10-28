@@ -2,6 +2,7 @@ package app;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connect.Connect;
@@ -27,19 +28,19 @@ public class EditProfileHandler extends Connect implements AppHandler {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
-		// TODO Auto-generated method stub
-
+		
 		EditProfileReqObj rq = (EditProfileReqObj) req;
 		EditProfileResObj rs = new EditProfileResObj();
+		
 		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null;
+		int rs1, rs2;
 
-		LOGGER.info("Inside Process Method " + rq.getUserId());
+		LOGGER.info("Inside Process Method of EditProfileHandler");
 
 		try {
 			
@@ -51,60 +52,85 @@ public class EditProfileHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
+			if(havePendingRequests(rq.getUserId())){
+				if(!hasSameLocality(rq.getUserId(), rq.getLocality())){
+					rs.setCode(FLS_ACTIVE_REQUEST);
+					rs.setMessage(FLS_ACTIVE_REQUEST_M);
+					return rs;
+				}
+			}
+			
+			if(havePendingLeases(rq.getUserId())){
+				if(!hasSameLocality(rq.getUserId(), rq.getLocality())){
+					rs.setCode(FLS_ACTIVE_LEASE);
+					rs.setMessage(FLS_ACTIVE_LEASE_M);
+					return rs;
+				}
+			}
+			
+			LOGGER.info("Updating users table...");
 			String sql = "UPDATE users SET user_full_name=?, user_location=?, user_address=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=? , user_photo_id=? WHERE user_id=?";
-			LOGGER.info("Creating Statement...");
-			PreparedStatement ps = hcp.prepareStatement(sql);
-			ps.setString(1, rq.getFullName());
-			ps.setString(2, rq.getLocation());
-			ps.setString(3, rq.getAddress());
-			ps.setString(4, rq.getLocality());
-			ps.setString(5, rq.getSublocality());
-			ps.setFloat(6, rq.getLat());
-			ps.setFloat(7, rq.getLng());
-			ps.setString(8, rq.getPhotoId());
-			ps.setString(9, rq.getUserId());
+			ps1 = hcp.prepareStatement(sql);
+			ps1.setString(1, rq.getFullName());
+			ps1.setString(2, rq.getLocation());
+			ps1.setString(3, rq.getAddress());
+			ps1.setString(4, rq.getLocality());
+			ps1.setString(5, rq.getSublocality());
+			ps1.setFloat(6, rq.getLat());
+			ps1.setFloat(7, rq.getLng());
+			ps1.setString(8, rq.getPhotoId());
+			ps1.setString(9, rq.getUserId());
 
-			LOGGER.info("statement created...executing update to users query");
-			int result = ps.executeUpdate();
-			ps.close();
-
-			LOGGER.info("Update Query Result : " + result);
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1){
+				rs.setCode(FLS_SUCCESS);
+				rs.setMessage(FLS_EDIT_PROFILE);
+				LOGGER.info("Users table updated for : " + rq.getUserId());
+			}
+			else{
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				LOGGER.info("Users table not updated for : " + rq.getUserId());
+			}
 			
 			// updating items table with lat lng
+			LOGGER.info("Updating items table with lat lng...");
 			String updateItemsLatLng = "UPDATE items SET item_lat=?, item_lng=? WHERE item_user_id=?";
-			LOGGER.info("Creating statement for updating items table with lat lng.....");
 			
-			PreparedStatement ps1 = hcp.prepareStatement(updateItemsLatLng);
-			ps1.setFloat(1, rq.getLat());
-			ps1.setFloat(2, rq.getLng());
-			ps1.setString(3, rq.getUserId());
+			ps2 = hcp.prepareStatement(updateItemsLatLng);
+			ps2.setFloat(1, rq.getLat());
+			ps2.setFloat(2, rq.getLng());
+			ps2.setString(3, rq.getUserId());
 			
-			LOGGER.info("statement created...executing update to items query");
-			ps1.executeUpdate();
-			ps1.close();
+			rs2 = ps2.executeUpdate();
+			
+			if(rs2 == 1)
+				LOGGER.info("Items table updated for : " + rq.getUserId());
+			else
+				LOGGER.info("Items table not updated for : " + rq.getUserId());
 
 			FlsPlan plan = new FlsPlan();
 			plan.checkPlan(rq.getUserId());
-			
-			if (result == 1) {
-				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_EDIT_PROFILE);
-				LOGGER.warning("Profile Updated!!");
-			} else {
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-			}
 
 		} catch (SQLException e) {
 			rs.setCode(FLS_SQL_EXCEPTION);
 			rs.setMessage(FLS_SQL_EXCEPTION_M);
-			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
+			e.printStackTrace();
 		} finally {
-			hcp.close();
+			try{
+				if(ps1 != null) ps1.close();
+				if(ps2 != null) ps2.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				rs.setCode(FLS_INVALID_OPERATION);
+				rs.setMessage(FLS_INVALID_OPERATION_M);
+				e.printStackTrace();
+			}
 		}
 		LOGGER.info("Finished process method ");
 		// return the response
@@ -113,8 +139,114 @@ public class EditProfileHandler extends Connect implements AppHandler {
 
 	@Override
 	public void cleanup() {
-		// TODO Auto-generated method stub
-
+	}
+	
+	private boolean havePendingRequests(String userId){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try{
+			
+			String sqlActiveRequest = "SELECT tb1.*, tb2.item_user_id FROM requests tb1 INNER JOIN items tb2 ON tb1.request_item_id=tb2.item_id WHERE (tb1.request_requser_id=? OR tb2.item_user_id=?) AND tb1.request_status=?";
+			
+			ps1 = hcp.prepareStatement(sqlActiveRequest);
+			ps1.setString(1, userId);
+			ps1.setString(2, userId);
+			ps1.setString(3, "Active");
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				return true;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(rs1 != null) rs1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	private boolean havePendingLeases(String userId){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try{
+			
+			String sqlActiveLease = "SELECT * FROM leases WHERE (lease_requser_id=? OR lease_user_id=?) AND lease_status=?";
+			
+			ps1 = hcp.prepareStatement(sqlActiveLease);
+			ps1.setString(1, userId);
+			ps1.setString(2, userId);
+			ps1.setString(3, "Active");
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				return true;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(rs1 != null) rs1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	private boolean hasSameLocality(String userId, String locality){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try{
+			
+			String sqlGetLocality = "SELECT user_locality FROM users WHERE user_id=? AND user_locality=?";
+			ps1 = hcp.prepareStatement(sqlGetLocality);
+			ps1.setString(1, userId);
+			ps1.setString(2, locality);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				return true;
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(rs1 != null) rs1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+		return false;
 	}
 
 }
