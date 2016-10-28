@@ -25,6 +25,8 @@ public class FlsPlan extends Connect{
 	
 	private String URL = FlsConfig.prefixUrl;
 	
+	private String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
+	
 	public enum Fls_Plan{
 		FLS_SELFIE,
 		FLS_PRIME,
@@ -522,8 +524,7 @@ public class FlsPlan extends Connect{
 			doc.open();
 			
 			//Add Image
-			String imageUrl = "http://s3-ap-southeast-1.amazonaws.com/fls-items-dev/house-260/post/house-260-primary-4028.png";
-		    Image image1 = Image.getInstance(new URL(imageUrl));
+		    Image image1 = Image.getInstance(new URL(LOGO_URL));
 		    //Fixed Positioning
 		    image1.setAbsolutePosition(100f, 550f);
 		    //Scale to new height and new width of image
