@@ -8,13 +8,13 @@
 				<div class="row">
 					<div class="col-md-3">
 						<h5 class="title">Subscribe</h5>
-						<form name="form" style="text-align: center;">
+						<form name="form" style="text-align:left;">
 						<div class="form-group">
 							<input name="lead_email" type="text" value="" ng-model="lead_email" class="form-control" ng-pattern="/^([_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,5}))|(\d+$)$/" ng-change="error=''" placeholder="Enter your email..." required><br>
 						</div>
 						<p ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
 						<div class="form-group">
-							<button type="button" ng-click="(form.lead_email.$touched && form.lead_email.$valid) ? newsLetterLead(lead_email) : error='Please Enter correct email'" class="btn btn-primary btn-fill">Subscribe Now!</button>
+							<button type="button" style=""ng-click="(form.lead_email.$touched && form.lead_email.$valid) ? newsLetterLead(lead_email) : error='Please Enter correct email'" class="btn btn-primary btn-fill">Subscribe Now!</button>
 						</div>
 						
 						</form>
