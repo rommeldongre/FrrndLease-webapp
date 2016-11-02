@@ -1,5 +1,6 @@
 package services;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -8,9 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfWriter;
 
 import util.FlsPlan;
 
@@ -21,30 +19,36 @@ public class GetLeaseAgreement extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doPost(req, resp);
+		resp.setContentType("application/pdf");
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		//get the output stream for writing binary data in the response.
-		ServletOutputStream os = response.getOutputStream();
-		//set the response content type to PDF
-		response.setContentType("application/pdf");
-		
-		int leaseId = 0;
-		
 		FlsPlan plan = new FlsPlan();
 		
 		try{
-			Document doc = new Document();
+
+			int leaseId = Integer.parseInt(request.getParameter("leaseId"));
 			
-			PdfWriter.getInstance(doc, os);
+			ByteArrayOutputStream output = plan.getLeaseAgreement(leaseId);
+
+			response.setHeader("Expires", "0");
+			response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
+			response.setHeader("Pragma", "public");
 			
-			doc = plan.getLeaseAgreement(doc, leaseId);
+			//set the response content type to PDF
+			response.setContentType("application/pdf");
 			
-			doc.close();
+			response.setContentLength(output.size());
+			
+			//get the output stream for writing binary data in the response.
+			ServletOutputStream os = response.getOutputStream();
+			output.writeTo(os);
+			os.flush();
 		}catch(Exception e){
 			e.printStackTrace();
+			response.sendRedirect("index.html");
 		}
 	}
 

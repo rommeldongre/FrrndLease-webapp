@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 
 import com.itextpdf.text.BaseColor;
@@ -17,6 +18,7 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import connect.Connect;
 import util.Event.Event_Type;
@@ -512,7 +514,11 @@ public class FlsPlan extends Connect{
 		
 	}
 	
-	public Document getLeaseAgreement(Document doc, int leaseId){
+	public ByteArrayOutputStream getLeaseAgreement(int leaseId){
+
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		
+		Document doc = new Document();
 		
 		//create some special styles and font sizes
 		Font h1 = new Font(FontFamily.TIMES_ROMAN, 28, Font.BOLD, BaseColor.BLACK);
@@ -520,6 +526,8 @@ public class FlsPlan extends Connect{
 		Font h3 = new Font(FontFamily.HELVETICA, 18, Font.NORMAL, BaseColor.BLACK);
 		
 		try{
+			PdfWriter.getInstance(doc, output);
+			
 			//document header properties
 			doc.addAuthor("Blue Marble");
 			doc.addCreationDate();
@@ -627,13 +635,15 @@ public class FlsPlan extends Connect{
 	        text.setPaddingTop(10);
 	        doc.add(text);
 	        
+	        doc.close();
+	        
 		}catch(DocumentException e){
 			e.printStackTrace();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return doc;
+		return output;
 	}
 	
 }
