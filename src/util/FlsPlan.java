@@ -9,11 +9,14 @@ import java.net.URL;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 
 import connect.Connect;
 import util.Event.Event_Type;
@@ -512,7 +515,9 @@ public class FlsPlan extends Connect{
 	public Document getLeaseAgreement(Document doc, int leaseId){
 		
 		//create some special styles and font sizes
-		Font bfBold18 = new Font(FontFamily.TIMES_ROMAN, 18, Font.BOLD, new BaseColor(0, 0, 0));
+		Font h1 = new Font(FontFamily.TIMES_ROMAN, 28, Font.BOLD, BaseColor.BLACK);
+		Font h2 = new Font(FontFamily.TIMES_ROMAN, 22, Font.BOLD, BaseColor.BLACK);
+		Font h3 = new Font(FontFamily.HELVETICA, 18, Font.NORMAL, BaseColor.BLACK);
 		
 		try{
 			//document header properties
@@ -524,16 +529,104 @@ public class FlsPlan extends Connect{
 			doc.open();
 			
 			//Add Image
-		    Image image1 = Image.getInstance(new URL(LOGO_URL));
+		    Image image = Image.getInstance(new URL(LOGO_URL));
 		    //Fixed Positioning
-		    image1.setAbsolutePosition(100f, 550f);
+		    image.setAlignment(Element.ALIGN_MIDDLE);
 		    //Scale to new height and new width of image
-		    image1.scaleAbsolute(200, 200);
+		    image.scaleAbsolute(50, 50);
 		    //Add to document
-		    doc.add(image1);
+		    doc.add(image);
 			
-			//add a new paragraph
-			doc.add( new Paragraph("Lease Agreement", bfBold18));
+			// Heading
+			Paragraph text = new Paragraph("Lease Agreement\nBetween", h1);
+			text.setAlignment(Element.ALIGN_CENTER);
+			doc.add(text);
+			
+			// The owner and the requestor
+	        PdfPTable table = new PdfPTable(3); // 3 columns.
+	        table.setWidthPercentage(100); //Width 100%
+	        table.setSpacingBefore(10f); //Space before table
+	        table.setSpacingAfter(10f); //Space after table
+	 
+	        //Set Column widths
+	        float[] columnWidths = {1f, 1f, 1f};
+	        table.setWidths(columnWidths);
+	 
+	        PdfPCell cell1 = new PdfPCell();
+	        cell1.addElement(image);
+	        text = new Paragraph("ankit@greylabs.org\n(Owner)", h3);
+	        text.setAlignment(Element.ALIGN_CENTER);
+	        cell1.addElement(text);
+	        cell1.setBorderColor(BaseColor.WHITE);
+	        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+	        cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	 
+	        PdfPCell cell2 = new PdfPCell(new Paragraph("&", h1));
+	        cell2.setBorderColor(BaseColor.WHITE);
+	        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+	        cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	 
+	        PdfPCell cell3 = new PdfPCell();
+	        cell3.addElement(image);
+	        text = new Paragraph("ankitkarnany@gmail.com\n(Requestor)", h3);
+	        text.setAlignment(Element.ALIGN_CENTER);
+	        cell3.addElement(text);
+	        cell3.setBorderColor(BaseColor.WHITE);
+	        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+	        cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	 
+	        table.addCell(cell1);
+	        table.addCell(cell2);
+	        table.addCell(cell3);
+	 
+	        doc.add(table);
+	        
+	        text = new Paragraph("For Item", h2);
+	        text.setAlignment(Element.ALIGN_CENTER);
+	        text.setPaddingTop(5);
+	        doc.add(text);
+	        
+	        doc.add(image);
+	        
+	        text = new Paragraph("Title: " + " title", h3);
+	        text.setPaddingTop(5);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Description: " + " description", h3);
+	        text.setPaddingTop(5);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Duration of lease: ", h2);
+	        text.setAlignment(Element.ALIGN_CENTER);
+	        text.setPaddingTop(10);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Starting - 19/12/1992", h3);
+	        text.setPaddingTop(5);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Ending - 19/12/1992", h3);
+	        text.setPaddingTop(5);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Cost of lease: ", h2);
+	        text.setAlignment(Element.ALIGN_CENTER);
+	        text.setPaddingTop(10);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Credits - 10", h3);
+	        text.setPaddingTop(5);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Payable Monthly - Rs.100", h3);
+	        text.setPaddingTop(5);
+	        doc.add(text);
+	        
+	        text = new Paragraph("Insurance Amount - Rs.1000", h2);
+	        text.setAlignment(Element.ALIGN_CENTER);
+	        text.setPaddingTop(10);
+	        doc.add(text);
+	        
 		}catch(DocumentException e){
 			e.printStackTrace();
 		}catch(Exception e){
