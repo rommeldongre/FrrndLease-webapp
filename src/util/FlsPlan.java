@@ -522,120 +522,136 @@ public class FlsPlan extends Connect{
 		
 		//create some special styles and font sizes
 		Font h1 = new Font(FontFamily.TIMES_ROMAN, 28, Font.BOLD, BaseColor.BLACK);
-		Font h2 = new Font(FontFamily.TIMES_ROMAN, 22, Font.BOLD, BaseColor.BLACK);
-		Font h3 = new Font(FontFamily.HELVETICA, 18, Font.NORMAL, BaseColor.BLACK);
+		Font h2 = new Font(FontFamily.TIMES_ROMAN, 20, Font.BOLD, BaseColor.BLACK);
+		Font h3 = new Font(FontFamily.HELVETICA, 16, Font.NORMAL, BaseColor.BLACK);
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
 		
 		try{
-			PdfWriter.getInstance(doc, output);
+			String sqlGetLeaseData = "SELECT tb1.*, tb2.user_full_name as requestor, tb3.user_full_name as owner, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id=tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id=tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id=tb4.item_id WHERE tb1.lease_id=?";
+			ps1 = hcp.prepareStatement(sqlGetLeaseData);
+			ps1.setInt(1, leaseId);
 			
-			//document header properties
-			doc.addAuthor("Blue Marble");
-			doc.addCreationDate();
-			doc.addCreator("frrndlease.com");
-			doc.addTitle("Lease Agreement");
-			doc.setPageSize(PageSize.A4);
-			doc.open();
+			rs1 = ps1.executeQuery();
 			
-			//Add Image
-		    Image image = Image.getInstance(new URL(LOGO_URL));
-		    //Fixed Positioning
-		    image.setAlignment(Element.ALIGN_MIDDLE);
-		    //Scale to new height and new width of image
-		    image.scaleAbsolute(50, 50);
-		    //Add to document
-		    doc.add(image);
-			
-			// Heading
-			Paragraph text = new Paragraph("Lease Agreement\nBetween", h1);
-			text.setAlignment(Element.ALIGN_CENTER);
-			doc.add(text);
-			
-			// The owner and the requestor
-	        PdfPTable table = new PdfPTable(3); // 3 columns.
-	        table.setWidthPercentage(100); //Width 100%
-	        table.setSpacingBefore(10f); //Space before table
-	        table.setSpacingAfter(10f); //Space after table
-	 
-	        //Set Column widths
-	        float[] columnWidths = {1f, 1f, 1f};
-	        table.setWidths(columnWidths);
-	 
-	        PdfPCell cell1 = new PdfPCell();
-	        cell1.addElement(image);
-	        text = new Paragraph("ankit@greylabs.org\n(Owner)", h3);
-	        text.setAlignment(Element.ALIGN_CENTER);
-	        cell1.addElement(text);
-	        cell1.setBorderColor(BaseColor.WHITE);
-	        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-	        cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-	 
-	        PdfPCell cell2 = new PdfPCell(new Paragraph("&", h1));
-	        cell2.setBorderColor(BaseColor.WHITE);
-	        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-	        cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
-	 
-	        PdfPCell cell3 = new PdfPCell();
-	        cell3.addElement(image);
-	        text = new Paragraph("ankitkarnany@gmail.com\n(Requestor)", h3);
-	        text.setAlignment(Element.ALIGN_CENTER);
-	        cell3.addElement(text);
-	        cell3.setBorderColor(BaseColor.WHITE);
-	        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
-	        cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
-	 
-	        table.addCell(cell1);
-	        table.addCell(cell2);
-	        table.addCell(cell3);
-	 
-	        doc.add(table);
-	        
-	        text = new Paragraph("For Item", h2);
-	        text.setAlignment(Element.ALIGN_CENTER);
-	        text.setPaddingTop(5);
-	        doc.add(text);
-	        
-	        doc.add(image);
-	        
-	        text = new Paragraph("Title: " + " title", h3);
-	        text.setPaddingTop(5);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Description: " + " description", h3);
-	        text.setPaddingTop(5);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Duration of lease: ", h2);
-	        text.setAlignment(Element.ALIGN_CENTER);
-	        text.setPaddingTop(10);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Starting - 19/12/1992", h3);
-	        text.setPaddingTop(5);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Ending - 19/12/1992", h3);
-	        text.setPaddingTop(5);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Cost of lease: ", h2);
-	        text.setAlignment(Element.ALIGN_CENTER);
-	        text.setPaddingTop(10);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Credits - 10", h3);
-	        text.setPaddingTop(5);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Payable Monthly - Rs.100", h3);
-	        text.setPaddingTop(5);
-	        doc.add(text);
-	        
-	        text = new Paragraph("Insurance Amount - Rs.1000", h2);
-	        text.setAlignment(Element.ALIGN_CENTER);
-	        text.setPaddingTop(10);
-	        doc.add(text);
-	        
-	        doc.close();
+			if(rs1.next()){
+				
+				PdfWriter.getInstance(doc, output);
+				
+				//document header properties
+				doc.addAuthor("Blue Marble");
+				doc.addCreationDate();
+				doc.addCreator("frrndlease.com");
+				doc.addTitle("Lease Agreement");
+				doc.setPageSize(PageSize.A4);
+				doc.open();
+				
+				//Add Image
+			    Image image = Image.getInstance(new URL(LOGO_URL));
+			    //Fixed Positioning
+			    image.setAlignment(Element.ALIGN_MIDDLE);
+			    //Scale to new height and new width of image
+			    image.scaleAbsolute(50, 50);
+			    //Add to document
+			    doc.add(image);
+				
+				// Heading
+				Paragraph text = new Paragraph("Lease Agreement\nBetween", h1);
+				text.setAlignment(Element.ALIGN_CENTER);
+				doc.add(text);
+				
+				// The owner and the requestor
+		        PdfPTable table = new PdfPTable(3); // 3 columns.
+		        table.setWidthPercentage(100); //Width 100%
+		        table.setSpacingBefore(10f); //Space before table
+		        table.setSpacingAfter(10f); //Space after table
+		 
+		        //Set Column widths
+		        float[] columnWidths = {1f, 1f, 1f};
+		        table.setWidths(columnWidths);
+		 
+		        PdfPCell cell1 = new PdfPCell();
+		        cell1.addElement(image);
+		        text = new Paragraph(rs1.getString("owner")+"\n(Owner)", h3);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        cell1.addElement(text);
+		        cell1.setBorderColor(BaseColor.WHITE);
+		        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		        cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		 
+		        PdfPCell cell2 = new PdfPCell(new Paragraph("&", h1));
+		        cell2.setBorderColor(BaseColor.WHITE);
+		        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+		        cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		 
+		        PdfPCell cell3 = new PdfPCell();
+		        cell3.addElement(image);
+		        text = new Paragraph(rs1.getString("requestor")+"\n(Requestor)", h3);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        cell3.addElement(text);
+		        cell3.setBorderColor(BaseColor.WHITE);
+		        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+		        cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		 
+		        table.addCell(cell1);
+		        table.addCell(cell2);
+		        table.addCell(cell3);
+		 
+		        doc.add(table);
+		        
+		        text = new Paragraph("For Item", h2);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        if(rs1.getString("item_primary_image_link") != null){
+			        Image imageLink = Image.getInstance(new URL(rs1.getString("item_primary_image_link")));
+			        imageLink.scaleAbsolute(100, 100);
+			        doc.add(imageLink);
+		        }
+		        
+		        text = new Paragraph("Title: " + rs1.getString("item_name"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Description: " + rs1.getString("item_desc"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Duration of lease: ", h2);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        text.setPaddingTop(10);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Lease Term - " + rs1.getString("item_lease_term"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Expiry Date - " + rs1.getString("lease_expiry_date"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Cost of lease: ", h2);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        text.setPaddingTop(10);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Credits - 10", h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Insurance Amount - Rs." + rs1.getString("item_lease_value"), h2);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        text.setPaddingTop(10);
+		        doc.add(text);
+		        
+		        doc.close();
+		        
+			}else{
+				return null;
+			}
 	        
 		}catch(DocumentException e){
 			e.printStackTrace();

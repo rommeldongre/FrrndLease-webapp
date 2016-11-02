@@ -33,6 +33,9 @@ public class GetLeaseAgreement extends HttpServlet {
 			
 			ByteArrayOutputStream output = plan.getLeaseAgreement(leaseId);
 
+			if(output == null)
+				response.sendRedirect("index.html");
+			
 			response.setHeader("Expires", "0");
 			response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
 			response.setHeader("Pragma", "public");
