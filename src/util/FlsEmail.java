@@ -52,7 +52,7 @@ public class FlsEmail extends Connect{
 		String URL = FlsConfig.prefixUrl;
 		
 		String FROM = "BlueMarble@frrndlease.com", CC = "BlueMarble@frrndlease.com", TO, PREFIX, SUBJECT, BODY;
-		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN;
+		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;
 		
 		int credits;
 		
@@ -62,6 +62,7 @@ public class FlsEmail extends Connect{
 		EMAIL_ITEM_DETAILS = URL + "/ItemDetails?uid=";
 		EMAIL_PICKUP_CONFIRMATION = URL + "/confirmpickup.html";
 		EMAIL_DELIVERY_PLAN = URL + "/deliveryplan.html";
+		EMAIL_GET_LEASE_AGGREMENT = URL + "/GetLeaseAgreement";
 		
 		if (ENV_CONFIG.equals("dev"))
 			PREFIX = "[FrrndLease-Test]";
@@ -284,12 +285,18 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_FROM_LEASE_STARTED:
 				SUBJECT = ("Lease Started");
-				BODY = ("<body>The lease has been started.</body>");
+				BODY = ("<body>The lease has been started."
+						+ "<form action=\"" + EMAIL_GET_LEASE_AGGREMENT + "\" method=\"POST\" target=\"_blank\">"
+                        +   "<input type=\"hidden\" name=\"leaseId\" value=\""+obj.getInt("leaseId")+"\" />"
+                        +  "<input type=\"submit\" class=\"btn btn-primary btn-simple\" value=\"Get Agreement\" /></form></body>");
 				break;
 				
 			case FLS_MAIL_TO_LEASE_STARTED:
 				SUBJECT = ("Lease Started");
-				BODY = ("<body>The lease has been started.</body>");
+				BODY = ("<body>The lease has been started."
+						+ "<form action=\"" + EMAIL_GET_LEASE_AGGREMENT + "\" method=\"POST\" target=\"_blank\">"
+                        +   "<input type=\"hidden\" name=\"leaseId\" value=\""+obj.getInt("leaseId")+"\" />"
+                        +  "<input type=\"submit\" class=\"btn btn-primary btn-simple\" value=\"Get Agreement\" /></form></body>");
 				break;
 				
 			case FLS_MAIL_GRANT_LEASE_FROM_PRIME:

@@ -92,7 +92,7 @@
                                <switch id="enabled" name="enabled" ng-model="lease.leaseePickupStatus" ng-change="changePickupStatus(lease.leaseePickupStatus, $index)" class="green"></switch>
                            </form>
                        </a>
-                       <form id="agreement" ng-if="lease.status='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank">
+                       <form id="agreement" ng-if="lease.status=='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank">
                            <input type="hidden" name="leaseId" value="{{lease.leaseId}}" />
                            <input type="submit" class="btn btn-primary btn-simple" value="Get Agreement" />
                        </form>

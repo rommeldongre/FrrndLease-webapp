@@ -193,4 +193,8 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
         });
     }
     
+    $("#agreement").submit(function(e) {
+        e.preventDefault();
+    });
+    
 }]);

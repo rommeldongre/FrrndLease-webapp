@@ -246,16 +246,17 @@ public class FlsPlan extends Connect{
 			
 			rs1 = ps1.executeUpdate();
 			
-			if(rs1 == 1)
+			if(rs1 == 1){
 				LOGGER.info("changed pickup status");
-			else
+				if(checkPickupStatus(leaseId)){
+					if(isLeaseEnded(leaseId))
+						closeLease(leaseId);
+					else
+						startLease(leaseId);
+				}
+			}
+			else{
 				LOGGER.info("Not able to change pickup status");
-			
-			if(checkPickupStatus(leaseId)){
-				if(isLeaseEnded(leaseId))
-					closeLease(leaseId);
-				else
-					startLease(leaseId);
 			}
 			
 		}catch(Exception e){
@@ -288,17 +289,20 @@ public class FlsPlan extends Connect{
 			ps1 = hcp.prepareStatement(sqlgetBothStatus);
 			ps1.setInt(1, leaseId);
 			ps1.setString(2, "Active");
-			ps1.setBoolean(3, true);
-			ps1.setBoolean(4, true);
+			ps1.setInt(3, 1);
+			ps1.setInt(4, 1);
 			
 			rs1 = ps1.executeQuery();
 			
 			if(rs1.next()){
+				LOGGER.info("Pickup confirmed by both the parties....");
 				return true;
+			}else{
+				LOGGER.info("Pickup not confirmed by both the parties..");
 			}
 			
 		}catch(Exception e){
-			LOGGER.warning("Exception occured while checking plan");
+			LOGGER.warning("Exception occured while checking pickup status");
 			e.printStackTrace();
 		}finally{
 			try{
@@ -316,7 +320,7 @@ public class FlsPlan extends Connect{
 	
 	private boolean isLeaseEnded(int leaseId){
 		
-		LOGGER.info("Inside isLeaseReady Method");
+		LOGGER.info("Inside isLeaseEnded Method");
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
@@ -388,19 +392,19 @@ public class FlsPlan extends Connect{
 					LOGGER.warning("Not able to start lease for leaseId : " + leaseId);
 				}
 				
-				String sqlResetPickupStatus = "UPDATE leases set owner_pickup_status=? AND leasee_pickup_status=? WHERE lease_item_id=? AND lease_status=?";
+				String sqlResetPickupStatus = "UPDATE leases set owner_pickup_status=?, leasee_pickup_status=? WHERE lease_id=? AND lease_status=?";
 				ps3 = hcp.prepareStatement(sqlResetPickupStatus);
-				ps3.setBoolean(1, false);
-				ps3.setBoolean(2, false);
-				ps3.setInt(3, itemId);
+				ps3.setInt(1, 0);
+				ps3.setInt(2, 0);
+				ps3.setInt(3, leaseId);
 				ps3.setString(4, "Active");
 				
 				rs3 = ps3.executeUpdate();
 				
 				if(rs3 == 1)
-					LOGGER.info("Pickup status resetted for the lease item : " + itemId);
+					LOGGER.info("Pickup status resetted for the lease id : " + leaseId);
 				else
-					LOGGER.info("Not able to reset pickup status for the lease item : " + itemId);
+					LOGGER.info("Not able to reset pickup status for the lease id : " + leaseId);
 				
 			}
 			
