@@ -514,11 +514,20 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     $scope.deleteUserPic = function(isProfile){
         
-        var req = {
-            userId: userFactory.user,
-            accessToken: userFactory.userAccessToken,
-            link: $scope.profilePic,
-            profile: isProfile
+        if(isProfile){
+            var req = {
+                userId: userFactory.user,
+                accessToken: userFactory.userAccessToken,
+                link: $scope.profilePic,
+                profile: isProfile
+            }
+        }else{
+            var req = {
+                userId: userFactory.user,
+                accessToken: userFactory.userAccessToken,
+                link: $scope.photoId,
+                profile: isProfile
+            }
         }
         
         if(isProfile)
