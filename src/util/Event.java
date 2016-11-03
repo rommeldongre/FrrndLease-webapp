@@ -338,12 +338,13 @@ public class Event extends Connect{
 		Connection hcp = getConnectionFromPool();
 		
 		try{
-			String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=? AND event_type IN (?,?)";
+			String sqlGetUnreadEventsCount = "SELECT count(*) FROM events WHERE to_user_id=? AND read_status=? AND event_type IN (?,?) AND archived=?";
 			ps = hcp.prepareStatement(sqlGetUnreadEventsCount);
 			ps.setString(1, userId);
 			ps.setString(2, Read_Status.FLS_UNREAD.name());
 			ps.setString(3, Event_Type.FLS_EVENT_NOTIFICATION.name());
 			ps.setString(4, Event_Type.FLS_EVENT_CHAT.name());
+			ps.setString(5, Archived.FLS_ACTIVE.name());
 			
 			rs = ps.executeQuery();
 			
