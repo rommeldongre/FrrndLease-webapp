@@ -377,6 +377,46 @@ public class FlsS3Bucket extends Connect {
 		
 	}
 	
+	public void deleteUserPics(){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		
+		try{
+			
+			String sqlDeleteUserPics = "UPDATE users ";
+			
+			if(isProfile)
+				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_profile_picture=? WHERE user_id=?";
+			else
+				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_photo_id=? WHERE user_id=?";
+			
+			ps1 = hcp.prepareStatement(sqlDeleteUserPics);
+			ps1.setString(1, null);
+			ps1.setString(2, userId);
+			
+			int result = ps1.executeUpdate();
+			
+			if(result == 1){
+				LOGGER.info("Pic deleted from users table");
+			}else{
+				LOGGER.info("Pic not deleted from users table");
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	public void savePrimaryImageLink(String link){
 		
 		Connection hcp = getConnectionFromPool();

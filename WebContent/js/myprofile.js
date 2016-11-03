@@ -17,7 +17,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, image_url='',picOrientation=null;
+    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
     
     $scope.user = {};
                                             
@@ -43,70 +43,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
     
-    var unsaved = false; 
-	
-	//beginning of image display
-	var canvasCtx = document.getElementById("panel").getContext("2d");
-	
-	$('#ifile').change(function(event) {
-        EXIF.getData(event.target.files[0], function() {
-		exif = EXIF.getAllTags(this);
-		
-		picOrientation = exif.Orientation;
-		});
-		
-		this.imageFile = event.target.files[0];
-		
-		var reader = new FileReader();
-		reader.onload =  function(event) {
-			var img = new Image();
-			img.onload = function() {
-				drawImage(img);
-			}
-			img.src = event.target.result;
-			
-		}
-		reader.readAsDataURL(this.imageFile);
-    });
-	
-	var drawImage = function(img) {
-		canvasCtx.width = 200;
-		canvasCtx.height = 200;
-		
-		if(img.width>img.height){                      							//Landscape Image 
-			canvasCtx.width = 200;
-			canvasCtx.height = 200 / img.width * img.height;
-		} else {                                                                  //Portrait Image
-			canvasCtx.width = 200 / img.height * img.width;
-			canvasCtx.height = 200;
-		} 
-		
-		if (picOrientation==2){
-			canvasCtx.transform(-1, 0, 0, 1,canvasCtx.width, 0);
-		}
-		if (picOrientation==3){
-			canvasCtx.transform(-1, 0, 0, -1,canvasCtx.width, canvasCtx.height);
-		}
-		if (picOrientation==4){
-			canvasCtx.transform(1, 0, 0, -1, 0, canvasCtx.height );
-		}
-		if (picOrientation==5){
-			canvasCtx.transform(0, 1, 1, 0, 0, 0);
-		}
-		if (picOrientation==6){
-			canvasCtx.transform(0, 1, -1, 0, canvasCtx.height , 0);
-		}
-		if (picOrientation==7){
-			canvasCtx.transform(0, -1, -1, 0, canvasCtx.height , canvasCtx.width);
-		}
-		if (picOrientation==8){
-			canvasCtx.transform(0, -1, 1, 0, 0, canvasCtx.width);
-		}
-		
-		canvasCtx.drawImage(img,0,0,canvasCtx.width, canvasCtx.height);
-		image_url = canvasCtx.canvas.toDataURL();
-	}			
-	//end of image display
+    var unsaved = false;
     
     var displayProfile = function(){
         profileFactory.getProfile(userFactory.user).then(
@@ -126,12 +63,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.status = response.data.userStatus;
                 $scope.secStatus = response.data.userSecStatus;
                 $scope.notification = response.data.userNotification;
-				url = response.data.photoId;
-				if(url != null && url != "null"){
-					var img = new Image();
-					img.src = url;
-					drawImage(img);
-				}
+                $scope.photoId = response.data.photoId;
+                
                 Mobile = response.data.mobile;
                 Email = response.data.email;
                 SecStatus = response.data.userSecStatus;
@@ -461,7 +394,6 @@ myProfile.controller('myProfileCtrl', ['$scope',
             sublocality: Sublocality,
             lat: Lat,
             lng: Lng,
-			photoId: image_url,
             accessToken: userFactory.userAccessToken
 		}
 		editProfile(req);
@@ -510,16 +442,29 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 function(canvas){
                     var Pic = canvas.toDataURL();
 
-                    var req = {
-                        userId: userFactory.user,
-                        accessToken: userFactory.userAccessToken,
-                        image: Pic,
-                        existingLink: $scope.profilePic,
-                        profile: isProfile
+                    if(isProfile){
+                        var req = {
+                            userId: userFactory.user,
+                            accessToken: userFactory.userAccessToken,
+                            image: Pic,
+                            existingLink: $scope.profilePic,
+                            profile: isProfile
+                        }
+                    }else{
+                        var req = {
+                            userId: userFactory.user,
+                            accessToken: userFactory.userAccessToken,
+                            image: Pic,
+                            existingLink: $scope.photoId,
+                            profile: isProfile
+                        }
                     }
                     
                     $scope.$apply(function(){
-                        $scope.profilePic = "loading";
+                        if(isProfile)
+                            $scope.profilePic = "loading";
+                        else
+                            $scope.photoId = "loading";
                     });
                     
                     $.ajax({
@@ -532,11 +477,17 @@ myProfile.controller('myProfileCtrl', ['$scope',
                         success: function(response) {
                             if(response.code == 0){
                                 $scope.$apply(function(){
-                                    $scope.profilePic = response.imageLink;
+                                    if(isProfile)
+                                        $scope.profilePic = response.imageLink;
+                                    else
+                                        $scope.photoId = response.imageLink;
                                 });
                             }else{
                                 $scope.$apply(function(){
-                                    $scope.profilePic = "";
+                                    if(isProfile)
+                                        $scope.profilePic = "";
+                                    else
+                                        $scope.photoId = "";
                                 });
                                 modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
                                     if(response.code == 400)
@@ -551,8 +502,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     });
                 },
                 {
-                    maxWidth: 200,
-                    maxHeight: 200,
+                    maxWidth: 300,
+                    maxHeight: 300,
                     canvas: true,
                     orientation: picOrientation
                 }
@@ -570,7 +521,10 @@ myProfile.controller('myProfileCtrl', ['$scope',
             profile: isProfile
         }
         
-        $scope.profilePic = "loading";
+        if(isProfile)
+            $scope.profilePic = "loading";
+        else
+            $scope.photoId = "loading";
         
         $.ajax({
             url: '/DeleteUserPicsFromS3',
@@ -581,7 +535,10 @@ myProfile.controller('myProfileCtrl', ['$scope',
             success: function(response) {
                 if(response.code == 0){
                     $scope.$apply(function(){
-                        $scope.profilePic = '';
+                        if(isProfile)
+                            $scope.profilePic = "";
+                        else
+                            $scope.photoId = "";
                     });
                 }else{
                     modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
