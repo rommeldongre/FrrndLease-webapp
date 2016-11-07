@@ -3,7 +3,7 @@ package pojos;
 public class RenewLeaseReqObj extends ReqObj{
 	
 	int itemId;
-	String  userId, reqUserId, flag;
+	String  userId, reqUserId, userLoggedIn, flag;
 	String accessToken;
 
 	public String getAccessToken() {
@@ -36,6 +36,14 @@ public class RenewLeaseReqObj extends ReqObj{
 
 	public void setReqUserId(String reqUserId) {
 		this.reqUserId = reqUserId;
+	}
+
+	public String getUserLoggedIn() {
+		return userLoggedIn;
+	}
+
+	public void setUserLoggedIn(String userLoggedIn) {
+		this.userLoggedIn = userLoggedIn;
 	}
 
 	public String getFlag() {
