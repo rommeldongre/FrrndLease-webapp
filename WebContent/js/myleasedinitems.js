@@ -66,6 +66,7 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
                         itemId: ItemId,
                         userId: OwnerUserId,
                         reqUserId: RequestorUserId,
+						userLoggedIn: userFactory.user,
                         flag: "close",
                         accessToken: userFactory.userAccessToken
                     };
