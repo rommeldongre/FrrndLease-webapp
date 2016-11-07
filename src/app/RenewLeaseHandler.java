@@ -75,7 +75,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				
 				OAuth oauth = new OAuth();
 				String oauthcheck = oauth.CheckOAuth(rq.getAccessToken());
-				if(!oauthcheck.equals(rq.getUserId())){
+				if(!oauthcheck.equals(rq.getUserLoggedIn())){
 					rs.setCode(FLS_ACCESS_TOKEN_FAILED);
 					rs.setMessage(FLS_ACCESS_TOKEN_FAILED_M);
 					return rs;

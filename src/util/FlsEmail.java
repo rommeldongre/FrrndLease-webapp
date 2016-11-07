@@ -126,10 +126,10 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_DELETE_ITEM:
 				SUBJECT = (" Your Item [" + obj.getString("title") + "] has been deleted from the Friend Store");
-				BODY = ("<body>You have deleted the following item on FrrndLease<br/> <br/>" + " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : "
-						+ obj.getString("description") + "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>"
-						+ " Lease Term : " + obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body>You have deleted the following item on FrrndLease <br/>" + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
@@ -176,13 +176,13 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_ADD_FRIEND_FROM:
-				SUBJECT = (" Your Friend '" + obj.getString("from")	+ "' has been added to your Friend List. ");
-				BODY = "You have added '" + obj.getString("from") + "' to your Friend List. You can now lease items to each other ";
+				SUBJECT = (" Your Friend '" + obj.getString("fromUserName")	+ "' has been added to your Friend List. ");
+				BODY = "You have added '" + obj.getString("fromUserName") + "' to your Friend List. You can now lease items to each other ";
 				break;
 
 			case FLS_MAIL_ADD_FRIEND_TO:
-				SUBJECT = (" Your Friend '" + obj.getString("from") + "' has added you to their Friend List");
-				BODY = "You are now in '" + obj.getString("from") + "'\'s Friend List. You can now lease items to each other <br/> <br/>"
+				SUBJECT = (" Your Friend '" + obj.getString("fromUserName") + "' has added you to their Friend List");
+				BODY = "You are now in '" + obj.getString("fromUserName") + "'\'s Friend List. You can now lease items to each other <br/> <br/>"
 						+ "Click here to Sign Up "+EMAIL_INVITATION_URL+obj.getString("fromUserRefferalCode");
 				break;
 
@@ -199,12 +199,12 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_MESSAGE_FRIEND_FROM:
-				SUBJECT = (" Your Friend '" + obj.getString("from")	+ "' has been sent a Message on Frrndlease. ");
+				SUBJECT = (" Your Friend '" + obj.getString("fromUserName")	+ "' has been sent a Message on Frrndlease. ");
 				BODY = obj.getString("message");
 				break;
 
 			case FLS_MAIL_MESSAGE_FRIEND_TO:
-				SUBJECT = (" Your Friend '" + obj.getString("from") + "' has sent you a Message on Frrndlease.");
+				SUBJECT = (" Your Friend '" + obj.getString("fromUserName") + "' has sent you a Message on Frrndlease.");
 				BODY = obj.getString("message");
 				break;
 				
@@ -220,63 +220,57 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_REJECT_REQUEST_FROM:
 				SUBJECT = (" Request removed");
-				BODY = ("<body> Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed as a lease might be granted. <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body> Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed as a lease might be granted. <br/>" + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_REJECT_REQUEST_TO:
 				SUBJECT = (" Request removed");
-				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the owner as a lease might be granted. <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the owner as a lease might be granted. <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_DELETE_REQUEST_FROM:
 				SUBJECT = (" Request removed");
-				BODY = ("<body> Your Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed. Item Details are as follows<br/> <br/> " 
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body> Your Request for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed. Item Details are as follows <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_DELETE_REQUEST_TO:
 				SUBJECT = (" Request removed");
-				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the Requestor. Item Details are as follows<br/> <br/> "
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body> Request of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been removed by the Requestor. Item Details are as follows<br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_FROM_SELF:
-				SUBJECT = (" Lease granted to user [" + obj.getString("from") + "]");
-				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("from") + "] on Friend Lease - <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				SUBJECT = (" Lease granted to user [" + obj.getString("fromUserName") + "]");
+				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("fromUserName") + "] on Friend Lease - <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "Please confirm pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=true&leaseId=" + obj.getInt("leaseId") + "'>"
 						+ "Click to confirm</a>");
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_TO_SELF:
-				SUBJECT = (" Lease granted to you by [" + obj.getString("from") + "]");
-				BODY = ("<body> The following item has been leased by [" + obj.getString("from") + "] to you on Friend Lease - <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				SUBJECT = (" Lease granted to you by [" + obj.getString("fromUserName") + "]");
+				BODY = ("<body> The following item has been leased by [" + obj.getString("fromUserName") + "] to you on Friend Lease - <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "Please confirm pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=false&leaseId=" + obj.getInt("leaseId") + "'>"
 						+ "Click to confirm</a>");
@@ -293,23 +287,21 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_GRANT_LEASE_FROM_PRIME:
-				SUBJECT = (" Lease granted to user [" + obj.getString("from") + "]");
-				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("from") + "] on Friend Lease - <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				SUBJECT = (" Lease granted to user [" + obj.getString("fromUserName") + "]");
+				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("fromUserName") + "] on Friend Lease - <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "Your Item will shortly be picked up. Wait till the user decides if he will pick up the item or he wants frrndlease to come into the picture.");
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_TO_PRIME:
-				SUBJECT = (" Lease granted to you by [" + obj.getString("from") + "]");
-				BODY = ("<body> The following item has been leased by [" + obj.getString("from") + "] to you on Friend Lease - <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				SUBJECT = (" Lease granted to you by [" + obj.getString("fromUserName") + "]");
+				BODY = ("<body> The following item has been leased by [" + obj.getString("fromUserName") + "] to you on Friend Lease - <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "Please choose one of the options for delivery - <br/><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=self&leaseId=" + obj.getInt("leaseId") + "'>"
 						+ "Self Pickup</a><br/>or<br/><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=prime&leaseId=" + obj.getInt("leaseId") + "'>Frrndlease Pickup</a>");
@@ -321,13 +313,12 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_CLOSE_LEASE_FROM_SELF:
-				SUBJECT = (" Lease Cancelled to user [" + obj.getString("from") + "]");
+				SUBJECT = (" Lease Cancelled to user [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body> You have closed lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee ["
-						+ obj.getString("from") + "] on Friend Lease - <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+						+ obj.getString("fromUserName") + "] on Friend Lease - <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "Please confirm pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=true&leaseId=" + obj.getInt("leaseId") + "'>"
 						+ "Click to confirm</a>");
@@ -335,11 +326,10 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_CLOSE_LEASE_TO_SELF:
 				SUBJECT = (" Lease Closed by the Owner");
-				BODY = ("<body> Lease has been closed by the Owner for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body> Lease has been closed by the Owner for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "Please confirm pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=false&leaseId=" + obj.getInt("leaseId") + "'>"
 						+ "Click to confirm</a>");
@@ -361,8 +351,8 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:
-				SUBJECT = (" Reminder to Renew Lease to user [" + obj.getString("from") + "]");
-				BODY = "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee [" + obj.getString("from") + "] on Friend Lease - ";
+				SUBJECT = (" Reminder to Renew Lease to user [" + obj.getString("fromUserName") + "]");
+				BODY = "Less than 5 days left for lease to close.Please consider renewing the lease of item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee [" + obj.getString("fromUserName") + "] on Friend Lease - ";
 				break;
 
 			case FLS_MAIL_GRACE_PERIOD_REQUESTOR:
@@ -372,39 +362,37 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_RENEW_LEASE_OWNER:
 				SUBJECT = (" Renewed Lease to user [" + obj.getString("fromUserName") + "]");
-				BODY = ("<body>You have renewed lease to user " + obj.getString("fromUserName") + " for the following item on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body>You have renewed lease to user " + obj.getString("fromUserName") + " for the following item on FrrndLease <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 				
 			case FLS_MAIL_RENEW_LEASE_REQUESTOR:
 				SUBJECT = (" Lease Renewed");
-				BODY = ("<body>Item Owner " +obj.getString("fromUserName") + " has renewed lease for the following item to you on FrrndLease <br/> <br/>" + " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body>Item Owner " +obj.getString("fromUserName") + " has renewed lease for the following item to you on FrrndLease <br/> " + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_FROM:
 				SUBJECT = (" Item Requested");
-				BODY = ("<body> You have sucessfully Requested the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> on Friend Lease - <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body> You have sucessfully Requested the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> on Friend Lease - <br/>"  + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_TO:
 				SUBJECT = (" Item Requested");
-				BODY = ("<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on Friend Lease - <br/> <br/>"
-						+ " Title : " + obj.getString("title")
-						+ "<br/>" + " Category : " + obj.getString("category") + "<br/>" + " Description : " + obj.getString("description")
-						+ "<br/>" + " Insurance : " + obj.getInt("leaseValue") + "<br/>" + " Lease Term : "
-						+ obj.getString("leaseTerm") + "<br/>" + " Status : " + obj.getString("itemStatus") + "<br/>"
+				BODY = ("<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on Friend Lease - <br/>" + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 

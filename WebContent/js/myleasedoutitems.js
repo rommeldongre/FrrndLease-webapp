@@ -64,6 +64,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
                         itemId: ItemId,
                         userId: userFactory.user,
                         reqUserId: RequestorUserId,
+						userLoggedIn: userFactory.user,
                         flag: "close",
                         accessToken: userFactory.userAccessToken
                     };
@@ -116,6 +117,7 @@ myLeasedOutItemsApp.controller('myLeasedOutItemsCtrl', ['$scope',
                         itemId: ItemId,
                         userId: userFactory.user,
                         reqUserId: RequestorUserId,
+						userLoggedIn: userFactory.user,
                         flag: "renew",
                         accessToken: userFactory.userAccessToken
                     }

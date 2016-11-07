@@ -376,52 +376,57 @@ editItemApp.controller('editItemCtrl', ['$scope', 'userFactory', 'bannerService'
     
     $scope.editItem = function(){
         
-        var item_title = $scope.item.title;
-        if(item_title == '')
-            item_title = null;
-        
-        var item_id = $scope.item.id;
-        if(item_id == '')
-            item_id = 0;
-        
-        var item_description = $scope.item.description;
-        if (item_description == '') 
-		  item_description = null;
-        
-        var item_category = $scope.item.category;
-        
-        var item_lease_value = $scope.item.leaseValue;
-        if (item_lease_value == '') 
-		  item_lease_value = 0;
-        
-        var item_lease_term = $scope.item.leaseTerm;
-        
-        req = {
-            id:item_id,
-            title:item_title,
-            description:item_description,
-            category: item_category,
-            userId: userId,
-            leaseValue: item_lease_value,
-            leaseTerm: item_lease_term
-        };
-        
-        modalService.showModal({}, {bodyText: 'Are you sure you want to update this Item?'}).then(function(result){
-            $.ajax({url: '/EditPosting',
-                    type: 'post',
-                    data: {req : JSON.stringify(req)},
-                    contentType: "application/x-www-form-urlencoded",
-                    dataType: "json",
-                    success:function(response){
-                        modalService.showModal({}, {bodyText: response.Message,showCancel: false, actionButtonText: 'OK'}).then(function(result){
-                            window.location.replace("ItemDetails?uid="+$scope.item.uid);
-							},function(){});
-                         },
-                    error: function(){
-                        modalService.showModal({}, {bodyText: "Something is Wrong",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
-                        }
-                   });
+		if($scope.item.leaseValue>1000){
+			 modalService.showModal({}, {bodyText: "Max Insurance Value is 1000",showCancel: false,actionButtonText: 'Ok'}).then(function(result){
             },function(){});
+		}else{
+			var item_title = $scope.item.title;
+			if(item_title == '')
+				item_title = null;
+			
+			var item_id = $scope.item.id;
+			if(item_id == '')
+				item_id = 0;
+			
+			var item_description = $scope.item.description;
+			if (item_description == '') 
+			item_description = null;
+			
+			var item_category = $scope.item.category;
+			
+			var item_lease_value = $scope.item.leaseValue;
+			if (item_lease_value == '') 
+			item_lease_value = 0;
+			
+			var item_lease_term = $scope.item.leaseTerm;
+			
+			req = {
+				id:item_id,
+				title:item_title,
+				description:item_description,
+				category: item_category,
+				userId: userId,
+				leaseValue: item_lease_value,
+				leaseTerm: item_lease_term
+			};
+			
+			modalService.showModal({}, {bodyText: 'Are you sure you want to update this Item?'}).then(function(result){
+				$.ajax({url: '/EditPosting',
+						type: 'post',
+						data: {req : JSON.stringify(req)},
+						contentType: "application/x-www-form-urlencoded",
+						dataType: "json",
+						success:function(response){
+							modalService.showModal({}, {bodyText: response.Message,showCancel: false, actionButtonText: 'OK'}).then(function(result){
+								window.location.replace("ItemDetails?uid="+$scope.item.uid);
+								},function(){});
+							},
+						error: function(){
+							modalService.showModal({}, {bodyText: "Something is Wrong",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+							}
+					});
+				},function(){});
+		}
     }
     
     $scope.cancel = function(){
