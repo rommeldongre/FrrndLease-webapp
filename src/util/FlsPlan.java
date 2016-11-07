@@ -624,6 +624,10 @@ public class FlsPlan extends Connect{
 		        text.setPaddingTop(5);
 		        doc.add(text);
 		        
+		        text = new Paragraph("Insurance Amount - Rs." + rs1.getString("item_lease_value"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
 		        text = new Paragraph("Duration of lease: ", h2);
 		        text.setAlignment(Element.ALIGN_CENTER);
 		        text.setPaddingTop(10);
@@ -644,11 +648,6 @@ public class FlsPlan extends Connect{
 		        
 		        text = new Paragraph("Credits - 10", h3);
 		        text.setPaddingTop(5);
-		        doc.add(text);
-		        
-		        text = new Paragraph("Insurance Amount - Rs." + rs1.getString("item_lease_value"), h2);
-		        text.setAlignment(Element.ALIGN_CENTER);
-		        text.setPaddingTop(10);
 		        doc.add(text);
 		        
 		        doc.close();

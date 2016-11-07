@@ -288,7 +288,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body>The lease has been started."
 						+ "<form action=\"" + EMAIL_GET_LEASE_AGGREMENT + "\" method=\"POST\" target=\"_blank\">"
                         +   "<input type=\"hidden\" name=\"leaseId\" value=\""+obj.getInt("leaseId")+"\" />"
-                        +  "<input type=\"submit\" class=\"btn btn-primary btn-simple\" value=\"Get Agreement\" /></form></body>");
+                        +  "<input type=\"submit\" style=\"background-color:#1D62F0\" value=\"Download Agreement\" /></form></body>");
 				break;
 				
 			case FLS_MAIL_TO_LEASE_STARTED:
@@ -296,7 +296,7 @@ public class FlsEmail extends Connect{
 				BODY = ("<body>The lease has been started."
 						+ "<form action=\"" + EMAIL_GET_LEASE_AGGREMENT + "\" method=\"POST\" target=\"_blank\">"
                         +   "<input type=\"hidden\" name=\"leaseId\" value=\""+obj.getInt("leaseId")+"\" />"
-                        +  "<input type=\"submit\" class=\"btn btn-primary btn-simple\" value=\"Get Agreement\" /></form></body>");
+                        +  "<input type=\"submit\" style=\"background-color:#1D62F0\" value=\"Download Agreement\" /></form></body>");
 				break;
 				
 			case FLS_MAIL_GRANT_LEASE_FROM_PRIME:
