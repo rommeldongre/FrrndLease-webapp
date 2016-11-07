@@ -425,7 +425,7 @@ public class FlsPlan extends Connect{
 		
 	}
 	
-	private void closeLease(int leaseId){
+	public void closeLease(int leaseId){
 		
 		LOGGER.info("inside closeLease method");
 
