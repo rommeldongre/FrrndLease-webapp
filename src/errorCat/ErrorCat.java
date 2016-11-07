@@ -66,6 +66,7 @@ public class ErrorCat {
 	final public String FLS_EDIT_PROFILE = "Your Profile Has Been Updated!!";
 	final public String FLS_CHANGE_PICKUP_STATUS = "Your pickup status has been changed!!";
 	final public String FLS_DELIVERY_PLAN_CHANGED = "Your delivery plan has been saved!!";
+	final public String FLS_LEASE_ITEM_EDIT = "You cannot edit item if it has been leased to someone!!";
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "Couldn't create statement or couldn't execute query (sql exception)";

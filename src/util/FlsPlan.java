@@ -31,6 +31,7 @@ public class FlsPlan extends Connect{
 	private String URL = FlsConfig.prefixUrl;
 	
 	private String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
+	private String USER_ICON = "http://s3-ap-south-1.amazonaws.com/fls-meta/user_icon.png";
 	
 	public enum Fls_Plan{
 		FLS_SELFIE,
@@ -577,6 +578,9 @@ public class FlsPlan extends Connect{
 		        table.setWidths(columnWidths);
 		 
 		        PdfPCell cell1 = new PdfPCell();
+		        image = Image.getInstance(new URL(USER_ICON));
+		        image.setAlignment(Element.ALIGN_MIDDLE);
+		        image.scaleAbsolute(50, 50);
 		        cell1.addElement(image);
 		        text = new Paragraph(rs1.getString("owner")+"\n(Owner)", h3);
 		        text.setAlignment(Element.ALIGN_CENTER);
@@ -591,6 +595,9 @@ public class FlsPlan extends Connect{
 		        cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
 		 
 		        PdfPCell cell3 = new PdfPCell();
+		        image = Image.getInstance(new URL(USER_ICON));
+		        image.setAlignment(Element.ALIGN_MIDDLE);
+		        image.scaleAbsolute(50, 50);
 		        cell3.addElement(image);
 		        text = new Paragraph(rs1.getString("requestor")+"\n(Requestor)", h3);
 		        text.setAlignment(Element.ALIGN_CENTER);

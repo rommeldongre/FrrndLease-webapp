@@ -387,10 +387,23 @@ public class Items extends Connect {
 		LOGGER.info("Inside edit method...");
 		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=? WHERE item_id=? AND item_user_id=?";
 
-		PreparedStatement stmt = null, stmt2 = null;
-		ResultSet rs = null;
+		PreparedStatement stmt = null, stmt2 = null, ps1 = null;
+		ResultSet rs = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
 		try {
+			LOGGER.info("Checking if lease is active for this item..");
+			String sqlCheckActiveLease = "SELECT * FROM leases WHERE lease_status=? AND lease_item_id=?";
+			ps1 = hcp.prepareStatement(sqlCheckActiveLease);
+			ps1.setString(1, "Active");
+			ps1.setInt(2, id);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				res.setData(FLS_ACTIVE_LEASE, "0", FLS_LEASE_ITEM_EDIT);
+				return;
+			}
+			
 			LOGGER.info("Creating statement...");
 
 			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
