@@ -400,7 +400,7 @@ public class Items extends Connect {
 			rs1 = ps1.executeQuery();
 			
 			if(rs1.next()){
-				res.setData(FLS_ACTIVE_LEASE, "0", FLS_LEASE_ITEM_EDIT);
+				res.setData(FLS_ACTIVE_LEASE, "0", FLS_LEASE_ITEM_EDIT_M);
 				return;
 			}
 			

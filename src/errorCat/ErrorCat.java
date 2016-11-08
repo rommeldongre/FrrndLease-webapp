@@ -66,7 +66,6 @@ public class ErrorCat {
 	final public String FLS_EDIT_PROFILE = "Your Profile Has Been Updated!!";
 	final public String FLS_CHANGE_PICKUP_STATUS = "Your pickup status has been changed!!";
 	final public String FLS_DELIVERY_PLAN_CHANGED = "Your delivery plan has been saved!!";
-	final public String FLS_LEASE_ITEM_EDIT = "You cannot edit item if it has been leased to someone!!";
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "Couldn't create statement or couldn't execute query (sql exception)";
@@ -100,6 +99,7 @@ public class ErrorCat {
 	final public String FLS_ACTIVE_LEASE_M = "You can change location only if there are no active leases.";
 	final public String FLS_DELIVERY_STATUS_FAIL_M = "Not able to change delivery status. Please try again later.";
 	final public String FLS_CHANGE_PICKUP_STATUS_FAIL_M = "The pickup status cannot be changed.";
+	final public String FLS_LEASE_ITEM_EDIT_M = "You cannot edit item if it has been leased to someone!!";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";
