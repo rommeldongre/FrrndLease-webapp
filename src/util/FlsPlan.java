@@ -1,11 +1,15 @@
 package util;
 
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -519,6 +523,78 @@ public class FlsPlan extends Connect{
 		
 	}
 	
+	public String getLeaseStartDate(String leaseTerm, String formattedExpiryDate){
+		
+		LOGGER.info("Inside get lease start date");
+		
+		Date expiryDate;
+		Date startDate;
+		
+		String formattedStartDate = "";
+		
+		int days = 0;
+		
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try {
+			expiryDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(formattedExpiryDate);
+			
+			String sqlGetLeaseTermDays = "SELECT term_duration FROM leaseterms WHERE term_name=?";
+			ps1 = hcp.prepareStatement(sqlGetLeaseTermDays);
+			ps1.setString(1, leaseTerm);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()) {
+				days = rs1.getInt("term_duration");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(expiryDate);
+				cal.add(Calendar.DATE, -days);
+				startDate = cal.getTime();
+				formattedStartDate = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss a").format(startDate);
+				LOGGER.info("Start Date : " + formattedStartDate);
+			}
+		} catch (SQLException e) {
+			LOGGER.info("Failed to get term days from leaseterms table");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			LOGGER.info("Failed to parse date");
+			e.printStackTrace();
+		} catch(Exception e) {
+			LOGGER.info("Exception occured");
+			e.printStackTrace();
+		}finally{
+			try{
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return formattedStartDate;
+	}
+	
+	public String formattedDate(String formatteddate){
+		
+		String formattedDate = "";
+		
+		try{
+			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(formatteddate);
+			
+			formattedDate = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss a").format(date);
+			LOGGER.info("Start Date : " + formattedDate);
+		}catch(Exception e){
+			e.printStackTrace();
+			LOGGER.info("Not able to format date");
+		}
+		
+		return formattedDate;
+		
+	}
+	
 	public ByteArrayOutputStream getLeaseAgreement(int leaseId){
 
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -644,7 +720,11 @@ public class FlsPlan extends Connect{
 		        text.setPaddingTop(5);
 		        doc.add(text);
 		        
-		        text = new Paragraph("Expiry Date - " + rs1.getString("lease_expiry_date"), h3);
+		        text = new Paragraph("Start Date - " + getLeaseStartDate(rs1.getString("item_lease_term"), rs1.getString("lease_expiry_date")), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Expiry Date - " + formattedDate(rs1.getString("lease_expiry_date")), h3);
 		        text.setPaddingTop(5);
 		        doc.add(text);
 		        
