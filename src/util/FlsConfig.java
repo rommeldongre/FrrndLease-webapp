@@ -59,7 +59,7 @@ public class FlsConfig extends Connect{
 		}
 
 		if(env.equals("dev"))
-			prefixUrl = "http://localhost:8080/";
+			prefixUrl = "http://localhost:8080";
 		
 		//env return
 		return env;
