@@ -20,6 +20,7 @@ import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsConfig;
 import util.FlsLogger;
+import util.FlsPlan;
 import util.FlsPlan.Delivery_Plan;
 import util.LogCredit;
 import util.LogItem;
@@ -64,8 +65,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 		
 			int itemAction = 0;
 			String item_image_link=null;
-			PreparedStatement psItemSelect = null, psItemUpdate = null, ps1 = null, ps2 = null;
-			ResultSet dbResponseitems = null, rs1 = null, rs2 = null;
+			PreparedStatement psItemSelect = null, psItemUpdate = null, ps1 = null, ps2 = null, ps3 = null;
+			ResultSet dbResponseitems = null, rs1 = null, rs2 = null, rs3 = null;
 			Connection hcp = getConnectionFromPool();
 			hcp.setAutoCommit(false);
 			
@@ -96,6 +97,24 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					return rs;
 				}else{
 					item_image_link = dbResponseitems.getString("item_primary_image_link");
+				}
+				
+				// Checking if the delivery actually happened and thus validating the lease
+				String sqlCheckDelivery = "SELECT lease_id, delivery_plan FROM leases WHERE lease_item_id=? AND lease_status=?";
+				ps3 = hcp.prepareStatement(sqlCheckDelivery);
+				ps3.setInt(1, rq.getItemId());
+				ps3.setString(2, "Active");
+				
+				rs3 = ps3.executeQuery();
+				
+				if(rs3.next()){
+					if(dbResponseitems.getString("item_status").equals("LeaseReady")){
+						FlsPlan plan = new FlsPlan();
+						plan.closeLease(rs3.getInt("lease_id"));
+						rs.setCode(FLS_SUCCESS);
+						rs.setMessage(FLS_CLOSE_LEASE);
+						return rs;
+					}
 				}
 				
 				String updateItemsSql = "UPDATE items SET item_status=? WHERE item_id=?";
@@ -167,6 +186,8 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				rs.setMessage(FLS_INVALID_OPERATION_M);
 				e.printStackTrace();
 			}finally{
+				if(rs3 != null) rs3.close();
+				if(ps3 != null) ps3.close();
 				if(rs2 != null) rs2.close();
 				if(ps2 != null) ps2.close();
 				if(rs1 != null)rs1.close();

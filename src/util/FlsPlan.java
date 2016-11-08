@@ -1,19 +1,28 @@
 package util;
 
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import connect.Connect;
 import util.Event.Event_Type;
@@ -26,6 +35,7 @@ public class FlsPlan extends Connect{
 	private String URL = FlsConfig.prefixUrl;
 	
 	private String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
+	private String USER_ICON = "http://s3-ap-south-1.amazonaws.com/fls-meta/user_icon.png";
 	
 	public enum Fls_Plan{
 		FLS_SELFIE,
@@ -241,16 +251,17 @@ public class FlsPlan extends Connect{
 			
 			rs1 = ps1.executeUpdate();
 			
-			if(rs1 == 1)
+			if(rs1 == 1){
 				LOGGER.info("changed pickup status");
-			else
+				if(checkPickupStatus(leaseId)){
+					if(isLeaseEnded(leaseId))
+						closeLease(leaseId);
+					else
+						startLease(leaseId);
+				}
+			}
+			else{
 				LOGGER.info("Not able to change pickup status");
-			
-			if(checkPickupStatus(leaseId)){
-				if(isLeaseEnded(leaseId))
-					closeLease(leaseId);
-				else
-					startLease(leaseId);
 			}
 			
 		}catch(Exception e){
@@ -283,17 +294,20 @@ public class FlsPlan extends Connect{
 			ps1 = hcp.prepareStatement(sqlgetBothStatus);
 			ps1.setInt(1, leaseId);
 			ps1.setString(2, "Active");
-			ps1.setBoolean(3, true);
-			ps1.setBoolean(4, true);
+			ps1.setInt(3, 1);
+			ps1.setInt(4, 1);
 			
 			rs1 = ps1.executeQuery();
 			
 			if(rs1.next()){
+				LOGGER.info("Pickup confirmed by both the parties....");
 				return true;
+			}else{
+				LOGGER.info("Pickup not confirmed by both the parties..");
 			}
 			
 		}catch(Exception e){
-			LOGGER.warning("Exception occured while checking plan");
+			LOGGER.warning("Exception occured while checking pickup status");
 			e.printStackTrace();
 		}finally{
 			try{
@@ -311,7 +325,7 @@ public class FlsPlan extends Connect{
 	
 	private boolean isLeaseEnded(int leaseId){
 		
-		LOGGER.info("Inside isLeaseReady Method");
+		LOGGER.info("Inside isLeaseEnded Method");
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
@@ -383,19 +397,19 @@ public class FlsPlan extends Connect{
 					LOGGER.warning("Not able to start lease for leaseId : " + leaseId);
 				}
 				
-				String sqlResetPickupStatus = "UPDATE leases set owner_pickup_status=? AND leasee_pickup_status=? WHERE lease_item_id=? AND lease_status=?";
+				String sqlResetPickupStatus = "UPDATE leases set owner_pickup_status=?, leasee_pickup_status=? WHERE lease_id=? AND lease_status=?";
 				ps3 = hcp.prepareStatement(sqlResetPickupStatus);
-				ps3.setBoolean(1, false);
-				ps3.setBoolean(2, false);
-				ps3.setInt(3, itemId);
+				ps3.setInt(1, 0);
+				ps3.setInt(2, 0);
+				ps3.setInt(3, leaseId);
 				ps3.setString(4, "Active");
 				
 				rs3 = ps3.executeUpdate();
 				
 				if(rs3 == 1)
-					LOGGER.info("Pickup status resetted for the lease item : " + itemId);
+					LOGGER.info("Pickup status resetted for the lease id : " + leaseId);
 				else
-					LOGGER.info("Not able to reset pickup status for the lease item : " + itemId);
+					LOGGER.info("Not able to reset pickup status for the lease id : " + leaseId);
 				
 			}
 			
@@ -416,7 +430,7 @@ public class FlsPlan extends Connect{
 		
 	}
 	
-	private void closeLease(int leaseId){
+	public void closeLease(int leaseId){
 		
 		LOGGER.info("inside closeLease method");
 
@@ -509,38 +523,233 @@ public class FlsPlan extends Connect{
 		
 	}
 	
-	public Document getLeaseAgreement(Document doc, int leaseId){
+	public String getLeaseStartDate(String leaseTerm, String formattedExpiryDate){
 		
-		//create some special styles and font sizes
-		Font bfBold18 = new Font(FontFamily.TIMES_ROMAN, 18, Font.BOLD, new BaseColor(0, 0, 0));
+		LOGGER.info("Inside get lease start date");
+		
+		Date expiryDate;
+		Date startDate;
+		
+		String formattedStartDate = "";
+		
+		int days = 0;
+		
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try {
+			expiryDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(formattedExpiryDate);
+			
+			String sqlGetLeaseTermDays = "SELECT term_duration FROM leaseterms WHERE term_name=?";
+			ps1 = hcp.prepareStatement(sqlGetLeaseTermDays);
+			ps1.setString(1, leaseTerm);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()) {
+				days = rs1.getInt("term_duration");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(expiryDate);
+				cal.add(Calendar.DATE, -days);
+				startDate = cal.getTime();
+				formattedStartDate = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss a").format(startDate);
+				LOGGER.info("Start Date : " + formattedStartDate);
+			}
+		} catch (SQLException e) {
+			LOGGER.info("Failed to get term days from leaseterms table");
+			e.printStackTrace();
+		} catch (ParseException e) {
+			LOGGER.info("Failed to parse date");
+			e.printStackTrace();
+		} catch(Exception e) {
+			LOGGER.info("Exception occured");
+			e.printStackTrace();
+		}finally{
+			try{
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		return formattedStartDate;
+	}
+	
+	public String formattedDate(String formatteddate){
+		
+		String formattedDate = "";
 		
 		try{
-			//document header properties
-			doc.addAuthor("Blue Marble");
-			doc.addCreationDate();
-			doc.addCreator("frrndlease.com");
-			doc.addTitle("Lease Agreement");
-			doc.setPageSize(PageSize.A4);
-			doc.open();
+			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(formatteddate);
 			
-			//Add Image
-		    Image image1 = Image.getInstance(new URL(LOGO_URL));
-		    //Fixed Positioning
-		    image1.setAbsolutePosition(100f, 550f);
-		    //Scale to new height and new width of image
-		    image1.scaleAbsolute(200, 200);
-		    //Add to document
-		    doc.add(image1);
+			formattedDate = new SimpleDateFormat("MMMM dd, yyyy HH:mm:ss a").format(date);
+			LOGGER.info("Start Date : " + formattedDate);
+		}catch(Exception e){
+			e.printStackTrace();
+			LOGGER.info("Not able to format date");
+		}
+		
+		return formattedDate;
+		
+	}
+	
+	public ByteArrayOutputStream getLeaseAgreement(int leaseId){
+
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		
+		Document doc = new Document();
+		
+		//create some special styles and font sizes
+		Font h1 = new Font(FontFamily.TIMES_ROMAN, 28, Font.BOLD, BaseColor.BLACK);
+		Font h2 = new Font(FontFamily.TIMES_ROMAN, 20, Font.BOLD, BaseColor.BLACK);
+		Font h3 = new Font(FontFamily.HELVETICA, 16, Font.NORMAL, BaseColor.BLACK);
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try{
+			String sqlGetLeaseData = "SELECT tb1.*, tb2.user_full_name as requestor, tb3.user_full_name as owner, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id=tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id=tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id=tb4.item_id WHERE tb1.lease_id=?";
+			ps1 = hcp.prepareStatement(sqlGetLeaseData);
+			ps1.setInt(1, leaseId);
 			
-			//add a new paragraph
-			doc.add( new Paragraph("Lease Agreement", bfBold18));
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				
+				PdfWriter.getInstance(doc, output);
+				
+				//document header properties
+				doc.addAuthor("Blue Marble");
+				doc.addCreationDate();
+				doc.addCreator("frrndlease.com");
+				doc.addTitle("Lease Agreement");
+				doc.setPageSize(PageSize.A4);
+				doc.open();
+				
+				//Add Image
+			    Image image = Image.getInstance(new URL(LOGO_URL));
+			    //Fixed Positioning
+			    image.setAlignment(Element.ALIGN_MIDDLE);
+			    //Scale to new height and new width of image
+			    image.scaleAbsolute(50, 50);
+			    //Add to document
+			    doc.add(image);
+				
+				// Heading
+				Paragraph text = new Paragraph("Lease Agreement\nBetween", h1);
+				text.setAlignment(Element.ALIGN_CENTER);
+				doc.add(text);
+				
+				// The owner and the requestor
+		        PdfPTable table = new PdfPTable(3); // 3 columns.
+		        table.setWidthPercentage(100); //Width 100%
+		        table.setSpacingBefore(10f); //Space before table
+		        table.setSpacingAfter(10f); //Space after table
+		 
+		        //Set Column widths
+		        float[] columnWidths = {1f, 1f, 1f};
+		        table.setWidths(columnWidths);
+		 
+		        PdfPCell cell1 = new PdfPCell();
+		        image = Image.getInstance(new URL(USER_ICON));
+		        image.setAlignment(Element.ALIGN_MIDDLE);
+		        image.scaleAbsolute(50, 50);
+		        cell1.addElement(image);
+		        text = new Paragraph(rs1.getString("owner")+"\n(Owner)", h3);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        cell1.addElement(text);
+		        cell1.setBorderColor(BaseColor.WHITE);
+		        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		        cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		 
+		        PdfPCell cell2 = new PdfPCell(new Paragraph("&", h1));
+		        cell2.setBorderColor(BaseColor.WHITE);
+		        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+		        cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		 
+		        PdfPCell cell3 = new PdfPCell();
+		        image = Image.getInstance(new URL(USER_ICON));
+		        image.setAlignment(Element.ALIGN_MIDDLE);
+		        image.scaleAbsolute(50, 50);
+		        cell3.addElement(image);
+		        text = new Paragraph(rs1.getString("requestor")+"\n(Requestor)", h3);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        cell3.addElement(text);
+		        cell3.setBorderColor(BaseColor.WHITE);
+		        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+		        cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		 
+		        table.addCell(cell1);
+		        table.addCell(cell2);
+		        table.addCell(cell3);
+		 
+		        doc.add(table);
+		        
+		        text = new Paragraph("For Item", h2);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        if(rs1.getString("item_primary_image_link") != null){
+			        Image imageLink = Image.getInstance(new URL(rs1.getString("item_primary_image_link")));
+			        imageLink.scaleAbsolute(100, 100);
+			        doc.add(imageLink);
+		        }
+		        
+		        text = new Paragraph("Title: " + rs1.getString("item_name"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Description: " + rs1.getString("item_desc"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Insurance Amount - Rs." + rs1.getString("item_lease_value"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Duration of lease: ", h2);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        text.setPaddingTop(10);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Lease Term - " + rs1.getString("item_lease_term"), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Start Date - " + getLeaseStartDate(rs1.getString("item_lease_term"), rs1.getString("lease_expiry_date")), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Expiry Date - " + formattedDate(rs1.getString("lease_expiry_date")), h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Cost of lease: ", h2);
+		        text.setAlignment(Element.ALIGN_CENTER);
+		        text.setPaddingTop(10);
+		        doc.add(text);
+		        
+		        text = new Paragraph("Credits - 10", h3);
+		        text.setPaddingTop(5);
+		        doc.add(text);
+		        
+		        doc.close();
+		        
+			}else{
+				return null;
+			}
+	        
 		}catch(DocumentException e){
 			e.printStackTrace();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return doc;
+		return output;
 	}
 	
 }

@@ -179,4 +179,8 @@ myLeasedInItemsApp.controller('myLeasedInItemsCtrl', ['$scope',
         });
     }
     
+    $("#agreement").submit(function(e) {
+        e.preventDefault();
+    });
+    
 }]);

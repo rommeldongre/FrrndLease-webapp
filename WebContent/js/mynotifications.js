@@ -73,6 +73,14 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
         getNotifications();
     }
     
+    $scope.markAllAsRead = function(){
+        for(var i in $scope.events){
+            if($scope.events[i].readStatus == 'FLS_UNREAD'){
+                $scope.readEvent(i,'FLS_READ');
+            }
+        }
+    }
+    
     $scope.readEvent = function(index, s){
         $.ajax({
                 url: '/EventReadStatus',
