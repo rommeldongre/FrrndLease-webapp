@@ -1,5 +1,108 @@
     <div ng-app="carouselApp">
         <div ng-controller="carouselCtrl">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2 col-sm-12" style="border-right:thin solid #eee;">
+                        <div ng-repeat="c in categories" >
+                            <button class="btn btn-block ng-class:{'btn-simple btn-default': !c.active, 'btn-fill btn-primary': c.active}" onclick="ga('send', 'event', 'index', 'click', 'ItemCategory');" id="All" ng-click="categorySelected($index)">{{c.label}}</button><br/>
+                        </div>
+                    </div>
+                    <div class="col-md-10 col-sm-12">
+                        <div class="container-fluid">
+                            <span>
+                                <button ng-if="search.show" class="btn btn-sm btn-primary btn-fill" ng-click="clearSearch()">"{{search.string}}" &nbsp;&nbsp;&nbsp; x</button>
+                                <span>Showing items near <strong>{{search.place}}</strong> from <strong>'{{search.category}}'</strong> category</span>
+                                <br/><hr/>
+                            </span>
+                            <h4 ng-if="notPosted" style="text-align:center;">You have not added any item to the friends store. 
+                                <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Offer Item &amp; Earn Credits</a>
+                                <br/><br/>
+                            </h4>
+                            <!-- Carousel Start -->
+                            <div class="row" id="carouselObject">
+                                <div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
+                                    <div class="row" id="product-cards" >
+                                        <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="item in items">
+                                            <span class="items" ng-click="itemClicked(item.uid)">
+                                                <div class="card card-product">
+                                                    <div class="image">
+                                                        <a href="">
+                                                            <img load-image="item.primaryImageLink" ng-src="" id="{{item.itemId}}">
+                                                        </a>
+                                                    </div>
+                                                    <div class="content">
+                                                        <a href="">
+                                                            <h5 class="title" id="{{item.itemId}}" style="text-align:center;word-wrap: break-word;">
+                                                                <b>{{item.title | limitTo: 32}}</b>
+                                                            </h5>
+                                                        </a>
+                                                        <p class="category btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;">
+                                                            <span ng-if="item.itemsAvgRating == 1">
+                                                                <img src="images/very-unhappy-n.jpg" style="width:10%;">
+                                                                User Experience : very unhappy
+                                                                </span>
+                                                            <span ng-if="item.itemsAvgRating == 2">
+                                                                <img src="images/unhappy-n.jpg" style="width:10%;">
+                                                                User Experience : unhappy
+                                                            </span>
+                                                            <span ng-if="item.itemsAvgRating == 3">
+                                                                <img src="images/happy-n.jpg" style="width:10%;">
+                                                                User Experience : happy
+                                                            </span>
+                                                            <span ng-if="item.itemsAvgRating == 4">
+                                                                <img src="images/very-happy-n.jpg" style="width:10%;">
+                                                                User Experience : very happy
+                                                            </span>
+                                                        </p>
+                                                        <p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
+                                                            <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br ng-if="item.status == 'OnHold'">
+                                                            <span class="label label-success label-fill" ng-if="item.friendStatus == true" style="text-align:center;">Friend</span><br ng-if="item.friendStatus == true">
+                                                            <b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
+                                                            <span ng-if="item.leaseTerm != ''" class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
+                                                            <label ng-switch="user_status" >
+                                                                <label ng-switch-when="''" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+                                                                <label ng-switch-when="null" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+                                                                <label ng-switch-when="anonymous" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
+                                                                <label ng-switch-default ng-if="item.sublocality != '' || item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
+                                                            </label>
+                                                        </p>
+                                                    </div>
+                                                </div> <!-- end card -->
+                                            </span>
+                                        </div>
+                                    </div>	
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div ng-if="showNext" style="text-align:center;">
+                                    <button ng-click="loadNextSlide()" onclick="ga('send', 'event', 'index', 'click', 'LoadMore');" class="btn btn-primary btn-sm btn-round btn-fill" id="successBtn" >Load more...</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="alert alert-success" ng-if="showWishes" style="margin-top: 20px;">
+                        <div class="container">
+                            <div class="row" style="display: flex;flex-wrap: wrap;">
+                                <div class="col-md-9">
+                                    Top Ten Wished Items -
+                                    <span class="label label-success" ng-repeat="wish in wishes">
+                                        {{wish | limitTo: 20}}
+                                        <span ng-if="wish.length > 20">&hellip;</span>
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <button ng-click="offerStuffClicked()" onclick="ga('send', 'event', 'index', 'click', 'StoreYourThings');" id="storebutton" class="btn btn-success btn-fill">Store Your Things</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+<!--
             <div id="categoryfilters" class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -14,91 +117,9 @@
                     </div>
                 </div>
             </div>
+-->
 
-			<br />
-            <h4 ng-if="notPosted" style="text-align:center;">You have not added any item to the friends store. 
-                <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Offer Item &amp; Earn Credits</a>
-                <br/><br/>
-            </h4>
-            <!-- Carousel Start -->
-			<div class="row" id="carouselObject" style="padding-right:5%">
-                <div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
-                    <div class="row" id="product-cards" >
-                        <div class="col-md-2 col-sm-2 col-xs-2">
-                        </div>
-                        <div class="col-md-3 col-sm-8 col-xs-8" ng-repeat="item in items">
-                            <span class="items" ng-click="itemClicked(item.uid)">
-                            <div class="card card-product">
-                                <div class="image">
-                                    <a href="">
-                                        <img load-image="item.primaryImageLink" ng-src="" id="{{item.itemId}}">
-                                    </a>
-                                </div>
-                                <div class="content">
-                                    <a href="">
-                                        <h5 class="title" id="{{item.itemId}}" style="text-align:center;word-wrap: break-word;">
-                                            <b>{{item.title | limitTo: 32}}</b>
-                                        </h5>
-                                    </a>
-                                    <p class="category btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;">
-                                        <span ng-if="item.itemsAvgRating == 1">
-                                            <img src="images/very-unhappy-n.jpg" style="width:10%;">
-                                            User Experience : very unhappy
-                                            </span>
-                                        <span ng-if="item.itemsAvgRating == 2">
-                                            <img src="images/unhappy-n.jpg" style="width:10%;">
-                                            User Experience : unhappy
-                                        </span>
-                                        <span ng-if="item.itemsAvgRating == 3">
-                                            <img src="images/happy-n.jpg" style="width:10%;">
-                                            User Experience : happy
-                                        </span>
-                                        <span ng-if="item.itemsAvgRating == 4">
-                                            <img src="images/very-happy-n.jpg" style="width:10%;">
-                                            User Experience : very happy
-                                        </span>
-                                    </p>
-                                    <p class="description" id="{{item.itemId}}" style="text-align:center;word-wrap:break-word;">
-                                        <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br ng-if="item.status == 'OnHold'">
-                                        <span class="label label-success label-fill" ng-if="item.friendStatus == true" style="text-align:center;">Friend</span><br ng-if="item.friendStatus == true">
-                                        <b style="color:Grey;">{{(item.distance == '0m' ? 'Under 1km' : item.distance)}}</b><br>
-                                        <span ng-if="item.leaseTerm != ''" class="glyphicon glyphicon-tags"></span><i>{{' '+ item.leaseTerm + ' Lease '}}</i><br>
-                                        <label ng-switch="user_status" >
-                                            <label ng-switch-when="''" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-                                            <label ng-switch-when="null" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-                                            <label ng-switch-when="anonymous" ng-if="item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" " + item.locality}}</b></label>
-                                            <label ng-switch-default ng-if="item.sublocality != '' || item.locality != ''" id="{{item.itemId}}"><span class="glyphicon glyphicon-map-marker"></span><b>{{" "+item.sublocality +"," + item.locality}}</b></label>
-                                        </label>
-                                    </p>
-                                </div>
-                            </div> <!-- end card -->
-                        </span>
-                        </div>
-                        <div class="col-md-6 col-sm-2 col-xs-3">
-                        </div>
-                    </div>	
-                </div>
-			</div>
-            <div class="row">
-                <div ng-if="showNext" style="text-align:center;">
-                    <button ng-click="loadNextSlide()" onclick="ga('send', 'event', 'index', 'click', 'LoadMore');" class="btn btn-primary btn-round btn-fill" id="successBtn" >Load more...</button>
-                </div>
-                <div class="alert alert-success" ng-if="showWishes" style="margin-top: 20px;">
-                    <div class="container">
-                        <div class="row" style="display: flex;flex-wrap: wrap;">
-                            <div class="col-md-9">
-                                Top Ten Wished Items -
-                                <span class="label label-success" ng-repeat="wish in wishes">
-                                    {{wish | limitTo: 20}}
-                                    <span ng-if="wish.length > 20">&hellip;</span>
-                                </span>
-                            </div>
-                            <div class="col-md-3">
-                                <button ng-click="offerStuffClicked()" onclick="ga('send', 'event', 'index', 'click', 'StoreYourThings');" id="storebutton" class="btn btn-success btn-fill">Store Your Things</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			
+
         </div>
     </div>
