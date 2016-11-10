@@ -4,7 +4,7 @@
                 <div class="row">
                     <div class="col-md-2 col-sm-12" style="border-right:thin solid #eee;">
                         <div ng-repeat="c in categories" >
-                            <button class="btn btn-block ng-class:{'btn-simple btn-default': !c.active, 'btn-fill btn-primary': c.active}" onclick="ga('send', 'event', 'index', 'click', 'ItemCategory');" id="All" ng-click="categorySelected($index)">{{c.label}}</button><br/>
+                            <button class="btn btn-block btn-sm ng-class:{'btn-simple btn-default': !c.active, 'btn-fill btn-primary': c.active}" onclick="ga('send', 'event', 'index', 'click', 'ItemCategory');" id="All" ng-click="categorySelected($index)">{{c.label}}</button><br/>
                         </div>
                     </div>
                     <div class="col-md-10 col-sm-12">
@@ -20,10 +20,49 @@
                             </h4>
                             <!-- Carousel Start -->
                             <div class="row" id="carouselObject">
-                                <div class="item ng-class:{'active':$first}" id="$index" ng-repeat="items in itemsArray">
-                                    <div class="row" id="product-cards" >
+                                <div class="container-fluid" id="$index" ng-repeat="items in itemsArray">
+                                    <div class="row" id="product-cards">
                                         <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="item in items">
-                                            <span class="items" ng-click="itemClicked(item.uid)">
+                                            <div class="card">
+                                                <div class="image">
+                                                    <img load-image="item.primaryImageLink" ng-src="">
+                                                    <div class="filter">
+                                                        <button type="button" class="btn btn-neutral btn-simple">
+                                                            <i class="fa fa-bookmark-o"></i> Bookmark
+                                                        </button>
+                                                        <button type="button" class="btn btn-neutral btn-simple">
+                                                            <i class="fa fa-align-left"></i> Read article
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="content">
+                                                    <a class="card-link" href="ItemDetails?uid={{item.uid}}">
+                                                        <h4 class="title">{{item.title | limitTo: 32}} </h4>
+                                                    </a>
+                                                    <p class="category">
+                                                        <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br ng-if="item.status == 'OnHold'">
+                                                    </p>
+                                                    <p class="category">
+                                                        <label ng-if="item.sublocality != '' || item.locality != ''">
+                                                            <i class="fa fa-map-marker"></i>&nbsp;{{item.distance == '0m' ? 'Under 1km' : item.distance}}&nbsp;-&nbsp;{{item.sublocality+","+item.locality}}
+                                                        </label>
+                                                    </p><hr style="margin-top:5px;margin-bottom:5px;"/>
+                                                    <div class="footer">
+                                                        <div class="author">
+                                                            <a class="card-link" href="">
+                                                               <i class="fa fa-user-circle-o"></i> {{item.fullName}}
+                                                            </a>
+                                                        </div>
+                                                        <div class="stats pull-right" ng-if="item.friendStatus == true">
+                                                            <i class="fa fa-handshake-o"></i> Is Friend
+                                                        </div>
+                                                        <div class="stats pull-right" ng-if="item.friendStatus == false">
+                                                            <i class="fa fa-users"></i> Is Member
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <span class="items" ng-click="itemClicked(item.uid)">
                                                 <div class="card card-product">
                                                     <div class="image">
                                                         <a href="">
@@ -67,8 +106,8 @@
                                                             </label>
                                                         </p>
                                                     </div>
-                                                </div> <!-- end card -->
-                                            </span>
+                                                </div>
+                                            </span> -->
                                         </div>
                                     </div>	
                                 </div>
