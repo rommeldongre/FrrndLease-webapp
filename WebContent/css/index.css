@@ -17,6 +17,14 @@
     text-transform: none;
 }
 
+.filter-text{
+    top: 35%;
+    position: relative;
+    color:white;
+    font-size: 18px;
+    margin-bottom: 0px;
+}
+
 .loaded-img{
     position: relative;
     display: inline-block;
