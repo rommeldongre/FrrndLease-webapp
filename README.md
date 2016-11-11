@@ -26,6 +26,23 @@ This README would normally document whatever steps are necessary to get your app
 <Context path="" docBase="flsv3" reloadable="true"></Context>
 ```
 
+### For Deploying automatically using Maven ###
+
+* Go to path <catalina_home>/conf/ in your computer.
+* In file tomcat_users.xml add the following xml code before closing </tomcat-users> tag 
+
+
+```
+#!xml
+
+<role rolename="manager-script"/>
+<user username="tomact" password="manager" roles="manager-script" />
+```
+
+* The above username, password should be same as that specified in Maven Tomcat plugin else it will not work
+* Start the XAMPP server
+* Deploy using the goals clean tomcat7:deploy -e either in Eclipse or Through command line
+
 ### Contribution guidelines ###
 
 * Writing tests

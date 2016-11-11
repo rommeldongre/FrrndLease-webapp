@@ -38,6 +38,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         initPopulate();
         if(searchString != "" && searchString != null && searchString != "undefined")
             addToWishList(searchString);
+        
+        getPlaceFromCoordinates(latitude,longitude);
     });
     
     $scope.clearSearch = function(){
@@ -47,6 +49,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     // Initialising the categories
     $scope.categories = [{label:'ALL',active:true}];
+    $scope.search.category = 'ALL';
     
     // checking in which page carousel is being loaded
     var user = localStorage.getItem("userloggedin");
@@ -207,6 +210,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         // store category which is clicked
         category = $scope.categories[index].label;
         
+        $scope.search.category = category;
+        
         initPopulate();
     }
     
@@ -281,6 +286,31 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     }
     
     getRecentWishes({limit: 10});
+    
+    var getPlaceFromCoordinates = function(latitude, longitude){
+		var geocoder = new google.maps.Geocoder();
+		var latLng = new google.maps.LatLng(latitude, longitude);
+		geocoder.geocode( { 'latLng': latLng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var Sublocality = "", Locality = "";
+                for(var i in results){
+                    results[i].address_components.forEach(function(component){
+                        if(component.types.indexOf("sublocality_level_1") != -1)
+                            Sublocality = component.long_name;
+                        if(component.types.indexOf("locality") != -1)
+                            Locality = component.long_name;
+                    });
+                    if(Sublocality != "" && Locality != "")
+                        break;
+                }
+                $scope.$apply(function(){
+                    $scope.search.place = Sublocality+","+Locality;
+                });
+            }else{
+                console.log("Geocode was unsucessfull in detecting your current location");
+            }
+        });
+    }
 }]);
                                         
 carouselApp.factory('getItemsForCarousel', ['$http', function($http){
