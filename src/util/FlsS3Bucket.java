@@ -38,6 +38,8 @@ public class FlsS3Bucket extends Connect {
 	
 	private String uid = null;
 	private int leaseId = -1;
+	private String userId = null;
+	private boolean isProfile = true;
 	
 	private String BASE_URL = "http://s3-ap-southeast-1.amazonaws.com/";
 	
@@ -51,7 +53,9 @@ public class FlsS3Bucket extends Connect {
 	
 	public enum Path_Name{
 		ITEM_POST,
-		ITEM_LEASE
+		ITEM_LEASE,
+		USER_PROFILE_PIC,
+		USER_PHOTO_ID
 	}
 	
 	public enum File_Name{
@@ -61,7 +65,9 @@ public class FlsS3Bucket extends Connect {
 		PICKED_UP_OUT,
 		LEASE_STARTED,
 		LEASE_ENDED,
-		PICKED_UP_IN
+		PICKED_UP_IN,
+		PROFILE_PIC,
+		PHOTO_ID
 	}
 	
 	public FlsS3Bucket(String Uid){
@@ -71,6 +77,11 @@ public class FlsS3Bucket extends Connect {
 	public FlsS3Bucket(String Uid, int LeaseId){
 		this.uid = Uid;
 		this.leaseId = LeaseId;
+	}
+	
+	public FlsS3Bucket(String UserId, boolean IsProfile){
+		this.userId = UserId;
+		this.isProfile = IsProfile;
 	}
 	
 	private String getBucketName(Bucket_Name bucketName){
@@ -99,12 +110,16 @@ public class FlsS3Bucket extends Connect {
 		
 		LOGGER.info("Inside getPathName method");
 		
-		String path = uid + "/";
+		String path = "";
 		
 		if(pathName == Path_Name.ITEM_POST)
-			path = path + "post/";
+			path = uid + "/post/";
 		else if(pathName == Path_Name.ITEM_LEASE)
-			path = path + "lease-" + leaseId + "/";
+			path = uid + "/lease-" + leaseId + "/";
+		else if(pathName == Path_Name.USER_PROFILE_PIC)
+			path = userId + "/profile/";
+		else if(pathName == Path_Name.USER_PHOTO_ID)
+			path = userId + "/photo_id/";
 		else path = null;
 		
 		return path;
@@ -133,6 +148,10 @@ public class FlsS3Bucket extends Connect {
 			name = name + "LeaseEnded.png";
 		else if(fileName == File_Name.PICKED_UP_IN)
 			name = name + "PickedUpIn.png";
+		else if(fileName == File_Name.PROFILE_PIC)
+			name = "ProfilePic-" + r + ".png";
+		else if(fileName == File_Name.PHOTO_ID)
+			name = "PhotoId-" + r + ".png";
 		else
 			name = null;
 			
@@ -312,6 +331,90 @@ public class FlsS3Bucket extends Connect {
 	    while (n-- > 0 && pos != -1)
 	        pos = str.indexOf(s, pos+1);
 	    return pos;
+	}
+	
+	public void saveUserPics(String link){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1 = 0;
+		
+		try{
+
+			if(link.isEmpty() || link.equals("null"))
+				return;
+			
+			String sqlSavePic = "UPDATE users ";
+
+			if(isProfile)
+				sqlSavePic = sqlSavePic + "SET user_profile_picture=? WHERE user_id=?";
+			else
+				sqlSavePic = sqlSavePic + "SET user_photo_id=? WHERE user_id=?";
+			
+			ps1 = hcp.prepareStatement(sqlSavePic);
+			ps1.setString(1, link);
+			ps1.setString(2, userId);
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1){
+				LOGGER.info("User Id : " + userId + " pic changed to : " + link);
+			}else{
+				LOGGER.info("User Id : " + userId + " pic not changed");
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void deleteUserPics(){
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		
+		try{
+			
+			String sqlDeleteUserPics = "UPDATE users ";
+			
+			if(isProfile)
+				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_profile_picture=? WHERE user_id=?";
+			else
+				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_photo_id=? WHERE user_id=?";
+			
+			ps1 = hcp.prepareStatement(sqlDeleteUserPics);
+			ps1.setString(1, null);
+			ps1.setString(2, userId);
+			
+			int result = ps1.executeUpdate();
+			
+			if(result == 1){
+				LOGGER.info("Pic deleted from users table");
+			}else{
+				LOGGER.info("Pic not deleted from users table");
+			}
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	public void savePrimaryImageLink(String link){
