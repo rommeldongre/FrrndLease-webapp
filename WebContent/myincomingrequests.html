@@ -11,8 +11,40 @@
     <h4 ng-if="requests.length == 0">You have no Incoming Requests. Post more items to the Store</h4>
     
     <div class="row" ng-repeat="request in requests">
-        <div class="col-lg-1 col-md-1"></div>
-        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
+        <div class="container">
+            <img load-image="request.primaryImageLink" ng-src="" alt="..."/><br/>
+            <h5>{{request.title}}, {{request.description}}, {{request.category}}, {{request.leaseTerm}}</h5>
+            <div class="row">
+                <div class="col-md-3" ng-repeat="req in request.requests">
+                    <div class="card card-user card-plain">
+                        <div class="image"></div>
+                        <div class="content">
+                            <div class="author">
+                                <a href="#">
+                                    <img class="avatar border-gray" ng-src="{{(req.requestorProfilePic === '' || req.requestorProfilePic === null || req.requestorProfilePic === NULL || req.requestorProfilePic === 'null') ? 'images/user_icon.png' : req.requestorProfilePic}}" alt="Profile Pic" style="width:50px;height:50px; padding:5px;">
+                                    <h4 class="title">{{req.requestorName}}<br>
+                                    </h4>
+                                </a>
+                            </div>
+                            <p class="description text-center">
+                                <i class="fa fa-map-marker fa-fw text-muted"></i> {{req.requestorSublocality}}, {{req.requestorLocality}} <br>
+                                <i class="fa fa-building-o fa-fw text-muted"></i> {{req.requestorId}} <br>
+                                <i class="fa fa-envelope-o fa-fw text-muted"></i> {{req.requestDate}}
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <button href="#" class="btn btn-social btn-facebook btn-simple"><i class="fa fa-facebook-square"></i></button>
+                            <button href="#" class="btn btn-social btn-twitter btn-simple"><i class="fa fa-twitter"></i></button>
+                            <button href="#" class="btn btn-social btn-google btn-simple"><i class="fa fa-google-plus-square"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        
+        
 <!--
             <div class="row" style="display: flex;flex-wrap: wrap;">
                 <div class="col-lg-4 col-md-4 col-sm-4" href="" ng-click="showItemDetails(request.uid)">
@@ -86,7 +118,5 @@
                </div>
             </div>
 -->
-        </div>
-        <div class="col-lg-1 col-md-1"></div>
     </div>
 </div>

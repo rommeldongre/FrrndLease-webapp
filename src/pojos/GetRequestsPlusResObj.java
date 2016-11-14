@@ -11,6 +11,7 @@ public class GetRequestsPlusResObj extends ResObj {
 	// Item Details
 	int itemId, insurance;
 	String title, description, category, leaseTerm, uid, primaryImageLink;
+	float itemLat, itemLng;
 
 	List<RequestObj> requests = new ArrayList<>();
 
@@ -100,6 +101,22 @@ public class GetRequestsPlusResObj extends ResObj {
 
 	public void setPrimaryImageLink(String primaryImageLink) {
 		this.primaryImageLink = primaryImageLink;
+	}
+
+	public float getItemLat() {
+		return itemLat;
+	}
+
+	public void setItemLat(float itemLat) {
+		this.itemLat = itemLat;
+	}
+
+	public float getItemLng() {
+		return itemLng;
+	}
+
+	public void setItemLng(float itemLng) {
+		this.itemLng = itemLng;
 	}
 
 	public List<RequestObj> getRequests() {

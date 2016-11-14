@@ -8,6 +8,8 @@ public class RequestObj {
 
 	int requestId;
 	String requestDate, requestorId, requestorName, requestorProfilePic, requestorLocality, requestorSublocality;
+	boolean friend;
+	float userLat, userLng;
 
 	public int getRequestId() {
 		return requestId;
@@ -70,6 +72,30 @@ public class RequestObj {
 
 	public void setRequestorSublocality(String requestorSublocality) {
 		this.requestorSublocality = requestorSublocality;
+	}
+
+	public boolean isFriend() {
+		return friend;
+	}
+
+	public void setFriend(boolean friend) {
+		this.friend = friend;
+	}
+
+	public float getUserLat() {
+		return userLat;
+	}
+
+	public void setUserLat(float userLat) {
+		this.userLat = userLat;
+	}
+
+	public float getUserLng() {
+		return userLng;
+	}
+
+	public void setUserLng(float userLng) {
+		this.userLng = userLng;
 	}
 	
 }

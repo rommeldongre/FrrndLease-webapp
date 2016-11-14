@@ -43,7 +43,7 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 		try {
 			int offset = rq.getCookie();
 			
-			String sqlGetRequestedItem = "SELECT tb1.request_id, tb2.* FROM requests tb1 INNER JOIN items tb2 ON tb1.request_item_id=tb2.item_id WHERE tb1.request_status=? AND tb2.item_user_id=? GROUP BY tb1.request_item_id ORDER BY tb1.request_lastmodified desc LIMIT ?, 1";
+			String sqlGetRequestedItem = "SELECT tb2.* FROM requests tb1 INNER JOIN items tb2 ON tb1.request_item_id=tb2.item_id WHERE tb1.request_status=? AND tb2.item_user_id=? GROUP BY tb1.request_item_id ORDER BY tb1.request_lastmodified desc LIMIT ?, 1";
 			ps1 = hcp.prepareStatement(sqlGetRequestedItem);
 			ps1.setString(1, "Active");
 			ps1.setString(2, rq.getUserId());
@@ -65,12 +65,16 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 				rs.setInsurance(rs1.getInt("item_lease_value"));
 				rs.setPrimaryImageLink(rs1.getString("item_primary_image_link"));
 				rs.setUid(rs1.getString("item_uid"));
+				rs.setItemLat(rs1.getFloat("item_lat"));
+				rs.setItemLng(rs1.getFloat("item_lng"));
 				rs.setOffset(offset);
 				
-				String sqlGetUserDetails = "SELECT tb1.*, tb2.* FROM requests tb1 INNER JOIN users tb2 ON tb1.request_requser_id=tb2.user_id WHERE tb1.request_status=? AND tb1.request_item_id=? ORDER BY tb1.request_lastmodified desc";
+				String sqlGetUserDetails = "SELECT tb1.request_id, tb1.request_lastmodified, tb2.*, (CASE WHEN tb1.request_requser_id=tb4.friend_id AND tb4.friend_user_id=? THEN true ELSE false END) AS isFriend FROM requests tb1 INNER JOIN users tb2 ON tb1.request_requser_id=tb2.user_id LEFT JOIN (SELECT * FROM friends WHERE friend_user_id=?) tb4 ON tb1.request_requser_id = tb4.friend_id WHERE tb1.request_status=? AND tb1.request_item_id=? ORDER BY tb1.request_lastmodified desc";
 				ps2 = hcp.prepareStatement(sqlGetUserDetails);
-				ps2.setString(1, "Active");
-				ps2.setInt(2, itemId);
+				ps2.setString(1, rq.getUserId());
+				ps2.setString(2, rq.getUserId());
+				ps2.setString(3, "Active");
+				ps2.setInt(4, itemId);
 				
 				rs2 = ps2.executeQuery();
 				
@@ -79,7 +83,10 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 					RequestObj request = new RequestObj();
 					request.setRequestId(rs2.getInt("request_id"));
 					request.setRequestDate(rs2.getString("request_lastmodified"));
+					request.setFriend(rs2.getBoolean("isFriend"));
 					request.setRequestorId(rs2.getString("user_id"));
+					request.setUserLat(rs2.getFloat("user_lat"));
+					request.setUserLng(rs2.getFloat("user_lng"));
 					request.setRequestorName(rs2.getString("user_full_name"));
 					request.setRequestorProfilePic(rs2.getString("user_profile_picture"));
 					request.setRequestorLocality(rs2.getString("user_locality"));
