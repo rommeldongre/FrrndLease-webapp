@@ -36,7 +36,7 @@ This README would normally document whatever steps are necessary to get your app
 #!xml
 
 <role rolename="manager-script"/>
-<user username="tomact" password="manager" roles="manager-script" />
+<user username="tomcat" password="manager" roles="manager-script" />
 ```
 
 * The above username, password should be same as that specified in Maven Tomcat plugin else it will not work

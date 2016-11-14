@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2040;
+	public final int appBuild = 2041;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1453,6 +1453,40 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2040;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block alters users table user_photo_id column
+				if(dbBuild < 2041){
+					
+					String sqlEmptyColumn = "UPDATE users set user_photo_id=null";
+					String sqlAlterColumnType = "ALTER TABLE `users` CHANGE `user_photo_id` `user_photo_id` VARCHAR(255) NULL DEFAULT NULL";
+					
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlEmptyColumn);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlAlterColumnType);
+						ps2.executeUpdate();
+						ps2.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2041;
 					updateDBBuild(dbBuild);
 					
 				}

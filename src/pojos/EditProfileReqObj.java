@@ -2,7 +2,7 @@ package pojos;
 
 public class EditProfileReqObj extends ReqObj {
 
-	String userId, fullName, location, address, locality, sublocality, photoId;
+	String userId, fullName, location, address, locality, sublocality;
 	float lat, lng;
 	String accessToken;
 
@@ -76,13 +76,5 @@ public class EditProfileReqObj extends ReqObj {
 
 	public void setLng(float lng) {
 		this.lng = lng;
-	}
-
-	public String getPhotoId() {
-		return photoId;
-	}
-
-	public void setPhotoId(String photoId) {
-		this.photoId = photoId;
 	}
 }

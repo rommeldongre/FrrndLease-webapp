@@ -7,7 +7,29 @@
 	<hr/><br/><br/>
     <div class="row" style="display:flex;flex-wrap:wrap;">
         <div class="col-lg-6 col-md-6" style="text-align:-webkit-center;">
-            <div><img ng-model="profilePic" ng-src="{{(profilePic === '' || profilePic === null || profilePic === NULL || profilePic === 'null') ? 'images/user_icon.png' : profilePic}}" alt="Profile Pic" style="display:block;width:200px;height:200px;"></div>
+            <div class="loaded-img">
+                <img load-image="profilePic" max-width="250" max-height="250" ng-src="" alt="..."/>
+                <div ng-if="profilePic == '' || profilePic == null || profilePic == 'null' || profilePic == undefined" class="empty-actions">
+                    <label class="primary-file-input-label" for="primary-file-input" style="font-size:small;">
+                        <i class="fa fa-plus" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Add Profile
+                    </label>
+                    <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], true)" style="display:none;" />
+                </div>
+                <div ng-if="profilePic=='loading'" class="loading-actions">
+                    <div class="loading-primary-image" style="font-size:small;">
+                        <i class="fa fa-refresh fa-spin" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Saving..
+                    </div>
+                </div>
+                <div ng-if="profilePic != 'loading' && profilePic != '' && profilePic != null && profilePic != 'null' && profilePic != undefined" class="actions">
+                    <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(true)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                    <label class="primary-file-input-label" for="primary-file-input" style="font-size:small;">
+                        <i class="fa fa-image" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Change Profile
+                    </label>
+                    <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], true)" style="display:none;" />
+                </div>
+            </div>
             <br/>
             <div id="userId" style="font-size:large;margin:5px;">
                 <i class="fa fa-user"></i><b> {{'  '+ userId }}</b><i ng-if="label == true" class="fa fa-check-circle btn-tooltip" style="color:#05AE0E;" data-toggle="tooltip" data-placement="top" title="Verified Location"></i>
@@ -79,10 +101,30 @@
     <hr/>
     <form name="form">
         <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <label class="control-label">Photo Id - </label>
-                <input name="photoId" type="file" class="form-control" accept="image/jpeg" id="ifile" ng-model="ifile">
-                <canvas id="panel" ng-model="panel" width="200" height="200" style="display:block;margin:auto;padding-top:20px;"></canvas>
+            <div class="col-lg-6 col-md-6" style="text-align:center;">
+                <div class="loaded-img">
+                    <img load-image="photoId" max-width="200" max-height="200" ng-src="" alt="..."/>
+                    <div ng-if="photoId == '' || photoId == null || photoId == 'null' || photoId == undefined" class="empty-actions">
+                        <label class="primary-file-input-label" for="id-file-input" style="font-size:small;">
+                            <i class="fa fa-plus" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Add Photo Id
+                        </label>
+                        <input id="id-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], false)" style="display:none;" />
+                    </div>
+                    <div ng-if="photoId=='loading'" class="loading-actions">
+                        <div class="loading-primary-image" style="font-size:small;">
+                            <i class="fa fa-refresh fa-spin" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Saving..
+                        </div>
+                    </div>
+                    <div ng-if="photoId != 'loading' && photoId != '' && photoId != null && photoId != 'null' && photoId != undefined" class="actions">
+                        <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(false)">
+                            <i class="fa fa-times"></i>
+                        </button>
+                        <label class="primary-file-input-label" for="id-file-input" style="font-size:small;">
+                            <i class="fa fa-image" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Change Photo Id
+                        </label>
+                        <input id="id-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], false)" style="display:none;" />
+                    </div>
+                </div>
             </div>
             <div class="col-lg-6 col-md-6">
                 <label class="control-label">Name</label>

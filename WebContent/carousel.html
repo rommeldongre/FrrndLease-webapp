@@ -24,47 +24,49 @@
                                     <div class="row" id="product-cards">
                                         <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="item in items">
                                             <div class="card">
-                                                <a href="ItemDetails?uid={{item.uid}}"><div class="image">
-                                                    <img load-image="item.primaryImageLink" ng-src="">
-                                                    <div class="filter">
-                                                        <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;{{item.leaseTerm}} Lease</p>
-                                                        <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i>{{item.leaseValue}}</p>
-                                                        <p class="filter-text btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;">
-                                                            <span ng-if="item.itemsAvgRating == 1">
-                                                                Experience:<br/>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                                                &nbsp;Very Unhappy
-                                                            </span>
-                                                            <span ng-if="item.itemsAvgRating == 2">
-                                                                Experience:<br/>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                                                &nbsp;Unhappy
-                                                            </span>
-                                                            <span ng-if="item.itemsAvgRating == 3">
-                                                                Experience:<br/>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                                                &nbsp;Happy
-                                                            </span>
-                                                            <span ng-if="item.itemsAvgRating == 4">
-                                                                Experience:<br/>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                <i class="fa fa-circle" aria-hidden="true"></i>
-                                                                &nbsp;Very Happy
-                                                            </span>
-                                                        </p>
+                                                <a href="ItemDetails?uid={{item.uid}}">
+                                                    <div class="image" style="height: 100%;">
+                                                        <img load-image="item.primaryImageLink" ng-src="">
+                                                        <div class="filter">
+                                                            <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;{{item.leaseTerm}} Lease</p>
+                                                            <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i>{{item.leaseValue}}</p>
+                                                            <p class="filter-text btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;">
+                                                                <span ng-if="item.itemsAvgRating == 1">
+                                                                    Experience:<br/>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                    &nbsp;Very Unhappy
+                                                                </span>
+                                                                <span ng-if="item.itemsAvgRating == 2">
+                                                                    Experience:<br/>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                    &nbsp;Unhappy
+                                                                </span>
+                                                                <span ng-if="item.itemsAvgRating == 3">
+                                                                    Experience:<br/>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                    &nbsp;Happy
+                                                                </span>
+                                                                <span ng-if="item.itemsAvgRating == 4">
+                                                                    Experience:<br/>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                    &nbsp;Very Happy
+                                                                </span>
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                </div></a>
+                                                </a>
                                                 <div class="content">
                                                     <a class="card-link" href="ItemDetails?uid={{item.uid}}">
                                                         <h4 class="title">{{item.title | limitTo: 32}} </h4>
