@@ -14,8 +14,53 @@
     
     <h4 ng-if="wishList.length == 0">You have not wished any item. You can add the items you wish. </h4>
 
-    <div class="row" ng-repeat="wish in wishList">
+    <div class="row">
         <div class="col-lg-1 col-md-1"></div>
+        <div class="col-lg-10 col-md-10">
+            <div class="table-responsive">
+                <table class="table table-shopping">
+                    <thead>
+                        <tr>
+                            <th class="text-center"></th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th class="th-description">Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="wish in wishList">
+                            <td>
+                                <div class="img-container">
+                                    <img load-image="wish.primaryImageLink" ng-src="" max-width="150" max-height="150" alt="..."/>
+                                </div>
+                            </td>
+                            <td class="td-name">
+                                {{wish.title}}
+                            </td>
+                            <td>
+                                {{wish.category}}
+                            </td>
+                            <td>
+                                <p>{{wish.desc}}</p>
+                            </td>
+                            <td class="td-actions">
+                                <button type="button" rel="tooltip" data-placement="left" title="Edit Wish Item" class="btn btn-info btn-simple btn-icon" ng-click="showItemDetails(wish.itemId)">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button type="button" rel="tooltip" data-placement="left" title="Delete Wish Item" class="btn btn-danger btn-simple btn-icon" ng-click="deleteWishItem(wish.itemId,$index)">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1"></div>
+<!--
+        
         <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
             <div class="row" style="display: flex;flex-wrap: wrap;">
                <div class="col-lg-4 col-md-4 col-sm-4">
@@ -62,7 +107,8 @@
                </div>
            </div>
         </div>
-        <div class="col-lg-1 col-md-1"></div>
+        
+-->
     </div>
     <div class="row" style="text-align:center;padding-bottom: 20px;">
         <button ng-if="loadMore" ng-click="loadNextWishItems()" class="btn btn-primary btn-round btn-fill">Load more..</button>
