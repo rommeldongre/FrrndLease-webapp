@@ -10,113 +10,101 @@
     
     <h4 ng-if="requests.length == 0">You have no Incoming Requests. Post more items to the Store</h4>
     
-    <div class="row" ng-repeat="request in requests">
-        <div class="container">
-            <img load-image="request.primaryImageLink" ng-src="" alt="..."/><br/>
-            <h5>{{request.title}}, {{request.description}}, {{request.category}}, {{request.leaseTerm}}</h5>
-            <div class="row">
-                <div class="col-md-3" ng-repeat="req in request.requests">
-                    <div class="card card-user card-plain">
-                        <div class="image"></div>
+    <div class="card" ng-repeat="request in requests">
+        <div class="container-fluid">
+            <div class="row" style="display:flex;flex-wrap:wrap;text-align:center;padding:20px 20px 0px 20px;">
+                <div class="col-md-4">
+                    <img class="img-rounded" load-image="request.primaryImageLink" ng-src="" alt="..."/>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                                <div class="icon icon-sm">
+                                    <i class="fa fa-filter" aria-hidden="true"></i>
+                                </div>
+                                <div class="description">
+                                    <h5>{{request.category}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location">
+                                <div class="icon icon-sm">
+                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                </div>
+                                <div class="description">
+                                    <h5>{{request.sublocality}}, {{request.locality}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
+                                <div class="icon icon-sm">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </div>
+                                <div class="description">
+                                    <h5>{{request.leaseTerm}} Lease</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value">
+                                <div class="icon icon-sm">
+                                    <i class="fa fa-rupee" aria-hidden="true"></i>
+                                </div>
+                                <div class="description">
+                                    <h5>{{request.insurance}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h3><strong>{{request.title}}</strong></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="text-align:center;"><h4><strong>Requests - </strong></h4></div>
+            <div class="row" style="display:flex;flex-wrap:wrap;text-align:center;padding:0px 20px 20px 20px;">
+                <div class="col-md-3Grant Lease" ng-repeat="req in request.requests">
+                    <div class="card card-user">
+                        <div class="image image-plain">
+                        </div>
                         <div class="content">
                             <div class="author">
-                                <a href="#">
-                                    <img class="avatar border-gray" ng-src="{{(req.requestorProfilePic === '' || req.requestorProfilePic === null || req.requestorProfilePic === NULL || req.requestorProfilePic === 'null') ? 'images/user_icon.png' : req.requestorProfilePic}}" alt="Profile Pic" style="width:50px;height:50px; padding:5px;">
+                                <a href="">
+                                    <img class="avatar border-gray" ng-src="{{(req.requestorProfilePic === '' || req.requestorProfilePic === null || req.requestorProfilePic === NULL || req.requestorProfilePic === 'null') ? 'images/user_icon.png' : req.requestorProfilePic}}" alt="Profile Pic">
                                     <h4 class="title">{{req.requestorName}}<br>
+                                        <small>
+                                            <div ng-if="req.friend">
+                                                <i class="fa fa-handshake-o"></i> Is Friend
+                                            </div>
+                                            <div ng-if="!req.friend">
+                                                <i class="fa fa-users"></i> Is Member
+                                            </div>
+                                        </small>
                                     </h4>
                                 </a>
                             </div>
                             <p class="description text-center">
-                                <i class="fa fa-map-marker fa-fw text-muted"></i> {{req.requestorSublocality}}, {{req.requestorLocality}} <br>
-                                <i class="fa fa-building-o fa-fw text-muted"></i> {{req.requestorId}} <br>
-                                <i class="fa fa-envelope-o fa-fw text-muted"></i> {{req.requestDate}}
+                                <i class="fa fa-map-marker text-muted"></i>&nbsp;{{req.distance == '0m' ? 'Under 1km' : req.distance}}&nbsp;-&nbsp;{{req.requestorSublocality+","+req.requestorLocality}}<br>
                             </p>
+                        </div>
+                        <div class="description text-center">
+                            <i class="fa fa-calendar" aria-hidden="true"></i> {{req.requestDate | date}}
                         </div>
                         <hr>
                         <div class="text-center">
-                            <button href="#" class="btn btn-social btn-facebook btn-simple"><i class="fa fa-facebook-square"></i></button>
-                            <button href="#" class="btn btn-social btn-twitter btn-simple"><i class="fa fa-twitter"></i></button>
-                            <button href="#" class="btn btn-social btn-google btn-simple"><i class="fa fa-google-plus-square"></i></button>
+                            <button type="button" rel="tooltip" data-placement="left" title="Grant Lease" class="btn btn-success btn-simple btn-icon" ng-click="grantLease(request.itemId,req.requestorId,$index)">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" rel="tooltip" data-placement="left" title="Reject Lease" class="btn btn-danger btn-simple btn-icon" ng-click="rejectLease(request.itemId,req.requestorId,$index)">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <hr/>
-        
-        
-<!--
-            <div class="row" style="display: flex;flex-wrap: wrap;">
-                <div class="col-lg-4 col-md-4 col-sm-4" href="" ng-click="showItemDetails(request.uid)">
-                   <a class="image">
-                      <img class="img-rounded" load-image="request.primaryImageLink" ng-src="" alt="..."/>
-                   </a>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                   <div class="content">
-                       <a class="card-link" href="" ng-click="showItemDetails(request.uid)">
-                          <h5 class="title">{{request.title}}</h5>
-                       </a>
-                       <a class="card-link">
-                          <p class="description">{{request.description}}</p>
-                       </a>
-                       <a class="footer">
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
-                              <div class="card-link">
-                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{request.category}}
-                              </div>
-                          </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
-                              <div class="card-link">
-                                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{request.leaseTerm}}
-                              </div>
-                          </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value">
-                              <div class="card-link">
-                                  <span class="fa fa-rupee" aria-hidden="true"></span> {{request.leaseValue}}
-                              </div>
-                          </div>
-                       </a>
-                   </div>
-               </div>
-               <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center;border-left: thin solid #eee;border-right: thin solid #eee;">
-                  <div class="content" style="text-align:center;">
-                      <a class="card-link">
-                        <span class="label label-default label-fill">Requestor</span>
-                      </a>
-                      <br/>
-                      <a class="card-link">
-                          <img src="images/user_icon.png" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{request.requestUserName}}</p>
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{request.requestor_sublocality}}</p>
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{request.requestor_locality}}</p>
-                      </a>
-                  </div>
-               </div>
-               <div class="col-lg-2 col-md-2 col-sm-2">
-                   <div class="content" style="text-align:center;">
-                       <a class="card-link">
-                         <span class="label label-default label-fill">Requested At</span>
-                       </a>
-                       <br/>
-                       <a class="card-link">
-                           <p class="description">{{request.requestDate | date}}</p>
-                       </a>
-                       <a class="card-link" href="">
-                           <button ng-click="grantLease(request.requestItemId,request.requestorId,$index)" class="btn btn-primary btn-simple">Accept</button>
-                       </a>
-                       <a class="card-link" href="">
-                           <button ng-click="rejectLease(request.requestItemId,request.requestorId,$index)" class="btn btn-primary btn-simple">Delete</button>
-                       </a>
-                   </div>
-               </div>
-            </div>
--->
     </div>
 </div>

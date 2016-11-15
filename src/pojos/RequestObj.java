@@ -7,9 +7,8 @@ import java.util.Date;
 public class RequestObj {
 
 	int requestId;
-	String requestDate, requestorId, requestorName, requestorProfilePic, requestorLocality, requestorSublocality;
+	String requestDate, requestorId, requestorName, requestorProfilePic, requestorLocality, requestorSublocality, distance;
 	boolean friend;
-	float userLat, userLng;
 
 	public int getRequestId() {
 		return requestId;
@@ -81,21 +80,16 @@ public class RequestObj {
 	public void setFriend(boolean friend) {
 		this.friend = friend;
 	}
-
-	public float getUserLat() {
-		return userLat;
+	
+	public String getDistance() {
+		return distance;
 	}
 
-	public void setUserLat(float userLat) {
-		this.userLat = userLat;
-	}
-
-	public float getUserLng() {
-		return userLng;
-	}
-
-	public void setUserLng(float userLng) {
-		this.userLng = userLng;
+	public void setDistance(float distance) {
+		if(distance < 1)
+			this.distance = "0m";
+		else
+			this.distance = Math.round(distance)+"km";
 	}
 	
 }

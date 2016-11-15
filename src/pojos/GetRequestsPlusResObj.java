@@ -11,8 +11,10 @@ public class GetRequestsPlusResObj extends ResObj {
 	// Item Details
 	int itemId, insurance;
 	String title, description, category, leaseTerm, uid, primaryImageLink;
-	float itemLat, itemLng;
 
+	// owner locality and sub locality
+	String locality, sublocality;
+	
 	List<RequestObj> requests = new ArrayList<>();
 
 	public int getCode() {
@@ -103,22 +105,6 @@ public class GetRequestsPlusResObj extends ResObj {
 		this.primaryImageLink = primaryImageLink;
 	}
 
-	public float getItemLat() {
-		return itemLat;
-	}
-
-	public void setItemLat(float itemLat) {
-		this.itemLat = itemLat;
-	}
-
-	public float getItemLng() {
-		return itemLng;
-	}
-
-	public void setItemLng(float itemLng) {
-		this.itemLng = itemLng;
-	}
-
 	public List<RequestObj> getRequests() {
 		return requests;
 	}
@@ -129,6 +115,22 @@ public class GetRequestsPlusResObj extends ResObj {
 	
 	public void addRequests(RequestObj req){
 		this.requests.add(req);
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getSublocality() {
+		return sublocality;
+	}
+
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
 	}
 
 }
