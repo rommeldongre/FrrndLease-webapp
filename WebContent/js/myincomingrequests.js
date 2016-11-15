@@ -1,20 +1,10 @@
 var myInComingRequests = angular.module('myApp');
 
-myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 
-														'userFactory', 
-														'bannerService', 
-														'modalService', 
-														function($scope, 
-														userFactory, 
-														bannerService,
-														modalService){
-  
+myInComingRequests.controller('myInComingRequestsCtrl', ['$scope', 'userFactory', 'bannerService', 'modalService', function($scope, userFactory, bannerService, modalService){
+    
     localStorage.setItem("prevPage","myapp.html#/myincomingrequests");
     
-    var itemNextId = "0";
-    
-    // to get all the incoming requests
-    var itemNextRequestId = "0";
+    var offset = 0;
     
     // to initialise the requests array
     $scope.requests = [];
@@ -23,9 +13,9 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
         
         $scope.requests = [];
         
-        itemNextRequestId = 0;
+        offset = 0;
         
-        getInRequests(itemNextRequestId);
+        getInRequests(offset);
         
     }
     
@@ -50,14 +40,13 @@ myInComingRequests.controller('myInComingRequestsCtrl', ['$scope',
             contentType:"application/json",
             dataType: "JSON",
             success: function(response) {
-                if(response.title){
-                    itemNextRequestId = response.requestId;
-                    itemNextId = response.requestItemId;
+                if(response.code == 0){
+                    offset = response.offset;
                     $scope.$apply(function(){
                         $scope.requests.unshift(response);
                     });
                     
-                    getInRequests(itemNextRequestId);
+                    getInRequests(offset);
                 }
             },
             error: function() {

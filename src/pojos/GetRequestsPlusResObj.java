@@ -1,19 +1,69 @@
 package pojos;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetRequestsPlusResObj extends ResObj {
 
-	int Code, RequestItemId, requestId;
-	String Id, Message, RequestorId, RequestUserName, RequestUserId, RequestDate, Title, Description;
+	int code, offset;
+	String message;
 
-	// more items details
-	String category, leaseValue, leaseTerm, uid, primaryImageLink;
+	// Item Details
+	int itemId, insurance;
+	String title, description, category, leaseTerm, uid, primaryImageLink;
 
-	// more items owners details
-	String requestor_mobile, requestor_address, requestor_locality, requestor_sublocality;
+	// owner locality and sub locality
+	String locality, sublocality;
+	
+	List<RequestObj> requests = new ArrayList<>();
+
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getCategory() {
 		return category;
@@ -23,12 +73,12 @@ public class GetRequestsPlusResObj extends ResObj {
 		this.category = category;
 	}
 
-	public String getLeaseValue() {
-		return leaseValue;
+	public int getInsurance() {
+		return insurance;
 	}
 
-	public void setLeaseValue(String leaseValue) {
-		this.leaseValue = leaseValue;
+	public void setInsurance(int insurance) {
+		this.insurance = insurance;
 	}
 
 	public String getLeaseTerm() {
@@ -39,14 +89,6 @@ public class GetRequestsPlusResObj extends ResObj {
 		this.leaseTerm = leaseTerm;
 	}
 
-	public String getPrimaryImageLink() {
-		return primaryImageLink;
-	}
-
-	public void setPrimaryImageLink(String primaryImageLink) {
-		this.primaryImageLink = primaryImageLink;
-	}
-
 	public String getUid() {
 		return uid;
 	}
@@ -55,130 +97,40 @@ public class GetRequestsPlusResObj extends ResObj {
 		this.uid = uid;
 	}
 
-	public String getRequestor_mobile() {
-		return requestor_mobile;
+	public String getPrimaryImageLink() {
+		return primaryImageLink;
 	}
 
-	public void setRequestor_mobile(String requestor_mobile) {
-		this.requestor_mobile = requestor_mobile;
+	public void setPrimaryImageLink(String primaryImageLink) {
+		this.primaryImageLink = primaryImageLink;
 	}
 
-	public String getRequestor_address() {
-		return requestor_address;
+	public List<RequestObj> getRequests() {
+		return requests;
 	}
 
-	public void setRequestor_address(String requestor_address) {
-		this.requestor_address = requestor_address;
+	public void setRequests(List<RequestObj> requests) {
+		this.requests = requests;
+	}
+	
+	public void addRequests(RequestObj req){
+		this.requests.add(req);
 	}
 
-	public String getRequestor_locality() {
-		return requestor_locality;
+	public String getLocality() {
+		return locality;
 	}
 
-	public void setRequestor_locality(String requestor_locality) {
-		this.requestor_locality = requestor_locality;
+	public void setLocality(String locality) {
+		this.locality = locality;
 	}
 
-	public String getRequestor_sublocality() {
-		return requestor_sublocality;
+	public String getSublocality() {
+		return sublocality;
 	}
 
-	public void setRequestor_sublocality(String requestor_sublocality) {
-		this.requestor_sublocality = requestor_sublocality;
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
 	}
 
-	public int getCode() {
-		return Code;
-	}
-
-	public void setCode(int code) {
-		Code = code;
-	}
-
-	public int getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(int requestId) {
-		this.requestId = requestId;
-	}
-
-	public String getId() {
-		return Id;
-	}
-
-	public void setId(String id) {
-		Id = id;
-	}
-
-	public String getMessage() {
-		return Message;
-	}
-
-	public void setMessage(String message) {
-		Message = message;
-	}
-
-	public int getRequestItemId() {
-		return RequestItemId;
-	}
-
-	public void setRequestItemId(int requestItemId) {
-		RequestItemId = requestItemId;
-	}
-
-	public String getRequestorId() {
-		return RequestorId;
-	}
-
-	public void setRequestorId(String requestorId) {
-		RequestorId = requestorId;
-	}
-
-	public String getRequestUserName() {
-		return RequestUserName;
-	}
-
-	public void setRequestUserName(String requestUserName) {
-		RequestUserName = requestUserName;
-	}
-
-	public String getRequestUserId() {
-		return RequestUserId;
-	}
-
-	public void setRequestUserId(String requestUserId) {
-		RequestUserId = requestUserId;
-	}
-
-	public String getRequestDate() {
-		return RequestDate;
-	}
-
-	public void setRequestDate(String requestDate) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		try {
-			date = sdf.parse(requestDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		RequestDate = Long.toString(date.getTime());
-	}
-
-	public String getTitle() {
-		return Title;
-	}
-
-	public void setTitle(String title) {
-		Title = title;
-	}
-
-	public String getDescription() {
-		return Description;
-	}
-
-	public void setDescription(String description) {
-		Description = description;
-	}
 }
