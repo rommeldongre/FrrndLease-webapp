@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2041;
+	public final int appBuild = 2042;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1487,6 +1487,61 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2041;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds user signup date column in users table and the correct value for old users
+				if(dbBuild < 2042){
+					
+					String sqlAddUserSignUpDate = "ALTER TABLE `users` ADD `user_signup_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `user_fb_id`";
+					String sqlFetchSignUpDate = "SELECT credit_user_id, MIN(credit_date) AS credit_date FROM credit_log GROUP BY credit_user_id";
+					ResultSet resultCreditDate =null;
+					
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddUserSignUpDate);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlFetchSignUpDate);
+						resultCreditDate = ps2.executeQuery();
+						
+						
+						System.out.println("Checking SignUp Date resultset if query returned anything");
+						resultCreditDate.beforeFirst();
+			    		while (resultCreditDate.next()) {
+			    			System.out.println("Result Set not Empty..Getting data one by one");
+			    			String user_id=null,signupdate= null;
+			      			user_id = resultCreditDate.getString("credit_user_id");
+			      			signupdate = resultCreditDate.getString("credit_date");
+			      			
+			      			String sqlUpdateSignUpDate = "UPDATE users set user_signup_date=? WHERE user_id=?";
+			      			
+			      			PreparedStatement ps3 = connection.prepareStatement(sqlUpdateSignUpDate);
+			    			
+			      			ps3.setString(1, signupdate);
+			      			ps3.setString(2, user_id);
+			      			ps3.executeUpdate();
+			    			ps3.close();   			
+			    		}
+			    		ps2.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							resultCreditDate.close();
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2042;
 					updateDBBuild(dbBuild);
 					
 				}
