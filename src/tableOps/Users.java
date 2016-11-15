@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -906,7 +909,7 @@ public class Users extends Connect {
 			if(liveStatus != -1)
 				sqlGetUsers = sqlGetUsers + " AND user_live_status=" + liveStatus;
 			
-			sqlGetUsers = sqlGetUsers + " ORDER BY user_id LIMIT " + offset + ", " + limit;
+			sqlGetUsers = sqlGetUsers + " ORDER BY user_signup_date LIMIT " + offset + ", " + limit;
 			
 			ps1 = hcp.prepareStatement(sqlGetUsers);
 			
@@ -935,6 +938,7 @@ public class Users extends Connect {
 					obj.put("verification", rs1.getInt("user_verified_flag"));
 					obj.put("profilePic", rs1.getString("user_profile_picture"));
 					obj.put("liveStatus", rs1.getInt("user_live_status"));
+					obj.put("signupDate", CalSignUpDate(rs1.getString("user_signup_date")));
 					
 					array.put(obj);
 					offset = offset + 1;
@@ -1134,6 +1138,20 @@ public class Users extends Connect {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public String CalSignUpDate(String signUpDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String SignUpdate=null;
+		Date date = new Date();
+		try {
+			date = sdf.parse(signUpDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	    signUpDate = Long.toString(date.getTime());
+	    SignUpdate = signUpDate;
+	    return SignUpdate;
 	}
 	
 }

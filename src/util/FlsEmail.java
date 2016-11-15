@@ -145,12 +145,11 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_MATCH_WISHLIST_ITEM:
 				SUBJECT = (" Item [" + obj.getString("title") + "] has been added to the Friend Store");
-				BODY = ("<body>Someone has posted this item that matches your wishlist. <br/> <br/>" + " Title : "
-						+ obj.getString("title") + "<br/>" + " Category : " + obj.getString("category") + "<br/>"
-						+ " Description : " + obj.getString("description") + "<br/>" + " Insurance : "
-						+ obj.getInt("leaseValue") + "<br/>" + " Lease Term : " + obj.getString("leaseTerm") + "<br/>"
-						+ " Status : " + obj.getString("itemStatus") + "<br/>" + "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title")
-						+ " ></img>" + "</body>");
+				BODY = ("<body>Someone has posted this item that matches your wishlist. <br/>" + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm") + "| Status: " + obj.getString("itemStatus")
+						+ "<br/>"+ obj.getString("description")+"<br/>"
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
 
 			case FLS_MAIL_MATCH_POST_ITEM:
