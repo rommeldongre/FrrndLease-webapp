@@ -422,6 +422,11 @@ public class FlsEmail extends Connect{
 				BODY = "<body> Your lease has not started for this item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> because you have not picked it up yet. <br/>"
 						+ "To start the lease and download your lease agreement, please confirm that the item has been picked up. If life is gettgin in the way, do nothing and we will delete this lease in the next 2 days. " + "</body>";
 				break;
+			
+			case FLS_MAIL_REMIND_PHOTO_ID:
+				SUBJECT = ("Reminder to Upload Photo Id on Frrndlease");
+				BODY = obj.getString("message");
+				break;
 				
 			default:
 				SUBJECT = (" Default Subject");
