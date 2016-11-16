@@ -32,6 +32,8 @@ public class ErrorCat {
 	final public int FLS_ACTIVE_LEASE = 223;
 	final public int FLS_DELIVERY_STATUS_FAIL = 224;
 	final public int FLS_CHANGE_PICKUP_STATUS_FAIL = 225;
+	final public int FLS_INVALID_MESSAGE = 226;
+	final public int FLS_MESSAGE_NOT_SENT = 227;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -100,6 +102,8 @@ public class ErrorCat {
 	final public String FLS_DELIVERY_STATUS_FAIL_M = "Not able to change delivery status. Please try again later.";
 	final public String FLS_CHANGE_PICKUP_STATUS_FAIL_M = "The pickup status cannot be changed.";
 	final public String FLS_LEASE_ITEM_EDIT_M = "You cannot edit item if it has been leased to someone!!";
+	final public String FLS_INVALID_MESSAGE_M = "Please enter a valid message.";
+	final public String FLS_MESSAGE_NOT_SENT_M = "Sorry!! Not able to send the message.";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

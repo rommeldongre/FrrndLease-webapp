@@ -1,11 +1,8 @@
 package pojos;
 
-public class SendMessageResObj extends ResObj{
-	
-	//Return code for PostItem
-		int code = 0;
-				
-	//Error String
+public class SendMessageResObj extends ResObj {
+
+	int code;
 	String message;
 
 	public int getCode() {
@@ -23,5 +20,5 @@ public class SendMessageResObj extends ResObj{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 }

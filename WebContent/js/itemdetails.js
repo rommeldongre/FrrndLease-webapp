@@ -262,27 +262,25 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     }
     
     $scope.sendItemMessage = function(){
-		modalService.showModal({}, {messaging: true, bodyText: 'Type Message to Item Owner', actionButtonText: 'Send'}).then(function(result){
+		modalService.showModal({}, {messaging: true, bodyText: 'Message Item\'s Owner', actionButtonText: 'Send'}).then(function(result){
+            
             var message = result;
-			var friend_name = "";
-			var item_id= parseInt($scope.item_id);
+            
             if(message == "" || message == undefined)
-                message = "";
-            	
-			if($scope.user_id!= '-' && $scope.user_id!=null && $scope.user_id!="null")
-				var friendId = $scope.user_id;
-				
-		   var req = {
+                message = null;
+            
+            var req = {
                 userId: userFactory.user,
+				accessToken: userFactory.userAccessToken,
+				from: userFactory.user,
+				to: $scope.user_id,
+                subject: "ITEM",
                 message: message,
-				friendId: friendId,
-				friendName: friend_name,
-				itemId: item_id,
-				title: $scope.item.title,
-				uid: $window.uid,
-				accessToken: userFactory.userAccessToken
+				itemId: parseInt($scope.item_id)
             }
-			sendMessage(req);	
+            
+            sendMessage(req);
+            
         }, function(){});
     }
 	
@@ -296,7 +294,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 			dataType: "json",
 			success: function(response) {
 				if(response.code==0){
-					bannerService.updatebannerMessage("Success, Message to Owner sent");
+					bannerService.updatebannerMessage("Message Sent!!");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{
