@@ -12,7 +12,7 @@
     
     <div class="card" ng-repeat="request in requests">
         <div class="container-fluid">
-            <div class="row" style="display:flex;flex-wrap:wrap;text-align:center;padding:20px 20px 0px 20px;">
+            <div class="row" style="display:flex;flex-wrap:wrap;padding:20px 20px 0px 20px;">
                 <div class="col-md-4">
                     <img class="img-rounded" load-image="request.primaryImageLink" ng-src="" alt="..."/>
                 </div>
@@ -20,7 +20,7 @@
                     <div class="row">
                         <h3><strong>{{request.title}}</strong></h3>
                     </div>
-                    <div class="row">
+                    <div class="row" style="text-align:center;margin-top:7%;">
                         <div class="col-md-3">
                             <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
                                 <div class="icon icon-sm">
@@ -88,7 +88,8 @@
                             </div>
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{req.distance == '0m' ? 'Under 1km' : req.distance}}&nbsp;-&nbsp;{{req.requestorSublocality+","+req.requestorLocality}}<br>
-                                <span ng-if="req.requestorMessage!=null" class="btn btn-default btn-simple" data-toggle="popover" title="{{req.requestorName}} says - " data-placement="top" data-content="{{req.requestorMessage}}">{{req.requestorMessage | limitTo: 20}}<span ng-if="req.requestorMessage > 20">&hellip;</span>
+                                <span ng-if="req.requestorMessage!=null" class="btn btn-default btn-simple" data-toggle="popover" title="{{req.requestorName}} says - " data-placement="top" data-content="{{req.requestorMessage}}">
+                                <i class="fa fa-quote-left" aria-hidden="true"></i> {{req.requestorMessage | limitTo: 20}}<span ng-if="req.requestorMessage > 20">&hellip;</span> <i class="fa fa-quote-right" aria-hidden="true"></i>
                                 </span>
                             </p>
                         </div>
@@ -97,13 +98,13 @@
                         </div>
                         <hr>
                         <div class="text-center">
-                            <button type="button" rel="tooltip" data-placement="left" title="Grant Lease" class="btn btn-success btn-simple btn-icon" ng-click="grantLease(request.itemId,req.requestorId,$index)">
+                            <button data-toggle="tooltip" data-placement="top" title="Grant Lease" class="btn btn-success btn-simple btn-icon btn-tooltip" ng-click="grantLease(request.itemId,req.requestorId,$index)">
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             </button>
-                            <button type="button" rel="tooltip" data-placement="left" title="Reject Lease" class="btn btn-danger btn-simple btn-icon" ng-click="rejectLease(request.itemId,req.requestorId,$index)">
+                            <button data-toggle="tooltip" data-placement="top" title="Reject Request" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="rejectLease(request.itemId,req.requestorId,$index)">
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
-                            <button type="button" rel="tooltip" data-placement="left" title="Send Message" class="btn btn-social btn-simple btn-icon" ng-click="sendMessage(request.itemId,req.requestorId)">
+                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(request.itemId,req.requestorId)">
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             </button>
                         </div>
