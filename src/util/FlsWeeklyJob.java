@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -22,7 +23,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		// TODO Auto-generated method stub
 		
-		LOGGER.warning("Its 5AM, Starting FlsDeleteJob...");
+		LOGGER.warning("Its Saturday 11AM, Starting FlsWeeklyJob...");
 		checkIdProof();
 	}
 
@@ -31,8 +32,8 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 		LOGGER.info("Send reminder to upload Id Proof");
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		ResultSet rs1 = null;
+		PreparedStatement ps1 = null,ps2=null;
+		ResultSet rs1 = null,rs2=null;
 		
 		try {
 			
@@ -40,12 +41,22 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 			ps1 = hcp.prepareStatement(sqlSelectUsersToRemind);
 			rs1 = ps1.executeQuery();
 			
+			String sqlSelectPrimePlaces = "SELECT * FROM `places`";
+			ps2 = hcp.prepareStatement(sqlSelectPrimePlaces);
+			rs2 = ps2.executeQuery();
+			
+			ArrayList<String> places =new ArrayList<String>();
+			
+			while(rs2.next()){
+				places.add(rs2.getString("locality"));
+			}
+			
 			while(rs1.next()){
 				LOGGER.info("Sending a reminder to the user about uploading photo id");
-				if(rs1.getString("user_locality").equals("Pune")){
+				if(places.contains(rs1.getString("user_locality"))){
 					try {
 						Event event = new Event();
-						event.createEvent(rs1.getString("user_id"), rs1.getString("user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REMIND_PHOTO_ID, 0, "You have not uploaded your valid photo id. Please upload it to become a PRIME member");
+						event.createEvent(rs1.getString("user_id"), rs1.getString("user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REMIND_PHOTO_ID, 0, "You have not uploaded your valid photo id. Please upload it to enable paid delivery service");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -61,7 +72,9 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 		}finally{
 			try{
 				if(rs1 != null) rs1.close();
+				if(rs2 != null) rs2.close();
 				if(ps1 != null) ps1.close();
+				if(ps2 != null) ps2.close();
 				if(hcp != null) hcp.close();
 			}catch(Exception e){
 				e.printStackTrace();
