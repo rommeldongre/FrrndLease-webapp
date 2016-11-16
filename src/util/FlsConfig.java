@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2042;
+	public final int appBuild = 2043;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1542,6 +1542,59 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2042;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block creates notifications types for photo id reminder in events table
+				if(dbBuild < 2043){
+					String sqlCreateBackup = "ALTER TABLE `events` ADD `test` ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER','FLS_EMAIL_VERIFICATION','FLS_MOBILE_VERIFICATION','FLS_MAIL_MESSAGE_FRIEND_FROM','FLS_MAIL_MESSAGE_FRIEND_TO','FLS_MAIL_MESSAGE_ITEM_FROM','FLS_MAIL_MESSAGE_ITEM_TO','FLS_MAIL_OLD_ITEM_WARN','FLS_MAIL_OLD_REQUEST_WARN','FLS_MAIL_OLD_LEASE_WARN','FLS_MAIL_GRANT_LEASE_FROM_SELF','FLS_MAIL_GRANT_LEASE_TO_SELF','FLS_MAIL_GRANT_LEASE_FROM_PRIME','FLS_MAIL_GRANT_LEASE_TO_PRIME','FLS_MAIL_FROM_LEASE_STARTED','FLS_MAIL_TO_LEASE_STARTED','FLS_MAIL_OPS_PICKUP_READY','FLS_MAIL_CLOSE_LEASE_FROM_SELF','FLS_MAIL_CLOSE_LEASE_TO_SELF','FLS_MAIL_OPS_PICKUP_CLOSE','FLS_MAIL_ITEM_INSTORE_FROM','FLS_MAIL_ITEM_INSTORE_TO')";
+					String sqlMoveBackup = "UPDATE `events` SET test=notification_type";
+					String sqlDropNotificationType = "ALTER TABLE `events` DROP `notification_type`";
+					String sqlAddNotificationEnum = "ALTER TABLE events ADD notification_type ENUM('FLS_MAIL_FORGOT_PASSWORD','FLS_MAIL_SIGNUP_VALIDATION','FLS_MAIL_REGISTER','FLS_MAIL_DELETE_ITEM','FLS_MAIL_POST_ITEM','FLS_MAIL_MATCH_WISHLIST_ITEM','FLS_MAIL_MATCH_POST_ITEM','FLS_MAIL_ADD_FRIEND_FROM','FLS_MAIL_ADD_FRIEND_TO','FLS_MAIL_DELETE_FRIEND_FROM','FLS_MAIL_DELETE_FRIEND_TO','FLS_MAIL_REJECT_REQUEST_FROM','FLS_MAIL_REJECT_REQUEST_TO','FLS_MAIL_DELETE_REQUEST_FROM','FLS_MAIL_DELETE_REQUEST_TO','FLS_MAIL_GRACE_PERIOD_OWNER','FLS_MAIL_GRACE_PERIOD_REQUESTOR','FLS_MAIL_RENEW_LEASE_OWNER','FLS_MAIL_RENEW_LEASE_REQUESTOR','FLS_MAIL_MAKE_REQUEST_FROM','FLS_MAIL_MAKE_REQUEST_TO','FLS_NOMAIL_ADD_WISH_ITEM','FLS_SMS_FORGOT_PASSWORD','FLS_SMS_SIGNUP_VALIDATION','FLS_SMS_REGISTER','FLS_EMAIL_VERIFICATION','FLS_MOBILE_VERIFICATION','FLS_MAIL_MESSAGE_FRIEND_FROM','FLS_MAIL_MESSAGE_FRIEND_TO','FLS_MAIL_MESSAGE_ITEM_FROM','FLS_MAIL_MESSAGE_ITEM_TO','FLS_MAIL_OLD_ITEM_WARN','FLS_MAIL_OLD_REQUEST_WARN','FLS_MAIL_OLD_LEASE_WARN','FLS_MAIL_GRANT_LEASE_FROM_SELF','FLS_MAIL_GRANT_LEASE_TO_SELF','FLS_MAIL_GRANT_LEASE_FROM_PRIME','FLS_MAIL_GRANT_LEASE_TO_PRIME','FLS_MAIL_FROM_LEASE_STARTED','FLS_MAIL_TO_LEASE_STARTED','FLS_MAIL_OPS_PICKUP_READY','FLS_MAIL_CLOSE_LEASE_FROM_SELF','FLS_MAIL_CLOSE_LEASE_TO_SELF','FLS_MAIL_OPS_PICKUP_CLOSE','FLS_MAIL_ITEM_INSTORE_FROM','FLS_MAIL_ITEM_INSTORE_TO','FLS_MAIL_REMIND_PHOTO_ID') NOT NULL AFTER delivery_status";
+					String sqlMoveBackupBack = "UPDATE `events` SET notification_type=test";
+					String sqlRemoveTest = "ALTER TABLE `events` DROP `test`";
+					try{
+						getConnection();
+						
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateBackup);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlMoveBackup);
+						ps2.executeUpdate();
+						ps2.close();
+						
+						PreparedStatement ps3 = connection.prepareStatement(sqlDropNotificationType);
+						ps3.executeUpdate();
+						ps3.close();
+						
+						PreparedStatement ps4 = connection.prepareStatement(sqlAddNotificationEnum);
+						ps4.executeUpdate();
+						ps4.close();
+						
+						PreparedStatement ps5 = connection.prepareStatement(sqlMoveBackupBack);
+						ps5.executeUpdate();
+						ps5.close();
+						
+						PreparedStatement ps6 = connection.prepareStatement(sqlRemoveTest);
+						ps6.executeUpdate();
+						ps6.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2043;
 					updateDBBuild(dbBuild);
 					
 				}

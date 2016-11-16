@@ -313,7 +313,7 @@ public class FlsEmail extends Connect{
 						+ "<br/>"+ obj.getString("description")+"<br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>"
 						+ "You are eligible for Prime pickup, where we pickup the item for you for a small delivery fee. However, you can choose to pick it up yourself. Please choose your delivery option, to start your lease: <br/><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=self&leaseId=" + obj.getInt("leaseId") + "'>"
-						+ "Self Pickup</a><br/>or<br/><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=prime&leaseId=" + obj.getInt("leaseId") + "'>Frrndlease Pickup</a>");
+						+ "Self Pickup</a><br/>or<br/><a href='" + EMAIL_DELIVERY_PLAN + "?delPlan=prime&leaseId=" + obj.getInt("leaseId") + "'>FrrndLease Pickup</a>");
 				break;
 				
 			case FLS_MAIL_OPS_PICKUP_READY:
@@ -421,6 +421,11 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Awaiting Pickup of this item on FrrndLease");
 				BODY = "<body> Your lease has not started for this item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> because you have not picked it up yet. <br/>"
 						+ "To start the lease and download your lease agreement, please confirm that the item has been picked up. If life is gettgin in the way, do nothing and we will delete this lease in the next 2 days. " + "</body>";
+				break;
+			
+			case FLS_MAIL_REMIND_PHOTO_ID:
+				SUBJECT = ("Reminder to Upload Photo Id on FrrndLease");
+				BODY = obj.getString("message");
 				break;
 				
 			default:

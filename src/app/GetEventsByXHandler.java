@@ -69,7 +69,7 @@ public class GetEventsByXHandler extends Connect implements AppHandler {
 				sql = sql + "datetime BETWEEN '"+fromDate+"' AND '"+toDate+"' AND ";
 			}
 			
-			sql = sql + "tb1.archived='" + status + "' ORDER BY tb1.event_id LIMIT " + offset + ","+limit;
+			sql = sql + "tb1.archived='" + status + "' ORDER BY tb1.event_id DESC LIMIT " + offset + ","+limit;
 			
 			LOGGER.info(sql);
 			
