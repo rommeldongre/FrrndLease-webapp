@@ -91,13 +91,13 @@ public class SendMessageHandler extends Connect implements AppHandler {
 				Event event = new Event();
 				if(rq.getUid()!=null){
 					LOGGER.info("Item Details are: "+rq.getItemId()+" "+rq.getTitle()+" "+rq.getUid());
-					event.createEvent(rq.getFriendId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_FROM, rq.getItemId(), "You have sent a message to user <i>"+friendName+"</i> regarding an item <a href=\"" + URL + "/ItemDetails?uid=" + rq.getUid() + "\">" + rq.getTitle() + "</a>. The message is:- <br> <i>"+"'"+message+"' </i>");
-					event.createEvent(rq.getUserId(), rq.getFriendId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_TO, rq.getItemId(), " You have recieved a message from user <i>"+userName+"</i> regarding an item <a href=\"" + URL + "/ItemDetails?uid=" + rq.getUid() + "\">" + rq.getTitle() + "</a>. The message is:- <br> <i>"+"'"+message+"' </i>");
+					event.createEvent(rq.getFriendId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_FROM, rq.getItemId(), "From: <i>You</i>. To: <i>"+friendName+"</i>. Regarding: <a href=\"" + URL + "/ItemDetails?uid=" + rq.getUid() + "\">" + rq.getTitle() + "</a>. <br> <i>"+"'"+message+"' </i>");
+					event.createEvent(rq.getUserId(), rq.getFriendId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_TO, rq.getItemId(), " To: <i>You</i>. From: <i>"+userName+"</i>. Regarding: <a href=\"" + URL + "/ItemDetails?uid=" + rq.getUid() + "\">" + rq.getTitle() + "</a>. <br> <i>"+"'"+message+"' </i>");
 					
 				}else{
 					LOGGER.info("Friend Message Info: "+rq.getUserId()+" "+rq.getFriendId()+" "+rq.getFriendName()+" "+rq.getMessage()+" "+rq.getItemId()+" "+rq.getTitle()+" "+rq.getUid());
-					event.createEvent(rq.getFriendId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_FROM, 0, "Your friend <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendName + "</a> has been sent a message. The message is:- <br> <i>"+"'"+message+"' </i>");
-					event.createEvent(rq.getUserId(), rq.getFriendId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_TO, 0, "Your friend <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userName + "</a> sent you a message. The message is:- <br> <i>"+"'"+message+"' </i>");
+					event.createEvent(rq.getFriendId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_FROM, 0, "From: <i>You</i>. To: <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendName + "</a>. <br> <i>"+"'"+message+"' </i>");
+					event.createEvent(rq.getUserId(), rq.getFriendId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_TO, 0, "From: <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userName + "</a>. To: You. <br> <i>"+"'"+message+"' </i>");
 				}
 				
 			}
