@@ -1,29 +1,23 @@
 package pojos;
 
-public class GetRequestsPlusReqObj extends ReqObj{
-	
-	// user posting item
-			//@NotNull
-			String userId;
-			
-			// Cookie
-			// TBD: change to user id type
-			//@NotNull
-			int cookie;
+public class GetRequestsPlusReqObj extends ReqObj {
 
-			public String getUserId() {
-				return userId;
-			}
+	String userId;
+	int cookie;
 
-			public void setUserId(String userId) {
-				this.userId = userId;
-			}
+	public String getUserId() {
+		return userId;
+	}
 
-			public int getCookie() {
-				return cookie;
-			}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-			public void setCookie(int cookie) {
-				this.cookie = cookie;
-			}
+	public int getCookie() {
+		return cookie;
+	}
+
+	public void setCookie(int cookie) {
+		this.cookie = cookie;
+	}
 }
