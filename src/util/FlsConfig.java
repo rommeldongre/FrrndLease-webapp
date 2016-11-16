@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2043;
+	public final int appBuild = 2044;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1595,6 +1595,35 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2043;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block adds message column in requests table
+				if(dbBuild < 2044){
+					
+					String sqlAddMessageInRequests = "ALTER TABLE `requests` ADD `request_message` VARCHAR(225) NULL AFTER `request_lastmodified`;";
+					
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddMessageInRequests);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2044;
 					updateDBBuild(dbBuild);
 					
 				}

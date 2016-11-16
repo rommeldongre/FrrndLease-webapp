@@ -9,7 +9,7 @@ public class RequestsModel {
 
 	private FlsLogger LOGGER = new FlsLogger(RequestsModel.class.getName());
 	
-	private String userId, itemId;
+	private String userId, itemId, message;
 	private JSONObject obj;
 	
 	public void getData(JSONObject ob) {
@@ -21,6 +21,7 @@ public class RequestsModel {
 		try {
 			userId = obj.getString("userId");
 			itemId = obj.getString("itemId");
+			message = obj.getString("message");
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
@@ -34,4 +35,9 @@ public class RequestsModel {
 	public String getItemId() {
 		return this.itemId;
 	}
+
+	public String getMessage() {
+		return this.message;
+	}
+
 }

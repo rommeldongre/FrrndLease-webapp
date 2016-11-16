@@ -27,7 +27,7 @@ public class Requests extends Connect {
 
 	private String URL = FlsConfig.prefixUrl;
 	
-	private String check = null, Id = null, token, userId, itemId, operation, message;
+	private String check = null, Id = null, token, userId, itemId, operation, message, msg;
 	private int Code;
 	private RequestsModel rm;
 	private Response res = new Response();
@@ -118,6 +118,7 @@ public class Requests extends Connect {
 	private void Add() {
 		userId = rm.getUserId();
 		itemId = rm.getItemId();
+		msg = rm.getMessage();
 
 		PreparedStatement  ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null;
 		ResultSet rs1 = null, rs2 = null, rs3 = null;
@@ -186,10 +187,11 @@ public class Requests extends Connect {
 					return;
 				}
 								
-				String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id) values (?,?)";
+				String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id,request_message) values (?,?,?)";
 				ps4 = hcp.prepareStatement(sqlAddRequest);
 				ps4.setString(1, userId);
 				ps4.setString(2, itemId);
+				ps4.setString(3, msg);
 							
 				rs4 = ps4.executeUpdate();
 				

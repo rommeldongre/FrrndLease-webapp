@@ -7,6 +7,7 @@
 <script type="text/javascript">
 	var ItemId = null;
 	var UserId = null;
+    var Message = null;
 	
 	getData = function (){
 		ItemId = document.getElementById("itemId").value;
@@ -14,14 +15,18 @@
 		
 		UserId = document.getElementById("userId").value;
 		if (UserId ==='') UserId = null;
+        
+        Message = document.getElementById("msg").value;
+		if (Message ==='') Message = null;
 	};
 	
 	add = function() {
 		alert("inside add function.");
 		getData();
 		var req = {
-					itemId: ItemId,
-					userId: UserId
+            itemId: ItemId,
+			userId: UserId,
+            message: Message
 		};
 		alert("got data");
 		send(req);
@@ -56,6 +61,7 @@
 	<form>
 		Request Item Id : <input type="text" name="itemId" id="itemId"><br/><br/>
 		Request User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Message : <input type="text" name="msg" id="msg"><br/><br/>
 		<input type="button" value="Request Item" onclick="add()"><br/><br/>
 		<h1>OUTPUT</h1>
 		ID : <input type="text" name="Id" id="Id"><br/><br/>

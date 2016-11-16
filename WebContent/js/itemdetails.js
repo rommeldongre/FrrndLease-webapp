@@ -85,13 +85,18 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     getItemsRating();
     
     $scope.requestItem = function(){
-        modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
+        modalService.showModal({}, {messaging: true, bodyText: 'Create A Request. Write a message to Item\'s Owner', actionButtonText: 'Send'}).then(
             function(result){
-                if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
+                if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous"){
 					$('#loginModal').modal('show');
-				else
+                }else{
+                    var message = result;
+            
+                    if(message == "" || message == undefined)
+                        message = null;
+                    
                     $http({
-                        url:'/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
+                        url:'/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user,message:message}),
                         method:"GET"
                     }).then(function success(response){
 						if(response.data.Code== 0){
@@ -106,6 +111,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                     function error(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
                     });
+                }
             }, 
             function(){
 

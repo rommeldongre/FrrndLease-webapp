@@ -88,6 +88,8 @@
                             </div>
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{req.distance == '0m' ? 'Under 1km' : req.distance}}&nbsp;-&nbsp;{{req.requestorSublocality+","+req.requestorLocality}}<br>
+                                <span ng-if="req.requestorMessage!=null" class="btn btn-default btn-simple" data-toggle="popover" title="{{req.requestorName}} says - " data-placement="top" data-content="{{req.requestorMessage}}">{{req.requestorMessage | limitTo: 20}}<span ng-if="req.requestorMessage > 20">&hellip;</span>
+                                </span>
                             </p>
                         </div>
                         <div class="description text-center">
