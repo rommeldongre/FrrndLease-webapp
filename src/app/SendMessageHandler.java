@@ -49,7 +49,7 @@ public class SendMessageHandler extends Connect implements AppHandler {
 				LOGGER.info("Sending message from : " + rq.getFrom() + " to : " + rq.getTo());
 				Message message = new Message(rq.getItemId());
 				int response = message.sendMessage(rq.getFrom(), rq.getTo(), rq.getSubject(), rq.getMessage());
-				
+
 				if(response == 1){
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);

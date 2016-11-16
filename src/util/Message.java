@@ -43,20 +43,20 @@ public class Message extends Connect {
 		try{
 			Event event = new Event();
 			switch(subject){
-				case FRIEND:
-					LOGGER.info("Sending message to friend : " + to);
-					event.createEvent(to, from, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_FROM, 0, "Your friend <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + toName + "</a> has been sent a message. The message is:- <br> <i>'" + message + "'</i>");
-					event.createEvent(from, to, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_TO, 0, "Your friend <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + fromName + "</a> sent you a message. The message is:- <br> <i>'" + message + "'</i>");
-					return 1;
 				case ITEM:
 					getItemDetails();
 					LOGGER.info("Sending message to item's owner : " + to);
 					if(itemId != 0){
-						event.createEvent(to, from, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_FROM, itemId, "You have sent a message to user <i>" + toName + "</i> regarding an item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a>. The message is:- <br> <i>'" + message + "'</i>");
-						event.createEvent(from, to, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_TO, itemId, " You have recieved a message from user <i>" + fromName + "</i> regarding an item <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a>. The message is:- <br> <i>'" + message + "'</i>");
+						event.createEvent(to, from, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_FROM, itemId, "From: <i>You</i>. To: <i>" + toName + "</i>. Regarding: <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a>. <br> <i>" + message + "'</i>");
+						event.createEvent(from, to, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_ITEM_TO, itemId, "To: <i>You</i>. From: <i>" + fromName + "</i>. Regarding: <a href=\"" + URL + "/ItemDetails?uid=" + uid + "\">" + title + "</a>. <br> <i>'" + message + "'</i>");
 					}else{
 						return 0;
 					}
+				return 1;
+				case FRIEND:
+					LOGGER.info("Sending message to friend : " + to);
+					event.createEvent(to, from, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_FROM, 0, "From: <i>You</i>. To: <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + toName + "</a>. <br> <i>'" + message + "'</i>");
+					event.createEvent(from, to, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MESSAGE_FRIEND_TO, 0, "From: <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + fromName + "</a>. To: You. <br> <i>'" + message + "'</i>");
 					return 1;
 				default:
 					return 0;

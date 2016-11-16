@@ -97,6 +97,17 @@ public class FlsServletContextListener implements ServletContextListener {
 	  		// scheduling the delete job
 	  		scheduler.scheduleJob(deleteJob, deleteTrigger);
 	  		
+	  	// defining delete job and tie it to FlsDeleteJob.class
+	  		JobKey weeklyJobKey = JobKey.jobKey("FlsWeeklyJob", "FlsWeeklyGroup");
+	  		// FlsDeleteJob declaration
+	  		JobDetail weeklyJob = newJob(FlsWeeklyJob.class).withIdentity(weeklyJobKey).build();
+	  		// A trigger for delete job
+	  		Trigger weeklyTrigger = newTrigger().withIdentity("FlsWeeklyTrigger", "FlsWeeklyGroup")
+	  				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 11 ? * SAT *"))
+	  				.build();
+	  		// scheduling the delete job
+	  		scheduler.scheduleJob(weeklyJob, weeklyTrigger);
+	  		
 		} catch (SchedulerException e) {
 			e.printStackTrace();
 		}

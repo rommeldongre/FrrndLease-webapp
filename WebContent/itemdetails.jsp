@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--Meta tags For Facebook start here-->
-        <meta property="og:title" content="New Item Posted on Frrndlease"/>
+        <meta property="og:title" content="New Item Posted on FrrndLease"/>
         <meta property="og:type" content="website" />
         <meta property="og:image" content="${primaryImageLink}" />
         <meta property="og:url" content="http://www.frrndlease.com/ItemDetails?uid=${uid}" />
