@@ -391,8 +391,8 @@ public class FlsPlan extends Connect{
 				
 				if(rs2 == 1){
 					Event event = new Event();
-					event.createEvent(rs1.getString("lease_requser_id"), rs1.getString("lease_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_FROM_LEASE_STARTED, itemId, "Yay! Your lease has started. The good earth thanks you! Check out <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">MyLeaseOutItems</a>");
-					event.createEvent(rs1.getString("lease_user_id"), rs1.getString("lease_requser_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_TO_LEASE_STARTED, itemId, "Yay! Your lease has started. The good earth thanks you! Check out <a href=\"" + URL + "/myapp.html#/myleasedinitems\">MyLeaseInItems</a>");
+					event.createEvent(rs1.getString("lease_requser_id"), rs1.getString("lease_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_FROM_LEASE_STARTED, itemId, "Yay! Your lease has started. The good earth thanks you! Check out <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">Your Lease Out Items</a>");
+					event.createEvent(rs1.getString("lease_user_id"), rs1.getString("lease_requser_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_TO_LEASE_STARTED, itemId, "Yay! Your lease has started. The good earth thanks you! Check out <a href=\"" + URL + "/myapp.html#/myleasedinitems\">Your Lease In Items</a>");
 				}else{
 					LOGGER.warning("Not able to start lease for leaseId : " + leaseId);
 				}
