@@ -398,7 +398,7 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_MAKE_REQUEST_TO:
 				SUBJECT = (" FrrndLeasae Item Requested");
-				BODY = ("<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on FrrndLease. Please respond within a week! <br/>" + obj.getString("title")
+				BODY = ("<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on FrrndLease. Check out <a href=\"" + URL + "/myapp.html#/myincomingrequests\">MyIncomingRequests</a>. Please respond within a week! <br/>" + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
 						+ "<br/>"+ obj.getString("description")+"<br/>"
