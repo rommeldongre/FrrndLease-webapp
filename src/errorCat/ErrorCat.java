@@ -104,6 +104,7 @@ public class ErrorCat {
 	final public String FLS_LEASE_ITEM_EDIT_M = "You cannot edit item if it has been leased to someone!!";
 	final public String FLS_INVALID_MESSAGE_M = "Please enter a valid message.";
 	final public String FLS_MESSAGE_NOT_SENT_M = "Sorry!! Not able to send the message.";
+	final public String FLS_CREDITS_INSUFFICIENT_FOR_LEASE = "Atleast 10 credits required by the requestor";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

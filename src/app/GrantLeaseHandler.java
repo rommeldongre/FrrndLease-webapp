@@ -39,14 +39,12 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
-		// TODO Auto-generated method stub
 
-		LOGGER.info("Inside Post Method");
+		LOGGER.info("Inside Process Method of GrantLeaseHandler");
 
 		GrantLeaseReqObj rq = (GrantLeaseReqObj) req;
 		GrantLeaseResObj rs = new GrantLeaseResObj();
@@ -54,12 +52,9 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		Connection hcp = getConnectionFromPool();
 		hcp.setAutoCommit(false);
 		
-		PreparedStatement psReqSelect = null, psReqUpdate = null, psItemSelect = null, 
-				psItemUpdate = null, psLeaseSelect = null, psLeaseUpdate = null, 
-				psAddCredit = null, psDebitCredit = null, psItemStatus = null;
-		ResultSet result1 = null, result3 = null, result4 = null, result5 = null;
-		int RequestAction = 0, ItemAction = 0, LeaseAction = 0, addCredit = 0, subCredit = 0;
-		String item_primary_image_link=null;
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null, ps6 = null;
+		ResultSet rs2 = null, rs1 = null, rs6 = null;
+		int rs3 = 0, rs4 = 0, rs5 = 0;
 		
 		try {
 			
@@ -71,120 +66,96 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			LOGGER.info("Creating Select statement to if item is InStore.....");
-			String checkItemStatus = "SELECT item_status FROM `items` WHERE item_id=?";
-			psItemStatus = hcp.prepareStatement(checkItemStatus);
-			psItemStatus.setInt(1, rq.getItemId());
-			result5 = psItemStatus.executeQuery();
+			// storing itemId
+			int itemId = rq.getItemId();
+			// saving requestorId
+			String requestorId = rq.getReqUserId();
+			// saving Items ownerId
+			String ownerId = rq.getUserId();
 			
-			if(result5.next()){
-				if(!(result5.getString("item_status")).equals("InStore")){
+			LOGGER.info("Getting ItemId : " + itemId + " - Details...");
+			String sqlGetItemsDetails = "SELECT item_status, item_primary_image_link, item_name, item_uid FROM `items` WHERE item_id=?";
+			ps1 = hcp.prepareStatement(sqlGetItemsDetails);
+			ps1.setInt(1, itemId);
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				if(!(rs1.getString("item_status")).equals("InStore")){
 					rs.setCode(FLS_ITEM_ON_HOLD);
-					rs.setError("404");
 					rs.setMessage(FLS_ITEM_ON_HOLD_M);
 					hcp.rollback();
 					return rs;
 				}
 			}
 			
-			
-			int credit = 0;
-			String sqlCheckCredit = "SELECT * FROM users WHERE user_id=?";
-			psLeaseSelect = hcp.prepareStatement(sqlCheckCredit);
-			psLeaseSelect.setString(1, rq.getReqUserId());
-			result4 = psLeaseSelect.executeQuery();
+			LOGGER.info("Getting Requestors Data...");
+			String sqlGetUserData = "SELECT * FROM users WHERE user_id=?";
+			ps2 = hcp.prepareStatement(sqlGetUserData);
+			ps2.setString(1, requestorId);
+			rs2 = ps2.executeQuery();
 									
-			if (!result4.next()) {
-				System.out.println("Empty result while firing select query on 4th table(leases)");
+			if (!rs2.next()) {
+				LOGGER.warning("UserId : " + requestorId + " not found.");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("404");
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
 				return rs;						
 			}
 			
-			credit = result4.getInt("user_credit");
+			if (rs2.getInt("user_credit") < 10) {
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setMessage(FLS_CREDITS_INSUFFICIENT_FOR_LEASE);
+				return rs;
+			}
+
+			LOGGER.info("Getting all active requests for ItemId : " + itemId + " and requestorId : " + requestorId);
+			String sqlGetAllRequests = "SELECT * FROM requests WHERE request_status=? AND request_item_id=? AND request_requser_id <> ?";
 			
-			if (credit < 10) {
+			ps6 = hcp.prepareStatement(sqlGetAllRequests);
+			ps6.setString(1, "Archived");
+			ps6.setInt(2, itemId);
+			ps6.setString(3, requestorId);
+			
+			rs6 = ps6.executeQuery();
+			
+			if(!rs6.next()){
+				rs6.beforeFirst();
+				LOGGER.warning("Not able to select active requests for itemId : " + itemId);
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-			    rs.setId("0");
-				rs.setMessage("Atleast 10 credits required by the requester");
-				return rs;
-			}
-
-			String SelectRequestItemIdSql = "SELECT * FROM requests WHERE request_item_id=?";
-			LOGGER.info("Creating 1st Statement of Grant Lease");
-
-			psReqSelect = hcp.prepareStatement(SelectRequestItemIdSql);
-			psReqSelect.setInt(1, rq.getItemId());
-			LOGGER.info("Created statement...executing select query on Requests table");
-
-			result1 = psReqSelect.executeQuery();
-			LOGGER.info(result1.toString());
-
-			if (!result1.next()) {
-				//the else
-				System.out.println("Empty result while firing select query on 1st table(requests)");
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("404");
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				hcp.rollback();
-				return rs;
-			}
-				
-			String UpdaterequestStatusSql = "UPDATE requests SET request_status=? WHERE request_item_id=?";
-			LOGGER.info("Creating 2st Statement of Grant Lease");
-				
-			psReqUpdate = hcp.prepareStatement(UpdaterequestStatusSql);
-			psReqUpdate.setString(1, "Archived");
-			psReqUpdate.setInt(2, rq.getItemId());
-			LOGGER.info("Created statement...executing update query on Requests table");
-				
-				
-			RequestAction = psReqUpdate.executeUpdate();
-
-			if (RequestAction == 0) {
-				System.out.println("Error occured while firing update query on 1st table(requests)");
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("500");
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
 				return rs;
 			}
 			
-			String SelectfromItemsSql = "SELECT * FROM items WHERE item_id=?";
-			psItemSelect = hcp.prepareStatement(SelectfromItemsSql);
-			psItemSelect.setInt(1, rq.getItemId());
-			LOGGER.info("Created statement...executing select query on Items table");
-							
-			result3 = psItemSelect.executeQuery();
-			LOGGER.info(result3.toString());
+			LOGGER.info("Archiving all the requests");
+			String sqlArchivingRequests = "UPDATE requests SET request_status=? WHERE request_item_id=?";
+				
+			ps3 = hcp.prepareStatement(sqlArchivingRequests);
+			ps3.setString(1, "Archived");
+			ps3.setInt(2, itemId);
 			
-			if (!result3.next()) {
-				System.out.println("Empty result while firing select query on 3rd table(items)");
+			rs3 = ps3.executeUpdate();
+
+			if (rs3 == 0) {
+				LOGGER.warning("Not able to find requests for itemId : " + itemId);
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("404");
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
 				return rs;
-			}else{
-				item_primary_image_link = result3.getString("item_primary_image_link");
 			}
+			
+			LOGGER.info("Updating itemId - " + itemId + " status to LeaseReady");
+			String sqlUpdatingItemStatus = "UPDATE items SET item_status=? WHERE item_id=?";
 								
-			String updateItemStatusSql = "UPDATE items SET item_status=? WHERE item_id=?";
-			LOGGER.info("Creating 4th Statement of Grant Lease");
+			ps4 = hcp.prepareStatement(sqlUpdatingItemStatus);
+			ps4.setString(1, "LeaseReady");
+			ps4.setInt(2, itemId);
 								
-			psItemUpdate = hcp.prepareStatement(updateItemStatusSql);
-			psItemUpdate.setString(1, "LeaseReady");
-			psItemUpdate.setInt(2, rq.getItemId());
-			LOGGER.info("Created statement...executing update query on Items table");
+			rs4 = ps4.executeUpdate();
 								
-			ItemAction = psItemUpdate.executeUpdate();
-								
-			if (ItemAction == 0) {
-				System.out.println("Error occured while firing update query on 3rd table(items)");
+			if (rs4 == 0) {
+				LOGGER.warning("Error occured while updating item_status to LeaseReady");
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("500");
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
 				return rs;
@@ -192,140 +163,103 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			
 			// logging item status to lease ready
 			LogItem li = new LogItem();
-			li.addItemLog(rq.getItemId(), "LeaseReady", "", item_primary_image_link);
-									
+			li.addItemLog(itemId, "LeaseReady", "", rs1.getString("item_primary_image_link"));
+			
+			LOGGER.info("Creating a new lease for itemId : " + itemId + " and userId : " + requestorId);
 			int days;
-            String term = getLeaseTerm((rq.getItemId()));
+            String term = getLeaseTerm((itemId));
 			days = getDuration(term);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.DATE, days);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String date = sdf.format(cal.getTime());
 
-			String AddLeasesql = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date,delivery_plan) values (?,?,?,?,?)"; //
-			LOGGER.info("Creating final statement.....");
-			psLeaseUpdate = hcp.prepareStatement(AddLeasesql);
+			String sqlCreateLease = "insert into leases (lease_requser_id,lease_item_id,lease_user_id,lease_expiry_date,delivery_plan) values (?,?,?,?,?)";
+			ps5 = hcp.prepareStatement(sqlCreateLease);
 
-			LOGGER.info("Statement created. Executing insert query in lease table.....");
-			psLeaseUpdate.setString(1, rq.getReqUserId());
-			psLeaseUpdate.setInt(2, rq.getItemId());
-			psLeaseUpdate.setString(3, rq.getUserId());
-			psLeaseUpdate.setString(4, date);
-			if(result4.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name()))
-				psLeaseUpdate.setString(5, Delivery_Plan.FLS_SELF.name());
+			ps5.setString(1, requestorId);
+			ps5.setInt(2, itemId);
+			ps5.setString(3, ownerId);
+			ps5.setString(4, date);
+			if(rs2.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name()))
+				ps5.setString(5, Delivery_Plan.FLS_SELF.name());
 			else
-				psLeaseUpdate.setString(5, Delivery_Plan.FLS_NONE.name());
+				ps5.setString(5, Delivery_Plan.FLS_NONE.name());
 									
-			LeaseAction = psLeaseUpdate.executeUpdate();
+			rs5 = ps5.executeUpdate();
 				
-			if(LeaseAction == 0){
-				System.out.println("Error occured while firing update query on 4th table(leases)");
+			if(rs5 == 0){
+				LOGGER.warning("Not able to create a lease for itemId : " + itemId + " and userId : " + requestorId);
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("500");
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
 				hcp.rollback();
 				return rs;
 			}
 			
-			// add credit to user giving item on lease
-			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
-			psAddCredit = hcp.prepareStatement(sqlAddCredit);
-			psAddCredit.setString(1, rq.getUserId());
-			addCredit = psAddCredit.executeUpdate();
-			
-			if(addCredit == 0){
-				System.out.println("Error occured while firing 1st update credit query on 5th table(users)");
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("500");
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				hcp.rollback();
-				return rs;
-			}
+			hcp.commit();
+			rs.setCode(FLS_SUCCESS);
+			rs.setMessage(FLS_GRANT_LEASE);
 			
 			LogCredit lc = new LogCredit();
-			lc.addLogCredit(rq.getUserId(),10,"Lease Granted","");
+			lc.addLogCredit(ownerId,10,"Lease Granted","");
+			// add credit to user giving item on lease
+			lc.addCredit(ownerId, 10);
 			
+			lc.addLogCredit(requestorId,-10,"Lease Recieved","");
 			// subtract credit from user getting a lease
-			   String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
-			psDebitCredit = hcp.prepareStatement(sqlSubCredit);
-			psDebitCredit.setString(1, rq.getReqUserId());
-			subCredit = psDebitCredit.executeUpdate();
+			lc.subtractCredit(requestorId, 10);
 
-			if(subCredit == 0){
-				System.out.println("Error occured while firing 2nd update credit query on 5th table(users)");
-				rs.setCode(FLS_ENTRY_NOT_FOUND);
-				rs.setError("500");
-				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-				hcp.rollback();
-				return rs;
-			}
-			lc.addLogCredit(rq.getReqUserId(),-10,"Lease Recieved","");
-			
-			rs.setCode(FLS_SUCCESS);
-			rs.setId(rq.getReqUserId());
-			rs.setMessage(FLS_GRANT_LEASE);
-			hcp.commit();
-			
 			try {
 				Event event = new Event();
-				if(result4.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name())){
-					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_SELF, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
-					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_SELF, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+				while(rs6.next()){
+					event.createEvent(ownerId, rs6.getString("request_requser_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REJECT_REQUEST_TO, itemId, "Your request for item <a href=\"" + URL + "/ItemDetails?uid=" + rs1.getString("item_uid") + "\">" + rs1.getString("item_name") + "</a> is closed by the owner as a lease has been granted to someone else.");
+				}
+				if(rs2.getString("user_plan").equals(Fls_Plan.FLS_SELFIE.name())){
+					event.createEvent(requestorId, ownerId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_SELF, itemId, "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + requestorId + "</a> on Friend Lease ");
+					event.createEvent(ownerId, requestorId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_SELF, itemId, "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + ownerId + "</a> to you on Friend Lease ");
 				}else{
-					event.createEvent(rq.getReqUserId(), rq.getUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_PRIME, rq.getItemId(), "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + rq.getReqUserId() + "</a> on Friend Lease ");
-					event.createEvent(rq.getUserId(), rq.getReqUserId(), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_PRIME, rq.getItemId(), "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + rq.getUserId() + "</a> to you on Friend Lease ");
+					event.createEvent(requestorId, ownerId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_PRIME, itemId, "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + requestorId + "</a> on Friend Lease ");
+					event.createEvent(ownerId, requestorId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_PRIME, itemId, "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + ownerId + "</a> to you on Friend Lease ");
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
 				rs.setCode(FLS_INVALID_OPERATION);
 				rs.setMessage(FLS_INVALID_OPERATION_M);
+				e.printStackTrace();
 			}						
 			
 		} catch (SQLException e) {
-			//res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			rs.setCode(FLS_SQL_EXCEPTION);
-			rs.setId("0");
 			rs.setMessage(FLS_SQL_EXCEPTION_M);
-			
-			LOGGER.warning("Error Check Stacktrace");
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
 			e.printStackTrace();
 		} finally{
-			
-			if(result1 != null)result1.close();
-			if(result3 != null)result3.close();
-			if(result4 != null)result4.close();
-			if(result5 != null)result5.close();
-			
-			if(psReqSelect != null)psReqSelect.close();
-			if(psReqUpdate != null)psReqUpdate.close();
-			if(psItemSelect != null)psItemSelect.close();
-			if(psItemUpdate != null)psItemUpdate.close();
-			if(psLeaseSelect != null)psLeaseSelect.close();
-			if(psLeaseUpdate != null)psLeaseUpdate.close();
-			if(psAddCredit != null)psAddCredit.close();
-			if(psDebitCredit != null)psDebitCredit.close();
-			if(psItemStatus != null)psItemStatus.close();
+			if(rs2 != null) rs2.close();
+			if(rs1 != null) rs1.close();
+
+			if(ps5 != null) ps5.close();
+			if(ps4 != null) ps4.close();
+			if(ps3 != null) ps3.close();
+			if(ps2 != null) ps2.close();
+			if(ps1 != null) ps1.close();
 			
 			if(hcp != null)hcp.close();
 		}
-		LOGGER.info("Finished process method ");
+		LOGGER.info("Finished process method");
 		// return the response
 		return rs;
 	}
 
 	@Override
 	public void cleanup() {
-		// TODO Auto-generated method stub
 	}
 
 	public String getLeaseTerm(int itemId) throws SQLException {
 		String term = null;
-		PreparedStatement stmt= null;
-		ResultSet rs =null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		
 		LOGGER.info("Inside getItemLeaseTerm");
 		String sql = "SELECT item_lease_term FROM items WHERE item_id=?";
@@ -344,17 +278,17 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			rs.close();
-			stmt.close();
-			hcp.close();
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(hcp != null) hcp.close();
 		}
 		return term;
 	}
 	
 	public int getDuration(String term) throws SQLException {
 		int days = 0;
-		PreparedStatement stmt= null;
-		ResultSet rs =null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		
 		LOGGER.info("Inside getDuration");
 		String sql = "SELECT term_duration FROM leaseterms WHERE term_name=?";
@@ -371,9 +305,9 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			rs.close();
-			stmt.close();
-			hcp.close();
+			if(rs != null) rs.close();
+			if(stmt != null) stmt.close();
+			if(hcp != null) hcp.close();
 		}
 		return days;
 	}
