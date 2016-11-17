@@ -435,31 +435,23 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
     }
 	
 	$scope.sendFriendMessage = function(index){
-		modalService.showModal({}, {messaging: true, bodyText: 'Type Message for friend', actionButtonText: 'Send'}).then(function(result){
-            var message = result;
-			var friend_name = $scope.friends[index].fullName;
-			var item_id=0;
-            var Uid=null,Title=null;
-            if(message == "" || message == undefined)
-                message = "";
+        modalService.showModal({}, {messaging: true, bodyText: 'Type Message for friend', actionButtonText: 'Send'}).then(function(result){
             
-			if(friend_name == "" || friend_name == undefined || friend_name=="-")
-                friend_name = "";
-			
-			if($scope.friends[index].friendId != '-')
-				var friendId = $scope.friends[index].friendId;
-				
-		   var req = {
+            var message = result;
+            
+            if(message == "" || message == undefined)
+                message = null;
+            
+            var req = {
                 userId: userFactory.user,
+                accessToken: userFactory.userAccessToken,
+                from: userFactory.user,
+                to: $scope.friends[index].friendId,
+                subject: "FRIEND",
                 message: message,
-				friendId: friendId,
-				friendName: friend_name,
-                title: Title,
-                uid: Uid,
-				itemId : item_id,
-				accessToken: userFactory.userAccessToken
+                itemId : 0
             }
-			sendMessage(req);	
+            sendMessage(req);
         }, function(){});
     }
 	
@@ -473,7 +465,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 			dataType: "json",
 			success: function(response) {
 				if(response.code==0){
-					bannerService.updatebannerMessage("Success, Message to Friend sent");
+					bannerService.updatebannerMessage("Message Sent!!");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{

@@ -2,25 +2,22 @@ package pojos;
 
 public class GrantLeaseResObj extends ResObj{
 
-	int Code;
-	String Id,Message;
-	
+	int code;
+	String message;
+
 	public int getCode() {
-		return Code;
+		return code;
 	}
+
 	public void setCode(int code) {
-		Code = code;
+		this.code = code;
 	}
-	public String getId() {
-		return Id;
-	}
-	public void setId(String id) {
-		Id = id;
-	}
+
 	public String getMessage() {
-		return Message;
+		return message;
 	}
+
 	public void setMessage(String message) {
-		Message = message;
+		this.message = message;
 	}
 }

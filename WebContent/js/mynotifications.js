@@ -115,28 +115,23 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 	$scope.replyFriendMessage = function(index){
 		modalService.showModal({}, {messaging: true, bodyText: 'Reply to this message', actionButtonText: 'Send'}).then(function(result){
             var message = result;
-            var friend_name = "";
-            var item_id= $scope.events[index].itemId;
-            var item_name = $scope.events[index].title;
-            var item_uid = $scope.events[index].uid;
             if(message == "" || message == undefined)
-                message = "";
-            
-			if(friend_name == "" || friend_name == undefined || friend_name=="-")
-                friend_name = "";
-			
-			if($scope.events[index].fromUserId != '-')
-				var friendId = $scope.events[index].fromUserId;
+                message = null;
 				
+            var ItemId = $scope.events[index].itemId;
+            
+            var Subject = "ITEM";
+            if(ItemId == 0)
+                Subject = "FRIEND";
+            
 		   var req = {
-                userId: userFactory.user,
-                message: message,
-				friendId: friendId,
-				friendName: friend_name,
-				itemId : item_id,
-                title: item_name,
-                uid: item_uid,
-				accessToken: userFactory.userAccessToken
+               userId: userFactory.user,
+               accessToken: userFactory.userAccessToken,
+               from: userFactory.user,
+               to: $scope.events[index].fromUserId,
+               message: message,
+               subject: Subject,
+               itemId: ItemId
             }
            
 			sendMessage(req);	
@@ -154,7 +149,7 @@ myNotifications.controller('myNotificationsCtrl', ['$scope',
 			success: function(response) {
 				if(response.code==0){
                     initialPopulate();
-					bannerService.updatebannerMessage("Success, Message to Friend sent");
+					bannerService.updatebannerMessage("Message Sent!!");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 				}else{
 					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){eventsCount.updateEventsCount();

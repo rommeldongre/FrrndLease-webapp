@@ -90,6 +90,7 @@ public class LogCredit extends Connect{
 				}
 				
 			} catch (SQLException e) {
+				e.printStackTrace();
 			}finally{
 				try {
 					if(stmt!=null) stmt.close();
@@ -99,5 +100,57 @@ public class LogCredit extends Connect{
 				}
 			}
 			return send_val;
+	}
+	
+	public void addCredit(String userId, int credits){
+		LOGGER.info("Adding " + credits + " Credits to the userId : " + userId);
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1;
+		
+		try{
+			String sqlAddCredits = "UPDATE users SET user_credit=user_credit+" + credits + " WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlAddCredits);
+			ps1.setString(1, userId);
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1)
+				LOGGER.info("Added credits to users account.");
+			else
+				LOGGER.info("Not able to add credits to users account.");
+			
+		}catch(Exception e){
+			LOGGER.warning("Error occured while adding credits to the user : " + userId);
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void subtractCredit(String userId, int credits){
+		LOGGER.info("Subtracting " + credits + " Credits from the userId : " + userId);
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1;
+		
+		try{
+			String sqlAddCredits = "UPDATE users SET user_credit=user_credit-" + credits + " WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlAddCredits);
+			ps1.setString(1, userId);
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1)
+				LOGGER.info("successfully subtracted credits from users account.");
+			else
+				LOGGER.info("Not able to subtract credits from users account.");
+			
+		}catch(Exception e){
+			LOGGER.warning("Error occured while subtracting credits from the user : " + userId);
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -1518,6 +1518,7 @@ input.ct-red + span + label + span.switch-right {
   position: absolute;
 }
 
+/*
 .popover {
   padding: 0;
   border-radius: 10px;
@@ -1575,6 +1576,7 @@ input.ct-red + span + label + span.switch-right {
   filter: alpha(opacity=20);
   transition-delay: 0s;
 }
+*/
 
 .section {
   padding: 30px 0;
