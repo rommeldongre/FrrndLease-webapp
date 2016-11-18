@@ -88,8 +88,8 @@
                             </div>
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{req.distance == '0m' ? 'Under 1km' : req.distance}}&nbsp;-&nbsp;{{req.requestorSublocality+","+req.requestorLocality}}<br>
-                                <span ng-if="req.requestorMessage!=null" class="btn btn-default btn-simple" data-toggle="popover" title="{{req.requestorName}} says - " data-placement="top" data-content="{{req.requestorMessage}}">
-                                <i class="fa fa-quote-left" aria-hidden="true"></i> {{req.requestorMessage | limitTo: 20}}<span ng-if="req.requestorMessage > 20">&hellip;</span> <i class="fa fa-quote-right" aria-hidden="true"></i>
+                                <span class="text-muted" ng-if="req.requestorMessage!=null" style="cursor:pointer;" data-toggle="popover" title="{{req.requestorName}} says - " data-placement="top" data-content="{{req.requestorMessage}}">
+                                    <i class="fa fa-quote-left" aria-hidden="true"></i> {{req.requestorMessage | limitTo: 15}}<span ng-if="req.requestorMessage.length > 15">&hellip;</span> <i class="fa fa-quote-right" aria-hidden="true"></i>
                                 </span>
                             </p>
                         </div>
