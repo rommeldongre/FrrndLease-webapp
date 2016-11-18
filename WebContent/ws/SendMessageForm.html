@@ -5,38 +5,34 @@
 <title>Send Message Form</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
-	var AccessToken = null;
 	var UserId = null;
-	var FriendId= null;
-	var FriendName= null;
+	var AccessToken = null;
+    var From = null;
+    var To = null;
+    var Subject = null;
 	var Message = null;
 	var ItemId= 0;
-	var ItemName = null;
-	var ItemUid = null;
 	
 	start = function(){
+        document.getElementById("userId").value = localStorage.getItem("userloggedin");
         document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
-		AccessToken = document.getElementById("accessToken").value;
     }
 	
 	getData = function() {
 		UserId = document.getElementById("userId").value;
-		FriendId = document.getElementById("friendId").value;
-		FriendName = document.getElementById("friendName").value;
+		AccessToken = document.getElementById("accessToken").value;
+		From = document.getElementById("from").value;
+		To = document.getElementById("to").value;
+		Subject = document.getElementById("subject").value;
 		Message = document.getElementById("message").value;
 		ItemId = document.getElementById("itemId").value;
-		if(ItemId == null || ItemId==""){
-			ItemId=0;
+		
+        if(ItemId == null || ItemId == ""){
+			ItemId = 0;
 		}
 		
-		ItemName = document.getElementById("itemName").value;
-		if(ItemName==null || ItemName==""){
-			ItemName=null;
-		}
-		
-		ItemUid = document.getElementById("itemUid").value;
-		if(ItemUid==null || ItemUid==""){
-			ItemUid=null;
+		if(Message == null || ItemName == ""){
+			Message = null;
 		}
 	}
 	
@@ -46,13 +42,12 @@
 		
 		var req = {
 			userId : UserId,
+			accessToken: AccessToken,
+            from: From,
+            to: To,
+            subject: Subject,
 			message: Message,
-			friendId: FriendId,
-			friendName: FriendName,
-			itemName: ItemName,
-			itemUid : ItemUid,
-			itemId : itemId,
-			accessToken: AccessToken
+			itemId : ItemId,
 		};
 		
 		console.log(req);
@@ -60,7 +55,6 @@
 	};
 	
 	send = function(req) {
-		alert("Inside send");
 		$.ajax({
 			url: '/SendMessage',
 			type: 'post',
@@ -68,8 +62,8 @@
 			contentType: "application/x-www-form-urlencoded",
 			dataType: "json",
 			success: function(response) {
-				document.getElementById("Code").value = response.code;
-				document.getElementById("Message").value = response.message;
+				document.getElementById("code").value = response.code;
+				document.getElementById("message").value = response.message;
 			},
 		
 			error: function() {
@@ -85,18 +79,17 @@
 	<form>
 		<p>Fill in the below details to send your friend Message </p>
 		User Id(*) : <input type="text" name="userId" id="userId"><br /><br />
-		Friend Id(*) : <input type="text" name="friendId" id="friendId"><br /><br />
-		Friend Name : <input type="text" name="friendName" id="friendName"><br /><br />
-		Item Name : <input type="text" name="itemName" id="itemName"><br /><br />
+		Access Token(*): <input type="text" name="accessToken" id="accessToken" ><br/><br />
+		From(*) : <input type="text" name="from" id="from"><br /><br />
+		To(*) : <input type="text" name="to" id="to"><br /><br />
+		Subject(*) : <input type="text" name="subject" id="subject"><br /><br />
+		Message : <input type="text" name="message" id="message"><br /><br />
 		Item Id : <input type="text" name="itemId" id="itemId"><br /><br />
-		Item UID : <input type="text" name="itemUid" id="itemUid"><br /><br />
-		Message(*) : <input type="text" name="message" id="message"><br /><br />
-		<br /> Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br />
 		<input type="button" value="Send Message" onclick="sendMessage()">
 		
 		<h1>OUTPUT</h1>
-		Code : <input type="text" name="code" id="Code"><br/><br/>
-		Message : <input type="text" name="message" id="Message">
+		Code : <input type="text" name="code" id="code"><br/><br/>
+		Message : <input type="text" name="message" id="message">
 	</form>
 	<br/>
 	<h3><A href="index.html">INDEX</A></h3>

@@ -69,7 +69,7 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 				rs.setSublocality(rs1.getString("user_sublocality"));
 				rs.setOffset(offset);
 				
-				String sqlGetUserDetails = "SELECT tb1.request_id, tb1.request_lastmodified, tb2.*, (CASE WHEN tb1.request_requser_id=tb4.friend_id AND tb4.friend_user_id=? THEN true ELSE false END) AS isFriend, ( 6371 * acos( cos( radians("+rs1.getFloat("item_lat")+") ) * cos( radians( tb2.user_lat ) ) * cos( radians( tb2.user_lng ) - radians("+rs1.getFloat("item_lng")+") ) + sin( radians("+rs1.getFloat("item_lat")+") ) * sin( radians( tb2.user_lat ) ) ) ) AS distance FROM requests tb1 INNER JOIN users tb2 ON tb1.request_requser_id=tb2.user_id LEFT JOIN (SELECT * FROM friends WHERE friend_user_id=?) tb4 ON tb1.request_requser_id = tb4.friend_id WHERE tb1.request_status=? AND tb1.request_item_id=? ORDER BY tb1.request_lastmodified desc";
+				String sqlGetUserDetails = "SELECT tb1.request_message, tb1.request_id, tb1.request_lastmodified, tb2.*, (CASE WHEN tb1.request_requser_id=tb4.friend_id AND tb4.friend_user_id=? THEN true ELSE false END) AS isFriend, ( 6371 * acos( cos( radians("+rs1.getFloat("item_lat")+") ) * cos( radians( tb2.user_lat ) ) * cos( radians( tb2.user_lng ) - radians("+rs1.getFloat("item_lng")+") ) + sin( radians("+rs1.getFloat("item_lat")+") ) * sin( radians( tb2.user_lat ) ) ) ) AS distance FROM requests tb1 INNER JOIN users tb2 ON tb1.request_requser_id=tb2.user_id LEFT JOIN (SELECT * FROM friends WHERE friend_user_id=?) tb4 ON tb1.request_requser_id = tb4.friend_id WHERE tb1.request_status=? AND tb1.request_item_id=? ORDER BY tb1.request_lastmodified desc";
 				ps2 = hcp.prepareStatement(sqlGetUserDetails);
 				ps2.setString(1, rq.getUserId());
 				ps2.setString(2, rq.getUserId());
@@ -90,6 +90,7 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 					request.setRequestorProfilePic(rs2.getString("user_profile_picture"));
 					request.setRequestorLocality(rs2.getString("user_locality"));
 					request.setRequestorSublocality(rs2.getString("user_sublocality"));
+					request.setRequestorMessage(rs2.getString("request_message"));
 					
 					rs.addRequests(request);
 				}

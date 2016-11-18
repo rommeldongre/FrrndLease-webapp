@@ -7,7 +7,7 @@ import java.util.Date;
 public class RequestObj {
 
 	int requestId;
-	String requestDate, requestorId, requestorName, requestorProfilePic, requestorLocality, requestorSublocality, distance;
+	String requestDate, requestorId, requestorName, requestorProfilePic, requestorLocality, requestorSublocality, distance, requestorMessage;
 	boolean friend;
 
 	public int getRequestId() {
@@ -81,6 +81,14 @@ public class RequestObj {
 		this.friend = friend;
 	}
 	
+	public String getRequestorMessage() {
+		return requestorMessage;
+	}
+
+	public void setRequestorMessage(String requestorMessage) {
+		this.requestorMessage = requestorMessage;
+	}
+
 	public String getDistance() {
 		return distance;
 	}

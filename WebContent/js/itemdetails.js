@@ -85,13 +85,18 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     getItemsRating();
     
     $scope.requestItem = function(){
-        modalService.showModal({}, {bodyText: 'Are you sure you want to request the Item?'}).then(
+        modalService.showModal({}, {messaging: true, bodyText: 'Create A Request. Write a message to Item\'s Owner', actionButtonText: 'Send'}).then(
             function(result){
-                if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
+                if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous"){
 					$('#loginModal').modal('show');
-				else
+                }else{
+                    var message = result;
+            
+                    if(message == "" || message == undefined)
+                        message = null;
+                    
                     $http({
-                        url:'/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user}),
+                        url:'/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user,message:message}),
                         method:"GET"
                     }).then(function success(response){
 						if(response.data.Code== 0){
@@ -106,6 +111,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                     function error(response){
                         modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
                     });
+                }
             }, 
             function(){
 
@@ -262,27 +268,25 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     }
     
     $scope.sendItemMessage = function(){
-		modalService.showModal({}, {messaging: true, bodyText: 'Type Message to Item Owner', actionButtonText: 'Send'}).then(function(result){
+		modalService.showModal({}, {messaging: true, bodyText: 'Message Item\'s Owner', actionButtonText: 'Send'}).then(function(result){
+            
             var message = result;
-			var friend_name = "";
-			var item_id= parseInt($scope.item_id);
+            
             if(message == "" || message == undefined)
-                message = "";
-            	
-			if($scope.user_id!= '-' && $scope.user_id!=null && $scope.user_id!="null")
-				var friendId = $scope.user_id;
-				
-		   var req = {
+                message = null;
+            
+            var req = {
                 userId: userFactory.user,
+				accessToken: userFactory.userAccessToken,
+				from: userFactory.user,
+				to: $scope.user_id,
+                subject: "ITEM",
                 message: message,
-				friendId: friendId,
-				friendName: friend_name,
-				itemId: item_id,
-				title: $scope.item.title,
-				uid: $window.uid,
-				accessToken: userFactory.userAccessToken
+				itemId: parseInt($scope.item_id)
             }
-			sendMessage(req);	
+            
+            sendMessage(req);
+            
         }, function(){});
     }
 	
@@ -296,7 +300,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 			dataType: "json",
 			success: function(response) {
 				if(response.code==0){
-					bannerService.updatebannerMessage("Success, Message to Owner sent");
+					bannerService.updatebannerMessage("Message Sent!!");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
 					
 				}else{

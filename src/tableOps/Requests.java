@@ -27,7 +27,7 @@ public class Requests extends Connect {
 
 	private String URL = FlsConfig.prefixUrl;
 	
-	private String check = null, Id = null, token, userId, itemId, operation, message;
+	private String check = null, Id = null, token, userId, itemId, operation, message, msg;
 	private int Code;
 	private RequestsModel rm;
 	private Response res = new Response();
@@ -118,6 +118,7 @@ public class Requests extends Connect {
 	private void Add() {
 		userId = rm.getUserId();
 		itemId = rm.getItemId();
+		msg = rm.getMessage();
 
 		PreparedStatement  ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null;
 		ResultSet rs1 = null, rs2 = null, rs3 = null;
@@ -186,10 +187,11 @@ public class Requests extends Connect {
 					return;
 				}
 								
-				String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id) values (?,?)";
+				String sqlAddRequest = "INSERT INTO requests (request_requser_id,request_item_id,request_message) values (?,?,?)";
 				ps4 = hcp.prepareStatement(sqlAddRequest);
 				ps4.setString(1, userId);
 				ps4.setString(2, itemId);
+				ps4.setString(3, msg);
 							
 				rs4 = ps4.executeUpdate();
 				
@@ -210,8 +212,8 @@ public class Requests extends Connect {
 						String ownerUserId;
 						ownerUserId = rs2.getString("item_user_id");
 						Event event = new Event();
-						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> on Friend Lease");
-						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease");
+						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> on Friend Lease. The Owner of the item will respond within a week!");
+						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease. Check out <a href=\"" + URL + "/myapp.html#/myincomingrequests\">Your Incoming Requests</a>");
 					} catch (Exception e) {
 						e.printStackTrace();
 						res.setData(FLS_DUPLICATE_ENTRY, "0", "Something is wrong with us we'll get back to you ASAP!!");
