@@ -192,9 +192,7 @@ myWishLists.controller('myWishListsCtrl', ['$scope',
     }
     
     $scope.showItemDetails = function(itemId){
-        localStorage.setItem("itemToShow", itemId);
-        localStorage.setItem("prevFunc", "viewItemOwner");
-        window.location.replace('mywishitemDetails.html');
+		window.location.replace("myapp.html#/mywishitemdetails/"+itemId);
     }
     
 }]);
