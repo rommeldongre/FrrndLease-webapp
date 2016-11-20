@@ -63,8 +63,6 @@ wishItemDetailsApp.controller('mywishitemdetailsCtrl', ['$scope',
             $scope.isEdit = false;
         }
     }
-
-   // $scope.selectedCategory = 0;
     
     var populateCategory = function(id){
         var req = {
@@ -105,7 +103,6 @@ wishItemDetailsApp.controller('mywishitemdetailsCtrl', ['$scope',
     }
     
     $scope.leaseTerms = [];
-    //$scope.selectedLeaseTerm = 0;
     
     var populateLeaseTerm = function(id){
         var req = {
@@ -252,42 +249,7 @@ wishItemDetailsApp.controller('mywishitemdetailsCtrl', ['$scope',
         
     }
     
-    $scope.deleteImage = function(index){
-        
-        var req = {
-            userId: userFactory.user,
-            accessToken: userFactory.userAccessToken,
-            uid: $scope.item.uid,
-            link: $scope.images[index].link,
-            primary: false
-        }
-        
-        $scope.images[index].link = "loading";
-        
-        $.ajax({
-            url: '/DeleteImageFromS3',
-            type: 'post',
-            data: JSON.stringify(req),
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "json",
-            success: function(response) {
-                if(response.code == 0){
-                    $scope.$apply(function(){
-                        $scope.images[index].link = '';
-                    });
-                }else{
-                    modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                        if(response.code == 400)
-                            logoutService.logout();
-                    },function(){});
-                }
-            },
-            error: function() {
-                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
-            }
-        });
-    }
-     
+ 
     $scope.editItem = function(){
         
 		if($scope.item.leaseValue>1000){
@@ -378,19 +340,5 @@ wishItemDetailsApp.controller('mywishitemdetailsCtrl', ['$scope',
         window.location.replace("myapp.html#/mywishlists");
     }
     
-    //getItemDetails();
-    
-    $scope.$watch('images', function(){
-        for(var i in $scope.images){
-            if($scope.images[i].link === 'loading'){
-                $scope.disableEdit = true;
-                break;
-            }
-            else{
-                $scope.disableEdit = false;
-            }
-        }
-    }, true);
-										
-										
+   									
 }]);
