@@ -1,0 +1,189 @@
+<footer class="footer footer-big footer-transparent">
+	
+			<!-- .footer-black is another class for the footer, for the transparent version, we recommend you to change the url of the image with your favourite image.          -->
+	
+			<div class="container">
+				<div class="row">
+					<div class="col-md-3">
+						<h5 class="title">Subscribe</h5>
+						<form name="form"  style="text-align:left;">
+						<div class="form-group">
+							<input name="lead_email" id="lead_email" type="email" value="" class="form-control" placeholder="Enter your email..." required><br>
+						</div>
+						<p id="subscribe_message" style="color:red;padding:10px;"></p>
+						<div class="form-group">
+							<button type="button" style="" onclick="newsLetterLead()" class="btn btn-primary btn-fill">Subscribe Now!</button>
+						</div>
+						
+						</form>
+	
+					</div>
+					<div class="col-md-2 col-md-offset-1">
+						<h5 class="title">Company</h5>
+						<nav>
+						<ul>
+							<li>
+								<a href="aboutus.html">
+									About Us
+								</a>
+							</li>
+							<li>
+								<a href="team.html">
+									Team
+								</a>
+							</li>
+							<li>
+								<a href="contact.html">
+								Contact Us
+								</a>
+							</li>
+							<li>
+								<a href="https://www.facebook.com/frrndlease">
+								Blog
+								</a>
+							</li>
+							<li>
+								<a href="https://www.surveymonkey.com/r/Y9GSGLJ" class="text-info">
+								Survey
+								</a>
+							</li>
+						</ul>
+						</nav>
+					</div>
+					<div class="col-md-3">
+						<h5 class="title" onclick="ga('send', 'event', 'index', 'click', 'ProductHelp');" >Product Help</h5>
+						<nav>
+							<ul>
+								<li>
+									<a href="benefits.html" onclick="ga('send', 'event', 'index', 'click', 'Benefits');">
+										Benefits
+									</a>
+								</li>
+								<li>
+									<a href="howitworks.html" onclick="ga('send', 'event', 'index', 'click', 'HowItWorks');">
+									How it works
+									</a>
+								</li>
+								<li>
+									<a href="pricing.html" onclick="ga('send', 'event', 'index', 'click', 'Pricing');">
+										Pricing
+									</a>
+								</li>
+								<li>
+									<a href="testimonial.html" onclick="ga('send', 'event', 'index', 'click', 'Testimonials');">
+										Testimonials
+										
+									</a>
+								</li>
+								<li>
+									<a href="terms.html" onclick="ga('send', 'event', 'index', 'click', 'T&C');">
+										Terms & Conditions
+									</a>
+								</li>
+								<li>
+									<a href="privacydiv.html" onclick="ga('send', 'event', 'index', 'click', 'PrivacyPolicy');">
+										Privacy Policy
+									</a>
+								</li>
+								<li>
+									<a href="faq.html" onclick="ga('send', 'event', 'index', 'click', 'Faq');">
+									FAQ
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+					<div class="col-md-3">
+					<h5 class="title">Follow us on</h5>
+					<nav>
+						<ul>
+							<li>
+								<a href="https://www.facebook.com/frrndlease" class="btn btn-social btn-facebook btn-simple">
+									<i class="fa fa-facebook-square"></i> Facebook
+								</a>
+							</li>
+							<li>
+								<a href="https://www.linkedin.com/company/grey-labs" class="btn btn-social btn-linkedin btn-simple">
+									<i class="fa fa-linkedin"></i> LinkedIn
+								</a>
+							</li>
+							<li>
+							<a href="https://www.twitter.com/rommeldongre" class="btn btn-social btn-twitter btn-simple">
+									<i class="fa fa-twitter"></i> Twitter
+								</a>
+							</li>
+							<li>
+								<a href="#" class="btn btn-social btn-reddit btn-simple">
+									<i class="fa fa-google-plus-square"></i> Google+
+								</a>
+							</li>
+	
+						</ul>
+					</nav>
+					</div>
+				</div>
+				<hr />
+				<div class="copyright">
+					&copy; 2015-2016 Grey Labs LLP. All Rights Reserved.
+				</div>
+			</div>
+		</footer>
+		
+		<script>
+		
+		$(document).ready(function() {
+			$("#subscribe_message").hide();
+		});
+		
+		function newsLetterLead(){
+		 var userEmail = $('#lead_email').val();
+		
+		if(isEmail(userEmail)){
+			var req = {
+                lead_email: userEmail,
+				lead_type: "news_letter"
+            }
+			sendLeadEmail(req);	
+		}else{
+			showMessage("Not a valid Email");
+		}
+		 
+		}
+		
+		function sendLeadEmail(req){
+			$.ajax({
+				url: '/AddLead',
+				type: 'post',
+				data: JSON.stringify(req),
+				contentType: "application/x-www-form-urlencoded",
+				dataType: "json",
+				success: function(response) {
+					if(response.code==225){
+						showMessage(response.message);
+					}else if(response.code==0){
+						showMessage(response.message);
+					}else{
+						showMessage("Something went Wrong! Please try later");
+					}
+				},
+				error: function() {
+					console.log("Not able to send message");
+				}
+			});
+		}
+		
+		function isEmail(email) {
+			var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			return regex.test(email);
+		}
+		
+		function showMessage(message){
+			$("#subscribe_message").text(message);
+			$("#subscribe_message").show();
+			setTimeout(hideMessage, 3000);
+		}
+		
+		function hideMessage(){
+		$("#subscribe_message").hide();
+		}
+		</script>

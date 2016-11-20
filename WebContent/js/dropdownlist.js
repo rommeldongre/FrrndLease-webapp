@@ -16,6 +16,10 @@ $(function(){
 			$.get("footer.html", function(response) {
                   $('#footer_nav').html(response);
             });
+			
+			$.get("footer1.html", function(response) {
+                  $('#footer_nav1').html(response);
+            });
     
             $.get("waitbar.html", function(response) {
                 $('#wait_bar').html(response);
