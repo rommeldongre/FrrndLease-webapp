@@ -107,7 +107,7 @@
                                 <div class="col-lg-6 col-md-6" style="border-left: 1px solid #ccc;">
                                     <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
                                     <hr/>
-                                    <h5 class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="raters > 0" style="text-align:center;">
+                                    <h5 class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="raters > 0" style="text-align:center;" tooltip>
                                         <span ng-if="rating == 1">
                                             <img src="images/very-unhappy-n.jpg" style="width:10%;">
                                             Average User Experience for this item is<strong> Very unhappy</strong>
@@ -132,7 +132,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
                                         <div class="icon icon-sm">
                                             <i class="fa fa-filter" aria-hidden="true"></i>
                                         </div>
@@ -142,7 +142,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location" tooltip>
                                         <div class="icon icon-sm">
                                             <i class="fa fa-location-arrow" aria-hidden="true"></i>
                                         </div>
@@ -152,7 +152,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip>
                                         <div class="icon icon-sm">
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                         </div>
@@ -162,7 +162,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value">
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip>
                                         <div class="icon icon-sm">
                                             <i class="fa fa-rupee" aria-hidden="true"></i>
                                         </div>
@@ -272,7 +272,6 @@
 		function start() {
 
 			fbComment_URL();
-            $('.btn-tooltip').tooltip();
             
             load_Gapi();
 		}

@@ -22,7 +22,7 @@
                     </div>
                     <div class="row" style="text-align:center;margin-top:7%;">
                         <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
                                 <div class="icon icon-sm">
                                     <i class="fa fa-filter" aria-hidden="true"></i>
                                 </div>
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location" tooltip>
                                 <div class="icon icon-sm">
                                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                                 </div>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip>
                                 <div class="icon icon-sm">
                                     <i class="fa fa-calendar" aria-hidden="true"></i>
                                 </div>
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value">
+                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip>
                                 <div class="icon icon-sm">
                                     <i class="fa fa-rupee" aria-hidden="true"></i>
                                 </div>
@@ -88,7 +88,7 @@
                             </div>
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{req.distance == '0m' ? 'Under 1km' : req.distance}}&nbsp;-&nbsp;{{req.requestorSublocality+","+req.requestorLocality}}<br>
-                                <span class="text-muted" ng-if="req.requestorMessage!=null" style="cursor:pointer;" data-toggle="popover" title="{{req.requestorName}} says - " data-placement="top" data-content="{{req.requestorMessage}}">
+                                <span class="text-muted" ng-if="req.requestorMessage!=null" style="cursor:pointer;" data-toggle="popover" title="Requestor says - " data-placement="top" data-content="{{req.requestorMessage}}" popover>
                                     <i class="fa fa-quote-left" aria-hidden="true"></i> {{req.requestorMessage | limitTo: 15}}<span ng-if="req.requestorMessage.length > 15">&hellip;</span> <i class="fa fa-quote-right" aria-hidden="true"></i>
                                 </span>
                             </p>
@@ -98,13 +98,13 @@
                         </div>
                         <hr>
                         <div class="text-center">
-                            <button data-toggle="tooltip" data-placement="top" title="Grant Lease" class="btn btn-success btn-simple btn-icon btn-tooltip" ng-click="grantLease(request.itemId,req.requestorId,$index)">
+                            <button data-toggle="tooltip" data-placement="top" title="Grant Lease" class="btn btn-success btn-simple btn-icon btn-tooltip" ng-click="grantLease(request.itemId,req.requestorId,$index)" tooltip>
                                 <i class="fa fa-check" aria-hidden="true"></i>
                             </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Reject Request" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="rejectLease(request.itemId,req.requestorId,$index)">
+                            <button data-toggle="tooltip" data-placement="top" title="Reject Request" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="rejectLease(request.itemId,req.requestorId,$index)" tooltip>
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(request.itemId,req.requestorId)">
+                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(request.itemId,req.requestorId)" tooltip>
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             </button>
                         </div>
