@@ -16,6 +16,10 @@ $(function(){
 			$.get("footer.html", function(response) {
                   $('#footer_nav').html(response);
             });
+			
+			$.get("footer1.html", function(response) {
+                  $('#footer_nav1').html(response);
+            });
     
             $.get("waitbar.html", function(response) {
                 $('#wait_bar').html(response);
@@ -55,6 +59,10 @@ $(function(){
 			
 			$.get("termsdiv.html", function(response) {
                   $('#gsd_terms').html(response);
+            });
+			
+			$.get("privacydiv.html", function(response) {
+                  $('#gsd_privacy').html(response);
             });
 			
 			var link = document.createElement('link');

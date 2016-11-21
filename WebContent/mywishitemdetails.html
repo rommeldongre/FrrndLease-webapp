@@ -1,0 +1,90 @@
+<div class="container-fluid" id="midcontainer">
+    <div class="row">
+        <div class="left_title col-lg-6 col-md-6 col-md-offset-5">
+            <strong>Wish Item Details</strong>
+        </div>
+	</div>
+    
+    <hr /><br /><br />
+    <div class="row" style="display: flex;flex-wrap: wrap;">
+        <div class="col-lg-1 col-md-1"></div>
+        <div class="col-lg-5 col-md-5 loaded-img col-md-offset-3">
+            <img load-image="item.primaryImageLink" scale="45" ng-src="" alt="">
+            <div ng-if="item.primaryImageLink == '' || item.primaryImageLink == null || item.primaryImageLink == 'null' || item.primaryImageLink == undefined" class="empty-actions">
+                <label class="primary-file-input-label" for="primary-file-input">
+                    <i class="fa fa-plus" aria-hidden="true" width="150" height="150" style="display:initial;"></i> ADD IMAGE
+                </label>
+                <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadPrimaryImage(files[0])" style="display:none;" />
+            </div>
+            <div ng-if="item.primaryImageLink=='loading'" class="loading-actions">
+                <div class="loading-primary-image">
+                    <i class="fa fa-refresh fa-spin" aria-hidden="true" width="150" height="150" style="display:initial;"></i> Please Wait..
+                </div>
+            </div>
+            <div ng-if="item.primaryImageLink != 'loading' && item.primaryImageLink != '' && item.primaryImageLink != null && item.primaryImageLink != 'null' && item.primaryImageLink != undefined" class="actions">
+                <button type="button" class="btn btn-danger btn-simple" ng-click="deletePrimaryImage()">
+                    <i class="fa fa-times"></i>
+                </button>
+                <label class="primary-file-input-label" for="primary-file-input">
+                    <i class="fa fa-image" aria-hidden="true" width="150" height="150" style="display:initial;"></i> CHANGE IMAGE
+                </label>
+                <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadPrimaryImage(files[0])" style="display:none;" />
+            </div>
+        </div>
+    </div>
+	
+    <hr/>
+    <div class="row">
+        <div class="col-lg-3 col-md-3"></div>
+        <div class="col-lg-6 col-md-6">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="title" class="col-sm-2 control-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="postItem_title" class="form-control" ng-model="item.title" placeholder="Enter Title" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="col-sm-2 control-label">Category</label>
+                    <div class="col-sm-10">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default ng-class:{'btn-fill':$index == selectedCategory,'btn-simple': $index != selectedCategory}" ng-click="categorySelected($index)" ng-repeat="c in categories" style="margin-right:10px;">{{c}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="lease_value" class="col-sm-2 control-label">Insurance</label>
+                    <div class="col-sm-10" ng-init="item.leaseValue=1000">
+                        <input type="number" class="form-control" ng-model="item.leaseValue" placeholder="Insurance">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="col-sm-2 control-label">Lease Term</label>
+                    <div class="col-sm-10">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default ng-class:{'btn-fill':$index == selectedLeaseTerm,'btn-simple': $index != selectedLeaseTerm}" ng-click="leaseTermSelected($index)" ng-repeat="l in leaseTerms" style="margin-right:10px;">{{l}}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label  for="description" class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-10" >
+                        <textarea ng-model="item.description" style="margin-bottom:5%;" class="form-control" id="description" placeholder="Add Description"></textarea>
+                    </div>
+                </div>
+            </form>
+            <div class="row" style="padding:20px;">
+                <div ng-if="editable" class="col-lg-3 col-md-3 col-md-offset-2" >
+                    <button ng-disabled="item.primaryImageLink=='loading' || disableEdit" style="margin-bottom:10px;margin-left:30%;min-width:100px;" class="btn btn-primary btn-fill" ng-click="editItem()">Save</button>
+                </div >
+				<div ng-if="editable" class="col-lg-3 col-md-3" >
+                    <button id="delete_item_button"  style="margin-bottom:10px;margin-left:30%;min-width:100px;" class="btn btn-primary" ng-click="deleteItem()">Delete Item</button>
+                </div >
+                <div class="col-lg-3 col-md-3">
+                    <button class="btn btn-default btn-simple" style="margin-bottom:10px;margin-left:30%;min-width:100px;" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3"></div>
+    </div>
+</div>

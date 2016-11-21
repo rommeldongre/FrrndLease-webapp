@@ -50,6 +50,11 @@ myApp.config(function($routeProvider){
         templateUrl : 'mywishlists.html',
         controller : 'myWishListsCtrl'
     })
+	
+	.when('/mywishitemdetails/:id?', {
+        templateUrl : 'mywishitemdetails.html',
+        controller : 'mywishitemdetailsCtrl'
+    })
     
     .when('/mypostings', {
         templateUrl : 'mypostings.html',
