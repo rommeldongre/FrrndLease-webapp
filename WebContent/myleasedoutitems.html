@@ -30,23 +30,23 @@
                           <p class="description">{{lease.description}}</p>
                        </a>
                        <a class="footer">
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category">
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
                               <div class="card-link">
                                   <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{lease.category}}
                               </div>
                           </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term">
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip>
                               <div class="card-link">
                                   <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{lease.leaseTerm}}
                               </div>
                           </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value">
+                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value" tooltip>
                               <div class="card-link">
                                   <span class="fa fa-rupee" aria-hidden="true"></span> {{lease.leaseValue}}
                               </div>
                           </div>
                            <br/>
-                           <span class="label label-success label-fill btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{lease.statusDesc}}" style="text-align:center;">{{lease.status}}</span>
+                           <span class="label label-success label-fill btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{lease.statusDesc}}" style="text-align:center;" tooltip>{{lease.status}}</span>
                        </a>
                    </div>
                </div>

@@ -1518,7 +1518,6 @@ input.ct-red + span + label + span.switch-right {
   position: absolute;
 }
 
-/*
 .popover {
   padding: 0;
   border-radius: 10px;
@@ -1530,7 +1529,7 @@ input.ct-red + span + label + span.switch-right {
 
 .popover-title {
   font-size: 16px;
-  background-color: rgba(91, 202, 255, 0.98);
+  background-color: rgb(0, 102, 255);
   font-weight: normal;
   line-height: 22px;
   padding: 8px 15px;
@@ -1576,7 +1575,6 @@ input.ct-red + span + label + span.switch-right {
   filter: alpha(opacity=20);
   transition-delay: 0s;
 }
-*/
 
 .section {
   padding: 30px 0;
