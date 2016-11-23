@@ -56,6 +56,7 @@ public class GetProfile extends HttpServlet {
 
 			// service response pojo to json
 			PrintWriter out = httpresponse.getWriter();
+			httpresponse.addHeader("Cache-Control", "max-age=86400");
 			httpresponse.setContentType("text/json");
 			httpresponse.setContentType("application/json; charset=UTF-8");
 			mapper.writeValue(out, response);

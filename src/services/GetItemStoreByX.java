@@ -51,6 +51,7 @@ public class GetItemStoreByX extends HttpServlet {
 				
 				//Service response pojo to JSON
 				PrintWriter out = httpresponse.getWriter();
+				httpresponse.addHeader("Cache-Control", "max-age=604800");
 				httpresponse.setContentType("text/json");				
 				httpresponse.setContentType("application/json; charset=UTF-8");	
 				mapper.writeValue(out, Response);
