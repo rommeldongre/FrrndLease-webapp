@@ -19,7 +19,7 @@
                 </td>
                 <td class="text-center">
                     <i class="ng-class:{'pink fa fa-lg fa-user':(event.notificationType=='FLS_USER'),'green fa fa-lg fa-thumbs-up':(event.notificationType=='FLS_POSITIVE'),'red fa fa-lg fa-thumbs-down':(event.notificationType=='FLS_NEGATIVE'),'blue fa fa-lg fa-info-circle':(event.notificationType=='FLS_DEFAULT'),'purple fa fa-lg fa-clock-o':(event.notificationType=='FLS_TIME'),'orange fa fa-lg fa-cubes':(event.notificationType=='FLS_ITEM'),'blue fa fa-upload':(event.notificationType=='FLS_MESSAGE_FROM'),'blue fa fa-download':(event.notificationType=='FLS_MESSAGE_TO')}"></i><br/><br/>
-					<button ng-if="event.notificationType=='FLS_MESSAGE_FROM' || event.notificationType=='FLS_MESSAGE_TO'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="replyFriendMessage($index)" data-toggle="tooltip" data-placement="top" title="Reply">
+					<button ng-if="event.notificationType=='FLS_MESSAGE_FROM' || event.notificationType=='FLS_MESSAGE_TO'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="replyFriendMessage($index)" data-toggle="tooltip" data-placement="top" title="Reply" tooltip>
                     <i class="fa fa-reply"></i>
 					</button>
 				</td>
@@ -27,10 +27,10 @@
 				</td>
                 <td class="td-actions text-center">
                     <button href="" class="label label-fill ng-class:{'label-primary':(event.readStatus == 'FLS_UNREAD'),'label-default':(event.readStatus == 'FLS_READ')}" title="{{event.readStatus == 'FLS_READ' ? 'Mark as unread' : 'Mark as read'}}" ng-click="(event.readStatus == 'FLS_UNREAD') ? readEvent($index,'FLS_READ') : readEvent($index,'FLS_UNREAD')">{{(event.readStatus == 'FLS_UNREAD') ? 'Mark as read' : 'Mark as unread'}}</button><br/>
-                    <span style="color:#999999" class="btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="{{event.datetime | date:'medium'}}">{{event.datetime | date}}</span>
+                    <span style="color:#999999" class="btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="{{event.datetime | date:'medium'}}" tooltip>{{event.datetime | date}}</span>
                 </td>
 				<td class="td-actions text-center">
-                    <button class="btn btn-danger btn-simple btn-xs btn-tooltip" data-toggle="tooltip" data-placement="top" title="Delete Notification" ng-click="deleteNotification(event.eventId,$index)">
+                    <button class="btn btn-danger btn-simple btn-xs btn-tooltip" data-toggle="tooltip" data-placement="top" title="Delete Notification" ng-click="deleteNotification(event.eventId,$index)" tooltip>
                         <i class="fa fa-times "></i>
                     </button>
                 </td>

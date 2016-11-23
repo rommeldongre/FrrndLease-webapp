@@ -60,6 +60,23 @@
 	bottom: 0;
 	}
 	</style>
+
+	<!-- Facebook Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+	n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+	document,'script','https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '953704608106351');
+	fbq('track', 'PageView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=953704608106351&ev=PageView&noscript=1"
+	/></noscript>
+	<!-- DO NOT MODIFY -->
+	<!-- End Facebook Pixel Code -->
+
   </head>
   
   <body onload="start()" style="background-image: url('images/bluebackground.jpg');">
@@ -76,7 +93,7 @@
             <div id="marketingline"><strong>The Doorstep Library of Things</strong></div>
 
             <div id="marketingstore">
-                <button ng-click="storeYourStuff()" onclick="ga('send', 'event', 'index', 'click', 'StoreYourThings');" id="storebutton" class="btn btn-success btn-fill">Store Your Things (For FREE)</button>
+                <button ng-click="storeYourStuff()" onclick="ga('send', 'event', 'index', 'click', 'StoreYourThings');" id="storebutton" class="btn btn-success btn-fill">FREE Storage For Your Things</button>
             </div>
 			<br><br><br><br><br><br>
             <div id="marketingsearch">
@@ -86,7 +103,7 @@
                 <div id="searchbox" class="input-group">
                     <div>
                         <input class="form-control" style="width:30%;" ng-autocomplete ng-model="search.location" options="options" details="details" />
-                        <input id="wish_title" style="width:70%;" type="text" ng-keypress="($event.charCode==13)?searching():return" ng-change="searchStringChanged(search.string)" ng-model="search.string" class="form-control" placeholder="I wish I had a ..." name="wish_title1" size="45">
+                        <input id="wish_title" style="width:70%;" type="text" ng-keypress="($event.charCode==13)?searching():return" ng-change="searchStringChanged(search.string)" ng-model="search.string" class="form-control" placeholder="I want to rent a ... " name="wish_title1" size="45">
                     </div>
                     
                     <span class="input-group-btn">

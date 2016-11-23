@@ -120,7 +120,8 @@ headerApp.controller('headerCtrl', ['$scope',
             dataType: "json",
 
             success: function(response) {
-				if(response.Code === "FLS_SUCCESS") {
+		if(response.Code === "FLS_SUCCESS") {
+		    fbq('track', 'CompleteRegistration');
                     if(SignUpStatus == "email_pending")
                         loginSignupService.signUpCheckRes("Email verification link send to your email!!");
                     else if(SignUpStatus == "mobile_pending")
@@ -878,6 +879,42 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
         }
     };
 }]);
+
+headerApp.directive('tooltip', function(){
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            $(element).hover(function(){
+                $(element).tooltip('show');
+            }, function(){
+                $(element).tooltip('hide');
+            });
+        }
+    };
+});
+
+headerApp.directive('popover', function(){
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            if($(element).length != 0){
+                $('body').append('<div class="popover-filter"></div>');
+
+                //    Activate Popovers
+               $(element).popover().on('show.bs.popover', function () {
+                    $('.popover-filter').click(function(){
+                        $(this).removeClass('in');
+                        $(element).popover('hide');
+                    });
+                    $('.popover-filter').addClass('in');
+                }).on('hide.bs.popover', function(){
+                    $('.popover-filter').removeClass('in');
+                });
+
+            }
+        }
+    }
+});
 
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     

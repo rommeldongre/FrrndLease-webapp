@@ -36,13 +36,13 @@
             </div>
             <hr>
             <div class="text-center">
-                <button href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="showFriendDetails($index)" data-toggle="tooltip" data-placement="top" title="Edit Details">
+                <button href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="showFriendDetails($index)" data-toggle="tooltip" data-placement="top" title="Edit Details" tooltip>
                     <i class="fa fa-edit"></i>
                 </button>
-				<button ng-if="friend.status == 'signedup'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="sendFriendMessage($index)" data-toggle="tooltip" data-placement="top" title="Send Message">
+				<button ng-if="friend.status == 'signedup'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="sendFriendMessage($index)" data-toggle="tooltip" data-placement="top" title="Send Message" tooltip>
                     <i class="fa fa-envelope-o"></i>
                 </button>
-                <button ng-if="friend.status == 'pending'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="reinviteFriend($index)" data-toggle="tooltip" data-placement="top" title="Send Reinvite">
+                <button ng-if="friend.status == 'pending'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="reinviteFriend($index)" data-toggle="tooltip" data-placement="top" title="Send Reinvite" tooltip>
                     <i class="fa fa-paper-plane"></i>
                 </button>
             </div>
