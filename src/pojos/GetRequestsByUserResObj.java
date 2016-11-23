@@ -1,157 +1,61 @@
 package pojos;
 
-import javax.validation.constraints.NotNull;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class GetRequestsByUserResObj extends ResObj {
 
-	// Return code for GetRequestsByUser
-	int ReturnCode = 0;
+	int code, offset;
+	String message;
 
-	// Error String
-	String ErrorString;
+	// Item Details
+	int itemId, insurance;
+	String title, description, category, leaseTerm, uid, primaryImageLink;
 
-	String title;
+	// request details
+	int requestId;
+	String requestDate, requestMessage, ownerId, ownerName, ownerProfilePic, ownerLocality, ownerSublocality, distance;
+	boolean friend;
 
-	// description of item
-	String desc;
-
-	// number of items, default is 1
-	int quantity = 1;
-
-	// Request id
-	int request_id;
-
-	// ID of request
-	// TBD: need to change type
-	@NotNull
-	int request_item_id;
-
-	// user posting item
-	// TBD: change to user id type
-	@NotNull
-	String owner_Id;
-
-	// user requesting item
-	String user_Id;
-
-	// Cookie
-	// TBD: change to user id type
-	@NotNull
-	int cookie;
-
-	// Request Status
-	String Request_status;
-
-	// Request date
-	String Request_date;
-
-	// Owner Name
-	String owner_name;
-
-	// more items details
-	String category, leaseValue, leaseTerm, uid, primaryImageLink;
-
-	// more items owners details
-	String owner_mobile, owner_address, owner_locality, owner_sublocality;
-
-	public String getCategory() {
-		return category;
+	public int getCode() {
+		return code;
 	}
 
-	public void setCategory(String category) {
-		this.category = category;
+	public void setCode(int code) {
+		this.code = code;
 	}
 
-	public String getLeaseValue() {
-		return leaseValue;
+	public int getOffset() {
+		return offset;
 	}
 
-	public void setLeaseValue(String leaseValue) {
-		this.leaseValue = leaseValue;
+	public void setOffset(int offset) {
+		this.offset = offset;
 	}
 
-	public String getLeaseTerm() {
-		return leaseTerm;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setLeaseTerm(String leaseTerm) {
-		this.leaseTerm = leaseTerm;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public String getPrimaryImageLink() {
-		return primaryImageLink;
+	public int getItemId() {
+		return itemId;
 	}
 
-	public void setPrimaryImageLink(String primaryImageLink) {
-		this.primaryImageLink = primaryImageLink;
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
 	}
 
-	public String getUid() {
-		return uid;
+	public int getInsurance() {
+		return insurance;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-
-	public String getOwner_mobile() {
-		return owner_mobile;
-	}
-
-	public void setOwner_mobile(String owner_mobile) {
-		this.owner_mobile = owner_mobile;
-	}
-
-	public String getOwner_address() {
-		return owner_address;
-	}
-
-	public void setOwner_address(String owner_address) {
-		this.owner_address = owner_address;
-	}
-
-	public String getOwner_locality() {
-		return owner_locality;
-	}
-
-	public void setOwner_locality(String owner_locality) {
-		this.owner_locality = owner_locality;
-	}
-
-	public String getOwner_sublocality() {
-		return owner_sublocality;
-	}
-
-	public void setOwner_sublocality(String owner_sublocality) {
-		this.owner_sublocality = owner_sublocality;
-	}
-
-	public String getOwner_name() {
-		return owner_name;
-	}
-
-	public void setOwner_name(String owner_name) {
-		this.owner_name = owner_name;
-	}
-
-	public int getReturnCode() {
-		return ReturnCode;
-	}
-
-	public void setReturnCode(int returnCode) {
-		ReturnCode = returnCode;
-	}
-
-	public String getErrorString() {
-		return ErrorString;
-	}
-
-	public void setErrorString(String errorString) {
-		ErrorString = errorString;
+	public void setInsurance(int insurance) {
+		this.insurance = insurance;
 	}
 
 	public String getTitle() {
@@ -162,83 +66,134 @@ public class GetRequestsByUserResObj extends ResObj {
 		this.title = title;
 	}
 
-	public String getDesc() {
-		return desc;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public int getQuantity() {
-		return quantity;
+	public String getCategory() {
+		return category;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
-	public int getRequest_id() {
-		return request_id;
+	public String getLeaseTerm() {
+		return leaseTerm;
 	}
 
-	public void setRequest_id(int request_id) {
-		this.request_id = request_id;
+	public void setLeaseTerm(String leaseTerm) {
+		this.leaseTerm = leaseTerm;
 	}
 
-	public int getRequest_item_id() {
-		return request_item_id;
+	public String getUid() {
+		return uid;
 	}
 
-	public void setRequest_item_id(int request_item_id) {
-		this.request_item_id = request_item_id;
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
-	public String getOwner_Id() {
-		return owner_Id;
+	public String getPrimaryImageLink() {
+		return primaryImageLink;
 	}
 
-	public void setOwner_Id(String owner_Id) {
-		this.owner_Id = owner_Id;
+	public void setPrimaryImageLink(String primaryImageLink) {
+		this.primaryImageLink = primaryImageLink;
 	}
 
-	public String getUser_Id() {
-		return user_Id;
+	public int getRequestId() {
+		return requestId;
 	}
 
-	public void setUser_Id(String user_Id) {
-		this.user_Id = user_Id;
+	public void setRequestId(int requestId) {
+		this.requestId = requestId;
 	}
 
-	public int getCookie() {
-		return cookie;
+	public String getRequestDate() {
+		return requestDate;
 	}
 
-	public void setCookie(int cookie) {
-		this.cookie = cookie;
-	}
-
-	public String getRequest_status() {
-		return Request_status;
-	}
-
-	public void setRequest_status(String request_status) {
-		Request_status = request_status;
-	}
-
-	public String getRequest_date() {
-		return Request_date;
-	}
-
-	public void setRequest_date(String request_date) {
+	public void setRequestDate(String requestDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		try {
-			date = sdf.parse(request_date);
+			date = sdf.parse(requestDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Request_date = Long.toString(date.getTime());
+		this.requestDate = Long.toString(date.getTime());
+	}
+
+	public String getOwnerId() {
+		return ownerId;
+	}
+
+	public void setOwnerId(String ownerId) {
+		this.ownerId = ownerId;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+	public String getOwnerProfilePic() {
+		return ownerProfilePic;
+	}
+
+	public void setOwnerProfilePic(String ownerProfilePic) {
+		this.ownerProfilePic = ownerProfilePic;
+	}
+
+	public String getOwnerLocality() {
+		return ownerLocality;
+	}
+
+	public void setOwnerLocality(String ownerLocality) {
+		this.ownerLocality = ownerLocality;
+	}
+
+	public String getOwnerSublocality() {
+		return ownerSublocality;
+	}
+
+	public void setOwnerSublocality(String ownerSublocality) {
+		this.ownerSublocality = ownerSublocality;
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(float distance) {
+		if(distance < 1)
+			this.distance = "0m";
+		else
+			this.distance = Math.round(distance)+"km";
+	}
+
+	public String getRequestMessage() {
+		return requestMessage;
+	}
+
+	public void setRequestMessage(String requestMessage) {
+		this.requestMessage = requestMessage;
+	}
+
+	public boolean isFriend() {
+		return friend;
+	}
+
+	public void setFriend(boolean friend) {
+		this.friend = friend;
 	}
 
 }

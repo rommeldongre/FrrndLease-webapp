@@ -1,8 +1,8 @@
 <div class="container-fluid" id="midcontainer">
-    
+       
     <div class="row">
         <div class="left_title col-lg-6 col-md-6">
-            <strong>My Incoming Requests List</strong>
+            <strong>My Incoming Requests</strong>
         </div>
 	</div>
     
@@ -12,63 +12,65 @@
     
     <div class="card" ng-repeat="request in requests">
         <div class="container-fluid">
-            <div class="row" style="display:flex;flex-wrap:wrap;padding:20px 20px 0px 20px;">
-                <div class="col-md-4">
-                    <img class="img-rounded" load-image="request.primaryImageLink" ng-src="" alt="..."/>
-                </div>
-                <div class="col-md-8">
-                    <div class="row">
-                        <h3><strong>{{request.title}}</strong></h3>
-                    </div>
-                    <div class="row" style="text-align:center;margin-top:7%;">
-                        <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
-                                <div class="icon icon-sm">
-                                    <i class="fa fa-filter" aria-hidden="true"></i>
+           <div class="row" style="display:flex;flex-wrap:wrap;padding:20px;">
+               <div class="col-md-8" style="border-right:thin solid #eee;">
+                   <div class="container-fluid">
+                        <div class="row" style="display:flex;flex-wrap:wrap;">
+                            <div class="col-md-6">
+                                <a href="ItemDetails?uid={{request.uid}}"><img class="img-rounded" load-image="request.primaryImageLink" ng-src="" alt="..."/></a>
+                            </div>
+                            <div class="col-md-6">
+                               <div class="container-fluid">
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.category}}</h5>
+                                    </div>
                                 </div>
-                                <div class="description">
-                                    <h5>{{request.category}}</h5>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.sublocality}}, {{request.locality}}</h5>
+                                    </div>
                                 </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.leaseTerm}} Lease</h5>
+                                    </div>
+                                </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-rupee" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.insurance}}</h5>
+                                    </div>
+                                </div>
+                               </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location" tooltip>
-                                <div class="icon icon-sm">
-                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                </div>
-                                <div class="description">
-                                    <h5>{{request.sublocality}}, {{request.locality}}</h5>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="ItemDetails?uid={{request.uid}}" style="color:black;"><h3><strong>{{request.title}}</strong></h3></a>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip>
-                                <div class="icon icon-sm">
-                                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                                </div>
-                                <div class="description">
-                                    <h5>{{request.leaseTerm}} Lease</h5>
-                                </div>
+                        <div class="row" style="margin-top:2%;">
+                            <div class="col-md-12">
+                                <h5><i ng-if="request.description.length>0" class="fa fa-quote-left" aria-hidden="true"></i> {{request.description}} <i ng-if="request.description.length>0" class="fa fa-quote-right" aria-hidden="true"></i></h5>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip>
-                                <div class="icon icon-sm">
-                                    <i class="fa fa-rupee" aria-hidden="true"></i>
-                                </div>
-                                <div class="description">
-                                    <h5>{{request.insurance}}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row" style="text-align:center;"><h4><strong>Requests - </strong></h4></div>
-            <div class="row" style="display:flex;flex-wrap:wrap;text-align:center;padding:0px 20px 20px 20px;">
-                <div class="col-md-3" ng-repeat="req in request.requests">
+                   </div>
+               </div>
+               <div class="col-md-4" ng-repeat="req in request.requests">
                     <div class="card card-user">
-                        <div class="image image-plain">
+                        <div class="image image-plain" style="margin-top:60px;">
                         </div>
                         <div class="content">
                             <div class="author">
@@ -110,7 +112,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+           </div>
         </div>
     </div>
 </div>
