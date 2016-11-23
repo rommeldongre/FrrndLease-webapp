@@ -120,7 +120,8 @@ headerApp.controller('headerCtrl', ['$scope',
             dataType: "json",
 
             success: function(response) {
-				if(response.Code === "FLS_SUCCESS") {
+		if(response.Code === "FLS_SUCCESS") {
+		    fbq('track', 'CompleteRegistration');
                     if(SignUpStatus == "email_pending")
                         loginSignupService.signUpCheckRes("Email verification link send to your email!!");
                     else if(SignUpStatus == "mobile_pending")
