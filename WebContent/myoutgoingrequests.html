@@ -2,7 +2,7 @@
     
     <div class="row">
         <div class="left_title col-lg-6 col-md-6">
-            <strong>My Outgoing Requests List</strong>
+            <strong>My Outgoing Requests</strong>
         </div>
 	</div>
     
@@ -10,79 +10,106 @@
 
     <h4 ng-if="requests.length == 0">You have no Outgoing Requests. Request items from the Store</h4>
     
-    <div class="row" ng-repeat="request in requests">
-        <div class="col-lg-1 col-md-1"></div>
-        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
-            <div class="row" style="display: flex;flex-wrap: wrap;">
-                <div class="col-lg-4 col-md-4 col-sm-4" href="" ng-click="showItemDetails(request.uid)">
-                   <a class="image">
-                      <img class="img-rounded" load-image="request.primaryImageLink" ng-src="" alt="..."/>
-                   </a>
+    <div class="card" ng-repeat="request in requests">
+        <div class="container-fluid">
+           <div class="row" style="display:flex;flex-wrap:wrap;padding:20px;">
+               <div class="col-md-8" style="border-right:thin solid #eee;">
+                   <div class="container-fluid">
+                        <div class="row" style="display:flex;flex-wrap:wrap;">
+                            <div class="col-md-6">
+                                <a href="ItemDetails?uid={{request.uid}}"><img class="img-rounded" load-image="request.primaryImageLink" ng-src="" alt="..."/></a>
+                            </div>
+                            <div class="col-md-6">
+                               <div class="container-fluid">
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.category}}</h5>
+                                    </div>
+                                </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.ownerSublocality}}, {{request.ownerLocality}}</h5>
+                                    </div>
+                                </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.leaseTerm}} Lease</h5>
+                                    </div>
+                                </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-rupee" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{request.insurance}}</h5>
+                                    </div>
+                                </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="ItemDetails?uid={{request.uid}}" style="color:black;"><h3><strong>{{request.title}}</strong></h3></a>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:2%;">
+                            <div class="col-md-12">
+                                <h5><i ng-if="request.description.length>0" class="fa fa-quote-left" aria-hidden="true"></i> {{request.description}} <i ng-if="request.description.length>0" class="fa fa-quote-right" aria-hidden="true"></i></h5>
+                            </div>
+                        </div>
+                   </div>
+               </div>
+               <div class="col-md-4">
+                    <div class="card card-user">
+                        <div class="image image-plain">
+                        </div>
+                        <div class="content">
+                            <div class="author">
+                                <a href="">
+                                    <img class="avatar border-gray" ng-src="{{(request.ownerProfilePic === '' || request.ownerProfilePic === null || request.ownerProfilePic === NULL || request.ownerProfilePic === 'null') ? 'images/user_icon.png' : request.ownerProfilePic}}" alt="Profile Pic">
+                                    <h4 class="title">{{request.ownerName}}<br>
+                                        <small>
+                                            <div ng-if="request.friend">
+                                                <i class="fa fa-handshake-o"></i> Is Friend
+                                            </div>
+                                            <div ng-if="!request.friend">
+                                                <i class="fa fa-users"></i> Is Member
+                                            </div>
+                                        </small>
+                                    </h4>
+                                </a>
+                            </div>
+                            <p class="description text-center">
+                                <i class="fa fa-map-marker text-muted"></i>&nbsp;{{request.distance == '0m' ? 'Under 1km' : request.distance}}&nbsp;-&nbsp;{{request.ownerSublocality+","+request.ownerLocality}}<br>
+                                <span class="text-muted" ng-if="request.requestMessage!=null" style="cursor:pointer;" data-toggle="popover" title="You said - " data-placement="top" data-content="{{request.requestMessage}}" popover>
+                                    <i class="fa fa-quote-left" aria-hidden="true"></i> {{request.requestMessage | limitTo: 15}}<span ng-if="request.requestMessage.length > 15">&hellip;</span> <i class="fa fa-quote-right" aria-hidden="true"></i>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="description text-center">
+                            <i class="fa fa-calendar" aria-hidden="true"></i> {{request.requestDate | date}}
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <button data-toggle="tooltip" data-placement="top" title="Delete Request" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="deleteRequest(request.requestId,$index)" tooltip>
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(request.itemId,req.ownerId)" tooltip>
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                   <div class="content">
-                       <a class="card-link" href="" ng-click="showItemDetails(request.uid)">
-                          <h5 class="title">{{request.title}}</h5>
-                       </a>
-                       <a class="card-link">
-                          <p class="description">{{request.desc}}</p>
-                       </a>
-                       <a class="footer">
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
-                              <div class="card-link">
-                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{request.category}}
-                              </div>
-                          </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip>
-                              <div class="card-link">
-                                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{request.leaseTerm}}
-                              </div>
-                          </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value" tooltip>
-                              <div class="card-link">
-                                  <span class="fa fa-rupee" aria-hidden="true"></span> {{request.leaseValue}}
-                              </div>
-                          </div>
-                       </a>
-                   </div>
-               </div>
-               <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center;border-left: thin solid #eee;border-right: thin solid #eee;">
-                  <div class="content" style="text-align:center;">
-                      <a class="card-link">
-                         <span class="label label-default label-fill">Owner</span>
-                       </a>
-                      <br/>
-                      <a class="card-link">
-                          <img src="images/user_icon.png" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{request.owner_name}}</p>
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{request.owner_sublocality}}</p>
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{request.owner_locality}}</p>
-                      </a>
-                  </div>
-               </div>
-               <div class="col-lg-2 col-md-2 col-sm-2">
-                   <div class="content" style="text-align:center;">
-                       <a class="card-link">
-                         <span class="label label-default label-fill">Requested At</span>
-                       </a>
-                       <br/>
-                       <a class="card-link">
-                           <p class="description">{{request.request_date | date}}</p>
-                       </a>
-                       <a class="card-link" href="">
-                           <button ng-click="deleteRequest(request.request_id,$index)" class="btn btn-primary btn-simple">Delete</button>
-                       </a>
-                   </div>
-               </div>
-            </div>
+           </div>
         </div>
-        <div class="col-lg-1 col-md-1"></div>
     </div>
-    
 </div>

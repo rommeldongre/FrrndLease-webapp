@@ -133,7 +133,7 @@
                             <div class="row">
                                 <div class="col-xs-3">
                                     <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
-                                        <div class="icon icon-sm">
+                                        <div class="icon icon-blue icon-sm">
                                             <i class="fa fa-filter" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
@@ -143,7 +143,7 @@
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location" tooltip>
-                                        <div class="icon icon-sm">
+                                        <div class="icon icon-blue icon-sm">
                                             <i class="fa fa-location-arrow" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
@@ -153,7 +153,7 @@
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip>
-                                        <div class="icon icon-sm">
+                                        <div class="icon icon-blue icon-sm">
                                             <i class="fa fa-calendar" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
@@ -163,7 +163,7 @@
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip>
-                                        <div class="icon icon-sm">
+                                        <div class="icon icon-blue icon-sm">
                                             <i class="fa fa-rupee" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">

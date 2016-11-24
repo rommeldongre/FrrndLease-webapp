@@ -13,8 +13,7 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
     
     localStorage.setItem("prevPage","myapp.html#/myoutgoingrequests");
     
-    // to get all out going requests
-    var itemNextRequestId = 0;
+    var offset = 0;
     
     // to initialise the requests array
     $scope.requests = [];
@@ -23,9 +22,9 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
         
         $scope.requests = [];
         
-        itemNextRequestId = 0;
+        offset = 0;
         
-        getOutRequests(itemNextRequestId);
+        getOutRequests(offset);
         
     }
     
@@ -50,12 +49,13 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
             contentType:"application/json",
             dataType: "JSON",
             success: function(response) {
-                if(response.title){
+                if(response.code == 0){
+                    offset = response.offset;
                     $scope.$apply(function(){
                         $scope.requests.unshift(response);
                     });
-                    itemNextRequestId = response.request_id;
-                    getOutRequests(itemNextRequestId);
+                    
+                    getOutRequests(offset);
                 }
             },
             error: function() {
@@ -109,8 +109,51 @@ myOutGoingRequests.controller('myOutGoingRequestsCtrl', ['$scope',
             });
     }
     
-    $scope.showItemDetails = function(uid){
-        window.location.replace("ItemDetails?uid="+uid);
+    $scope.sendMessage = function(ItemId, To){
+        modalService.showModal({}, {messaging: true, bodyText: 'Message Item\'s Owner', actionButtonText: 'Send'}).then(function(result){
+            
+            var message = result;
+            
+            if(message == "" || message == undefined)
+                message = null;
+            
+            var req = {
+                userId: userFactory.user,
+				accessToken: userFactory.userAccessToken,
+				from: userFactory.user,
+				to: To,
+                subject: "ITEM",
+                message: message,
+				itemId: ItemId
+            }
+            
+            sendMessage(req);
+            
+        }, function(){});
     }
+    
+    var sendMessage = function(req){
+		$.ajax({
+			url: '/SendMessage',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code==0){
+					bannerService.updatebannerMessage("Message Sent!!");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+					
+				}else{
+					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){});
+				}
+			},
+		
+			error: function() {
+				console.log("Not able to send message");
+			}
+		});
+	}
     
 }]);
