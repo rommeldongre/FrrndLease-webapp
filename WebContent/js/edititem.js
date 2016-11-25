@@ -378,9 +378,9 @@ editItemApp.controller('editItemCtrl', ['$scope',
 				},function(response){
                     var m = "";
 					if (response && !response.error) {
-                        m = "Item sucessfully posted on Frrndlease and shared on Facebook";
+                        m = "Item sucessfully posted on FrrndLease and shared on Facebook";
                     }else{
-                        m = "Item sucessfully posted on Frrndlease";
+                        m = "Item sucessfully posted on FrrndLease";
                     }
                     bannerService.updatebannerMessage(m, "myapp.html#/");
 					$("html, body").animate({ scrollTop: 0 }, "slow");

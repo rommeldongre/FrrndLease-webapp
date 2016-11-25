@@ -627,7 +627,7 @@ headerApp.service('modalService', ['$uibModal',
             submitting: false,
 			messaging: false,
             cancelButtonText: 'Cancel',
-            headerText: 'Frrndlease Says',
+            headerText: 'FrrndLease Says',
             bodyText: 'Perform this action?'
         };
         

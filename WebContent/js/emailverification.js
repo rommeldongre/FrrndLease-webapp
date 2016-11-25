@@ -2,7 +2,7 @@ var emailVerificationApp = angular.module('emailVerificationApp', ['headerApp', 
 
 emailVerificationApp.controller('verificationCtrl', ['$scope', '$http', '$location', 'modalService', function($scope, $http, $location, modalService){
     
-    $scope.title = "Frrndlease Email Verification";
+    $scope.title = "FrrndLease Email Verification";
     
     var getQueryVariable = function (variable) {
         var query = window.location.search.substring(1);
