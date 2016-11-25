@@ -1,19 +1,11 @@
 package util;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.imageio.ImageIO;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -23,7 +15,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.xml.bind.DatatypeConverter;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -50,6 +41,8 @@ public class FlsEmail extends Connect{
 
 		String ENV_CONFIG = FlsConfig.env;
 		String URL = FlsConfig.prefixUrl;
+		
+		String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
 		
 		String FROM = "BlueMarble@frrndlease.com", CC = "BlueMarble@frrndlease.com", TO, PREFIX, SUBJECT, BODY;
 		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;
@@ -160,8 +153,6 @@ public class FlsEmail extends Connect{
 				List<JSONObject> listItems = matchItems.checkPostedItems(obj.getInt("itemId"));
 				SUBJECT = (" You have a match on FrrndLease!");
 				BODY = ("<body>Check out these items on FrrndLease that match your wishlist. Go request them! <br/> <br/>");
-
-				int i = 0;
 				
 				for (JSONObject l : listItems) {
 					BODY = BODY + (" Title : " + l.getString("title") + "<br/>" + " Category : "
@@ -171,7 +162,6 @@ public class FlsEmail extends Connect{
 							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")
 							+ "<br/>" + "<img width=\"300\" src='" + l.getString("imageLinks") + "' alt="
 							+ l.getString("title") + " ></img><br/><br/>");
-					i++;
 				}
 
 				BODY = BODY + ("</body>");
@@ -456,17 +446,11 @@ public class FlsEmail extends Connect{
 				context.put("credits", credits);
 			context.put("subject", SUBJECT);
 			context.put("body", BODY);
+			context.put("logo", LOGO_URL);
 						
 			BodyPart body = new MimeBodyPart();
 						
 			multipart.addBodyPart(body);
-						
-			InputStream logoUrl = getClass().getClassLoader().getResourceAsStream("images/fls-logo-min.png");
-			MimeBodyPart logo = new MimeBodyPart();
-			logo.attachFile(createFile(logoUrl));
-			logo.setContentID("<logo>");
-			logo.setDisposition(MimeBodyPart.INLINE);
-			multipart.addBodyPart(logo);
 			           
 			template.merge(context, writer);
 				
@@ -510,56 +494,6 @@ public class FlsEmail extends Connect{
 		
 		return false;
 		
-	}
-	
-	private File convertBinaryToImage(String imageString) {
-		// TODO Auto-generated method stub
-		
-		if(imageString == null || imageString == ""){
-			return null;
-		}
-		
-		try {
-			String[] i = imageString.split(",");
-			String binary = i[1];
-
-			BufferedImage image = null;
-			byte[] imageByte;
-
-			imageByte = DatatypeConverter.parseBase64Binary(binary);
-			ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-			image = ImageIO.read(bis);
-			bis.close();
-
-			// write the image to a file
-			File file = new File("ItemImage.png");
-			ImageIO.write(image, "png", file);
-
-			return file;
-		} catch (IOException e) {
-			LOGGER.warning("Not able to decode the image");
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	public File createFile(InputStream is) throws IOException {
-	    File tmp = null;
-	    FileOutputStream tmpOs = null;
-	    try {
-	        tmp = File.createTempFile("xml", "tmp");
-	        tmpOs = new FileOutputStream(tmp);
-	        int len = -1;
-	        byte[] b = new byte[4096];
-	        while ((len = is.read(b)) != -1) {
-	            tmpOs.write(b, 0, len);
-	        }
-	    } finally {
-	        try { is.close(); } catch (Exception e) {}
-	        try { tmpOs.close(); } catch (Exception e) {}
-	    }
-	    return tmp;
 	}
 	
 }

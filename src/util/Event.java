@@ -535,7 +535,7 @@ public class Event extends Connect{
 					case SMS:
 						return sendSms(eventId);
 					case BOTH:
-						return sendEmail(eventId) || sendSms(eventId);
+						return sendEmail(eventId) && sendSms(eventId);
 					case NONE:
 						return true;
 				}
