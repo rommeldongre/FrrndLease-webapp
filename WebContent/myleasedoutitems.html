@@ -12,93 +12,119 @@
         <a href="#/myincomingrequests">Check your Incoming Requests to lease them out.</a>
     </h4>
     
-    <div class="row" ng-repeat="lease in leases">
-        <div class="col-lg-1 col-md-1"></div>
-        <div class="card col-lg-10 col-md-10" style="box-shadow: 0 4px 4px rgba(0, 0, 0, 0.23);">
-            <div class="row" style="display: flex;flex-wrap: wrap;">
-                <div class="col-lg-4 col-md-4 col-sm-4" href="" ng-click="showItemDetails(lease.uid)">
-                   <a class="image">
-                      <img class="img-rounded" load-image="lease.primaryImageLink" ng-src="" alt="..."/>
-                   </a>
+    <div class="card" ng-repeat="lease in leases">
+        <div class="container-fluid">
+           <div class="row" style="display:flex;flex-wrap:wrap;padding:20px;">
+               <div class="col-md-8" style="border-right:thin solid #eee;">
+                   <div class="container-fluid">
+                        <div class="row" style="display:flex;flex-wrap:wrap;">
+                            <div class="col-md-6">
+                                <a href="ItemDetails?uid={{lease.uid}}"><img class="img-rounded" load-image="lease.primaryImageLink" ng-src="" alt="..."/></a>
+                            </div>
+                            <div class="col-md-6">
+                               <div class="container-fluid">
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{lease.category}}</h5>
+                                    </div>
+                                </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Location" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{lease.ownerSublocality}}, {{lease.ownerLocality}}</h5>
+                                    </div>
+                                </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{lease.leaseTerm}} Lease</h5>
+                                    </div>
+                                </div>
+                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip style="margin-bottom:0px;">
+                                    <div class="icon icon-blue icon-sm">
+                                        <i class="fa fa-rupee" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="description">
+                                        <h5 style="margin-top:30px;margin-bottom:5px;">{{lease.leaseValue}}</h5>
+                                    </div>
+                                </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a href="ItemDetails?uid={{lease.uid}}" style="color:black;"><h3><strong>{{lease.title}}</strong></h3></a>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:2%;">
+                            <div class="col-md-12">
+                                <h5><i ng-if="lease.description.length>0" class="fa fa-quote-left" aria-hidden="true"></i> {{lease.description}} <i ng-if="lease.description.length>0" class="fa fa-quote-right" aria-hidden="true"></i></h5>
+                            </div>
+                        </div>
+                   </div>
+               </div>
+               <div class="col-md-4">
+                    <div class="card card-user">
+                        <div class="image image-plain" style="margin-top:60px;">
+                        </div>
+                        <div class="content">
+                            <div class="author">
+                                <a href="">
+                                    <img class="avatar border-gray" ng-src="{{(lease.requestorProfilePic === '' || lease.requestorProfilePic === null || lease.requestorProfilePic === NULL || lease.requestorProfilePic === 'null') ? 'images/user_icon.png' : lease.requestorProfilePic}}" alt="Profile Pic">
+                                    <h4 class="title">{{lease.requestorFullName}}<br>
+                                        <small>
+                                            <div ng-if="lease.friend">
+                                                <i class="fa fa-handshake-o"></i> Is Friend
+                                            </div>
+                                            <div ng-if="!lease.friend">
+                                                <i class="fa fa-users"></i> Is Member
+                                            </div>
+                                        </small>
+                                    </h4>
+                                </a>
+                            </div>
+                            <p class="description text-center">
+                                <i class="fa fa-map-marker text-muted"></i>&nbsp;{{lease.distance == '0m' ? 'Under 1km' : lease.distance}}&nbsp;-&nbsp;{{lease.requestorSublocality+","+lease.requestorLocality}}<br>
+                                <span class="label label-success label-fill btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{lease.statusDesc}}" style="text-align:center;" tooltip>{{lease.status}}</span>
+                            </p>
+                        </div>
+                        <div class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Expiry Date" tooltip>
+                            <i class="fa fa-calendar" aria-hidden="true"></i> {{lease.leaseExpiryDate | date}}
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
+                                Item Pick Up Status:<br/>{{(lease.ownerPickupStatus ? 'Picked Up' : 'Pending')}}
+                                <form>
+                                   <switch id="enabled" name="enabled" ng-change="changePickupStatus(lease.ownerPickupStatus, $index)" ng-model="lease.ownerPickupStatus" class="green"></switch>
+                               </form>
+                            </a>
+                            <form id="agreement" ng-if="lease.status=='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank">
+                               <input type="hidden" name="leaseId" value="{{lease.leaseId}}" />
+                               <button type="submit" data-toggle="tooltip" data-placement="top" title="Download Lease Agreement" class="btn btn-primary btn-simple btn-tooltip" tooltip>
+                                   <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                               </button>
+                            </form>
+                            <button ng-if="lease.status != 'LeaseEnded'" data-toggle="tooltip" data-placement="top" title="Close Lease" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)" tooltip>
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                            <button data-toggle="tooltip" data-placement="top" title="Renew Lease" class="btn btn-success btn-simple btn-icon btn-tooltip" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)" tooltip>
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </button>
+                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(lease.itemId,lease.requestorUserId)" tooltip>
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                   <div class="content">
-                       <a class="card-link" href="" ng-click="showItemDetails(lease.uid)">
-                          <h5 class="title">{{lease.title}}</h5>
-                       </a>
-                       <a class="card-link">
-                          <p class="description">{{lease.description}}</p>
-                       </a>
-                       <a class="footer">
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
-                              <div class="card-link">
-                                  <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> {{lease.category}}
-                              </div>
-                          </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Term" tooltip>
-                              <div class="card-link">
-                                  <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> {{lease.leaseTerm}}
-                              </div>
-                          </div>
-                          <div class="stats btn-tooltip" data-toggle="tooltip" data-placement="top" title="Resonable Replacement Value" tooltip>
-                              <div class="card-link">
-                                  <span class="fa fa-rupee" aria-hidden="true"></span> {{lease.leaseValue}}
-                              </div>
-                          </div>
-                           <br/>
-                           <span class="label label-success label-fill btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{lease.statusDesc}}" style="text-align:center;" tooltip>{{lease.status}}</span>
-                       </a>
-                   </div>
-               </div>
-               <div class="col-lg-3 col-md-3 col-sm-3" style="text-align:center;border-left: thin solid #eee;border-right: thin solid #eee;">
-                  <div class="content" style="text-align:center;">
-                      <a class="card-link">
-                        <span class="label label-default label-fill">Requestor</span>
-                      </a>
-                      <br/>
-                      <a class="card-link">
-                          <img ng-src="{{(lease.requestorProfilePic === '' || lease.requestorProfilePic === null || lease.requestorProfilePic === NULL || lease.requestorProfilePic === 'null') ? 'images/user_icon.png' : lease.requestorProfilePic}}" alt="Profile Pic" style="width:50px;height:50px; padding:5px;" class="img-circle">
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{lease.requestorFullName}}</p>
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{lease.requestorSublocality}}</p>
-                      </a>
-                      <a class="card-link">
-                         <p class="description">{{lease.requestorLocality}}</p>
-                      </a>
-                  </div>
-               </div>
-               <div class="col-lg-3 col-md-3 col-sm-3">
-                   <div class="content" style="text-align:center;">
-                       <a class="card-link">
-                         <span class="label label-default label-fill">Expiry Date</span>
-                       </a>
-                       <br/>
-                       <a class="card-link">
-                           <p class="description">{{lease.leaseExpiryDate | date}}</p>
-                       </a>
-                       <a class="card-link" href="">
-                           <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-primary btn-simple" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">Close</button>
-                       </a><br/>
-                       <a class="card-link" href="">
-                           <button class="btn btn-primary btn-simple" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">Renew</button>
-                       </a><br/>
-                       <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
-                           Item Pick Up Status:<br/>{{(lease.ownerPickupStatus ? 'Picked Up' : 'Pending')}}
-                           <form>
-                               <switch id="enabled" name="enabled" ng-change="changePickupStatus(lease.ownerPickupStatus, $index)" ng-model="lease.ownerPickupStatus" class="green"></switch>
-                           </form>
-                       </a>
-                       <form id="agreement" ng-if="lease.status=='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank">
-                           <input type="hidden" name="leaseId" value="{{lease.leaseId}}" />
-                           <input type="submit" class="btn btn-primary btn-fill" value="Download Agreement" />
-                       </form>
-                   </div>
-               </div>
-            </div>
+           </div>
         </div>
-        <div class="col-lg-1 col-md-1"></div>
     </div>
 </div>
