@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Leads By X</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	var Token = 0;
+	var itemNextIdArray = [];
+	
+	getData = function (){
+		var UserId = document.getElementById("ownerId").value;
+		
+		var Type = document.getElementById("type").value;
+		
+		var Offset = document.getElementById("offset").value;
+		Offset = parseInt(Offset);
+		
+		var Limit = document.getElementById("limit").value;
+		Limit = parseInt(Limit);
+		
+		var FromDate = document.getElementById("from_date").value;
+		
+		var ToDate = document.getElementById("to_date").value;
+		
+		GetLeadsByX(UserId,Type,Offset,Limit,FromDate,ToDate);
+	};
+	
+	function GetLeadsByX(user,type,offset,limit,fromDate,toDate){
+	
+		if (user ===''){
+			reqUserId = null;
+		}else{
+			reqUserId = user;
+		}
+		
+		if (type ===''){
+			Type = null;
+		}else{
+			Type = type;
+		}
+		
+		if (offset ==='' || offset== null) {
+			Offset =0;
+		}else{
+			Offset = offset;
+		}
+		
+		if (limit ==='' || limit == null) {
+			Limit =0;
+		}else{
+			Limit = limit;
+		}
+		
+		if (fromDate ==='' || fromDate == null) {
+			FromDate ="";
+		}else{
+			FromDate = fromDate;
+		}
+		
+		if (toDate ==='' || toDate == null) {
+			ToDate ="";
+		}else{
+			ToDate = toDate;
+		}
+		
+		var req = {
+			userId: reqUserId,
+			leadType: type,
+			cookie: Offset,
+			limit: Limit,
+			fromDate: FromDate,
+			toDate: ToDate
+		};
+		GetLeadsByXSend(req);
+	}
+		
+	GetLeadsByXSend = function(req) {
+		alert("Inside send");
+		$.ajax({
+			url: '/GetLeadsByX',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				document.getElementById("size").value = response.resList.length;
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = "Success!";
+				document.getElementById("offsetVal").value = response.lastLeadId;
+				var div = document.getElementById("output");
+				div.innerHTML = JSON.stringify(response.resList);
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> GET Leads By X FORM</h1>
+	<form>
+		User Id : <input type="text" name="ownerId" id="ownerId" ><br/><br/>
+		Type : <input type="text" name="type" id="type" ><br/><br/>
+		Batch Limit: <input type="text" name="limit" id="limit" ><br/><br/>
+		Offset Value: <input type="text" name="offset" id="offset" ><br/><br/>
+		From Date: <input type="date" name="from_date" id="from_date" ><br/><br/>
+		To Date: <input type="date" name="to_date" id="to_date" ><br/><br/>
+		<input type="button" value="Next" onclick="getData()">
+		
+		<h1>OUTPUT</h1>
+		Output Array Size : <input type="text" name="size" id="size"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+		
+		Last Offset Value : <input type="text" name="offsetVal" id="offsetVal"><br/><br/>
+		
+		<div id="output">
+		
+		</div>
+	</form>
+	
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
