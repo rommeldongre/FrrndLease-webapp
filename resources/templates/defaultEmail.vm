@@ -7,13 +7,13 @@
         	<td>$body</td>
         </tr>
         <tr style="text-align:center;">
-        	<td valign="top" style="padding-bottom:20px;">
+        	<td valign="top" style="padding-bottom:5px;">
         		<u>Account Status</u>: <br>
         		You have <strong>$credits credits</strong> left to spend on FrrndLease.<br><br>
             </td>
          </tr>
          <tr style="text-align:center;">
-         	<td style="padding-top:20px;">
+         	<td style="padding-top:0px;">
          		<hr/>
          		Thank you for being good to the earth!<br>
          		The FrrndLease Team
