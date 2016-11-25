@@ -137,6 +137,10 @@ public class Friends extends Connect {
 				stmt3.setString(5, status);
 				stmt3.executeUpdate();
 
+				Event event = new Event();
+				event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
+				event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
+				
 				message = "Entry added into friends table";
 				LOGGER.warning(message);
 				Code = 10;

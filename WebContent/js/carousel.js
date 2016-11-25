@@ -222,7 +222,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     
     $scope.offerStuffClicked = function(){
        if(user == "" || user == null || user == 'anonymous'){
-            $('#loginModal').modal('show');
+            $('#registerModal').modal('show');
         }
         else{
             window.location.replace("myapp.html#/wizard");
