@@ -410,7 +410,7 @@ public class Users extends Connect {
 			
 			res.setData(FLS_SUCCESS, Id, message);
 			}else{
-				res.setData(FLS_DUPLICATE_ENTRY, "200", "Account with this Email Id already exists");	
+				res.setData(FLS_DUPLICATE_ENTRY, "200", "Account with this User Id already exists");	
 			}
 		} catch (SQLException e) {
 			LOGGER.warning("Couldn't create statement");
