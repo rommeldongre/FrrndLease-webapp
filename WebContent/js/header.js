@@ -918,7 +918,7 @@ headerApp.directive('popover', function(){
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
     var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
-    var mobile = /(\d+$)$/;
+    var mobile = /^[789]\d{9}$/;
     
     // Form login
     $scope.formLogin = function(userId, password){
@@ -927,8 +927,10 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalSe
         else{
             if(email.test(userId))
                 loginSignupService.loginCheckReq(userId, password, "", "email_activated");
-            else
+            else if(mobile.test(userId))
                 loginSignupService.loginCheckReq(userId, password, "", "mobile_activated");
+            else
+                $scope.error = "Please enter valid user id!!";
         }
     }
     
@@ -1018,8 +1020,10 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     
     $scope.userIdChanged = function(){
         
+        $scope.error = "";
+        
         var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
-        var mobile = /(\d+$)$/;
+        var mobile = /^[789]\d{9}$/;
         
         if(email.test($scope.userId)){
             $scope.email = $scope.userId;
@@ -1045,7 +1049,10 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     // form sign up
     $scope.formSignup = function(email, password, name, mobile, code, location){
         friendId = email;
-        loginSignupService.signUpCheckReq($scope.userId, email, password, name, "", mobile, code, location, signUpStatus, friendId);
+        if($scope.userId == email || $scope.userId == mobile)
+            loginSignupService.signUpCheckReq($scope.userId, email, password, name, "", mobile, code, location, signUpStatus, friendId);
+        else
+            $scope.error = "Please enter correct User Id!!";
     }
     
     // Google sign up
