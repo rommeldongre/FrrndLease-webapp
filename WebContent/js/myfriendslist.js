@@ -386,7 +386,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 	
 	var reinviteFriendSend = function(req){
 		$.ajax({
-            url: '/AddFriend',
+            url: '/ReinviteFriend',
             type:'get',
             data: {req : JSON.stringify(req)},
             contentType:"application/json",
