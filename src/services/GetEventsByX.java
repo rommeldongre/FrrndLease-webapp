@@ -25,7 +25,7 @@ import app.NotImplementedException;
 /**
  * Servlet implementation class GetEventsByX
  */
-@WebServlet(description = "List Item Requests for a given UserId", urlPatterns = { "/GetEventsByX" })
+@WebServlet(description = "List Events matching a condition", urlPatterns = { "/GetEventsByX" })
 public class GetEventsByX extends HttpServlet {
 	
 	private FlsLogger LOGGER = new FlsLogger(GetEventsByX.class.getName());
@@ -58,8 +58,8 @@ public class GetEventsByX extends HttpServlet {
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
-				LOGGER.warning("GetItemStore process method not implemented");
-				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetItemStore process method not implemented");
+				LOGGER.warning("GetEventsByX process method not implemented");
+				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetEventsByX process method not implemented");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
