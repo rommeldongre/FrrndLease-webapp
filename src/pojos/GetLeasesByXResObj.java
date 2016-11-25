@@ -4,37 +4,44 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class GetLeasesByXResObj extends ResObj{
+public class GetLeasesByXResObj extends ResObj {
 
 	int code;
 	String message;
 
 	int cookie;
-	
+
 	// requesters details
-	String requestorUserId, requestorFullName, requestorMobile, requestorAddress, requestorLocality, requestorSublocality,requestorProfilePic;
-	
+	String requestorUserId, requestorFullName, requestorMobile, requestorAddress, requestorLocality,
+			requestorSublocality, requestorProfilePic;
+
 	// owners details
-	String ownerUserId, ownerFullName, ownerMobile, ownerAddress, ownerLocality, ownerSublocality,ownerProfilePic;
-	
+	String ownerUserId, ownerFullName, ownerMobile, ownerAddress, ownerLocality, ownerSublocality, ownerProfilePic;
+
 	// lease details
 	String leaseExpiryDate;
 	int leaseId;
-	
+
 	// item details
 	int itemId;
 	String title, description, category, leaseValue, leaseTerm, primaryImageLink, status, uid;
-	
-	//Delivery Plan
+
+	// Delivery Plan
 	String deliveryPlan;
-	
-	//Delivery Status
+
+	// Delivery Status
 	boolean ownerPickupStatus;
 	boolean leaseePickupStatus;
-	
-	//User Plan
+
+	// User Plan
 	String ownerPlan;
 	String requestorPlan;
+
+	// Friendship
+	boolean friend;
+
+	// Distance
+	String distance;
 
 	public int getCode() {
 		return code;
@@ -51,7 +58,7 @@ public class GetLeasesByXResObj extends ResObj{
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	public int getCookie() {
 		return cookie;
 	}
@@ -170,7 +177,7 @@ public class GetLeasesByXResObj extends ResObj{
 		}
 		this.leaseExpiryDate = Long.toString(date.getTime());
 	}
-	
+
 	public int getLeaseId() {
 		return leaseId;
 	}
@@ -305,5 +312,24 @@ public class GetLeasesByXResObj extends ResObj{
 
 	public void setRequestorPlan(String requestorPlan) {
 		this.requestorPlan = requestorPlan;
+	}
+
+	public boolean isFriend() {
+		return friend;
+	}
+
+	public void setFriend(boolean friend) {
+		this.friend = friend;
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(float distance) {
+		if(distance < 1)
+			this.distance = "0m";
+		else
+			this.distance = Math.round(distance)+"km";
 	}
 }
