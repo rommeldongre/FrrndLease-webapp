@@ -106,7 +106,7 @@
                             <button data-toggle="tooltip" data-placement="top" title="Reject Request" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="rejectLease(request.itemId,req.requestorId,$index)" tooltip>
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(request.itemId,req.requestorId)" tooltip>
+                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" send-message-to="req.requestorId" item-id="request.itemId" tooltip>
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             </button>
                         </div>

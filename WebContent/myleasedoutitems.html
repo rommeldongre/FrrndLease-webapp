@@ -118,7 +118,7 @@
                             <button data-toggle="tooltip" data-placement="top" title="Renew Lease" class="btn btn-success btn-simple btn-icon btn-tooltip" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)" tooltip>
                                 <i class="fa fa-refresh" aria-hidden="true"></i>
                             </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(lease.itemId,lease.requestorUserId)" tooltip>
+                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" send-message-to="lease.requestorUserId" item-id="lease.itemId" tooltip>
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             </button>
                         </div>

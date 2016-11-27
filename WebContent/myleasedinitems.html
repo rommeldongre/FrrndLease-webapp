@@ -118,7 +118,7 @@
                             <button ng-if="lease.status != 'LeaseEnded'" data-toggle="tooltip" data-placement="top" title="Close Lease" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="closeLease(lease.itemId, lease.ownerUserId, lease.requestorUserId, $index)" tooltip>
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" ng-click="sendMessage(lease.itemId,lease.ownerUserId)" tooltip>
+                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" send-message-to="lease.ownerUserId" item-id="lease.itemId" tooltip>
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             </button>
                         </div>
