@@ -71,8 +71,6 @@ public class GetLeadsByXHandler extends Connect implements AppHandler {
 			
 			sql = sql + "tb1.lead_type='" + type + "' ORDER BY tb1.lead_id DESC LIMIT " + offset + ","+limit;
 			
-			LOGGER.info(sql);
-			
 			sql_stmt = hcp.prepareStatement(sql);
 
 			dbResponse = sql_stmt.executeQuery();
@@ -85,18 +83,22 @@ public class GetLeadsByXHandler extends Connect implements AppHandler {
 					rs1.setLeadLogDate(dbResponse.getString("lead_datetime"));
 					rs1.setLeadUserId(dbResponse.getString("lead_email"));
 					rs1.setLeadType(dbResponse.getString("lead_type"));
+					rs1.setLeadURL(dbResponse.getString("lead_url"));
 								
 					rs.addResList(rs1);
 					offset = offset + 1;
 				}
 				rs.setLastLeadId(offset);
 			} else {
-				rs.setCode(404);
-				LOGGER.warning("End of DB");
+				rs.setCode(FLS_END_OF_DB);
+				rs.setMessage(FLS_END_OF_DB_M);
+				LOGGER.warning(FLS_END_OF_DB_M);
 			}
 
 		} catch (SQLException e) {
 			LOGGER.warning("Error Check Stacktrace");
+			rs.setCode(FLS_SQL_EXCEPTION);
+			rs.setMessage(FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} finally {
 			try {
@@ -105,6 +107,7 @@ public class GetLeadsByXHandler extends Connect implements AppHandler {
 				if(hcp!=null) hcp.close();
 			} catch (Exception e) {
 				// TODO: handle exception
+				e.printStackTrace();
 			}
 		}
 		LOGGER.info("Finished process method ");

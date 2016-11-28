@@ -6,7 +6,7 @@ import java.util.List;
 public class GetLeadsByXListResObj extends ResObj{
 	
 	// Return code for GetRequestsByUser
-	int code = 0,lastLeadId;
+	int code,lastLeadId;
 
 	// Error String
 	String message;

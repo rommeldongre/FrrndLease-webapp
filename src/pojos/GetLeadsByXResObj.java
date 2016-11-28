@@ -2,18 +2,11 @@ package pojos;
 
 public class GetLeadsByXResObj extends ResObj{
 	
-	int quantity = 1;
 	String message;
 	
 	int leadId;
-	String leadLogDate,leadUserId,leadType;
+	String leadLogDate,leadUserId,leadType,leadURL;
 	
-	public int getQuantity() {
-		return quantity;
-	}
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
 	public String getMessage() {
 		return message;
 	}
@@ -43,5 +36,11 @@ public class GetLeadsByXResObj extends ResObj{
 	}
 	public void setLeadType(String leadType) {
 		this.leadType = leadType;
+	}
+	public String getLeadURL() {
+		return leadURL;
+	}
+	public void setLeadURL(String leadURL) {
+		this.leadURL = leadURL;
 	}
 }

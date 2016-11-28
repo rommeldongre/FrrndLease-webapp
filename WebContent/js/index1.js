@@ -81,16 +81,27 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
     
 }]);
 
-indexApp.controller('pricingCtrl', ['$scope', 'modalService', function($scope, modalService){
+indexApp.controller('pricingCtrl', ['$scope', '$location', 'modalService', function($scope, $location, modalService){
 	
 	$scope.primeLead = function(){
 		modalService.showModal({}, {submitting: true, labelText: 'Enter Email for recieve Updates', actionButtonText: 'Submit'}).then(function(result){
             var Lead_email = result;
-			var Lead_type= "prime";
+			var Lead_type= "uber";
+			var Lead_url= "";
+			var loc_url = $location.url();
+			
+			if(loc_url=="/"){
+				Lead_url = "myapp"
+			}else if(loc_url==""){
+				Lead_url = "index"
+			}else{
+				Lead_url = loc_url;
+			}	
 				
 		   var req = {
-                lead_email : Lead_email,
-				lead_type: Lead_type
+                leadEmail : Lead_email,
+				leadType: Lead_type,
+				leadUrl: Lead_url
             }
 			sendLeadEmail(req);	
         }, function(){});

@@ -87,7 +87,7 @@
 			success: function(response) {
 				document.getElementById("size").value = response.resList.length;
 				document.getElementById("Code").value = response.code;
-				document.getElementById("Message").value = "Success!";
+				document.getElementById("Message").value = response.message;
 				document.getElementById("offsetVal").value = response.lastLeadId;
 				var div = document.getElementById("output");
 				div.innerHTML = JSON.stringify(response.resList);

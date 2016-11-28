@@ -136,12 +136,17 @@
 		});
 		
 		function newsLetterLead(){
-		 var userEmail = $('#lead_email').val();
-		
+			var userEmail = $('#lead_email').val();
+			var full_url = window.location.href;
+			var sub_url = full_url.split("/").pop();
+			var final_url = sub_url.split(".");
+			var Lead_url = final_url[0];
+			
 		if(isEmail(userEmail)){
 			var req = {
-                lead_email: userEmail,
-				lead_type: "news_letter"
+                leadEmail: userEmail,
+				leadType: "news_letter",
+				leadUrl: Lead_url
             }
 			sendLeadEmail(req);	
 		}else{

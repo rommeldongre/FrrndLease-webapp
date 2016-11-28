@@ -418,6 +418,16 @@ public class FlsEmail extends Connect{
 				BODY = obj.getString("message");
 				break;
 				
+			case FLS_MAIL_OPS_ADD_LEAD:
+				SUBJECT = ("New Lead Added");
+				BODY = obj.getString("message");
+				break;
+			
+			case FLS_NOMAIL_ADD_LEAD:
+				SUBJECT = ("Subsciption Successful");
+				BODY = obj.getString("message");
+				break;
+				
 			default:
 				SUBJECT = (" Default Subject");
 				BODY = "Default Message ... Contact us, you should never get this! ";
