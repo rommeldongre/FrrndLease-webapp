@@ -75,7 +75,7 @@ public class AddLeadHandler extends Connect implements AppHandler {
 					
 					Event event = new Event();
 					event.createEvent(rq.getLeadEmail(), "admin@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_ADD_LEAD, 0, "A new Lead <b>" + rq.getLeadEmail() + "</b> of type <b><i>"+rq.getLeadType()+"</i></b> has been added.");
-					event.createEvent("admin@frrndlease.com", rq.getLeadEmail(), Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_NOMAIL_ADD_LEAD, 0, "Thank You for subscribing to FrrndLease. You will recieve periodic updates about our exciting offers");
+					event.createEvent("admin@frrndlease.com", rq.getLeadEmail(), Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_LEAD, 0, "Thank You for subscribing to FrrndLease. You will recieve periodic updates about our exciting offers");
 					
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_ADD_LEAD);

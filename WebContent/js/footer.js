@@ -11,7 +11,13 @@ footerApp.controller('footerCtrl', ['$scope', '$location', 'modalService', funct
 		if(loc_url=="/"){
 			Lead_url = "myapp"
 		}else if(loc_url==""){
-			Lead_url = "index"
+			if(window.location.href.indexOf("ItemDetails") > -1){
+				var itemDetails_url = window.location.href;
+				var item_url = itemDetails_url.split("/");
+				Lead_url = item_url[3];
+			}else{
+				Lead_url = "index";
+			}
 		}else{
 			Lead_url = loc_url;
 		}

@@ -423,7 +423,7 @@ public class FlsEmail extends Connect{
 				BODY = obj.getString("message");
 				break;
 			
-			case FLS_NOMAIL_ADD_LEAD:
+			case FLS_MAIL_ADD_LEAD:
 				SUBJECT = ("Subsciption Successful");
 				BODY = obj.getString("message");
 				break;
