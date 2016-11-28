@@ -879,6 +879,76 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
     };
 }]);
 
+headerApp.directive('sendMessageTo', ['userFactory', 'modalService', 'bannerService', function(userFactory, modalService, bannerService){
+    return {
+        scope:{
+            sendMessageTo: '=',
+            itemId: '=?'
+        },
+        link: function(scope, element, attrs){
+            
+            var To = scope.sendMessageTo;
+            
+            var ItemId = 0;
+            var BodyText = "Message Your friend";
+            var Subject = "FRIEND";
+            
+            if(scope.itemId){
+                ItemId = scope.itemId;
+                BodyText = "Message Item\'s Owner";
+                Subject = "ITEM";
+            }
+            
+            element.on('click', function(){
+                modalService.showModal({}, {messaging: true, bodyText: BodyText, actionButtonText: 'Send'}).then(function(result){
+
+                    var message = result;
+
+                    if(message == "" || message == undefined)
+                        message = null;
+
+                    var req = {
+                        userId: userFactory.user,
+                        accessToken: userFactory.userAccessToken,
+                        from: userFactory.user,
+                        to: To,
+                        subject: Subject,
+                        message: message,
+                        itemId: ItemId
+                    }
+
+                    sendMessage(req);
+
+                }, function(){});
+            });
+
+            var sendMessage = function(req){
+                $.ajax({
+                    url: '/SendMessage',
+                    type: 'post',
+                    data: JSON.stringify(req),
+                    contentType: "application/x-www-form-urlencoded",
+                    dataType: "json",
+                    success: function(response) {
+                        if(response.code==0){
+                            bannerService.updatebannerMessage("Message Sent!!");
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+
+                        }else{
+                            modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                }, function(){});
+                        }
+                    },
+
+                    error: function() {
+                        console.log("Not able to send message");
+                    }
+                });
+            }
+        }
+    };
+}]);
+
 headerApp.directive('tooltip', function(){
     return {
         restrict: 'A',
