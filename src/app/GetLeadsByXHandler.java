@@ -88,6 +88,8 @@ public class GetLeadsByXHandler extends Connect implements AppHandler {
 					rs.addResList(rs1);
 					offset = offset + 1;
 				}
+				rs.setCode(FLS_SUCCESS);
+				rs.setMessage(FLS_SUCCESS_M);
 				rs.setLastLeadId(offset);
 			} else {
 				rs.setCode(FLS_END_OF_DB);

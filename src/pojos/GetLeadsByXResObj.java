@@ -2,17 +2,9 @@ package pojos;
 
 public class GetLeadsByXResObj extends ResObj{
 	
-	String message;
-	
 	int leadId;
 	String leadLogDate,leadUserId,leadType,leadURL;
 	
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
 	public int getLeadId() {
 		return leadId;
 	}
