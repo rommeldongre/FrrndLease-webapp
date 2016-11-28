@@ -949,6 +949,39 @@ headerApp.directive('sendMessageTo', ['userFactory', 'modalService', 'bannerServ
     };
 }]);
 
+headerApp.directive('userBadges', function(){
+    return {
+        scope: {
+            userBadges: '='
+        },
+        link: function(scope, element, attrs){
+            
+            scope.$watch('userBadges', function(){
+                var userId = scope.userBadges;
+
+                if(userId != undefined && userId != null){
+                    $.ajax({
+                        url: '/GetUserBadges',
+                        type: 'post',
+                        data: JSON.stringify({userId: userId}),
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "json",
+                        success: function(response) {
+                            if(response.code == 0){
+                                console.log(response);
+                            }
+                        },
+
+                        error: function() {
+                            console.log("Not able to get user badges");
+                        }
+                    });
+                }
+            });
+        }
+    };
+});
+
 headerApp.directive('tooltip', function(){
     return {
         restrict: 'A',

@@ -31,32 +31,39 @@
                 </div>
             </div>
             <br/>
-            <div id="userId" style="font-size:large;margin:5px;">
-                <i class="fa fa-user"></i><b> {{'  '+ userId }}</b>
+            <div id="user.userId" style="font-size:large;margin:5px;">
+                <i class="fa fa-user"></i><b> {{'  '+ user.userId }}</b>
             </div>
             <div style="font-size:large;margin:5px;">
                 <i class="fa fa-map-marker" aria-hidden="true"></i>{{locality}}
             </div>
             <div style="margin:5px;">
-<!--
-                <span style="font-size:initial;" class="label label-warning label-fill" ng-if="plan == 'FLS_SELFIE'">SELFIE USER</span>
-                <span style="font-size:initial;" class="label label-success label-fill" ng-if="plan == 'FLS_PRIME'">PRIME USER</span>
-                <i ng-if="plan == 'FLS_SELFIE'" class="fa fa-check-circle btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Selfie User" tooltip></i>
-                <i ng-if="plan == 'FLS_PRIME'" class="fa fa-question-circle-o btn-tooltip" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Prime User" tooltip></i>
--->
                 <div class="social-badges" style="text-align:center;font-size:large;">
                     <span>Verified:</span>
-                    <div style="display:inline-block">
-                        <span style="cursor:help" class="no-padding ng-class:{'text-gray':!label,'orange':label}" data-toggle="popover" title="FrrndLease Verification - " data-placement="top" data-content="Address Verified" popover>
+                    <div style="display:inline-block;">
+                        <span style="cursor:help;" class="no-padding ng-class:{'text-gray':!label,'orange':label}" data-toggle="popover" title="FrrndLease Verification - " data-placement="top" data-content="Address Verified" popover>
                             <i class="fa fa-address-card" aria-hidden="true"></i>
                         </span>
-                        <span style="cursor:help" class="no-padding ng-class:{'text-gray':status!='facebook', 'text-facebook':status=='facebook'}" data-toggle="popover" title="Facebook Verification - " data-placement="top" data-content="Facebook Verified" popover>
+                        <span style="cursor:help;" class="no-padding ng-class:{'text-gray':status!='facebook', 'text-facebook':status=='facebook'}" data-toggle="popover" title="Facebook Verification - " data-placement="top" data-content="Facebook Verified" popover>
                             <i class="fa fa-facebook-square" aria-hidden="true"></i>
                         </span>
-                        <span style="cursor:help" class="no-padding ng-class:{'text-gray':status!='google','text-google':status=='google'}" data-toggle="popover" title="Google Verification - " data-placement="top" data-content="Google Verified" popover>
+                        <span style="cursor:help;" class="no-padding ng-class:{'text-gray':status!='google','text-google':status=='google'}" data-toggle="popover" title="Google Verification - " data-placement="top" data-content="Google Verified" popover>
                             <i class="fa fa-google-plus-square" aria-hidden="true"></i>
                         </span>
                     </div>
+                </div>
+            </div>
+            <div style="margin:5px;">
+                <div style="text-align:center;" user-badges="user.userId">
+                    <span style="cursor:help;padding:5px;">
+                        <i class="fa fa-home fa-2x" aria-hidden="true"></i>
+                    </span>
+                    <span style="cursor:help;padding:5px;">
+                        <i class="fa fa-home fa-2x" aria-hidden="true"></i>
+                    </span>
+                    <span style="cursor:help;padding:5px;">
+                        <i class="fa fa-home fa-2x" aria-hidden="true"></i>
+                    </span>
                 </div>
             </div>
         </div>
