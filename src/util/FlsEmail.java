@@ -248,7 +248,7 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_FROM_SELF:
-				SUBJECT = (" FrrndLease granted to user [" + obj.getString("fromUserName") + "]");
+				SUBJECT = (" Lease granted to user [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body> Congratulations! Your item is ready to be leased to [" + obj.getString("fromUserName") + "] on FrrndLease - <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -259,7 +259,7 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_TO_SELF:
-				SUBJECT = (" FrrndLease granted to you by [" + obj.getString("fromUserName") + "]");
+				SUBJECT = (" Lease granted to you by [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body> Congratulations! The following item is ready to be leased by [" + obj.getString("fromUserName") + "] to you on FrrndLease - <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -270,7 +270,7 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_FROM_LEASE_STARTED:
-				SUBJECT = ("FrrndLease Started for Item");
+				SUBJECT = (" Lease Started for Item");
 				BODY = ("<body>Yay! Your lease has started. The good earth thanks you!"
 						+ "<form action=\"" + EMAIL_GET_LEASE_AGGREMENT + "\" method=\"POST\" target=\"_blank\">"
                         +   "<input type=\"hidden\" name=\"leaseId\" value=\""+obj.getInt("leaseId")+"\" />"
@@ -278,7 +278,7 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_TO_LEASE_STARTED:
-				SUBJECT = ("FrrndLease Started for Item");
+				SUBJECT = (" Lease Started for Item");
 				BODY = ("<body>Yay! Your lease has started. The good earth thanks you!"
 						+ "<form action=\"" + EMAIL_GET_LEASE_AGGREMENT + "\" method=\"POST\" target=\"_blank\">"
                         +   "<input type=\"hidden\" name=\"leaseId\" value=\""+obj.getInt("leaseId")+"\" />"
@@ -286,7 +286,7 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_GRANT_LEASE_FROM_PRIME:
-				SUBJECT = (" FrrndLease granted to user [" + obj.getString("fromUserName") + "]");
+				SUBJECT = (" Lease granted to user [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body> You have sucessfully leased the following item to [" + obj.getString("fromUserName") + "] on FrrndLease - <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -296,7 +296,7 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_GRANT_LEASE_TO_PRIME:
-				SUBJECT = (" FrrndLease granted to you by [" + obj.getString("fromUserName") + "]");
+				SUBJECT = (" Lease granted to you by [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body> Congratulations! The following item has been leased by [" + obj.getString("fromUserName") + "] to you on FrrndLease - <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -312,7 +312,7 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_CLOSE_LEASE_FROM_SELF:
-				SUBJECT = (" FrrndLease Cancelled for user [" + obj.getString("fromUserName") + "]");
+				SUBJECT = (" Lease Cancelled for user [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body> You have closed the lease for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and leasee ["
 						+ obj.getString("fromUserName") + "] on Friend Lease - <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
@@ -324,7 +324,7 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_CLOSE_LEASE_TO_SELF:
-				SUBJECT = (" FrrndLease Closed by Owner");
+				SUBJECT = (" Lease Closed by Owner");
 				BODY = ("<body> The Owner closed the lease for this item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -360,7 +360,7 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_RENEW_LEASE_OWNER:
-				SUBJECT = (" FrrndLease renewed for user [" + obj.getString("fromUserName") + "]");
+				SUBJECT = (" Lease renewed for user [" + obj.getString("fromUserName") + "]");
 				BODY = ("<body>You have renewed lease to user " + obj.getString("fromUserName") + " for the following item on FrrndLease <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -369,7 +369,7 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_RENEW_LEASE_REQUESTOR:
-				SUBJECT = (" FrrndLease Renewed");
+				SUBJECT = (" Lease Renewed");
 				BODY = ("<body>Item Owner " +obj.getString("fromUserName") + " has renewed lease for the following item to you on FrrndLease <br/> " + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -378,7 +378,7 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_FROM:
-				SUBJECT = (" FrrndLease Item Requested");
+				SUBJECT = ("Item Requested");
 				BODY = ("<body> You have Requested the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> on FrrndLease. The Owner of the item will respond within a week!<br/>"  + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
@@ -387,7 +387,7 @@ public class FlsEmail extends Connect{
 				break;
 
 			case FLS_MAIL_MAKE_REQUEST_TO:
-				SUBJECT = (" FrrndLeasae Item Requested");
+				SUBJECT = ("Item Requested");
 				BODY = ("<body> Your Item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> has been requested on FrrndLease. Check out <a href=\"" + URL + "/myapp.html#/myincomingrequests\">Your Incoming Requests</a>. Please respond within a week! <br/>" + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
