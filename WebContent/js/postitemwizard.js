@@ -151,7 +151,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 	
 		if(window.location.href.indexOf("frrndlease.com") > -1){
 			var params = {};
-			params['message'] = "New Item "+$scope.item.title+" posted on Frrndlease";
+			params['message'] = "New Item "+$scope.item.title+" posted on FrrndLease";
 			params['access_token'] = 'EAABiKoMD4QQBAC2ZBFRpZB6TKdPB8K56VBIjuqbzRlZAfHsBFllZAvSx5gBfKc1ZC1s4wiN9GenaqdrS0eAxbOJmVOhG1RGPRngUltPSJZAKjMdOaeH5ZAjY2cgfXNKslF3AhIyVCmPL04ZCUN5hvh0CyQIzVMmaHRaohpZBV0KBHBgZDZD';
 			params['link'] = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid ;
 	

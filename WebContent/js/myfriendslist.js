@@ -433,54 +433,5 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 		localStorage.setItem("friend_details", friendArray[index]);
         window.location.replace('myfrienddetails.html');
     }
-	
-	$scope.sendFriendMessage = function(index){
-        modalService.showModal({}, {messaging: true, bodyText: 'Type Message for friend', actionButtonText: 'Send'}).then(function(result){
-            
-            var message = result;
-            
-            if(message == "" || message == undefined)
-                message = null;
-            
-            var req = {
-                userId: userFactory.user,
-                accessToken: userFactory.userAccessToken,
-                from: userFactory.user,
-                to: $scope.friends[index].friendId,
-                subject: "FRIEND",
-                message: message,
-                itemId : 0
-            }
-            sendMessage(req);
-        }, function(){});
-    }
-	
-	var sendMessage = function(req){
-		
-		$.ajax({
-			url: '/SendMessage',
-			type: 'post',
-			data: JSON.stringify(req),
-			contentType: "application/x-www-form-urlencoded",
-			dataType: "json",
-			success: function(response) {
-				if(response.code==0){
-					bannerService.updatebannerMessage("Message Sent!!");
-                    $("html, body").animate({ scrollTop: 0 }, "slow");
-					
-				}else{
-					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
-						if(response.code == 400){
-							logoutService.logout();
-						}
-					}, function(){});
-				}
-			},
-		
-			error: function() {
-				console.log("Not able to send message");
-			}
-		});
-	}
     
 }]);

@@ -120,12 +120,12 @@ headerApp.controller('headerCtrl', ['$scope',
             dataType: "json",
 
             success: function(response) {
-		if(response.Code === "FLS_SUCCESS") {
-		    fbq('track', 'CompleteRegistration');
+                if(response.Code === "FLS_SUCCESS") {
+                    fbq('track', 'CompleteRegistration');
                     if(SignUpStatus == "email_pending")
-                        loginSignupService.signUpCheckRes("Email verification link send to your email!!");
+                        loginSignupService.signUpCheckRes(response.Code, "Email verification link send to your email!!");
                     else if(SignUpStatus == "mobile_pending")
-                        loginSignupService.signUpCheckRes("OTP has been sent to your phone!!");
+                        loginSignupService.signUpCheckRes(response.Code, "OTP has been sent to your phone!!");
                     else{
                         var obj = JSON.parse(response.Message);
 						userFactory.setLocalStorageValues(UserId,Name,obj.access_token,response.Id);
@@ -137,8 +137,7 @@ headerApp.controller('headerCtrl', ['$scope',
 						}
                     }
 				}else{
-                    if(response.Id == 200)
-                        loginSignupService.signUpCheckRes("User Already Exists!!");
+                    loginSignupService.signUpCheckRes(response.Code, response.Message);
 				}
             },		
             error: function() {
@@ -627,7 +626,7 @@ headerApp.service('modalService', ['$uibModal',
             submitting: false,
 			messaging: false,
             cancelButtonText: 'Cancel',
-            headerText: 'Frrndlease Says',
+            headerText: 'FrrndLease Says',
             bodyText: 'Perform this action?'
         };
         
@@ -734,8 +733,8 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
         $rootScope.$broadcast('signUpCheckReq', userId, email, password, name, picture ,mobile, code, location, signUpStatus, friendId);
     }
     
-    this.signUpCheckRes = function(message){
-        $rootScope.$broadcast('signUpCheckRes', message);
+    this.signUpCheckRes = function(code, message){
+        $rootScope.$broadcast('signUpCheckRes', code, message);
     }
     
 }]);
@@ -880,6 +879,76 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
     };
 }]);
 
+headerApp.directive('sendMessageTo', ['userFactory', 'modalService', 'bannerService', function(userFactory, modalService, bannerService){
+    return {
+        scope:{
+            sendMessageTo: '=',
+            itemId: '=?'
+        },
+        link: function(scope, element, attrs){
+            
+            var To = scope.sendMessageTo;
+            
+            var ItemId = 0;
+            var BodyText = "Message Your friend";
+            var Subject = "FRIEND";
+            
+            if(scope.itemId){
+                ItemId = scope.itemId;
+                BodyText = "Message Item\'s Owner";
+                Subject = "ITEM";
+            }
+            
+            element.on('click', function(){
+                modalService.showModal({}, {messaging: true, bodyText: BodyText, actionButtonText: 'Send'}).then(function(result){
+
+                    var message = result;
+
+                    if(message == "" || message == undefined)
+                        message = null;
+
+                    var req = {
+                        userId: userFactory.user,
+                        accessToken: userFactory.userAccessToken,
+                        from: userFactory.user,
+                        to: To,
+                        subject: Subject,
+                        message: message,
+                        itemId: ItemId
+                    }
+
+                    sendMessage(req);
+
+                }, function(){});
+            });
+
+            var sendMessage = function(req){
+                $.ajax({
+                    url: '/SendMessage',
+                    type: 'post',
+                    data: JSON.stringify(req),
+                    contentType: "application/x-www-form-urlencoded",
+                    dataType: "json",
+                    success: function(response) {
+                        if(response.code==0){
+                            bannerService.updatebannerMessage("Message Sent!!");
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+
+                        }else{
+                            modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                }, function(){});
+                        }
+                    },
+
+                    error: function() {
+                        console.log("Not able to send message");
+                    }
+                });
+            }
+        }
+    };
+}]);
+
 headerApp.directive('tooltip', function(){
     return {
         restrict: 'A',
@@ -919,7 +988,7 @@ headerApp.directive('popover', function(){
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
     var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
-    var mobile = /(\d+$)$/;
+    var mobile = /^[789]\d{9}$/;
     
     // Form login
     $scope.formLogin = function(userId, password){
@@ -928,8 +997,10 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalSe
         else{
             if(email.test(userId))
                 loginSignupService.loginCheckReq(userId, password, "", "email_activated");
-            else
+            else if(mobile.test(userId))
                 loginSignupService.loginCheckReq(userId, password, "", "mobile_activated");
+            else
+                $scope.error = "Please enter valid user id!!";
         }
     }
     
@@ -1019,8 +1090,10 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     
     $scope.userIdChanged = function(){
         
+        $scope.error = "";
+        
         var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
-        var mobile = /(\d+$)$/;
+        var mobile = /^[789]\d{9}$/;
         
         if(email.test($scope.userId)){
             $scope.email = $scope.userId;
@@ -1046,7 +1119,10 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     // form sign up
     $scope.formSignup = function(email, password, name, mobile, code, location){
         friendId = email;
-        loginSignupService.signUpCheckReq($scope.userId, email, password, name, "", mobile, code, location, signUpStatus, friendId);
+        if($scope.userId == email || $scope.userId == mobile)
+            loginSignupService.signUpCheckReq($scope.userId, email, password, name, "", mobile, code, location, signUpStatus, friendId);
+        else
+            $scope.error = "Please enter correct User Id!!";
     }
     
     // Google sign up
@@ -1069,28 +1145,30 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     }
     
     // sign up response
-    $scope.$on('signUpCheckRes', function(event, message){
-        if(signUpStatus == 'mobile_pending'){
-            $('#registerModal').modal('hide');
-            modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
-                $.ajax({
-                    url: '/Verification',
-                    type:'POST',
-                    data: JSON.stringify({verification : result+"_u"}),
-                    contentType:"application/json",
-                    dataType: "JSON",
-                    success: function(response) {
-                        if(response.code == 0){
-                            localStorage.setItem("userloggedin", response.userId);
-                            localStorage.setItem("userloggedinName", response.name);
-                            localStorage.setItem("userloggedinAccess", response.access_token);
-                            window.location.replace("myapp.html#/wizard");
+    $scope.$on('signUpCheckRes', function(event, code, message){
+        if(code == 'FLS_SUCCESS'){
+            if(signUpStatus == 'mobile_pending'){
+                $('#registerModal').modal('hide');
+                modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
+                    $.ajax({
+                        url: '/Verification',
+                        type:'POST',
+                        data: JSON.stringify({verification : result+"_u"}),
+                        contentType:"application/json",
+                        dataType: "JSON",
+                        success: function(response) {
+                            if(response.code == 0){
+                                localStorage.setItem("userloggedin", response.userId);
+                                localStorage.setItem("userloggedinName", response.name);
+                                localStorage.setItem("userloggedinAccess", response.access_token);
+                                window.location.replace("myapp.html#/wizard");
+                            }
+                        },
+                        error: function() {
                         }
-                    },
-                    error: function() {
-                    }
-                });
-            }, function(){});
+                    });
+                }, function(){});
+            }
         }else{
             $scope.$apply(function(){
                 $scope.error = message;

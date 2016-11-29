@@ -55,7 +55,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 			String status = rq.getStatus();
 			
 			//already getting all data from tb1. for tb3 add new coloum
-			sql = "SELECT tb1.*, tb2.*, tb3.user_full_name AS OwnerName, tb3.user_address AS OwnerAddress, tb3.user_mobile AS OwnerMobile, tb3.user_locality AS OwnerLocality, tb3.user_sublocality AS OwnerSublocality, tb3.user_profile_picture as OwnerProfilePic, tb3.user_plan as OwnerPlan, tb4.* FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id = tb4.item_id WHERE ";
+			sql = "SELECT tb1.*, tb2.*, tb3.user_full_name AS OwnerName, tb3.user_address AS OwnerAddress, tb3.user_mobile AS OwnerMobile, tb3.user_locality AS OwnerLocality, tb3.user_sublocality AS OwnerSublocality, tb3.user_profile_picture as OwnerProfilePic, tb3.user_plan as OwnerPlan, tb4.*, (CASE WHEN tb1.lease_user_id=tb5.friend_id AND tb5.friend_user_id=tb1.lease_requser_id THEN true ELSE false END) AS isFriend, ( 6371 * acos( cos( radians(tb4.item_lat) ) * cos( radians( tb2.user_lat ) ) * cos( radians( tb2.user_lng ) - radians(tb4.item_lng) ) + sin( radians(tb4.item_lat) ) * sin( radians( tb2.user_lat ) ) ) ) AS distance FROM leases tb1 INNER JOIN users tb2 ON tb1.lease_requser_id = tb2.user_id INNER JOIN users tb3 ON tb1.lease_user_id = tb3.user_id INNER JOIN items tb4 ON tb1.lease_item_id = tb4.item_id LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='" + leaseReqUserId + "') tb5 ON tb1.lease_user_id = tb5.friend_id WHERE ";
 			
 			if(leaseUserId != "")
 				sql = sql + "tb1.lease_user_id='" + leaseUserId + "' AND ";
@@ -104,6 +104,9 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 				rs.setPrimaryImageLink(dbResponse.getString("item_primary_image_link"));
 				rs.setStatus(dbResponse.getString("item_status"));
 				rs.setUid(dbResponse.getString("item_uid"));
+				
+				rs.setFriend(dbResponse.getBoolean("isFriend"));
+				rs.setDistance(dbResponse.getFloat("distance"));
 				
 				offset = offset + 1;
 				rs.setCookie(offset);
