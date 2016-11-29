@@ -14,21 +14,21 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
-import pojos.GetEventsByXListResObj;
-import pojos.GetEventsByXReqObj;
-import pojos.GetEventsByXResObj;
+import pojos.GetLeadsByXListResObj;
+import pojos.GetLeadsByXReqObj;
+import pojos.GetLeadsByXResObj;
 import util.FlsLogger;
-import app.GetEventsByXHandler;
+import app.GetLeadsByXHandler;
 import app.NotImplementedException;
 
 
 /**
- * Servlet implementation class GetEventsByX
+ * Servlet implementation class GetLeadsByX
  */
-@WebServlet(description = "List Events matching a condition", urlPatterns = { "/GetEventsByX" })
-public class GetEventsByX extends HttpServlet {
+@WebServlet(description = "List Leads matching a condition", urlPatterns = { "/GetLeadsByX" })
+public class GetLeadsByX extends HttpServlet {
 	
-	private FlsLogger LOGGER = new FlsLogger(GetEventsByX.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(GetLeadsByX.class.getName());
 	
 	private static final long serialVersionUID = 1L;
 	/**
@@ -39,15 +39,15 @@ public class GetEventsByX extends HttpServlet {
 			LOGGER.info("Inside POST method");
 			//HTTP request to Service request pojo 
 			ObjectMapper mapper = new ObjectMapper();
-			GetEventsByXReqObj request = mapper.readValue(httprequest.getInputStream(), GetEventsByXReqObj.class);
+			GetLeadsByXReqObj request = mapper.readValue(httprequest.getInputStream(), GetLeadsByXReqObj.class);
 			httpresponse.setContentType("application/json");
 			
 			// application logic comes here --------		
-			GetEventsByXListResObj Response = null;
+			GetLeadsByXListResObj Response = null;
 		
 			try {
 				//App handler to process request and create Service response pojo
-				Response = (GetEventsByXListResObj) GetEventsByXHandler.getInstance().process(request);
+				Response = (GetLeadsByXListResObj) GetLeadsByXHandler.getInstance().process(request);
 				
 				//Service response pojo to JSON
 				PrintWriter out = httpresponse.getWriter();
@@ -58,8 +58,8 @@ public class GetEventsByX extends HttpServlet {
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
-				LOGGER.warning("GetEventsByX process method not implemented");
-				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetEventsByX process method not implemented");
+				LOGGER.warning("GetLeadsByX process method not implemented");
+				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetLeadsByX process method not implemented");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
