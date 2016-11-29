@@ -2,21 +2,29 @@ package pojos;
 
 public class AddLeadReqObj extends ReqObj{
 	
-	String lead_email, lead_type;
+	String leadEmail,leadType,leadUrl;
 
-	public String getLead_email() {
-		return lead_email;
+	public String getLeadEmail() {
+		return leadEmail;
 	}
 
-	public void setLead_email(String lead_email) {
-		this.lead_email = lead_email;
+	public void setLeadEmail(String leadEmail) {
+		this.leadEmail = leadEmail;
 	}
 
-	public String getLead_type() {
-		return lead_type;
+	public String getLeadType() {
+		return leadType;
 	}
 
-	public void setLead_type(String lead_type) {
-		this.lead_type = lead_type;
+	public void setLeadType(String leadType) {
+		this.leadType = leadType;
+	}
+
+	public String getLeadUrl() {
+		return leadUrl;
+	}
+
+	public void setLeadUrl(String leadUrl) {
+		this.leadUrl = leadUrl;
 	}
 }
