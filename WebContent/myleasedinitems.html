@@ -92,6 +92,7 @@
                             </div>
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{lease.distance == '0m' ? 'Under 1km' : lease.distance}}&nbsp;-&nbsp;{{lease.ownerSublocality+","+lease.ownerLocality}}<br>
+                                <user-badges user-id="lease.ownerUserId"></user-badges>
                             </p>
                         </div>
                         <div class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Expiry Date" tooltip>

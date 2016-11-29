@@ -37,35 +37,7 @@
             <div style="font-size:large;margin:5px;">
                 <i class="fa fa-map-marker" aria-hidden="true"></i>{{locality}}
             </div>
-            <div style="margin:5px;">
-                <div class="social-badges" style="text-align:center;font-size:large;">
-                    <span>Verified:</span>
-                    <div style="display:inline-block;">
-                        <span style="cursor:help;" class="no-padding ng-class:{'text-gray':!label,'orange':label}" data-toggle="popover" title="FrrndLease Verification - " data-placement="top" data-content="Address Verified" popover>
-                            <i class="fa fa-address-card" aria-hidden="true"></i>
-                        </span>
-                        <span style="cursor:help;" class="no-padding ng-class:{'text-gray':status!='facebook', 'text-facebook':status=='facebook'}" data-toggle="popover" title="Facebook Verification - " data-placement="top" data-content="Facebook Verified" popover>
-                            <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                        </span>
-                        <span style="cursor:help;" class="no-padding ng-class:{'text-gray':status!='google','text-google':status=='google'}" data-toggle="popover" title="Google Verification - " data-placement="top" data-content="Google Verified" popover>
-                            <i class="fa fa-google-plus-square" aria-hidden="true"></i>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div style="margin:5px;">
-                <div style="text-align:center;" user-badges="user.userId">
-                    <span style="cursor:help;padding:5px;">
-                        <i class="fa fa-home fa-2x" aria-hidden="true"></i>
-                    </span>
-                    <span style="cursor:help;padding:5px;">
-                        <i class="fa fa-home fa-2x" aria-hidden="true"></i>
-                    </span>
-                    <span style="cursor:help;padding:5px;">
-                        <i class="fa fa-home fa-2x" aria-hidden="true"></i>
-                    </span>
-                </div>
-            </div>
+            <user-badges user-id="user.userId"></user-badges>
         </div>
         <div class="col-lg-6 col-md-6">
             <label class="control-label">Credits</label>
