@@ -5,7 +5,7 @@ public class GetUserBadgesResObj extends ResObj {
 	boolean idVerified;
 	String message, signUpStatus;
 	int code, itemsPosted, leaseCount;
-	long responseTime;
+	String responseTime;
 
 	public String getMessage() {
 		return message;
@@ -55,12 +55,21 @@ public class GetUserBadgesResObj extends ResObj {
 		this.leaseCount = leaseCount;
 	}
 
-	public long getResponseTime() {
+	public String getResponseTime() {
 		return responseTime;
 	}
 
 	public void setResponseTime(long responseTime) {
-		this.responseTime = responseTime;
+		if(responseTime == -1){
+			this.responseTime = "Not Enough Data";
+		}else{
+			if(responseTime < 86400)
+				this.responseTime = "In A Day";
+			else if(responseTime > 86400 && responseTime < 259200)
+				this.responseTime = "In 3 Days";
+			else
+				this.responseTime = "In A Week";
+		}
 	}
 
 }

@@ -85,8 +85,9 @@ public class GetUserBadgesHandler extends Connect implements AppHandler {
 				if(rs3.next()){
 					count++;
 					seconds = seconds + Math.abs(rs3.getLong("res"));
-					LOGGER.info("Count - " + count + " Total Seconds - " + seconds + " For Item Id - " + rs2.getInt("item_id"));
 				}
+				LOGGER.info("Count - " + count + " Total Seconds - " + seconds + " For Item Id - " + rs2.getInt("item_id"));
+				rs.setResponseTime(seconds / count);
 			}
 			
 			

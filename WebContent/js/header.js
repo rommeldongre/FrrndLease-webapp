@@ -1004,13 +1004,13 @@ headerApp.directive('userBadges', function(){
                 <div style="margin:5px;">\
                     <div style="text-align:center;">\
                         <span style="cursor:help;padding:5px;">\
-                            <i class="fa fa-home fa-2x" aria-hidden="true"></i>\
+                            {{info.itemsPosted}}\
                         </span>\
                         <span style="cursor:help;padding:5px;">\
-                            <i class="fa fa-home fa-2x" aria-hidden="true"></i>\
+                            {{info.leaseCount}}\
                         </span>\
                         <span style="cursor:help;padding:5px;">\
-                            <i class="fa fa-home fa-2x" aria-hidden="true"></i>\
+                            {{info.responseTime}}\
                         </span>\
                     </div>\
                 </div></div>'
