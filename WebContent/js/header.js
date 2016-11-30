@@ -1036,8 +1036,6 @@ headerApp.directive('popover', function(){
         restrict: 'A',
         link: function(scope, element, attrs){
             if($(element).length != 0){
-                $('body').append('<div class="popover-filter"></div>');
-
                 //    Activate Popovers
                $(element).popover().on('show.bs.popover', function () {
                     $('.popover-filter').click(function(){
