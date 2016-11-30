@@ -4,7 +4,7 @@ public class GetUserBadgesResObj extends ResObj {
 
 	boolean idVerified;
 	String message, signUpStatus;
-	int code, itemsPosted, leaseCount;
+	int code, itemsPosted, leaseCount, memberSince;
 	String responseTime;
 
 	public String getMessage() {
@@ -70,6 +70,14 @@ public class GetUserBadgesResObj extends ResObj {
 			else
 				this.responseTime = "In A Week";
 		}
+	}
+
+	public int getMemberSince() {
+		return memberSince;
+	}
+
+	public void setMemberSince(int memberSince) {
+		this.memberSince = memberSince;
 	}
 
 }

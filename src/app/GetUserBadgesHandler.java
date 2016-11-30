@@ -43,7 +43,7 @@ public class GetUserBadgesHandler extends Connect implements AppHandler {
 			String userId = rq.getUserId();
 			LOGGER.info("Getting badges for user id - " + userId);
 
-			String sqlGetProfile = "SELECT user_status, user_verified_flag, (SELECT COUNT(*) FROM items WHERE item_user_id=? AND item_status NOT IN ('Archived','Wished')) AS items_posted, (SELECT COUNT(*) FROM leases WHERE lease_user_id=?) AS total_leases FROM users WHERE user_id=?";
+			String sqlGetProfile = "SELECT user_status, user_verified_flag, DATEDIFF(NOW(), user_signup_date) AS member_since, (SELECT COUNT(*) FROM items WHERE item_user_id=? AND item_status NOT IN ('Archived','Wished')) AS items_posted, (SELECT COUNT(*) FROM leases WHERE lease_user_id=?) AS total_leases FROM users WHERE user_id=?";
 			ps1 = hcp.prepareStatement(sqlGetProfile);
 			ps1.setString(1, userId);
 			ps1.setString(2, userId);
@@ -58,6 +58,7 @@ public class GetUserBadgesHandler extends Connect implements AppHandler {
 				rs.setSignUpStatus(rs1.getString("user_status"));
 				rs.setItemsPosted(rs1.getInt("items_posted"));
 				rs.setLeaseCount(rs1.getInt("total_leases"));
+				rs.setMemberSince(rs1.getInt("member_since"));
 				rs.setResponseTime(-1);
 			}
 			
@@ -73,7 +74,7 @@ public class GetUserBadgesHandler extends Connect implements AppHandler {
 			long seconds = 0;
 			
 			while(rs2.next()){
-				String sqlGetRequestResponse = "SELECT TIMESTAMPDIFF(SECOND, ?, datetime) AS res FROM `events` WHERE from_user_id=? AND to_user_id=? AND item_id=? AND notification_type IN ('FLS_MAIL_REJECT_REQUEST_TO', 'FLS_MAIL_GRANT_LEASE_TO_SELF', 'FLS_MAIL_GRANT_LEASE_TO_PRIME') LIMIT 1";
+				String sqlGetRequestResponse = "SELECT TIMESTAMPDIFF(SECOND, ?, datetime) AS response_time FROM `events` WHERE from_user_id=? AND to_user_id=? AND item_id=? AND notification_type IN ('FLS_MAIL_REJECT_REQUEST_TO', 'FLS_MAIL_GRANT_LEASE_TO_SELF', 'FLS_MAIL_GRANT_LEASE_TO_PRIME') LIMIT 1";
 				ps3 = hcp.prepareStatement(sqlGetRequestResponse);
 				ps3.setString(1, rs2.getString("datetime"));
 				ps3.setString(2, userId);
@@ -84,10 +85,11 @@ public class GetUserBadgesHandler extends Connect implements AppHandler {
 				
 				if(rs3.next()){
 					count++;
-					seconds = seconds + Math.abs(rs3.getLong("res"));
+					seconds = seconds + Math.abs(rs3.getLong("response_time"));
 				}
 				LOGGER.info("Count - " + count + " Total Seconds - " + seconds + " For Item Id - " + rs2.getInt("item_id"));
-				rs.setResponseTime(seconds / count);
+				if(count != 0 && seconds != 0)
+					rs.setResponseTime(seconds / count);
 			}
 			
 			

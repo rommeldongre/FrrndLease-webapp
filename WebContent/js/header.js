@@ -985,35 +985,42 @@ headerApp.directive('userBadges', function(){
             });
         },
         replace: true,
-        template:'<div><div style="margin:5px;">\
-                    <div class="social-badges" style="text-align:center;font-size:large;">\
-                        <span>Verified:</span>\
-                        <div style="display:inline-block;">\
-                            <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':!info.idVerified,\'orange\':info.idVerified}" data-toggle="popover" title="FrrndLease Verification - " data-placement="top" data-content="Address Verified" popover>\
-                                <i class="fa fa-address-card" aria-hidden="true"></i>\
+        template:'<div>\
+                    <div style="margin:5px;">\
+                        <div style="text-align:center;">\
+                            Member Since {{info.memberSince}} days\
+                        </div>\
+                    </div>\
+                    <div style="margin:5px;">\
+                        <div class="social-badges" style="text-align:center;font-size:large;">\
+                            <span>Verified:</span>\
+                            <div style="display:inline-block;">\
+                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':!info.idVerified,\'orange\':info.idVerified}" data-toggle="popover" title="FrrndLease Verification - " data-placement="top" data-content="Address Verified" popover>\
+                                    <i class="fa fa-address-card" aria-hidden="true"></i>\
+                                </span>\
+                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':info.signUpStatus!=\'facebook\', \'text-facebook\':info.signUpStatus==\'facebook\'}" data-toggle="popover" title="Facebook Verification - " data-placement="top" data-content="Facebook Verified" popover>\
+                                    <i class="fa fa-facebook-square" aria-hidden="true"></i>\
+                                </span>\
+                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':info.signUpStatus!=\'google\',\'text-google\':info.signUpStatus==\'google\'}" data-toggle="popover" title="Google Verification - " data-placement="top" data-content="Google Verified" popover>\
+                                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>\
+                                </span>\
+                            </div>\
+                        </div>\
+                    </div>\
+                    <div style="margin:5px;">\
+                        <div style="text-align:center;">\
+                            <span style="cursor:help;padding:5px;">\
+                                {{info.itemsPosted}}\
                             </span>\
-                            <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':info.signUpStatus!=\'facebook\', \'text-facebook\':info.signUpStatus==\'facebook\'}" data-toggle="popover" title="Facebook Verification - " data-placement="top" data-content="Facebook Verified" popover>\
-                                <i class="fa fa-facebook-square" aria-hidden="true"></i>\
+                            <span style="cursor:help;padding:5px;">\
+                                {{info.leaseCount}}\
                             </span>\
-                            <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':info.signUpStatus!=\'google\',\'text-google\':info.signUpStatus==\'google\'}" data-toggle="popover" title="Google Verification - " data-placement="top" data-content="Google Verified" popover>\
-                                <i class="fa fa-google-plus-square" aria-hidden="true"></i>\
+                            <span style="cursor:help;padding:5px;">\
+                                {{info.responseTime}}\
                             </span>\
                         </div>\
                     </div>\
-                </div>\
-                <div style="margin:5px;">\
-                    <div style="text-align:center;">\
-                        <span style="cursor:help;padding:5px;">\
-                            {{info.itemsPosted}}\
-                        </span>\
-                        <span style="cursor:help;padding:5px;">\
-                            {{info.leaseCount}}\
-                        </span>\
-                        <span style="cursor:help;padding:5px;">\
-                            {{info.responseTime}}\
-                        </span>\
-                    </div>\
-                </div></div>'
+                </div>'
         
     };
 });
