@@ -15,6 +15,7 @@ import pojos.ResObj;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsBadges;
 import util.FlsConfig;
 import util.FlsLogger;
 import util.FlsPlan.Delivery_Plan;
@@ -126,6 +127,10 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				hcp.rollback();
 				return rs;
 			}
+			
+			// Updating response time for owner
+			FlsBadges badges = new FlsBadges(ownerId);
+			badges.updateRequestResponseTime(rs6.getString("request_lastmodified"));
 			
 			LOGGER.info("Archiving all the requests");
 			String sqlArchivingRequests = "UPDATE requests SET request_status=? WHERE request_item_id=?";

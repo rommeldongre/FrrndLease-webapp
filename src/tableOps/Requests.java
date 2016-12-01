@@ -4,19 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import adminOps.Response;
 import connect.Connect;
-import pojos.RequestsModel;
 import pojos.ItemsModel;
+import pojos.RequestsModel;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsBadges;
 import util.FlsConfig;
 import util.FlsLogger;
 import util.LogCredit;
@@ -431,6 +430,11 @@ public class Requests extends Connect {
 
 						// Populate the response
 						try {
+
+							// Updating users response time
+							FlsBadges badges = new FlsBadges(dbResponse.getString("item_user_id"));
+							badges.updateRequestResponseTime(rs.getString("request_lastmodified"));
+							
 							JSONObject obj1 = new JSONObject();
 							obj1.put("title", dbResponse.getString("item_name"));
 							obj1.put("description", dbResponse.getString("item_desc"));

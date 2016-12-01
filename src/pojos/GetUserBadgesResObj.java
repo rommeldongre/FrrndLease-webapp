@@ -1,19 +1,13 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetUserBadgesResObj extends ResObj {
 
-	boolean idVerified;
-	String message, signUpStatus;
-	int code, itemsPosted, leaseCount, memberSince;
-	String responseTime;
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
+	int code, userItems, userLeases, responseTime, responseCount;
+	String message, userSignupDate;
 
 	public int getCode() {
 		return code;
@@ -23,61 +17,59 @@ public class GetUserBadgesResObj extends ResObj {
 		this.code = code;
 	}
 
-	public boolean isIdVerified() {
-		return idVerified;
+	public int getUserItems() {
+		return userItems;
 	}
 
-	public void setIdVerified(boolean idVerified) {
-		this.idVerified = idVerified;
+	public void setUserItems(int userItems) {
+		this.userItems = userItems;
 	}
 
-	public String getSignUpStatus() {
-		return signUpStatus;
+	public int getUserLeases() {
+		return userLeases;
 	}
 
-	public void setSignUpStatus(String signUpStatus) {
-		this.signUpStatus = signUpStatus;
+	public void setUserLeases(int userLeases) {
+		this.userLeases = userLeases;
 	}
 
-	public int getItemsPosted() {
-		return itemsPosted;
-	}
-
-	public void setItemsPosted(int itemsPosted) {
-		this.itemsPosted = itemsPosted;
-	}
-
-	public int getLeaseCount() {
-		return leaseCount;
-	}
-
-	public void setLeaseCount(int leaseCount) {
-		this.leaseCount = leaseCount;
-	}
-
-	public String getResponseTime() {
+	public int getResponseTime() {
 		return responseTime;
 	}
 
-	public void setResponseTime(long responseTime) {
-		if(responseTime == -1){
-			this.responseTime = "Not Enough Data";
-		}else{
-			if(responseTime < 86400)
-				this.responseTime = "In A Day";
-			else if(responseTime > 86400 && responseTime < 259200)
-				this.responseTime = "In 3 Days";
-			else
-				this.responseTime = "In A Week";
+	public void setResponseTime(int responseTime) {
+		this.responseTime = responseTime;
+	}
+
+	public int getResponseCount() {
+		return responseCount;
+	}
+
+	public void setResponseCount(int responseCount) {
+		this.responseCount = responseCount;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getUserSignupDate() {
+		return userSignupDate;
+	}
+
+	public void setUserSignupDate(String userSignupDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(userSignupDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
-	}
-
-	public int getMemberSince() {
-		return memberSince;
-	}
-
-	public void setMemberSince(int memberSince) {
-		this.memberSince = memberSince;
+		this.userSignupDate = Long.toString(date.getTime());
 	}
 
 }
