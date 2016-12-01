@@ -4,7 +4,6 @@ import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import util.ReferralCode;
-import util.Event.Notification_Type;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
@@ -16,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2046;
+	public final int appBuild = 2047;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1682,6 +1681,66 @@ public class FlsConfig extends Connect{
 					}
 					// The dbBuild version value is changed in the database
 					dbBuild = 2046;
+					updateDBBuild(dbBuild);
+					
+				}
+				
+				// This block alters users table to add badges data
+				if(dbBuild < 2047){
+					
+					String sqlAddBadgesData = "ALTER TABLE `users` ADD `user_items` INT(255) NOT NULL DEFAULT '0' AFTER `user_signup_date`, ADD `user_leases` INT(255) NOT NULL DEFAULT '0' AFTER `user_items`, ADD `user_response_time` INT(255) NOT NULL DEFAULT '0' AFTER `user_leases`, ADD `user_response_count` INT(255) NOT NULL DEFAULT '0' AFTER `user_response_time`;";
+					String sqlGetUserId = "SELECT user_id FROM users";
+					String sqlGetItemsAndLeases = "SELECT (SELECT COUNT(*) FROM items WHERE item_user_id=? AND item_status NOT IN ('Archived','Wished')) AS items, (SELECT COUNT(*) FROM leases WHERE lease_user_id=? OR lease_requser_id=?) AS leases";
+					String sqlUpdateUsersItemsLeases = "UPDATE users SET user_items=?, user_leases=? WHERE user_id=?";
+					
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddBadgesData);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlGetUserId);
+						ResultSet rs2 = ps2.executeQuery();
+						
+						rs2.beforeFirst();
+						while(rs2.next()){
+							
+							PreparedStatement ps3 = connection.prepareStatement(sqlGetItemsAndLeases);
+							ps3.setString(1, rs2.getString("user_id"));
+							ps3.setString(2, rs2.getString("user_id"));
+							ps3.setString(3, rs2.getString("user_id"));
+							ResultSet rs3 = ps3.executeQuery();
+							
+							if(rs3.next()){
+								PreparedStatement ps4 = connection.prepareStatement(sqlUpdateUsersItemsLeases);
+								ps4.setInt(1, rs3.getInt("items"));
+								ps4.setInt(2, rs3.getInt("leases"));
+								ps4.setString(3, rs2.getString("user_id"));
+								ps4.executeUpdate();
+								ps4.close();
+							}
+							
+							ps3.close();
+							
+						}
+						
+						ps2.close();
+						
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2047;
 					updateDBBuild(dbBuild);
 					
 				}
