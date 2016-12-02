@@ -5,6 +5,7 @@ footerApp.controller('footerCtrl', ['$scope', '$location', 'modalService', funct
 	$scope.newsLetterLead = function(){
 		var Lead_type="news_letter";
 		var Lead_url= "";
+		var base_url = "/myapp.html#";
 		
 		var loc_url = $location.url();
 		
@@ -19,7 +20,7 @@ footerApp.controller('footerCtrl', ['$scope', '$location', 'modalService', funct
 				Lead_url = "index";
 			}
 		}else{
-			Lead_url = loc_url;
+			Lead_url = base_url+loc_url;
 		}
 		
         var req = {
