@@ -1,19 +1,14 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetUserBadgesResObj extends ResObj {
 
-	boolean idVerified;
-	String message, signUpStatus;
-	int code, itemsPosted, leaseCount;
-	long responseTime;
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
+	int code, userItems, userLeases, responseTime, responseCount;
+	String message, userSignupDate, userStatus;
+	boolean userVeifiedFlag;
 
 	public int getCode() {
 		return code;
@@ -23,44 +18,75 @@ public class GetUserBadgesResObj extends ResObj {
 		this.code = code;
 	}
 
-	public boolean isIdVerified() {
-		return idVerified;
+	public int getUserItems() {
+		return userItems;
 	}
 
-	public void setIdVerified(boolean idVerified) {
-		this.idVerified = idVerified;
+	public void setUserItems(int userItems) {
+		this.userItems = userItems;
 	}
 
-	public String getSignUpStatus() {
-		return signUpStatus;
+	public int getUserLeases() {
+		return userLeases;
 	}
 
-	public void setSignUpStatus(String signUpStatus) {
-		this.signUpStatus = signUpStatus;
+	public void setUserLeases(int userLeases) {
+		this.userLeases = userLeases;
 	}
 
-	public int getItemsPosted() {
-		return itemsPosted;
-	}
-
-	public void setItemsPosted(int itemsPosted) {
-		this.itemsPosted = itemsPosted;
-	}
-
-	public int getLeaseCount() {
-		return leaseCount;
-	}
-
-	public void setLeaseCount(int leaseCount) {
-		this.leaseCount = leaseCount;
-	}
-
-	public long getResponseTime() {
+	public int getResponseTime() {
 		return responseTime;
 	}
 
-	public void setResponseTime(long responseTime) {
+	public void setResponseTime(int responseTime) {
 		this.responseTime = responseTime;
+	}
+
+	public int getResponseCount() {
+		return responseCount;
+	}
+
+	public void setResponseCount(int responseCount) {
+		this.responseCount = responseCount;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getUserSignupDate() {
+		return userSignupDate;
+	}
+
+	public void setUserSignupDate(String userSignupDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(userSignupDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.userSignupDate = Long.toString(date.getTime());
+	}
+
+	public String getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public boolean isUserVeifiedFlag() {
+		return userVeifiedFlag;
+	}
+
+	public void setUserVeifiedFlag(boolean userVeifiedFlag) {
+		this.userVeifiedFlag = userVeifiedFlag;
 	}
 
 }

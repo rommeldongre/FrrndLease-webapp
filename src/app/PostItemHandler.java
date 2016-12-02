@@ -16,6 +16,7 @@ import pojos.ResObj;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsBadges;
 import util.FlsConfig;
 import util.FlsLogger;
 import util.FlsS3Bucket;
@@ -142,6 +143,11 @@ public class PostItemHandler extends Connect implements AppHandler {
 			if(rs5 == 1){
 				LOGGER.info("10 credits added to the users table");
 				hcp.commit();
+				
+				// Updating data for badges
+				FlsBadges badges = new FlsBadges(userId);
+				badges.updateItemsCount();
+				
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(uid);
 				link = s3Bucket.uploadImage(Bucket_Name.ITEMS_BUCKET, Path_Name.ITEM_POST, File_Name.ITEM_PRIMARY, rq.getImage(), null);
 				if(link != null){

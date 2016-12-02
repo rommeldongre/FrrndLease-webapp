@@ -23,13 +23,6 @@
     <!--for Facebook signin-->
 	<script src="js/Facebook_api.js"></script>
 
-    <!-- Angularjs api -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-    <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
-    <script src="js/header.js"></script>
-	 <script src="js/footer.js"></script>
-    <!-- Angularjs api ends -->
-
     <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
 
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -50,14 +43,6 @@
     <script src="js/jquery.backstretch.js"></script>
     <script src="js/animation.js"></script>
     <!--Loading Animation code CSS & JS Links ends here  -->
-
-    <!--Check whether user is logged in or not  -->
-    <script src="js/logincheck.js"></script>
-    <!--Check whether user is logged in or not ends here  -->
-
-    <!--Correct Orientation of image while uploading  -->
-    <script src="js/exif.js"></script>
-    <!--Correct Orientation of image while uploading ends here  -->
 	    
 </head>
     
@@ -274,6 +259,8 @@
 			fbComment_URL();
             
             load_Gapi();
+            
+            $('body').append('<div class="popover-filter"></div>');
 		}
         
         var googleUser = {};
@@ -314,6 +301,13 @@
 		}
 			
 	</script>
+    
+    <!-- Angularjs api -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
+    <script src="js/header.js"></script>
+	 <script src="js/footer.js"></script>
+    <!-- Angularjs api ends -->
     
     <link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
     <link href="css/pe-icon-7-stroke.css" type="text/css" rel="stylesheet">

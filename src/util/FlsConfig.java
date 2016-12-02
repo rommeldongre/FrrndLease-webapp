@@ -4,7 +4,6 @@ import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import util.ReferralCode;
-import util.Event.Notification_Type;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
