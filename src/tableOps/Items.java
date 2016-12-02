@@ -503,7 +503,14 @@ public class Items extends Connect {
 				if(status.equals("OnHold")){
 					try {
 						Event event = new Event();
-						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_ON_HOLD, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> has been put on hold due to inappropriate content.");
+						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_ON_HOLD, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> has been put on hold because of inappropriate content.");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if (status.equals("InStore")){
+					try {
+						Event event = new Event();
+						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_INSTORE, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> is back in store.");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
