@@ -16,6 +16,7 @@ import adminOps.Response;
 import pojos.ItemsModel;
 import util.LogItem;
 import util.Event;
+import util.FlsBadges;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.FlsS3Bucket.Bucket_Name;
@@ -245,6 +246,10 @@ public class Items extends Connect {
 				}
 				Id = String.valueOf(id);
 				res.setData(FLS_SUCCESS, Id, FLS_ITEMS_ADD);
+				
+				// Updating data for badges
+				FlsBadges badges = new FlsBadges(userId);
+				badges.updateItemsCount();
 			}else{
 				res.setData(FLS_DUPLICATE_ENTRY, null, FLS_POST_ITEM_F_M);
 			}
@@ -347,6 +352,10 @@ public class Items extends Connect {
 				}else{
 					res.setData(FLS_INVALID_OPERATION, "0", "Not able to delete from items table");
 				}
+				
+				// Updating data for badges
+				FlsBadges badges = new FlsBadges(rs3.getString("item_user_id"));
+				badges.updateItemsCount();
 				
 			} else {
 				LOGGER.warning("Entry not found in database!!");
@@ -490,6 +499,15 @@ public class Items extends Connect {
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 				item_uid = rs.getString("item_uid");
+				
+				if(status.equals("OnHold")){
+					try {
+						Event event = new Event();
+						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_ON_HOLD, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> has been put on hold due to inappropriate content.");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 
 			if (check != 0) {
@@ -922,6 +940,10 @@ public class Items extends Connect {
 					res.setData(FLS_ITEMS_DP_DEFAULT, Id, FLS_ITEMS_DP_DEFAULT_M);
 					break;
 				}
+				
+				// Updating data for badges
+				FlsBadges badges = new FlsBadges(userId);
+				badges.updateItemsCount();
 			} else {
 				LOGGER.warning("Entry not found in database!!");
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
