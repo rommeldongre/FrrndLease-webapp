@@ -4,7 +4,6 @@ import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import util.ReferralCode;
-import util.Event.Notification_Type;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
@@ -16,7 +15,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2046;
+	public final int appBuild = 2047;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1657,7 +1656,7 @@ public class FlsConfig extends Connect{
 					
 				}
 				
-				// This block change column type of notification_type
+				// This block adds column lead_url in leads table
 				if(dbBuild < 2046){
 					
 					String sqlAddLeadUrl = "ALTER TABLE `leads` ADD `lead_url` VARCHAR(255) NULL DEFAULT NULL AFTER `lead_type`;";
@@ -1685,6 +1684,36 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 					
 				}
+				
+				// This block edits column user_signup_date in users table as we don't want to update it
+				if(dbBuild < 2047){
+					
+					String sqlEditSignUpTime = "ALTER TABLE `users` CHANGE `user_signup_date` `user_signup_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;";
+					
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlEditSignUpTime);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2047;
+					updateDBBuild(dbBuild);
+					
+				}
+				//
 				
 	}
 	

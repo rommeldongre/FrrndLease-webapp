@@ -92,6 +92,7 @@
                             </div>
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{lease.distance == '0m' ? 'Under 1km' : lease.distance}}&nbsp;-&nbsp;{{lease.requestorSublocality+","+lease.requestorLocality}}<br>
+                                <user-badges user-id="lease.requestorUserId"></user-badges>
                                 <span class="label label-success label-fill btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{lease.statusDesc}}" style="text-align:center;" tooltip>{{lease.status}}</span>
                             </p>
                         </div>

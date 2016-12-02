@@ -138,6 +138,13 @@ public class FlsEmail extends Connect{
 						+ "<br/>"+ obj.getString("description")+"<br/><br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img>" + "</body>");
 				break;
+				
+			case FLS_MAIL_ITEM_ON_HOLD:
+				SUBJECT = ("Your Item [" + obj.getString("title") + "] has been put on hold");
+				BODY = ("<body>Your Item " + obj.getString("title") + "-<br/><br/>"
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img><br/><br/>"
+								+ "Has been put on hold since the content is not appropriate.</body>");
+				break;
 
 			case FLS_MAIL_MATCH_WISHLIST_ITEM:
 				SUBJECT = (" Your Wish [" + obj.getString("title") + "] has been added to FrrndLease");

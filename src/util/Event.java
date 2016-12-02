@@ -83,7 +83,8 @@ public class Event extends Connect{
 		FLS_MAIL_OLD_LEASE_WARN,
 		FLS_MAIL_REMIND_PHOTO_ID,
 		FLS_MAIL_OPS_ADD_LEAD,
-		FLS_MAIL_ADD_LEAD
+		FLS_MAIL_ADD_LEAD,
+		FLS_MAIL_ITEM_ON_HOLD
 	}
 	
 	public enum Event_Type {

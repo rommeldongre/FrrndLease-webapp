@@ -50,7 +50,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         function(response){
             if (response.data.code == 0) {
                 $scope.plan = response.data.plan;
-                $scope.userId = userFactory.user;
+                $scope.user.userId = userFactory.user;
                 $scope.fullname = response.data.fullName;
 				$scope.user.mobile = response.data.mobile;
                 $scope.user.email = response.data.email;
@@ -70,7 +70,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 SecStatus = response.data.userSecStatus;
                 Notification = response.data.userNotification;
             } else {
-                $scope.userId = "";
+                $scope.user.userId = "";
                 $scope.fullname = "";
 				$scope.user.mobile = "";
 				$scope.location = "";
