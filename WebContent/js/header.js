@@ -1017,7 +1017,7 @@ headerApp.directive('userBadges', function(){
                     </div>\
                     <div style="margin:5px;">\
                         <div style="text-align:center;">\
-                            Member Since - <strong>{{badge.userSignupDate | date:\'MMM,yy\'}}</strong>\
+                            Member Since - <strong>{{badge.userSignupDate | date:\'MMMM yyyy\'}}</strong>\
                         </div>\
                     </div>\
                 </div>'
