@@ -1684,9 +1684,38 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 					
 				}
+				
+				// This block edits column user_signup_date in users table as we don't want to update it
+				if(dbBuild < 2047){
+					
+					String sqlEditSignUpTime = "ALTER TABLE `users` CHANGE `user_signup_date` `user_signup_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;";
+					
+					try{
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlEditSignUpTime);
+						ps1.executeUpdate();
+						ps1.close();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+						System.exit(1);
+					}finally {
+						try {
+							connection.close();
+							connection = null;
+							} catch (Exception e){
+								e.printStackTrace();
+								System.out.println(e.getStackTrace());
+							}
+					}
+					// The dbBuild version value is changed in the database
+					dbBuild = 2047;
+					updateDBBuild(dbBuild);
+					
+				}
 
 				// This block alters users table to add badges data
-				if(dbBuild < 2047){
+				if(dbBuild < 2048){
 					
 					String sqlAddBadgesData = "ALTER TABLE `users` ADD `user_items` INT(255) NOT NULL DEFAULT '0' AFTER `user_signup_date`, ADD `user_leases` INT(255) NOT NULL DEFAULT '0' AFTER `user_items`, ADD `user_response_time` INT(255) NOT NULL DEFAULT '0' AFTER `user_leases`, ADD `user_response_count` INT(255) NOT NULL DEFAULT '0' AFTER `user_response_time`;";
 					String sqlGetUserId = "SELECT user_id FROM users";
@@ -1725,36 +1754,6 @@ public class FlsConfig extends Connect{
 						}
 						
 						ps2.close();
-						
-					}catch(Exception e){
-						e.printStackTrace();
-						System.out.println(e.getStackTrace());
-						System.exit(1);
-					}finally {
-						try {
-							connection.close();
-							connection = null;
-							} catch (Exception e){
-								e.printStackTrace();
-								System.out.println(e.getStackTrace());
-							}
-					}
-					// The dbBuild version value is changed in the database
-					dbBuild = 2047;
-					updateDBBuild(dbBuild);
-					
-				}
-
-				// This block edits column user_signup_date in users table as we don't want to update it
-				if(dbBuild < 2048){
-					
-					String sqlEditSignUpTime = "ALTER TABLE `users` CHANGE `user_signup_date` `user_signup_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;";
-					
-					try{
-						getConnection();
-						PreparedStatement ps1 = connection.prepareStatement(sqlEditSignUpTime);
-						ps1.executeUpdate();
-						ps1.close();
 					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
@@ -1773,7 +1772,6 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 					
 				}
-
 				
 	}
 	
