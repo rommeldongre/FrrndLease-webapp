@@ -69,7 +69,11 @@ public class GetLeadsByXHandler extends Connect implements AppHandler {
 				sql = sql + "lead_datetime BETWEEN '"+fromDate+"' AND '"+toDate+"' AND ";
 			}
 			
-			sql = sql + "tb1.lead_type='" + type + "' ORDER BY tb1.lead_id DESC LIMIT " + offset + ","+limit;
+			if(type.equals("all")){
+				sql = sql + "tb1.lead_type LIKE '%' ORDER BY tb1.lead_id  DESC LIMIT " + offset + ","+limit;
+			}else{
+				sql = sql + "tb1.lead_type='" + type + "' ORDER BY tb1.lead_id DESC LIMIT " + offset + ","+limit;
+			}
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
