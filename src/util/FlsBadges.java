@@ -31,7 +31,7 @@ public class FlsBadges extends Connect {
 
 			LOGGER.info("Getting badges for user id - " + userId);
 
-			String sqlGetBadges = "SELECT user_items, user_leases, user_response_time, user_response_count, user_signup_date FROM users WHERE user_id=?";
+			String sqlGetBadges = "SELECT user_status, user_verified_flag, user_items, user_leases, user_response_time, user_response_count, user_signup_date FROM users WHERE user_id=?";
 			ps1 = hcp.prepareStatement(sqlGetBadges);
 			ps1.setString(1, userId);
 			
@@ -40,6 +40,8 @@ public class FlsBadges extends Connect {
 			if(rs1.next()){
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
+				rs.setUserStatus(rs1.getString("user_status"));
+				rs.setUserVeifiedFlag(rs1.getBoolean("user_verified_flag"));
 				rs.setUserItems(rs1.getInt("user_items"));
 				rs.setUserLeases(rs1.getInt("user_leases"));
 				rs.setUserSignupDate(rs1.getString("user_signup_date"));

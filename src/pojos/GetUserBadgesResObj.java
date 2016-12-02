@@ -7,7 +7,8 @@ import java.util.Date;
 public class GetUserBadgesResObj extends ResObj {
 
 	int code, userItems, userLeases, responseTime, responseCount;
-	String message, userSignupDate;
+	String message, userSignupDate, userStatus;
+	boolean userVeifiedFlag;
 
 	public int getCode() {
 		return code;
@@ -70,6 +71,22 @@ public class GetUserBadgesResObj extends ResObj {
 			e.printStackTrace();
 		}
 		this.userSignupDate = Long.toString(date.getTime());
+	}
+
+	public String getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public boolean isUserVeifiedFlag() {
+		return userVeifiedFlag;
+	}
+
+	public void setUserVeifiedFlag(boolean userVeifiedFlag) {
+		this.userVeifiedFlag = userVeifiedFlag;
 	}
 
 }

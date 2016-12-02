@@ -110,17 +110,16 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			}
 
 			LOGGER.info("Getting all active requests for ItemId : " + itemId + " and requestorId : " + requestorId);
-			String sqlGetAllRequests = "SELECT * FROM requests WHERE request_status=? AND request_item_id=? AND request_requser_id <> ?";
+			String sqlGetAllRequests = "SELECT * FROM requests WHERE request_status=? AND request_item_id=? AND request_requser_id=?";
 			
 			ps6 = hcp.prepareStatement(sqlGetAllRequests);
-			ps6.setString(1, "Archived");
+			ps6.setString(1, "Active");
 			ps6.setInt(2, itemId);
 			ps6.setString(3, requestorId);
 			
 			rs6 = ps6.executeQuery();
 			
 			if(!rs6.next()){
-				rs6.beforeFirst();
 				LOGGER.warning("Not able to select active requests for itemId : " + itemId);
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
@@ -128,9 +127,12 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 				return rs;
 			}
 			
-			// Updating response time for owner
+			// Updating badges data for owner and requester
 			FlsBadges badges = new FlsBadges(ownerId);
+			badges.updateLeasesCount();
 			badges.updateRequestResponseTime(rs6.getString("request_lastmodified"));
+			badges = new FlsBadges(requestorId);
+			badges.updateLeasesCount();
 			
 			LOGGER.info("Archiving all the requests");
 			String sqlArchivingRequests = "UPDATE requests SET request_status=? WHERE request_item_id=?";
