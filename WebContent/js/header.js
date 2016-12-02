@@ -987,37 +987,37 @@ headerApp.directive('userBadges', function(){
         replace: true,
         template:'<div>\
                     <div style="margin:5px;">\
-                        <div style="text-align:center;">\
-                            Member Since {{badge.userSignupDate | date}}\
-                        </div>\
-                    </div>\
-                    <div style="margin:5px;">\
                         <div class="social-badges" style="text-align:center;font-size:large;">\
                             <span>Verified:</span>\
                             <div style="display:inline-block;">\
-                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':!badge.userVeifiedFlag,\'orange\':badge.userVeifiedFlag}" data-toggle="popover" title="FrrndLease Verification - " data-placement="top" data-content="Address Verified" popover>\
+                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':!badge.userVeifiedFlag,\'orange\':badge.userVeifiedFlag}" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="You get Address Verified when you upload your Photo Id" popover>\
                                     <i class="fa fa-address-card" aria-hidden="true"></i>\
                                 </span>\
-                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':badge.userStatus!=\'facebook\', \'text-facebook\':badge.userStatus==\'facebook\'}" data-toggle="popover" title="Facebook Verification - " data-placement="top" data-content="Facebook Verified" popover>\
+                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':badge.userStatus!=\'facebook\', \'text-facebook\':badge.userStatus==\'facebook\'}" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="You get Facebook verified if you signed up using Facebook" popover>\
                                     <i class="fa fa-facebook-square" aria-hidden="true"></i>\
                                 </span>\
-                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':badge.userStatus!=\'google\',\'text-google\':badge.userStatus==\'google\'}" data-toggle="popover" title="Google Verification - " data-placement="top" data-content="Google Verified" popover>\
+                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':badge.userStatus!=\'google\',\'text-google\':badge.userStatus==\'google\'}" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="You get Google verified if you signed up using Google" popover>\
                                     <i class="fa fa-google-plus-square" aria-hidden="true"></i>\
                                 </span>\
                             </div>\
                         </div>\
                     </div>\
                     <div style="margin:5px;">\
+                        <div style="text-align:center;display:inline-flex;">\
+                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Number of Items Posted by this User" popover>\
+                                <span style="font-size:22px;"><strong>{{badge.userItems}}</strong></span> <span class="text-gray" style="font-size:8px;">Posted Items</span>\
+                            </span>\
+                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Number of Leases this User has got and also has given out" popover>\
+                                <span style="font-size:22px;"><strong>{{badge.userLeases}}</strong></span> <span class="text-gray" style="font-size:8px;">Leases</span>\
+                            </span>\
+                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Average number of Days this user takes to respond to a request" popover>\
+                                <span style="font-size:22px;"><strong>{{(badge.responseTime==0) ? \'NA\' : (badge.responseTime/badge.responseCount | number:0)}} </strong></span> <span class="text-gray" style="font-size:8px;">days, Response Time</span>\
+                            </span>\
+                        </div>\
+                    </div>\
+                    <div style="margin:5px;">\
                         <div style="text-align:center;">\
-                            <span style="cursor:help;padding:5px;">\
-                                {{badge.userItems}}\
-                            </span>\
-                            <span style="cursor:help;padding:5px;">\
-                                {{badge.userLeases}}\
-                            </span>\
-                            <span style="cursor:help;padding:5px;">\
-                                {{badge.responseTime/badge.responseCount | number:0}}\
-                            </span>\
+                            Member Since - <strong>{{badge.userSignupDate | date:\'MMM,yy\'}}</strong>\
                         </div>\
                     </div>\
                 </div>'
