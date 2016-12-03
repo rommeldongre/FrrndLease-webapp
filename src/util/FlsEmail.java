@@ -143,7 +143,14 @@ public class FlsEmail extends Connect{
 				SUBJECT = ("Your Item [" + obj.getString("title") + "] has been put on hold");
 				BODY = ("<body>Your Item " + obj.getString("title") + "-<br/><br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img><br/><br/>"
-								+ "Has been put on hold since the content is not appropriate.</body>");
+								+ "Has been put on hold because of the inappropriate content.</body>");
+				break;
+				
+			case FLS_MAIL_ITEM_INSTORE:
+				SUBJECT = ("Your Item [" + obj.getString("title") + "] is back In Store");
+				BODY = ("<body>Your Item " + obj.getString("title") + "-<br/><br/>"
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img><br/><br/>"
+								+ "Your Item is back In Store.</body>");
 				break;
 
 			case FLS_MAIL_MATCH_WISHLIST_ITEM:
