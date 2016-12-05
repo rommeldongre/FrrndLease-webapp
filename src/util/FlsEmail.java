@@ -432,7 +432,7 @@ public class FlsEmail extends Connect{
 			
 			case FLS_MAIL_ADD_LEAD:
 				SUBJECT = ("Subsciption Successful");
-				BODY = obj.getString("message");
+				BODY = "<body>Thank You for subscribing to FrrndLease. You will recieve periodic updates about our exciting offers</body>";
 				break;
 				
 			default:
@@ -458,7 +458,12 @@ public class FlsEmail extends Connect{
 
 			Multipart multipart = new MimeMultipart("related");
 
-			template = ve.getTemplate("templates/defaultEmail.vm");
+			if(notificationType == notificationType.FLS_MAIL_ADD_LEAD){
+				template = ve.getTemplate("templates/leadEmail.vm");
+			}else{
+				template = ve.getTemplate("templates/defaultEmail.vm");
+			}
+			
 			if(credits != -1)
 				context.put("credits", credits);
 			context.put("subject", SUBJECT);

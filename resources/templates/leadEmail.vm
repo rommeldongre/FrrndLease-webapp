@@ -1,0 +1,17 @@
+<div style="background-color:aliceblue;padding:50px;">
+	<table align="center" bgcolor="#ffffff" cellpadding="20">
+        <tr style="text-align:center;">
+        	<th><img src="$logo" style="width:10%;"><h1>FrrndLease</h1></th>
+        </tr>
+        <tr style="text-align:center;">
+        	<td>$body</td>
+        </tr>
+         <tr style="text-align:center;">
+         	<td style="padding-top:0px;">
+         		<hr/>
+         		Thank you for being good to the earth!<br>
+         		The FrrndLease Team
+         	</td>
+         </tr>
+     </table>
+</div>
