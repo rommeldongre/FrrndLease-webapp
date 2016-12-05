@@ -102,12 +102,12 @@ public class FlsEmail extends Connect{
 			case FLS_MAIL_REGISTER:
 				SUBJECT = " Welcome Aboard";
 				BODY = "Hello " + obj.getString("toUserName")
-						+ ". You have successfully activated your account on FrrndLease, the Friendly Library of Things. <br/>"
-						+ "We are truely happy to have you. We are a community of sharers; we love our things, but only as a means to get rich, positive experiences. <br/>"
+						+ "! <br/> You have successfully activated your account on FrrndLease, the Friendly Library of Things. <br/><br/>"
+						+ "We are truely happy to have you. We are a community of sharers; we love our things, but only as a means to get rich, positive experiences. Here's what you can do now:<br/><br/>"
 						+ "1. Go and offer your dormant things for others to share!! <br/>"
-						+ "Remember, it will always be yours ... and we will bring it back, whenever you want! <br/>"
+						+ "Remember, it will always be yours ... and we will bring it back, whenever you want! <br/><br/>"
 						+ "2. Also check out what other Members are sharing. <br/>"
-						+ "You might save some money or a trip to the mall ... <br/>"
+						+ "You might save some money or a trip to the mall ... <br/><br/>"
 						+ "3. Check out and follow us on our Facebook community page at <a href='http://www.facebook.com/frrndlease'>frrndlease on facebook</a>. "
 						+ "We use that to make announcements and share posts <br/>";
 				
@@ -143,7 +143,14 @@ public class FlsEmail extends Connect{
 				SUBJECT = ("Your Item [" + obj.getString("title") + "] has been put on hold");
 				BODY = ("<body>Your Item " + obj.getString("title") + "-<br/><br/>"
 						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img><br/><br/>"
-								+ "Has been put on hold since the content is not appropriate.</body>");
+								+ "Has been put on hold because of the inappropriate content.</body>");
+				break;
+				
+			case FLS_MAIL_ITEM_INSTORE:
+				SUBJECT = ("Your Item [" + obj.getString("title") + "] is back In Store");
+				BODY = ("<body>Your Item " + obj.getString("title") + "-<br/><br/>"
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") + " ></img><br/><br/>"
+								+ "Your Item is back In Store.</body>");
 				break;
 
 			case FLS_MAIL_MATCH_WISHLIST_ITEM:
@@ -357,12 +364,12 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:
-				SUBJECT = (" Reminder to close FrrndLease to user [" + obj.getString("fromUserName") + "]");
+				SUBJECT = (" Reminder to close lease to user [" + obj.getString("fromUserName") + "]");
 				BODY = "There are less than 5 days for your lease to close. If you want the item back, please close the lease. It will auto-renew if the requestor has credits for it, and you do not need to do anything for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.";
 				break;
 
 			case FLS_MAIL_GRACE_PERIOD_REQUESTOR:
-				SUBJECT = (" Reminder to close FrrndLease");
+				SUBJECT = (" Reminder to close lease");
 				BODY = "There are less than 5 days for your lease to close. It will auto-renew if you have enough credits and you do not need to do anything. If you want to return the item, please close the lease for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> ";
 				break;
 				
@@ -415,13 +422,13 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_OLD_LEASE_WARN:
-				SUBJECT = (" Awaiting Pickup of this item on FrrndLease");
+				SUBJECT = (" Awaiting Pickup of this item");
 				BODY = "<body> Your lease has not started for this item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> because you have not picked it up yet. <br/>"
 						+ "To start the lease and download your lease agreement, please confirm that the item has been picked up. If life is gettgin in the way, do nothing and we will delete this lease in the next 2 days. " + "</body>";
 				break;
 			
 			case FLS_MAIL_REMIND_PHOTO_ID:
-				SUBJECT = ("Reminder to Upload Photo Id on FrrndLease");
+				SUBJECT = ("Reminder to Upload Photo Id");
 				BODY = obj.getString("message");
 				break;
 				
