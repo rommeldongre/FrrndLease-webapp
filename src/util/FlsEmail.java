@@ -102,12 +102,12 @@ public class FlsEmail extends Connect{
 			case FLS_MAIL_REGISTER:
 				SUBJECT = " Welcome Aboard";
 				BODY = "Hello " + obj.getString("toUserName")
-						+ ". You have successfully activated your account on FrrndLease, the Friendly Library of Things. <br/>"
-						+ "We are truely happy to have you. We are a community of sharers; we love our things, but only as a means to get rich, positive experiences. <br/>"
+						+ "! <br/> You have successfully activated your account on FrrndLease, the Friendly Library of Things. <br/><br/>"
+						+ "We are truely happy to have you. We are a community of sharers; we love our things, but only as a means to get rich, positive experiences. Here's what you can do now:<br/><br/>"
 						+ "1. Go and offer your dormant things for others to share!! <br/>"
-						+ "Remember, it will always be yours ... and we will bring it back, whenever you want! <br/>"
+						+ "Remember, it will always be yours ... and we will bring it back, whenever you want! <br/><br/>"
 						+ "2. Also check out what other Members are sharing. <br/>"
-						+ "You might save some money or a trip to the mall ... <br/>"
+						+ "You might save some money or a trip to the mall ... <br/><br/>"
 						+ "3. Check out and follow us on our Facebook community page at <a href='http://www.facebook.com/frrndlease'>frrndlease on facebook</a>. "
 						+ "We use that to make announcements and share posts <br/>";
 				
