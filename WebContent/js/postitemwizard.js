@@ -173,7 +173,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         var link = null;
 
         if(window.location.href.indexOf("frrndlease.com") > -1){
-            link = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.uid;
+            link = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid;
 			
 			FB.login(function(response) {
 				// Facebook checks whether user is logged in or not and asks for credentials if not.
