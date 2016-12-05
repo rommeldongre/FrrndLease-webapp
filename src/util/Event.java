@@ -530,6 +530,8 @@ public class Event extends Connect{
 						return sendSms(eventId);
 					case FLS_MAIL_ADD_FRIEND_TO:
 						return sendEmailToFriend(rs.getString("from_user_id"), rs.getString("to_user_id"));
+					case FLS_MAIL_ADD_LEAD:
+						return sendEmailToLead(rs.getString("to_user_id"),rs.getString("from_user_id"), eventId);
 					default:
 						break;
 				}
@@ -837,6 +839,41 @@ public class Event extends Connect{
 		
 		return true;
 		
+	}
+	private boolean sendEmailToLead(String leadEmail,String senderEmail, int eventId){
+		JSONObject obj = new JSONObject();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
+		LOGGER.info("Sending email to Lead : " + leadEmail);
+		try {
+			String sqlSelectUserInfo = "SELECT user_full_name, user_credit, user_referral_code FROM users WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlSelectUserInfo);
+			ps1.setString(1, leadEmail);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+			obj.put("to", leadEmail);
+			obj.put("toUserCredit", rs1.getString("user_credit"));
+			obj.put("from", rs1.getString("user_full_name"));
+			obj.put("fromUserRefferalCode", rs1.getString("user_referral_code"));
+		}else{
+			obj.put("to", leadEmail);
+			obj.put("toUserCredit", 0);
+			obj.put("from", "");
+			obj.put("fromUserRefferalCode", "");
+		}
+			FlsEmail mail = new FlsEmail();
+			return mail.sendEmail(obj, Notification_Type.FLS_MAIL_ADD_LEAD);
+		}catch(SQLException e){
+			LOGGER.warning(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		} catch (JSONException e) {
+			LOGGER.warning(FLS_JSON_EXCEPTION_M);
+			e.printStackTrace();
+		}
+		return true;
 	}
 	
 	private int getLeaseId(int itemId){

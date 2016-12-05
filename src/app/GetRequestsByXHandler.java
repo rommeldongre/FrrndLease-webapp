@@ -62,7 +62,7 @@ public class GetRequestsByXHandler extends Connect implements AppHandler {
 			else if(ReqUserId != "")
 				sql = sql + "tb1.request_requser_id='" + ReqUserId + "' AND ";
 			
-			sql = sql + " tb1.request_status='" + status + "' ORDER BY tb1.request_lastmodified LIMIT " + offset + ", 1";
+			sql = sql + " tb1.request_status='" + status + "' ORDER BY tb1.request_lastmodified DESC LIMIT " + offset + ", 1";
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
