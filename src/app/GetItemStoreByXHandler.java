@@ -61,6 +61,8 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			Float lat = rq.getLat(), lng = rq.getLng();
 			String searchString = rq.getSearchString();
 			
+			LOGGER.info("User Id is "+userId);
+			
 			sql = "SELECT DISTINCT tb1.*";
 			
 			if(match_userId == null)
@@ -87,13 +89,20 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			if(category != null)
 				sql = sql + " AND tb1.item_category='"+category+"'";
 			
-			if(userId != null)
+			if(userId != null && !(userId.equals("admin@frrndlease.com")) && !(userId.equals("ops@frrndlease.com")))
 				sql = sql + " AND tb1.item_user_id='"+userId+"'";
 			
 			if(searchString != "" || searchString != null)
 				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%')";
 			
-			sql = sql + " ORDER BY friendst DESC, distance LIMIT "+offset+", "+limit;
+			if(userId != null && (userId.equals("admin@frrndlease.com") || userId.equals("ops@frrndlease.com"))){
+				sql = sql + " ORDER BY friendst DESC, tb1.item_id DESC, distance LIMIT "+offset+", "+limit;
+			}else{
+				sql = sql + " ORDER BY friendst DESC, distance LIMIT "+offset+", "+limit;
+			}
+			
+			
+			LOGGER.info(sql);
 			
 			sql_stmt = hcp.prepareStatement(sql);
 

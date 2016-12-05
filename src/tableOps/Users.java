@@ -909,7 +909,7 @@ public class Users extends Connect {
 			if(liveStatus != -1)
 				sqlGetUsers = sqlGetUsers + " AND user_live_status=" + liveStatus;
 			
-			sqlGetUsers = sqlGetUsers + " ORDER BY user_signup_date LIMIT " + offset + ", " + limit;
+			sqlGetUsers = sqlGetUsers + " ORDER BY user_signup_date DESC LIMIT " + offset + ", " + limit;
 			
 			ps1 = hcp.prepareStatement(sqlGetUsers);
 			
