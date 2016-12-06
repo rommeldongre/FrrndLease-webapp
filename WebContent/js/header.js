@@ -396,7 +396,6 @@ headerApp.controller('headerCtrl', ['$scope',
         profileFactory.getProfile(userFactory.user).then(
         function(response){
             if (response.data.code == 0) {
-                $scope.search.location = response.data.sublocality+","+response.data.locality;
                 $scope.credits = response.data.credit;
                 searchService.saveCurrentLocation(response.data.lat,response.data.lng);
             } else {
