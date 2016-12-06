@@ -22,6 +22,7 @@ import util.Event.Notification_Type;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
+import util.LogCredit;
 import util.FlsConfig;
 import util.FlsLogger;
 import util.FlsS3Bucket;
@@ -349,6 +350,12 @@ public class Items extends Connect {
 
 				if(rs4 == 1){
 					res.setData(FLS_SUCCESS, "0", FLS_ITEMS_DELETE);
+					
+					// Updating credits
+					LogCredit lc = new LogCredit();
+					lc.addLogCredit(rs3.getString("item_user_id"), -10, "Item Deleted Permanently", "");
+					lc.subtractCredit(rs3.getString("item_user_id"), 10);
+					
 				}else{
 					res.setData(FLS_INVALID_OPERATION, "0", "Not able to delete from items table");
 				}
@@ -489,6 +496,9 @@ public class Items extends Connect {
 		PreparedStatement stmt2 = null ,stmt = null;
 		ResultSet rs = null;
 		Connection hcp = getConnectionFromPool();
+
+		LogCredit lc = new LogCredit();
+		
 		try {
 			LOGGER.info("Creating statement...");
 
@@ -501,6 +511,11 @@ public class Items extends Connect {
 				item_uid = rs.getString("item_uid");
 				
 				if(status.equals("OnHold")){
+					
+					// Updating credits
+					lc.addLogCredit(rs.getString("item_user_id"), -10, "Item Put OnHold", "");
+					lc.subtractCredit(rs.getString("item_user_id"), 10);
+					
 					try {
 						Event event = new Event();
 						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_ON_HOLD, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> has been put on hold because of inappropriate content.");
@@ -508,6 +523,11 @@ public class Items extends Connect {
 						e.printStackTrace();
 					}
 				} else if (status.equals("InStore")){
+					
+					// Updating credits
+					lc.addLogCredit(rs.getString("item_user_id"), 10, "Item Back InStore", "");
+					lc.addCredit(rs.getString("item_user_id"), 10);
+					
 					try {
 						Event event = new Event();
 						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_INSTORE, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> is back in store.");
@@ -926,6 +946,11 @@ public class Items extends Connect {
 					// logging item status to archived
 					LogItem li = new LogItem();
 					li.addItemLog(id, "Archived", "", item_image_link);
+					
+					// Updating credits
+					LogCredit lc = new LogCredit();
+					lc.addLogCredit(userId, -10, "Item Archived", "");
+					lc.subtractCredit(userId, 10);
 					
 					Event event = new Event();
 					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from frrndlease store.");
