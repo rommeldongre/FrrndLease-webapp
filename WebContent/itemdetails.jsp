@@ -203,9 +203,9 @@
                                     <table id="creditLogTable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
                                         <thead>
                                             <tr>
-                                                <th class="tablecell" style="width: 50%">Log Date</th>
-                                                <th class="tablecell" style="width: 25%">Log Type</th>
-                                                <th class="tablecell" style="width: 25%">Item Image</th>
+                                                <th class="tablecell" style="width: 50%">Date</th>
+                                                <th class="tablecell" style="width: 25%">Type</th>
+                                                <th class="tablecell" style="width: 25%">Image</th>
                                             </tr>
                                         </thead>
                                         <tbody ng-repeat="y in timelineArray">
