@@ -69,7 +69,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 				sql = sql + ", (CASE WHEN tb1.item_user_id=tb3.friend_id AND tb3.friend_user_id='"+match_userId+"' THEN true ELSE false END) AS friendst";
 			
 			if(lat == 0.0 || lng == 0.0)
-				sql = sql + ", 0 AS distance, tb2.user_id, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id  LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='"+match_userId+"') tb3 ON tb1.item_user_id = tb3.friend_id WHERE";
+				sql = sql + ", 0 AS distance, tb2.user_id, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 LEFT JOIN users tb2 ON tb1.item_user_id = tb2.user_id  LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='"+match_userId+"') tb3 ON tb1.item_user_id = tb3.friend_id WHERE";
 			else
 				sql = sql + ", ( 6371 * acos( cos( radians("+lat+") ) * cos( radians( tb1.item_lat ) ) * cos( radians( tb1.item_lng ) - radians("+lng+") ) + sin( radians("+lat+") ) * sin( radians( tb1.item_lat ) ) ) ) AS distance, tb2.user_id, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id  LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='"+match_userId+"') tb3 ON tb1.item_user_id = tb3.friend_id WHERE";
 			
@@ -87,17 +87,13 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			if(category != null)
 				sql = sql + " AND tb1.item_category='"+category+"'";
 			
-			if(userId != null && !(userId.equals("admin@frrndlease.com")) && !(userId.equals("ops@frrndlease.com")))
+			if(userId != null)
 				sql = sql + " AND tb1.item_user_id='"+userId+"'";
 			
 			if(searchString != "" || searchString != null)
 				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%')";
 			
-			if(userId != null && (userId.equals("admin@frrndlease.com") || userId.equals("ops@frrndlease.com"))){
-				sql = sql + " ORDER BY tb1.item_id DESC LIMIT "+offset+", "+limit;
-			}else{
-				sql = sql + " ORDER BY friendst DESC, distance LIMIT "+offset+", "+limit;
-			}
+			sql = sql + " ORDER BY friendst DESC, distance, tb1.item_id DESC LIMIT "+offset+", "+limit;
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
