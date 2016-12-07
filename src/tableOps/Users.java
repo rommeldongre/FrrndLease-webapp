@@ -302,7 +302,7 @@ public class Users extends Connect {
 		}
 		
 		String  referrer_code=null;
-		PreparedStatement stmt = null, stmt1 = null,stmt2=null,stmt3 = null;
+		PreparedStatement stmt = null, stmt1 = null,stmt2=null,stmt3 = null, stmt4 = null;
 		ResultSet rs1 = null,rs2=null;
 		Connection hcp = getConnectionFromPool();
 
@@ -382,6 +382,18 @@ public class Users extends Connect {
 			FlsPlan plan = new FlsPlan();
 			plan.checkPlan(userId);
 			
+			Random rnd = new Random();
+			int r = 10000 + rnd.nextInt(90000);
+			
+			String userUid = fullName + " " + r;
+			userUid = userUid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
+			
+			String sqlUpdateUserUID = "UPDATE users SET user_uid=? WHERE user_id=?";
+			stmt4 = connection.prepareStatement(sqlUpdateUserUID);
+			stmt4.setString(1, userUid);
+			stmt4.setString(2, userId);
+			stmt4.executeUpdate();
+			
 			try {
 				Event event = new Event();
 				if (status.equals("email_pending")){
@@ -418,6 +430,7 @@ public class Users extends Connect {
 			e.printStackTrace();
 		}finally{
 			try {
+				if(stmt4 != null) stmt4.close();
 				if(rs1!=null) rs1.close();
 				if(rs2 != null)rs2.close();
 				if(stmt3 != null) stmt3.close();

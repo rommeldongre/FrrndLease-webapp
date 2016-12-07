@@ -80,7 +80,7 @@
                           <div class="content">
                               <div class="row" style="display: flex;flex-wrap: wrap;text-align:center;">
                                   <div class="col-lg-4 col-md-4">
-                                      <img class="avatar border-gray" ng-src="{{user.itemPrimaryImageLink}}" style="width:150px;height:150px;" alt="Profile Pic">
+                                      <img class="avatar border-gray" ng-src="{{user.profilePic}}" style="width:150px;height:150px;" alt="Profile Pic">
                                       <h3 class="title" style="word-wrap: break-word;">
                                           <strong>Ankit Karnany</strong>
                                       </h3>
@@ -113,7 +113,7 @@
                                         <div class="card">
                                             <a href="">
                                                 <div class="image" style="height:100%;">
-                                                    <img load-image="user.itemPrimaryImageLink" ng-src="">
+                                                    <img load-image="user.profilePic" ng-src="">
                                                     <div class="filter">
                                                         <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp; Lease</p>
                                                         <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i></p>
@@ -135,7 +135,7 @@
                                         <div class="card">
                                             <a href="">
                                                 <div class="image" style="height:100%;">
-                                                    <img load-image="user.itemPrimaryImageLink" ng-src="">
+                                                    <img load-image="user.profilePic" ng-src="">
                                                     <div class="filter">
                                                         <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp; Lease</p>
                                                         <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i></p>
@@ -157,7 +157,7 @@
                                         <div class="card">
                                             <a href="">
                                                 <div class="image" style="height:100%;">
-                                                    <img load-image="user.itemPrimaryImageLink" ng-src="">
+                                                    <img load-image="user.profilePic" ng-src="">
                                                     <div class="filter">
                                                         <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp; Lease</p>
                                                         <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i></p>
@@ -196,6 +196,16 @@
        </div>
        
        <script type="text/javascript">
+           
+           var code = "${code}";
+           var message = "${message}";
+           var userId = "${userId}";
+           var userFullName = "${userFullName}";
+           var userProfilePic = "${userProfilePic}";
+           var sublocality = "${sublocality}";
+           var locality = "${locality}";
+           var wishedList = "${wishedList}";
+           var items = "${items}";
            
            function start() {
                load_Gapi();
