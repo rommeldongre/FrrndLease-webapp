@@ -155,7 +155,7 @@ public class FlsEmail extends Connect{
 
 			case FLS_MAIL_MATCH_WISHLIST_ITEM:
 				SUBJECT = (" Your Wish [" + obj.getString("title") + "] has been added to FrrndLease");
-				BODY = ("<body>Someone has posted this item that matches your wishlist. Go get it!<br/>" + obj.getString("title")
+				BODY = ("<body>Someone has posted this item that matches your wishlist. <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>Go get it!</a>"+"<br/>" + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm") + "| Status: " + obj.getString("itemStatus")
 						+ "<br/>"+ obj.getString("description")+"<br/><br/>"
@@ -173,8 +173,8 @@ public class FlsEmail extends Connect{
 							+ l.getString("category") + "<br/>" + " Description : "
 							+ l.getString("description") + "<br/>" + " Insurance : "
 							+ l.getInt("leaseValue") + "<br/>" + " Lease Term : "
-							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")
-							+ "<br/>" + "<img width=\"300\" src='" + l.getString("imageLinks") + "' alt="
+							+ l.getString("leaseTerm") + "<br/>" + " Status : " + l.getString("status")+ "<br/>"
+							+ "<img width=\"300\" src='" + l.getString("imageLinks") + "' alt="
 							+ l.getString("title") + " ></img><br/><br/>");
 				}
 
