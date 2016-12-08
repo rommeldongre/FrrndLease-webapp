@@ -88,29 +88,43 @@
                                       <user-badges user-id="user.userId"></user-badges>
                                   </div>
                                   <div class="col-lg-4 col-md-4" style="border-left: 1px solid #ccc;">
-                                      <div class="social-badges" style="padding:50px;">
-                                          <button class="btn btn-primary btn-fill btn-block" style="margin-bottom:25px;"><i class="fa fa-envelope-o" aria-hidden="true"></i> Message</button><br/>
-                                          <button class="btn btn-primary btn-fill btn-block" style="margin-top:25px;"><i class="fa fa-user-plus" aria-hidden="true"></i> Add Friend</button>
-                                      </div>
+                                     <div style="text-align:left;">
+                                         <textarea class="form-control" ng-model="user.message" ng-trim="false" maxlength="500" style="height:176px;"></textarea>
+                                         <span>{{500 - user.message.length}} left</span>
+                                     </div>
+                                     <button class="btn btn-primary btn-fill btn-block" style="margin-bottom:25px;"><i class="fa fa-envelope-o" aria-hidden="true"></i> Message</button><hr/>
+                                     <button class="btn btn-primary btn-fill btn-block" style="margin-top:25px;"><i class="fa fa-user-plus" aria-hidden="true"></i> Add Friend</button>
                                   </div>
                                   <div class="col-lg-4 col-md-4" style="border-left: 1px solid #ccc;">
-                                      <div class="card" ng-repeat="friend in user.friends">
-                                          <div class="content">
-                                              <a class="card-link" href="/UserProfile?userUid={{friend.userUid}}">
-                                                  <h4 class="title">{{friend.userFullName}}</h4>
-                                              </a>
-                                          </div>
-                                      </div>
+                                     <h4 style="text-align:left;">Friends List -  
+                                         <br/>
+                                     </h4>
+                                     <div style="overflow-y:auto;height:275px;">
+                                         <div class="card" ng-repeat="friend in user.friends">
+                                             <div class="content" style="text-align:left;">
+                                                <div class="footer">
+                                                    <div class="author">
+                                                        <a class="card-link" href="/UserProfile?userUid={{friend.userUid}}">
+                                                           <img load-image="friend.userProfilePic" max-width="50" max-height="50" ng-src="">
+                                                           <span style="padding-left:50px;font-size:large;">{{friend.userFullName}}</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                             </div>
+                                         </div>
+                                     </div>
                                   </div>
                               </div>
                               <hr/>
                               <div class="container-fluid">
+                               <h4>Wished Items - 
+                                     <br/>
+                                </h4>
                                 <div class="row" ng-if="user.wishedList.length > 0">
-                                    <div class="alert alert-success" style="margin-top: 20px;">
+                                    <div class="alert alert-success">
                                         <div class="container">
                                             <div class="row" style="display: flex;flex-wrap: wrap;">
                                                 <div class="col-md-9">
-                                                    Wished Items -
                                                     <span class="label label-success" ng-repeat="wish in user.wishedList">
                                                         {{wish | limitTo: 20}}
                                                         <span ng-if="wish.length > 20">&hellip;</span>
@@ -123,6 +137,9 @@
                                         </div>
                                     </div>
                                  </div>
+                                 <h4>Items Owned -  
+                                     <br/>
+                                </h4>
                                 <h4 ng-if="notPosted" style="text-align:center;">You have not added any item to the friends store. 
                                     <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Offer Item &amp; Earn Credits</a>
                                     <br/><br/>
