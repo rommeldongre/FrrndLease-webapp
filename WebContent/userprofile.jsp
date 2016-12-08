@@ -66,24 +66,25 @@
                       <br />
                       
                       <!-- Error Message Display starts -->
-<!--
-                      <div class="row" ng-if="showError">
+                      <div class="row" ng-if="${code} != 0">
                           <div id="heading">
                               <span>${message}</span>
                           </div>
                       </div>
--->
                       <!-- Error Message Display ends -->
                       
                       <!-- Item Details starts -->
-                      <div class="row" style="padding-top:50px">
+                      <div class="row" style="padding-top:50px" ng-if="${code} == 0">
                           <div class="content">
                               <div class="row" style="display: flex;flex-wrap: wrap;text-align:center;">
                                   <div class="col-lg-4 col-md-4">
-                                      <img class="avatar border-gray" ng-src="{{user.profilePic}}" style="width:150px;height:150px;" alt="Profile Pic">
+                                      <img class="avatar border-gray" ng-src="{{(user.profilePic === '' || user.profilePic === null || user.profilePic === NULL || user.profilePic === 'null') ? 'images/user_icon.png' : user.profilePic}}" style="width:150px;height:150px;" alt="Profile Pic">
                                       <h3 class="title" style="word-wrap: break-word;">
-                                          <strong>Ankit Karnany</strong>
+                                          <strong>{{user.userFullName}}</strong>
                                       </h3>
+                                      <div style="font-size:large;margin:5px;">
+                                          <i class="fa fa-map-marker" aria-hidden="true"></i>{{user.locality}}
+                                      </div>
                                       <user-badges user-id="user.userId"></user-badges>
                                   </div>
                                   <div class="col-lg-4 col-md-4" style="border-left: 1px solid #ccc;">
@@ -93,88 +94,109 @@
                                       </div>
                                   </div>
                                   <div class="col-lg-4 col-md-4" style="border-left: 1px solid #ccc;">
-                                     <h4>Wished Items : </h4>
-                                     <div class="row">
-                                         <ul class="user-wished-list">
-                                             <li>Home</li>
-                                             <li>Learning</li>
-                                             <li>Business</li>
-                                         </ul>
-                                     </div>
-                                     <div class="row" style="margin-top:15%;">
-                                         <button class="btn btn-primary btn-fill">Store Your Stuff</button>
-                                     </div>
+                                      <div class="card" ng-repeat="friend in user.friends">
+                                          <div class="content">
+                                              <a class="card-link" href="/UserProfile?userUid={{friend.userUid}}">
+                                                  <h4 class="title">{{friend.userFullName}}</h4>
+                                              </a>
+                                          </div>
+                                      </div>
                                   </div>
                               </div>
                               <hr/>
                               <div class="container-fluid">
-                                  <div class="row">
-                                    <div class="col-md-4 col-sm-6 col-xs-12">
-                                        <div class="card">
-                                            <a href="">
-                                                <div class="image" style="height:100%;">
-                                                    <img load-image="user.profilePic" ng-src="">
-                                                    <div class="filter">
-                                                        <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp; Lease</p>
-                                                        <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i></p>
-                                                    </div>
+                                <div class="row" ng-if="user.wishedList.length > 0">
+                                    <div class="alert alert-success" style="margin-top: 20px;">
+                                        <div class="container">
+                                            <div class="row" style="display: flex;flex-wrap: wrap;">
+                                                <div class="col-md-9">
+                                                    Wished Items -
+                                                    <span class="label label-success" ng-repeat="wish in user.wishedList">
+                                                        {{wish | limitTo: 20}}
+                                                        <span ng-if="wish.length > 20">&hellip;</span>
+                                                    </span>
                                                 </div>
-                                            </a>
-                                            <div class="content">
-                                                <a class="card-link" href="">
-                                                    <h4 class="title">Item Title </h4>
-                                                </a>
-                                                <p class="category">
-                                                    <label ng-if="item.sublocality != '' || item.locality != ''">
-                                                        <i class="fa fa-map-marker"></i>&nbsp;Under 1km&nbsp;-&nbsp;Aundh, Pune
-                                                    </label>
-                                                </p>
+                                                <div class="col-md-3">
+                                                    <button class="btn btn-success btn-fill">Store Your Things</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div><div class="col-md-4 col-sm-6 col-xs-12">
-                                        <div class="card">
-                                            <a href="">
-                                                <div class="image" style="height:100%;">
-                                                    <img load-image="user.profilePic" ng-src="">
-                                                    <div class="filter">
-                                                        <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp; Lease</p>
-                                                        <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i></p>
+                                    </div>
+                                 </div>
+                                <h4 ng-if="notPosted" style="text-align:center;">You have not added any item to the friends store. 
+                                    <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Offer Item &amp; Earn Credits</a>
+                                    <br/><br/>
+                                </h4>
+                                <!-- Carousel Start -->
+                                <div class="row" id="carouselObject">
+                                    <div class="container-fluid" id="$index" ng-repeat="items in user.items">
+                                        <div class="row" id="product-cards">
+                                            <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="item in items">
+                                                <div class="card">
+                                                    <a href="ItemDetails?uid={{item.uid}}">
+                                                        <div class="image" style="height: 100%;">
+                                                            <img load-image="item.primaryImageLink" ng-src="">
+                                                            <div class="filter">
+                                                                <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;{{item.leaseTerm}} Lease</p>
+                                                                <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i>{{item.leaseValue}}</p>
+                                                                <p class="filter-text btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;" tooltip>
+                                                                    <span ng-if="item.itemsAvgRating == 1">
+                                                                        Experience:<br/>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                        &nbsp;Very Unhappy
+                                                                    </span>
+                                                                    <span ng-if="item.itemsAvgRating == 2">
+                                                                        Experience:<br/>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                        &nbsp;Unhappy
+                                                                    </span>
+                                                                    <span ng-if="item.itemsAvgRating == 3">
+                                                                        Experience:<br/>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                                                        &nbsp;Happy
+                                                                    </span>
+                                                                    <span ng-if="item.itemsAvgRating == 4">
+                                                                        Experience:<br/>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        <i class="fa fa-circle" aria-hidden="true"></i>
+                                                                        &nbsp;Very Happy
+                                                                    </span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    <div class="content">
+                                                        <a class="card-link" href="ItemDetails?uid={{item.uid}}">
+                                                            <h4 class="title">{{item.title | limitTo: 32}} </h4>
+                                                        </a>
+                                                        <p class="category">
+                                                            <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br ng-if="item.status == 'OnHold'">
+                                                        </p>
+                                                        <p class="category">
+                                                            <label ng-if="item.sublocality != '' || item.locality != ''">
+                                                                <i class="fa fa-map-marker"></i>&nbsp;{{item.distance == '0m' ? 'Under 1km' : item.distance}}&nbsp;-&nbsp;{{item.sublocality+","+item.locality}}
+                                                            </label>
+                                                        </p>
                                                     </div>
                                                 </div>
-                                            </a>
-                                            <div class="content">
-                                                <a class="card-link" href="">
-                                                    <h4 class="title">Item Title </h4>
-                                                </a>
-                                                <p class="category">
-                                                    <label ng-if="item.sublocality != '' || item.locality != ''">
-                                                        <i class="fa fa-map-marker"></i>&nbsp;Under 1km&nbsp;-&nbsp;Aundh, Pune
-                                                    </label>
-                                                </p>
                                             </div>
-                                        </div>
-                                    </div><div class="col-md-4 col-sm-6 col-xs-12">
-                                        <div class="card">
-                                            <a href="">
-                                                <div class="image" style="height:100%;">
-                                                    <img load-image="user.profilePic" ng-src="">
-                                                    <div class="filter">
-                                                        <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp; Lease</p>
-                                                        <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i></p>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <div class="content">
-                                                <a class="card-link" href="">
-                                                    <h4 class="title">Item Title </h4>
-                                                </a>
-                                                <p class="category">
-                                                    <label ng-if="item.sublocality != '' || item.locality != ''">
-                                                        <i class="fa fa-map-marker"></i>&nbsp;Under 1km&nbsp;-&nbsp;Aundh, Pune
-                                                    </label>
-                                                </p>
-                                            </div>
-                                        </div>
+                                        </div>	
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom:10px;">
+                                    <div ng-if="showNext" style="text-align:center;">
+                                        <button ng-click="loadNextSlide()" class="btn btn-primary btn-sm btn-round btn-fill" id="successBtn" >Load more...</button>
                                     </div>
                                 </div>
                             </div>
@@ -205,7 +227,7 @@
            var sublocality = "${sublocality}";
            var locality = "${locality}";
            var wishedList = "${wishedList}";
-           var items = "${items}";
+           var friends = ${friends};
            
            function start() {
                load_Gapi();
@@ -242,6 +264,7 @@
        <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
        <script src="js/header.js"></script>
        <script src="js/footer.js"></script>
+       <script src="js/carousel.js"></script>
        <!-- Angularjs api ends -->
        
        <link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">

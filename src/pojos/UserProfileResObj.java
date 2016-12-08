@@ -1,16 +1,12 @@
 package pojos;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.JSONArray;
 
 public class UserProfileResObj extends ResObj {
 
 	int code;
-	String message, userFullName, userId, userProfilePic, sublocality, locality;
-
-	String[] wishedList;
-
-	List<UserItemObj> items = new ArrayList<>();
+	String message, userFullName, userId, userProfilePic, sublocality, locality, wishedList;
+	JSONArray friends = new JSONArray();
 
 	public int getCode() {
 		return code;
@@ -68,24 +64,19 @@ public class UserProfileResObj extends ResObj {
 		this.locality = locality;
 	}
 
-	public String[] getWishedList() {
+	public String getWishedList() {
 		return wishedList;
 	}
 
-	public void setWishedList(String[] wishedList) {
+	public void setWishedList(String wishedList) {
 		this.wishedList = wishedList;
 	}
-
-	public List<UserItemObj> getItems() {
-		return items;
+	public JSONArray getFriends() {
+		return friends;
 	}
 
-	public void setItems(List<UserItemObj> items) {
-		this.items = items;
-	}
-
-	public void addItem(UserItemObj item) {
-		this.items.add(item);
+	public void setFriends(JSONArray friends) {
+		this.friends = friends;
 	}
 
 }

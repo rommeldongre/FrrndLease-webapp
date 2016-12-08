@@ -5,10 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import connect.Connect;
 import pojos.ReqObj;
 import pojos.ResObj;
-import pojos.UserItemObj;
 import pojos.UserProfileReqObj;
 import pojos.UserProfileResObj;
 import util.FlsLogger;
@@ -38,8 +41,8 @@ public class UserProfileHandler extends Connect implements AppHandler {
 		UserProfileResObj rs = new UserProfileResObj();
 
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null, ps2 = null, ps3 = null;
-		ResultSet rs1 = null, rs2 = null, rs3 = null;
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null;
+		ResultSet rs1 = null, rs2 = null, rs3 = null, rs4 = null;
 
 		try {
 
@@ -63,48 +66,51 @@ public class UserProfileHandler extends Connect implements AppHandler {
 				ps2 = hcp.prepareStatement(sqlGetWishedItems);
 				ps2.setString(1, rs1.getString("user_id"));
 				rs2 = ps2.executeQuery();
-				
-				String[] wishedList = {};
-				String wishes = null;
+
+				String wishes = "";
 				
 				while (rs2.next()) {
 					if(rs2.getString("item_name") != null)
-						if(wishes == null)
+						if(wishes.equals(""))
 							wishes = rs2.getString("item_name");
 						else
 							wishes = wishes + "," + rs2.getString("item_name");
 				}
 				
-				if(wishes != null)
-					wishedList = wishes.split(",");
+				rs.setWishedList(wishes);
 				
-				rs.setWishedList(wishedList);
+				// Getting list of friends
+				String sqlGetFriends = "SELECT tb2.user_profile_picture, tb2.user_full_name, tb2.user_uid FROM friends tb1 LEFT JOIN users tb2 ON tb1.friend_id=tb2.user_id WHERE tb1.friend_user_id=? AND tb1.friend_status='signedup'";
+				ps4 = hcp.prepareStatement(sqlGetFriends);
+				ps4.setString(1, rs1.getString("user_id"));
+				rs4 = ps4.executeQuery();
 				
-				// Getting InStore Items List
-				String sqlGetInStoreItems = "SELECT item_name, item_uid, item_lease_value, item_lease_term, item_primary_image_link, item_lastmodified FROM items WHERE item_user_id=? AND item_status='InStore'";
-				ps3 = hcp.prepareStatement(sqlGetInStoreItems);
-				ps3.setString(1, rs1.getString("user_id"));
-				rs3 = ps3.executeQuery();
+				JSONArray friends = new JSONArray();
 				
-				while(rs3.next()){
-					UserItemObj item = new UserItemObj();
-					item.setTitle(rs3.getString("item_name"));
-					item.setUid(rs3.getString("item_uid"));
-					item.setPrimaryImageLink(rs3.getString("item_primary_image_link"));
-					item.setLeaseValue(rs3.getInt("item_lease_value"));
-					item.setLeaseTerm(rs3.getString("item_lease_term"));
-					rs.addItem(item);
+				while(rs4.next()){
+					JSONObject friend = new JSONObject();
+					friend.put("userUid", rs4.getString("user_uid"));
+					friend.put("userFullName", rs4.getString("user_full_name"));
+					friend.put("userProfilePic", rs4.getString("user_profile_picture"));
+					friends.put(friend);
 				}
 				
+				rs.setFriends(friends);
+				
 			} else {
-				LOGGER.warning("Not ablt to find user id for user uid - " + rq.getUserUid());
+				LOGGER.warning("Not able to find user id for user uid - " + rq.getUserUid());
 				rs.setCode(FLS_ENTRY_NOT_FOUND);
 				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				return rs;
 			}
 
 		} catch (SQLException e) {
 			rs.setCode(FLS_SQL_EXCEPTION);
 			rs.setMessage(FLS_SQL_EXCEPTION_M);
+			e.printStackTrace();
+		} catch(JSONException e) {
+			rs.setCode(FLS_JSON_EXCEPTION);
+			rs.setMessage(FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (Exception e) {
 			rs.setCode(FLS_INVALID_OPERATION);
