@@ -2,10 +2,10 @@
     <div class="loaded-img" style="margin-bottom:20px;">
         <img load-image="item.image" ng-src="" alt="">
         <div ng-if="item.image == '' || item.image == null || item.image == 'null' || item.image == undefined" class="empty-actions">
-            <label class="primary-file-input-label" for="primary-file-input" style="font-size: x-large;">
+            <label class="primary-file-input-label" for="primary-file-input-add" style="font-size: x-large;">
                 <i class="fa fa-plus" aria-hidden="true" style="display:initial;"></i> Item Image
             </label>
-            <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" style="display:none;" />
+            <input id="primary-file-input-add" type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" style="display:none;" />
         </div>
         <div ng-if="item.image != 'loading' && item.image != '' && item.image != null && item.image != 'null' && item.image != undefined" class="actions">
             <label class="primary-file-input-label" for="primary-file-input" style="font-size: x-large;">
