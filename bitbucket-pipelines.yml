@@ -9,4 +9,10 @@ pipelines:
   default:
     - step:
         script: # Modify the commands below to build your repository.
-        - mvn clean install #tomcat7:deploy -e  <= when we do CI/CD to the AWS instance
+        - mvn clean install
+  branches:
+    master:
+      - step:
+          script:
+            - echo "This script runs only on commit to the master branch."
+            - mvn clean install tomcat7:deploy -Plive -e
