@@ -41,8 +41,8 @@ public class UserProfileHandler extends Connect implements AppHandler {
 		UserProfileResObj rs = new UserProfileResObj();
 
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null;
-		ResultSet rs1 = null, rs2 = null, rs3 = null, rs4 = null;
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null;
+		ResultSet rs1 = null, rs2 = null, rs3 = null;
 
 		try {
 
@@ -81,17 +81,17 @@ public class UserProfileHandler extends Connect implements AppHandler {
 				
 				// Getting list of friends
 				String sqlGetFriends = "SELECT tb2.user_profile_picture, tb2.user_full_name, tb2.user_uid FROM friends tb1 LEFT JOIN users tb2 ON tb1.friend_id=tb2.user_id WHERE tb1.friend_user_id=? AND tb1.friend_status='signedup'";
-				ps4 = hcp.prepareStatement(sqlGetFriends);
-				ps4.setString(1, rs1.getString("user_id"));
-				rs4 = ps4.executeQuery();
+				ps3 = hcp.prepareStatement(sqlGetFriends);
+				ps3.setString(1, rs1.getString("user_id"));
+				rs3 = ps3.executeQuery();
 				
 				JSONArray friends = new JSONArray();
 				
-				while(rs4.next()){
+				while(rs3.next()){
 					JSONObject friend = new JSONObject();
-					friend.put("userUid", rs4.getString("user_uid"));
-					friend.put("userFullName", rs4.getString("user_full_name"));
-					friend.put("userProfilePic", rs4.getString("user_profile_picture"));
+					friend.put("userUid", rs3.getString("user_uid"));
+					friend.put("userFullName", rs3.getString("user_full_name"));
+					friend.put("userProfilePic", rs3.getString("user_profile_picture"));
 					friends.put(friend);
 				}
 				
