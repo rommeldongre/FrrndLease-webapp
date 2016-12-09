@@ -779,8 +779,7 @@ headerApp.directive('loadImage', ['$http', function($http){
                     loadImage(
                         ImgSrc,
                         function(canvas){
-                            element.removeAttr('width');
-                            element.removeAttr('height');
+                            element.removeAttr('style');
                             attrs.$set('ngSrc', canvas.toDataURL());
                         },
                         {
@@ -791,8 +790,8 @@ headerApp.directive('loadImage', ['$http', function($http){
                         }
                     );
                 }else if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
-                    attrs.$set('width', MaxWidth);
-                    attrs.$set('height', MaxHeight);
+                    element.css('width', MaxWidth+"px");
+                    element.css('height', MaxHeight+"px");
                     attrs.$set('ngSrc', 'images/imgplaceholder.png');
                 }
                 

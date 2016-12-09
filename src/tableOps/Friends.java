@@ -91,97 +91,88 @@ public class Friends extends Connect {
 		mobile = fm.getMobile();
 		userId = fm.getUserId();
 
-		PreparedStatement stmt1 = null, stmt2 = null, stmt3 = null, stmt4 = null;
-		ResultSet rs1 = null, rs2 = null;
 		Connection hcp = getConnectionFromPool();
-
-		String source = "@api";
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null;
+		ResultSet rs1 = null, rs2 = null;
+		int rs3;
 		
 		String status = "pending";
 		
 		try {
-			LOGGER.info("Checking if friend is signed up");
+			LOGGER.info("Checking if this friend user has signed up");
 			String sqlCheckUser = "SELECT user_id,user_full_name FROM users WHERE user_id=?";
-			stmt1 = hcp.prepareStatement(sqlCheckUser);
-			stmt1.setString(1, friendId);
-			rs1 = stmt1.executeQuery();
+			ps1 = hcp.prepareStatement(sqlCheckUser);
+			ps1.setString(1, friendId);
+			rs1 = ps1.executeQuery();
 			
 			if(rs1.next()){
 				status = "signedup";
+				LOGGER.info("This user has already signed up");
 				fullName = rs1.getString("user_full_name");
+			}else{
+				LOGGER.info("This user has not signed up");
 			}
 			
-			LOGGER.info("Creating Select statement from friends table");
+			LOGGER.info("Checking this friendship...");
 			String sqlSelectFriends = "SELECT * FROM friends WHERE friend_user_id=? AND (friend_id=? OR friend_fb_id=?)";
-			stmt2 = hcp.prepareStatement(sqlSelectFriends);
-			stmt2.setString(1, userId);
-			stmt2.setString(2, friendId);
-			stmt2.setString(3, friendId);
-			rs2 = stmt2.executeQuery();
+			ps2 = hcp.prepareStatement(sqlSelectFriends);
+			ps2.setString(1, userId);
+			ps2.setString(2, friendId);
+			ps2.setString(3, friendId);
+			rs2 = ps2.executeQuery();
 			
-			while (rs2.next()) {
-				check = rs2.getString("friend_id");
-				LOGGER.info("Printing check val: "+check+" "+rs2.getString("friend_full_name"));
-			}
-			
-			if (check == null  & !userId.equals(friendId)) {
-				LOGGER.info("Creating statement.....");
+			if(!rs2.next()){
+				LOGGER.info("This is a new friendship.");
 				String sqlAddFriends = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status) values (?,?,?,?,?)";
-				stmt3 = hcp.prepareStatement(sqlAddFriends);
+				ps3 = hcp.prepareStatement(sqlAddFriends);
 
 				LOGGER.info("Statement created. Executing query.....");
-				stmt3.setString(1, friendId);
-				stmt3.setString(2, fullName);
-				stmt3.setString(3, mobile);
-				stmt3.setString(4, userId);
-				stmt3.setString(5, status);
-				stmt3.executeUpdate();
-
-				Event event = new Event();
-				event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
-				event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
+				ps3.setString(1, friendId);
+				ps3.setString(2, fullName);
+				ps3.setString(3, mobile);
+				ps3.setString(4, userId);
+				ps3.setString(5, status);
+				rs3 = ps3.executeUpdate();
 				
-				message = "Entry added into friends table";
-				LOGGER.warning(message);
-				Code = 10;
-				Id = friendId;
-				res.setData(FLS_SUCCESS, Id, message);
+				if(rs3 == 1){
+					res.setData(FLS_SUCCESS, Id, FLS_ADD_FRIEND);
+					LOGGER.info("Congratulations new friendship created!!");
+					Event event = new Event();
+					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
+					event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
 				
-				// to add credit in user_credit
-				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-				stmt4 = hcp.prepareStatement(sqlAddCredit);
-				stmt4.setString(1, userId);
-				stmt4.executeUpdate();
-				
-				LogCredit lc = new LogCredit();
-				lc.addLogCredit(userId,1,"Friend Added","");
-				
-				if (friendId.contains("@fb") || friendId.contains("@google")){
-//					Event event = new Event();
-//					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
+					LogCredit lc = new LogCredit();
+					lc.addLogCredit(userId,1,"Friend Added","");
+					lc.addCredit(userId, 1);
+				}else{
+					res.setData(FLS_INVALID_OPERATION, Id, FLS_FRIEND_NOT_ADDED);
+					LOGGER.info("Not able to create a new friendship.");
 				}
 
+				
+			} else if(userId.equals(friendId)) {
+				res.setData(FLS_DUPLICATE_ENTRY, Id, FLS_FRIEND_YOURSELF);
+				LOGGER.info("Trying to make yourself friend.");
 			} else {
-				LOGGER.warning("Friend Already exists.....");
-				res.setData(FLS_SUCCESS, check, FLS_SUCCESS_M);
+				res.setData(FLS_DUPLICATE_ENTRY, Id, FLS_DUPLICATE_FRIEND_ENTRY);
+				LOGGER.info("This friendship already exists.");
 			}
+
 		} catch (SQLException e) {
-			LOGGER.warning("Couldn't create statement");
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 		} finally {
 			try {
-				if(rs1 != null)rs1.close();
-				if(rs2 != null)rs2.close();
-				if(stmt4 != null)stmt4.close();
-				if(stmt3 != null)stmt3.close();
-				if(stmt2 != null)stmt2.close();
-				if(stmt1 != null)stmt1.close();
+				if(rs2 != null) rs2.close();
+				if(rs1 != null) rs1.close();
+				if(ps3 != null) ps3.close();
+				if(ps2 != null) ps2.close();
+				if(ps1 != null) ps1.close();
 				if(hcp != null)hcp.close();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

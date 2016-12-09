@@ -3,6 +3,8 @@ package util;
 import java.security.Key;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Random;
+
 import util.ReferralCode;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
@@ -15,7 +17,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2048;
+	public final int appBuild = 2049;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1771,6 +1773,58 @@ public class FlsConfig extends Connect{
 					dbBuild = 2048;
 					updateDBBuild(dbBuild);
 					
+				}
+				
+				// This block adds user uid column in users table
+				if (dbBuild < 2049) {
+					
+					// New column created to store the uid of the user
+					String sqlAddUserUid = "ALTER TABLE `users` ADD `user_uid` VARCHAR(255) NULL DEFAULT NULL AFTER `user_id`";
+					
+					// These queries are updating items table to add item_uid
+					String getAllUsersName = "SELECT user_full_name, user_id FROM `users`";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddUserUid);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(getAllUsersName);
+						ResultSet rs = ps2.executeQuery();
+						
+						while(rs.next()){
+							Random rnd = new Random();
+							int r = 10000 + rnd.nextInt(90000);
+							
+							String userUid = rs.getString("user_full_name") + " " + r;
+							userUid = userUid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
+							
+							String sqlUpdateUserUID = "UPDATE users SET user_uid=? WHERE user_id=?";
+							PreparedStatement s = connection.prepareStatement(sqlUpdateUserUID);
+							s.setString(1, userUid);
+							s.setString(2, rs.getString("user_id"));
+							s.executeUpdate();
+						}
+						
+						ps2.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2049;
+					updateDBBuild(dbBuild);
 				}
 				
 	}

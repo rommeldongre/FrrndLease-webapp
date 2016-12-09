@@ -1,3 +1,18 @@
+.user-wished-list{
+    text-align: left;
+    display: block;
+    list-style-type: disc;
+}
+
+.user-wished-list > li{
+    position: relative;
+    float: left;
+    width: 50%;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 .social-badges{
     background: #f7f7f7;
     border: 1px solid #ddd;

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +33,8 @@ public class Event extends Connect{
 	
 	String ENV_CONFIG = FlsConfig.env;
 	String URL = FlsConfig.prefixUrl;
+	
+	private final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 	
 	public enum Notification_Type {
 		FLS_MAIL_FORGOT_PASSWORD,
@@ -529,7 +533,7 @@ public class Event extends Connect{
 					case FLS_MOBILE_VERIFICATION:
 						return sendSms(eventId);
 					case FLS_MAIL_ADD_FRIEND_TO:
-						return sendEmailToFriend(rs.getString("from_user_id"), rs.getString("to_user_id"));
+						return sendEmailToFriend(rs.getString("from_user_id"), rs.getString("to_user_id"), eventId);
 					case FLS_MAIL_ADD_LEAD:
 						return sendEmailToLead(rs.getString("to_user_id"),rs.getString("from_user_id"), eventId);
 					default:
@@ -791,7 +795,7 @@ public class Event extends Connect{
 		return true;
 	}
 	
-	private boolean sendEmailToFriend(String fromUserId, String toUserId){
+	private boolean sendEmailToFriend(String fromUserId, String toUserId, int eventId){
 		
 		LOGGER.info("Sending email to friend : " + toUserId);
 		
@@ -811,13 +815,17 @@ public class Event extends Connect{
 			
 			if(rs1.next()){
 				
-				obj.put("to", toUserId);
-				obj.put("toUserCredit", 0);
-				obj.put("from", rs1.getString("user_full_name"));
-				obj.put("fromUserRefferalCode", rs1.getString("user_referral_code"));
-				
-				FlsEmail mail = new FlsEmail();
-				return mail.sendEmail(obj, Notification_Type.FLS_MAIL_ADD_FRIEND_TO);
+				if(validateEmail(rs1.getString("user_full_name"))){
+					obj.put("to", toUserId);
+					obj.put("toUserCredit", 0);
+					obj.put("from", rs1.getString("user_full_name"));
+					obj.put("fromUserRefferalCode", rs1.getString("user_referral_code"));
+					
+					FlsEmail mail = new FlsEmail();
+					return mail.sendEmail(obj, Notification_Type.FLS_MAIL_ADD_FRIEND_TO);
+				}else{
+					return sendSms(eventId);
+				}
 				
 			}
 			
@@ -840,6 +848,12 @@ public class Event extends Connect{
 		return true;
 		
 	}
+
+	public boolean validateEmail(String emailStr) {
+		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX .matcher(emailStr);
+		return matcher.find();
+	}
+	
 	private boolean sendEmailToLead(String leadEmail,String senderEmail, int eventId){
 		JSONObject obj = new JSONObject();
 		PreparedStatement ps1 = null;
