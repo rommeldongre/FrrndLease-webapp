@@ -85,6 +85,7 @@ public class GetRequestsPlusHandler extends Connect implements AppHandler {
 					request.setRequestDate(rs2.getString("request_lastmodified"));
 					request.setFriend(rs2.getBoolean("isFriend"));
 					request.setRequestorId(rs2.getString("user_id"));
+					request.setRequestorUid(rs2.getString("user_uid"));
 					request.setDistance(rs2.getFloat("distance"));
 					request.setRequestorName(rs2.getString("user_full_name"));
 					request.setRequestorProfilePic(rs2.getString("user_profile_picture"));

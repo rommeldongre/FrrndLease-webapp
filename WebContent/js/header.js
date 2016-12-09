@@ -1241,11 +1241,10 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
                     });
                 }, function(){});
             }
-        }else{
-            $scope.$apply(function(){
-                $scope.error = message;
-            });
         }
+        $scope.$apply(function(){
+            $scope.error = message;
+        });
     });
 	
 	var getQueryVariable = function (variable) {

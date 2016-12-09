@@ -74,7 +74,7 @@
                         </div>
                         <div class="content">
                             <div class="author">
-                                <a href="">
+                                <a href="/UserProfile?userUid={{request.ownerUid}}">
                                     <img class="avatar border-gray" ng-src="{{(request.ownerProfilePic === '' || request.ownerProfilePic === null || request.ownerProfilePic === NULL || request.ownerProfilePic === 'null') ? 'images/user_icon.png' : request.ownerProfilePic}}" alt="Profile Pic">
                                     <h4 class="title">{{request.ownerName}}<br>
                                         <small>

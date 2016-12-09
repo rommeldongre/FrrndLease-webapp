@@ -389,7 +389,7 @@ public class Users extends Connect {
 			userUid = userUid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();
 			
 			String sqlUpdateUserUID = "UPDATE users SET user_uid=? WHERE user_id=?";
-			stmt4 = connection.prepareStatement(sqlUpdateUserUID);
+			stmt4 = hcp.prepareStatement(sqlUpdateUserUID);
 			stmt4.setString(1, userUid);
 			stmt4.setString(2, userId);
 			stmt4.executeUpdate();
