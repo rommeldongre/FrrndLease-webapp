@@ -12,11 +12,11 @@ public class GetLeasesByXResObj extends ResObj {
 	int cookie;
 
 	// requesters details
-	String requestorUserId, requestorFullName, requestorMobile, requestorAddress, requestorLocality,
+	String requestorUserId, requestorUid, requestorFullName, requestorMobile, requestorAddress, requestorLocality,
 			requestorSublocality, requestorProfilePic;
 
 	// owners details
-	String ownerUserId, ownerFullName, ownerMobile, ownerAddress, ownerLocality, ownerSublocality, ownerProfilePic;
+	String ownerUserId, ownerUid, ownerFullName, ownerMobile, ownerAddress, ownerLocality, ownerSublocality, ownerProfilePic;
 
 	// lease details
 	String leaseExpiryDate;
@@ -75,6 +75,14 @@ public class GetLeasesByXResObj extends ResObj {
 		this.requestorUserId = requestorUserId;
 	}
 
+	public String getRequestorUid() {
+		return requestorUid;
+	}
+
+	public void setRequestorUid(String requestorUid) {
+		this.requestorUid = requestorUid;
+	}
+
 	public String getRequestorFullName() {
 		return requestorFullName;
 	}
@@ -121,6 +129,14 @@ public class GetLeasesByXResObj extends ResObj {
 
 	public void setOwnerUserId(String ownerUserId) {
 		this.ownerUserId = ownerUserId;
+	}
+
+	public String getOwnerUid() {
+		return ownerUid;
+	}
+
+	public void setOwnerUid(String ownerUid) {
+		this.ownerUid = ownerUid;
 	}
 
 	public String getOwnerFullName() {

@@ -69,9 +69,9 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 				sql = sql + ", (CASE WHEN tb1.item_user_id=tb3.friend_id AND tb3.friend_user_id='"+match_userId+"' THEN true ELSE false END) AS friendst";
 			
 			if(lat == 0.0 || lng == 0.0)
-				sql = sql + ", 0 AS distance, tb2.user_id, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 LEFT JOIN users tb2 ON tb1.item_user_id = tb2.user_id  LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='"+match_userId+"') tb3 ON tb1.item_user_id = tb3.friend_id WHERE";
+				sql = sql + ", 0 AS distance, tb2.user_id, tb2.user_uid, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 LEFT JOIN users tb2 ON tb1.item_user_id = tb2.user_id  LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='"+match_userId+"') tb3 ON tb1.item_user_id = tb3.friend_id WHERE";
 			else
-				sql = sql + ", ( 6371 * acos( cos( radians("+lat+") ) * cos( radians( tb1.item_lat ) ) * cos( radians( tb1.item_lng ) - radians("+lng+") ) + sin( radians("+lat+") ) * sin( radians( tb1.item_lat ) ) ) ) AS distance, tb2.user_id, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id  LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='"+match_userId+"') tb3 ON tb1.item_user_id = tb3.friend_id WHERE";
+				sql = sql + ", ( 6371 * acos( cos( radians("+lat+") ) * cos( radians( tb1.item_lat ) ) * cos( radians( tb1.item_lng ) - radians("+lng+") ) + sin( radians("+lat+") ) * sin( radians( tb1.item_lat ) ) ) ) AS distance, tb2.user_id, tb2.user_uid, tb2.user_full_name, tb2.user_locality, tb2.user_sublocality FROM items tb1 INNER JOIN users tb2 ON tb1.item_user_id = tb2.user_id  LEFT JOIN (SELECT * FROM friends WHERE friend_user_id='"+match_userId+"') tb3 ON tb1.item_user_id = tb3.friend_id WHERE";
 			
 			// getting all itemStatus from the request
 			int i = 0;
@@ -108,6 +108,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs1.setCategory(dbResponse.getString("item_category"));
 					rs1.setDesc(dbResponse.getString("item_desc"));
 					rs1.setUserId(dbResponse.getString("user_id"));
+					rs1.setUserUid(dbResponse.getString("user_uid"));
 					rs1.setFullName(dbResponse.getString("user_full_name"));
 					rs1.setLeaseValue(dbResponse.getInt("item_lease_value"));
 					rs1.setLeaseTerm(dbResponse.getString("item_lease_term"));

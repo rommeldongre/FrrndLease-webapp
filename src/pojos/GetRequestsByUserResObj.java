@@ -15,7 +15,7 @@ public class GetRequestsByUserResObj extends ResObj {
 
 	// request details
 	int requestId;
-	String requestDate, requestMessage, ownerId, ownerName, ownerProfilePic, ownerLocality, ownerSublocality, distance;
+	String requestDate, requestMessage, ownerId, ownerUid, ownerName, ownerProfilePic, ownerLocality, ownerSublocality, distance;
 	boolean friend;
 
 	public int getCode() {
@@ -135,6 +135,14 @@ public class GetRequestsByUserResObj extends ResObj {
 
 	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
+	}
+
+	public String getOwnerUid() {
+		return ownerUid;
+	}
+
+	public void setOwnerUid(String ownerUid) {
+		this.ownerUid = ownerUid;
 	}
 
 	public String getOwnerName() {
