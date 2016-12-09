@@ -1,67 +1,65 @@
 package pojos;
 
-import javax.validation.constraints.NotNull;
+public class GetItemStoreByXResObj extends ResObj {
 
-import java.util.Date;
-
-public class GetItemStoreByXResObj extends ResObj{
-	
-	//Return code for GetRequestsByUser
+	// Return code for GetRequestsByUser
 	int ReturnCode = 0;
-	
-	//Error String
+
+	// Error String
 	String ErrorString;
-	
-	
+
 	String title;
-	
+
 	// description of item
 	String desc;
-	
+
 	// category of item
 	String category;
-		
+
 	// number of items, default is 1
 	int quantity = 1;
-	
-	//Owner Name
+
+	// Owner Name
 	String fullName;
-	
+
 	// owner user id
 	String userId;
-	
+
+	// Owner user uid
+	String userUid;
+
 	// lease term of item
 	String leaseTerm;
-	
-	//id of item
+
+	// id of item
 	int itemId;
-	
+
 	// uid of the item
 	String uid;
-	
+
 	// locality of user
 	String locality;
-	
+
 	// sublocality of user
 	String sublocality;
-	
+
 	// distance of item from current searched location
 	String distance;
 
-	//leaseValue of item
+	// leaseValue of item
 	int leaseValue;
-	
-	//status of item
+
+	// status of item
 	String status;
-	
-	//image of item
+
+	// image of item
 	String primaryImageLink;
-	
+
 	// Avg Rating
 	int itemsAvgRating;
-	
+
 	boolean friendStatus;
-	
+
 	public boolean isFriendStatus() {
 		return friendStatus;
 	}
@@ -91,10 +89,10 @@ public class GetItemStoreByXResObj extends ResObj{
 	}
 
 	public void setDistance(float distance) {
-		if(distance < 1)
+		if (distance < 1)
 			this.distance = "0m";
 		else
-			this.distance = Math.round(distance)+"km";
+			this.distance = Math.round(distance) + "km";
 	}
 
 	public String getUid() {
@@ -161,6 +159,14 @@ public class GetItemStoreByXResObj extends ResObj{
 		this.userId = userId;
 	}
 
+	public String getUserUid() {
+		return userUid;
+	}
+
+	public void setUserUid(String userUid) {
+		this.userUid = userUid;
+	}
+
 	public String getFullName() {
 		return fullName;
 	}
@@ -177,7 +183,6 @@ public class GetItemStoreByXResObj extends ResObj{
 		this.leaseTerm = leaseTerm;
 	}
 
-	
 	public int getItemId() {
 		return itemId;
 	}
@@ -217,5 +222,5 @@ public class GetItemStoreByXResObj extends ResObj{
 	public void setItemsAvgRating(int itemsAvgRating) {
 		this.itemsAvgRating = itemsAvgRating;
 	}
-	
+
 }

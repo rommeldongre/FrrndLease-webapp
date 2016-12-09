@@ -71,6 +71,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 				
 				// Owner Details
 				rs.setOwnerId(rs1.getString("user_id"));
+				rs.setOwnerUid(rs1.getString("user_uid"));
 				rs.setOwnerName(rs1.getString("user_full_name"));
 				rs.setOwnerProfilePic(rs1.getString("user_profile_picture"));
 				rs.setOwnerLocality(rs1.getString("user_locality"));

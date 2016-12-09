@@ -815,7 +815,7 @@ public class Event extends Connect{
 			
 			if(rs1.next()){
 				
-				if(validateEmail(rs1.getString("user_full_name"))){
+				if(validateEmail(toUserId)){
 					obj.put("to", toUserId);
 					obj.put("toUserCredit", 0);
 					obj.put("from", rs1.getString("user_full_name"));
