@@ -136,6 +136,11 @@ public class Items extends Connect {
 			LOGGER.info("getdetails operation is selected");
 			getDetails();
 			break;
+			
+		case "deleteadmin":
+			LOGGER.info("Admin Delete operation is selected");
+			DeleteAdmin();
+			break;
 
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
@@ -1200,6 +1205,85 @@ public class Items extends Connect {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void DeleteAdmin(){
+		
+		userId= im.getUserId();
+		title =im.getTitle();
+		
+		LOGGER.info("Inside delete Admin method....");
+		
+		PreparedStatement stmt1 = null, stmt2 = null, stmt3 = null, stmt4 = null;
+		ResultSet rs1 = null, rs2 = null, rs3 = null;
+		int rs4;
+		Connection hcp = getConnectionFromPool();
+		
+		try {
+			
+			String sqlCheckItems = "SELECT * FROM items WHERE item_user_id=? AND item_name=?";
+			stmt1 = hcp.prepareStatement(sqlCheckItems);
+			stmt1.setString(1, userId);
+			stmt1.setString(2, title);
+			rs1 = stmt1.executeQuery();			
+
+			if (rs1.next()) {
+
+				if(rs1.getString("item_uid") != null && rs1.getString("item_primary_image_link") != null){
+					FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
+					int d = s3Bucket.deleteImage(Bucket_Name.ITEMS_BUCKET, rs1.getString("item_primary_image_link"));
+					if(d == 1){
+						LOGGER.info("item image deleted from s3");
+						s3Bucket.deleteImages();
+					}else{
+						res.setData(FLS_INVALID_OPERATION, "0", "Not Able to delete images");
+						return;
+					}
+					
+				}
+				
+				LOGGER.info("Deleting item from items table");
+				String sqlDeleteItem = "DELETE FROM items WHERE item_id=?";
+
+				stmt4 = hcp.prepareStatement(sqlDeleteItem);
+				stmt4.setInt(1, rs1.getInt("item_id"));
+				rs4 = stmt4.executeUpdate();
+
+				if(rs4 == 1){
+					res.setData(FLS_SUCCESS, "0", FLS_ITEMS_DELETE);
+					
+					// Updating credits
+					LogCredit lc = new LogCredit();
+					lc.addLogCredit(rs1.getString("item_user_id"), -10, "Item Deleted Permanently", "");
+					lc.subtractCredit(rs1.getString("item_user_id"), 10);
+					
+				}else{
+					res.setData(FLS_INVALID_OPERATION, "0", "Not able to delete from items table");
+				}
+				
+				// Updating data for badges
+				FlsBadges badges = new FlsBadges(rs1.getString("item_user_id"));
+				badges.updateItemsCount();
+				
+			} else {
+				LOGGER.warning("Entry not found in database!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try {
+				if(rs1 != null) rs1.close();
+				if(stmt4 != null) stmt4.close();
+				if(stmt1 != null) stmt1.close();
+				if(hcp != null) hcp.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	/*
 	 * private void GetMax(){ //id = im.getId(); getConnection(); try {
