@@ -63,21 +63,9 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
 		}
     }
     
-    // getting the width and height of the carousel when page gets loaded
-    var getCarouselWidthHeight = function(){
-        $scope.carouselWidth = angular.element(document.querySelector('#carouselObject'))[0].clientWidth;
-        $scope.carouselHeight = angular.element(document.querySelector('#carouselObject'))[0].clientHeight;
-    }
-    
-    // called on page load
-    getCarouselWidthHeight();
-    
     // getting the width and height of the carousel when window is resized
     $(window).resize(function(){
         checkItemsLimit();
-        $scope.$apply(function(){
-            getCarouselWidthHeight();
-        });
         // loading carousel from start
         initPopulate();
     });

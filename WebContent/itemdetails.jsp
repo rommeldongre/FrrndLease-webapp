@@ -30,7 +30,6 @@
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="js/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -66,7 +65,7 @@
 
         <div class="row">
             <div class="col-lg-1  col-md-1"></div>
-            <div class="card col-lg-10  col-md-10" style="margin: 10px 20px 10px 20px;min-height: 500px;">
+            <div class="page-card col-lg-10  col-md-10" style="margin: 10px 20px 10px 20px;min-height: 500px;">
                 <div class="container-fluid" id="midcontainer" ng-controller="itemDetailsCtrl">
 
                     <br />

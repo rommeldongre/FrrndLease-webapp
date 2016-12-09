@@ -6,7 +6,8 @@ public class GetProfileResObj extends ResObj {
 	String message;
 
 	int credit, liveStatus;
-	String plan, fullName, mobile, email, location, address, locality, sublocality, referralCode, photoId, profilePic;
+	String plan, userUid, fullName, mobile, email, location, address, locality, sublocality, referralCode, photoId,
+			profilePic;
 	float lat, lng;
 	boolean photoIdVerified;
 	String userStatus, userSecStatus, userNotification;
@@ -33,6 +34,14 @@ public class GetProfileResObj extends ResObj {
 
 	public void setPlan(String plan) {
 		this.plan = plan;
+	}
+
+	public String getUserUid() {
+		return userUid;
+	}
+
+	public void setUserUid(String userUid) {
+		this.userUid = userUid;
 	}
 
 	public int getLiveStatus() {

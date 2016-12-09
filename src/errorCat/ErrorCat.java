@@ -105,6 +105,9 @@ public class ErrorCat {
 	final public String FLS_INVALID_MESSAGE_M = "Please enter a valid message.";
 	final public String FLS_MESSAGE_NOT_SENT_M = "Sorry!! Not able to send the message.";
 	final public String FLS_CREDITS_INSUFFICIENT_FOR_LEASE = "Atleast 10 credits required by the requestor";
+	final public String FLS_FRIEND_NOT_ADDED = "Not able to add friend.";
+	final public String FLS_DUPLICATE_FRIEND_ENTRY = "This friendship already exists.";
+	final public String FLS_FRIEND_YOURSELF = "Sorry cannot make yourself friend.";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";
