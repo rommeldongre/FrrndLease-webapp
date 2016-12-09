@@ -169,11 +169,11 @@
 		 <groupId>org.apache.tomcat.maven</groupId>
           <artifactId>tomcat7-maven-plugin</artifactId>
           <version>2.2</version>
-			<configuration>
-				 <url>http://localhost:8080/manager/text</url>
-				<server>flsv3</server>
-				<username>tomcat</username>
-        		<password>manager</password>
+			  <configuration>
+				 <url>${deploy_url}</url>
+				<server>${deploy_server}</server>
+				<username>${deploy_username}</username>
+        		<password>${deploy_password}</password>
         		<update>true</update>
 				<path>/</path>
 			</configuration>
@@ -222,4 +222,32 @@
             </plugin>
     </plugins>
   </build>
+  <profiles>
+	<profile>
+	<id>local</id>
+	<activation>
+		<activeByDefault>true</activeByDefault>
+	</activation>
+	<properties>
+		<deploy_url>http://localhost:8080/manager/text</deploy_url>
+		<deploy_server>flsv3</deploy_server>
+		<deploy_username>tomcat</deploy_username>
+		<deploy_password>manager</deploy_password>
+		<deploy_path>/</deploy_path>
+	</properties>
+	</profile>
+	<profile>
+	<id>live</id>
+	<activation>
+		<activeByDefault>true</activeByDefault>
+	</activation>
+	<properties>
+		<deploy_url>http://www.frrndlease.com/manager/text</deploy_url>
+		<deploy_server>AWS</deploy_server>
+		<deploy_username>tomcat</deploy_username>
+		<deploy_password>manager</deploy_password>
+		<deploy_path>/</deploy_path>
+	</properties>
+	</profile>
+ </profiles>  
 </project>
