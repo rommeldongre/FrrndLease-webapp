@@ -92,11 +92,11 @@
                                          <textarea class="form-control" ng-model="user.message" ng-trim="false" maxlength="500" style="height:176px;"></textarea>
                                          <span>{{500 - user.message.length}} left</span>
                                      </div>
-                                     <button class="btn btn-primary btn-fill btn-block" style="margin-bottom:25px;"><i class="fa fa-envelope-o" aria-hidden="true"></i> Message</button><hr/>
-                                     <button class="btn btn-primary btn-fill btn-block" style="margin-top:25px;"><i class="fa fa-user-plus" aria-hidden="true"></i> Add Friend</button>
+                                     <button class="btn btn-primary btn-fill btn-block" style="margin-bottom:25px;" ng-click="sendMessage()"><i class="fa fa-envelope-o" aria-hidden="true"></i> Message</button><hr/>
+                                     <button class="btn btn-primary btn-fill btn-block" style="margin-top:25px;" ng-click="addFriend()"><i class="fa fa-user-plus" aria-hidden="true"></i> Add Friend</button>
                                   </div>
                                   <div class="col-lg-4 col-md-4" style="border-left: 1px solid #ccc;">
-                                     <h4 style="text-align:left;">Friends List -  
+                                     <h4 style="text-align:left;">Friends -  
                                          <br/>
                                      </h4>
                                      <div style="overflow-y:auto;height:275px;">
@@ -131,7 +131,7 @@
                                                     </span>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <button class="btn btn-success btn-fill">Store Your Things</button>
+                                                    <button class="btn btn-success btn-fill" ng-click="storeYourStuff()">Store Your Things</button>
                                                 </div>
                                             </div>
                                         </div>

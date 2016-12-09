@@ -1,6 +1,6 @@
 var userProfileApp = angular.module('userProfileApp', ['headerApp', 'footerApp', 'carouselApp']);
 
-userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForCarousel', function($scope, $window, getItemsForCarousel){
+userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForCarousel', 'userFactory', 'bannerService', 'logoutService', 'modalService', function($scope, $window, getItemsForCarousel, userFactory, bannerService, logoutService, modalService){
     
     // lastItem is used to store the id of the last retrieved item from the database
     var lastItem = 0;
@@ -95,5 +95,95 @@ userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForC
     }
     
     initPopulate();
+    
+    $scope.storeYourStuff = function(){
+        if(userFactory.user == "" || userFactory.user == null || userFactory.user == 'anonymous'){
+            $('#registerModal').modal('show');
+        }
+        else{
+            window.location.replace("myapp.html#/wizard");
+        }
+    }
+    
+    $scope.sendMessage = function(){
+        if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous"){
+            $('#registerModal').modal('show');
+        } else if(userFactory.user == $scope.user.userId){
+            modalService.showModal({}, {bodyText: "Cannot send message to yourself." ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){}, function(){});
+        } else{
+            if($scope.user.message == ''){
+                modalService.showModal({}, {bodyText: "Please write something." ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){}, function(){});
+            }else{
+                var req = {
+                    userId: userFactory.user,
+                    accessToken: userFactory.userAccessToken,
+                    from: userFactory.user,
+                    to: $scope.user.userId,
+                    message: $scope.user.message,
+                    subject: "FRIEND",
+                    itemId: 0
+                }
+                $.ajax({
+                    url: '/SendMessage',
+                    type: 'post',
+                    data: JSON.stringify(req),
+                    contentType: "application/x-www-form-urlencoded",
+                    dataType: "json",
+                    success: function(response) {
+                        if(response.code==0){
+                            $scope.user.message = '';
+                            bannerService.updatebannerMessage("Message Sent!!");
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                        }else{
+                            modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){eventsCount.updateEventsCount();
+                                if(response.code == 400){
+                                    logoutService.logout();
+                                }
+                            }, function(){});
+                        }
+                    },
+
+                    error: function() {
+                        console.log("Not able to send message");
+                    }
+                });
+            }
+        }
+    }
+	
+	$scope.addFriend = function(){
+        if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous"){
+            $('#registerModal').modal('show');
+        } else if(userFactory.user == $scope.user.userId){
+            modalService.showModal({}, {bodyText: "Cannot add yourself as your friend." ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){}, function(){});
+        } else {
+            var req = {
+                id: $scope.user.userId,
+                fullName: $scope.user.userFullName,
+                mobile: "-",
+                userId: userFactory.user,
+                referralCode: localStorage.getItem("userReferralCode")
+            }
+            $.ajax({
+                url: '/AddFriend',
+                type:'get',
+                data: {req : JSON.stringify(req)},
+                contentType:"application/json",
+                dataType: "json",
+                success: function(response) {
+                    if(response.Code == 'FLS_SUCCESS'){
+                        bannerService.updatebannerMessage($scope.user.userFullName + " has been added to your friends list.");
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                    }else{
+                        modalService.showModal({}, {bodyText: response.Message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){}, function(){});
+                    }
+                },
+                error: function() {
+                    console.log("Invalid Entry");
+                }
+            });
+        }
+		
+	}
     
 }]);
