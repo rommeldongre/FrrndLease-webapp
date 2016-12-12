@@ -21,7 +21,7 @@
               <p id="login_error" ng-if="error != ''" style="color:red;padding:10px;">{{error}}</p>
             <form name="form" style="text-align: center;">
                 <div class="form-group">
-                    <input name="userId" class="form-control" ng-model="userId" ng-pattern="/^([_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,5}))|(\d+$)$/" ng-change="error=''" placeholder="Email or Phone" required autofocus/>
+                    <input name="userId" id="userId" class="form-control" ng-model="userId" ng-pattern="/^([_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,5}))|(\d+$)$/" ng-change="error=''" placeholder="Email or Phone" required autofocus/>
                 </div>
                 <div class="form-group">
                     <input name="password" type="password" id="password" class="form-control" ng-change="error=''" ng-model="password" placeholder="Password" />
