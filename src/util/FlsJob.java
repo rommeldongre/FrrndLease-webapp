@@ -156,10 +156,9 @@ public class FlsJob extends Connect implements org.quartz.Job {
     	try {
     		
     		// fetching the uid
-			String sqlUid = "SELECT item_uid,item_name,item_primary_image_link FROM items WHERE item_id=? and item_status=?";
+			String sqlUid = "SELECT item_uid,item_name,item_primary_image_link FROM items WHERE item_id=?";
 			ps1 = hcp.prepareStatement(sqlUid);
 			ps1.setInt(1, lease_item_id);
-			ps1.setString(2, "LeaseStarted");
 			rs1 = ps1.executeQuery();
 			String uid = null;
 			String title = null;
@@ -167,6 +166,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				uid = rs1.getString("item_uid");
 				title = rs1.getString("item_name");
 				item_primary_image_link = rs1.getString("item_primary_image_link");
+			}
 			
     		hcp.setAutoCommit(false);
 			LOGGER.info("Grace Condition is false ...");
@@ -319,9 +319,6 @@ public class FlsJob extends Connect implements org.quartz.Job {
 			}
 		    
 			hcp.commit();
-    	}else{
-			LOGGER.warning("No item in lease Started State");
-    	}
     	}catch (SQLException e) {
   			// TODO: handle exception
   			LOGGER.warning("SQL Exception Occured in Expire Method");
