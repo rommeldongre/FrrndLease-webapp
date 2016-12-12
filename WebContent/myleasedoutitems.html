@@ -76,19 +76,19 @@
                                 <div class="text-center">
                                     <form id="agreement" ng-if="lease.status=='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank" style="display:inline;">
                                        <input type="hidden" name="leaseId" value="{{lease.leaseId}}" />
-                                       <button type="submit" class="btn btn-primary btn-fill">
+                                       <button type="submit" class="btn btn-primary btn-fill btn-sm">
                                            Download Agreement
                                        </button>
                                     </form>
-                                    <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-danger btn-fill btn-icon btn-sm" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">
+                                    <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-danger btn-fill btn-sm" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">
                                         Close Lease
                                     </button>
-                                    <button class="btn btn-success btn-fill btn-icon btn-sm" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">
+                                    <button class="btn btn-success btn-fill btn-sm" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">
                                         Renew Lease
                                     </button>
-                                    <button class="btn btn-social btn-fill btn-icon btn-sm" send-message-to="lease.requestorUserId" item-id="lease.itemId">
+                                    <button class="btn btn-default btn-fill btn-sm" send-message-to="lease.requestorUserId" item-id="lease.itemId">
                                         Send Message
-                                    </button>
+                                    </button><br/>
                                     <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
                                         Item Pick Up Status:<br/>
                                         <form>
