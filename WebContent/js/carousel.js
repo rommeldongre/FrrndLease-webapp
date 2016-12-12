@@ -57,7 +57,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
     if(user != "" || user != null || user != 'anonymous'){
         if(window.location.hash == '#/mypostings'){
             userId = user;
-            ItemStatus = ['InStore', 'OnHold'];
+            ItemStatus = ['InStore', 'OnHold', 'LeaseReady', 'PickedUpOut', 'LeaseStarted', 'LeaseEnded', 'PickedUpIn'];
         }else{
 			match_userId = user;
 		}

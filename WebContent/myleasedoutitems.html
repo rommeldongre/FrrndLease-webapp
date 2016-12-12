@@ -66,6 +66,36 @@
                         <div class="row" style="margin-top:2%;">
                             <div class="col-md-12">
                                 <h5><i ng-if="lease.description.length>0" class="fa fa-quote-left" aria-hidden="true"></i> {{lease.description}} <i ng-if="lease.description.length>0" class="fa fa-quote-right" aria-hidden="true"></i></h5>
+                                
+                                <div class="description">
+                                    Lease Expiry Date - <strong>{{lease.leaseExpiryDate | date}}</strong>
+                                    <span class="label label-success label-fill btn-tooltip pull-right" data-toggle="tooltip" data-placement="top" title="{{lease.statusDesc}}" style="text-align:center;" tooltip>{{lease.status}}</span>
+                                </div>
+                                
+                                <hr>
+                                <div class="text-center">
+                                    <form id="agreement" ng-if="lease.status=='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank" style="display:inline;">
+                                       <input type="hidden" name="leaseId" value="{{lease.leaseId}}" />
+                                       <button type="submit" class="btn btn-primary btn-fill btn-sm">
+                                           Download Agreement
+                                       </button>
+                                    </form>
+                                    <button ng-if="lease.status != 'LeaseEnded'" class="btn btn-danger btn-fill btn-sm" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)">
+                                        Close Lease
+                                    </button>
+                                    <button class="btn btn-success btn-fill btn-sm" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)">
+                                        Renew Lease
+                                    </button>
+                                    <button class="btn btn-default btn-fill btn-sm" send-message-to="lease.requestorUserId" item-id="lease.itemId">
+                                        Send Message
+                                    </button><br/>
+                                    <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
+                                        Item Pick Up Status:<br/>
+                                        <form>
+                                           <switch id="enabled" name="enabled" ng-change="changePickupStatus(lease.ownerPickupStatus, $index)" ng-model="lease.ownerPickupStatus" on="Picked Up" off="Pending" class="green"></switch>
+                                       </form>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                    </div>
@@ -93,35 +123,7 @@
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{lease.distance == '0m' ? 'Under 1km' : lease.distance}}&nbsp;-&nbsp;{{lease.requestorSublocality+","+lease.requestorLocality}}<br>
                                 <user-badges user-id="lease.requestorUserId"></user-badges>
-                                <span class="label label-success label-fill btn-tooltip" data-toggle="tooltip" data-placement="top" title="{{lease.statusDesc}}" style="text-align:center;" tooltip>{{lease.status}}</span>
                             </p>
-                        </div>
-                        <div class="description text-center btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Expiry Date" tooltip>
-                            <i class="fa fa-calendar" aria-hidden="true"></i> {{lease.leaseExpiryDate | date}}
-                        </div>
-                        <hr>
-                        <div class="text-center">
-                            <a ng-if="(lease.status=='LeaseReady'||lease.status=='LeaseEnded') && lease.deliveryPlan=='FLS_SELF'" class="card-link" href="">
-                                Item Pick Up Status:<br/>{{(lease.ownerPickupStatus ? 'Picked Up' : 'Pending')}}
-                                <form>
-                                   <switch id="enabled" name="enabled" ng-change="changePickupStatus(lease.ownerPickupStatus, $index)" ng-model="lease.ownerPickupStatus" class="green"></switch>
-                               </form>
-                            </a>
-                            <form id="agreement" ng-if="lease.status=='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank">
-                               <input type="hidden" name="leaseId" value="{{lease.leaseId}}" />
-                               <button type="submit" data-toggle="tooltip" data-placement="top" title="Download Lease Agreement" class="btn btn-primary btn-simple btn-tooltip" tooltip>
-                                   <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                               </button>
-                            </form>
-                            <button ng-if="lease.status != 'LeaseEnded'" data-toggle="tooltip" data-placement="top" title="Close Lease" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="closeLease(lease.itemId, lease.requestorUserId, $index)" tooltip>
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Renew Lease" class="btn btn-success btn-simple btn-icon btn-tooltip" ng-click="renewLease(lease.itemId, lease.requestorUserId, $index)" tooltip>
-                                <i class="fa fa-refresh" aria-hidden="true"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" send-message-to="lease.requestorUserId" item-id="lease.itemId" tooltip>
-                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                            </button>
                         </div>
                     </div>
                 </div>

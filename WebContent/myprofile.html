@@ -124,17 +124,19 @@
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
-                <label class="control-label">Name</label>
-                <input name="fullname" type="text" class="form-control" id="fullname" ng-change="(fullname != '') ? user.error='' : user.error='Name is required'" ng-model="fullname" placeholder="Full Name" required>
-                <br/>
-                <label class="control-label">Location</label>
-                <input name="location" type="text" class="form-control" id="location" ng-change="(location != '') ? user.error='' : user.error='Location is required'" ng-model="location" ng-autocomplete options="options" details="details" placeholder="Location">
-                <br/>
-                <span ng-if="user.error != ''" style="color:red;padding:10px;">{{user.error}}</span>
+                <form name="form">
+                    <label class="control-label">Name</label>
+                    <input name="fullname" type="text" class="form-control" id="fullname" ng-change="(form.fullname.$dirty && form.fullname.$valid) ? user.error='' : user.error='Name is required'" ng-model="fullname" placeholder="Full Name" required>
+                    <br/>
+                    <label class="control-label">Location</label>
+                    <input name="location" type="text" class="form-control" id="location" ng-change="(form.location.$valid && form.location.$dirty) ? user.error='' : user.error='Location is required'" ng-model="location" ng-autocomplete options="options" details="details" placeholder="Location" required>
+                    <br/>
+                    <span ng-if="user.error != ''" style="color:red;padding:10px;">{{user.error}}</span>
+                </form>
             </div>
         </div>
         <div class="row" style="text-align:center;padding-bottom:20px;">
-            <button type="button" class="btn btn-primary btn-fill" ng-click="(user.error == '') ? updateProfile() : user.error='Please enter correct data!!'">Save</button>
+            <button type="button" class="btn btn-primary btn-fill" ng-click="form.$valid ? updateProfile() : user.error='Please enter correct data!!'">Save</button>
             <button type="button" class="btn btn-default btn-simple" ng-click="cancel()">Cancel</button>
         </div>
     </form>

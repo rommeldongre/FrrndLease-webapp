@@ -478,7 +478,7 @@ public class FlsEmail extends Connect{
 			message.setSubject(PREFIX + SUBJECT, "UTF-8");
 
 			// setting the basic properties of the email message
-			message.setFrom(new InternetAddress(FROM));
+			message.setFrom(new InternetAddress(FROM, "FrrndLease"));
 			message.setReplyTo(new Address[] { new InternetAddress(FROM) });
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(TO));
 			if (!ENV_CONFIG.equals("dev")) {
@@ -487,7 +487,7 @@ public class FlsEmail extends Connect{
 
 			Multipart multipart = new MimeMultipart("related");
 
-			if(notificationType == notificationType.FLS_MAIL_ADD_LEAD){
+			if(notificationType == Notification_Type.FLS_MAIL_ADD_LEAD){
 				template = ve.getTemplate("templates/leadEmail.vm");
 			}else{
 				template = ve.getTemplate("templates/defaultEmail.vm");
