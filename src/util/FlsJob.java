@@ -41,7 +41,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
     public void leasetask(){
     	  
     	LOGGER.info("Inside Lease Task job");
-  		String lease_requser_id=null,lease_user_id=null,lease_expiry_date=null,term,date;
+  		String lease_requser_id=null,lease_user_id=null,lease_expiry_date=null,term,date, item_name=null;
   	    int user_credit=0,lease_item_id=0,days=0;
   	    Calendar gracePeroidCal = Calendar.getInstance();
   	    
@@ -59,9 +59,10 @@ public class FlsJob extends Connect implements org.quartz.Job {
 		GrantLeaseHandler GLH = new GrantLeaseHandler();
 		RenewLeaseHandler RLH = new RenewLeaseHandler();
 		LogCredit lc = new LogCredit();
+		Event event = new Event();
   	    
     	try {
-    		String getLeases =" SELECT tb1.lease_requser_id, tb1.lease_item_id, tb1.lease_user_id, tb1.lease_status, tb1.lease_expiry_date, tb2.user_credit FROM leases tb1 INNER JOIN users tb2 on tb1.lease_requser_id = tb2.user_id WHERE tb1.lease_status=? AND lease_expiry_date< ?";
+    		String getLeases =" SELECT tb1.lease_requser_id, tb1.lease_item_id, tb1.lease_user_id, tb1.lease_status, tb1.lease_expiry_date, tb2.user_credit, tb3.item_name, tb3.item_status FROM leases tb1 INNER JOIN users tb2 on tb1.lease_requser_id = tb2.user_id  INNER JOIN items tb3 ON tb1.lease_item_id = tb3.item_id WHERE tb1.lease_status=? AND tb1.lease_expiry_date< ?";
     		psgetLeases= hcp.prepareStatement(getLeases);
     		psgetLeases.setString(1, "Active");
     		psgetLeases.setString(2, futureDate);
@@ -77,14 +78,17 @@ public class FlsJob extends Connect implements org.quartz.Job {
     		LOGGER.info("Checking Resultset if query returned anything");
     		resultLeases.beforeFirst();
   			while (resultLeases.next()) {
+  				
   			LOGGER.info("Result Set not Empty..Getting data one by one");
   			lease_requser_id = resultLeases.getString("lease_requser_id");
   			lease_user_id = resultLeases.getString("lease_user_id");
+  			item_name = resultLeases.getString("item_name");
   			lease_item_id = resultLeases.getInt("lease_item_id");
   			lease_expiry_date = resultLeases.getString("lease_expiry_date");
   			user_credit = resultLeases.getInt("user_credit");
   			LOGGER.warning("Lease expiry date :"+lease_expiry_date);
   			
+  			if(resultLeases.getString("item_status")=="LeaseStarted"){
   			String lease_check=null;
   			lease_check = checkGracePeroid(lease_expiry_date);
   			switch (lease_check) {
@@ -100,7 +104,19 @@ public class FlsJob extends Connect implements org.quartz.Job {
   					LOGGER.warning("Method to check Grace Period returned invalid value please check");
   					break;
   				}	
-  			}
+  			}else if (resultLeases.getString("item_status")=="LeaseEnded"){
+				if(resultLeases.getString("delivery_plan")=="FLS_SELF"){
+					event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_ENDED_OWNER, lease_item_id, "Lease has ended.Please update pick up status of your item <a href=\"" + URL + "/myapp.html#/myleasedoutitems" + "\">" + item_name + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
+					event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_ENDED_REQUESTOR, lease_item_id, "Lease has ended. Please update pick up status of the item you leased <a href=\"" + URL + "/myapp.html#/myleasedinitems" + "\">" + item_name + "</a> ");
+				}
+			}else if(resultLeases.getString("item_status")=="LeaseReady"){
+				if(resultLeases.getString("delivery_plan")=="FLS_SELF"){
+					event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_READY_OWNER, lease_item_id, "Lease is ready .Please update pick up status of your item <a href=\"" + URL + "/myapp.html#/myleasedoutitems" + "\">" + item_name + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
+					event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_READY_REQUESTOR, lease_item_id, "Lease is ready. Please update pick up status of the item you leased <a href=\"" + URL + "/myapp.html#/myleasedinitems" + "\">" + item_name + "</a> ");
+				}
+			}
+  		 }
+  			
 		}catch (SQLException e) {
 			// TODO: handle exception
 			LOGGER.warning("SQL Exception Occured in Lease Task Method");
@@ -140,9 +156,10 @@ public class FlsJob extends Connect implements org.quartz.Job {
     	try {
     		
     		// fetching the uid
-			String sqlUid = "SELECT item_uid,item_name,item_primary_image_link FROM items WHERE item_id=?";
+			String sqlUid = "SELECT item_uid,item_name,item_primary_image_link FROM items WHERE item_id=? and item_status=?";
 			ps1 = hcp.prepareStatement(sqlUid);
 			ps1.setInt(1, lease_item_id);
+			ps1.setString(2, "LeaseStarted");
 			rs1 = ps1.executeQuery();
 			String uid = null;
 			String title = null;
@@ -150,7 +167,6 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				uid = rs1.getString("item_uid");
 				title = rs1.getString("item_name");
 				item_primary_image_link = rs1.getString("item_primary_image_link");
-			}
 			
     		hcp.setAutoCommit(false);
 			LOGGER.info("Grace Condition is false ...");
@@ -303,6 +319,9 @@ public class FlsJob extends Connect implements org.quartz.Job {
 			}
 		    
 			hcp.commit();
+    	}else{
+			LOGGER.warning("No item in lease Started State");
+    	}
     	}catch (SQLException e) {
   			// TODO: handle exception
   			LOGGER.warning("SQL Exception Occured in Expire Method");
