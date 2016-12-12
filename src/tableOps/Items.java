@@ -902,80 +902,67 @@ public class Items extends Connect {
 	}
 
 	private void DeletePosting() {
+		LOGGER.info("Inside delete posting method....");
+		
 		id = im.getId();
 		userId = im.getUserId();
-		String check2 = null;
-		String item_image_link=null;
-		LOGGER.info("Inside delete posting method....");
 
-		PreparedStatement stmt = null, stmt2 = null;
-		ResultSet rs = null;
 		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2;
+		
 		try {
-			LOGGER.info("Creating statement...");
-
-			// checking whether the input id is present in table
-			String sql2 = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
-			stmt2 = hcp.prepareStatement(sql2);
-			stmt2.setInt(1, id);
-			stmt2.setString(2, userId);
-			rs = stmt2.executeQuery();
-			while (rs.next()) {
-				check = rs.getInt("item_id");
-				check2 = rs.getString("item_status");
-				item_image_link = rs.getString("item_primary_image_link");
-				LOGGER.warning(check2);
-			}
-
-			if (check != 0) {
-
-				switch (check2) {
-
-				case "InStore":
-
-					String sql = "UPDATE `items` SET `item_status`='Archived' WHERE item_id = ? AND item_user_id = ?";
-					stmt = hcp.prepareStatement(sql);
-
-					// deletes entry from items table
-
-					LOGGER.info("Statement created. Executing delete posting query..." + check);
-					stmt.setInt(1, id);
-					stmt.setString(2, userId);
-					stmt.executeUpdate();
-					status = "Your posted item is deleted!!";
-					Id = String.valueOf(check);
-					message = status;
-					Code = 001;
-					res.setData(FLS_SUCCESS, Id, FLS_ITEMS_DELETE_POSTING);
-					
-					// logging item status to archived
-					LogItem li = new LogItem();
-					li.addItemLog(id, "Archived", "", item_image_link);
-					
-					// Updating credits
-					LogCredit lc = new LogCredit();
-					lc.addLogCredit(userId, -10, "Item Archived", "");
-					lc.subtractCredit(userId, 10);
-					
-					Event event = new Event();
-					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from frrndlease store.");
-					break;
-
-				case "Leased":
-					status = "Item is leased, close the lease first!!!";
-					Id = String.valueOf(check);
-					message = status;
-					Code = 215;
-					res.setData(FLS_ITEMS_DP_LEASED, Id, FLS_ITEMS_DP_LEASED_M);
-					break;
-
-				default:
-					status = "Item is niether posted nor leased!!!";
-					Id = String.valueOf(check);
-					message = status;
-					Code = 216;
-					res.setData(FLS_ITEMS_DP_DEFAULT, Id, FLS_ITEMS_DP_DEFAULT_M);
-					break;
+			// checking whether the item id is valid
+			String sqlCheckItem = "SELECT * FROM items WHERE item_id=? AND item_user_id=?";
+			ps1 = hcp.prepareStatement(sqlCheckItem);
+			ps1.setInt(1, id);
+			ps1.setString(2, userId);
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				switch(rs1.getString("item_status")){
+					case "OnHold":
+					case "InStore":
+						String sqlArchiveItem = "UPDATE `items` SET `item_status`='Archived' WHERE item_id = ? AND item_user_id = ?";
+						ps2 = hcp.prepareStatement(sqlArchiveItem);
+						ps2.setInt(1, id);
+						ps2.setString(2, userId);
+						rs2 = ps2.executeUpdate();
+						
+						if(rs2 == 1){
+							LOGGER.info("Item id: " + id + " has been archived!!");
+							res.setData(FLS_SUCCESS, Id, FLS_ITEMS_DELETE_POSTING);
+							
+							// logging item status to archived
+							LogItem li = new LogItem();
+							li.addItemLog(id, "Archived", "", rs1.getString("item_primary_image_link"));
+							
+							// Updating credits
+							LogCredit lc = new LogCredit();
+							lc.addLogCredit(userId, -10, "Item Archived", "");
+							lc.subtractCredit(userId, 10);
+							
+							Event event = new Event();
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from frrndlease store.");
+						}else{
+							LOGGER.info("Item: " + id + " has not been archived!!");
+							res.setData(FLS_ITEMS_DP_DEFAULT, Id, FLS_ITEMS_DP_DEFAULT_M);
+						}
+						
+						break;
+					case "LeaseReady":
+					case "PickedUpOut":
+					case "LeaseStarted":
+					case "LeaseEnded":
+					case "PickedUpIn":
+						LOGGER.info("This item id:" + id + " is leased so cannot archive it.");
+						res.setData(FLS_ITEMS_DP_LEASED, Id, FLS_ITEMS_DP_LEASED_M);
+						break;
+					default:
+						LOGGER.info("This item id:" + id + " is neither InStore or Leased");
+						res.setData(FLS_ITEMS_DP_DEFAULT, Id, FLS_ITEMS_DP_DEFAULT_M);
+						break;
 				}
 				
 				// Updating data for badges
@@ -994,12 +981,11 @@ public class Items extends Connect {
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 		} finally{
 			try {
-				rs.close();
-				stmt.close();
-				stmt2.close();
-				hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				if(rs1 != null) rs1.close();
+				if(ps2 != null) ps2.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

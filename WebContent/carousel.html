@@ -73,6 +73,7 @@
                                                     </a>
                                                     <p class="category">
                                                         <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br ng-if="item.status == 'OnHold'">
+                                                        <span class="label label-primary label-fill" ng-if="item.status != 'OnHold' && item.status != 'InStore'" style="text-align:center;">{{item.status}}</span>
                                                     </p>
                                                     <p class="category">
                                                         <label ng-if="item.sublocality != '' || item.locality != ''">

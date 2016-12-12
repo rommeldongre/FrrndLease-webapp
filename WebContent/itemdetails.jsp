@@ -35,6 +35,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/gsdk.css" rel="stylesheet" />
     <link href="css/mystore.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 
     <!--Loading Animation code CSS & JS Links  -->
