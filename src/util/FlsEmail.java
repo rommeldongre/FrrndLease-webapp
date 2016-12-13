@@ -45,7 +45,7 @@ public class FlsEmail extends Connect{
 		String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
 		
 		String FROM = "BlueMarble@frrndlease.com", CC = "BlueMarble@frrndlease.com", TO, PREFIX, SUBJECT, BODY;
-		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;
+		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_LEASED_OUT_ITEMS, EMAIL_LEASED_IN_ITEMS, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;
 		
 		int credits;
 		
@@ -53,6 +53,8 @@ public class FlsEmail extends Connect{
 		EMAIL_INVITATION_URL = URL + "/index.html?ref_token=";
 		EMAIL_FORGOT_PASSWORD = URL + "/forgotpassword.html";
 		EMAIL_ITEM_DETAILS = URL + "/ItemDetails?uid=";
+		EMAIL_LEASED_OUT_ITEMS = URL + "/myapp.html#/myleasedoutitems";
+		EMAIL_LEASED_IN_ITEMS = URL + "/myapp.html#/myleasedinitems";
 		EMAIL_PICKUP_CONFIRMATION = URL + "/confirmpickup.html";
 		EMAIL_DELIVERY_PLAN = URL + "/deliveryplan.html";
 		EMAIL_GET_LEASE_AGGREMENT = URL + "/GetLeaseAgreement";
@@ -365,12 +367,32 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_GRACE_PERIOD_OWNER:
 				SUBJECT = (" Reminder to close lease to user [" + obj.getString("fromUserName") + "]");
-				BODY = "There are less than 5 days for your lease to close. If you want the item back, please close the lease. It will auto-renew if the requestor has credits for it, and you do not need to do anything for the item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.";
+				BODY = "There are less than 5 days for your lease to close. If you want the item back, please close the lease. It will auto-renew if the requestor has credits for it, and you do not need to do anything for the item <a href='" + EMAIL_LEASED_OUT_ITEMS + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.";
 				break;
-
+				
 			case FLS_MAIL_GRACE_PERIOD_REQUESTOR:
 				SUBJECT = (" Reminder to close lease");
-				BODY = "There are less than 5 days for your lease to close. It will auto-renew if you have enough credits and you do not need to do anything. If you want to return the item, please close the lease for item <a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'>" + obj.getString("title") + "</a> ";
+				BODY = "There are less than 5 days for your lease to close. It will auto-renew if you have enough credits and you do not need to do anything. If you want to return the item, please close the lease for item <a href='" + EMAIL_LEASED_IN_ITEMS + "'>" + obj.getString("title") + "</a> ";
+				break;
+				
+			case FLS_MAIL_LEASE_ENDED_OWNER:
+				SUBJECT = (" Reminder to update status of lease given to user [" + obj.getString("fromUserName") + "]");
+				BODY = "Lease for your item has ended. Please update lease status for the item <a href='" + EMAIL_LEASED_OUT_ITEMS + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.";
+				break;
+				
+			case FLS_MAIL_LEASE_ENDED_REQUESTOR:
+				SUBJECT = (" Reminder to update lease status");
+				BODY = "Lease for an item you leased has ended. Please update lease status for item <a href='" + EMAIL_LEASED_IN_ITEMS + "'>" + obj.getString("title") + "</a> ";
+				break;
+				
+			case FLS_MAIL_LEASE_READY_OWNER:
+				SUBJECT = (" Reminder to update status of lease given to user [" + obj.getString("fromUserName") + "]");
+				BODY = "Lease for your item has started. Please update lease status for the item <a href='" + EMAIL_LEASED_OUT_ITEMS + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.";
+				break;
+				
+			case FLS_MAIL_LEASE_READY_REQUESTOR:
+				SUBJECT = (" Reminder to update lease status");
+				BODY = "Lease for an item you requested has started. Please update lease status for item <a href='" + EMAIL_LEASED_IN_ITEMS + "'>" + obj.getString("title") + "</a> ";
 				break;
 				
 			case FLS_MAIL_RENEW_LEASE_OWNER:

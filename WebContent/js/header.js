@@ -11,6 +11,7 @@ headerApp.controller('headerCtrl', ['$scope',
 									'loginSignupService',
                                     'logoutService',
                                     'modalService',
+									'eventsCount',
 									function($scope, 
 									$timeout, 
 									userFactory, 
@@ -21,7 +22,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									statsFactory, 
 									loginSignupService,
                                     logoutService,
-                                    modalService){
+                                    modalService,
+									eventsCount){
     
     // sign up starts here
     
@@ -528,6 +530,30 @@ headerApp.controller('headerCtrl', ['$scope',
         });
         
     });
+	
+	$scope.importfb = function(){
+		
+		FB.login(function(response) {
+				
+				var ref_code = localStorage.getItem("userReferralCode");
+				// handle the response
+				
+				// check whether user is logged in or not and ask for credentials if not.
+
+				// send message to facebook friends using send request dialog
+				FB.ui({
+					method: 'send',
+					link: 'http://www.frrndlease.com/index.html?ref_token='+ref_code,
+				},function(response){
+					if (response && !response.error) {
+						//check 'response' to see if call was successful
+						modalService.showModal({}, {bodyText: "Success, Message to Facebook Friend(s) sent" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+							eventsCount.updateEventsCount();
+						}, function(){});
+					}
+				});
+            }, {scope: 'email,public_profile,user_friends'});
+	}
     
 }]);
 
@@ -1059,7 +1085,7 @@ headerApp.directive('popover', function(){
 
 headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
     
-    var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
+    var email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     var mobile = /^[789]\d{9}$/;
     
     // Form login
@@ -1164,7 +1190,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
         
         $scope.error = "";
         
-        var email = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
+        var email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         var mobile = /^[789]\d{9}$/;
         
         if(email.test($scope.userId)){
