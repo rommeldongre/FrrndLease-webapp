@@ -35,8 +35,10 @@
                     
                     <!-- Dropdown starts here -->
                     <ul class="nav navbar-nav navbar-right">
-
-                        <li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Login');" href="" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+						
+						<li ng-if="isAnonymous()"><a id="headerlikeoptions" onclick="ga('send', 'event', 'index', 'click', 'Like');" href="" ><div class="fb-like" data-href="https://www.facebook.com/frrndlease/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
+                        
+						<li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Login');" href="" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
 
                         <li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Signup');" href="" data-toggle="modal" data-target="#registerModal"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
 
@@ -50,6 +52,7 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+								<li><a href="" ng-click="importfb()"><i class="glyphicon glyphicon-thumbs-up"></i><b> Refer Friends </b></a></li>
                                 <li><a href="myapp.html#/mypostings"><i class="glyphicon glyphicon-phone"></i> MyPostings </a></li>
                                 <li><a href="myapp.html#/mywishlists"><i class="glyphicon glyphicon-heart-empty"></i> MyWishList </a></li>
                                 <li><a href="myapp.html#/myincomingrequests"><i class="glyphicon glyphicon-inbox"></i> MyIncomingRequests </a></li>
