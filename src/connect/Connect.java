@@ -92,4 +92,14 @@ public class Connect extends ErrorCat {
     	return HikariDS;
     }
     
+    public void closeHikariConnection(){
+    	if(HikariDS!=null){
+    		HikariDS.close();
+        	System.out.println("Closing Hikari Connection in Connect Class....");
+    	}else{
+    		System.out.println("Hikari Datasource is null...");
+    	}
+    	
+    }
+    
 }

@@ -14,7 +14,9 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
-public class FlsServletContextListener implements ServletContextListener {
+import connect.Connect;
+
+public class FlsServletContextListener extends Connect implements ServletContextListener {
 
 	 private Scheduler scheduler;
 	 
@@ -22,7 +24,8 @@ public class FlsServletContextListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// Notification that the servlet context is about to be shut down.
 		try {
-			scheduler.shutdown(true);	
+			scheduler.shutdown(true);
+			closeHikariConnection();
 		} catch (SchedulerException e) {
 			// TODO: handle exception
 		}
