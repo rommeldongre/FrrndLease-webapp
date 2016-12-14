@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class GetUserBadgesResObj extends ResObj {
 
-	int code, userItems, userLeases, responseTime, responseCount;
+	int code, userItems, userLeases, responseTime, responseCount, userCredit;
 	String message, userSignupDate, userStatus;
 	boolean userVeifiedFlag;
 
@@ -48,6 +48,14 @@ public class GetUserBadgesResObj extends ResObj {
 
 	public void setResponseCount(int responseCount) {
 		this.responseCount = responseCount;
+	}
+
+	public int getUserCredit() {
+		return userCredit;
+	}
+
+	public void setUserCredit(int userCredit) {
+		this.userCredit = userCredit;
 	}
 
 	public String getMessage() {
