@@ -16,17 +16,16 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import connect.Connect;
 
-public class FlsServletContextListener implements ServletContextListener {
+public class FlsServletContextListener extends Connect implements ServletContextListener {
 
 	 private Scheduler scheduler;
-	 Connect conn = new Connect();
 	 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// Notification that the servlet context is about to be shut down.
 		try {
 			scheduler.shutdown(true);
-			conn.closeHikariConnection();
+			closeHikariConnection();
 		} catch (SchedulerException e) {
 			// TODO: handle exception
 		}
