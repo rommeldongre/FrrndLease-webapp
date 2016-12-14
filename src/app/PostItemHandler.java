@@ -115,7 +115,7 @@ public class PostItemHandler extends Connect implements AppHandler {
 			LOGGER.info("Item created with item id : " + itemId);
 			
 			String uidTitle = rq.getTitle();
-			uidTitle = uidTitle.substring(0, Math.min(uidTitle.length(), 10));
+			uidTitle = uidTitle.substring(0, Math.min(uidTitle.length(), 50));
 			
 			uid = uidTitle+ " " + itemId;
 			uid = uid.replaceAll("[^A-Za-z0-9]+", "-").toLowerCase();

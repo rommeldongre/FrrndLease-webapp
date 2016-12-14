@@ -1029,13 +1029,16 @@ headerApp.directive('userBadges', function(){
                     <div style="margin:5px;">\
                         <div style="text-align:center;display:inline-flex;">\
                             <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Number of Items Posted by this User" popover>\
-                                <span style="font-size:22px;"><strong>{{badge.userItems}}</strong></span> <span class="text-gray" style="font-size:8px;">Posted Items</span>\
+                                <span style="font-size:22px;"><strong>{{badge.userItems}}</strong></span> <span class="text-gray"><i class="fa fa-cubes" aria-hidden="true"></i></span>\
                             </span>\
                             <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Number of Leases this User has got and also has given out" popover>\
-                                <span style="font-size:22px;"><strong>{{badge.userLeases}}</strong></span> <span class="text-gray" style="font-size:8px;">Leases</span>\
+                                <span style="font-size:22px;"><strong>{{badge.userLeases}}</strong></span> <span class="text-gray"><i class="fa fa-file-text-o" aria-hidden="true"></i></span>\
                             </span>\
                             <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Average number of Days this user takes to respond to a request" popover>\
-                                <span style="font-size:22px;"><strong>{{(badge.responseTime==0) ? \'NA\' : (badge.responseTime/badge.responseCount | number:0)}} </strong></span> <span class="text-gray" style="font-size:8px;">days, Response Time</span>\
+                                <span style="font-size:22px;"><strong>{{(badge.responseTime==0) ? \'NA\' : (badge.responseTime/badge.responseCount | number:0)}} </strong></span> <span class="text-gray"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></span>\
+                            </span>\
+                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Total credits owned by this user" popover>\
+                                <span style="font-size:22px;"><strong>{{badge.userCredit}} </strong></span> <span class="text-gray"><i class="fa fa-diamond"></i></li></span>\
                             </span>\
                         </div>\
                     </div>\

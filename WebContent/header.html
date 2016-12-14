@@ -38,9 +38,9 @@
 						
 						<li ng-if="isAnonymous()"><a id="headerlikeoptions" onclick="ga('send', 'event', 'index', 'click', 'Like');" href="" ><div class="fb-like" data-href="https://www.facebook.com/frrndlease/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
                         
-						<li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Login');" href="" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+						<li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Login');" href="" data-toggle="modal" data-target="#loginModal"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
 
-                        <li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Signup');" href="" data-toggle="modal" data-target="#registerModal"><span class="glyphicon glyphicon-user"></span> Signup</a></li>
+                        <li ng-if="isAnonymous()"><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Signup');" href="" data-toggle="modal" data-target="#registerModal"><i class="fa fa-user-plus" aria-hidden="true"></i> Signup</a></li>
 
                         <li ng-if="isLoggedIn()" class="btn btn-simple btn-tooltip" data-toggle="tooltip" data-placement="bottom" title="See Notifications" style="font-size:16px;{{(head.unread == 0) ? '' : 'color:black;'}}" ng-click="openNotifications()" tooltip><strong ng-if="head.unread!=0">{{head.unread + " "}}</strong><i class="fa fa-bell"></i></li>
                         
@@ -52,16 +52,16 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-								<li><a href="" ng-click="importfb()"><i class="glyphicon glyphicon-thumbs-up"></i><b> Refer Friends </b></a></li>
-                                <li><a href="myapp.html#/mypostings"><i class="glyphicon glyphicon-phone"></i> MyPostings </a></li>
-                                <li><a href="myapp.html#/mywishlists"><i class="glyphicon glyphicon-heart-empty"></i> MyWishList </a></li>
-                                <li><a href="myapp.html#/myincomingrequests"><i class="glyphicon glyphicon-inbox"></i> MyIncomingRequests </a></li>
-                                <li><a href="myapp.html#/myoutgoingrequests"><i class="glyphicon glyphicon-road"></i> MyOutgoingRequests </a></li>
-                                <li><a href="myapp.html#/myleasedoutitems"><i class="glyphicon glyphicon-gift"></i> MyLeasedOutItems </a></li>
-                                <li><a href="myapp.html#/myleasedinitems"><i class="glyphicon glyphicon-shopping-cart"></i> MyLeasedInItems </a></li>
-                                <li><a href="myapp.html#/myfriendslist"><i class="glyphicon glyphicon-user"></i> MyFriends </a></li>
-                                <li><a href="myapp.html#/myprofile"><i class="glyphicon glyphicon-list-alt"></i> MyProfile </a></li>
-                                <li ng-click="logout()"><a href="#"><i class="glyphicon glyphicon-log-out"></i> Logout </a></li>
+								<li><a href="" ng-click="importfb()"><i class="fa fa-facebook" aria-hidden="true"></i><b> Refer Friends </b></a></li><hr style="margin:0px;"/>
+                                <li><a href="myapp.html#/mywishlists"><i class="fa fa-heart" aria-hidden="true"></i> MyWishList </a></li>
+                                <li><a href="myapp.html#/mypostings"><i class="fa fa-cubes" aria-hidden="true"></i> MyPostings </a></li>
+                                <li><a href="myapp.html#/myprofile"><i class="fa fa-user" aria-hidden="true"></i> MyProfile </a></li>
+                                <li><a href="myapp.html#/myfriendslist"><i class="fa fa-users" aria-hidden="true"></i> MyFriends </a></li>
+                                <li><a href="myapp.html#/myincomingrequests"><i class="fa fa-hand-paper-o" aria-hidden="true"></i><i class="fa fa-long-arrow-down" aria-hidden="true"></i> MyIncomingRequests </a></li>
+                                <li><a href="myapp.html#/myoutgoingrequests"><i class="fa fa-hand-paper-o" aria-hidden="true"></i><i class="fa fa-long-arrow-up" aria-hidden="true"></i> MyOutgoingRequests </a></li>
+                                <li><a href="myapp.html#/myleasedinitems"><i class="fa fa-file-text-o" aria-hidden="true"></i><i class="fa fa-long-arrow-down" aria-hidden="true"></i> MyLeasedInItems </a></li>
+                                <li><a href="myapp.html#/myleasedoutitems"><i class="fa fa-file-text-o" aria-hidden="true"></i><i class="fa fa-long-arrow-up" aria-hidden="true"></i> MyLeasedOutItems </a></li>
+                                <li ng-click="logout()"><a href="#"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a></li>
                             </ul>
                         </li>
 
