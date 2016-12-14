@@ -191,6 +191,7 @@ public class FlsS3Bucket extends Connect {
 				
 				if (imageFile != null) {
 					s3Client.putObject(new PutObjectRequest(BUCKET_NAME, PATH_NAME + FILE_NAME, imageFile).withCannedAcl(CannedAccessControlList.PublicRead));
+					imageFile.delete();
 					return BASE_URL + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				}
 				
