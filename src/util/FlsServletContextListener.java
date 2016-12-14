@@ -14,15 +14,19 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 
+import connect.Connect;
+
 public class FlsServletContextListener implements ServletContextListener {
 
 	 private Scheduler scheduler;
+	 Connect conn = new Connect();
 	 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// Notification that the servlet context is about to be shut down.
 		try {
-			scheduler.shutdown(true);	
+			scheduler.shutdown(true);
+			conn.closeHikariConnection();
 		} catch (SchedulerException e) {
 			// TODO: handle exception
 		}
@@ -103,7 +107,7 @@ public class FlsServletContextListener implements ServletContextListener {
 	  		JobDetail weeklyJob = newJob(FlsWeeklyJob.class).withIdentity(weeklyJobKey).build();
 	  		// A trigger for delete job
 	  		Trigger weeklyTrigger = newTrigger().withIdentity("FlsWeeklyTrigger", "FlsWeeklyGroup")
-	  				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 11 ? * SAT *"))
+	  				.withSchedule(CronScheduleBuilder.cronSchedule("0 11 12 ? * WED *"))
 	  				.build();
 	  		// scheduling the delete job
 	  		scheduler.scheduleJob(weeklyJob, weeklyTrigger);

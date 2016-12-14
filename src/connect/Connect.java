@@ -92,4 +92,8 @@ public class Connect extends ErrorCat {
     	return HikariDS;
     }
     
+    public void closeHikariConnection(){
+    	HikariDS.close();
+    }
+    
 }
