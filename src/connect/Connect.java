@@ -3,8 +3,6 @@ package connect;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import org.h2.jdbcx.JdbcDataSource;
-
 import javax.sql.DataSource;
 
 import java.sql.Connection;

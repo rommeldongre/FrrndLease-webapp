@@ -1332,3 +1332,27 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 //    
 //    getLocation();
 }]);
+
+headerApp.controller('paymentModalCtrl', ['$scope', function($scope){
+    
+    $scope.payment = {
+        credit: 0,
+        conversion: 10,
+        amount: 0,
+        promoCode: '',
+        discount: 0
+    };
+    
+    $scope.$watch('payment.credit', function(){
+        $scope.payment.amount = $scope.payment.credit * $scope.payment.conversion;
+    });
+    
+    $scope.$watch('payment.promoCode', function(){
+        if($scope.payment.promoCode == 'xyz'){
+            $scope.payment.discount = 100;
+        }else{
+            $scope.payment.discount = 0;
+        }
+    });
+    
+}]);
