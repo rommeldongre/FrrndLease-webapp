@@ -1839,6 +1839,9 @@ public class FlsConfig extends Connect{
 					// Update the existing promo codes
 					String sqlUpdatePromoCode = "UPDATE `promo_credits` SET `expiry`=null,`code_type`='FLS_INTERNAL'";
 					
+					// Update the credit_log date to make date column default value to be current_timestamp
+					String sqlUpdateDateOrCreditLog = "ALTER TABLE `credit_log` CHANGE `credit_date` `credit_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP;";
+					
 					try {
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlCountColumns);
@@ -1852,6 +1855,10 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps3 = connection.prepareStatement(sqlUpdatePromoCode);
 						ps3.executeUpdate();
 						ps3.close();
+						
+						PreparedStatement ps4 = connection.prepareStatement(sqlUpdateDateOrCreditLog);
+						ps4.executeUpdate();
+						ps4.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 						System.out.println(e.getStackTrace());
