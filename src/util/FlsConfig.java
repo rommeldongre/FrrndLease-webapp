@@ -17,7 +17,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2049;
+	public final int appBuild = 2050;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1824,6 +1824,50 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2049;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds count column in promo_credits table and amount per credit rate in config table
+				if (dbBuild < 2050) {
+					
+					// New columns in promo_credits table
+					String sqlCountColumns = "ALTER TABLE `promo_credits` ADD `count` INT(255) NULL DEFAULT NULL AFTER `expiry`, ADD `per_person_count` INT(255) NULL DEFAULT NULL AFTER `count`, ADD `code_type` ENUM('FLS_INTERNAL','FLS_EXTERNAL') NOT NULL DEFAULT 'FLS_EXTERNAL' AFTER `per_person_count`";
+					
+					// Add new conversion amount entry in config table
+					String sqlGetCreditConversion = "INSERT INTO `config` (`option`, `value`) VALUES ('credit_amount', '10')";
+					
+					// Update the existing promo codes
+					String sqlUpdatePromoCode = "UPDATE `promo_credits` SET `expiry`=null,`code_type`='FLS_INTERNAL'";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCountColumns);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlGetCreditConversion);
+						ps2.executeUpdate();
+						ps2.close();
+						
+						PreparedStatement ps3 = connection.prepareStatement(sqlUpdatePromoCode);
+						ps3.executeUpdate();
+						ps3.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2050;
 					updateDBBuild(dbBuild);
 				}
 				
