@@ -12,9 +12,10 @@ import pojos.AddPromoCreditsReqObj;
 import pojos.AddPromoCreditsResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
+import util.FlsCredit;
 import util.FlsLogger;
-import util.LogCredit;
 import util.OAuth;
+import util.FlsCredit.Credit;
 
 public class AddPromoCreditsHandler extends Connect implements AppHandler {
 
@@ -32,19 +33,16 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
-		// TODO Auto-generated method stub
 
 		AddPromoCreditsReqObj rq = (AddPromoCreditsReqObj) req;
 		AddPromoCreditsResObj rs = new AddPromoCreditsResObj();
 		Connection hcp = getConnectionFromPool();
 
-		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null;
+		PreparedStatement ps1 = null, ps3 = null, ps4 = null;
 		ResultSet result1 = null, result3 = null, result4 = null;
 
 		LOGGER.info("Inside Process Method " + rq.getUserId());
@@ -95,11 +93,17 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 							rs.setMessage("This promo can be used only once");
 						}
 					}else{
-						String sql2 = "UPDATE users SET user_credit=user_credit+? WHERE user_id=?";
-						ps2 = hcp.prepareStatement(sql2);
-						ps2.setInt(1, credit);
-						ps2.setString(2, userId);
-						ps2.executeUpdate();
+
+						String msg = "Applied Promo Code - " + rq.getPromoCode();
+						
+						if(promoCode.equals("shared@10")){
+							msg = "Shared on facebook";
+						}else if(promoCode.equals("invited@10")){
+							msg = "Invited friends on facebook";
+						}
+						
+						FlsCredit credits = new FlsCredit();
+						credits.logCredit(userId, credit, msg, "", Credit.ADD);
 						
 						String sql3 = "SELECT user_credit FROM users WHERE user_id=?";
 						ps3 = hcp.prepareStatement(sql3);
@@ -112,17 +116,7 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 						
 						rs.setCode(FLS_SUCCESS);
 						rs.setMessage(credit + " credits has been added to your frrndlease account.");
-
-						String msg = "Applied Promo Code - " + rq.getPromoCode();
 						
-						if(promoCode.equals("shared@10")){
-							msg = "Shared on facebook";
-						}else if(promoCode.equals("invited@10")){
-							msg = "Invited friends on facebook";
-						}
-						
-						LogCredit lc = new LogCredit();
-						lc.addLogCredit(userId, result1.getInt("credit"), msg, promoCode);
 					}
 					
 				}
@@ -141,7 +135,6 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 			if(ps4 != null) ps4.close();
 			if(ps3 != null) ps3.close();
 			if(result3 != null) result3.close();
-			if(ps2 != null) ps2.close();
 			if (result1 != null) result1.close();
 			if (ps1 != null) ps1.close();
 			if (hcp != null) hcp.close();
@@ -153,8 +146,6 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 
 	@Override
 	public void cleanup() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private boolean expired(Date expiry) {
@@ -162,7 +153,6 @@ public class AddPromoCreditsHandler extends Connect implements AppHandler {
 		int result = 0;
 		
 		try{
-			
 			Date current = new Date();
 			current.setTime(0);
 			result = current.compareTo(expiry);

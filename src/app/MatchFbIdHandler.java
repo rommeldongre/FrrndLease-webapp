@@ -1,37 +1,21 @@
 package app;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
-
-import com.mysql.jdbc.MysqlErrorNumbers;
 
 import connect.Connect;
 import pojos.MatchFbIdReqObj;
 import pojos.MatchFbIdResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
-import util.Event;
-import util.Event.Event_Type;
-import util.Event.Notification_Type;
-import util.FlsConfig;
 import util.FlsLogger;
-import util.LogCredit;
-import util.LogItem;
 import util.OAuth;
 
 public class MatchFbIdHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(MatchFbIdHandler.class.getName());
-
-	private String URL = FlsConfig.prefixUrl;
 	
 	private static MatchFbIdHandler instance = null;
 

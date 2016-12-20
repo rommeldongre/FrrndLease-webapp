@@ -20,9 +20,10 @@ import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.Event.User_Notification;
+import util.FlsCredit.Credit;
+import util.FlsCredit;
 import util.FlsLogger;
 import util.FlsPlan;
-import util.LogCredit;
 import util.OAuth;
 import util.ReferralCode;
 
@@ -346,7 +347,7 @@ public class Users extends Connect {
 			stmt.setString(6, auth);
 			stmt.setString(7, activation+"_u");
 			stmt.setString(8, status);
-			stmt.setInt(9, 10);
+			stmt.setInt(9, 0);
 			stmt.setFloat(10, lat);
 			stmt.setFloat(11, lng);
 			stmt.setString(12, address);
@@ -364,12 +365,8 @@ public class Users extends Connect {
 			Code = 37;
 			Id = generated_ref_code;
 			
-			LogCredit lc = new LogCredit();
-			lc.addLogCredit(userId,10,"SignUp","");
-			
-			if(!(status.equals("email_pending") && status.equals("mobile_pending"))){
-				lc.updateCredits(generated_ref_code,referrer_code);
-			}
+			FlsCredit credits = new FlsCredit();
+			credits.logCredit(userId, 10, "Signed Up", "", Credit.ADD);
 			
 			String sqlChangeFriendStatus = "UPDATE friends SET friend_id=?, friend_status=? , friend_full_name=? WHERE friend_id=?";
 			stmt3 = hcp.prepareStatement(sqlChangeFriendStatus);

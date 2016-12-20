@@ -14,15 +14,15 @@ import pojos.RenewLeaseReqObj;
 import pojos.RenewLeaseResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
-import app.GrantLeaseHandler;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsCredit.Credit;
 import util.FlsConfig;
+import util.FlsCredit;
 import util.FlsLogger;
 import util.FlsPlan;
 import util.FlsPlan.Delivery_Plan;
-import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
 
@@ -209,10 +209,9 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 
 	private boolean renewLease(RenewLeaseReqObj rq, RenewLeaseResObj rs) throws SQLException {
 		
-		PreparedStatement psRenewSelect = null,psRenewUpdate = null, psUpdateLeaseStatus = null, psAddCredit = null, psDebitCredit = null, ps1 = null;
+		PreparedStatement psRenewSelect = null,psRenewUpdate = null, psUpdateLeaseStatus = null, ps1 = null;
 		ResultSet result1 = null, rs1 = null;
 		Connection hcp = getConnectionFromPool();
-		int addCredit = 0, subCredit = 0;
 		
 		Calendar cal = new GregorianCalendar();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -310,52 +309,22 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 					hcp.rollback();
 					return false;
 				}
-				
-				// add credit to user giving item on lease
-				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
-				psAddCredit = hcp.prepareStatement(sqlAddCredit);
-				psAddCredit.setString(1, rq.getUserId());
-				addCredit = psAddCredit.executeUpdate();
-				
-				if(addCredit == 0){
-					System.out.println("Error occured while firing 1st update credit query on 5th table(users)");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					return false;
-				}
-				LOGGER.info("Add Credit query executed successfully...");
-				
-				LogCredit lc = new LogCredit();
-				lc.addLogCredit(rq.getUserId(),10,"Lease Renewed","");
-				
-				// subtract credit from user getting a lease
-				   String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
-				psDebitCredit = hcp.prepareStatement(sqlSubCredit);
-				psDebitCredit.setString(1, rq.getReqUserId());
-				subCredit = psDebitCredit.executeUpdate();
 
-				if(subCredit == 0){
-					System.out.println("Error occured while firing 2nd update credit query on 5th table(users)");
-					rs.setCode(FLS_ENTRY_NOT_FOUND);
-					rs.setError("500");
-					rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
-					hcp.rollback();
-					return false;
-				}
-				lc.addLogCredit(rq.getReqUserId(),-10,"Lease Renewed","");
-				
-				// logging item status to renewed
-				LogItem li = new LogItem();
-				li.addItemLog(rq.getItemId(), "Lease Renewed", "", "");
-				
-				LOGGER.info("Debit Credit query executed successfully...");
 				rs.setCode(FLS_SUCCESS);
 				rs.setId(rq.getReqUserId());
 				rs.setMessage(FLS_RENEW_LEASE);
 				LOGGER.info("renew Lease query executed successfully...");
 				hcp.commit();
+				
+				FlsCredit credits = new FlsCredit();
+				// add credit to user giving item on lease
+				credits.logCredit(rq.getUserId(), 10, "Lease Renewed", "", Credit.ADD);
+				// subtract credit from user getting a lease
+				credits.logCredit(rq.getReqUserId(), 10, "Lease Renewed", "", Credit.SUB);
+				
+				// logging item status to renewed
+				LogItem li = new LogItem();
+				li.addItemLog(rq.getItemId(), "Lease Renewed", "", "");
 				
 				try {
 					// fetching the uid
@@ -388,9 +357,7 @@ public class RenewLeaseHandler extends Connect implements AppHandler {
 				if(ps1 != null)ps1.close();
 				if(result1 != null)result1.close();
 				if(psRenewSelect != null)psRenewSelect.close();
-				if(psRenewUpdate!=null) psRenewUpdate.close();	
-				if(psAddCredit!=null) psAddCredit.close();
-				if(psDebitCredit!=null) psDebitCredit.close();
+				if(psRenewUpdate!=null) psRenewUpdate.close();
 				if(hcp != null)hcp.close();
 			} catch (Exception e2) {
 				// TODO: handle exception
