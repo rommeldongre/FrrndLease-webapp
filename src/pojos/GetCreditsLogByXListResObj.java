@@ -3,7 +3,7 @@ package pojos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetEngagementsByUserListResObj extends ResObj{
+public class GetCreditsLogByXListResObj extends ResObj{
 	
 	// Return code for GetRequestsByUser
 	int code,lastEngagementId;
@@ -11,7 +11,7 @@ public class GetEngagementsByUserListResObj extends ResObj{
 	// Error String
 	String message;
 	
-	List<GetEngagementsByUserResObj> resList = new ArrayList<>();
+	List<GetCreditsLogByXResObj> resList = new ArrayList<>();
 
 	public int getLastEngagementId() {
 		return lastEngagementId;
@@ -37,15 +37,15 @@ public class GetEngagementsByUserListResObj extends ResObj{
 		this.message = message;
 	}
 
-	public List<GetEngagementsByUserResObj> getResList() {
+	public List<GetCreditsLogByXResObj> getResList() {
 		return resList;
 	}
 
-	public void setResList(List<GetEngagementsByUserResObj> resList) {
+	public void setResList(List<GetCreditsLogByXResObj> resList) {
 		this.resList = resList;
 	}
 
-	public void addResList(GetEngagementsByUserResObj res) {
+	public void addResList(GetCreditsLogByXResObj res) {
 		this.resList.add(res);
 	}
 }

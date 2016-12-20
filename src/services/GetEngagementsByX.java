@@ -14,21 +14,21 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
-import pojos.GetEngagementsByDateListResObj;
-import pojos.GetEngagementsByDateReqObj;
-import pojos.GetEngagementsByDateResObj;
+import pojos.GetEngagementsByXListResObj;
+import pojos.GetEngagementsByXReqObj;
+import pojos.GetEngagementsByXResObj;
 import util.FlsLogger;
-import app.GetEngagementsByDateHandler;
+import app.GetEngagementsByXHandler;
 import app.NotImplementedException;
 
 
 /**
- * Servlet implementation class GetEngagementsByDate
+ * Servlet implementation class GetEngagementsByX
  */
-@WebServlet(description = "Get Engagements between 2 dates", urlPatterns = { "/GetEngagementsByDate" })
-public class GetEngagementsByDate extends HttpServlet {
+@WebServlet(description = "Get Engagements between 2 dates", urlPatterns = { "/GetEngagementsByX" })
+public class GetEngagementsByX extends HttpServlet {
 	
-	private FlsLogger LOGGER = new FlsLogger(GetEngagementsByDate.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(GetEngagementsByX.class.getName());
 	
 	private static final long serialVersionUID = 1L;
 	/**
@@ -39,15 +39,15 @@ public class GetEngagementsByDate extends HttpServlet {
 			LOGGER.info("Inside POST method");
 			//HTTP request to Service request pojo 
 			ObjectMapper mapper = new ObjectMapper();
-			GetEngagementsByDateReqObj request = mapper.readValue(httprequest.getInputStream(), GetEngagementsByDateReqObj.class);
+			GetEngagementsByXReqObj request = mapper.readValue(httprequest.getInputStream(), GetEngagementsByXReqObj.class);
 			httpresponse.setContentType("application/json");
 			
 			// application logic comes here --------		
-			GetEngagementsByDateListResObj Response = null;
+			GetEngagementsByXListResObj Response = null;
 		
 			try {
 				//App handler to process request and create Service response pojo
-				Response = (GetEngagementsByDateListResObj) GetEngagementsByDateHandler.getInstance().process(request);
+				Response = (GetEngagementsByXListResObj) GetEngagementsByXHandler.getInstance().process(request);
 				
 				//Service response pojo to JSON
 				PrintWriter out = httpresponse.getWriter();
@@ -58,8 +58,8 @@ public class GetEngagementsByDate extends HttpServlet {
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
-				LOGGER.warning("GetEngagementsByDate process method not implemented");
-				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetEngagementsByDate process method not implemented");
+				LOGGER.warning("GetEngagementsByX process method not implemented");
+				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetEngagementsByX process method not implemented");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -1,6 +1,6 @@
 package pojos;
 
-public class GetEngagementsByDateResObj extends ResObj{
+public class GetEngagementsByXResObj extends ResObj{
 	
 	int totalCredits;
 	String startDate,endDate;

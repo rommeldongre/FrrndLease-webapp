@@ -11,22 +11,22 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import connect.Connect;
-import pojos.GetEngagementsByUserListResObj;
-import pojos.GetEngagementsByUserReqObj;
-import pojos.GetEngagementsByUserResObj;
+import pojos.GetCreditsLogByXListResObj;
+import pojos.GetCreditsLogByXReqObj;
+import pojos.GetCreditsLogByXResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 
-public class GetEngagementsByUserHandler extends Connect implements AppHandler {
+public class GetCreditsLogByXHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(GetEngagementsByUserHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(GetCreditsLogByXHandler.class.getName());
 
-	private static GetEngagementsByUserHandler instance = null;
+	private static GetCreditsLogByXHandler instance = null;
 
-	public static GetEngagementsByUserHandler getInstance() {
+	public static GetCreditsLogByXHandler getInstance() {
 		if (instance == null)
-			instance = new GetEngagementsByUserHandler();
+			instance = new GetCreditsLogByXHandler();
 		return instance;
 	}
 
@@ -39,16 +39,16 @@ public class GetEngagementsByUserHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 		// TODO Auto-generated method stub
-		GetEngagementsByUserReqObj rq = (GetEngagementsByUserReqObj) req;
+		GetCreditsLogByXReqObj rq = (GetCreditsLogByXReqObj) req;
 
-		GetEngagementsByUserListResObj rs = new GetEngagementsByUserListResObj();
+		GetCreditsLogByXListResObj rs = new GetCreditsLogByXListResObj();
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement sql_stmt = null,edgestmt = null;
-		ResultSet dbResponse = null, edgeDbResponse = null;
+		PreparedStatement ps1 = null;
+		ResultSet Rs1 = null;
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
-		LOGGER.info("Inside GetEngagementsByUser method");
+		LOGGER.info("Inside GetCreditsLogByX method");
 
 		try {
 
@@ -75,20 +75,20 @@ public class GetEngagementsByUserHandler extends Connect implements AppHandler {
 					
 					LOGGER.info(sql);
 					
-					sql_stmt = hcp.prepareStatement(sql);
+					ps1 = hcp.prepareStatement(sql);
 		
-					dbResponse = sql_stmt.executeQuery();
+					Rs1 = ps1.executeQuery();
 					LOGGER.info("Excuted Query");
 					
-					if (dbResponse.isBeforeFirst()) {
+					if (Rs1.isBeforeFirst()) {
 						LOGGER.info("inside if statement");
-						while (dbResponse.next()) {
+						while (Rs1.next()) {
 							LOGGER.info("Inside While Loop");
-							GetEngagementsByUserResObj rs1 = new GetEngagementsByUserResObj();
+							GetCreditsLogByXResObj rs1 = new GetCreditsLogByXResObj();
 							
-							rs1.setCredits(dbResponse.getInt("credit_amount"));
-							rs1.setCreditDate(dbResponse.getString("credit_date"));
-							rs1.setUserName(dbResponse.getString("user_full_name"));
+							rs1.setCredits(Rs1.getInt("credit_amount"));
+							rs1.setCreditDate(Rs1.getString("credit_date"));
+							rs1.setUserName(Rs1.getString("user_full_name"));
 							rs.addResList(rs1);	
 							offset = offset + 1;
 							
@@ -96,7 +96,7 @@ public class GetEngagementsByUserHandler extends Connect implements AppHandler {
 							LOGGER.info("Response To date is "+toDate);
 							LOGGER.info("after if statement");
 							
-							toDate = dbResponse.getString("credit_date");
+							toDate = Rs1.getString("credit_date");
 						}
 					} else {
 						rs.setCode(FLS_END_OF_DB);
@@ -111,10 +111,8 @@ public class GetEngagementsByUserHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(dbResponse!=null) dbResponse.close();
-				if(edgeDbResponse!=null) edgeDbResponse.close();
-				if(edgestmt!=null) edgestmt.close();
-				if(sql_stmt!=null) sql_stmt.close();
+				if(Rs1!=null) Rs1.close();
+				if(ps1!=null) ps1.close();
 				if(hcp!=null) hcp.close();
 			} catch (Exception e) {
 				// TODO: handle exception

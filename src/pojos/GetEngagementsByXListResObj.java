@@ -3,15 +3,15 @@ package pojos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetEngagementsByDateListResObj extends ResObj{
+public class GetEngagementsByXListResObj extends ResObj{
 	
-	// Return code for GetEngagementsByDate
+	// Return code for GetEngagementsByX
 	int code;
 
 	// Error String
 	String message,lastEngagementId;
 	
-	List<GetEngagementsByDateResObj> resList = new ArrayList<>();
+	List<GetEngagementsByXResObj> resList = new ArrayList<>();
 
 	
 	public String getLastEngagementId() {
@@ -38,15 +38,15 @@ public class GetEngagementsByDateListResObj extends ResObj{
 		this.message = message;
 	}
 
-	public List<GetEngagementsByDateResObj> getResList() {
+	public List<GetEngagementsByXResObj> getResList() {
 		return resList;
 	}
 
-	public void setResList(List<GetEngagementsByDateResObj> resList) {
+	public void setResList(List<GetEngagementsByXResObj> resList) {
 		this.resList = resList;
 	}
 
-	public void addResList(GetEngagementsByDateResObj res) {
+	public void addResList(GetEngagementsByXResObj res) {
 		this.resList.add(res);
 	}
 }

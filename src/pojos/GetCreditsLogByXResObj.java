@@ -1,6 +1,6 @@
 package pojos;
 
-public class GetEngagementsByUserResObj extends ResObj{
+public class GetCreditsLogByXResObj extends ResObj{
 	
 	int Credits;
 	String creditDate,userName;

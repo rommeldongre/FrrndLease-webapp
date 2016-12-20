@@ -14,21 +14,21 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.util.JSONPObject;
 import org.json.JSONObject;
 
-import pojos.GetEngagementsByUserListResObj;
-import pojos.GetEngagementsByUserReqObj;
-import pojos.GetEngagementsByUserResObj;
+import pojos.GetCreditsLogByXListResObj;
+import pojos.GetCreditsLogByXReqObj;
+import pojos.GetCreditsLogByXResObj;
 import util.FlsLogger;
-import app.GetEngagementsByUserHandler;
+import app.GetCreditsLogByXHandler;
 import app.NotImplementedException;
 
 
 /**
- * Servlet implementation class GetEngagementsByUser
+ * Servlet implementation class GetCreditsLogByX
  */
-@WebServlet(description = "Get Engagements between 2 dates", urlPatterns = { "/GetEngagementsByUser" })
-public class GetEngagementsByUser extends HttpServlet {
+@WebServlet(description = "Get Engagements between 2 dates", urlPatterns = { "/GetCreditsLogByX" })
+public class GetCreditsLogByX extends HttpServlet {
 	
-	private FlsLogger LOGGER = new FlsLogger(GetEngagementsByUser.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(GetCreditsLogByX.class.getName());
 	
 	private static final long serialVersionUID = 1L;
 	/**
@@ -39,15 +39,15 @@ public class GetEngagementsByUser extends HttpServlet {
 			LOGGER.info("Inside POST method");
 			//HTTP request to Service request pojo 
 			ObjectMapper mapper = new ObjectMapper();
-			GetEngagementsByUserReqObj request = mapper.readValue(httprequest.getInputStream(), GetEngagementsByUserReqObj.class);
+			GetCreditsLogByXReqObj request = mapper.readValue(httprequest.getInputStream(), GetCreditsLogByXReqObj.class);
 			httpresponse.setContentType("application/json");
 			
 			// application logic comes here --------		
-			GetEngagementsByUserListResObj Response = null;
+			GetCreditsLogByXListResObj Response = null;
 		
 			try {
 				//App handler to process request and create Service response pojo
-				Response = (GetEngagementsByUserListResObj) GetEngagementsByUserHandler.getInstance().process(request);
+				Response = (GetCreditsLogByXListResObj) GetCreditsLogByXHandler.getInstance().process(request);
 				
 				//Service response pojo to JSON
 				PrintWriter out = httpresponse.getWriter();
@@ -58,8 +58,8 @@ public class GetEngagementsByUser extends HttpServlet {
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
-				LOGGER.warning("GetEngagementsByUser process method not implemented");
-				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetEngagementsByUser process method not implemented");
+				LOGGER.warning("GetCreditsLogByX process method not implemented");
+				httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "GetCreditsLogByX process method not implemented");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

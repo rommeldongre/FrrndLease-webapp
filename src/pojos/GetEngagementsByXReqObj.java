@@ -1,6 +1,6 @@
 package pojos;
 
-public class GetEngagementsByDateReqObj extends ReqObj{
+public class GetEngagementsByXReqObj extends ReqObj{
 
 	String userId,fromDate,toDate,interval;
 	int cookie,limit;

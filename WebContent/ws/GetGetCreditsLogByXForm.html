@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Engagements By Date</title>
+<title>Credits Log By X</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var Token = 0;
@@ -20,15 +20,16 @@
 		var Limit = document.getElementById("limit").value;
 		Limit = parseInt(Limit);
 		
-		FromDate = "";
+		var FromDate = document.getElementById("from_date").value;
+		FromDate = FromDate+time;
 		
 		var ToDate = document.getElementById("to_date").value;
 		 ToDate = ToDate+time;
 		
-		GetEngagementsByDate(UserId,Interval,Offset,Limit,FromDate,ToDate);
+		GetCreditsLogByX(UserId,Interval,Offset,Limit,FromDate,ToDate);
 	};
 	
-	function GetEngagementsByDate(user,interval,offset,limit,fromDate,toDate){
+	function GetCreditsLogByX(user,interval,offset,limit,fromDate,toDate){
 	
 		if (user ===''){
 			reqUserId = null;
@@ -74,17 +75,16 @@
 			fromDate: FromDate,
 			toDate: ToDate
 		};
-		GetEngagementsByDateSend(req);
+		GetCreditsLogByXSend(req);
 	}
 		
-	GetEngagementsByDateSend = function(req) {
+	GetCreditsLogByXSend = function(req) {
 		$.ajax({
-			url: '/GetEngagementsByDate',
+			url: '/GetCreditsLogByX',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",
 			dataType:"json",
-			
 			success: function(response) {
 				document.getElementById("size").value = response.resList.length;
 				document.getElementById("Code").value = response.code;
@@ -103,12 +103,13 @@
 </script>
 </head>
 <body>
-<h1> Get Engagements By Date FORM</h1>
+<h1> Get Credits Log By X FORM</h1>
 	<form>
 		User Id : <input type="text" name="ownerId" id="ownerId" ><br/><br/>
 		Interval : <input type="text" name="interval" id="interval" ><br/><br/>
 		Batch Limit: <input type="text" name="limit" id="limit" ><br/><br/>
 		Offset Value: <input type="text" name="offset" id="offset" ><br/><br/>
+		From Date: <input type="date" name="from_date" id="from_date" ><br/><br/>
 		To Date: <input type="date" name="to_date" id="to_date" ><br/><br/>
 		<input type="button" value="Next" onclick="getData()">
 		

@@ -11,22 +11,22 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import connect.Connect;
-import pojos.GetEngagementsByDateListResObj;
-import pojos.GetEngagementsByDateReqObj;
-import pojos.GetEngagementsByDateResObj;
+import pojos.GetEngagementsByXListResObj;
+import pojos.GetEngagementsByXReqObj;
+import pojos.GetEngagementsByXResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 
-public class GetEngagementsByDateHandler extends Connect implements AppHandler {
+public class GetEngagementsByXHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(GetEngagementsByDateHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(GetEngagementsByXHandler.class.getName());
 
-	private static GetEngagementsByDateHandler instance = null;
+	private static GetEngagementsByXHandler instance = null;
 
-	public static GetEngagementsByDateHandler getInstance() {
+	public static GetEngagementsByXHandler getInstance() {
 		if (instance == null)
-			instance = new GetEngagementsByDateHandler();
+			instance = new GetEngagementsByXHandler();
 		return instance;
 	}
 
@@ -39,16 +39,16 @@ public class GetEngagementsByDateHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 		// TODO Auto-generated method stub
-		GetEngagementsByDateReqObj rq = (GetEngagementsByDateReqObj) req;
+		GetEngagementsByXReqObj rq = (GetEngagementsByXReqObj) req;
 
-		GetEngagementsByDateListResObj rs = new GetEngagementsByDateListResObj();
+		GetEngagementsByXListResObj rs = new GetEngagementsByXListResObj();
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement sql_stmt = null,edgestmt = null;
-		ResultSet dbResponse = null, edgeDbResponse = null;
+		PreparedStatement ps1 = null;
+		ResultSet Rs1 = null;
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
-		LOGGER.info("Inside GetEngagementsByDate method");
+		LOGGER.info("Inside GetEngagementsByX method");
 
 		try {
 
@@ -89,7 +89,7 @@ public class GetEngagementsByDateHandler extends Connect implements AppHandler {
 			LOGGER.info("Before While Loop");
 			
 				while (intCount<limit) {
-					GetEngagementsByDateResObj rs1 = new GetEngagementsByDateResObj();
+					GetEngagementsByXResObj rs1 = new GetEngagementsByXResObj();
 				
 					LOGGER.info("Inside While Loop");
 					//already getting all data from events table
@@ -105,13 +105,13 @@ public class GetEngagementsByDateHandler extends Connect implements AppHandler {
 					
 					LOGGER.info(sql);
 					
-					sql_stmt = hcp.prepareStatement(sql);
+					ps1 = hcp.prepareStatement(sql);
 		
-					dbResponse = sql_stmt.executeQuery();
+					Rs1 = ps1.executeQuery();
 					LOGGER.info("Excuted Query");
 					
-					if (dbResponse.next()) {
-							rs1.setTotalCredits(dbResponse.getInt("totalCredits"));
+					if (Rs1.next()) {
+							rs1.setTotalCredits(Rs1.getInt("totalCredits"));
 							rs1.setStartDate(interimDate);
 							rs1.setEndDate(toDate);
 							LOGGER.info("Response Start date is "+interimDate);
@@ -144,10 +144,8 @@ public class GetEngagementsByDateHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(dbResponse!=null) dbResponse.close();
-				if(edgeDbResponse!=null) edgeDbResponse.close();
-				if(edgestmt!=null) edgestmt.close();
-				if(sql_stmt!=null) sql_stmt.close();
+				if(Rs1!=null) Rs1.close();
+				if(ps1!=null) ps1.close();
 				if(hcp!=null) hcp.close();
 			} catch (Exception e) {
 				// TODO: handle exception

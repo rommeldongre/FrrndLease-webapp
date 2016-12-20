@@ -1,6 +1,6 @@
 package pojos;
 
-public class GetEngagementsByUserReqObj extends ReqObj{
+public class GetCreditsLogByXReqObj extends ReqObj{
 
 	String userId,fromDate,toDate,interval;
 	int cookie,limit;
