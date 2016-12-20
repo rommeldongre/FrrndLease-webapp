@@ -1189,6 +1189,8 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     
     var signUpStatus = "";
     
+    $scope.user = {};
+    
     $scope.userIdChanged = function(){
         
         $scope.error = "";
@@ -1197,31 +1199,31 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
         var mobile = /^[789]\d{9}$/;
         
         if(email.test($scope.userId)){
-            $scope.email = $scope.userId;
+            $scope.user.email = $scope.userId;
             $scope.emailEditable = true;
             signUpStatus = "email_pending";
         }
         else{
-            $scope.email = '';
+            $scope.user.email = '';
             $scope.emailEditable = false;
         }
         
         if(mobile.test($scope.userId)){
-            $scope.mobile = $scope.userId;
+            $scope.user.mobile = $scope.userId;
             $scope.mobileEditable = true;
             signUpStatus = "mobile_pending";
         }
         else{
-            $scope.mobile = '';
+            $scope.user.mobile = '';
             $scope.mobileEditable = false;
         }
     }
     
     // form sign up
-    $scope.formSignup = function(email, password, name, mobile, code, location){
-        friendId = email;
-        if($scope.userId == email || $scope.userId == mobile)
-            loginSignupService.signUpCheckReq($scope.userId, email, password, name, "", mobile, code, location, signUpStatus, friendId);
+    $scope.formSignup = function(){
+        friendId = $scope.user.email;
+        if($scope.userId == $scope.user.email || $scope.userId == $scope.user.mobile)
+            loginSignupService.signUpCheckReq($scope.userId, $scope.user.email, $scope.password, $scope.name, "", $scope.user.mobile, $scope.user.code, $scope.location, signUpStatus, friendId);
         else
             $scope.error = "Please enter correct User Id!!";
     }
@@ -1230,7 +1232,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     function onSignUp(googleUser) {
         var profile = googleUser.getBasicProfile();
         friendId = profile.getEmail();
-        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.code, $scope.location, "google", friendId);
+        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.user.code, $scope.location, "google", friendId);
     }
     window.onSignUp = onSignUp;
     
@@ -1240,7 +1242,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
             // handle the response
             FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender,picture.type(large)', function(response) {
                 friendId = response.id + "@fb";
-                loginSignupService.signUpCheckReq(response.email, response.email, response.id, response.name, response.picture.data.url, "", $scope.code, $scope.location, "facebook", friendId);
+                loginSignupService.signUpCheckReq(response.email, response.email, response.id, response.name, response.picture.data.url, "", $scope.user.code, $scope.location, "facebook", friendId);
             });
         }, {scope: 'email,public_profile,user_friends'});    
     }
@@ -1291,11 +1293,11 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 		var token = getQueryVariable("ref_token");
 		if(token === undefined || token=="undefined"){
 		}else{
-			$scope.code = token;
+			$scope.user.code = token;
 			localStorage.setItem("friendReferralCode",token);
 		}	
 		var ref_code = localStorage.getItem("friendReferralCode");
-		$scope.code = ref_code;
+		$scope.user.code = ref_code;
 	}
     
 	
