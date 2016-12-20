@@ -17,7 +17,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2050;
+	public final int appBuild = 2051;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1875,6 +1875,36 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2050;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates orders table 
+				if (dbBuild < 2051) {
+					
+					// New orders table
+					String sqlCreateOrdersTable = "CREATE TABLE `fls`.`orders` ( `order_id` INT(255) NOT NULL AUTO_INCREMENT , `order_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `order_user_id` VARCHAR(255) NOT NULL , `amount` INT(255) NULL DEFAULT NULL , `promo_code` VARCHAR(255) NULL DEFAULT NULL , `razor_pay_id` VARCHAR(255) NULL DEFAULT NULL , `credit_log_id` INT(255) NOT NULL , `order_type` ENUM('FLS_INTERNAL','FLS_EXTERNAL') NOT NULL DEFAULT 'FLS_INTERNAL' , PRIMARY KEY (`order_id`))";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateOrdersTable);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2051;
 					updateDBBuild(dbBuild);
 				}
 				
