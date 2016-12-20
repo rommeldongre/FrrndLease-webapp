@@ -450,7 +450,7 @@ public class FlsEmail extends Connect{
 				break;
 			
 			case FLS_MAIL_REMIND_PHOTO_ID:
-				SUBJECT = ("Reminder to Upload Photo Id");
+				SUBJECT = ("Reminder to Upload a Photo Id");
 				BODY = obj.getString("message");
 				break;
 				
