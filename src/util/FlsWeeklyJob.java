@@ -56,7 +56,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 				if(places.contains(rs1.getString("user_locality").toUpperCase())){
 					try {
 						Event event = new Event();
-						event.createEvent(rs1.getString("user_id"), rs1.getString("user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REMIND_PHOTO_ID, 0, "You have not uploaded your valid photo id. Please upload it to enable paid delivery service");
+						event.createEvent(rs1.getString("user_id"), rs1.getString("user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_REMIND_PHOTO_ID, 0, "You are in a Prime location! This means that you can avail of Prime delivery from FrrndLease, by having a valid photo id stored with us! You can always choose to not get delivery through FrrndLease. Upload your Photo Id now!!");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
