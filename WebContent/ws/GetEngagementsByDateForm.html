@@ -7,7 +7,7 @@
 <script type="text/javascript">
 	var Token = 0;
 	var itemNextIdArray = [];
-	var time = " 00:00:00";;
+	var time = " 00:00:00";
 	
 	getData = function (){
 		var UserId = document.getElementById("ownerId").value;
@@ -20,16 +20,15 @@
 		var Limit = document.getElementById("limit").value;
 		Limit = parseInt(Limit);
 		
-		//var FromDate = document.getElementById("from_date").value;
 		FromDate = "";
 		
 		var ToDate = document.getElementById("to_date").value;
 		 ToDate = ToDate+time;
 		
-		GetLeadsByX(UserId,Interval,Offset,Limit,FromDate,ToDate);
+		GetEngagementsByDate(UserId,Interval,Offset,Limit,FromDate,ToDate);
 	};
 	
-	function GetLeadsByX(user,interval,offset,limit,fromDate,toDate){
+	function GetEngagementsByDate(user,interval,offset,limit,fromDate,toDate){
 	
 		if (user ===''){
 			reqUserId = null;
@@ -75,12 +74,10 @@
 			fromDate: FromDate,
 			toDate: ToDate
 		};
-		console.log(req);
-		GetLeadsByXSend(req);
+		GetEngagementsByDateSend(req);
 	}
 		
-	GetLeadsByXSend = function(req) {
-		alert("Inside send");
+	GetEngagementsByDateSend = function(req) {
 		$.ajax({
 			url: '/GetEngagementsByDate',
 			type: 'post',
@@ -112,7 +109,6 @@
 		Interval : <input type="text" name="interval" id="interval" ><br/><br/>
 		Batch Limit: <input type="text" name="limit" id="limit" ><br/><br/>
 		Offset Value: <input type="text" name="offset" id="offset" ><br/><br/>
-		<!--From Date: <input type="date" name="from_date" id="from_date" ><br/><br/>-->
 		To Date: <input type="date" name="to_date" id="to_date" ><br/><br/>
 		<input type="button" value="Next" onclick="getData()">
 		

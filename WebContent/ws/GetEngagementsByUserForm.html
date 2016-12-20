@@ -7,7 +7,7 @@
 <script type="text/javascript">
 	var Token = 0;
 	var itemNextIdArray = [];
-	var time = " 00:00:00";;
+	var time = " 00:00:00";
 	
 	getData = function (){
 		var UserId = document.getElementById("ownerId").value;
@@ -26,10 +26,10 @@
 		var ToDate = document.getElementById("to_date").value;
 		 ToDate = ToDate+time;
 		
-		GetLeadsByX(UserId,Interval,Offset,Limit,FromDate,ToDate);
+		GetEngagementsByUser(UserId,Interval,Offset,Limit,FromDate,ToDate);
 	};
 	
-	function GetLeadsByX(user,interval,offset,limit,fromDate,toDate){
+	function GetEngagementsByUser(user,interval,offset,limit,fromDate,toDate){
 	
 		if (user ===''){
 			reqUserId = null;
@@ -75,19 +75,16 @@
 			fromDate: FromDate,
 			toDate: ToDate
 		};
-		console.log(req);
-		GetLeadsByXSend(req);
+		GetEngagementsByUserSend(req);
 	}
 		
-	GetLeadsByXSend = function(req) {
-		alert("Inside send");
+	GetEngagementsByUserSend = function(req) {
 		$.ajax({
 			url: '/GetEngagementsByUser',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",
 			dataType:"json",
-			
 			success: function(response) {
 				document.getElementById("size").value = response.resList.length;
 				document.getElementById("Code").value = response.code;
