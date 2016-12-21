@@ -50,14 +50,14 @@
                                         <div class="input-group">
                                             <input type="text" class="form-control" placeholder="Enter Promo Code" ng-model="payment.promoCode">
                                             <span class="input-group-btn">
-                                                <button class="btn btn-primary btn-fill" type="button">Apply</button>
+                                                <button class="btn btn-primary btn-fill" ng-click="validatePromoCode()" type="button">Apply</button>
                                             </span>
                                         </div>
                                     </div>
                                 </td>
-                                <td colspan="2"></td>
+                                <td colspan="2">{{payment.promoError}}</td>
                                 <td class="td-price" style="text-align:center;">
-                                    - {{payment.discount}}
+                                    - <small><i class="fa fa-rupee"></i></small>{{payment.discount}}
                                 </td>
                             </tr>
                             <tr>

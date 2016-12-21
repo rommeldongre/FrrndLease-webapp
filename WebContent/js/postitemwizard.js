@@ -354,4 +354,15 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }
 	}
     
+    $scope.$on('validatePromoRes', function(event, response){
+        var msg = "Something is wrong with the network!!";
+        if(response.code == 0){
+            if(response.promoCode == "shared@10")
+                msg = "You have successfully shared this item on facebook!!";
+            else if (response.promoCode == "invited@10")
+                msg = "You have successfully invited friends on facebook!!";
+        }
+        modalService.showModal({}, {bodyText: msg, showCancel: false, actionButtonText: 'OK'}).then(function(r){}, function(){});
+    });
+    
 }]);

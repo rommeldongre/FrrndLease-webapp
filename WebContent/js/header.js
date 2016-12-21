@@ -12,6 +12,7 @@ headerApp.controller('headerCtrl', ['$scope',
                                     'logoutService',
                                     'modalService',
 									'eventsCount',
+                                    '$rootScope',
 									function($scope, 
 									$timeout, 
 									userFactory, 
@@ -23,7 +24,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									loginSignupService,
                                     logoutService,
                                     modalService,
-									eventsCount){
+									eventsCount,
+                                    $rootScope){
     
     // sign up starts here
     
@@ -508,27 +510,20 @@ headerApp.controller('headerCtrl', ['$scope',
         }
         
         $.ajax({
-            url: '/AddPromoCredits',
+            url: '/ValidatePromoCode',
             type: 'post',
             data: JSON.stringify(req),
             contentType:"application/json",
             dataType:"json",
             success: function(response){
-                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(
-                    function(r){
-                        if(response.code == 0){
-                            $scope.credits = response.newCreditBalance;
-                            userFactory.userCreditsRes(response.newCreditBalance);
-                        }
-                        if(response.code == 400)
-                            logoutService.logout();
-                    }, function(){});
+                if(response.code == 400)
+                    logoutService.logout();
+                $rootScope.$broadcast('validatePromoRes', response);
             },
             error: function(){
                 console.log("not able to add promo credit");
             }
         });
-        
     });
 	
 	$scope.importfb = function(){
@@ -603,7 +598,7 @@ headerApp.factory('profileFactory', ['$http', function($http){
     return dataFactory;
 }]);
 
-headerApp.factory('userFactory', ['$rootScope', function($rootScope){
+headerApp.factory('userFactory', ['$rootScope', 'logoutService', function($rootScope, logoutService){
     
     var dataFactory = {};
     
@@ -613,10 +608,6 @@ headerApp.factory('userFactory', ['$rootScope', function($rootScope){
     
     dataFactory.userCredits = function(promo){
         $rootScope.$broadcast('addPromoCredits', promo);
-    }
-    
-    dataFactory.userCreditsRes = function(credits){
-        $rootScope.$broadcast('updatedCredits', credits);
     }
 	
 	dataFactory.setLocalStorageValues = function(userId,fullName,access_token,referralCode){
@@ -1335,18 +1326,27 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 //    getLocation();
 }]);
 
-headerApp.controller('paymentModalCtrl', ['$scope', function($scope){
+headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($scope, userFactory){
     
     $scope.payment = {
         credit: 0,
         conversion: 10,
         amount: 0,
         promoCode: '',
-        discount: 0
+        discount: 0,
+        promoError: ''
     };
     
     $scope.$watch('payment.credit', function(){
         $scope.payment.amount = $scope.payment.credit * $scope.payment.conversion;
+    });
+    
+    $scope.validatePromoCode = function(){
+        userFactory.userCredits($scope.payment.promoCode);
+    }
+    
+    $scope.$on('validatePromoRes', function(event, response){
+        console.log(response);
     });
     
     $scope.$watch('payment.promoCode', function(){

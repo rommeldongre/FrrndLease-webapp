@@ -87,14 +87,8 @@ public class PromoCode extends Connect {
 				ps2.setString(1, promoCode);
 				ps2.setInt(2, credit);
 				ps2.setString(3, expiry);
-				if(count == -1)
-					ps2.setString(4, null);
-				else
-					ps2.setInt(4, count);
-				if(perPersonCount == -1)
-					ps2.setString(5, null);
-				else
-					ps2.setInt(5, perPersonCount);
+				ps2.setInt(4, count);
+				ps2.setInt(5, perPersonCount);
 				ps2.setString(6, codeType.name());
 				
 				ps2.executeUpdate();

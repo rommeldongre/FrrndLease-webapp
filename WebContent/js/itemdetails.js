@@ -340,4 +340,12 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						}, function(){});
         }
     }
+    
+    $scope.$on('validatePromoRes', function(event, response){
+        var msg = "Not able to share item on facebook";
+        if(response.code == 0 && response.promoCode == "shared@10"){
+            msg = "You have successfully shared this item on facebook!!";
+        }
+        modalService.showModal({}, {bodyText: msg, showCancel: false, actionButtonText: 'OK'}).then(function(r){}, function(){});
+    });
 }]);

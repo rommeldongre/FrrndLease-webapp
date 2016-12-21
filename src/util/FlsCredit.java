@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connect.Connect;
+import pojos.PromoCodeModel.Code_Type;
 
 public class FlsCredit extends Connect {
 
@@ -124,6 +125,152 @@ public class FlsCredit extends Connect {
 			}
 		}
 
+		return 0;
+	}
+
+	public int getCreditLogId(String userId, String promoCode) {
+		
+		LOGGER.info("Inside getCreditLogId Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		int id = -1;
+		
+		try {
+			
+			String sqlGetCreditLogId = "SELECT credit_log_id FROM credit_log WHERE credit_user_id=? AND credit_desc=? ORDER BY credit_date DESC LIMIT 1";
+			ps1 = hcp.prepareStatement(sqlGetCreditLogId);
+			ps1.setString(1, userId);
+			ps1.setString(2, promoCode);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				id = rs1.getInt("credit_log_id");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return id;
+	}
+	
+	public int getCreditValue() {
+		
+		LOGGER.info("Inside getCreditValue Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetCreditValue = "SELECT `value` FROM `config` WHERE `option`='credit_amount'";
+			ps1 = hcp.prepareStatement(sqlGetCreditValue);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				return rs1.getInt("value");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return 0;
+	}
+
+	public void addOrder(String userId, int amount, String promoCode, int razorPayId, int creditLogId, Code_Type flsInternal) {
+		
+		LOGGER.info("Inside addOrder Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1;
+		
+		try {
+			
+			String sqlInsertOrder = "INSERT INTO `orders` (`order_user_id`, `amount`, `promo_code`, `razor_pay_id`, `credit_log_id`, `order_type`) VALUES (?, ?, ?, ?, ?, ?)";
+			ps1 = hcp.prepareStatement(sqlInsertOrder);
+			ps1.setString(1, userId);
+			ps1.setInt(2, amount);
+			ps1.setString(3, promoCode);
+			ps1.setInt(4, razorPayId);
+			ps1.setInt(5, creditLogId);
+			ps1.setString(6, flsInternal.name());
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1){
+				LOGGER.info("New order created for the userId - " + userId + " and creditLogId - " + creditLogId);
+			}else{
+				LOGGER.info("Not able to create a new order");
+			}		
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	public int getCurrentCredits(String userId) {
+		
+		LOGGER.info("Inside getCurrentCredits Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetCurrentCredits = "SELECT user_credit FROM users WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlGetCurrentCredits);
+			ps1.setString(1, userId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				return rs1.getInt("user_credit");
+			}	
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return 0;
 	}
 

@@ -1,10 +1,9 @@
 package pojos;
 
-public class AddPromoCreditsResObj extends ResObj{
+public class ValidatePromoCodeResObj extends ResObj {
 
 	int code;
-	String message;
-	
+	String message, promoCode;
 	int newCreditBalance;
 
 	public int getCode() {
@@ -23,6 +22,14 @@ public class AddPromoCreditsResObj extends ResObj{
 		this.message = message;
 	}
 
+	public String getPromoCode() {
+		return promoCode;
+	}
+
+	public void setPromoCode(String promoCode) {
+		this.promoCode = promoCode;
+	}
+
 	public int getNewCreditBalance() {
 		return newCreditBalance;
 	}
@@ -30,4 +37,5 @@ public class AddPromoCreditsResObj extends ResObj{
 	public void setNewCreditBalance(int newCreditBalance) {
 		this.newCreditBalance = newCreditBalance;
 	}
+
 }

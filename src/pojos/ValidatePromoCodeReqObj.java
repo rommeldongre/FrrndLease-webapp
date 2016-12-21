@@ -1,12 +1,8 @@
 package pojos;
 
-public class AddPromoCreditsReqObj extends ReqObj{
+public class ValidatePromoCodeReqObj extends ReqObj {
 
-	String userId;
-	
-	String promoCode;
-	
-	String accessToken;
+	String userId, accessToken, promoCode;
 
 	public String getUserId() {
 		return userId;
@@ -31,5 +27,5 @@ public class AddPromoCreditsReqObj extends ReqObj{
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
 	}
-	
+
 }

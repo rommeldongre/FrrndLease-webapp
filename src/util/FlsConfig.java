@@ -1831,13 +1831,13 @@ public class FlsConfig extends Connect{
 				if (dbBuild < 2050) {
 					
 					// New columns in promo_credits table
-					String sqlCountColumns = "ALTER TABLE `promo_credits` ADD `count` INT(255) NULL DEFAULT NULL AFTER `expiry`, ADD `per_person_count` INT(255) NULL DEFAULT NULL AFTER `count`, ADD `code_type` ENUM('FLS_INTERNAL','FLS_EXTERNAL') NOT NULL DEFAULT 'FLS_EXTERNAL' AFTER `per_person_count`";
+					String sqlCountColumns = "ALTER TABLE `promo_credits` ADD `count` INT(255) NOT NULL DEFAULT -1 AFTER `expiry`, ADD `per_person_count` INT(255) NOT NULL DEFAULT -1 AFTER `count`, ADD `code_type` ENUM('FLS_INTERNAL','FLS_EXTERNAL') NOT NULL DEFAULT 'FLS_EXTERNAL' AFTER `per_person_count`";
 					
 					// Add new conversion amount entry in config table
 					String sqlGetCreditConversion = "INSERT INTO `config` (`option`, `value`) VALUES ('credit_amount', '10')";
 					
 					// Update the existing promo codes
-					String sqlUpdatePromoCode = "UPDATE `promo_credits` SET `expiry`=null,`code_type`='FLS_INTERNAL'";
+					String sqlUpdatePromoCode = "UPDATE `promo_credits` SET `expiry`=null,`per_person_count`=1,`code_type`='FLS_INTERNAL'";
 					
 					// Update the credit_log date to make date column default value to be current_timestamp
 					String sqlUpdateDateOrCreditLog = "ALTER TABLE `credit_log` CHANGE `credit_date` `credit_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP;";

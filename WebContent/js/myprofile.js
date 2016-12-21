@@ -20,17 +20,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
     var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
     
     $scope.user = {};
-                                            
-    // add credits
-    $scope.addCredits = function(){
-        modalService.showModal({}, {actionButtonText: "submit", labelText: "Enter the promo code: ", submitting: true}).then(
-            function(promo){
-                userFactory.userCredits(promo);
-            },function(){});
-    }
     
-    $scope.$on('updatedCredits', function(event, credits){
-        $scope.credit = credits;
+    $scope.$on('validatePromoCodeRes', function(event, response){
+        $scope.credit = response.newCreditBalance;
     });
     
     $scope.options = {
