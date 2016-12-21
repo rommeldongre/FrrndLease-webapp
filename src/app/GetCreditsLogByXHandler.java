@@ -44,7 +44,7 @@ public class GetCreditsLogByXHandler extends Connect implements AppHandler {
 		GetCreditsLogByXListResObj rs = new GetCreditsLogByXListResObj();
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
-		ResultSet Rs1 = null;
+		ResultSet rs1 = null;
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
@@ -77,26 +77,26 @@ public class GetCreditsLogByXHandler extends Connect implements AppHandler {
 					
 					ps1 = hcp.prepareStatement(sql);
 		
-					Rs1 = ps1.executeQuery();
+					rs1 = ps1.executeQuery();
 					LOGGER.info("Excuted Query");
 					
-					if (Rs1.isBeforeFirst()) {
+					if (rs1.isBeforeFirst()) {
 						LOGGER.info("inside if statement");
-						while (Rs1.next()) {
+						while (rs1.next()) {
 							LOGGER.info("Inside While Loop");
-							GetCreditsLogByXResObj rs1 = new GetCreditsLogByXResObj();
+							GetCreditsLogByXResObj credtlog = new GetCreditsLogByXResObj();
 							
-							rs1.setCredits(Rs1.getInt("credit_amount"));
-							rs1.setCreditDate(Rs1.getString("credit_date"));
-							rs1.setUserName(Rs1.getString("user_full_name"));
-							rs.addResList(rs1);	
+							credtlog.setCredits(rs1.getInt("credit_amount"));
+							credtlog.setCreditDate(rs1.getString("credit_date"));
+							credtlog.setUserName(rs1.getString("user_full_name"));
+							rs.addResList(credtlog);	
 							offset = offset + 1;
 							
 							LOGGER.info("Response Start date is "+interimDate);
 							LOGGER.info("Response To date is "+toDate);
 							LOGGER.info("after if statement");
 							
-							toDate = Rs1.getString("credit_date");
+							toDate = rs1.getString("credit_date");
 						}
 					} else {
 						rs.setCode(FLS_END_OF_DB);
@@ -111,7 +111,7 @@ public class GetCreditsLogByXHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(Rs1!=null) Rs1.close();
+				if(rs1!=null) rs1.close();
 				if(ps1!=null) ps1.close();
 				if(hcp!=null) hcp.close();
 			} catch (Exception e) {

@@ -44,7 +44,7 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 		GetEngagementsByXListResObj rs = new GetEngagementsByXListResObj();
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
-		ResultSet Rs1 = null;
+		ResultSet rs1 = null;
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
@@ -89,7 +89,7 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 			LOGGER.info("Before While Loop");
 			
 				while (intCount<limit) {
-					GetEngagementsByXResObj rs1 = new GetEngagementsByXResObj();
+					GetEngagementsByXResObj egmt = new GetEngagementsByXResObj();
 				
 					LOGGER.info("Inside While Loop");
 					//already getting all data from events table
@@ -107,21 +107,21 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 					
 					ps1 = hcp.prepareStatement(sql);
 		
-					Rs1 = ps1.executeQuery();
+					rs1 = ps1.executeQuery();
 					LOGGER.info("Excuted Query");
 					
-					if (Rs1.next()) {
-							rs1.setTotalCredits(Rs1.getInt("totalCredits"));
-							rs1.setStartDate(interimDate);
-							rs1.setEndDate(toDate);
+					if (rs1.next()) {
+							egmt.setTotalCredits(rs1.getInt("totalCredits"));
+							egmt.setStartDate(interimDate);
+							egmt.setEndDate(toDate);
 							LOGGER.info("Response Start date is "+interimDate);
 							LOGGER.info("Response To date is "+toDate);
-							rs.addResList(rs1);	
+							rs.addResList( egmt);	
 					} else {
-						rs1.setTotalCredits(0);
-						rs1.setStartDate(interimDate);
-						rs1.setEndDate(toDate);
-						rs.addResList(rs1);
+						 egmt.setTotalCredits(0);
+						 egmt.setStartDate(interimDate);
+						 egmt.setEndDate(toDate);
+						rs.addResList(egmt);
 					}
 					
 					toDate = interimDate;
@@ -144,7 +144,7 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(Rs1!=null) Rs1.close();
+				if(rs1!=null) rs1.close();
 				if(ps1!=null) ps1.close();
 				if(hcp!=null) hcp.close();
 			} catch (Exception e) {
