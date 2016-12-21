@@ -21,10 +21,6 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     $scope.user = {};
     
-    $scope.$on('validatePromoCodeRes', function(event, response){
-        $scope.credit = response.newCreditBalance;
-    });
-    
     $scope.options = {
         country: 'in',
         sendToCarousel: false

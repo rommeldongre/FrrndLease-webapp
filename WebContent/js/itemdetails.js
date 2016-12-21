@@ -330,8 +330,10 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				},function(response){
 					var m = "";
 					if (response && !response.error_code) {
-						userFactory.userCredits("shared@10");
-						$scope.shared = true;
+                        modalService.showModal({}, {bodyText: "You have successfully shared this item on facebook!!" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+                            userFactory.userCredits("shared@10");
+                            $scope.shared = true;
+                        }, function(){});
 					}
 				});
 			}, {scope: 'email,public_profile,user_friends'});
@@ -341,11 +343,4 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
         }
     }
     
-    $scope.$on('validatePromoRes', function(event, response){
-        var msg = "Not able to share item on facebook";
-        if(response.code == 0 && response.promoCode == "shared@10"){
-            msg = "You have successfully shared this item on facebook!!";
-        }
-        modalService.showModal({}, {bodyText: msg, showCancel: false, actionButtonText: 'OK'}).then(function(r){}, function(){});
-    });
 }]);

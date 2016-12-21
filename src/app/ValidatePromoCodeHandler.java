@@ -50,6 +50,10 @@ public class ValidatePromoCodeHandler extends Connect implements AppHandler {
 
 		try {
 			
+			FlsCredit credits = new FlsCredit();
+			
+			int creditAmount = 0;
+			
 			String promoCode = rq.getPromoCode();
 			String userId = rq.getUserId();
 			
@@ -76,8 +80,6 @@ public class ValidatePromoCodeHandler extends Connect implements AppHandler {
 			rs1 = ps1.executeQuery();
 
 			if (rs1.next()) {
-				
-				FlsCredit credits = new FlsCredit();
 				
 				int credit = rs1.getInt("credit");
 				LOGGER.info("Credit for that promo code are - " + credit);
@@ -125,19 +127,18 @@ public class ValidatePromoCodeHandler extends Connect implements AppHandler {
 					}
 				}
 
+				creditAmount = credits.getCreditValue();
+				
 				String codeType = rs1.getString("code_type");
-				switch(Code_Type.valueOf(codeType)){
-					case FLS_INTERNAL:
-						credits.logCredit(userId, credit, "Applied Promo Code", promoCode, Credit.ADD);
-						int creditLogId = credits.getCreditLogId(userId, promoCode);
-						int amount = credits.getCreditValue() * credit;
-						credits.addOrder(userId, amount, promoCode, -1, creditLogId, Code_Type.FLS_INTERNAL);
-						break;
-					case FLS_EXTERNAL:
-						break;
+				if(codeType.equals("FLS_INTERNAL")){
+					credits.logCredit(userId, credit, "Applied Promo Code", promoCode, Credit.ADD);
+					int creditLogId = credits.getCreditLogId(userId, promoCode);
+					credits.addOrder(userId, creditAmount * credit, promoCode, -1, creditLogId, Code_Type.FLS_INTERNAL);
 				}
 				
-				rs.setNewCreditBalance(credits.getCurrentCredits(userId));
+				rs.setCode(FLS_SUCCESS);
+				rs.setMessage(FLS_SUCCESS_M);
+				rs.setCreditAmount(creditAmount * credit);
 
 			} else {
 				rs.setCode(FLS_INVALID_PROMO);

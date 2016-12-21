@@ -184,8 +184,11 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 				},function(response){
 					var m = "";
 					if (response && !response.error_code) {
-						userFactory.userCredits("shared@10");
-						$scope.shared = true;
+                        modalService.showModal({}, {bodyText: "You have successfully shared this item on facebook!!" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+                            userFactory.userCredits("shared@10");
+                            $scope.shared = true;
+                        }, function(){});
+						
 					}
 				});
 			}, {scope: 'email,public_profile,user_friends'});
@@ -353,16 +356,5 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             addFriendSetValues(selectedContacts[i].name, selectedContacts[i].mobile, selectedContacts[i].email);
         }
 	}
-    
-    $scope.$on('validatePromoRes', function(event, response){
-        var msg = "Something is wrong with the network!!";
-        if(response.code == 0){
-            if(response.promoCode == "shared@10")
-                msg = "You have successfully shared this item on facebook!!";
-            else if (response.promoCode == "invited@10")
-                msg = "You have successfully invited friends on facebook!!";
-        }
-        modalService.showModal({}, {bodyText: msg, showCancel: false, actionButtonText: 'OK'}).then(function(r){}, function(){});
-    });
     
 }]);

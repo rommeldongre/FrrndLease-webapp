@@ -55,7 +55,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td colspan="2">{{payment.promoError}}</td>
+                                <td colspan="2">{{payment.promoError}} <button ng-if="payment.promoError != ''" class="btn btn-default btn-simple" ng-click="removePromoCode()"><i class="fa fa-times-circle" aria-hidden="true"></i></button></td>
                                 <td class="td-price" style="text-align:center;">
                                     - <small><i class="fa fa-rupee"></i></small>{{payment.discount}}
                                 </td>

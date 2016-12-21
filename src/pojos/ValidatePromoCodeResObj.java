@@ -4,7 +4,7 @@ public class ValidatePromoCodeResObj extends ResObj {
 
 	int code;
 	String message, promoCode;
-	int newCreditBalance;
+	int creditAmount;
 
 	public int getCode() {
 		return code;
@@ -30,12 +30,12 @@ public class ValidatePromoCodeResObj extends ResObj {
 		this.promoCode = promoCode;
 	}
 
-	public int getNewCreditBalance() {
-		return newCreditBalance;
+	public int getCreditAmount() {
+		return creditAmount;
 	}
 
-	public void setNewCreditBalance(int newCreditBalance) {
-		this.newCreditBalance = newCreditBalance;
+	public void setCreditAmount(int creditAmount) {
+		this.creditAmount = creditAmount;
 	}
 
 }

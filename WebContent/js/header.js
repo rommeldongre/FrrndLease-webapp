@@ -518,6 +518,7 @@ headerApp.controller('headerCtrl', ['$scope',
             success: function(response){
                 if(response.code == 400)
                     logoutService.logout();
+                displayCredits();
                 $rootScope.$broadcast('validatePromoRes', response);
             },
             error: function(){
@@ -1346,15 +1347,15 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
     }
     
     $scope.$on('validatePromoRes', function(event, response){
-        console.log(response);
-    });
-    
-    $scope.$watch('payment.promoCode', function(){
-        if($scope.payment.promoCode == 'xyz'){
-            $scope.payment.discount = 100;
-        }else{
-            $scope.payment.discount = 0;
+        if(response.code == 0){
+            $scope.payment.discount = response.creditAmount;
+            $scope.payment.promoError = "Promo Applied: " + response.promoCode;
         }
     });
+    
+    $scope.removePromoCode = function(){
+        $scope.payment.discount = 0;
+        $scope.payment.promoError = '';
+    }
     
 }]);
