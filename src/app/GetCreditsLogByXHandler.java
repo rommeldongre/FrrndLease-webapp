@@ -67,9 +67,16 @@ public class GetCreditsLogByXHandler extends Connect implements AppHandler {
 			String interimDate = toDate;
 					
 					//already getting all data from events table
-					sql = "SELECT tb1.credit_date, tb1.credit_amount, tb2.user_full_name FROM `credit_log` tb1 INNER JOIN users tb2 WHERE ";
+					sql = "SELECT tb1.credit_date, tb1.credit_amount, tb1.credit_type, tb2.user_full_name FROM `credit_log` tb1 INNER JOIN users tb2 WHERE ";
 					
 					sql = sql + "tb1.credit_date BETWEEN '"+fromDate+"' AND '"+toDate+"'";
+					
+					if(userId!=null){
+						sql = sql + "AND tb1.credit_user_id ='"+userId+"'";
+						LOGGER.info("USer ID  is NOT null");
+					}else{
+						LOGGER.info("USer ID  null");
+					}
 					
 					sql = sql + " AND tb1.credit_user_id=tb2.user_id ORDER BY tb1.credit_date DESC LIMIT " + offset + ","+limit;
 					
@@ -88,6 +95,7 @@ public class GetCreditsLogByXHandler extends Connect implements AppHandler {
 							
 							credtlog.setCredits(rs1.getInt("credit_amount"));
 							credtlog.setCreditDate(rs1.getString("credit_date"));
+							credtlog.setCreditType(rs1.getString("credit_type"));
 							credtlog.setUserName(rs1.getString("user_full_name"));
 							rs.addResList(credtlog);	
 							offset = offset + 1;

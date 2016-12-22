@@ -43,8 +43,8 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 
 		GetEngagementsByXListResObj rs = new GetEngagementsByXListResObj();
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		ResultSet rs1 = null;
+		PreparedStatement ps1 = null,ps2=null;
+		ResultSet rs1 = null,rs2=null;
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie());
 		// TODO: Core of the processing takes place here
@@ -53,7 +53,7 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 		try {
 
 			// Prepare SQL
-			String sql = null;
+			String sql = null,minDateSql=null;
 			int intCount=0,countIncrement=1,diff=-1;
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Calendar c = Calendar.getInstance();
@@ -66,6 +66,7 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 			String toDate = rq.getToDate();
 			String interval = rq.getInterval();
 			String interimDate = toDate;
+			String minDate= "";
 			
 			if(interval.equals("weekly")){
 				diff = -7;
@@ -88,52 +89,85 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 			LOGGER.info("To date is "+toDate);
 			LOGGER.info("Before While Loop");
 			
-				while (intCount<limit) {
-					GetEngagementsByXResObj egmt = new GetEngagementsByXResObj();
+			//get min date from credit_log table
+			
+			minDateSql = "SELECT *, MIN(credit_log_id) AS MinId FROM `credit_log`";
+			
+			if(userId!=null){
+				minDateSql = minDateSql + " WHERE credit_user_id ='"+userId+"'";
+				LOGGER.info(" Outer USer ID  is NOT null");
+			}else{
+				LOGGER.info(" Outer USer ID  null");
+			}
+			
+			ps2 = hcp.prepareStatement(minDateSql);
+			
+			rs2 = ps2.executeQuery();
+			LOGGER.info("Excuted Query");
+			
+			if(rs2.next()){
+				minDate = rs2.getString("credit_date");
+				}
+			
+			if (minDate==null || minDate.isEmpty() || minDate.equals("") || minDate.equals("null") || minDate.equals("NULL") ) {
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setMessage(FLS_CREDIT_ENTRY_NOT_FOUND_M);
+				return rs;
+			}
+			
+			LOGGER.info("1st Credit date is "+minDate);
+			
+			if(!sdf.parse(minDate).before(sdf.parse(toDate))){
+				rs.setCode(FLS_ENGAGEMENT_DATE_EXCEPTION);
+				rs.setMessage(FLS_ENGAGEMENT_DATE_EXCEPTION_M);
+				LOGGER.warning(FLS_ENGAGEMENT_DATE_EXCEPTION_M);
+				return rs;
+			}
+			
+			while (intCount<limit && sdf.parse(minDate).before(sdf.parse(toDate))) {
+				GetEngagementsByXResObj egmt = new GetEngagementsByXResObj();
 				
-					LOGGER.info("Inside While Loop");
-					//already getting all data from events table
-					sql = "SELECT SUM(tb1.credit_amount) AS totalCredits FROM `credit_log` tb1 WHERE ";
-					
-					sql = sql + "tb1.credit_date BETWEEN '"+interimDate+"' AND '"+toDate+"'";
-					
-					if(userId!=null){
-						sql = sql + "AND tb1.credit_user_id ='"+userId+"'";
-					}else{
-						LOGGER.info("USer ID  null");
-					}
-					
-					LOGGER.info(sql);
-					
-					ps1 = hcp.prepareStatement(sql);
-		
-					rs1 = ps1.executeQuery();
-					LOGGER.info("Excuted Query");
-					
-					if (rs1.next()) {
-							egmt.setTotalCredits(rs1.getInt("totalCredits"));
-							egmt.setStartDate(interimDate);
-							egmt.setEndDate(toDate);
-							LOGGER.info("Response Start date is "+interimDate);
-							LOGGER.info("Response To date is "+toDate);
-							rs.addResList( egmt);	
-					} else {
-						 egmt.setTotalCredits(0);
-						 egmt.setStartDate(interimDate);
-						 egmt.setEndDate(toDate);
-						rs.addResList(egmt);
-					}
-					
-					toDate = interimDate;
-					c.add(Calendar.DATE, diff);  // number of days to subtract
-					interimDate = sdf.format(c.getTime());
-					intCount = intCount + countIncrement;
-					sql= null;
-					LOGGER.info("New Start date is "+interimDate);
-					LOGGER.info("To date is "+toDate);
+				//already getting all data from events table
+				sql = "SELECT SUM(tb1.credit_amount) AS totalCredits FROM `credit_log` tb1 WHERE ";
+				
+				sql = sql + "tb1.credit_date BETWEEN '"+interimDate+"' AND '"+toDate+"'";
+				
+				if(userId!=null){
+					sql = sql + "AND tb1.credit_user_id ='"+userId+"'";
+					LOGGER.info("USer ID  is NOT null");
+				}else{
+					LOGGER.info("USer ID  null");
 				}
 				
-			LOGGER.info("After While Loop");
+				ps1 = hcp.prepareStatement(sql);
+		
+				rs1 = ps1.executeQuery();
+				LOGGER.info("Excuted Query");
+				
+				if (rs1.next()) {
+						egmt.setTotalCredits(rs1.getInt("totalCredits"));
+						egmt.setStartDate(interimDate);
+						egmt.setEndDate(toDate);
+						LOGGER.info("Response Start date is "+interimDate);
+						LOGGER.info("Response To date is "+toDate);
+						rs.addResList( egmt);	
+				} else {
+					 egmt.setTotalCredits(0);
+					 egmt.setStartDate(interimDate);
+					 egmt.setEndDate(toDate);
+					rs.addResList(egmt);
+				}
+				
+				toDate = interimDate;
+				c.add(Calendar.DATE, diff);  // number of days to subtract
+				interimDate = sdf.format(c.getTime());
+				intCount = intCount + countIncrement;
+				sql= null;
+				LOGGER.info("New Start date is "+interimDate);
+				LOGGER.info("To date is "+toDate);
+			}
+			
+			LOGGER.info("Engagements successfully added in response object");
 			rs.setCode(FLS_SUCCESS);
 			rs.setMessage(FLS_SUCCESS_M);
 			rs.setLastEngagementId(toDate);
