@@ -6,29 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import adminOps.Response;
 import connect.Connect;
-import pojos.ValidateAndCommitPromoReqObj;
-import pojos.ValidateAndCommitPromoResObj;
-import pojos.PromoCodeModel.Code_Type;
 import pojos.ReqObj;
 import pojos.ResObj;
+import pojos.ValidatePromoReqObj;
+import pojos.ValidatePromoResObj;
 import util.FlsCredit;
 import util.FlsLogger;
 import util.OAuth;
-import util.FlsCredit.Credit;
 
-public class ValidateAndCommitPromoHandler extends Connect implements AppHandler {
+public class ValidatePromoHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(ValidateAndCommitPromoHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(ValidatePromoHandler.class.getName());
 
-	private Response res = new Response();
+	private static ValidatePromoHandler instance;
 
-	private static ValidateAndCommitPromoHandler instance = null;
-
-	public static ValidateAndCommitPromoHandler getInstance() {
+	public static ValidatePromoHandler getInstance() {
 		if (instance == null)
-			instance = new ValidateAndCommitPromoHandler();
+			instance = new ValidatePromoHandler();
 		return instance;
 	}
 
@@ -39,20 +34,18 @@ public class ValidateAndCommitPromoHandler extends Connect implements AppHandler
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 
-		LOGGER.info("Inside Process Method of ValidateAndCommitPromoHandler");
+		LOGGER.info("Inside Process Method of ValidatePromoHandler");
 
-		ValidateAndCommitPromoReqObj rq = (ValidateAndCommitPromoReqObj) req;
-		ValidateAndCommitPromoResObj rs = new ValidateAndCommitPromoResObj();
-		
+		ValidatePromoReqObj rq = (ValidatePromoReqObj) req;
+		ValidatePromoResObj rs = new ValidatePromoResObj();
+
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null, ps2 = null;
 		ResultSet rs1 = null, rs2 = null;
-
+		
 		try {
 			
 			FlsCredit credits = new FlsCredit();
-			
-			int creditAmount = 0;
 			
 			String promoCode = rq.getPromoCode();
 			String userId = rq.getUserId();
@@ -70,7 +63,6 @@ public class ValidateAndCommitPromoHandler extends Connect implements AppHandler
 				rs.setMessage(FLS_INVALID_PROMO_M);
 				return rs;
 			}
-			rs.setPromoCode(promoCode);
 
 			// Getting all the data for the promo code
 			String sqlGetPromoData = "SELECT * FROM promo_credits WHERE code=?";
@@ -82,7 +74,7 @@ public class ValidateAndCommitPromoHandler extends Connect implements AppHandler
 			if (rs1.next()) {
 				
 				int credit = rs1.getInt("credit");
-				LOGGER.info("Credit for that promo code are - " + credit);
+				LOGGER.info("Credits for the promo code is - " + credit);
 				
 				Date expiry = rs1.getDate("expiry");
 				LOGGER.info("Expiry of the promo code is - " + expiry);
@@ -126,19 +118,17 @@ public class ValidateAndCommitPromoHandler extends Connect implements AppHandler
 						return rs;
 					}
 				}
-
-				creditAmount = credits.getCreditValue();
 				
 				String codeType = rs1.getString("code_type");
 				if(codeType.equals("FLS_INTERNAL")){
-					credits.logCredit(userId, credit, "Applied Promo Code", promoCode, Credit.ADD);
-					int creditLogId = credits.getCreditLogId(userId, promoCode);
-					credits.addOrder(userId, creditAmount * credit, promoCode, -1, creditLogId, Code_Type.FLS_INTERNAL);
+					rs.setCode(FLS_INVALID_PROMO);
+					rs.setMessage(FLS_INVALID_PROMO_M);
+					return rs;
 				}
 				
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
-				rs.setCreditAmount(creditAmount * credit);
+				rs.setDiscountAmount(credits.getCreditValue() * credit);
 
 			} else {
 				rs.setCode(FLS_INVALID_PROMO);

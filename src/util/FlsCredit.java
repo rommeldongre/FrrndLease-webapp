@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import connect.Connect;
 import pojos.PromoCodeModel.Code_Type;
@@ -272,6 +273,25 @@ public class FlsCredit extends Connect {
 		}
 		
 		return 0;
+	}
+	
+	public boolean expired(Date expiry) {
+
+		int result = 0;
+
+		try {
+			Date current = new Date();
+			current.setTime(0);
+			result = current.compareTo(expiry);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.info(e.getMessage());
+		}
+
+		if (result <= 0)
+			return false;
+		else
+			return true;
 	}
 
 }

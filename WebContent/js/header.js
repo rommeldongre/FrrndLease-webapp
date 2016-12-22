@@ -1340,7 +1340,8 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
         amount: 0,
         promoCode: '',
         discount: 0,
-        promoError: ''
+        promoError: '',
+        checkingPromo: false
     };
     
     $scope.$watch('payment.credit', function(){
@@ -1348,15 +1349,48 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
     });
     
     $scope.validatePromoCode = function(){
-        userFactory.userCredits($scope.payment.promoCode);
-    }
-    
-    $scope.$on('ValidateAndCommitPromoRes', function(event, response){
-        if(response.code == 0){
-            $scope.payment.discount = response.creditAmount;
-            $scope.payment.promoError = "Promo Applied: " + response.promoCode;
+        
+        if($scope.payment.promoCode == '' || $scope.payment.promoCode == undefined){
+            $scope.payment.promoError = "Please enter a valid promo code!!";
+            return;
         }
-    });
+        
+        $scope.payment.checkingPromo = true;
+        
+        var req = {
+            userId: userFactory.user,
+            promoCode: $scope.payment.promoCode,
+            accessToken: userFactory.userAccessToken
+        }
+        
+        $.ajax({
+            url: '/ValidatePromo',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType:"json",
+            success: function(response){
+                $scope.$apply(function(){
+                    $scope.payment.checkingPromo = false;
+                    if(response.code == 0){
+                        $scope.payment.discount = response.discountAmount;
+                        $scope.payment.promoError = "Promo Applied: " + $scope.payment.promoCode;
+                    }else{
+                        if(response.code == 400)
+                            logoutService.logout();
+                        else{
+                            $scope.payment.discount = 0;
+                            $scope.payment.promoError = response.message;
+                        }
+                    }
+                });
+            },
+            error: function(){
+                $scope.payment.checkingPromo = false;
+                console.log("not able to add promo credit");
+            }
+        });
+    }
     
     $scope.removePromoCode = function(){
         $scope.payment.discount = 0;
