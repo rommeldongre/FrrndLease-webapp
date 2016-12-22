@@ -510,7 +510,7 @@ headerApp.controller('headerCtrl', ['$scope',
         }
         
         $.ajax({
-            url: '/ValidatePromoCode',
+            url: '/ValidateAndCommitPromo',
             type: 'post',
             data: JSON.stringify(req),
             contentType:"application/json",
@@ -519,7 +519,7 @@ headerApp.controller('headerCtrl', ['$scope',
                 if(response.code == 400)
                     logoutService.logout();
                 displayCredits();
-                $rootScope.$broadcast('validatePromoRes', response);
+                $rootScope.$broadcast('ValidateAndCommitPromoRes', response);
             },
             error: function(){
                 console.log("not able to add promo credit");
@@ -1346,7 +1346,7 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
         userFactory.userCredits($scope.payment.promoCode);
     }
     
-    $scope.$on('validatePromoRes', function(event, response){
+    $scope.$on('ValidateAndCommitPromoRes', function(event, response){
         if(response.code == 0){
             $scope.payment.discount = response.creditAmount;
             $scope.payment.promoError = "Promo Applied: " + response.promoCode;

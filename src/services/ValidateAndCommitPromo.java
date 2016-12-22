@@ -3,10 +3,10 @@ package services;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import app.ValidatePromoCodeHandler;
+import app.ValidateAndCommitPromoHandler;
 import app.NotImplementedException;
-import pojos.ValidatePromoCodeReqObj;
-import pojos.ValidatePromoCodeResObj;
+import pojos.ValidateAndCommitPromoReqObj;
+import pojos.ValidateAndCommitPromoResObj;
 import util.FlsLogger;
 
 import javax.servlet.ServletException;
@@ -17,26 +17,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
-@WebServlet(description = "Validate Promo Code for a UserId", urlPatterns = { "/ValidatePromoCode" })
-public class ValidatePromoCode extends HttpServlet {
+@WebServlet(description = "Validate And Commit Promo for a UserId", urlPatterns = { "/ValidateAndCommitPromo" })
+public class ValidateAndCommitPromo extends HttpServlet {
 
-	private FlsLogger LOGGER = new FlsLogger(ValidatePromoCode.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(ValidateAndCommitPromo.class.getName());
 
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse) throws ServletException, IOException {
 
-		LOGGER.info("Inside Post of ValidatePromoCode Service");
+		LOGGER.info("Inside Post of ValidateAndCommitPromo Service");
 
 		ObjectMapper mapper = new ObjectMapper();
-		ValidatePromoCodeReqObj request = mapper.readValue(httprequest.getInputStream(), ValidatePromoCodeReqObj.class);
+		ValidateAndCommitPromoReqObj request = mapper.readValue(httprequest.getInputStream(), ValidateAndCommitPromoReqObj.class);
 		httpresponse.setContentType("application/json");
-		ValidatePromoCodeResObj response = null;
+		ValidateAndCommitPromoResObj response = null;
 
 		try {
 
 			// App Handler to to process request and create service response into pojo
-			response = (ValidatePromoCodeResObj) ValidatePromoCodeHandler.getInstance().process(request);
+			response = (ValidateAndCommitPromoResObj) ValidateAndCommitPromoHandler.getInstance().process(request);
 
 			// service response pojo to json
 			PrintWriter out = httpresponse.getWriter();
@@ -46,8 +46,8 @@ public class ValidatePromoCode extends HttpServlet {
 
 		} catch (NotImplementedException e) {
 			e.printStackTrace();
-			LOGGER.warning("ValidatePromoCode process method not implemented");
-			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "ValidatePromoCode process method not implemented");
+			LOGGER.warning("ValidateAndCommitPromo process method not implemented");
+			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "ValidateAndCommitPromo process method not implemented");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

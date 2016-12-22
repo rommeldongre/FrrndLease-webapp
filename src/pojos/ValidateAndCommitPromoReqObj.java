@@ -1,6 +1,6 @@
 package pojos;
 
-public class ValidatePromoCodeReqObj extends ReqObj {
+public class ValidateAndCommitPromoReqObj extends ReqObj {
 
 	String userId, accessToken, promoCode;
 

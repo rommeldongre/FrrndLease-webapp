@@ -8,8 +8,8 @@ import java.util.Date;
 
 import adminOps.Response;
 import connect.Connect;
-import pojos.ValidatePromoCodeReqObj;
-import pojos.ValidatePromoCodeResObj;
+import pojos.ValidateAndCommitPromoReqObj;
+import pojos.ValidateAndCommitPromoResObj;
 import pojos.PromoCodeModel.Code_Type;
 import pojos.ReqObj;
 import pojos.ResObj;
@@ -18,17 +18,17 @@ import util.FlsLogger;
 import util.OAuth;
 import util.FlsCredit.Credit;
 
-public class ValidatePromoCodeHandler extends Connect implements AppHandler {
+public class ValidateAndCommitPromoHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(ValidatePromoCodeHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(ValidateAndCommitPromoHandler.class.getName());
 
 	private Response res = new Response();
 
-	private static ValidatePromoCodeHandler instance = null;
+	private static ValidateAndCommitPromoHandler instance = null;
 
-	public static ValidatePromoCodeHandler getInstance() {
+	public static ValidateAndCommitPromoHandler getInstance() {
 		if (instance == null)
-			instance = new ValidatePromoCodeHandler();
+			instance = new ValidateAndCommitPromoHandler();
 		return instance;
 	}
 
@@ -39,10 +39,10 @@ public class ValidatePromoCodeHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 
-		LOGGER.info("Inside Process Method of ValidatePromoCodeHandler");
+		LOGGER.info("Inside Process Method of ValidateAndCommitPromoHandler");
 
-		ValidatePromoCodeReqObj rq = (ValidatePromoCodeReqObj) req;
-		ValidatePromoCodeResObj rs = new ValidatePromoCodeResObj();
+		ValidateAndCommitPromoReqObj rq = (ValidateAndCommitPromoReqObj) req;
+		ValidateAndCommitPromoResObj rs = new ValidateAndCommitPromoResObj();
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null, ps2 = null;

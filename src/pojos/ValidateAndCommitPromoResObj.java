@@ -1,6 +1,6 @@
 package pojos;
 
-public class ValidatePromoCodeResObj extends ResObj {
+public class ValidateAndCommitPromoResObj extends ResObj {
 
 	int code;
 	String message, promoCode;
