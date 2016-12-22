@@ -184,11 +184,21 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 				},function(response){
 					var m = "";
 					if (response && !response.error_code) {
-                        modalService.showModal({}, {bodyText: "You have successfully shared this item on facebook!!" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
-                            userFactory.userCredits("shared@10");
-                            $scope.shared = true;
-                        }, function(){});
-						
+                        $scope.shared = true;
+                        userFactory.buyCredits("shared@10", -1, -1).then(
+                            function(response){
+                                if(response.data.code == 400)
+                                    logoutService.logout();
+                                if(response.data.code == 0){
+                                    modalService.showModal({}, {bodyText: "You have successfully shared this item on facebook!!" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+                                        eventsCount.updateEventsCount();
+                                    }, function(){});
+                                }
+                            }, 
+                            function(error){
+                                console.log("Not able to buy credits internally.");
+                            }
+                        );
 					}
 				});
 			}, {scope: 'email,public_profile,user_friends'});
@@ -292,11 +302,21 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             },function(response){
                 if (response && !response.error_code) {
                     //check 'response' to see if call was successful
-                    modalService.showModal({}, {bodyText: "Invitation successfully sent to Facebook Friend(s)" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
-                        userFactory.userCredits("invited@10");
-                        eventsCount.updateEventsCount();
-                        $scope.invited = true;
-                    }, function(){});
+                    $scope.invited = true;
+                    userFactory.buyCredits("invited@10", -1, -1).then(
+                        function(response){
+                            if(response.data.code == 400)
+                                logoutService.logout();
+                            if(response.data.code == 0){
+                                modalService.showModal({}, {bodyText: "Invitation successfully sent to Facebook Friend(s)" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+                                    eventsCount.updateEventsCount();
+                                }, function(){});
+                            }
+                        }, 
+                        function(error){
+                            console.log("Not able to buy credits internally.");
+                        }
+                    );
                 }
             });
         }, {scope: 'email,public_profile,user_friends'});

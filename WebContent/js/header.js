@@ -506,31 +506,6 @@ headerApp.controller('headerCtrl', ['$scope',
 		
 		
     });
-                                        
-    $scope.$on('addPromoCredits', function(event, promoCode){
-        var req = {
-            userId: userFactory.user,
-            promoCode: promoCode,
-            accessToken: userFactory.userAccessToken
-        }
-        
-        $.ajax({
-            url: '/ValidateAndCommitPromo',
-            type: 'post',
-            data: JSON.stringify(req),
-            contentType:"application/json",
-            dataType:"json",
-            success: function(response){
-                if(response.code == 400)
-                    logoutService.logout();
-                displayCredits();
-                $rootScope.$broadcast('ValidateAndCommitPromoRes', response);
-            },
-            error: function(){
-                console.log("not able to add promo credit");
-            }
-        });
-    });
 	
 	$scope.importfb = function(){
 		
@@ -604,7 +579,7 @@ headerApp.factory('profileFactory', ['$http', function($http){
     return dataFactory;
 }]);
 
-headerApp.factory('userFactory', ['$rootScope', 'logoutService', function($rootScope, logoutService){
+headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', function($rootScope, logoutService, $http){
     
     var dataFactory = {};
     
@@ -612,8 +587,14 @@ headerApp.factory('userFactory', ['$rootScope', 'logoutService', function($rootS
     dataFactory.userName = localStorage.getItem("userloggedinName");
     dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
     
-    dataFactory.userCredits = function(promo){
-        $rootScope.$broadcast('addPromoCredits', promo);
+    dataFactory.buyCredits = function(PromoCode, AmountPaid, RazorPayId){
+        return $http.post('/BuyCredits', JSON.stringify({
+            userId: localStorage.getItem("userloggedin"),
+            accessToken: localStorage.getItem("userloggedinAccess"),
+            promoCode: PromoCode,
+            amountPaid: AmountPaid,
+            razorPayId: RazorPayId
+        }));
     }
 	
 	dataFactory.setLocalStorageValues = function(userId,fullName,access_token,referralCode){
@@ -1372,6 +1353,7 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
             success: function(response){
                 $scope.$apply(function(){
                     $scope.payment.checkingPromo = false;
+                    $scope.payment.discount = 0;
                     if(response.code == 0){
                         $scope.payment.discount = response.discountAmount;
                         $scope.payment.promoError = "Promo Applied: " + $scope.payment.promoCode;
@@ -1393,8 +1375,17 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
     }
     
     $scope.removePromoCode = function(){
-        $scope.payment.discount = 0;
         $scope.payment.promoError = '';
+        $scope.payment.promoCode = '';
+    }
+    
+    $scope.completePayment = function(){
+        userFactory.buyCredits().then(function(response){
+            
+        },
+        function(error){
+            
+        });
     }
     
 }]);
