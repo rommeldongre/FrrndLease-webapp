@@ -336,6 +336,11 @@ headerApp.controller('headerCtrl', ['$scope',
         });
 	}
 	
+	$scope.cancel_credit = function(){
+		lastOffset = 0;
+		$scope.creditsArray = [];
+	}
+	
 	// called when Show More Credits button is clicked
     $scope.loadNextCredit = function(){
         getCredit(lastOffset);

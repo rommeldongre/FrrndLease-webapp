@@ -45,7 +45,7 @@ public class FlsEmail extends Connect{
 		String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
 		
 		String FROM = "BlueMarble@frrndlease.com", CC = "BlueMarble@frrndlease.com", TO, PREFIX, SUBJECT, BODY;
-		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_LEASED_OUT_ITEMS, EMAIL_LEASED_IN_ITEMS, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;
+		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_LEASED_OUT_ITEMS, EMAIL_LEASED_IN_ITEMS, EMAIL_PHOTO_ID, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;
 		
 		int credits;
 		
@@ -55,6 +55,7 @@ public class FlsEmail extends Connect{
 		EMAIL_ITEM_DETAILS = URL + "/ItemDetails?uid=";
 		EMAIL_LEASED_OUT_ITEMS = URL + "/myapp.html#/myleasedoutitems";
 		EMAIL_LEASED_IN_ITEMS = URL + "/myapp.html#/myleasedinitems";
+		EMAIL_PHOTO_ID =  URL + "/myapp.html#/myprofile";
 		EMAIL_PICKUP_CONFIRMATION = URL + "/confirmpickup.html";
 		EMAIL_DELIVERY_PLAN = URL + "/deliveryplan.html";
 		EMAIL_GET_LEASE_AGGREMENT = URL + "/GetLeaseAgreement";
@@ -451,7 +452,7 @@ public class FlsEmail extends Connect{
 			
 			case FLS_MAIL_REMIND_PHOTO_ID:
 				SUBJECT = ("Reminder to Upload a Photo Id");
-				BODY = obj.getString("message");
+				BODY = "You are in a Prime location! This means that you can avail of Prime delivery from FrrndLease, by having a valid photo id stored with us! You can always choose to not get delivery through FrrndLease. Upload your Photo Id <a href='" + EMAIL_PHOTO_ID + "'>now</a> !!";
 				break;
 				
 			case FLS_MAIL_OPS_ADD_LEAD:

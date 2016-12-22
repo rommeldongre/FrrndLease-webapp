@@ -78,7 +78,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<button type="button" class="close" ng-click="cancel_credit()" data-dismiss="modal" aria-hidden="true">×</button>
 					<h3 class="modal-title">Credit History</h3>
 					</div>
 					<div class="modal-body">
@@ -102,7 +102,7 @@
 					</table>
 					</div>
 					<div class="modal-footer">
-					<button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
+					<button type="button" class="btn btn-default btn-fill" ng-click="cancel_credit()" data-dismiss="modal" ng-click="">Cancel</button>
 					<button class="btn btn-primary btn-fill" style="text-align: end;margin-top: 0%;" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextCredit()">Show More</button>
 					</div>
 							
