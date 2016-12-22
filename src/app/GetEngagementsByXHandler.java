@@ -109,25 +109,23 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 				minDate = rs2.getString("credit_date");
 				}
 			
-			if (minDate==null || minDate.equals(null)) {
-				rs.setCode(FLS_END_OF_DB);
-				rs.setMessage(FLS_END_OF_DB_M);
+			if (minDate==null || minDate.isEmpty() || minDate.equals("") || minDate.equals("null") || minDate.equals("NULL") ) {
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setMessage(FLS_CREDIT_ENTRY_NOT_FOUND_M);
 				return rs;
 			}
 			
 			LOGGER.info("1st Credit date is "+minDate);
 			
 			if(!sdf.parse(minDate).before(sdf.parse(toDate))){
-				rs.setCode(FLS_END_OF_DB);
-				rs.setMessage(FLS_END_OF_DB_M);
-				LOGGER.warning(FLS_END_OF_DB_M);
+				rs.setCode(FLS_ENGAGEMENT_DATE_EXCEPTION);
+				rs.setMessage(FLS_ENGAGEMENT_DATE_EXCEPTION_M);
+				LOGGER.warning(FLS_ENGAGEMENT_DATE_EXCEPTION_M);
 				return rs;
 			}
 			
 			while (intCount<limit && sdf.parse(minDate).before(sdf.parse(toDate))) {
 				GetEngagementsByXResObj egmt = new GetEngagementsByXResObj();
-			
-				LOGGER.info("Inside While Loop");
 				
 				//already getting all data from events table
 				sql = "SELECT SUM(tb1.credit_amount) AS totalCredits FROM `credit_log` tb1 WHERE ";
@@ -140,8 +138,6 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 				}else{
 					LOGGER.info("USer ID  null");
 				}
-				
-				LOGGER.info(sql);
 				
 				ps1 = hcp.prepareStatement(sql);
 		
@@ -171,7 +167,7 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 				LOGGER.info("To date is "+toDate);
 			}
 			
-			LOGGER.info("After While Loop");
+			LOGGER.info("Engagements successfully added in response object");
 			rs.setCode(FLS_SUCCESS);
 			rs.setMessage(FLS_SUCCESS_M);
 			rs.setLastEngagementId(toDate);

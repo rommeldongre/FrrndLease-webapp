@@ -34,7 +34,8 @@ public class ErrorCat {
 	final public int FLS_CHANGE_PICKUP_STATUS_FAIL = 225;
 	final public int FLS_INVALID_MESSAGE = 226;
 	final public int FLS_MESSAGE_NOT_SENT = 227;
-
+	final public int FLS_ENGAGEMENT_DATE_EXCEPTION = 228;
+	
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
 	final public String FLS_ITEMS_DELETE = "Item entry deleted from items table";
@@ -108,6 +109,8 @@ public class ErrorCat {
 	final public String FLS_FRIEND_NOT_ADDED = "Not able to add friend.";
 	final public String FLS_DUPLICATE_FRIEND_ENTRY = "This friendship already exists.";
 	final public String FLS_FRIEND_YOURSELF = "Sorry cannot make yourself friend.";
+	final public String FLS_CREDIT_ENTRY_NOT_FOUND_M = "No intitial Credit Entry found";
+	final public String FLS_ENGAGEMENT_DATE_EXCEPTION_M = "Sorry, To Date is before intial Credit Date";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";
