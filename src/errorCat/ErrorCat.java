@@ -34,6 +34,7 @@ public class ErrorCat {
 	final public int FLS_CHANGE_PICKUP_STATUS_FAIL = 225;
 	final public int FLS_INVALID_MESSAGE = 226;
 	final public int FLS_MESSAGE_NOT_SENT = 227;
+	final public int FLS_AMOUNT_NEGATIVE = 228;
 
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -108,6 +109,7 @@ public class ErrorCat {
 	final public String FLS_FRIEND_NOT_ADDED = "Not able to add friend.";
 	final public String FLS_DUPLICATE_FRIEND_ENTRY = "This friendship already exists.";
 	final public String FLS_FRIEND_YOURSELF = "Sorry cannot make yourself friend.";
+	final public String FLS_AMOUNT_NEGATIVE_M = "Sorry! The amount cannot be negative or zero.";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

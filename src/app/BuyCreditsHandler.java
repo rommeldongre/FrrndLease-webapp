@@ -57,96 +57,104 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 				return rs;
 			}
 
+			FlsCredit credits = new FlsCredit();
+
+			int creditAmount = credits.getCreditValue();
+			
+			int amountPaid = rq.getAmountPaid();
+
 			String promoCode = rq.getPromoCode();
-			if (promoCode == null || promoCode.equals("")) {
-				rs.setCode(FLS_INVALID_PROMO);
-				rs.setMessage(FLS_INVALID_PROMO_M);
-				return rs;
-			}
+			if (!promoCode.equals("")) {
+				// Getting the data of the promo code
+				String sqlGetPromoData = "SELECT * FROM promo_credits WHERE code=?";
+				ps1 = hcp.prepareStatement(sqlGetPromoData);
+				ps1.setString(1, promoCode);
 
-			// Getting the data of the promo code
-			String sqlGetPromoData = "SELECT * FROM promo_credits WHERE code=?";
-			ps1 = hcp.prepareStatement(sqlGetPromoData);
-			ps1.setString(1, promoCode);
+				rs1 = ps1.executeQuery();
 
-			rs1 = ps1.executeQuery();
+				if (rs1.next()) {
 
-			if (rs1.next()) {
+					int credit = rs1.getInt("credit");
+					LOGGER.info("Credits for that promo code are: " + credit);
 
-				FlsCredit credits = new FlsCredit();
-
-				int credit = rs1.getInt("credit");
-				LOGGER.info("Credits for that promo code are: " + credit);
-
-				Date expiry = rs1.getDate("expiry");
-				LOGGER.info("Expiry of the promo code is: " + expiry);
-				if (expiry != null) {
-					if (credits.expired(expiry)) {
-						rs.setCode(FLS_PROMO_EXPIRED);
-						rs.setMessage(FLS_PROMO_EXPIRED_M);
-						return rs;
+					Date expiry = rs1.getDate("expiry");
+					LOGGER.info("Expiry of the promo code is: " + expiry);
+					if (expiry != null) {
+						if (credits.expired(expiry)) {
+							rs.setCode(FLS_PROMO_EXPIRED);
+							rs.setMessage(FLS_PROMO_EXPIRED_M);
+							return rs;
+						}
 					}
-				}
 
-				int count = rs1.getInt("count");
-				LOGGER.info("Count of the promo code is: " + count);
-				if (count != -1) {
-					if (count == 0) {
-						rs.setCode(FLS_PROMO_EXPIRED);
-						rs.setMessage(FLS_PROMO_EXPIRED_M);
-						return rs;
+					int count = rs1.getInt("count");
+					LOGGER.info("Count of the promo code is: " + count);
+					if (count != -1) {
+						if (count == 0) {
+							rs.setCode(FLS_PROMO_EXPIRED);
+							rs.setMessage(FLS_PROMO_EXPIRED_M);
+							return rs;
+						}
 					}
-				}
 
-				String sqlGetFromOrders = "SELECT * FROM orders WHERE order_user_id=? AND promo_code=?";
-				ps2 = hcp.prepareStatement(sqlGetFromOrders);
-				ps2.setString(1, userId);
-				ps2.setString(2, promoCode);
+					String sqlGetFromOrders = "SELECT * FROM orders WHERE order_user_id=? AND promo_code=?";
+					ps2 = hcp.prepareStatement(sqlGetFromOrders);
+					ps2.setString(1, userId);
+					ps2.setString(2, promoCode);
 
-				rs2 = ps2.executeQuery();
+					rs2 = ps2.executeQuery();
 
-				int tot = 0;
+					int tot = 0;
 
-				while (rs2.next()) {
-					tot = tot + 1;
-				}
-
-				int perPersonCount = rs1.getInt("per_person_count");
-				LOGGER.info("Per Person Count of the promo code is - " + perPersonCount);
-				if (perPersonCount != -1) {
-					if (tot >= perPersonCount) {
-						rs.setCode(FLS_INVALID_PROMO);
-						rs.setMessage("You cannot use this promo code more than " + perPersonCount + " time");
-						return rs;
+					while (rs2.next()) {
+						tot = tot + 1;
 					}
+
+					int perPersonCount = rs1.getInt("per_person_count");
+					LOGGER.info("Per Person Count of the promo code is - " + perPersonCount);
+					if (perPersonCount != -1) {
+						if (tot >= perPersonCount) {
+							rs.setCode(FLS_INVALID_PROMO);
+							rs.setMessage("You cannot use this promo code more than " + perPersonCount + " time");
+							return rs;
+						}
+					}
+
+					String codeType = rs1.getString("code_type");
+					if (codeType.equals("FLS_INTERNAL")) {
+						credits.logCredit(userId, credit, "Applied Promo Code", promoCode, Credit.ADD);
+						int creditLogId = credits.getCreditLogId(userId, promoCode);
+						credits.addOrder(userId, 0, promoCode, null, creditLogId, Code_Type.FLS_INTERNAL);
+					} else if (codeType.equals("FLS_EXTERNAL")) {
+						int totalCreditsEarned = credit;
+						if (amountPaid > 0) {
+							totalCreditsEarned = totalCreditsEarned + (Integer) amountPaid / creditAmount;
+						}
+						credits.logCredit(userId, totalCreditsEarned, "Bought Credits", promoCode, Credit.ADD);
+						int creditLogId = credits.getCreditLogId(userId, promoCode);
+						credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
+					}
+
+					rs.setCode(FLS_SUCCESS);
+					rs.setMessage(FLS_SUCCESS_M);
+					rs.setCreditsBalance(credits.getCurrentCredits(userId));
+
+				} else {
+					rs.setCode(FLS_INVALID_PROMO);
+					rs.setMessage(FLS_INVALID_PROMO_M);
 				}
-
-				int creditAmount = credits.getCreditValue();
-
-				String codeType = rs1.getString("code_type");
-				if (codeType.equals("FLS_INTERNAL")) {
-					credits.logCredit(userId, credit, "Applied Promo Code", promoCode, Credit.ADD);
+			}else{
+				if(amountPaid > 0){
+					credits.logCredit(userId, (Integer) amountPaid / creditAmount, "Bought Credits", promoCode, Credit.ADD);
 					int creditLogId = credits.getCreditLogId(userId, promoCode);
-					credits.addOrder(userId, creditAmount * credit, promoCode, -1, creditLogId, Code_Type.FLS_INTERNAL);
-				} else if (codeType.equals("FLS_EXTERNAL")) {
-					int amountPaid = rq.getAmountPaid();
-					int totalCreditsEarned = credit;
-					if (amountPaid > 0) {
-						totalCreditsEarned = totalCreditsEarned + (Integer) amountPaid / creditAmount;
-					}
-					credits.logCredit(userId, totalCreditsEarned, "Bought Credits", "", Credit.ADD);
-					int creditLogId = credits.getCreditLogId(userId, promoCode);
-					credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId,
-							Code_Type.FLS_EXTERNAL);
+					credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
+					rs.setCode(FLS_SUCCESS);
+					rs.setMessage(FLS_SUCCESS_M);
+					rs.setCreditsBalance(credits.getCurrentCredits(userId));
+				}else{
+					rs.setCode(FLS_AMOUNT_NEGATIVE);
+					rs.setMessage(FLS_AMOUNT_NEGATIVE_M);
 				}
-
-				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
-				rs.setCreditsBalance(credits.getCurrentCredits(userId));
-
-			} else {
-				rs.setCode(FLS_INVALID_PROMO);
-				rs.setMessage(FLS_INVALID_PROMO_M);
 			}
 
 		} catch (SQLException e) {

@@ -2,8 +2,8 @@ package pojos;
 
 public class BuyCreditsReqObj extends ReqObj {
 
-	String userId, accessToken, promoCode;
-	int amountPaid, razorPayId;
+	String userId, accessToken, promoCode, razorPayId;
+	int amountPaid;
 
 	public String getUserId() {
 		return userId;
@@ -37,11 +37,11 @@ public class BuyCreditsReqObj extends ReqObj {
 		this.amountPaid = amountPaid;
 	}
 
-	public int getRazorPayId() {
+	public String getRazorPayId() {
 		return razorPayId;
 	}
 
-	public void setRazorPayId(int razorPayId) {
+	public void setRazorPayId(String razorPayId) {
 		this.razorPayId = razorPayId;
 	}
 

@@ -185,7 +185,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 					var m = "";
 					if (response && !response.error_code) {
                         $scope.shared = true;
-                        userFactory.buyCredits("shared@10", -1, -1).then(
+                        userFactory.buyCredits("shared@10", 0, null).then(
                             function(response){
                                 if(response.data.code == 400)
                                     logoutService.logout();
@@ -303,7 +303,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
                 if (response && !response.error_code) {
                     //check 'response' to see if call was successful
                     $scope.invited = true;
-                    userFactory.buyCredits("invited@10", -1, -1).then(
+                    userFactory.buyCredits("invited@10", 0, null).then(
                         function(response){
                             if(response.data.code == 400)
                                 logoutService.logout();

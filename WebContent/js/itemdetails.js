@@ -335,7 +335,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 					var m = "";
 					if (response && !response.error_code) {
                         $scope.shared = true;
-                        userFactory.buyCredits("shared@10", -1, -1).then(
+                        userFactory.buyCredits("shared@10", 0, null).then(
                             function(response){
                                 if(response.data.code == 400)
                                     logoutService.logout();

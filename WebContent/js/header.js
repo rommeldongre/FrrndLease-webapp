@@ -1313,7 +1313,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 //    getLocation();
 }]);
 
-headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($scope, userFactory){
+headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount', function($scope, userFactory, eventsCount){
     
     $scope.payment = {
         credit: 0,
@@ -1322,7 +1322,9 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
         promoCode: '',
         discount: 0,
         promoError: '',
-        checkingPromo: false
+        checkingPromo: false,
+        validPromo: false,
+        paymentError: ''
     };
     
     $scope.$watch('payment.credit', function(){
@@ -1354,9 +1356,11 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
                 $scope.$apply(function(){
                     $scope.payment.checkingPromo = false;
                     $scope.payment.discount = 0;
+                    $scope.payment.validPromo = false;
                     if(response.code == 0){
                         $scope.payment.discount = response.discountAmount;
                         $scope.payment.promoError = "Promo Applied: " + $scope.payment.promoCode;
+                        $scope.payment.validPromo = true;
                     }else{
                         if(response.code == 400)
                             logoutService.logout();
@@ -1377,15 +1381,55 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', function($sco
     $scope.removePromoCode = function(){
         $scope.payment.promoError = '';
         $scope.payment.promoCode = '';
+        $scope.payment.validPromo = false;
     }
     
     $scope.completePayment = function(){
-        userFactory.buyCredits().then(function(response){
-            
-        },
-        function(error){
-            
-        });
+        
+        var payableAmt = $scope.payment.amount - $scope.payment.discount;
+        
+        if(payableAmt > 0){
+            var options = {
+                key: "rzp_test_GwL1Gj4oI20Jeq",
+                amount: payableAmt * 100,
+                name: "Grey Labs LLP",
+                description: "Buying Credits",
+                image: "images/fls-logo.png",
+                prefill: {
+                    name: userFactory.userName,
+                    email: userFactory.user
+                },
+                handler: function (response){
+                    userFactory.buyCredits($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
+                        if(res.data.code == 0)
+                            window.location.reload();
+                        else
+                            console.log(res);
+                    },
+                    function(error){});
+                },
+                modal: {
+                    ondismiss: function(){}
+                }
+            }
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        }else if(payableAmt == 0){
+            if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
+                userFactory.buyCredits($scope.payment.promoCode, 0, null).then(function(response){
+                    window.location.reload();
+                },
+                function(error){});
+            }else{
+                $scope.payment.paymentError = 'Please make the amount positive or apply a valid promo code';
+            }
+        }else if(payableAmt < 0){
+            if($scope.payment.validPromo)
+                $scope.payment.paymentError = 'Please make the amount positive or zero by adding more credits';
+            else
+                $scope.payment.paymentError = 'Cannot pay negative amount. Please make it positive by adding more credits';
+        }
+        
     }
     
 }]);

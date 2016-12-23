@@ -201,7 +201,7 @@ public class FlsCredit extends Connect {
 		return 0;
 	}
 
-	public void addOrder(String userId, int amount, String promoCode, int razorPayId, int creditLogId, Code_Type flsInternal) {
+	public void addOrder(String userId, int amount, String promoCode, String razorPayId, int creditLogId, Code_Type flsInternal) {
 		
 		LOGGER.info("Inside addOrder Method");
 		
@@ -216,7 +216,7 @@ public class FlsCredit extends Connect {
 			ps1.setString(1, userId);
 			ps1.setInt(2, amount);
 			ps1.setString(3, promoCode);
-			ps1.setInt(4, razorPayId);
+			ps1.setString(4, razorPayId);
 			ps1.setInt(5, creditLogId);
 			ps1.setString(6, flsInternal.name());
 			
