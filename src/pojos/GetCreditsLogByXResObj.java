@@ -3,7 +3,7 @@ package pojos;
 public class GetCreditsLogByXResObj extends ResObj{
 	
 	int Credits;
-	String creditDate,userName;
+	String creditDate,creditType, userName;
 	public int getCredits() {
 		return Credits;
 	}
@@ -15,6 +15,12 @@ public class GetCreditsLogByXResObj extends ResObj{
 	}
 	public void setCreditDate(String creditDate) {
 		this.creditDate = creditDate;
+	}
+	public String getCreditType() {
+		return creditType;
+	}
+	public void setCreditType(String creditType) {
+		this.creditType = creditType;
 	}
 	public String getUserName() {
 		return userName;
