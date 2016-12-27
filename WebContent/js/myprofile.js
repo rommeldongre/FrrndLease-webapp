@@ -47,12 +47,13 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.locality = response.data.locality;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
-				$scope.label = response.data.photoIdVerified;
 				$scope.profilePic = response.data.profilePic;
                 $scope.status = response.data.userStatus;
                 $scope.secStatus = response.data.userSecStatus;
                 $scope.notification = response.data.userNotification;
                 $scope.photoId = response.data.photoId;
+				$scope.addressVerified = response.data.photoIdVerified;
+                $scope.userFeeExpiry = response.data.userFeeExpry;
                 
                 Mobile = response.data.mobile;
                 Email = response.data.email;

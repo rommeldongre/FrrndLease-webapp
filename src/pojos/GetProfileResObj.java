@@ -6,11 +6,10 @@ public class GetProfileResObj extends ResObj {
 	String message;
 
 	int credit, liveStatus;
-	String plan, userUid, fullName, mobile, email, location, address, locality, sublocality, referralCode, photoId,
-			profilePic;
+	String plan, userUid, fullName, mobile, email, location, address, locality, sublocality, referralCode, photoId, profilePic;
 	float lat, lng;
 	boolean photoIdVerified;
-	String userStatus, userSecStatus, userNotification;
+	String userStatus, userSecStatus, userNotification, userFeeExpiry;
 
 	public int getCode() {
 		return code;
@@ -186,5 +185,13 @@ public class GetProfileResObj extends ResObj {
 
 	public void setUserNotification(String userNotification) {
 		this.userNotification = userNotification;
+	}
+
+	public String getUserFeeExpiry() {
+		return userFeeExpiry;
+	}
+
+	public void setUserFeeExpiry(String userFeeExpiry) {
+		this.userFeeExpiry = userFeeExpiry;
 	}
 }

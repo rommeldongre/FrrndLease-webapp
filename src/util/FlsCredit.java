@@ -294,4 +294,75 @@ public class FlsCredit extends Connect {
 			return true;
 	}
 
+	public int getMemberValue() {
+		LOGGER.info("Inside getMemberValue Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetMemberValue = "SELECT `value` FROM `config` WHERE `option`='member_amount'";
+			ps1 = hcp.prepareStatement(sqlGetMemberValue);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				return rs1.getInt("value");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return 0;
+	}
+
+	public void addMembership(String userId, int amountPaid, String promoCode, String razorPayId) {
+		
+		LOGGER.info("Inside addMembership Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int rs1;
+		
+		try {
+			
+			String sqlInsertOrder = "INSERT INTO `membership` (`member_user_id`, `amount`, `promo_code`, `razor_pay_id`) VALUES (?, ?, ?, ?)";
+			ps1 = hcp.prepareStatement(sqlInsertOrder);
+			ps1.setString(1, userId);
+			ps1.setInt(2, amountPaid);
+			ps1.setString(3, promoCode);
+			ps1.setString(4, razorPayId);
+			
+			rs1 = ps1.executeUpdate();
+			
+			if(rs1 == 1){
+				LOGGER.info("New membership created for the userId - " + userId);
+			}else{
+				LOGGER.info("Not able to create a new membership");
+			}		
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
 }
