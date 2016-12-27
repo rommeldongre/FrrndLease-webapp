@@ -35,6 +35,7 @@ public class ErrorCat {
 	final public int FLS_INVALID_MESSAGE = 226;
 	final public int FLS_MESSAGE_NOT_SENT = 227;
 	final public int FLS_ENGAGEMENT_DATE_EXCEPTION = 228;
+	final public int FLS_AMOUNT_NEGATIVE = 229;
 	
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -111,6 +112,7 @@ public class ErrorCat {
 	final public String FLS_FRIEND_YOURSELF = "Sorry cannot make yourself friend.";
 	final public String FLS_CREDIT_ENTRY_NOT_FOUND_M = "No intitial Credit Entry found";
 	final public String FLS_ENGAGEMENT_DATE_EXCEPTION_M = "Sorry, To Date is before intial Credit Date";
+	final public String FLS_AMOUNT_NEGATIVE_M = "Sorry! The amount cannot be negative or zero.";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

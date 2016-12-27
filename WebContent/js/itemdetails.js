@@ -5,13 +5,17 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											'$http', 
 											'userFactory', 
 											'bannerService', 
-											'modalService', 
+											'modalService',
+                                            'logoutService',
+                                            'eventsCount',
 											function($scope, 
 											$window, 
 											$http, 
 											userFactory, 
 											bannerService, 
-											modalService){
+											modalService,
+                                            logoutService,
+                                            eventsCount){
     
     var user = localStorage.getItem("userloggedin");
     
@@ -330,8 +334,21 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				},function(response){
 					var m = "";
 					if (response && !response.error_code) {
-						userFactory.userCredits("shared@10");
-						$scope.shared = true;
+                        $scope.shared = true;
+                        userFactory.buyCredits("shared@10", 0, null).then(
+                            function(response){
+                                if(response.data.code == 400)
+                                    logoutService.logout();
+                                if(response.data.code == 0){
+                                    modalService.showModal({}, {bodyText: "You have successfully shared this item on facebook!!" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+                                        eventsCount.updateEventsCount();
+                                    }, function(){});
+                                }
+                            }, 
+                            function(error){
+                                console.log("Not able to buy credits internally.");
+                            }
+                        );
 					}
 				});
 			}, {scope: 'email,public_profile,user_friends'});
@@ -340,4 +357,5 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						}, function(){});
         }
     }
+    
 }]);

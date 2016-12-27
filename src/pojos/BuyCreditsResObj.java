@@ -1,11 +1,9 @@
 package pojos;
 
-public class AddPromoCreditsResObj extends ResObj{
+public class BuyCreditsResObj extends ResObj {
 
-	int code;
+	int code, creditsBalance;
 	String message;
-	
-	int newCreditBalance;
 
 	public int getCode() {
 		return code;
@@ -13,6 +11,14 @@ public class AddPromoCreditsResObj extends ResObj{
 
 	public void setCode(int code) {
 		this.code = code;
+	}
+
+	public int getCreditsBalance() {
+		return creditsBalance;
+	}
+
+	public void setCreditsBalance(int creditsBalance) {
+		this.creditsBalance = creditsBalance;
 	}
 
 	public String getMessage() {
@@ -23,11 +29,4 @@ public class AddPromoCreditsResObj extends ResObj{
 		this.message = message;
 	}
 
-	public int getNewCreditBalance() {
-		return newCreditBalance;
-	}
-
-	public void setNewCreditBalance(int newCreditBalance) {
-		this.newCreditBalance = newCreditBalance;
-	}
 }

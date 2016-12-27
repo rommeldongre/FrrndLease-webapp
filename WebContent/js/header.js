@@ -12,6 +12,7 @@ headerApp.controller('headerCtrl', ['$scope',
                                     'logoutService',
                                     'modalService',
 									'eventsCount',
+                                    '$rootScope',
 									function($scope, 
 									$timeout, 
 									userFactory, 
@@ -23,7 +24,8 @@ headerApp.controller('headerCtrl', ['$scope',
 									loginSignupService,
                                     logoutService,
                                     modalService,
-									eventsCount){
+									eventsCount,
+                                    $rootScope){
     
     // sign up starts here
     
@@ -504,37 +506,6 @@ headerApp.controller('headerCtrl', ['$scope',
 		
 		
     });
-                                        
-    $scope.$on('addPromoCredits', function(event, promoCode){
-        var req = {
-            userId: userFactory.user,
-            promoCode: promoCode,
-            accessToken: userFactory.userAccessToken
-        }
-        
-        $.ajax({
-            url: '/AddPromoCredits',
-            type: 'post',
-            data: JSON.stringify(req),
-            contentType:"application/json",
-            dataType:"json",
-            success: function(response){
-                modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'Ok'}).then(
-                    function(r){
-                        if(response.code == 0){
-                            $scope.credits = response.newCreditBalance;
-                            userFactory.userCreditsRes(response.newCreditBalance);
-                        }
-                        if(response.code == 400)
-                            logoutService.logout();
-                    }, function(){});
-            },
-            error: function(){
-                console.log("not able to add promo credit");
-            }
-        });
-        
-    });
 	
 	$scope.importfb = function(){
 		
@@ -608,7 +579,7 @@ headerApp.factory('profileFactory', ['$http', function($http){
     return dataFactory;
 }]);
 
-headerApp.factory('userFactory', ['$rootScope', function($rootScope){
+headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', function($rootScope, logoutService, $http){
     
     var dataFactory = {};
     
@@ -616,12 +587,14 @@ headerApp.factory('userFactory', ['$rootScope', function($rootScope){
     dataFactory.userName = localStorage.getItem("userloggedinName");
     dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
     
-    dataFactory.userCredits = function(promo){
-        $rootScope.$broadcast('addPromoCredits', promo);
-    }
-    
-    dataFactory.userCreditsRes = function(credits){
-        $rootScope.$broadcast('updatedCredits', credits);
+    dataFactory.buyCredits = function(PromoCode, AmountPaid, RazorPayId){
+        return $http.post('/BuyCredits', JSON.stringify({
+            userId: localStorage.getItem("userloggedin"),
+            accessToken: localStorage.getItem("userloggedinAccess"),
+            promoCode: PromoCode,
+            amountPaid: AmountPaid,
+            razorPayId: RazorPayId
+        }));
     }
 	
 	dataFactory.setLocalStorageValues = function(userId,fullName,access_token,referralCode){
@@ -1194,6 +1167,8 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     
     var signUpStatus = "";
     
+    $scope.user = {};
+    
     $scope.userIdChanged = function(){
         
         $scope.error = "";
@@ -1202,31 +1177,31 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
         var mobile = /^[789]\d{9}$/;
         
         if(email.test($scope.userId)){
-            $scope.email = $scope.userId;
+            $scope.user.email = $scope.userId;
             $scope.emailEditable = true;
             signUpStatus = "email_pending";
         }
         else{
-            $scope.email = '';
+            $scope.user.email = '';
             $scope.emailEditable = false;
         }
         
         if(mobile.test($scope.userId)){
-            $scope.mobile = $scope.userId;
+            $scope.user.mobile = $scope.userId;
             $scope.mobileEditable = true;
             signUpStatus = "mobile_pending";
         }
         else{
-            $scope.mobile = '';
+            $scope.user.mobile = '';
             $scope.mobileEditable = false;
         }
     }
     
     // form sign up
-    $scope.formSignup = function(email, password, name, mobile, code, location){
-        friendId = email;
-        if($scope.userId == email || $scope.userId == mobile)
-            loginSignupService.signUpCheckReq($scope.userId, email, password, name, "", mobile, code, location, signUpStatus, friendId);
+    $scope.formSignup = function(){
+        friendId = $scope.user.email;
+        if($scope.userId == $scope.user.email || $scope.userId == $scope.user.mobile)
+            loginSignupService.signUpCheckReq($scope.userId, $scope.user.email, $scope.password, $scope.name, "", $scope.user.mobile, $scope.user.code, $scope.location, signUpStatus, friendId);
         else
             $scope.error = "Please enter correct User Id!!";
     }
@@ -1235,7 +1210,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     function onSignUp(googleUser) {
         var profile = googleUser.getBasicProfile();
         friendId = profile.getEmail();
-        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.code, $scope.location, "google", friendId);
+        loginSignupService.signUpCheckReq(profile.getEmail(), profile.getEmail(), profile.getId(), profile.getName(), profile.getImageUrl(), "", $scope.user.code, $scope.location, "google", friendId);
     }
     window.onSignUp = onSignUp;
     
@@ -1245,7 +1220,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
             // handle the response
             FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender,picture.type(large)', function(response) {
                 friendId = response.id + "@fb";
-                loginSignupService.signUpCheckReq(response.email, response.email, response.id, response.name, response.picture.data.url, "", $scope.code, $scope.location, "facebook", friendId);
+                loginSignupService.signUpCheckReq(response.email, response.email, response.id, response.name, response.picture.data.url, "", $scope.user.code, $scope.location, "facebook", friendId);
             });
         }, {scope: 'email,public_profile,user_friends'});    
     }
@@ -1296,11 +1271,11 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 		var token = getQueryVariable("ref_token");
 		if(token === undefined || token=="undefined"){
 		}else{
-			$scope.code = token;
+			$scope.user.code = token;
 			localStorage.setItem("friendReferralCode",token);
 		}	
 		var ref_code = localStorage.getItem("friendReferralCode");
-		$scope.code = ref_code;
+		$scope.user.code = ref_code;
 	}
     
 	
@@ -1336,4 +1311,125 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 //    }
 //    
 //    getLocation();
+}]);
+
+headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount', function($scope, userFactory, eventsCount){
+    
+    $scope.payment = {
+        credit: 0,
+        conversion: 10,
+        amount: 0,
+        promoCode: '',
+        discount: 0,
+        promoError: '',
+        checkingPromo: false,
+        validPromo: false,
+        paymentError: ''
+    };
+    
+    $scope.$watch('payment.credit', function(){
+        $scope.payment.amount = $scope.payment.credit * $scope.payment.conversion;
+    });
+    
+    $scope.validatePromoCode = function(){
+        
+        if($scope.payment.promoCode == '' || $scope.payment.promoCode == undefined){
+            $scope.payment.promoError = "Please enter a valid promo code!!";
+            return;
+        }
+        
+        $scope.payment.checkingPromo = true;
+        
+        var req = {
+            userId: userFactory.user,
+            promoCode: $scope.payment.promoCode,
+            accessToken: userFactory.userAccessToken
+        }
+        
+        $.ajax({
+            url: '/ValidatePromo',
+            type: 'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType:"json",
+            success: function(response){
+                $scope.$apply(function(){
+                    $scope.payment.checkingPromo = false;
+                    $scope.payment.discount = 0;
+                    $scope.payment.validPromo = false;
+                    if(response.code == 0){
+                        $scope.payment.discount = response.discountAmount;
+                        $scope.payment.promoError = "Promo Applied: " + $scope.payment.promoCode;
+                        $scope.payment.validPromo = true;
+                    }else{
+                        if(response.code == 400)
+                            logoutService.logout();
+                        else{
+                            $scope.payment.discount = 0;
+                            $scope.payment.promoError = response.message;
+                        }
+                    }
+                });
+            },
+            error: function(){
+                $scope.payment.checkingPromo = false;
+                console.log("not able to add promo credit");
+            }
+        });
+    }
+    
+    $scope.removePromoCode = function(){
+        $scope.payment.promoError = '';
+        $scope.payment.promoCode = '';
+        $scope.payment.validPromo = false;
+    }
+    
+    $scope.completePayment = function(){
+        
+        var payableAmt = $scope.payment.amount - $scope.payment.discount;
+        
+        if(payableAmt > 0){
+            var options = {
+                key: "rzp_test_GwL1Gj4oI20Jeq",
+                amount: payableAmt * 100,
+                name: "Grey Labs LLP",
+                description: "Buying Credits",
+                image: "images/fls-logo.png",
+                prefill: {
+                    name: userFactory.userName,
+                    email: userFactory.user
+                },
+                handler: function (response){
+                    userFactory.buyCredits($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
+                        if(res.data.code == 0)
+                            window.location.reload();
+                        else
+                            console.log(res);
+                    },
+                    function(error){});
+                },
+                modal: {
+                    ondismiss: function(){}
+                }
+            }
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        }else if(payableAmt == 0){
+            if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
+                userFactory.buyCredits($scope.payment.promoCode, 0, null).then(function(response){
+                    window.location.reload();
+                },
+                function(error){});
+            }else{
+                $scope.payment.paymentError = 'Please make the amount positive or apply a valid promo code';
+            }
+        }else if(payableAmt < 0){
+            if($scope.payment.validPromo)
+                $scope.payment.paymentError = 'Please make the amount positive or zero by adding more credits';
+            else
+                $scope.payment.paymentError = 'Cannot pay negative amount. Please make it positive by adding more credits';
+        }
+        
+    }
+    
 }]);
