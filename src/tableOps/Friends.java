@@ -14,9 +14,10 @@ import connect.Connect;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsCredit.Credit;
 import util.FlsConfig;
+import util.FlsCredit;
 import util.FlsLogger;
-import util.LogCredit;
 
 public class Friends extends Connect {
 
@@ -141,9 +142,8 @@ public class Friends extends Connect {
 					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
 					event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
 				
-					LogCredit lc = new LogCredit();
-					lc.addLogCredit(userId,1,"Friend Added","");
-					lc.addCredit(userId, 1);
+					FlsCredit credits = new FlsCredit();
+					credits.logCredit(userId, 1, "Friend Added", "", Credit.ADD);
 				}else{
 					res.setData(FLS_INVALID_OPERATION, Id, FLS_FRIEND_NOT_ADDED);
 					LOGGER.info("Not able to create a new friendship.");

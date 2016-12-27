@@ -9,9 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import app.GrantLeaseHandler;
-import app.RenewLeaseHandler;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsCredit.Credit;
 import util.FlsPlan.Delivery_Plan;
 import connect.Connect;
 
@@ -43,7 +43,6 @@ public class FlsJob extends Connect implements org.quartz.Job {
     	LOGGER.info("Inside Lease Task job");
   		String lease_requser_id=null,lease_user_id=null,lease_expiry_date=null,term,date, item_name=null;
   	    int user_credit=0,lease_item_id=0,days=0;
-  	    Calendar gracePeroidCal = Calendar.getInstance();
   	    
   	    Calendar futureCal = Calendar.getInstance();
 		SimpleDateFormat futureSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -55,10 +54,6 @@ public class FlsJob extends Connect implements org.quartz.Job {
 		Connection hcp = getConnectionFromPool();
   	    PreparedStatement psgetLeases=null;
   	    ResultSet resultLeases =null;
-		SimpleDateFormat sdfCal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		GrantLeaseHandler GLH = new GrantLeaseHandler();
-		RenewLeaseHandler RLH = new RenewLeaseHandler();
-		LogCredit lc = new LogCredit();
 		Event event = new Event();
   	    
     	try {
@@ -147,12 +142,11 @@ public class FlsJob extends Connect implements org.quartz.Job {
   	    
   	    Connection hcp = getConnectionFromPool();
 		
-  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null,psAddCredit=null,psDebitCredit=null, ps1 = null, ps2 = null;
+  	    PreparedStatement psRenewUpdate=null,psCloseUpdate=null,psItemSelect=null,psItemUpdate=null, ps1 = null, ps2 = null;
   	    ResultSet dbResponseitems=null, rs1 = null, rs2 = null;
 		SimpleDateFormat sdfCal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		GrantLeaseHandler GLH = new GrantLeaseHandler();
-		RenewLeaseHandler RLH = new RenewLeaseHandler();
-		LogCredit lc = new LogCredit();
+		FlsCredit credits = new FlsCredit();
 		LogItem li = new LogItem();
   	    
     	try {
@@ -206,35 +200,9 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				}
 					
 				// add credit to user giving item on lease
-				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
-				psAddCredit = hcp.prepareStatement(sqlAddCredit);
-				psAddCredit.setString(1, lease_user_id);
-				int addCredit=0;
-				addCredit = psAddCredit.executeUpdate();
-				
-				if(addCredit == 0){
-					LOGGER.warning("Error occured while firing 1st update credit query on users table");
-					hcp.rollback();
-					return;
-				}
-				
-				
-				lc.addLogCredit(lease_user_id,10,"Lease Renewed","");
-				
+				credits.logCredit(lease_user_id, 10, "Lease Renewed", "", Credit.ADD);
 				// subtract credit from user getting a lease
-				String sqlSubCredit = "UPDATE users SET user_credit=user_credit-10 WHERE user_id=?";
-				psDebitCredit = hcp.prepareStatement(sqlSubCredit);
-				psDebitCredit.setString(1, lease_requser_id);
-				int subCredit =0;
-				subCredit = psDebitCredit.executeUpdate();
-
-				if(subCredit == 0){
-					LOGGER.warning("Error occured while firing 2nd update credit query on users");
-					hcp.rollback();
-					return;
-				}
-					
-				lc.addLogCredit(lease_requser_id,-10,"Lease Renewed","");
+				credits.logCredit(lease_requser_id, 10, "Lease Renewed", "", Credit.SUB);
 				
 				// logging item status to renewed
 				li.addItemLog(lease_item_id, "Lease Renewed", "", item_primary_image_link);
@@ -338,8 +306,6 @@ public class FlsJob extends Connect implements org.quartz.Job {
   				
   				if(psRenewUpdate != null)psRenewUpdate.close();
   				if(psCloseUpdate != null)psCloseUpdate.close();
-  				if(psAddCredit != null)psAddCredit.close();
-  				if(psDebitCredit != null)psDebitCredit.close();
   				
   				if(psItemSelect != null)psItemSelect.close();
   				if(psItemUpdate != null)psItemUpdate.close();

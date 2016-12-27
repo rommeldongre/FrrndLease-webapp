@@ -1,0 +1,100 @@
+<div ng-controller="paymentModalCtrl" class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="paymentModalLabel">Add Credits</h4>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <div class="table-responsive">
+                    <table class="table table-shopping">
+                        <thead>
+                            <tr>
+                                <th class="text-center" colspan="2">Add Credits</th>
+                                <th class="text-center">Credits</th>
+                                <th class="text-center">Amount per credit</th>
+                                <th class="text-center">Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="payment.credit = payment.credit + 1">
+                                        <i class="fa fa-plus" aria-hidden="true"></i> 1
+                                    </button>
+                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="(payment.credit >= 1) ? payment.credit = payment.credit - 1 : payment.credit">
+                                       <i class="fa fa-minus" aria-hidden="true"></i> 1
+                                    </button>
+                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="payment.credit = payment.credit + 10">
+                                       <i class="fa fa-plus" aria-hidden="true"></i> 10
+                                    </button>
+                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="(payment.credit >= 10) ? payment.credit = payment.credit - 10 : payment.credit">
+                                       <i class="fa fa-minus" aria-hidden="true"></i> 10
+                                    </button>
+                                </td>
+                                <td class="td-number" style="text-align:center;">
+                                    {{payment.credit}}
+                                </td>
+                                <td class="td-number" style="text-align:center;">
+                                    <small><i class="fa fa-rupee"></i></small>{{payment.conversion}}
+                                </td>
+                                <td class="td-number" style="text-align:center;">
+                                    <small><i class="fa fa-rupee"></i></small>{{payment.amount}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="2">
+                                    <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Enter Promo Code (If Any)" ng-model="payment.promoCode">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary btn-fill" ng-click="validatePromoCode()" type="button">Apply</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td colspan="2"><i ng-if="payment.checkingPromo" class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{payment.promoError}} <button ng-if="payment.promoError != ''" class="btn btn-default btn-simple" ng-click="removePromoCode()"><i class="fa fa-times-circle" aria-hidden="true"></i></button></td>
+                                <td class="td-price" style="text-align:center;">
+                                    - <small><i class="fa fa-rupee"></i></small>{{payment.discount}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="2">Internet Handling Charges</td>
+                                <td colspan="2"></td>
+                                <td class="td-price" style="text-align:center;">
+                                    <small><i class="fa fa-rupee"></i></small>0
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="2">Service Tax</td>
+                                <td colspan="2"></td>
+                                <td class="td-price" style="text-align:center;">
+                                    <small><i class="fa fa-rupee"></i></small>0
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="td-total">
+                                    Total-
+                                </td>
+                                <td class="td-price" style="text-align:center;">
+                                    <small><i class="fa fa-rupee"></i></small>{{payment.amount - payment.discount}}
+                                </td>
+                                <td class="text-center">
+                                    <button ng-click="completePayment()" type="button" class="btn btn-primary btn-fill btn-sm">Complete Payment <i class="fa fa-chevron-right"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row" style="text-align:center;color:red;">
+                    {{payment.paymentError}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -16,14 +16,15 @@ import pojos.ResObj;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsCredit.Credit;
 import util.FlsBadges;
 import util.FlsConfig;
+import util.FlsCredit;
 import util.FlsLogger;
 import util.FlsS3Bucket;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
-import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
 
@@ -54,9 +55,9 @@ public class PostItemHandler extends Connect implements AppHandler {
 		PostItemResObj rs = new PostItemResObj();
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps5 = null;
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null;
 		ResultSet keys = null, rs1 = null;
-		int rs2, rs3,rs5;
+		int rs2, rs3;
 		
 		String userId = rq.getUserId();
 		int itemId = 0;
@@ -130,19 +131,13 @@ public class PostItemHandler extends Connect implements AppHandler {
 			
 			LOGGER.warning("Item added into table");
 			
-			// Adding entry to Item log
-			LogCredit lc = new LogCredit();
-			lc.addLogCredit(rq.getUserId(),10,"Item Added In Friend Store","");
-			
-			// adding credit to users account
-			String sqlAddCredit = "UPDATE users SET user_credit=user_credit+10 WHERE user_id=?";
-			ps5 = hcp.prepareStatement(sqlAddCredit);
-			ps5.setString(1, rq.getUserId()+"");
-			rs5 = ps5.executeUpdate();
-			
-			if(rs5 == 1){
+			if(rs3 == 1){
 				LOGGER.info("10 credits added to the users table");
 				hcp.commit();
+				
+				// Logging the credit
+				FlsCredit credits = new FlsCredit();
+				credits.logCredit(rq.getUserId(), 10, "Item Added In Friend Store", "", Credit.ADD);
 				
 				// Updating data for badges
 				FlsBadges badges = new FlsBadges(userId);
@@ -195,7 +190,6 @@ public class PostItemHandler extends Connect implements AppHandler {
 			rs.setMessage(FLS_INVALID_OPERATION_M);
 		}finally {
 			try {
-				if(ps5 != null)ps5.close();
 				if(ps3 != null)ps3.close();
 				if(keys != null)keys.close();
 				if(ps2 != null)ps2.close();

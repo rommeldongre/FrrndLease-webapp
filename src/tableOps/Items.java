@@ -19,11 +19,12 @@ import util.Event;
 import util.FlsBadges;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsCredit.Credit;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
-import util.LogCredit;
 import util.FlsConfig;
+import util.FlsCredit;
 import util.FlsLogger;
 import util.FlsS3Bucket;
 
@@ -356,10 +357,9 @@ public class Items extends Connect {
 				if(rs4 == 1){
 					res.setData(FLS_SUCCESS, "0", FLS_ITEMS_DELETE);
 					
-					// Updating credits
-					LogCredit lc = new LogCredit();
-					lc.addLogCredit(rs3.getString("item_user_id"), -10, "Item Deleted Permanently", "");
-					lc.subtractCredit(rs3.getString("item_user_id"), 10);
+					// Updating Credits
+					FlsCredit credits = new FlsCredit();
+					credits.logCredit(rs3.getString("item_user_id"), 10, "Item Deleted Permanently", "", Credit.SUB);
 					
 				}else{
 					res.setData(FLS_INVALID_OPERATION, "0", "Not able to delete from items table");
@@ -502,7 +502,7 @@ public class Items extends Connect {
 		ResultSet rs = null;
 		Connection hcp = getConnectionFromPool();
 
-		LogCredit lc = new LogCredit();
+		FlsCredit credits = new FlsCredit();
 		
 		try {
 			LOGGER.info("Creating statement...");
@@ -518,8 +518,7 @@ public class Items extends Connect {
 				if(status.equals("OnHold")){
 					
 					// Updating credits
-					lc.addLogCredit(rs.getString("item_user_id"), -10, "Item Put OnHold", "");
-					lc.subtractCredit(rs.getString("item_user_id"), 10);
+					credits.logCredit(rs.getString("item_user_id"), 10, "Item Put OnHold", "", Credit.SUB);
 					
 					try {
 						Event event = new Event();
@@ -530,8 +529,7 @@ public class Items extends Connect {
 				} else if (status.equals("InStore")){
 					
 					// Updating credits
-					lc.addLogCredit(rs.getString("item_user_id"), 10, "Item Back InStore", "");
-					lc.addCredit(rs.getString("item_user_id"), 10);
+					credits.logCredit(rs.getString("item_user_id"), 10, "Item Back InStore", "", Credit.ADD);
 					
 					try {
 						Event event = new Event();
@@ -939,9 +937,8 @@ public class Items extends Connect {
 							li.addItemLog(id, "Archived", "", rs1.getString("item_primary_image_link"));
 							
 							// Updating credits
-							LogCredit lc = new LogCredit();
-							lc.addLogCredit(userId, -10, "Item Archived", "");
-							lc.subtractCredit(userId, 10);
+							FlsCredit credits = new FlsCredit();
+							credits.logCredit(userId, 10, "Item Archived", "", Credit.SUB);
 							
 							Event event = new Event();
 							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_DELETE_ITEM, id, "Your Item " + id + "has been deleted from frrndlease store.");
@@ -1200,18 +1197,18 @@ public class Items extends Connect {
 		
 		LOGGER.info("Inside delete Admin method....");
 		
-		PreparedStatement stmt1 = null, stmt2 = null, stmt3 = null, stmt4 = null;
-		ResultSet rs1 = null, rs2 = null, rs3 = null;
-		int rs4;
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2;
 		Connection hcp = getConnectionFromPool();
 		
 		try {
 			
 			String sqlCheckItems = "SELECT * FROM items WHERE item_user_id=? AND item_name=?";
-			stmt1 = hcp.prepareStatement(sqlCheckItems);
-			stmt1.setString(1, userId);
-			stmt1.setString(2, title);
-			rs1 = stmt1.executeQuery();			
+			ps1 = hcp.prepareStatement(sqlCheckItems);
+			ps1.setString(1, userId);
+			ps1.setString(2, title);
+			rs1 = ps1.executeQuery();
 
 			if (rs1.next()) {
 
@@ -1231,17 +1228,16 @@ public class Items extends Connect {
 				LOGGER.info("Deleting item from items table");
 				String sqlDeleteItem = "DELETE FROM items WHERE item_id=?";
 
-				stmt4 = hcp.prepareStatement(sqlDeleteItem);
-				stmt4.setInt(1, rs1.getInt("item_id"));
-				rs4 = stmt4.executeUpdate();
+				ps2 = hcp.prepareStatement(sqlDeleteItem);
+				ps2.setInt(1, rs1.getInt("item_id"));
+				rs2 = ps2.executeUpdate();
 
-				if(rs4 == 1){
+				if(rs2 == 1){
 					res.setData(FLS_SUCCESS, "0", FLS_ITEMS_DELETE);
 					
 					// Updating credits
-					LogCredit lc = new LogCredit();
-					lc.addLogCredit(rs1.getString("item_user_id"), -10, "Item Deleted Permanently", "");
-					lc.subtractCredit(rs1.getString("item_user_id"), 10);
+					FlsCredit credits = new FlsCredit();
+					credits.logCredit(rs1.getString("item_user_id"), 10, "Item Deleted Permanently", "", Credit.SUB);
 					
 				}else{
 					res.setData(FLS_INVALID_OPERATION, "0", "Not able to delete from items table");
@@ -1262,45 +1258,14 @@ public class Items extends Connect {
 		}finally{
 			try {
 				if(rs1 != null) rs1.close();
-				if(stmt4 != null) stmt4.close();
-				if(stmt1 != null) stmt1.close();
+				if(ps2 != null) ps2.close();
+				if(ps1 != null) ps1.close();
 				if(hcp != null) hcp.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
 	}
-	/*
-	 * private void GetMax(){ //id = im.getId(); getConnection(); try {
-	 * Statement stmt1 = connection.createStatement(); String sql =
-	 * "SELECT MAX(itemId),title,description FROM items"; ResultSet rs =
-	 * stmt1.executeQuery(sql); while(rs.next()) {
-	 * System.out.println(rs.getInt("itemId")+"\t"+rs.getString("title")+"\t"+rs
-	 * .getString("description")); id = rs.getInt("itemId"); }
-	 * 
-	 * } catch (SQLException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); } }
-	 * 
-	 * /*private void updateCounter() { try { Statement stm =
-	 * connection.createStatement(); String sql1 = "SET @num := 0;"; String sql2
-	 * = "UPDATE items SET counter = @num := (@num+1);"; String sql3 =
-	 * "ALTER TABLE items AUTO_INCREMENT = 1;";
-	 * 
-	 * stm.addBatch(sql1); stm.addBatch(sql2); stm.addBatch(sql3);
-	 * 
-	 * System.out.println("Executing Query..."); stm.executeBatch();
-	 * 
-	 * } catch (SQLException e) { System.out.println(
-	 * "Couldn't update counter column.."); e.printStackTrace(); } }
-	 * 
-	 * private void Search(int id) {
-	 * 
-	 * String sql = "SELECT * FROM items WHERE id=?"; getConnection(); try {
-	 * System.out.println("Searching for item in table..."); PreparedStatement
-	 * stmt = connection.prepareStatement(sql); stmt.setInt(1, id); rs =
-	 * stmt.executeQuery(); } catch (SQLException e) { System.out.println(
-	 * "Couldnt create a statement"); e.printStackTrace(); } }
-	 */
 
 }

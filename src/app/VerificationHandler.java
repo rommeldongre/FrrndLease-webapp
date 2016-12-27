@@ -6,13 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connect.Connect;
-import pojos.VerificationReqObj;
-import pojos.VerificationResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
+import pojos.VerificationReqObj;
+import pojos.VerificationResObj;
+import util.FlsCredit;
 import util.FlsLogger;
-import util.LogCredit;
 import util.OAuth;
+import util.FlsCredit.Credit;
 
 public class VerificationHandler extends Connect implements AppHandler {
 
@@ -53,6 +54,8 @@ public class VerificationHandler extends Connect implements AppHandler {
 			
 			String sqlUpdateStatus = null;
 			
+			FlsCredit credits = new FlsCredit();
+			
 			if (rs1.next()) {
 				if(isUserId(verification)){
 					switch(rs1.getString("user_status")){
@@ -66,20 +69,16 @@ public class VerificationHandler extends Connect implements AppHandler {
 							LOGGER.info("Updating user_status to email_activated : " + res2);
 							
 							if (res2 == 1) {
-								LogCredit lc = new LogCredit();
-								int r = lc.updateCredits(rs1.getString("user_referral_code"),rs1.getString("user_referrer_code"));
-								if (r == 1) {
-									rs.setCode(FLS_SUCCESS);
-									rs.setUserId(rs1.getString("user_id"));
-									rs.setName(rs1.getString("user_full_name"));
-									rs.setMessage("Your user id has been activated!!");
-									OAuth oauth = new OAuth();
-									String access_token = oauth.generateOAuth(rs1.getString("user_id"));
-									rs.setAccess_token(access_token);
-								} else {
-									rs.setCode(FLS_SQL_EXCEPTION);
-									rs.setMessage("Could not activate your account due to some internal problems!! Trying to fix it ASAP");
-								}
+								int r = credits.addRefferalCredits(rs1.getString("user_referrer_code"));
+								if(r == 1)
+									credits.logCredit(rs1.getString("user_id"), 10, "Used Referral for Sign Up", "", Credit.ADD);
+								rs.setCode(FLS_SUCCESS);
+								rs.setUserId(rs1.getString("user_id"));
+								rs.setName(rs1.getString("user_full_name"));
+								rs.setMessage("Your user id has been activated!!");
+								OAuth oauth = new OAuth();
+								String access_token = oauth.generateOAuth(rs1.getString("user_id"));
+								rs.setAccess_token(access_token);
 							}else{
 								rs.setCode(FLS_SQL_EXCEPTION);
 								rs.setMessage("Some issues on our side. Trying to fix them ASAP!!");
@@ -95,20 +94,16 @@ public class VerificationHandler extends Connect implements AppHandler {
 							LOGGER.info("Updating user_status to mobile_activated : " + res3);
 							
 							if (res3 == 1) {
-								LogCredit lc = new LogCredit();
-								int r = lc.updateCredits(rs1.getString("user_referral_code"),rs1.getString("user_referrer_code"));
-								if (r == 1) {
-									rs.setCode(FLS_SUCCESS);
-									rs.setUserId(rs1.getString("user_id"));
-									rs.setName(rs1.getString("user_full_name"));
-									rs.setMessage("Your user id has been activated!!");
-									OAuth oauth = new OAuth();
-									String access_token = oauth.generateOAuth(rs1.getString("user_id"));
-									rs.setAccess_token(access_token);
-								} else {
-									rs.setCode(FLS_SQL_EXCEPTION);
-									rs.setMessage("Could not activate your account due to some internal problems!! Trying to fix it ASAP");
-								}
+								int r = credits.addRefferalCredits(rs1.getString("user_referrer_code"));
+								if(r == 1)
+									credits.logCredit(rs1.getString("user_id"), 10, "Used Referral for Sign Up", "", Credit.ADD);
+								rs.setCode(FLS_SUCCESS);
+								rs.setUserId(rs1.getString("user_id"));
+								rs.setName(rs1.getString("user_full_name"));
+								rs.setMessage("Your user id has been activated!!");
+								OAuth oauth = new OAuth();
+								String access_token = oauth.generateOAuth(rs1.getString("user_id"));
+								rs.setAccess_token(access_token);
 							}else{
 								rs.setCode(FLS_SQL_EXCEPTION);
 								rs.setMessage("Some issues on our side. Trying to fix them ASAP!!");

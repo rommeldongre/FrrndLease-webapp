@@ -15,22 +15,19 @@ import pojos.WishlistModel;
 import pojos.ReqObj;
 import pojos.ResObj;
 import adminOps.Response;
-import tableOps.Items;
 import util.FlsLogger;
 import util.FlsS3Bucket;
 import util.BufferImage;
-import util.LogCredit;
+import util.FlsCredit;
+import util.FlsCredit.Credit;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import errorCat.ErrorCat;
 
-import java.io.IOException;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -241,13 +238,8 @@ public class ImportWishlistHandler extends Connect implements AppHandler {
 				}
 				
 				// to add credit in user_credit
-				String sqlAddCredit = "UPDATE users SET user_credit=user_credit+1 WHERE user_id=?";
-				PreparedStatement s1 = hcp.prepareStatement(sqlAddCredit);
-				s1.setString(1, User);
-				s1.executeUpdate();
-				
-				LogCredit lc = new LogCredit();
-				lc.addLogCredit(User,1,"Importing Amazon Wishlist","");
+				FlsCredit credits = new FlsCredit();
+				credits.logCredit(User, 1, "Importing Amazon Wishlist", "", Credit.ADD);
 				
 				// returning the new id
 				String sql2 = "SELECT MAX(item_id) FROM items";

@@ -15,12 +15,13 @@ import pojos.ResObj;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsCredit.Credit;
 import util.FlsBadges;
 import util.FlsConfig;
+import util.FlsCredit;
 import util.FlsLogger;
 import util.FlsPlan.Delivery_Plan;
 import util.FlsPlan.Fls_Plan;
-import util.LogCredit;
 import util.LogItem;
 import util.OAuth;
 
@@ -207,14 +208,11 @@ public class GrantLeaseHandler extends Connect implements AppHandler {
 			rs.setCode(FLS_SUCCESS);
 			rs.setMessage(FLS_GRANT_LEASE);
 			
-			LogCredit lc = new LogCredit();
-			lc.addLogCredit(ownerId,10,"Lease Granted","");
+			FlsCredit credits = new FlsCredit();
 			// add credit to user giving item on lease
-			lc.addCredit(ownerId, 10);
-			
-			lc.addLogCredit(requestorId,-10,"Lease Recieved","");
+			credits.logCredit(ownerId, 10, "Lease Granted", "", Credit.ADD);
 			// subtract credit from user getting a lease
-			lc.subtractCredit(requestorId, 10);
+			credits.logCredit(requestorId, 10, "Lease Recieved", "", Credit.SUB);
 
 			try {
 				Event event = new Event();

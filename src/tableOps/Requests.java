@@ -15,10 +15,11 @@ import pojos.RequestsModel;
 import util.Event;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
+import util.FlsCredit.Credit;
 import util.FlsBadges;
 import util.FlsConfig;
+import util.FlsCredit;
 import util.FlsLogger;
-import util.LogCredit;
 
 public class Requests extends Connect {
 
@@ -204,8 +205,8 @@ public class Requests extends Connect {
 									
 					ps5.executeUpdate();
 					
-					LogCredit lc = new LogCredit();
-					lc.addLogCredit(userId,1,"Item Requested","");
+					FlsCredit credits = new FlsCredit();
+					credits.logCredit(userId, 1, "Item Requested", "", Credit.ADD);
 									
 					try {
 						String ownerUserId;

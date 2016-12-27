@@ -17,7 +17,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2049;
+	public final int appBuild = 2052;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1824,6 +1824,125 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2049;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds count column in promo_credits table and amount per credit rate in config table
+				if (dbBuild < 2050) {
+					
+					// New columns in promo_credits table
+					String sqlCountColumns = "ALTER TABLE `promo_credits` ADD `count` INT(255) NOT NULL DEFAULT -1 AFTER `expiry`, ADD `per_person_count` INT(255) NOT NULL DEFAULT -1 AFTER `count`, ADD `code_type` ENUM('FLS_INTERNAL','FLS_EXTERNAL') NOT NULL DEFAULT 'FLS_EXTERNAL' AFTER `per_person_count`";
+					
+					// Add new conversion amount entry in config table
+					String sqlGetCreditConversion = "INSERT INTO `config` (`option`, `value`) VALUES ('credit_amount', '10')";
+					
+					// Update the existing promo codes
+					String sqlUpdatePromoCode = "UPDATE `promo_credits` SET `expiry`=null,`per_person_count`=1,`code_type`='FLS_INTERNAL'";
+					
+					// Update the credit_log date to make date column default value to be current_timestamp
+					String sqlUpdateDateOrCreditLog = "ALTER TABLE `credit_log` CHANGE `credit_date` `credit_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP;";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCountColumns);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlGetCreditConversion);
+						ps2.executeUpdate();
+						ps2.close();
+						
+						PreparedStatement ps3 = connection.prepareStatement(sqlUpdatePromoCode);
+						ps3.executeUpdate();
+						ps3.close();
+						
+						PreparedStatement ps4 = connection.prepareStatement(sqlUpdateDateOrCreditLog);
+						ps4.executeUpdate();
+						ps4.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2050;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates orders table 
+				if (dbBuild < 2051) {
+					
+					// New orders table
+					String sqlCreateOrdersTable = "CREATE TABLE `fls`.`orders` ( `order_id` INT(255) NOT NULL AUTO_INCREMENT , `order_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `order_user_id` VARCHAR(255) NOT NULL , `amount` INT(255) NULL DEFAULT NULL , `promo_code` VARCHAR(255) NULL DEFAULT NULL , `razor_pay_id` VARCHAR(255) NULL DEFAULT NULL , `credit_log_id` INT(255) NOT NULL , `order_type` ENUM('FLS_INTERNAL','FLS_EXTERNAL') NOT NULL DEFAULT 'FLS_INTERNAL' , PRIMARY KEY (`order_id`))";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateOrdersTable);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2051;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates column for user fee expiry and creates membership table
+				if (dbBuild < 2052) {
+					
+					// New Column for user fee expiry
+					String sqlCreateFeeColumn = "ALTER TABLE `users` ADD `user_fee_expiry` DATETIME NULL DEFAULT NULL AFTER `user_plan`;";
+					
+					// New Membership Table
+					String sqlCreateMembershipTable = "CREATE TABLE `fls`.`membership` ( `member_id` INT(255) NOT NULL AUTO_INCREMENT , `member_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `member_user_id` VARCHAR(255) NOT NULL , `amount` INT(255) NULL , `promo_code` VARCHAR(255) NULL , `razor_pay_id` VARCHAR(255) NULL , PRIMARY KEY (`member_id`));";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateFeeColumn);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlCreateMembershipTable);
+						ps2.executeUpdate();
+						ps2.close();
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2052;
 					updateDBBuild(dbBuild);
 				}
 				
