@@ -17,7 +17,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2051;
+	public final int appBuild = 2052;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -1905,6 +1905,36 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2051;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates column for user fee expiry
+				if (dbBuild < 2052) {
+					
+					// New Column for user fee expiry
+					String sqlCreateFeeColumn = "ALTER TABLE `users` ADD `user_fee_expiry` DATETIME NULL DEFAULT NULL AFTER `user_plan`;";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateFeeColumn);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2052;
 					updateDBBuild(dbBuild);
 				}
 				
