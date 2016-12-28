@@ -24,6 +24,9 @@ public class FlsConfig extends Connect{
 	
 	public static String prefixUrl = "http://www.frrndlease.com";
 	
+	public static int creditValue = 10;
+	public static int memberValue = 499;
+	
 	String getEnv() {
 
 		//select value from config where option = "env"
@@ -75,6 +78,72 @@ public class FlsConfig extends Connect{
 		}else{
 			return false;
 		}	
+	}
+	
+	public void setCreditValue(){
+
+		getConnection();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetCreditValue = "SELECT value FROM `config` WHERE config.option='credit_amount'";
+			ps1 = connection.prepareStatement(sqlGetCreditValue);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				creditValue = Integer.parseInt(rs1.getString("value"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// close and reset connection to null
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				connection.close();
+				connection = null;
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void setMemberValue(){
+
+		getConnection();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetMemberValue = "SELECT value FROM `config` WHERE config.option='member_amount'";
+			ps1 = connection.prepareStatement(sqlGetMemberValue);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				memberValue = Integer.parseInt(rs1.getString("value"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// close and reset connection to null
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				connection.close();
+				connection = null;
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	int getDbBuild() {
@@ -1950,7 +2019,7 @@ public class FlsConfig extends Connect{
 				if (dbBuild < 2053) {
 					
 					// New Column for user fee expiry
-					String sqlMemberAmount = "INSERT INTO `config` (`option`, `value`) VALUES ('member_amount', '499')";
+					String sqlMemberAmount = "INSERT INTO `config` (`option`, `value`) VALUES ('member_amount', 499)";
 					
 					try {
 						getConnection();

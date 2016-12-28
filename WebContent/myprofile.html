@@ -100,7 +100,7 @@
         <div class="col-lg-6 col-md-6" style="text-align:center;">
             <div class="row" style="display:flex;flex-wrap:wrap;">
                 <div class="col-md-6" style="padding-right:20px; border-right: 1px solid #ccc;">
-                    <label class="label label-default label-fill">Photo Id</label>
+                    <label class="label label-default label-fill">Photo Id - </label>
                     <div class="row">
                         <img load-image="photoId" max-width="100" max-height="100" ng-src="" alt="..." /><br/>
                         <i ng-if="photoId=='loading'" class="fa fa-spinner fa-pulse fa-fw"></i>
@@ -110,10 +110,10 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label class="label label-default label-fill">Uber Plan</label>
+                    <label class="label label-default label-fill">Membership Expiry Date - </label>
                     <div class="row" style="margin-top:15%;">
-                        <i ng-if="userFeeExpiry != null" class="green" aria-hidden="true">{{userFeeExpiry}}</i>
-                        <i ng-if="userFeeExpiry == null" class="red" aria-hidden="true">NA</i>
+                        <i ng-if="userFeeExpiry != null" class="green" aria-hidden="true">{{userFeeExpiry | date}}</i>
+                        <i ng-if="userFeeExpiry == null" class="red" aria-hidden="true">Not Applicable</i>
                     </div>
                 </div>
             </div>

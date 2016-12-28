@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetProfileResObj extends ResObj {
 
 	int code;
@@ -192,6 +196,13 @@ public class GetProfileResObj extends ResObj {
 	}
 
 	public void setUserFeeExpiry(String userFeeExpiry) {
-		this.userFeeExpiry = userFeeExpiry;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(userFeeExpiry);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.userFeeExpiry = Long.toString(date.getTime());
 	}
 }

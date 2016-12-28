@@ -1556,9 +1556,9 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
             }
         }else if(payableAmt < 0){
             if($scope.payment.validPromo)
-                $scope.payment.paymentError = 'Please make the amount positive or zero by adding more credits';
+                $scope.payment.paymentError = 'Please make the amount positive or zero by adding more months';
             else
-                $scope.payment.paymentError = 'Cannot pay negative amount. Please make it positive by adding more credits';
+                $scope.payment.paymentError = 'Cannot pay negative amount. Please make it positive by adding more months';
         }
         
     }

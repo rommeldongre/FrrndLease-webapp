@@ -118,8 +118,10 @@ public class PayMembershipHandler extends Connect implements AppHandler {
 
 					if(amountPaid > 0){
 						credits.addMembership(userId, amountPaid, promoCode, rq.getRazorPayId());
+						credits.updateMembership(userId, amountPaid, credit);
 					}else{
 						credits.addMembership(userId, 0, promoCode, rq.getRazorPayId());
+						credits.updateMembership(userId, 0, credit);
 					}
 
 					rs.setCode(FLS_SUCCESS);
@@ -132,6 +134,7 @@ public class PayMembershipHandler extends Connect implements AppHandler {
 			}else{
 				if(amountPaid > 0){
 					credits.addMembership(userId, amountPaid, promoCode, rq.getRazorPayId());
+					credits.updateMembership(userId, amountPaid, 0);
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);
 				}else{

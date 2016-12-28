@@ -53,7 +53,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.notification = response.data.userNotification;
                 $scope.photoId = response.data.photoId;
 				$scope.addressVerified = response.data.photoIdVerified;
-                $scope.userFeeExpiry = response.data.userFeeExpry;
+                $scope.userFeeExpiry = response.data.userFeeExpiry;
                 
                 Mobile = response.data.mobile;
                 Email = response.data.email;

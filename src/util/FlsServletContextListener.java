@@ -39,6 +39,8 @@ public class FlsServletContextListener extends Connect implements ServletContext
 		FlsConfig c = new FlsConfig();
 		c.setEnv();
 		c.setDbBuild();
+		c.setCreditValue();
+		c.setMemberValue();
 		//Can't use logger in startup code.
 		System.out.println("=====> Database reconciled ...");
 

@@ -12,6 +12,7 @@ import pojos.BuyCreditsResObj;
 import pojos.PromoCodeModel.Code_Type;
 import pojos.ReqObj;
 import pojos.ResObj;
+import util.FlsConfig;
 import util.FlsCredit;
 import util.FlsCredit.Credit;
 import util.FlsLogger;
@@ -21,6 +22,8 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(BuyCreditsHandler.class.getName());
 
+	int CREDIT_VALUE = FlsConfig.creditValue;
+	
 	private static BuyCreditsHandler instance = null;
 
 	public static BuyCreditsHandler getInstance() {
@@ -58,8 +61,6 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 			}
 
 			FlsCredit credits = new FlsCredit();
-
-			int creditAmount = credits.getCreditValue();
 			
 			int amountPaid = rq.getAmountPaid();
 
@@ -128,7 +129,7 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 					} else if (codeType.equals("FLS_EXTERNAL")) {
 						int totalCreditsEarned = credit;
 						if (amountPaid > 0) {
-							totalCreditsEarned = totalCreditsEarned + (Integer) amountPaid / creditAmount;
+							totalCreditsEarned = totalCreditsEarned + (Integer) amountPaid / CREDIT_VALUE;
 						}
 						credits.logCredit(userId, totalCreditsEarned, "Bought Credits", promoCode, Credit.ADD);
 						int creditLogId = credits.getCreditLogId(userId, promoCode);
@@ -145,7 +146,7 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 				}
 			}else{
 				if(amountPaid > 0){
-					credits.logCredit(userId, (Integer) amountPaid / creditAmount, "Bought Credits", promoCode, Credit.ADD);
+					credits.logCredit(userId, (Integer) amountPaid / CREDIT_VALUE, "Bought Credits", promoCode, Credit.ADD);
 					int creditLogId = credits.getCreditLogId(userId, promoCode);
 					credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
 					rs.setCode(FLS_SUCCESS);
