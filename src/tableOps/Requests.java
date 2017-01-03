@@ -120,13 +120,54 @@ public class Requests extends Connect {
 		itemId = rm.getItemId();
 		msg = rm.getMessage();
 
-		PreparedStatement  ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null;
-		ResultSet rs1 = null, rs2 = null, rs3 = null;
+		PreparedStatement  ps1 = null, ps2 = null, ps3 = null, ps4 = null, ps5 = null, ps6 = null, ps7 = null;
+		ResultSet rs1 = null, rs2 = null, rs3 = null, rs6 = null, rs7 = null;
 		int rs4;
 		boolean user_verified=false;
 		Connection hcp = getConnectionFromPool();
 
 		try {
+			
+			LOGGER.info("Checking if the owner is Uber Or Not...");
+			String sqlCheckingUberOwner = "SELECT (CASE WHEN tb1.user_fee_expiry IS NULL THEN true WHEN tb1.user_fee_expiry < NOW() THEN true ELSE false END) AS expired, tb1.user_id FROM users tb1 INNER JOIN items tb2 ON tb1.user_id=tb2.item_user_id WHERE tb2.item_id=?";
+			ps6 = hcp.prepareStatement(sqlCheckingUberOwner);
+			ps6.setInt(1, Integer.parseInt(itemId));
+			
+			rs6 = ps6.executeQuery();
+			
+			if(rs6.next()){
+				if(rs6.getBoolean("expired")){
+					String sqlCountOwnerRequests = "SELECT COUNT(*) AS requests FROM `requests` tb1 INNER JOIN `items` tb2 ON tb1.request_item_id=tb2.item_id WHERE tb2.item_user_id=?";
+					ps7 = hcp.prepareStatement(sqlCountOwnerRequests);
+					ps7.setString(1, rs6.getString("user_id"));
+					
+					rs7 = ps7.executeQuery();
+					
+					if(rs7.next()){
+						if(rs7.getInt("requests") >= 10){
+							LOGGER.warning("Number of requests to the owner : " + rs7.getInt("requests"));
+							res.setData(FLS_OWNER_REQUESTS_LIMIT, "0", FLS_OWNER_REQUESTS_LIMIT_M);
+							try {
+								Event event = new Event();
+								event.createEvent(rs6.getString("user_id"), rs6.getString("user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OWNER_REQUEST_LIMIT, Integer.parseInt(itemId), "People are not able to request since you have reached the limit for receiving incoming requests. To get unlimited number of requests please switch to Uber Plan.");
+							} catch (Exception e) {
+								e.printStackTrace();
+								res.setData(FLS_DUPLICATE_ENTRY, "0", "Something is wrong with us we'll get back to you ASAP!!");
+							}
+							return;
+						}
+					}else{
+						LOGGER.warning("Not able to get number of requests to the owner!!");
+						res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+						return;
+					}
+				}
+			}else{
+				LOGGER.warning("Not able to get owners data!!");
+				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_ENTRY_NOT_FOUND_M);
+				return;
+			}
+
 			LOGGER.info("Checking if this request already exists...");
 			String sqlCheckingRequest = "SELECT tb1.*,(CASE WHEN tb1.request_item_id=? THEN true ELSE false END) AS itemCheck FROM requests tb1 WHERE tb1.request_requser_id=? AND tb1.request_status=?";
 			ps1 = hcp.prepareStatement(sqlCheckingRequest);

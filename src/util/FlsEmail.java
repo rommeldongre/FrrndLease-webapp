@@ -465,6 +465,11 @@ public class FlsEmail extends Connect{
 				BODY = "<body>Thank You for subscribing to FrrndLease. You will recieve periodic updates about our exciting offers</body>";
 				break;
 				
+			case FLS_MAIL_OWNER_REQUEST_LIMIT:
+				SUBJECT = ("Requests Limit Reached");
+				BODY = "<body>People are not able to request since you have reached the limit for receiving incoming requests. To get unlimited number of requests please switch to Uber Plan.</body>";
+				break;
+				
 			default:
 				SUBJECT = (" Default Subject");
 				BODY = "Default Message ... Contact us, you should never get this! ";

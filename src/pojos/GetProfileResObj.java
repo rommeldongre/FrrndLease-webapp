@@ -196,13 +196,17 @@ public class GetProfileResObj extends ResObj {
 	}
 
 	public void setUserFeeExpiry(String userFeeExpiry) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		try {
-			date = sdf.parse(userFeeExpiry);
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if(userFeeExpiry != null){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			try {
+				date = sdf.parse(userFeeExpiry);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			this.userFeeExpiry = Long.toString(date.getTime());
+		}else{
+			this.userFeeExpiry = userFeeExpiry;
 		}
-		this.userFeeExpiry = Long.toString(date.getTime());
 	}
 }

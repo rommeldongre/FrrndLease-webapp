@@ -19,9 +19,15 @@ public class RequestsModel {
 	
 	private void extractData() {
 		try {
-			userId = obj.getString("userId");
-			itemId = obj.getString("itemId");
-			message = obj.getString("message");
+			if(obj.has("userId"))userId = obj.getString("userId");
+			if(obj.has("itemId"))itemId = obj.getString("itemId");
+			if(obj.has("message")){
+				if(obj.isNull("message")){
+					message = null;
+				}else{
+					message = obj.getString("message");
+				}
+			}
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
