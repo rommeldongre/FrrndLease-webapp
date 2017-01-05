@@ -1983,18 +1983,11 @@ public class FlsConfig extends Connect{
 					// New Column for user fee expiry
 					String sqlCreateFeeColumn = "ALTER TABLE `users` ADD `user_fee_expiry` DATETIME NULL DEFAULT NULL AFTER `user_plan`;";
 					
-					// New Membership Table
-					String sqlCreateMembershipTable = "CREATE TABLE `fls`.`membership` ( `member_id` INT(255) NOT NULL AUTO_INCREMENT , `member_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `member_user_id` VARCHAR(255) NOT NULL , `amount` INT(255) NULL , `promo_code` VARCHAR(255) NULL , `razor_pay_id` VARCHAR(255) NULL , PRIMARY KEY (`member_id`));";
-					
 					try {
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlCreateFeeColumn);
 						ps1.executeUpdate();
 						ps1.close();
-						
-						PreparedStatement ps2 = connection.prepareStatement(sqlCreateMembershipTable);
-						ps2.executeUpdate();
-						ps2.close();
 						
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -2019,7 +2012,7 @@ public class FlsConfig extends Connect{
 				if (dbBuild < 2053) {
 					
 					// New Column for user fee expiry
-					String sqlMemberAmount = "INSERT INTO `config` (`option`, `value`) VALUES ('member_amount', 499)";
+					String sqlMemberAmount = "INSERT INTO `config` (`option`, `value`) VALUES ('member_amount', 500)";
 					
 					try {
 						getConnection();

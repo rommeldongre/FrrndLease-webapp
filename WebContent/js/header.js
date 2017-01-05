@@ -1453,7 +1453,7 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
     
     $scope.payment = {
         month: 0,
-        conversion: 499,
+        conversion: 500,
         amount: 0,
         promoCode: '',
         discount: 0,

@@ -9,11 +9,13 @@ import java.util.Date;
 import connect.Connect;
 import pojos.PayMembershipReqObj;
 import pojos.PayMembershipResObj;
+import pojos.PromoCodeModel.Code_Type;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsCredit;
 import util.FlsLogger;
 import util.OAuth;
+import util.FlsCredit.Credit;
 
 public class PayMembershipHandler extends Connect implements AppHandler {
 
@@ -93,7 +95,7 @@ public class PayMembershipHandler extends Connect implements AppHandler {
 						}
 					}
 
-					String sqlGetFromOrders = "SELECT * FROM membership WHERE member_user_id=? AND promo_code=?";
+					String sqlGetFromOrders = "SELECT * FROM orders WHERE order_user_id=? AND promo_code=?";
 					ps2 = hcp.prepareStatement(sqlGetFromOrders);
 					ps2.setString(1, userId);
 					ps2.setString(2, promoCode);
@@ -115,12 +117,15 @@ public class PayMembershipHandler extends Connect implements AppHandler {
 							return rs;
 						}
 					}
+					
+					credits.logCredit(userId, 1, "Bought Membership", promoCode, Credit.ADD);
+					int creditLogId = credits.getCreditLogId(userId, promoCode);
 
 					if(amountPaid > 0){
-						credits.addMembership(userId, amountPaid, promoCode, rq.getRazorPayId());
+						credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
 						credits.updateMembership(userId, amountPaid, credit);
 					}else{
-						credits.addMembership(userId, 0, promoCode, rq.getRazorPayId());
+						credits.addOrder(userId, 0, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
 						credits.updateMembership(userId, 0, credit);
 					}
 
@@ -133,7 +138,9 @@ public class PayMembershipHandler extends Connect implements AppHandler {
 				}
 			}else{
 				if(amountPaid > 0){
-					credits.addMembership(userId, amountPaid, promoCode, rq.getRazorPayId());
+					credits.logCredit(userId, 1, "Bought Membership", promoCode, Credit.ADD);
+					int creditLogId = credits.getCreditLogId(userId, promoCode);
+					credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
 					credits.updateMembership(userId, amountPaid, 0);
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);

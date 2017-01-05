@@ -262,44 +262,6 @@ public class FlsCredit extends Connect {
 		else
 			return true;
 	}
-
-	public void addMembership(String userId, int amountPaid, String promoCode, String razorPayId) {
-		
-		LOGGER.info("Inside addMembership Method");
-		
-		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		int rs1;
-		
-		try {
-			
-			String sqlInsertOrder = "INSERT INTO `membership` (`member_user_id`, `amount`, `promo_code`, `razor_pay_id`) VALUES (?, ?, ?, ?)";
-			ps1 = hcp.prepareStatement(sqlInsertOrder);
-			ps1.setString(1, userId);
-			ps1.setInt(2, amountPaid);
-			ps1.setString(3, promoCode);
-			ps1.setString(4, razorPayId);
-			
-			rs1 = ps1.executeUpdate();
-			
-			if(rs1 == 1){
-				LOGGER.info("New membership created for the userId - " + userId);
-			}else{
-				LOGGER.info("Not able to create a new membership");
-			}		
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(ps1 != null) ps1.close();
-				if(hcp != null) hcp.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
 	
 	public void updateMembership(String userId, int amountPaid, int promoCredits){
 		
