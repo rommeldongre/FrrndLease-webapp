@@ -1400,7 +1400,7 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
         
         if(payableAmt > 0){
-            if(true){
+            if(window.location.href.indexOf("frrndlease.com") > -1){
                 $scope.payment.paymentError = 'Currently we are not supporting payments!!';
             }else{
                 var options = {
@@ -1526,7 +1526,7 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
         
         if(payableAmt > 0){
-            if(true){
+            if(window.location.href.indexOf("frrndlease.com") > -1){
                 $scope.payment.paymentError = 'Currently we are not supporting payments!!';
             }else{
                 var options = {
