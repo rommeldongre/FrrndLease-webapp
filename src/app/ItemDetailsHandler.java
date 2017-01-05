@@ -63,6 +63,7 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setStatus(rs1.getString("item_status"));
 				rs.setPrimaryImageLink(rs1.getString("item_primary_image_link"));
 				rs.setLeaseValue(Integer.parseInt(rs1.getString("item_lease_value")));
+				rs.setSurcharge(rs1.getInt("item_surcharge"));
 				rs.setUid(rs1.getString("item_uid"));
 				
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));

@@ -43,6 +43,7 @@ public class ItemDetails extends HttpServlet {
 				httprequest.setAttribute("category", response.getCategory());
 				httprequest.setAttribute("description", response.getDescription());
 				httprequest.setAttribute("leaseValue", response.getLeaseValue());
+				httprequest.setAttribute("surcharge", response.getSurcharge());
 				httprequest.setAttribute("leaseTerm", response.getLeaseTerm());
 				httprequest.setAttribute("userId", response.getUserId());
 				httprequest.setAttribute("itemId", response.getId());

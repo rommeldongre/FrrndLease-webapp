@@ -117,12 +117,12 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Category" tooltip>
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item Surcharge" tooltip>
                                         <div class="icon icon-blue icon-sm">
-                                            <i class="fa fa-filter" aria-hidden="true"></i>
+                                            <i class="fa fa-rupee" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
-                                            <h5>${category}</h5>
+                                            <h5>${surcharge}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -147,9 +147,9 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Reasonable Replacement Value" tooltip>
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Insurance Amount" tooltip>
                                         <div class="icon icon-blue icon-sm">
-                                            <i class="fa fa-rupee" aria-hidden="true"></i>
+                                            <i class="fa fa-university" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
                                             <h5>${leaseValue}</h5>

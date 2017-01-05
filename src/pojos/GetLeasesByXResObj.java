@@ -23,7 +23,7 @@ public class GetLeasesByXResObj extends ResObj {
 	int leaseId;
 
 	// item details
-	int itemId;
+	int itemId, surcharge;
 	String title, description, category, leaseValue, leaseTerm, primaryImageLink, status, uid;
 
 	// Delivery Plan
@@ -208,6 +208,14 @@ public class GetLeasesByXResObj extends ResObj {
 
 	public void setItemId(int itemId) {
 		this.itemId = itemId;
+	}
+
+	public int getSurcharge() {
+		return surcharge;
+	}
+
+	public void setSurcharge(int surcharge) {
+		this.surcharge = surcharge;
 	}
 
 	public String getTitle() {

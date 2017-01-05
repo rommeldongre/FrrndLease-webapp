@@ -61,6 +61,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 				rs.setCategory(rs1.getString("item_category"));
 				rs.setLeaseTerm(rs1.getString("item_lease_term"));
 				rs.setInsurance(rs1.getInt("item_lease_value"));
+				rs.setSurcharge(rs1.getInt("item_surcharge"));
 				rs.setPrimaryImageLink(rs1.getString("item_primary_image_link"));
 				rs.setUid(rs1.getString("item_uid"));
 				
