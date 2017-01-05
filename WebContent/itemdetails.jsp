@@ -117,7 +117,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item Surcharge" tooltip>
+                                    <div class="info btn-tooltip" data-toggle="tooltip" data-placement="top" title="Lease Fee" tooltip>
                                         <div class="icon icon-blue icon-sm">
                                             <i class="fa fa-rupee" aria-hidden="true"></i>
                                         </div>

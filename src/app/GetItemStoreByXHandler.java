@@ -111,6 +111,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs1.setUserUid(dbResponse.getString("user_uid"));
 					rs1.setFullName(dbResponse.getString("user_full_name"));
 					rs1.setLeaseValue(dbResponse.getInt("item_lease_value"));
+					rs1.setSurcharge(dbResponse.getInt("item_surcharge"));
 					rs1.setLeaseTerm(dbResponse.getString("item_lease_term"));
 					rs1.setPrimaryImageLink(dbResponse.getString("item_primary_image_link"));
 					rs1.setStatus(dbResponse.getString("item_status"));

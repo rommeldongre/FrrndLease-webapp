@@ -154,8 +154,8 @@
                                                         <div class="image" style="height: 100%;">
                                                             <img load-image="item.primaryImageLink" ng-src="">
                                                             <div class="filter">
+                                                                <p class="filter-text">Lease Fee: <i class="fa fa-inr" aria-hidden="true"></i>{{item.surcharge}}</p>
                                                                 <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;{{item.leaseTerm}} Lease</p>
-                                                                <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i>{{item.leaseValue}}</p>
                                                                 <p class="filter-text btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;" tooltip>
                                                                     <span ng-if="item.itemsAvgRating == 1">
                                                                         Experience:<br/>

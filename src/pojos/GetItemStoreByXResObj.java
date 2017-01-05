@@ -48,6 +48,9 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	// leaseValue of item
 	int leaseValue;
+	
+	// Item Surcharge
+	int surcharge;
 
 	// status of item
 	String status;
@@ -197,6 +200,14 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	public void setLeaseValue(int leaseValue) {
 		this.leaseValue = leaseValue;
+	}
+
+	public int getSurcharge() {
+		return surcharge;
+	}
+
+	public void setSurcharge(int surcharge) {
+		this.surcharge = surcharge;
 	}
 
 	public String getStatus() {
