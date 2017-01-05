@@ -155,15 +155,16 @@ public class GetNotificationsResObj {
 			case "FLS_MAIL_CLOSE_LEASE_FROM_SELF":
 			case "FLS_MAIL_CLOSE_LEASE_TO_SELF":
 			case "FLS_MAIL_OPS_PICKUP_CLOSE":
-			case "FLS_MAIL_OLD_ITEM_WARN":
-			case "FLS_MAIL_OLD_REQUEST_WARN":
-			case "FLS_MAIL_OLD_LEASE_WARN":
 			case "FLS_MAIL_ITEM_ON_HOLD":
 			case "FLS_MAIL_OWNER_REQUEST_LIMIT":
 				this.notificationType = Icon_Type.FLS_NEGATIVE.name();
 				break;
 			case "FLS_MAIL_GRACE_PERIOD_OWNER":
 			case "FLS_MAIL_GRACE_PERIOD_REQUESTOR":
+			case "FLS_MAIL_OLD_ITEM_WARN":
+			case "FLS_MAIL_OLD_REQUEST_WARN":
+			case "FLS_MAIL_OLD_LEASE_WARN":
+			case "FLS_MAIL_UBER_WARN":
 				this.notificationType = Icon_Type.FLS_TIME.name();
 				break;
 			case "FLS_MAIL_MESSAGE_FRIEND_FROM":
