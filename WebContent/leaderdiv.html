@@ -1,0 +1,67 @@
+		
+		<div class="row">
+		<h2 class="text-center" id="icon" style="color:#0066ff;font-size: 200%;"><strong>Leader Board</strong></h2>
+		<div class="col-md-4">
+			 <h4 class="section-title text-center">Lifetime Credits</h4>
+        	<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th class="text-center">Rank</th>
+							<th class="text-center">Credits</th>
+							<th class="text-center">User</th>
+						</tr>
+					</thead>
+					<tbody ng-repeat="y in leaders">
+							<tr>
+								<td class="text-center">#{{$index + 1}}</td>
+								<td class="text-center">{{ y.highestCreditValue }}</td>
+								<td class="text-center">{{ y.highestCreditUser }}</td>
+							</tr>
+						</tbody>
+				</table>
+			</div>
+        </div>
+          <div class="col-md-4">
+            <h4 class="section-title text-center">This Month Credits</h4>
+        	<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th class="text-center">Rank</th>
+							<th class="text-center">Credit</th>
+							<th class="text-center">User</th>
+						</tr>
+					</thead>
+					<tbody ng-repeat="y in leaders">
+							<tr>
+								<td class="text-center">#{{$index + 1}}</td>
+								<td class="text-center">{{ y.totalCreditMonthly }}</td>
+								<td class="text-center">{{ y.monthlyCreditUserName }}</td>
+							</tr>
+						</tbody>
+				</table>
+			</div>
+        </div>
+        <div class="col-md-4">
+            <h4 class="section-title text-center">Most Requested Items</h4>
+        	<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th class="text-center">Rank</th>
+							<th class="text-center">Item</th>
+							<th class="text-center">Owner</th>
+						</tr>
+					</thead>
+					<tbody ng-repeat="y in leaders">
+							<tr>
+								<td class="text-center">#{{$index + 1}}</td>
+								<td class="text-center">{{ y.mostRequestedItemName }}</td>
+								<td class="text-center">{{ y.mostRequestedItemUserName }}</td>
+							</tr>
+						</tbody>
+				</table>
+			</div>
+        </div>
+	</div>
