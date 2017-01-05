@@ -1391,6 +1391,7 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
     $scope.removePromoCode = function(){
         $scope.payment.promoError = '';
         $scope.payment.promoCode = '';
+        $scope.payment.discount = 0;
         $scope.payment.validPromo = false;
     }
     
@@ -1399,31 +1400,35 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
         
         if(payableAmt > 0){
-            var options = {
-                key: "rzp_test_GwL1Gj4oI20Jeq",
-                amount: payableAmt * 100,
-                name: "Grey Labs LLP",
-                description: "Buying Credits",
-                image: "images/fls-logo.png",
-                prefill: {
-                    name: userFactory.userName,
-                    email: userFactory.user
-                },
-                handler: function (response){
-                    userFactory.buyCredits($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
-                        if(res.data.code == 0)
-                            window.location.reload();
-                        else
-                            console.log(res);
+            if(true){
+                $scope.payment.paymentError = 'Currently we are not supporting payments!!';
+            }else{
+                var options = {
+                    key: "rzp_test_GwL1Gj4oI20Jeq",
+                    amount: payableAmt * 100,
+                    name: "Grey Labs LLP",
+                    description: "Buying Credits",
+                    image: "images/fls-logo.png",
+                    prefill: {
+                        name: userFactory.userName,
+                        email: userFactory.user
                     },
-                    function(error){});
-                },
-                modal: {
-                    ondismiss: function(){}
+                    handler: function (response){
+                        userFactory.buyCredits($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
+                            if(res.data.code == 0)
+                                window.location.reload();
+                            else
+                                console.log(res);
+                        },
+                        function(error){});
+                    },
+                    modal: {
+                        ondismiss: function(){}
+                    }
                 }
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
             }
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
                 userFactory.buyCredits($scope.payment.promoCode, 0, null).then(function(response){
@@ -1512,6 +1517,7 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
     $scope.removePromoCode = function(){
         $scope.payment.promoError = '';
         $scope.payment.promoCode = '';
+        $scope.payment.discount = 0;
         $scope.payment.validPromo = false;
     }
     
@@ -1520,31 +1526,35 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
         
         if(payableAmt > 0){
-            var options = {
-                key: "rzp_test_GwL1Gj4oI20Jeq",
-                amount: payableAmt * 100,
-                name: "Grey Labs LLP",
-                description: "Paying Membership Fee",
-                image: "images/fls-logo.png",
-                prefill: {
-                    name: userFactory.userName,
-                    email: userFactory.user
-                },
-                handler: function (response){
-                    userFactory.payMembership($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
-                        if(res.data.code == 0)
-                            window.location.reload();
-                        else
-                            console.log(res);
+            if(true){
+                $scope.payment.paymentError = 'Currently we are not supporting payments!!';
+            }else{
+                var options = {
+                    key: "rzp_test_GwL1Gj4oI20Jeq",
+                    amount: payableAmt * 100,
+                    name: "Grey Labs LLP",
+                    description: "Paying Membership Fee",
+                    image: "images/fls-logo.png",
+                    prefill: {
+                        name: userFactory.userName,
+                        email: userFactory.user
                     },
-                    function(error){});
-                },
-                modal: {
-                    ondismiss: function(){}
+                    handler: function (response){
+                        userFactory.payMembership($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
+                            if(res.data.code == 0)
+                                window.location.reload();
+                            else
+                                console.log(res);
+                        },
+                        function(error){});
+                    },
+                    modal: {
+                        ondismiss: function(){}
+                    }
                 }
+                var rzp1 = new Razorpay(options);
+                rzp1.open();
             }
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
                 userFactory.payMembership($scope.payment.promoCode, 0, null).then(function(response){
