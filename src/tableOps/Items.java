@@ -35,7 +35,7 @@ public class Items extends Connect {
 	private String URL = FlsConfig.prefixUrl;
 	
 	private String operation, category, leaseTerm, userId, status, title, description, message, Id = null, image;
-	private int leaseValue, id, token, Code;
+	private int leaseValue, id, token, Code, surcharge;
 	private ItemsModel im;
 	private Response res = new Response();
 	private int check = 0;
@@ -402,11 +402,12 @@ public class Items extends Connect {
 		userId = im.getUserId();
 		leaseTerm = im.getLeaseTerm();
 		leaseValue = im.getLeaseValue();
+		surcharge = im.getSurcharge();
 		status = im.getStatus();
 		String item_image_primary_link=null;
 		
 		LOGGER.info("Inside edit method...");
-		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_lease_term=? WHERE item_id=? AND item_user_id=?";
+		String sql = "UPDATE items SET item_name=?, item_category=?, item_desc=?, item_lease_value=?, item_surcharge=?, item_lease_term=? WHERE item_id=? AND item_user_id=?";
 
 		PreparedStatement stmt = null, stmt2 = null, ps1 = null;
 		ResultSet rs = null, rs1 = null;
@@ -442,9 +443,10 @@ public class Items extends Connect {
 				stmt.setString(2, category);
 				stmt.setString(3, description);
 				stmt.setInt(4, leaseValue);
-				stmt.setString(5, leaseTerm);
-				stmt.setInt(6, id);
-				stmt.setString(7, userId);
+				stmt.setInt(5, surcharge);
+				stmt.setString(6, leaseTerm);
+				stmt.setInt(7, id);
+				stmt.setString(8, userId);
 				stmt.executeUpdate();
 				
 				message = "operation successfull edited item id : " + id;
@@ -992,8 +994,8 @@ public class Items extends Connect {
 		id = im.getId();
 		userId = im.getUserId();
 		
-		PreparedStatement ps1 = null;
-		ResultSet rs1 = null;
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null, rs2 = null;
 		Connection hcp = getConnectionFromPool();
 		
 		try{
@@ -1018,9 +1020,22 @@ public class Items extends Connect {
 				else
 					json.put("primaryImageLink", rs1.getString("item_primary_image_link"));
 				json.put("uid", rs1.getString("item_uid"));
+				json.put("surcharge", rs1.getInt("item_surcharge"));
 				
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
 				json.put("imageLinks", s3Bucket.getImagesLinks());
+				
+				String checkUberOrNot = "SELECT (CASE WHEN user_fee_expiry IS NULL THEN false WHEN user_fee_expiry < NOW() THEN false ELSE true END) AS isMerchant FROM users WHERE user_id=?";
+				ps2 = hcp.prepareStatement(checkUberOrNot);
+				ps2.setString(1, userId);
+				
+				rs2 = ps2.executeQuery();
+				
+				if(rs2.next()){
+					json.put("isMerchant", rs2.getBoolean("isMerchant"));
+				}else{
+					json.put("isMerchant", false);
+				}
 				
 				message = json.toString();
 				
@@ -1034,9 +1049,11 @@ public class Items extends Connect {
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		}finally{
 			try {
-				if(rs1 != null)rs1.close();
-				if(ps1 != null)ps1.close();
-				if(hcp != null)hcp.close();
+				if(rs2 != null) rs2.close();
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 				res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);

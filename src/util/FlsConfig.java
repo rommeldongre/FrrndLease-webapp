@@ -17,7 +17,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2053;
+	public final int appBuild = 2054;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2042,6 +2042,36 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2053;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates a column for merchant surcharge
+				if (dbBuild < 2054) {
+					
+					// New Column for item surcharge
+					String sqlSurchargeColumn = "ALTER TABLE `items` ADD `item_surcharge` INT(255) NOT NULL DEFAULT '0' AFTER `item_lastmodified`";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlSurchargeColumn);
+						ps1.executeUpdate();
+						ps1.close();						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2054;
 					updateDBBuild(dbBuild);
 				}
 				

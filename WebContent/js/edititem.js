@@ -413,6 +413,8 @@ editItemApp.controller('editItemCtrl', ['$scope',
 			item_lease_value = 0;
 			
 			var item_lease_term = $scope.item.leaseTerm;
+            
+            var item_surcharge = $scope.item.surcharge;
 			
 			req = {
 				id:item_id,
@@ -421,7 +423,8 @@ editItemApp.controller('editItemCtrl', ['$scope',
 				category: item_category,
 				userId: userId,
 				leaseValue: item_lease_value,
-				leaseTerm: item_lease_term
+				leaseTerm: item_lease_term,
+                surcharge: item_surcharge
 			};
 			
 			modalService.showModal({}, {bodyText: 'Are you sure you want to update this Item?'}).then(function(result){
