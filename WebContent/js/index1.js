@@ -131,3 +131,43 @@ indexApp.controller('pricingCtrl', ['$scope', '$location', 'modalService', funct
 		});
 	}
 }]);
+
+indexApp.controller('leaderCtrl', ['$scope', function($scope){
+	
+	$scope.leaders = [];
+	
+	
+	var displayLeaders = function(){
+            var req = {
+			empty_pojo: ""
+		};
+		
+		GetLeaderBoardByXSend(req);
+    }
+	
+	var GetLeaderBoardByXSend = function(req){
+		
+		$.ajax({
+			url: '/GetLeaderBoardByX',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code == 0){
+                    $scope.$apply(function(){
+                        $scope.leaders = response.resList;
+                    });
+                }else{
+                    //lastEngagementId = -1
+                }
+			},
+		
+			error: function() {
+				console.log("Not able to send message");
+			}
+		});
+	}
+	
+	displayLeaders();
+}]);

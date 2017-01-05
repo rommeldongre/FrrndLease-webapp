@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Leader Board By X</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+	
+	function GetLeaderBoardByX(){
+		
+		var req = {
+			empty_pojo: ""
+		};
+		
+		GetLeaderBoardByXSend(req);
+	}
+		
+	GetLeaderBoardByXSend = function(req) {
+		$.ajax({
+			url: '/GetLeaderBoardByX',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+				console.log(response);
+				document.getElementById("size").value = response.resList.length;
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message;
+				document.getElementById("offsetVal").value = response.lastLeadId;
+				var div = document.getElementById("output");
+				div.innerHTML = JSON.stringify(response.resList);
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body>
+<h1> Get Leader Board By X FORM</h1>
+	<form>
+		<!--User Id : <input type="text" name="ownerId" id="ownerId" ><br/><br/>
+		Interval : <input type="text" name="interval" id="interval" ><br/><br/>
+		Batch Limit: <input type="text" name="limit" id="limit" ><br/><br/>
+		Offset Value: <input type="text" name="offset" id="offset" ><br/><br/>
+		To Date: <input type="date" name="to_date" id="to_date" ><br/><br/>-->
+		<input type="button" value="Next" onclick="GetLeaderBoardByX()">
+		
+		<h1>OUTPUT</h1>
+		Output Array Size : <input type="text" name="size" id="size"><br/><br/>
+		Code : <input type="text" name="code" id="Code"><br/><br/>
+		Message : <input type="text" name="message" id="Message"><br/><br/>
+		
+		Last Offset Value : <input type="text" name="offsetVal" id="offsetVal"><br/><br/>
+		
+		<div id="output">
+		
+		</div>
+	</form>
+	
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
