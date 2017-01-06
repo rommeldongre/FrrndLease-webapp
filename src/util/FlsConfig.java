@@ -25,7 +25,7 @@ public class FlsConfig extends Connect{
 	public static String prefixUrl = "http://www.frrndlease.com";
 	
 	public static int creditValue = 10;
-	public static int memberValue = 499;
+	public static int memberValue = 500;
 	
 	String getEnv() {
 
