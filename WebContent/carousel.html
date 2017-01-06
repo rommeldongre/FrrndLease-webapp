@@ -69,7 +69,9 @@
                                                 </a>
                                                 <div class="content">
                                                     <a class="card-link" href="ItemDetails?uid={{item.uid}}">
-                                                        <h4 class="title">{{item.title | limitTo: 32}} </h4>
+                                                        <h4 class="title">
+                                                            <i ng-if="item.uber" class="fa fa-bookmark blue btn-tooltip" data-toggle="tooltip" data-placement="top" title="Featured Item" aria-hidden="true" tooltip></i> {{item.title | limitTo: 32}}
+                                                        </h4>
                                                     </a>
                                                     <p class="category">
                                                         <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br ng-if="item.status == 'OnHold'">

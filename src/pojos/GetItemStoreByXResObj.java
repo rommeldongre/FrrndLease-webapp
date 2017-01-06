@@ -61,7 +61,7 @@ public class GetItemStoreByXResObj extends ResObj {
 	// Avg Rating
 	int itemsAvgRating;
 
-	boolean friendStatus;
+	boolean friendStatus, uber;
 
 	public boolean isFriendStatus() {
 		return friendStatus;
@@ -69,6 +69,14 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	public void setFriendStatus(boolean friendStatus) {
 		this.friendStatus = friendStatus;
+	}
+
+	public boolean isUber() {
+		return uber;
+	}
+
+	public void setUber(boolean uber) {
+		this.uber = uber;
 	}
 
 	public String getLocality() {
