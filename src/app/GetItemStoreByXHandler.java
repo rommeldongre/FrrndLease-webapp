@@ -63,6 +63,8 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			
 			sql = "SELECT DISTINCT tb1.*";
 			
+			sql = sql + ", (CASE WHEN tb2.user_fee_expiry IS NOT NULL AND tb2.user_fee_expiry >= NOW() THEN true ELSE false END) AS uber";
+			
 			if(match_userId == null)
 				sql = sql + ", false AS friendst";
 			else
@@ -93,7 +95,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			if(searchString != "" || searchString != null)
 				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%')";
 			
-			sql = sql + " ORDER BY friendst DESC, distance, tb1.item_id DESC LIMIT "+offset+", "+limit;
+			sql = sql + " ORDER BY uber DESC, friendst DESC, distance, tb1.item_id DESC LIMIT "+offset+", "+limit;
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
@@ -111,6 +113,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs1.setUserUid(dbResponse.getString("user_uid"));
 					rs1.setFullName(dbResponse.getString("user_full_name"));
 					rs1.setLeaseValue(dbResponse.getInt("item_lease_value"));
+					rs1.setSurcharge(dbResponse.getInt("item_surcharge"));
 					rs1.setLeaseTerm(dbResponse.getString("item_lease_term"));
 					rs1.setPrimaryImageLink(dbResponse.getString("item_primary_image_link"));
 					rs1.setStatus(dbResponse.getString("item_status"));
@@ -119,6 +122,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs1.setSublocality(dbResponse.getString("user_sublocality"));
 					rs1.setDistance(dbResponse.getFloat("distance"));
 					rs1.setFriendStatus(dbResponse.getBoolean("friendst"));
+					rs1.setUber(dbResponse.getBoolean("uber"));
 					
 					FlsRating rating = new FlsRating(rs1.getItemId());
 					rs1.setItemsAvgRating(rating.getItemsAvgRating());

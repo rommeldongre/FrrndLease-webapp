@@ -11,7 +11,7 @@ public class ItemsModel {
 	
 	private String title, category, description,userId,leaseTerm,status, uid, primaryImageLink, image;
 
-	int id, leaseValue,leaseId;
+	int id, leaseValue,leaseId, surcharge;
 	private JSONObject obj;
 	
 	public void getData(JSONObject ob) {
@@ -41,6 +41,7 @@ public class ItemsModel {
 			if(obj.has("leaseTerm"))leaseTerm = obj.getString("leaseTerm");
 			if(obj.has("id"))id = obj.getInt("id");
 			if(obj.has("leaseValue"))leaseValue = obj.getInt("leaseValue");
+			if(obj.has("surcharge"))surcharge = obj.getInt("surcharge");
 			if(obj.has("status"))status = obj.getString("status");
 			if(obj.has("uid")) uid = obj.getString("uid");
 			if(obj.has("image")) image = obj.getString("image");
@@ -63,6 +64,10 @@ public class ItemsModel {
 		return this.leaseValue;
 	}
 	
+	public int getSurcharge() {
+		return surcharge;
+	}
+
 	public int getId(){
 		return this.id;
 	}

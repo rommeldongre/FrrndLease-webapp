@@ -48,6 +48,9 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	// leaseValue of item
 	int leaseValue;
+	
+	// Item Surcharge
+	int surcharge;
 
 	// status of item
 	String status;
@@ -58,7 +61,7 @@ public class GetItemStoreByXResObj extends ResObj {
 	// Avg Rating
 	int itemsAvgRating;
 
-	boolean friendStatus;
+	boolean friendStatus, uber;
 
 	public boolean isFriendStatus() {
 		return friendStatus;
@@ -66,6 +69,14 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	public void setFriendStatus(boolean friendStatus) {
 		this.friendStatus = friendStatus;
+	}
+
+	public boolean isUber() {
+		return uber;
+	}
+
+	public void setUber(boolean uber) {
+		this.uber = uber;
 	}
 
 	public String getLocality() {
@@ -197,6 +208,14 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	public void setLeaseValue(int leaseValue) {
 		this.leaseValue = leaseValue;
+	}
+
+	public int getSurcharge() {
+		return surcharge;
+	}
+
+	public void setSurcharge(int surcharge) {
+		this.surcharge = surcharge;
 	}
 
 	public String getStatus() {

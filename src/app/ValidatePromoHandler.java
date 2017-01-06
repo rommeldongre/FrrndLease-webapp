@@ -11,6 +11,7 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import pojos.ValidatePromoReqObj;
 import pojos.ValidatePromoResObj;
+import util.FlsConfig;
 import util.FlsCredit;
 import util.FlsLogger;
 import util.OAuth;
@@ -19,6 +20,8 @@ public class ValidatePromoHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(ValidatePromoHandler.class.getName());
 
+	int CREDIT_VALUE = FlsConfig.creditValue;
+	
 	private static ValidatePromoHandler instance;
 
 	public static ValidatePromoHandler getInstance() {
@@ -128,7 +131,7 @@ public class ValidatePromoHandler extends Connect implements AppHandler {
 				
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
-				rs.setDiscountAmount(credits.getCreditValue() * credit);
+				rs.setDiscountAmount(CREDIT_VALUE * credit);
 
 			} else {
 				rs.setCode(FLS_INVALID_PROMO);

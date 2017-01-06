@@ -28,8 +28,8 @@
                                                     <div class="image" style="height: 100%;">
                                                         <img load-image="item.primaryImageLink" ng-src="">
                                                         <div class="filter">
+                                                            <p class="filter-text">Lease Fee: <i class="fa fa-inr" aria-hidden="true"></i>{{item.surcharge}}</p>
                                                             <p class="filter-text"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;{{item.leaseTerm}} Lease</p>
-                                                            <p class="filter-text">Insurance: <i class="fa fa-inr" aria-hidden="true"></i>{{item.leaseValue}}</p>
                                                             <p class="filter-text btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-if="item.itemsAvgRating > 0" style="text-align:center;" tooltip>
                                                                 <span ng-if="item.itemsAvgRating == 1">
                                                                     Experience:<br/>
@@ -69,7 +69,9 @@
                                                 </a>
                                                 <div class="content">
                                                     <a class="card-link" href="ItemDetails?uid={{item.uid}}">
-                                                        <h4 class="title">{{item.title | limitTo: 32}} </h4>
+                                                        <h4 class="title">
+                                                            <i ng-if="item.uber" class="fa fa-bookmark blue btn-tooltip" data-toggle="tooltip" data-placement="top" title="Featured Item" aria-hidden="true" tooltip></i> {{item.title | limitTo: 32}}
+                                                        </h4>
                                                     </a>
                                                     <p class="category">
                                                         <span class="label label-danger label-fill" ng-if="item.status == 'OnHold'" style="text-align:center;">On Hold</span><br ng-if="item.status == 'OnHold'">
@@ -99,7 +101,7 @@
                                     </div>	
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-bottom:10px;">
                                 <div ng-if="showNext" style="text-align:center;">
                                     <button ng-click="loadNextSlide()" onclick="ga('send', 'event', 'index', 'click', 'LoadMore');" class="btn btn-primary btn-sm btn-round btn-fill" id="successBtn" >Load more...</button>
                                 </div>

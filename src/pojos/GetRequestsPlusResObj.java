@@ -9,7 +9,7 @@ public class GetRequestsPlusResObj extends ResObj {
 	String message;
 
 	// Item Details
-	int itemId, insurance;
+	int itemId, insurance, surcharge;
 	String title, description, category, leaseTerm, uid, primaryImageLink;
 
 	// owner locality and sub locality
@@ -79,6 +79,14 @@ public class GetRequestsPlusResObj extends ResObj {
 
 	public void setInsurance(int insurance) {
 		this.insurance = insurance;
+	}
+
+	public int getSurcharge() {
+		return surcharge;
+	}
+
+	public void setSurcharge(int surcharge) {
+		this.surcharge = surcharge;
 	}
 
 	public String getLeaseTerm() {

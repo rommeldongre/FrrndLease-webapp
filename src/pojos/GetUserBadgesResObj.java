@@ -8,7 +8,7 @@ public class GetUserBadgesResObj extends ResObj {
 
 	int code, userItems, userLeases, responseTime, responseCount, userCredit;
 	String message, userSignupDate, userStatus;
-	boolean userVeifiedFlag;
+	boolean userVerifiedFlag;
 
 	public int getCode() {
 		return code;
@@ -89,12 +89,12 @@ public class GetUserBadgesResObj extends ResObj {
 		this.userStatus = userStatus;
 	}
 
-	public boolean isUserVeifiedFlag() {
-		return userVeifiedFlag;
+	public boolean isUserVerifiedFlag() {
+		return userVerifiedFlag;
 	}
 
-	public void setUserVeifiedFlag(boolean userVeifiedFlag) {
-		this.userVeifiedFlag = userVeifiedFlag;
+	public void setUserVerifiedFlag(boolean userVerifiedFlag) {
+		this.userVerifiedFlag = userVerifiedFlag;
 	}
 
 }

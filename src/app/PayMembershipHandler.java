@@ -7,28 +7,25 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import connect.Connect;
-import pojos.BuyCreditsReqObj;
-import pojos.BuyCreditsResObj;
+import pojos.PayMembershipReqObj;
+import pojos.PayMembershipResObj;
 import pojos.PromoCodeModel.Code_Type;
 import pojos.ReqObj;
 import pojos.ResObj;
-import util.FlsConfig;
 import util.FlsCredit;
-import util.FlsCredit.Credit;
 import util.FlsLogger;
 import util.OAuth;
+import util.FlsCredit.Credit;
 
-public class BuyCreditsHandler extends Connect implements AppHandler {
+public class PayMembershipHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(BuyCreditsHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(PayMembershipHandler.class.getName());
 
-	int CREDIT_VALUE = FlsConfig.creditValue;
-	
-	private static BuyCreditsHandler instance = null;
+	private static PayMembershipHandler instance = null;
 
-	public static BuyCreditsHandler getInstance() {
+	public static PayMembershipHandler getInstance() {
 		if (instance == null)
-			instance = new BuyCreditsHandler();
+			instance = new PayMembershipHandler();
 		return instance;
 	}
 
@@ -39,10 +36,10 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 
-		LOGGER.info("Inside Process Method of BuyCreditsHandler");
+		LOGGER.info("Inside Process Method of PayMembershipHandler");
 
-		BuyCreditsReqObj rq = (BuyCreditsReqObj) req;
-		BuyCreditsResObj rs = new BuyCreditsResObj();
+		PayMembershipReqObj rq = (PayMembershipReqObj) req;
+		PayMembershipResObj rs = new PayMembershipResObj();
 
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null, ps2 = null;
@@ -120,25 +117,20 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 							return rs;
 						}
 					}
+					
+					credits.logCredit(userId, 1, "Bought Membership", promoCode, Credit.ADD);
+					int creditLogId = credits.getCreditLogId(userId, promoCode);
 
-					String codeType = rs1.getString("code_type");
-					if (codeType.equals("FLS_INTERNAL")) {
-						credits.logCredit(userId, credit, "Applied Promo Code", promoCode, Credit.ADD);
-						int creditLogId = credits.getCreditLogId(userId, promoCode);
-						credits.addOrder(userId, 0, promoCode, null, creditLogId, Code_Type.FLS_INTERNAL);
-					} else if (codeType.equals("FLS_EXTERNAL")) {
-						int totalCreditsEarned = credit;
-						if (amountPaid > 0) {
-							totalCreditsEarned = totalCreditsEarned + (Integer) amountPaid / CREDIT_VALUE;
-						}
-						credits.logCredit(userId, totalCreditsEarned, "Bought Credits", promoCode, Credit.ADD);
-						int creditLogId = credits.getCreditLogId(userId, promoCode);
+					if(amountPaid > 0){
 						credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
+						credits.updateMembership(userId, amountPaid, credit);
+					}else{
+						credits.addOrder(userId, 0, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
+						credits.updateMembership(userId, 0, credit);
 					}
 
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);
-					rs.setCreditsBalance(credits.getCurrentCredits(userId));
 
 				} else {
 					rs.setCode(FLS_INVALID_PROMO);
@@ -146,12 +138,12 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 				}
 			}else{
 				if(amountPaid > 0){
-					credits.logCredit(userId, (Integer) amountPaid / CREDIT_VALUE, "Bought Credits", promoCode, Credit.ADD);
+					credits.logCredit(userId, 1, "Bought Membership", promoCode, Credit.ADD);
 					int creditLogId = credits.getCreditLogId(userId, promoCode);
 					credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
+					credits.updateMembership(userId, amountPaid, 0);
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);
-					rs.setCreditsBalance(credits.getCurrentCredits(userId));
 				}else{
 					rs.setCode(FLS_AMOUNT_NEGATIVE);
 					rs.setMessage(FLS_AMOUNT_NEGATIVE_M);
