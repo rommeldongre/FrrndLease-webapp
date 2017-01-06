@@ -63,6 +63,8 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			
 			sql = "SELECT DISTINCT tb1.*";
 			
+			sql = sql + ", (CASE WHEN tb2.user_fee_expiry IS NOT NULL AND tb2.user_fee_expiry >= NOW() THEN true ELSE false END) AS uber";
+			
 			if(match_userId == null)
 				sql = sql + ", false AS friendst";
 			else
@@ -93,7 +95,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			if(searchString != "" || searchString != null)
 				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%')";
 			
-			sql = sql + " ORDER BY friendst DESC, distance, tb1.item_id DESC LIMIT "+offset+", "+limit;
+			sql = sql + " ORDER BY uber DESC, friendst DESC, distance, tb1.item_id DESC LIMIT "+offset+", "+limit;
 			
 			sql_stmt = hcp.prepareStatement(sql);
 
