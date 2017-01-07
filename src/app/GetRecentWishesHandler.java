@@ -48,7 +48,7 @@ public class GetRecentWishesHandler extends Connect implements AppHandler {
 		LOGGER.info("Inside process method " + rq.getLimit());
 		
 		try {
-			String sql = "SELECT DISTINCT item_name FROM `items` WHERE item_status='Wished' ORDER BY item_id DESC LIMIT ?";
+			String sql = "SELECT DISTINCT item_name FROM `items` WHERE item_status='Wished' AND item_user_id NOT IN ('anonymous') ORDER BY item_id DESC LIMIT ?";
 			LOGGER.info("Creating Statement...");
 			ps = hcp.prepareStatement(sql);
 			ps.setInt(1, rq.getLimit());
