@@ -13,6 +13,9 @@ public class FlsCredit extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(FlsCredit.class.getName());
 	
+	int CREDIT_VALUE = FlsConfig.creditValue;
+	int MEMBER_VALUE = FlsConfig.memberValue;
+	
 	public enum Credit{
 		ADD,
 		SUB
@@ -166,40 +169,6 @@ public class FlsCredit extends Connect {
 		
 		return id;
 	}
-	
-	public int getCreditValue() {
-		
-		LOGGER.info("Inside getCreditValue Method");
-		
-		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		ResultSet rs1 = null;
-		
-		try {
-			
-			String sqlGetCreditValue = "SELECT `value` FROM `config` WHERE `option`='credit_amount'";
-			ps1 = hcp.prepareStatement(sqlGetCreditValue);
-			
-			rs1 = ps1.executeQuery();
-			
-			if(rs1.next()){
-				return rs1.getInt("value");
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if(rs1 != null) rs1.close();
-				if(ps1 != null) ps1.close();
-				if(hcp != null) hcp.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return 0;
-	}
 
 	public void addOrder(String userId, int amount, String promoCode, String razorPayId, int creditLogId, Code_Type flsInternal) {
 		
@@ -292,6 +261,64 @@ public class FlsCredit extends Connect {
 			return false;
 		else
 			return true;
+	}
+	
+	public void updateMembership(String userId, int amountPaid, int promoCredits){
+		
+		LOGGER.info("Inside updateMembership Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null;
+		ResultSet rs1 = null;
+		int rs2;
+		
+		try {
+			
+			int totalAmount = amountPaid + promoCredits * CREDIT_VALUE;
+			
+			int monthsEarned = (Integer) totalAmount / MEMBER_VALUE;
+			
+			String sqlGetFeeExpiryDate = "SELECT user_fee_expiry FROM users WHERE user_id=?";
+			ps1 = hcp.prepareStatement(sqlGetFeeExpiryDate);
+			ps1.setString(1, userId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				LOGGER.info("Got user fee expiry date for the userId - " + userId + " as - " + rs1.getString("user_fee_expiry"));
+				String sqlUpdateFeeExpiry = "UPDATE `users` SET user_fee_expiry=";
+				if(rs1.getString("user_fee_expiry") == null){
+					sqlUpdateFeeExpiry = sqlUpdateFeeExpiry + "DATE_ADD(CURRENT_TIMESTAMP, INTERVAL ? YEAR_MONTH) WHERE user_id=?";
+				}else{
+					sqlUpdateFeeExpiry = sqlUpdateFeeExpiry + "DATE_ADD(user_fee_expiry, INTERVAL ? YEAR_MONTH) WHERE user_id=?";
+				}
+				ps2 = hcp.prepareStatement(sqlUpdateFeeExpiry);
+				ps2.setInt(1, monthsEarned);
+				ps2.setString(2, userId);
+				
+				rs2 = ps2.executeUpdate();
+				
+				if(rs2 == 1){
+					LOGGER.info("Updated user fee expiry by " + monthsEarned + " months for the userId - " + userId);
+				}else{
+					LOGGER.info("Not able to update user fee expiry by " + monthsEarned + " months for the userId - " + userId);
+				}
+			}else{
+				LOGGER.info("Not able to get user fee expiry date for the userId - " + userId);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

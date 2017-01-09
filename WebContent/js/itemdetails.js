@@ -99,21 +99,25 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                     if(message == "" || message == undefined)
                         message = null;
                     
-                    $http({
-                        url:'/RequestItem?req='+JSON.stringify({itemId:$scope.item_id,userId:userFactory.user,message:message}),
-                        method:"GET"
-                    }).then(function success(response){
-						if(response.data.Code== 0){
-							bannerService.updatebannerMessage(response.data.Message,"/index.html");
-							$("html, body").animate({ scrollTop: 0 }, "slow");
-						}else{
-							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-								window.location.replace("index.html");
-							},function(){});
-					}
-                    },
-                    function error(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                    $.ajax({ 
+                        url: '/RequestItem',
+                        type: 'post',
+                        data: {req : JSON.stringify({itemId:$scope.item_id,userId:userFactory.user,message:message})},
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "json",
+                        success:function(response){
+                            if(response.Code== 0){
+                                bannerService.updatebannerMessage(response.Message,"/index.html");
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            }else{
+                                modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                    window.location.replace("index.html");
+                                },function(){});
+                           }
+                        },
+                        error: function(){
+                            modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                        }
                     });
                 }
             }, 

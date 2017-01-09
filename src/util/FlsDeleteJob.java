@@ -10,12 +10,9 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 import adminOps.AdminOpsHandler;
-import adminOps.Response;
 import connect.Connect;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
-
-import util.LogItem;
 
 public class FlsDeleteJob extends Connect implements org.quartz.Job {
 
@@ -30,6 +27,7 @@ public class FlsDeleteJob extends Connect implements org.quartz.Job {
 		checkOldItems();
 		checkOldRequests();
 		checkOldLeases();
+		checkMembershipExpiry();
 		
 	}
 
@@ -220,6 +218,86 @@ public class FlsDeleteJob extends Connect implements org.quartz.Job {
 			e.printStackTrace();
 		}finally{
 			try{
+				if(rs2 != null) rs2.close();
+				if(ps2 != null) ps2.close();
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private void checkMembershipExpiry() {
+		
+		LOGGER.info("Inside CheckMembershipExpiry Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null;
+		ResultSet rs1 = null, rs2 = null;
+		int rs3, rs4;
+		
+		try{
+			
+			String sqlSelectUsersToWarn = "SELECT user_id FROM users WHERE user_fee_expiry IS NOT NULL AND user_fee_expiry BETWEEN (CURRENT_TIMESTAMP) AND (CURRENT_TIMESTAMP + INTERVAL 72 DAY_HOUR)";
+			ps1 = hcp.prepareStatement(sqlSelectUsersToWarn);
+			rs1 = ps1.executeQuery();
+			
+			while(rs1.next()){
+				LOGGER.info("Sending a reminder to the user about upgrading membership date to avoid nulling lease fee");
+				try {
+					Event event = new Event();
+					event.createEvent("admin@frrndlease.com", rs1.getString("user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_UBER_WARN, 0, "You have less than 3 days left for your uber membership to expiry. Please upgrade it to avoid nulling of all your items lease fee.");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			String sqlGettingExpiredMemberships = "SELECT user_id FROM users WHERE user_fee_expiry IS NOT NULL AND user_fee_expiry <= CURRENT_TIMESTAMP";
+			ps2 = hcp.prepareStatement(sqlGettingExpiredMemberships);
+			rs2 = ps2.executeQuery();
+			
+			while(rs2.next()){
+				LOGGER.info("Expiring Membership of the user --- " + rs2.getString("user_id") +  " by making user_fee_expiry date to null");
+				
+				String sqlUpdateExpiryFee = "UPDATE users SET user_fee_expiry=null WHERE user_id=?";
+				ps3 = hcp.prepareStatement(sqlUpdateExpiryFee);
+				ps3.setString(1, rs2.getString("user_id"));
+				
+				rs3 = ps3.executeUpdate();
+				
+				if(rs3 == 1){
+					LOGGER.info("User expiry fee made null for the userId --- " + rs2.getString("user_id"));
+				}else{
+					LOGGER.info("User expiry fee could not be made null for the userId --- " + rs2.getString("user_id"));
+				}
+				
+				LOGGER.info("Making item surcharge for items of the user --- " + rs2.getString("user_id") +  " to 0");
+				
+				String sqlUpdateItemsSurcharge = "UPDATE items SET item_surcharge=0 WHERE item_user_id=?";
+				ps4 = hcp.prepareStatement(sqlUpdateItemsSurcharge);
+				ps4.setString(1, rs2.getString("user_id"));
+				
+				rs4 = ps4.executeUpdate();
+				
+				if(rs4 == 1){
+					LOGGER.info("Items Surcharge made 0 for the userId --- " + rs2.getString("user_id"));
+				}else{
+					LOGGER.info("Items Surcharge could not be made 0 for the userId --- " + rs2.getString("user_id"));
+				}
+			}
+			
+		}catch(SQLException e){
+			LOGGER.warning("Error with the mysql operation");
+			e.printStackTrace();
+		}catch(Exception e){
+			LOGGER.warning("Exception Occured");
+			e.printStackTrace();
+		}finally{
+			try{
+				if(ps4 != null) ps4.close();
+				if(ps3 != null) ps3.close();
 				if(rs2 != null) rs2.close();
 				if(ps2 != null) ps2.close();
 				if(rs1 != null) rs1.close();

@@ -41,7 +41,7 @@ public class FlsBadges extends Connect {
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
 				rs.setUserStatus(rs1.getString("user_status"));
-				rs.setUserVeifiedFlag(rs1.getBoolean("user_verified_flag"));
+				rs.setUserVerifiedFlag(rs1.getBoolean("user_verified_flag"));
 				rs.setUserItems(rs1.getInt("user_items"));
 				rs.setUserLeases(rs1.getInt("user_leases"));
 				rs.setUserSignupDate(rs1.getString("user_signup_date"));

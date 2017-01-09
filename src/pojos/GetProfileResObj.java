@@ -1,16 +1,19 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetProfileResObj extends ResObj {
 
 	int code;
 	String message;
 
 	int credit, liveStatus;
-	String plan, userUid, fullName, mobile, email, location, address, locality, sublocality, referralCode, photoId,
-			profilePic;
+	String plan, userUid, fullName, mobile, email, location, address, locality, sublocality, referralCode, photoId, profilePic;
 	float lat, lng;
 	boolean photoIdVerified;
-	String userStatus, userSecStatus, userNotification;
+	String userStatus, userSecStatus, userNotification, userFeeExpiry;
 
 	public int getCode() {
 		return code;
@@ -186,5 +189,24 @@ public class GetProfileResObj extends ResObj {
 
 	public void setUserNotification(String userNotification) {
 		this.userNotification = userNotification;
+	}
+
+	public String getUserFeeExpiry() {
+		return userFeeExpiry;
+	}
+
+	public void setUserFeeExpiry(String userFeeExpiry) {
+		if(userFeeExpiry != null){
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			try {
+				date = sdf.parse(userFeeExpiry);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			this.userFeeExpiry = Long.toString(date.getTime());
+		}else{
+			this.userFeeExpiry = userFeeExpiry;
+		}
 	}
 }

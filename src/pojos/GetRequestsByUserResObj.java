@@ -10,7 +10,7 @@ public class GetRequestsByUserResObj extends ResObj {
 	String message;
 
 	// Item Details
-	int itemId, insurance;
+	int itemId, insurance, surcharge;
 	String title, description, category, leaseTerm, uid, primaryImageLink;
 
 	// request details
@@ -56,6 +56,14 @@ public class GetRequestsByUserResObj extends ResObj {
 
 	public void setInsurance(int insurance) {
 		this.insurance = insurance;
+	}
+
+	public int getSurcharge() {
+		return surcharge;
+	}
+
+	public void setSurcharge(int surcharge) {
+		this.surcharge = surcharge;
 	}
 
 	public String getTitle() {

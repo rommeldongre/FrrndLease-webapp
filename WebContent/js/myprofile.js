@@ -7,13 +7,15 @@ myProfile.controller('myProfileCtrl', ['$scope',
 										'modalService',
                                         'logoutService',
                                         '$timeout',
+                                        '$filter',
 										function($scope, 
 										userFactory, 
 										profileFactory, 
 										bannerService, 
 										modalService,
                                         logoutService,
-                                        $timeout){
+                                        $timeout,
+                                        $filter){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
@@ -47,12 +49,17 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.locality = response.data.locality;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
-				$scope.label = response.data.photoIdVerified;
 				$scope.profilePic = response.data.profilePic;
                 $scope.status = response.data.userStatus;
                 $scope.secStatus = response.data.userSecStatus;
                 $scope.notification = response.data.userNotification;
                 $scope.photoId = response.data.photoId;
+				$scope.addressVerified = response.data.photoIdVerified;
+                $scope.userFeeExpiry = response.data.userFeeExpiry;
+                if($scope.userFeeExpiry != null)
+                    $scope.userFeeExpiry = $filter('date')($scope.userFeeExpiry);
+                else
+                    $scope.userFeeExpiry = 'NA';
                 
                 Mobile = response.data.mobile;
                 Email = response.data.email;
@@ -332,6 +339,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
 	
     $scope.updateProfile = function(){
         
+        $scope.user.saving = true;
+        
         if($scope.location != '')
             getLocationData($scope.location);
         else
@@ -392,7 +401,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         profileFactory.updateProfile(req).then(
         function(response){
             if (response.data.code == 0) {
-                window.location.reload();
+                $scope.user.saving = false;
             }else{
 				modalService.showModal({}, {bodyText:response.data.message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
                     if(response.data.code == 400)
@@ -401,10 +410,10 @@ myProfile.controller('myProfileCtrl', ['$scope',
                         window.location.reload();
                 }, function(){});
             }
-			
         },
         function(error){
             console.log("unable to edit profile: " + error.message);
+            $scope.user.saving = false;
         });
     }
     

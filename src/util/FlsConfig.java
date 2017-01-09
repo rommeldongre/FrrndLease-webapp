@@ -17,12 +17,15 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2052;
+	public final int appBuild = 2054;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
 	
 	public static String prefixUrl = "http://www.frrndlease.com";
+	
+	public static int creditValue = 10;
+	public static int memberValue = 500;
 	
 	String getEnv() {
 
@@ -75,6 +78,72 @@ public class FlsConfig extends Connect{
 		}else{
 			return false;
 		}	
+	}
+	
+	public void setCreditValue(){
+
+		getConnection();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetCreditValue = "SELECT value FROM `config` WHERE config.option='credit_amount'";
+			ps1 = connection.prepareStatement(sqlGetCreditValue);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				creditValue = Integer.parseInt(rs1.getString("value"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// close and reset connection to null
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				connection.close();
+				connection = null;
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
+	public void setMemberValue(){
+
+		getConnection();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetMemberValue = "SELECT value FROM `config` WHERE config.option='member_amount'";
+			ps1 = connection.prepareStatement(sqlGetMemberValue);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				memberValue = Integer.parseInt(rs1.getString("value"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// close and reset connection to null
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				connection.close();
+				connection = null;
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	int getDbBuild() {
@@ -1914,18 +1983,11 @@ public class FlsConfig extends Connect{
 					// New Column for user fee expiry
 					String sqlCreateFeeColumn = "ALTER TABLE `users` ADD `user_fee_expiry` DATETIME NULL DEFAULT NULL AFTER `user_plan`;";
 					
-					// New Membership Table
-					String sqlCreateMembershipTable = "CREATE TABLE `fls`.`membership` ( `member_id` INT(255) NOT NULL AUTO_INCREMENT , `member_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `member_user_id` VARCHAR(255) NOT NULL , `amount` INT(255) NULL , `promo_code` VARCHAR(255) NULL , `razor_pay_id` VARCHAR(255) NULL , PRIMARY KEY (`member_id`));";
-					
 					try {
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlCreateFeeColumn);
 						ps1.executeUpdate();
 						ps1.close();
-						
-						PreparedStatement ps2 = connection.prepareStatement(sqlCreateMembershipTable);
-						ps2.executeUpdate();
-						ps2.close();
 						
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1943,6 +2005,66 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2052;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates a value for membership per month
+				if (dbBuild < 2053) {
+					
+					// New Column for user fee expiry
+					String sqlMemberAmount = "INSERT INTO `config` (`option`, `value`) VALUES ('member_amount', 500)";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlMemberAmount);
+						ps1.executeUpdate();
+						ps1.close();						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2053;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates a column for merchant surcharge
+				if (dbBuild < 2054) {
+					
+					// New Column for item surcharge
+					String sqlSurchargeColumn = "ALTER TABLE `items` ADD `item_surcharge` INT(255) NOT NULL DEFAULT '0' AFTER `item_lastmodified`";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlSurchargeColumn);
+						ps1.executeUpdate();
+						ps1.close();						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2054;
 					updateDBBuild(dbBuild);
 				}
 				
