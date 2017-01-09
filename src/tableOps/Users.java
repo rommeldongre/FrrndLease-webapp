@@ -31,7 +31,7 @@ public class Users extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(Users.class.getName());
 
-	private String userId, email, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
+	private String userId, userUid, email, fullName, mobile, location, auth, activation, status, message, operation, Id = null,
 			check = null, token, address, locality, sublocality, referralCode=null,profilePicture,friendId;
 	private float lat, lng;
 	private String signUpStatus;
@@ -132,12 +132,58 @@ public class Users extends Connect {
 			saveSecUserId();
 			break;
 			
+		case "userfromuid":
+			LOGGER.info("Getting user data from user uid");
+			getUserDataFromUid();
+			break;
+			
 		default:
 			res.setData(FLS_INVALID_OPERATION, "0", FLS_INVALID_OPERATION_M);
 			break;
 		}
 
 		return res;
+	}
+
+	private void getUserDataFromUid() {
+		LOGGER.info("Inside getDataFromUid Method");
+		userUid = um.getUserUid();
+		
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		Connection hcp = getConnectionFromPool();
+		
+		try{
+			
+			String sqlGetData = "SELECT * FROM users WHERE user_uid=?";
+			ps1 = hcp.prepareStatement(sqlGetData);
+			ps1.setString(1, userUid);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				JSONObject json = new JSONObject();
+				json.put("userId", rs1.getString("user_id"));
+				json.put("userName", rs1.getString("user_full_name"));
+				
+				message = json.toString();
+				res.setData(FLS_SUCCESS, "0", message);
+			}else{
+				res.setData(FLS_INVALID_USER_I, "0", FLS_INVALID_USER_M);
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		}finally{
+			try{
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void saveSecUserId(){
@@ -933,6 +979,7 @@ public class Users extends Connect {
 					JSONObject obj = new JSONObject();
 					
 					obj.put("userId", rs1.getString("user_id"));
+					obj.put("userUid", rs1.getString("user_uid"));
 					obj.put("fullName", rs1.getString("user_full_name"));
 					obj.put("mobile", rs1.getString("user_mobile"));
 					obj.put("status", rs1.getString("user_status"));

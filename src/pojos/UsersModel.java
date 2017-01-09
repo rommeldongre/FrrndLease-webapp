@@ -9,7 +9,8 @@ public class UsersModel {
 
 	private FlsLogger LOGGER = new FlsLogger(UsersModel.class.getName());
 
-	private String userId, email, fullName, mobile, location, auth, activation, status, address, locality, sublocality, referralCode,profilePicture,friendId;
+	private String userId, userUid, email, fullName, mobile, location, auth, activation, status, address, locality, sublocality,
+			referralCode, profilePicture, friendId;
 	private int liveStatus, verification;
 	private float lat, lng;
 	private JSONObject obj;
@@ -21,29 +22,48 @@ public class UsersModel {
 
 	private void extractData() {
 		try {
-			if(obj.has("userId"))userId = obj.getString("userId");
-			if(obj.has("email"))email = obj.getString("email");
-			if(obj.has("fullName"))fullName = obj.getString("fullName");
-			if(obj.has("mobile"))mobile = obj.getString("mobile");
-			if(obj.has("location"))location = obj.getString("location");
-			if(obj.has("auth"))auth = obj.getString("auth");
-			if(obj.has("activation"))activation = obj.getString("activation");
-			if(obj.has("status"))status = obj.getString("status");
-			if(obj.has("address"))address = obj.getString("address");
-			if(obj.has("locality"))locality = obj.getString("locality");
-			if(obj.has("sublocality"))sublocality = obj.getString("sublocality");
-			if(obj.has("lat"))lat = Float.parseFloat(obj.getString("lat"));
-			if(obj.has("lng"))lng = Float.parseFloat(obj.getString("lng"));
-			if(obj.has("referralCode"))referralCode = obj.getString("referralCode");
-			if(obj.has("profilePicture"))profilePicture = obj.getString("profilePicture");
-			if(obj.has("liveStatus"))liveStatus = obj.getInt("liveStatus");
-			if(obj.has("verification"))verification = obj.getInt("verification");
-			if(obj.has("friendId"))
-			if(obj.isNull("friendId")){
-				friendId = "";
-			}else{
-				friendId = obj.getString("friendId");
-			}
+			if (obj.has("userId"))
+				userId = obj.getString("userId");
+			if (obj.has("userUid"))
+				userUid = obj.getString("userUid");
+			if (obj.has("email"))
+				email = obj.getString("email");
+			if (obj.has("fullName"))
+				fullName = obj.getString("fullName");
+			if (obj.has("mobile"))
+				mobile = obj.getString("mobile");
+			if (obj.has("location"))
+				location = obj.getString("location");
+			if (obj.has("auth"))
+				auth = obj.getString("auth");
+			if (obj.has("activation"))
+				activation = obj.getString("activation");
+			if (obj.has("status"))
+				status = obj.getString("status");
+			if (obj.has("address"))
+				address = obj.getString("address");
+			if (obj.has("locality"))
+				locality = obj.getString("locality");
+			if (obj.has("sublocality"))
+				sublocality = obj.getString("sublocality");
+			if (obj.has("lat"))
+				lat = Float.parseFloat(obj.getString("lat"));
+			if (obj.has("lng"))
+				lng = Float.parseFloat(obj.getString("lng"));
+			if (obj.has("referralCode"))
+				referralCode = obj.getString("referralCode");
+			if (obj.has("profilePicture"))
+				profilePicture = obj.getString("profilePicture");
+			if (obj.has("liveStatus"))
+				liveStatus = obj.getInt("liveStatus");
+			if (obj.has("verification"))
+				verification = obj.getInt("verification");
+			if (obj.has("friendId"))
+				if (obj.isNull("friendId")) {
+					friendId = "";
+				} else {
+					friendId = obj.getString("friendId");
+				}
 		} catch (JSONException e) {
 			LOGGER.warning("Couldn't parse json");
 			e.printStackTrace();
@@ -60,6 +80,10 @@ public class UsersModel {
 
 	public String getUserId() {
 		return this.userId;
+	}
+
+	public String getUserUid() {
+		return userUid;
 	}
 
 	public String getFullName() {
