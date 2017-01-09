@@ -296,8 +296,6 @@ public class Items extends Connect {
 	private void Delete() {
 		
 		id = im.getId();
-		userId= im.getUserId();
-		title =im.getTitle();
 		
 		LOGGER.info("Inside delete method....");
 		
