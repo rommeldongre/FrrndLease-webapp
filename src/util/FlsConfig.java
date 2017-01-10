@@ -22,7 +22,7 @@ public class FlsConfig extends Connect{
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
 	
-	public static String prefixUrl = "http://www.frrndlease.com";
+	public static String prefixUrl = "https://www.frrndlease.com";
 	
 	public static int creditValue = 10;
 	public static int memberValue = 500;

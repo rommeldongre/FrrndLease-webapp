@@ -34,8 +34,8 @@ public class FlsPlan extends Connect{
 	
 	private String URL = FlsConfig.prefixUrl;
 	
-	private String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
-	private String USER_ICON = "http://s3-ap-south-1.amazonaws.com/fls-meta/user_icon.png";
+	private String LOGO_URL = "https://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
+	private String USER_ICON = "https://s3-ap-south-1.amazonaws.com/fls-meta/user_icon.png";
 	
 	public enum Fls_Plan{
 		FLS_SELFIE,

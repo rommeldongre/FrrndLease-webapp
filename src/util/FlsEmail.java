@@ -42,7 +42,7 @@ public class FlsEmail extends Connect{
 		String ENV_CONFIG = FlsConfig.env;
 		String URL = FlsConfig.prefixUrl;
 		
-		String LOGO_URL = "http://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
+		String LOGO_URL = "https://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
 		
 		String FROM = "BlueMarble@frrndlease.com", CC = "BlueMarble@frrndlease.com", TO, PREFIX, SUBJECT, BODY;
 		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_LEASED_OUT_ITEMS, EMAIL_LEASED_IN_ITEMS, EMAIL_PROFILE_PAGE, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;

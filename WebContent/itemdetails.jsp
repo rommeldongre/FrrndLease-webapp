@@ -11,7 +11,7 @@
         <meta property="og:title" content="New Item Posted on FrrndLease"/>
         <meta property="og:type" content="website" />
         <meta property="og:image" content="${primaryImageLink}" />
-        <meta property="og:url" content="http://www.frrndlease.com/ItemDetails?uid=${uid}" />
+        <meta property="og:url" content="https://www.frrndlease.com/ItemDetails?uid=${uid}" />
         <meta property="og:description" content="${title}" />
 		<meta property="fb:app_id" content="107934726217988" />
     <!--Meta tags For Facebook end here-->
@@ -329,7 +329,7 @@
 	<script src="js/bootstrap.min.js"></script>
     <!-- For Autocomplete Feature -->
     <script src="js/load-image.all.min.js"></script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
     <script src="js/ngAutocomplete.js"></script>
 </body>
 </html>

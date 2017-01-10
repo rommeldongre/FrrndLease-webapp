@@ -152,7 +152,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 				// send message to facebook friends using send request dialog
 				FB.ui({
 					method: 'send',
-					link: 'http://www.frrndlease.com/index.html?ref_token='+ref_code,
+					link: 'https://www.frrndlease.com/index.html?ref_token='+ref_code,
 				},function(response){
 					if (response && !response.error) {
 						//check 'response' to see if call was successful
