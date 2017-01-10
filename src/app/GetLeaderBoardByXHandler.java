@@ -45,7 +45,7 @@ public class GetLeaderBoardByXHandler extends Connect implements AppHandler {
 		ResultSet itemsrs1 = null,usersrs2=null,usersrs3=null;
 		Connection hcp = getConnectionFromPool();
 		try {
-			String GetItemSql = "SELECT tb1.request_item_id AS most_requested_item_id, tb2.item_name AS most_requested_item_name, tb3.user_full_name AS most_requested_item_user_name FROM `requests` tb1 INNER JOIN `items` tb2 ON tb1.request_item_id = tb2.item_id INNER JOIN users tb3 ON tb2.item_user_id = tb3.user_id GROUP BY tb1.request_item_id ORDER BY COUNT(tb1.request_item_id) DESC LIMIT 3";
+			String GetItemSql = "SELECT tb1.request_item_id AS most_requested_item_id, COUNT(tb1.request_item_id) AS request_count, tb2.item_name AS most_requested_item_name, tb3.user_full_name AS most_requested_item_user_name FROM `requests` tb1 INNER JOIN `items` tb2 ON tb1.request_item_id = tb2.item_id INNER JOIN users tb3 ON tb2.item_user_id = tb3.user_id GROUP BY tb1.request_item_id ORDER BY COUNT(tb1.request_item_id) DESC, tb1.request_lastmodified DESC LIMIT 3";
 			LOGGER.info("Creating 1st Statement");
 			
 			String GetUsersSql = "SELECT tb1.user_credit AS highest_credit_value, tb1.user_full_name AS highest_credit_user FROM users tb1 ORDER BY tb1.user_credit DESC LIMIT 3";
