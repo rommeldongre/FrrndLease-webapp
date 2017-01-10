@@ -5,19 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Random;
 
-import util.ReferralCode;
+import connect.Connect;
+import io.jsonwebtoken.impl.crypto.MacProvider;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
-import connect.Connect;
-import io.jsonwebtoken.impl.crypto.MacProvider;
 
 public class FlsConfig extends Connect{
 
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2054;
+	public final int appBuild = 2055;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2065,6 +2064,42 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2054;
+					updateDBBuild(dbBuild);
+				}
+				
+				// Replace all http with https
+				if (dbBuild < 2055) {
+					
+					String[][] fields = {{"users", "user_photo_id"}, {"users", "user_profile_picture"},
+					{"images", "item_image_link"}, {"items", "item_primary_image_link"}, {"item_log", "item_log_image_link"}};
+					
+					try {
+						getConnection();
+						for(int i = 0; i < fields.length; i++){
+							String updateFields = "UPDATE " + fields[i][0] + " SET " + fields[i][1] + "=REPLACE(" + fields[i][1] 
+									+ ",'http://', 'https://');";
+
+							PreparedStatement ps1 = connection.prepareStatement(updateFields);
+							ps1.executeUpdate();
+							ps1.close();
+						}
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2055;
 					updateDBBuild(dbBuild);
 				}
 				
