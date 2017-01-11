@@ -327,7 +327,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
         var link = null;
 
         if(window.location.href.indexOf("frrndlease.com") > -1){
-            link = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.uid;
+            link = 'https://www.frrndlease.com/ItemDetails?uid='+$scope.uid;
 			
 			FB.login(function(response) {
 				// Facebook checks whether user is logged in or not and asks for credentials if not.

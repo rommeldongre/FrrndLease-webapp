@@ -153,7 +153,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
 			var params = {};
 			params['message'] = "New Item "+$scope.item.title+" posted on FrrndLease";
 			params['access_token'] = 'EAABiKoMD4QQBAC2ZBFRpZB6TKdPB8K56VBIjuqbzRlZAfHsBFllZAvSx5gBfKc1ZC1s4wiN9GenaqdrS0eAxbOJmVOhG1RGPRngUltPSJZAKjMdOaeH5ZAjY2cgfXNKslF3AhIyVCmPL04ZCUN5hvh0CyQIzVMmaHRaohpZBV0KBHBgZDZD';
-			params['link'] = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid ;
+			params['link'] = 'https://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid ;
 	
 			FB.api('/1127097583974287/feed', 'post', params, function(response) {
 				if (!response || response.error) {
@@ -173,7 +173,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         var link = null;
 
         if(window.location.href.indexOf("frrndlease.com") > -1){
-            link = 'http://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid;
+            link = 'https://www.frrndlease.com/ItemDetails?uid='+$scope.item.uid;
 			
 			FB.login(function(response) {
 				// Facebook checks whether user is logged in or not and asks for credentials if not.
@@ -298,7 +298,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             // send message to facebook friends using send request dialog
             FB.ui({
                 method: 'send',
-                link: 'http://www.frrndlease.com/index.html?ref_token='+$scope.refferalCode,
+                link: 'https://www.frrndlease.com/index.html?ref_token='+$scope.refferalCode,
             },function(response){
                 if (response && !response.error_code) {
                     //check 'response' to see if call was successful

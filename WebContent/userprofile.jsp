@@ -305,7 +305,7 @@
        
        <!-- For Autocomplete Feature -->
        <script src="js/load-image.all.min.js"></script>
-       <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
+       <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
        <script src="js/ngAutocomplete.js"></script>
     </body>
     

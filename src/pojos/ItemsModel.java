@@ -37,7 +37,13 @@ public class ItemsModel {
 					leaseId = obj.getInt("leaseId");
 				}
 			if(obj.has("category"))category = obj.getString("category");
-			if(obj.has("userId"))userId = obj.getString("userId");
+			if(obj.has("userId")){
+				if(obj.isNull("userId")){
+					userId = "anonymous";
+				}else{
+					userId = obj.getString("userId");
+				}
+			}
 			if(obj.has("leaseTerm"))leaseTerm = obj.getString("leaseTerm");
 			if(obj.has("id"))id = obj.getInt("id");
 			if(obj.has("leaseValue"))leaseValue = obj.getInt("leaseValue");
