@@ -1,0 +1,77 @@
+<div ng-controller="leaderCtrl" class="modal fade" id="leaderModal" tabindex="-1" role="dialog" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title text-center">Leader Board</h4>
+        </div>
+        <div class="modal-body">
+			<div class="row">
+				<div class="col-md-4">
+					<h4 class="section-title text-center">Lifetime Credits</h4>
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th class="text-center">Rank</th>
+									<th class="text-center">Credits</th>
+									<th class="text-center">User</th>
+								</tr>
+							</thead>
+							<tbody ng-repeat="y in leaders">
+									<tr>
+										<td class="text-center">#{{$index + 1}}</td>
+										<td class="text-center">{{ y.highestCreditValue }}</td>
+										<td class="text-center">{{ y.highestCreditUser }}</td>
+									</tr>
+								</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<h4 class="section-title text-center">Past Months Credits</h4>
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th class="text-center">Rank</th>
+									<th class="text-center">Credit</th>
+									<th class="text-center">User</th>
+								</tr>
+							</thead>
+							<tbody ng-repeat="y in leaders">
+									<tr ng-if="y.totalCreditMonthly >'20'">
+										<td class="text-center">#{{$index + 1}}</td>
+										<td class="text-center">{{ y.totalCreditMonthly }}</td>
+										<td class="text-center">{{ y.monthlyCreditUserName }}</td>
+									</tr>
+								</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<h4 class="section-title text-center">Most Requested Items</h4>
+					<div class="table-responsive">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th class="text-center">Rank</th>
+									<th class="text-center">Item</th>
+									<th class="text-center">Owner</th>
+								</tr>
+							</thead>
+							<tbody ng-repeat="y in leaders">
+									<tr>
+										<td class="text-center">#{{$index + 1}}</td>
+										<td class="text-center">{{ y.mostRequestedItemName }}</td>
+										<td class="text-center">{{ y.mostRequestedItemUserName }}</td>
+									</tr>
+								</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+        </div>
+      </div>
+    </div>
+</div>

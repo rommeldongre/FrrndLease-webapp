@@ -23,7 +23,7 @@
                         <input class="form-control" type="text" ng-autocomplete ng-model="search.location" options="options" details="details" />
                     </li>
                     
-                    <div class="nav navbar-nav col-sm-4 col-md-4" ng-if="showSearch && isLoggedIn()">
+                    <div class="nav navbar-nav col-sm-3 col-md-3" ng-if="showSearch && isLoggedIn()">
                         <div class="input-group" style="margin-left:5px;">
                             <input type="text" id="search_box" class="form-control" style="margin-top:15px;margin-bottom:15px;" ng-keypress="($event.charCode==13)?searching():return" placeholder="Search from {{item_count}} items from {{user_count}} members on FrrndLease" ng-change="searchStringChanged(search.string)" ng-model="search.string">
                             <div class="input-group-btn">
@@ -35,6 +35,8 @@
                     
                     <!-- Dropdown starts here -->
                     <ul class="nav navbar-nav navbar-right">
+						
+						<li class="btn-tooltip" style="color:#337ab7;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title=" See Leader Board" tooltip><a id="headerleaderoptions" onclick="ga('send', 'event', 'index', 'click', 'Leader');" href="" data-toggle="modal" data-target="#leaderModal"><i class="fa fa-trophy" style="color:#edbf07;font-size:18px;" aria-hidden="true"></i></a></li>
 						
 						<li ng-if="isAnonymous()"><a id="headerlikeoptions" onclick="ga('send', 'event', 'index', 'click', 'Like');" href="" ><div class="fb-like" data-href="https://www.facebook.com/frrndlease/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
                         
@@ -119,6 +121,7 @@
         </nav>
 		
     </div>
+	<div ng-include="'leadermodal.html'"></div>
     <div ng-include="'loginmodal.html'"></div>
     <div ng-include="'signupmodal.html'"></div>
     <div ng-include="'paymentmodal.html'"></div>
