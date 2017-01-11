@@ -41,7 +41,7 @@ public class FlsS3Bucket extends Connect {
 	private String userId = null;
 	private boolean isProfile = true;
 	
-	private String BASE_URL = "http://s3-ap-southeast-1.amazonaws.com/";
+	private String BASE_URL = "https://s3-ap-southeast-1.amazonaws.com/";
 	
 	private BasicAWSCredentials credentials = new BasicAWSCredentials("AKIAJMC2WRKPB6UEF5DA","obuoy6YGu6YUSLRrIHoe7E5M9QdzyKjZ1u0mc6m2");
 	private AmazonS3 s3Client = new AmazonS3Client(credentials);

@@ -363,9 +363,9 @@ editItemApp.controller('editItemCtrl', ['$scope',
 			var link = null;
 			
 			if(window.location.href.indexOf("frrndlease.com") > -1){
-				link = 'http://www.frrndlease.com/ItemDetails?uid='+uid;
+				link = 'https://www.frrndlease.com/ItemDetails?uid='+uid;
 			}else{
-				link = 'http://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
+				link = 'https://www.frrndlease.com/ItemDetails?uid=ripstick-wave-board-156';
 				console.log('http://localhost:8080/ItemDetails?uid='+uid);
 			}
 			

@@ -4,11 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import connect.Connect;
 import pojos.GetEngagementsByXListResObj;
@@ -59,10 +56,8 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 			Calendar c = Calendar.getInstance();
 			
 			// storing the front end data in appropriate variables
-			int offset = rq.getCookie();
 			int limit = rq.getLimit();
 			String userId = rq.getUserId();
-			String fromDate = rq.getFromDate();
 			String toDate = rq.getToDate();
 			String interval = rq.getInterval();
 			String interimDate = toDate;
