@@ -40,7 +40,7 @@
 								</tr>
 							</thead>
 							<tbody ng-repeat="y in leaders">
-									<tr ng-if="y.totalCreditMonthly >'20'">
+									<tr ng-if="y.totalCreditMonthly > 0">
 										<td class="text-center">#{{$index + 1}}</td>
 										<td class="text-center">{{ y.totalCreditMonthly }}</td>
 										<td class="text-center">{{ y.monthlyCreditUserName }}</td>
