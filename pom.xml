@@ -239,7 +239,7 @@
 	<profile>
 	<id>live</id>
 	<properties>
-		<deploy_url>http://www.frrndlease.com/manager/text</deploy_url>
+		<deploy_url>https://www.frrndlease.com/manager/text</deploy_url>
 		<deploy_server>AWS</deploy_server>
 		<deploy_username>tomcat</deploy_username>
 		<deploy_password>manager</deploy_password>
