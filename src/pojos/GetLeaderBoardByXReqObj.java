@@ -1,10 +1,15 @@
 package pojos;
 
-public class GetLeaderBoardByXReqObj extends ReqObj{
-	
-	String empty_pojo;
+public class GetLeaderBoardByXReqObj extends ReqObj {
 
-	public String getEmpty_pojo() {
-		return empty_pojo;
+	int limit;
+
+	public int getLimit() {
+		return limit;
 	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
 }

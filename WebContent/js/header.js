@@ -1588,17 +1588,15 @@ headerApp.controller('leaderCtrl', ['$scope', function($scope){
 	
 	$scope.leaders = [];
 	
-	
 	var displayLeaders = function(){
             var req = {
-			empty_pojo: ""
+			limit: 3
 		};
 		
 		GetLeaderBoardByXSend(req);
     }
 	
 	var GetLeaderBoardByXSend = function(req){
-		
 		$.ajax({
 			url: '/GetLeaderBoardByX',
 			type: 'post',
@@ -1610,14 +1608,10 @@ headerApp.controller('leaderCtrl', ['$scope', function($scope){
                     $scope.$apply(function(){
                         $scope.leaders = response.resList;
                     });
-                }else{
-                    //lastEngagementId = -1
                 }
 			},
 		
-			error: function() {
-				console.log("Not able to send message");
-			}
+			error: function() {}
 		});
 	}
 	

@@ -3,24 +3,15 @@ package pojos;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetLeaderBoardByXListResObj extends ResObj{
-	
+public class GetLeaderBoardByXListResObj extends ResObj {
+
 	// Return code for GetRequestsByUser
-	int code,lastLeadId;
+	int code;
 
 	// Error String
 	String message;
-	
+
 	List<GetLeaderBoardByXResObj> resList = new ArrayList<>();
-
-	
-	public int getLastLeadId() {
-		return lastLeadId;
-	}
-
-	public void setLastLeadId(int lastLeadId) {
-		this.lastLeadId = lastLeadId;
-	}
 
 	public int getCode() {
 		return code;
