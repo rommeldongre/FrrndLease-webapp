@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -32,8 +34,13 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 		LOGGER.info("Send reminder to upload Id Proof");
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null,ps2=null;
-		ResultSet rs1 = null,rs2=null;
+		PreparedStatement ps1 = null,ps2=null,ps3=null,ps4=null;
+		ResultSet rs1 = null,rs2=null,rs3=null;
+		String next_reminder_date=null;
+		
+		Calendar currentCal = Calendar.getInstance();
+		SimpleDateFormat currentSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  		String currentDate = currentSdf.format(currentCal.getTime());
 		
 		try {
 			
@@ -44,6 +51,21 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 			String sqlSelectPrimePlaces = "SELECT * FROM `places`";
 			ps2 = hcp.prepareStatement(sqlSelectPrimePlaces);
 			rs2 = ps2.executeQuery();
+			
+			String sqlSelectPhotoIdDate = "SELECT * FROM `config` WHERE option=?";
+			ps3 = hcp.prepareStatement(sqlSelectPhotoIdDate);
+			ps3.setString(1, "photo_id_reminder");
+			rs3 = ps3.executeQuery();
+			
+			while(rs3.next()){
+				next_reminder_date = rs3.getString("value");
+			}
+			
+			LOGGER.info("Next date :"+next_reminder_date+" Current Date :"+currentDate);
+			if(currentSdf.parse(currentDate).before(currentSdf.parse(next_reminder_date))){
+				LOGGER.warning("Current date is before the next time stamp date");
+				return;	
+			}
 			
 			ArrayList<String> places =new ArrayList<String>();
 			
@@ -63,6 +85,12 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 				}
 				
 			}
+			
+			String sqlAddNextPhotoIdDate = "UPDATE `config` SET `value`=(CURRENT_TIMESTAMP + INTERVAL 192 DAY_HOUR) WHERE option=?";
+			ps4 = hcp.prepareStatement(sqlAddNextPhotoIdDate);
+			ps4.setString(1, "photo_id_reminder");
+			ps4.executeUpdate();
+			
 		}catch(SQLException e){
 			LOGGER.warning("Error with the mysql operation in checkIdProof");
 			e.printStackTrace();
@@ -73,8 +101,11 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 			try{
 				if(rs1 != null) rs1.close();
 				if(rs2 != null) rs2.close();
+				if(rs3 != null) rs3.close();
 				if(ps1 != null) ps1.close();
 				if(ps2 != null) ps2.close();
+				if(ps3 != null) ps3.close();
+				if(ps4 != null) ps4.close();
 				if(hcp != null) hcp.close();
 			}catch(Exception e){
 				e.printStackTrace();
