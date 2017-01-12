@@ -22,7 +22,7 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
 	var errCount = 0, len = 0,count=1;
     $scope.friends = [];
 	var reasonForAddFriend = null, googleFriendsCounter = 0, counter = 0,checkcounter = 0;
-	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
+	var clientId = '1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com';
 	var apiKey = 'API Code';
 	var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
 	$("#openBtn_gmail").hide();
