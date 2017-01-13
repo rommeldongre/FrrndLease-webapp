@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2055;
+	public final int appBuild = 2056;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2100,6 +2100,36 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2055;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds a value for timestamp for next photo Id reminder
+				if (dbBuild < 2056) {
+					
+					// New Column for user fee expiry
+					String sqlPhotoIdReminder = "INSERT INTO `config` (`option`, `value`) VALUES ('photo_id_reminder', (CURRENT_TIMESTAMP  + INTERVAL 192 DAY_HOUR))";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlPhotoIdReminder);
+						ps1.executeUpdate();
+						ps1.close();						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2056;
 					updateDBBuild(dbBuild);
 				}
 				

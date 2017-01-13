@@ -378,22 +378,30 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_LEASE_ENDED_OWNER:
 				SUBJECT = (" Reminder to update status of lease given to user [" + obj.getString("fromUserName") + "]");
-				BODY = "Lease for your item has ended. Please update lease status for the item <a href='" + EMAIL_LEASED_OUT_ITEMS + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.";
+				BODY = ("<body>Lease for your item has ended. Please update lease status for the item <a href='" + EMAIL_LEASED_OUT_ITEMS + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.</body>"
+						+ "To stop the lease and release credits, please confirm item pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=true&leaseId=" + obj.getInt("leaseId") + "'>"
+						+ "Click to confirm</a>");
 				break;
 				
 			case FLS_MAIL_LEASE_ENDED_REQUESTOR:
 				SUBJECT = (" Reminder to update lease status");
-				BODY = "Lease for an item you leased has ended. Please update lease status for item <a href='" + EMAIL_LEASED_IN_ITEMS + "'>" + obj.getString("title") + "</a> ";
+				BODY = ("<body>Lease for an item you leased has ended. Please update lease status for item <a href='" + EMAIL_LEASED_IN_ITEMS + "'>" + obj.getString("title") + "</a> </body>"
+						+ "To stop the lease and release credits, please confirm item pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=false&leaseId=" + obj.getInt("leaseId") + "'>"
+						+ "Click to confirm</a>");
 				break;
 				
 			case FLS_MAIL_LEASE_READY_OWNER:
 				SUBJECT = (" Reminder to update status of lease given to user [" + obj.getString("fromUserName") + "]");
-				BODY = "Lease for your item has started. Please update lease status for the item <a href='" + EMAIL_LEASED_OUT_ITEMS + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.";
+				BODY = ("<body>Lease for your item has started. Please update lease status for the item <a href='" + EMAIL_LEASED_OUT_ITEMS + "'>" + obj.getString("title") + "</a> and Requestor [" + obj.getString("fromUserName") + "] on FrrndLease.</body>"
+						+ "To start the lease, please confirm item pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=true&leaseId=" + obj.getInt("leaseId") + "'>"
+						+ "Click to confirm</a>");
 				break;
 				
 			case FLS_MAIL_LEASE_READY_REQUESTOR:
 				SUBJECT = (" Reminder to update lease status");
-				BODY = "Lease for an item you requested has started. Please update lease status for item <a href='" + EMAIL_LEASED_IN_ITEMS + "'>" + obj.getString("title") + "</a> ";
+				BODY = ("</body>Lease for an item you requested has started. Please update lease status for item <a href='" + EMAIL_LEASED_IN_ITEMS + "'>" + obj.getString("title") + "</a> </body>"
+						+ "To start the lease, please confirm item pickup by clicking on this link - <a href='" + EMAIL_PICKUP_CONFIRMATION + "?isOw=false&leaseId=" + obj.getInt("leaseId") + "'>"
+						+ "Click to confirm</a>");
 				break;
 				
 			case FLS_MAIL_RENEW_LEASE_OWNER:
