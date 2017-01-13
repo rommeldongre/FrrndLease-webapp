@@ -36,7 +36,7 @@
                     <!-- Dropdown starts here -->
                     <ul class="nav navbar-nav navbar-right">
 						
-						<li class="btn-tooltip" style="color:#337ab7;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title=" See Leader Board" tooltip><a id="headerleaderoptions" onclick="ga('send', 'event', 'index', 'click', 'Leader');" href="" data-toggle="modal" data-target="#leaderModal"><i class="fa fa-trophy" style="color:#edbf07;font-size:18px;" aria-hidden="true"></i></a></li>
+						<li id="headerleaderoptions" class="btn btn-simple btn-tooltip" style="color:#edbf07;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title="See Leader Board" tooltip><i class="fa fa-trophy" data-toggle="modal" data-target="#leaderModal" aria-hidden="true"></i></li>
 						
 						<li ng-if="isAnonymous()"><a id="headerlikeoptions" onclick="ga('send', 'event', 'index', 'click', 'Like');" href="" ><div class="fb-like" data-href="https://www.facebook.com/frrndlease/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
                         

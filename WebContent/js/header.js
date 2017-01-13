@@ -531,6 +531,14 @@ headerApp.controller('headerCtrl', ['$scope',
             }, {scope: 'email,public_profile,user_friends'});
 	}
     
+    // getting current location on header load
+    userFactory.getCurrentLocation();
+    
+    // listening broadcast for current location
+    $scope.$on('currentLocation', function(event, location){
+        $scope.search.location = location;
+    });
+    
 }]);
 
 headerApp.service('logoutService', function(){
@@ -616,6 +624,31 @@ headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', functi
 		dataFactory.user = localStorage.getItem("userloggedin");
 		dataFactory.userName = localStorage.getItem("userloggedinName");
 		dataFactory.userAccessToken = localStorage.getItem("userloggedinAccess");
+    }
+    
+    dataFactory.getCurrentLocation = function(){
+        
+        // getting the current location
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                coords = new google.maps.LatLng(latitude, longitude);	
+
+                var geocoder = new google.maps.Geocoder();
+                var latLng = new google.maps.LatLng(latitude, longitude);
+                geocoder.geocode( { 'latLng': latLng}, function(results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        $rootScope.$broadcast('currentLocation', results[4].formatted_address);
+                    }else{
+                        console.log("Geocode was unsucessfull in detecting your current location");
+                    }
+                });
+            });
+        } else { 
+            console.log("Geolocation is not supported by this browser.");
+        }
+        
     }
     
     return dataFactory;
@@ -1171,7 +1204,7 @@ headerApp.controller('loginModalCtrl', ['$scope', 'loginSignupService', 'modalSe
     
 }]);
 
-headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalService', function($scope, loginSignupService, modalService){
+headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalService', 'userFactory', function($scope, loginSignupService, modalService, userFactory){
     
     var friendId = "";
     
@@ -1293,34 +1326,10 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
     // remove this code and uncomment the below one when using https
     $scope.location = "Gokhalenagar, Pune, Maharashtra, India";
     
-//    // getting the current location
-//    var getLocation = function() {
-//        if (navigator.geolocation) {
-//            navigator.geolocation.getCurrentPosition(showPosition);
-//        } else { 
-//            console.log("Geolocation is not supported by this browser.");
-//        }
-//    }
-//
-//    var showPosition = function(position) {
-//		latitude = position.coords.latitude;
-//		longitude = position.coords.longitude;
-//		coords = new google.maps.LatLng(latitude, longitude);	
-//			
-//		var geocoder = new google.maps.Geocoder();
-//		var latLng = new google.maps.LatLng(latitude, longitude);
-//		geocoder.geocode( { 'latLng': latLng}, function(results, status) {
-//            if (status == google.maps.GeocoderStatus.OK) {
-//                $scope.$apply(function(){
-//                   $scope.location = results[4].formatted_address; 
-//                });
-//            }else{
-//                console.log("Geocode was unsucessfull in detecting your current location");
-//            }
-//        });
-//    }
-//    
-//    getLocation();
+    $scope.$on('currentLocation', function(event, location){
+        $scope.location = location;
+    });
+    
 }]);
 
 headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount', function($scope, userFactory, eventsCount){
@@ -1579,17 +1588,15 @@ headerApp.controller('leaderCtrl', ['$scope', function($scope){
 	
 	$scope.leaders = [];
 	
-	
 	var displayLeaders = function(){
             var req = {
-			empty_pojo: ""
+			limit: 3
 		};
 		
 		GetLeaderBoardByXSend(req);
     }
 	
 	var GetLeaderBoardByXSend = function(req){
-		
 		$.ajax({
 			url: '/GetLeaderBoardByX',
 			type: 'post',
@@ -1601,14 +1608,10 @@ headerApp.controller('leaderCtrl', ['$scope', function($scope){
                     $scope.$apply(function(){
                         $scope.leaders = response.resList;
                     });
-                }else{
-                    //lastEngagementId = -1
                 }
 			},
 		
-			error: function() {
-				console.log("Not able to send message");
-			}
+			error: function() {}
 		});
 	}
 	

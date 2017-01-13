@@ -211,7 +211,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     var testEmail = /^\w+([-+.']\ w+)*@\w+([-.]\ w+)*\.\w+([-.]\ w+)*$/;
 	var count=0;
 	var counter = 0;
-	var clientId = '349857239428-jtd6tn19skoc9ltdr6tsrbsbecv5uhh3.apps.googleusercontent.com';
+	var clientId = '1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com';
 	var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
 	
 	var load_Gapi = function(){						//for google
