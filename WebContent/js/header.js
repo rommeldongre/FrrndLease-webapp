@@ -91,7 +91,7 @@ headerApp.controller('headerCtrl', ['$scope',
     }
     
     var sendAddData = function(){
-        var Activation = CryptoJS.MD5(Email);
+        var Activation = CryptoJS.MD5(UserId);
         Activation = Activation.toString();
             
         var req = {

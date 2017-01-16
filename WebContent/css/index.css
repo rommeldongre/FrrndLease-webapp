@@ -1,3 +1,13 @@
+.divider {
+    margin: 0 auto;
+    display: block;
+    width: 14px;
+    position: relative;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
 .navbar-default{
     background-color: white;
 }
@@ -205,7 +215,8 @@ html, body{
 	padding: 0;
 	height: 100%;
 	background-color: #edefed;
-	overflow-x: hidden;
+    font-family: 'Happy Monkey', serif;
+/*	overflow-x: hidden;*/
 }
 
 
