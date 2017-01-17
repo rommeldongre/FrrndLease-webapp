@@ -41,8 +41,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
     public void leasetask(){
     	  
     	LOGGER.info("Inside Lease Task job");
-  		String lease_requser_id=null,lease_user_id=null,lease_expiry_date=null,term,date, item_name=null;
-  	    int user_credit=0,lease_item_id=0,days=0;
+  		String lease_requser_id=null,lease_requser_name=null,lease_user_id=null,lease_expiry_date=null,term,date, item_name=null;
+  	    int user_credit=0,lease_item_id=0,lease_id=0,days=0;
   	    
   	    Calendar futureCal = Calendar.getInstance();
 		SimpleDateFormat futureSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -57,10 +57,12 @@ public class FlsJob extends Connect implements org.quartz.Job {
 		Event event = new Event();
   	    
     	try {
-    		String getLeases =" SELECT tb1.lease_requser_id, tb1.lease_item_id, tb1.lease_user_id, tb1.lease_status, tb1.delivery_plan, tb1.lease_expiry_date, tb2.user_credit, tb3.item_name, tb3.item_status FROM leases tb1 INNER JOIN users tb2 on tb1.lease_requser_id = tb2.user_id  INNER JOIN items tb3 ON tb1.lease_item_id = tb3.item_id WHERE tb1.lease_status=? AND tb1.lease_expiry_date< ?";
+    		String getLeases =" SELECT tb1.lease_requser_id, tb1.lease_id, tb1.lease_item_id, tb1.lease_user_id, tb1.lease_status, tb1.delivery_plan, tb1.lease_expiry_date, tb1.owner_pickup_status,tb1.leasee_pickup_status, tb2.user_credit,  tb2.user_full_name, tb3.item_name, tb3.item_status FROM leases tb1 INNER JOIN users tb2 on tb1.lease_requser_id = tb2.user_id INNER JOIN items tb3 ON tb1.lease_item_id = tb3.item_id WHERE tb1.lease_status=? AND tb1.lease_expiry_date< ? AND tb3.item_status IN (?,?)";
     		psgetLeases= hcp.prepareStatement(getLeases);
     		psgetLeases.setString(1, "Active");
     		psgetLeases.setString(2, futureDate);
+    		psgetLeases.setString(3, "LeaseStarted");
+    		psgetLeases.setString(4, "LeaseEnded");
     		
     		resultLeases = psgetLeases.executeQuery();
     		
@@ -76,8 +78,10 @@ public class FlsJob extends Connect implements org.quartz.Job {
   				
   			LOGGER.info("Result Set not Empty..Getting data one by one");
   			lease_requser_id = resultLeases.getString("lease_requser_id");
+  			lease_requser_name = resultLeases.getString("user_full_name");
   			lease_user_id = resultLeases.getString("lease_user_id");
   			item_name = resultLeases.getString("item_name");
+  			lease_id = resultLeases.getInt("lease_id");
   			lease_item_id = resultLeases.getInt("lease_item_id");
   			lease_expiry_date = resultLeases.getString("lease_expiry_date");
   			user_credit = resultLeases.getInt("user_credit");
@@ -88,7 +92,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
   			lease_check = checkGracePeroid(lease_expiry_date);
   			switch (lease_check) {
   				case "Expired":
-  					closeOrRenewLease(lease_requser_id,lease_user_id,lease_item_id,lease_expiry_date,user_credit);
+  					closeOrRenewLease(lease_requser_id,lease_user_id,lease_item_id,lease_id,lease_expiry_date,user_credit);
   					break;
   				case "Grace":
   					sendGraceMail(lease_requser_id, lease_user_id,lease_item_id);
@@ -102,14 +106,22 @@ public class FlsJob extends Connect implements org.quartz.Job {
   			}else if (resultLeases.getString("item_status").equals("LeaseEnded")){
 				if(resultLeases.getString("delivery_plan").equals("FLS_SELF")){
 					LOGGER.info("Lease Ended State");
-					event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_ENDED_OWNER, lease_item_id, "Lease has ended.Please update pick up status of your item <a href=\"" + URL + "/myapp.html#/myleasedoutitems" + "\">" + item_name + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
-					event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_ENDED_REQUESTOR, lease_item_id, "Lease has ended. Please update pick up status of the item you leased <a href=\"" + URL + "/myapp.html#/myleasedinitems" + "\">" + item_name + "</a> ");
+					if(!resultLeases.getBoolean("owner_pickup_status")){
+						event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_ENDED_OWNER, lease_item_id, "Lease has ended.Please update pick up status of your item <a href=\"" + URL + "/myapp.html#/myleasedoutitems" + "\">" + item_name + "</a> and leasee <strong>" + lease_requser_name + "</strong> on Friend Lease");
+					}
+					if(!resultLeases.getBoolean("leasee_pickup_status")){
+						event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_ENDED_REQUESTOR, lease_item_id, "Lease has ended. Please update pick up status of the item you leased <a href=\"" + URL + "/myapp.html#/myleasedinitems" + "\">" + item_name + "</a> ");
+					}
 				}
 			}else if(resultLeases.getString("item_status").equals("LeaseReady")){
 				if(resultLeases.getString("delivery_plan").equals("FLS_SELF")){
 					LOGGER.info("Lease Ready State");
-					event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_READY_OWNER, lease_item_id, "Lease is ready .Please update pick up status of your item <a href=\"" + URL + "/myapp.html#/myleasedoutitems" + "\">" + item_name + "</a> and leasee <strong>" + lease_requser_id + "</strong> on Friend Lease");
-					event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_READY_REQUESTOR, lease_item_id, "Lease is ready. Please update pick up status of the item you leased <a href=\"" + URL + "/myapp.html#/myleasedinitems" + "\">" + item_name + "</a> ");
+					if(!resultLeases.getBoolean("owner_pickup_status")){
+					 event.createEvent(lease_requser_id, lease_user_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_READY_OWNER, lease_item_id, "Lease is ready .Please update pick up status of your item <a href=\"" + URL + "/myapp.html#/myleasedoutitems" + "\">" + item_name + "</a> and leasee <strong>" + lease_requser_name + "</strong> on Friend Lease");
+					}
+					if(!resultLeases.getBoolean("leasee_pickup_status")){
+						event.createEvent(lease_user_id, lease_requser_id, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_LEASE_READY_REQUESTOR, lease_item_id, "Lease is ready. Please update pick up status of the item you leased <a href=\"" + URL + "/myapp.html#/myleasedinitems" + "\">" + item_name + "</a> ");
+					}
 				}
 			}
   		 }
@@ -133,7 +145,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
     	 
     }
       
-    private void closeOrRenewLease(String lease_requser_id, String lease_user_id,int lease_item_id, String lease_expiry_date, int user_credit){
+    private void closeOrRenewLease(String lease_requser_id, String lease_user_id,int lease_item_id,int lease_id, String lease_expiry_date, int user_credit){
     	
     	LOGGER.info("Inside Expire Method");
   		String term,date,item_primary_image_link=null;
@@ -180,7 +192,7 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				gracePeroidCal.add(Calendar.DATE, days);
 				date = sdfCal.format(gracePeroidCal.getTime());
 				
-				String UpdateRenewLeasesql = "UPDATE`leases` SET lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status =?"; //
+				String UpdateRenewLeasesql = "UPDATE`leases` SET lease_expiry_date=? WHERE lease_requser_id=? AND lease_item_id=? AND lease_id=? AND lease_status =?"; //
 				
 				psRenewUpdate = hcp.prepareStatement(UpdateRenewLeasesql);
 				
@@ -188,7 +200,8 @@ public class FlsJob extends Connect implements org.quartz.Job {
 				psRenewUpdate.setString(1, date);
 				psRenewUpdate.setString(2, lease_requser_id);
 				psRenewUpdate.setInt(3, lease_item_id);
-				psRenewUpdate.setString(4, "Active");
+				psRenewUpdate.setInt(4, lease_id);
+				psRenewUpdate.setString(5, "Active");
 				
 				int renewAction =0;
 				renewAction = psRenewUpdate.executeUpdate();
@@ -218,13 +231,14 @@ public class FlsJob extends Connect implements org.quartz.Job {
 					
 			}else{
 				
-				String CloseRenewLeasesql = "UPDATE`leases` SET lease_status=? WHERE lease_requser_id=? AND lease_item_id=? AND lease_status =?"; //
+				String CloseRenewLeasesql = "UPDATE`leases` SET lease_status=? WHERE lease_requser_id=? AND lease_item_id=? AND lease_id=? AND lease_status =?"; //
 				
 				psCloseUpdate = hcp.prepareStatement(CloseRenewLeasesql);
 				psCloseUpdate.setString(1, "Archived");
 				psCloseUpdate.setString(2, lease_requser_id);
 				psCloseUpdate.setInt(3, lease_item_id);
-				psCloseUpdate.setString(4, "Active");
+				psCloseUpdate.setInt(4, lease_id);
+				psCloseUpdate.setString(5, "Active");
 				
 				int leaseAction=0;
 				leaseAction = psCloseUpdate.executeUpdate();
