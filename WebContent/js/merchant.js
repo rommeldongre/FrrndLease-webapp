@@ -9,6 +9,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         referral: '',
         location: '',
         email: '',
+        otp: '',
         signedUp: false,
         verified: false
     };
@@ -36,6 +37,8 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
     $scope.$watch('onboarding', function(){
         if($scope.onboarding == true)
             $("html, body").animate({ scrollTop: 600 }, "slow");
+        else
+            $("html, body").animate({ scrollTop: 0 }, "slow");
     });
 
     // validating the user id entered
@@ -145,27 +148,13 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
 
             success: function(response) {
                 if(response.Code === "FLS_SUCCESS") {
-                    if(req.status == "mobile_pending"){
-                        modalService.showModal({}, {submitting: true, labelText: 'Enter the OTP sent to your mobile number', actionButtonText: 'Submit'}).then(function(result){
-                            $.ajax({
-                                url: '/Verification',
-                                type:'POST',
-                                data: JSON.stringify({verification : result+"_u"}),
-                                contentType:"application/json",
-                                dataType: "JSON",
-                                success: function(response) {
-                                    if(response.code == 0){
-                                        localStorage.setItem("userloggedin", response.userId);
-                                        localStorage.setItem("userloggedinName", response.name);
-                                        localStorage.setItem("userloggedinAccess", response.access_token);
-                                        $scope.user.signedUp = true;
-                                    }
-                                },
-                                error: function() {
-                                }
-                            });
-                        }, function(){});
-                    } else{
+                    $scope.$apply(function(){
+                        $scope.user.signedUp = true;
+                    });
+                    if(req.status != "mobile_pending") {
+                        $scope.$apply(function(){
+                            $scope.user.verified = true;
+                        });
                         var obj = JSON.parse(response.Message);
 						userFactory.setLocalStorageValues($scope.user.userId,$scope.user.name,obj.access_token,response.Id);
                         multiStepForm.nextStep();
@@ -179,6 +168,28 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
                         $scope.user.error = response.Message;
                     });
 				}
+            },
+            error: function() {
+            }
+        });
+    }
+    
+    $scope.verifyOtp = function(){
+        $.ajax({
+            url: '/Verification',
+            type:'POST',
+            data: JSON.stringify({verification : $scope.user.otp+"_u"}),
+            contentType:"application/json",
+            dataType: "JSON",
+            success: function(response) {
+                if(response.code == 0){
+                    localStorage.setItem("userloggedin", response.userId);
+                    localStorage.setItem("userloggedinName", response.name);
+                    localStorage.setItem("userloggedinAccess", response.access_token);
+                    $scope.$apply(function(){
+                        $scope.user.verified = true;
+                    });
+                }
             },
             error: function() {
             }
@@ -263,8 +274,6 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
 		$scope.user.refferal = ref_code;
         req.refferalCode = ref_code;
 	}
-
-
 
     // remove this code and uncomment the below one when using https
     $scope.user.location = "Gokhalenagar, Pune, Maharashtra, India";
@@ -381,7 +390,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
                 userFactory.payMembership($scope.payment.promoCode, 0, null).then(function(response){
-                    window.location.reload();
+                    window.location.replace("myapp.html#/myprofile");
                 },
                 function(error){});
             }else{

@@ -64,6 +64,12 @@
             clear: both;
             bottom: 0;
         }
+        
+        @media screen and (max-width:360px) {
+            .parallax {
+                height: 640px;
+            }
+        }
 
     </style>
 
@@ -130,7 +136,7 @@
             <div class="small-info" style="top:27%;" ng-init="onboarding = false">
                 <h1>Take your Rental Store Online</h1>
                 <h3>Now you can set up an online rental store for your items in 3 simple clicks!</h3><br/><br/>
-                <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;font-size:xx-large;">Let’s Do This</a>
+                <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;">Let’s Do This</a>
             </div>
         </div>
 
@@ -140,20 +146,20 @@
                     <div class="card col-md-6 col-md-offset-3" style="padding:50px;">
                         <!-- Nav tabs -->
                         <ul class="nav nav-text">
-                            <li class="ng-class:{'active':!user.signedUp}">
-                                <a style="font-size:30px;">
-                             Sign Up <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                        </a>
+                            <li class="ng-class:{'active':(!user.signedUp)}">
+                                <a style="font-size:30px;{{user.signedUp ? 'color:greenyellow;' : ''}}">
+                                     Sign Up <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                </a>
                             </li>
-                            <li class="ng-class:{'active':user.signedUp}">
-                                <a style="font-size:30px;">
-                            Verify <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                        </a>
+                            <li class="ng-class:{'active':(user.signedUp && !user.verified)}">
+                                <a style="font-size:30px;{{user.verified ? 'color:greenyellow;' : ''}}">
+                                    Verify <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                </a>
                             </li>
                             <li class="ng-class:{'active':(user.verified && user.signedUp)}">
                                 <a style="font-size:30px;">
-                            Pay
-                        </a>
+                                    Pay
+                                </a>
                             </li>
                         </ul>
                         <hr/>
@@ -202,11 +208,12 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="tab-pane ng-class:{'active':user.signedUp}">
+                            <div class="tab-pane ng-class:{'active':(user.signedUp && !user.verified)}">
+                                <label>Enter OTP Sent to Your Mobile</label>
                                 <div class="form-group">
-                                    <input name="verify" type="text" class="form-control" ng-model="user.otp" placeholder="OTP*" required>
+                                    <input name="verify" type="text" class="form-control" ng-model="user.otp" placeholder="Enter OTP*" required>
                                 </div>
-                                <button class="btn btn-primary btn-fill">Verify</button>
+                                <button class="btn btn-primary btn-fill" ng-click="verifyOtp()">Verify</button>
                             </div>
                             <div class="tab-pane ng-class:{'active':(user.verified && user.signedUp)}">
                                 <div class="table-responsive">
@@ -219,15 +226,11 @@
                                                 <th class="text-center">Total Amount</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody ng-init="payment.month = 1">
                                             <tr>
                                                 <td colspan="2">
-                                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="payment.month = payment.month + 1">
-                                                <i class="fa fa-plus" aria-hidden="true"></i> 1
-                                            </button>
-                                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="(payment.month >= 1) ? payment.month = payment.month - 1 : payment.month">
-                                               <i class="fa fa-minus" aria-hidden="true"></i> 1
-                                            </button>
+                                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="payment.month = payment.month + 1"><i class="fa fa-plus" aria-hidden="true"></i> 1</button>
+                                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="(payment.month >= 1) ? payment.month = payment.month - 1 : payment.month"><i class="fa fa-minus" aria-hidden="true"></i> 1</button>
                                                 </td>
                                                 <td class="td-number" style="text-align:center;">
                                                     {{payment.month}}
@@ -240,17 +243,15 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="text-center" colspan="2">
-                                                    <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
-                                                        <div class="input-group">
-                                                            <input type="text" class="form-control" placeholder="Enter Promo Code (If Any)" ng-model="payment.promoCode">
-                                                            <span class="input-group-btn">
-                                                        <button class="btn btn-primary btn-fill" ng-click="validatePromoCode()" type="button">Apply</button>
-                                                    </span>
-                                                        </div>
+                                                <td class="text-center" colspan="3">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" placeholder="Enter Promo Code (If Any)" ng-model="payment.promoCode">
+                                                        <span class="input-group-btn">
+                                                            <button class="btn btn-primary btn-fill" ng-click="validatePromoCode()" type="button">Apply</button>
+                                                        </span>
                                                     </div>
                                                 </td>
-                                                <td colspan="2"><i ng-if="payment.checkingPromo" class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{payment.promoError}} <button ng-if="payment.promoError != ''" class="btn btn-default btn-simple" ng-click="removePromoCode()"><i class="fa fa-times-circle" aria-hidden="true"></i></button></td>
+                                                <td colspan="1"><i ng-if="payment.checkingPromo" class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{payment.promoError}} <button ng-if="payment.promoError != ''" class="btn btn-default btn-simple" ng-click="removePromoCode()"><i class="fa fa-times-circle" aria-hidden="true"></i></button></td>
                                                 <td class="td-price" style="text-align:center;">
                                                     - <small><i class="fa fa-rupee"></i></small>{{payment.discount}}
                                                 </td>
@@ -291,10 +292,9 @@
                         </div>
                     </div>
                 </div>
+                <hr/>
             </div>
         </div>
-
-        <hr/>
 
         <div class="section section-features-1">
             <div class="container text-center">
