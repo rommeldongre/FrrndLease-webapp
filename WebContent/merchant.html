@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="merchantApp">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<!--Meta tags For Facebook start here-->
-	<meta property="og:title" content="FrrndLease Merchant" />
-	<meta property="og:type" content="website" />
-	<meta property="og:image" content="images/fls_cover_image.jpg" />
-	<meta property="og:image:width" content="600" />
-	<meta property="og:image:height" content="315" />
-	<meta property="og:url" content="https://www.frrndLease.com/merchant.html" />
-	<meta property="og:description" content="Get A Merchant Profile Online" />
-	<!--Meta tags For Facebook end here-->
-	<meta name="google-signin-scope" content="profile email">
+    <!--Meta tags For Facebook start here-->
+    <meta property="og:title" content="FrrndLease Merchant" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="images/fls_cover_image.jpg" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="315" />
+    <meta property="og:url" content="https://www.frrndLease.com/merchant.html" />
+    <meta property="og:description" content="Get A Merchant Profile Online" />
+    <!--Meta tags For Facebook end here-->
+    <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com">
     <script src="https://apis.google.com/js/api:client.js"></script>
-	<script src="js/md5.js"></script>
+    <script src="js/md5.js"></script>
     <!--for Facebook signin-->
-	<script src="js/Facebook_api.js"></script>
+    <script src="js/Facebook_api.js"></script>
 
-	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>FrrndLease - The Doorstep Library of Things</title>
 
     <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
@@ -29,64 +30,80 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
     <script src="js/header.js"></script>
-	<script src="js/footer.js"></script>
+    <script src="js/footer.js"></script>
     <!-- Angularjs api ends -->
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/gsdk.css" rel="stylesheet">
-	<link href="css/index.css" rel="stylesheet">
-	<link href="css/examples.css" rel="stylesheet">
-	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-	<link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+    <link href="css/index.css" rel="stylesheet">
+    <link href="css/examples.css" rel="stylesheet">
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
 
-	<!--Loading Animation code CSS & JS Links  -->
-	<link href="css/animation.css" type="text/css" rel="stylesheet">
-	<script src="js/jquery-1.11.3.min.js"></script>
-	<script src="js/jquery.backstretch.js"></script>
-	<script src="js/animation.js"></script>
-	<!--Loading Animation code CSS & JS Links ends here  -->
+    <!--Loading Animation code CSS & JS Links  -->
+    <link href="css/animation.css" type="text/css" rel="stylesheet">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/jquery.backstretch.js"></script>
+    <script src="js/animation.js"></script>
+    <!--Loading Animation code CSS & JS Links ends here  -->
 
     <style>
-        #gsd_footer{
-        width: 100%;
-        min-height: 70px;
-        margin-top: -5px;
-        padding-top: 10px;
-        clear: both;
-        bottom: 0;
+        #gsd_footer {
+            width: 100%;
+            min-height: 70px;
+            margin-top: -5px;
+            padding-top: 10px;
+            clear: both;
+            bottom: 0;
         }
-        #gsd_wrapper{
-        width: 100%;
-        min-height: 70px;
-        clear: both;
-        bottom: 0;
+        
+        #gsd_wrapper {
+            width: 100%;
+            min-height: 70px;
+            clear: both;
+            bottom: 0;
         }
-	</style>
 
-	<!-- Facebook Pixel Code -->
-	<script>
-	!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-	n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-	n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-	t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-	document,'script','https://connect.facebook.net/en_US/fbevents.js');
-	fbq('init', '953704608106351');
-	fbq('track', 'PageView');
-	</script>
-	<noscript><img height="1" width="1" style="display:none"
+    </style>
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window,
+            document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '953704608106351');
+        fbq('track', 'PageView');
+
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
 	src="https://www.facebook.com/tr?id=953704608106351&ev=PageView&noscript=1"
 	/></noscript>
-	<!-- DO NOT MODIFY -->
-	<!-- End Facebook Pixel Code -->
+    <!-- DO NOT MODIFY -->
+    <!-- End Facebook Pixel Code -->
 
-  </head>
+</head>
 
-  <body onload="start()">
+<body onload="start()">
     <div id="loader">
-	</div>
+    </div>
 
-	<nav class="navbar navbar-inverse navbar-transparent navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-transparent navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
@@ -110,41 +127,181 @@
             <div class="parallax-image">
                 <img src="css/bluebackground.jpg" alt="..." style="top: 0px;">
             </div>
-            <div class="small-info" style="top:27%;">
+            <div class="small-info" style="top:27%;" ng-init="onboarding = false">
                 <h1>Take your Rental Store Online</h1>
                 <h3>Now you can set up an online rental store for your items in 3 simple clicks!</h3><br/><br/>
-                <button class="btn btn-success btn-fill btn-lg" style="padding:1em 5em;font-size:xx-large;">Let’s Do This</button>
+                <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;font-size:xx-large;">Let’s Do This</a>
             </div>
         </div>
 
-        <div class="section">
+        <div class="section" style="text-align:center;" ng-hide="!onboarding">
             <div class="container">
-                <multi-step-container steps="steps" class="simple-prev-next">
-                    <div class="row" style="padding-left: 20px;">
-                        <div class="text_center">
-                            <h1 ng-bind-template="{{$getActiveStep().title}}"></h1>
+                <div class="row">
+                    <div class="card col-md-6 col-md-offset-3" style="padding:50px;">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-text">
+                            <li class="ng-class:{'active':!user.signedUp}">
+                                <a style="font-size:30px;">
+                             Sign Up <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                        </a>
+                            </li>
+                            <li class="ng-class:{'active':user.signedUp}">
+                                <a style="font-size:30px;">
+                            Verify <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                        </a>
+                            </li>
+                            <li class="ng-class:{'active':(user.verified && user.signedUp)}">
+                                <a style="font-size:30px;">
+                            Pay
+                        </a>
+                            </li>
+                        </ul>
+                        <hr/>
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane ng-class:{'active':!user.signedUp}">
+                                <div class="social-area">
+                                    <a href="" class="btn btn-round btn-fill btn-social btn-facebook" id="fbSignInWrapper" ng-click="facebookSignIn()">
+                                        <i class="fa fa-facebook-square"></i>
+                                    </a>
+                                    <a href="" class="btn btn-round btn-fill btn-social btn-google" id="gSignUpWrapper">
+                                        <div id="customSignUpBtn" class="customGPlusSignIn">
+                                            <i class="fa fa-google-plus-square"></i>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div ng-if="user.refferal.length > 0" style="margin-top:1%;">Referral Code: {{user.refferal}}</div>
+                                <span class="divider"> or </span>
+                                <form name="form">
+                                    <div class="form-group">
+                                        <input name="userId" class="form-control" ng-model="user.userId" ng-change="userIdChanged()" placeholder="Mobile*" required autofocus/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="name" type="text" class="form-control" ng-model="user.name" ng-change="(form.name.$dirty && form.name.$valid) ? user.error='' : user.error='Please enter a valid name!'" placeholder="Name*" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="password" type="password" class="form-control" ng-model="user.password" ng-change="(form.password.$dirty && form.password.$valid) ? user.error='' : user.error='Invalid Password'" placeholder="Password*" required/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input name="retypepassword" type="password" class="form-control" ng-model="user.retypepassword" ng-change="(user.password == user.retypepassword) ? user.error='' : user.error='Both passwords must be same!'" placeholder="Retype the Password*" required>
+                                    </div>
+                                    <div class="form-group" style="text-align:end;" ng-init="hide=false">
+                                        <span ng-if="user.error != ''" style="color:red;padding:10px;">{{user.error}}</span>
+                                        <button type="button" class="btn btn-default btn-simple" ng-click="(hide == true) ? hide=false : hide=true">Optional<i ng-if="!hide" class="fa fa-arrow-down"></i><i ng-if="hide" class="fa fa-arrow-up"></i></button>
+                                    </div>
+                                    <div ng-if="hide">
+                                        <div class="form-group">
+                                            <input name="refferal" type="text" ng-model="user.refferal" ng-change="(user.refferal.length == 8) ? user.error='' : user.error='Referral Code must have 8 characters'" class="form-control" placeholder="Referral Code(If Any)">
+                                        </div>
+                                        <div class="form-group">
+                                            <input name="location" type="text" class="form-control" ng-model="user.location" placeholder="Location">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="float:right;">
+                                        <button ng-if="!user.signedUp" type="button" class="btn btn-primary btn-fill" ng-click="(form.$valid && user.error=='') ? formSignup() : user.error='Please enter correct data!!'"> Sign Up </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane ng-class:{'active':user.signedUp}">
+                                <div class="form-group">
+                                    <input name="verify" type="text" class="form-control" ng-model="user.otp" placeholder="OTP*" required>
+                                </div>
+                                <button class="btn btn-primary btn-fill">Verify</button>
+                            </div>
+                            <div class="tab-pane ng-class:{'active':(user.verified && user.signedUp)}">
+                                <div class="table-responsive">
+                                    <table class="table table-shopping">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="2">Add Months</th>
+                                                <th class="text-center">Months</th>
+                                                <th class="text-center">Amount per Month</th>
+                                                <th class="text-center">Total Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="payment.month = payment.month + 1">
+                                                <i class="fa fa-plus" aria-hidden="true"></i> 1
+                                            </button>
+                                                    <button class="btn btn-primary btn-fill btn-sm" ng-click="(payment.month >= 1) ? payment.month = payment.month - 1 : payment.month">
+                                               <i class="fa fa-minus" aria-hidden="true"></i> 1
+                                            </button>
+                                                </td>
+                                                <td class="td-number" style="text-align:center;">
+                                                    {{payment.month}}
+                                                </td>
+                                                <td class="td-number" style="text-align:center;">
+                                                    <small><i class="fa fa-rupee"></i></small>{{payment.conversion}}
+                                                </td>
+                                                <td class="td-number" style="text-align:center;">
+                                                    <small><i class="fa fa-rupee"></i></small>{{payment.amount}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" colspan="2">
+                                                    <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Enter Promo Code (If Any)" ng-model="payment.promoCode">
+                                                            <span class="input-group-btn">
+                                                        <button class="btn btn-primary btn-fill" ng-click="validatePromoCode()" type="button">Apply</button>
+                                                    </span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2"><i ng-if="payment.checkingPromo" class="fa fa-spinner fa-spin" aria-hidden="true"></i> {{payment.promoError}} <button ng-if="payment.promoError != ''" class="btn btn-default btn-simple" ng-click="removePromoCode()"><i class="fa fa-times-circle" aria-hidden="true"></i></button></td>
+                                                <td class="td-price" style="text-align:center;">
+                                                    - <small><i class="fa fa-rupee"></i></small>{{payment.discount}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" colspan="2">Internet Handling Charges</td>
+                                                <td colspan="2"></td>
+                                                <td class="td-price" style="text-align:center;">
+                                                    <small><i class="fa fa-rupee"></i></small>0
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center" colspan="2">Service Tax</td>
+                                                <td colspan="2"></td>
+                                                <td class="td-price" style="text-align:center;">
+                                                    <small><i class="fa fa-rupee"></i></small>0
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"></td>
+                                                <td class="td-total">
+                                                    Total-
+                                                </td>
+                                                <td class="td-price" style="text-align:center;">
+                                                    <small><i class="fa fa-rupee"></i></small>{{payment.amount - payment.discount}}
+                                                </td>
+                                                <td class="text-center">
+                                                    <button ng-click="completePayment()" type="button" class="btn btn-primary btn-fill btn-sm">Complete Payment <i class="fa fa-chevron-right"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="row" style="text-align:center;color:red;">
+                                        {{payment.paymentError}}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <hr />
-
-                    <div class="row">
-                        <div class="col-lg-2 col-md-1"></div>
-                        <div class="col-lg-8 col-md-10">
-                            <main step-container></main>
-                        </div>
-                        <div class="col-lg-2 col-md-1"></div>
-                    </div>
-                </multi-step-container>
+                </div>
             </div>
         </div>
 
-       <div class="section section-features-1">
-           <div class="container text-center">
-               <h2 class="section-title">Benefits</h2>
-               <div class="row">
-                   <div class="col-md-3">
-                       <div class="info">
+        <hr/>
+
+        <div class="section section-features-1">
+            <div class="container text-center">
+                <h2 class="section-title">Benefits</h2>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="info">
                             <div class="icon">
                                 <i class="fa fa-bullhorn" aria-hidden="true"></i>
                             </div>
@@ -153,9 +310,9 @@
                                 <p class="text-muted">Announce yourself to the world with a Company Profile that is optimized for SEO.</p>
                             </div>
                         </div>
-                     </div>
-                      <div class="col-md-3">
-                       <div class="info">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info">
                             <div class="icon">
                                 <i class="fa fa-users" aria-hidden="true"></i>
                             </div>
@@ -164,9 +321,9 @@
                                 <p class="text-muted">Receive unlimited Leads for your items.</p>
                             </div>
                         </div>
-                     </div>
-                     <div class="col-md-3">
-                       <div class="info">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info">
                             <div class="icon">
                                 <i class="fa fa-bookmark" aria-hidden="true"></i>
                             </div>
@@ -175,9 +332,9 @@
                                 <p class="text-muted">All your Items show on top of all listings as 'Featured Items'.</p>
                             </div>
                         </div>
-                     </div>
-                     <div class="col-md-3">
-                       <div class="info">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info">
                             <div class="icon">
                                 <i class="fa fa-truck" aria-hidden="true"></i>
                             </div>
@@ -186,61 +343,67 @@
                                 <p class="text-muted">Get Free Delivery for your items for Prime locations.</p>
                             </div>
                         </div>
-                     </div>
-               </div>
-           </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-	<!--The tawk.to widget code will get populated here from file chatbox.html.-->
+    <!--The tawk.to widget code will get populated here from file chatbox.html.-->
     <div id="tawk_widget"></div>
 
-	<!--Footer starts here-->
+    <!--Footer starts here-->
     <div ng-include="'footer.html'" id="gsd_footer"></div>
     <!--Footer ends here-->
 
     <!-- "Please Wait" Modal Start here-->
     <div id="opendivmyPleaseWait" class="span4 proj-div" data-toggle="modal" data-target="#myPleaseWait" data-backdrop="static" data-keyboard="false">..</div>
     <div class="modal fade" id="myPleaseWait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h4 id="waitheading"></h4>
-              </div>
-              <div class="modal-body">
-                  <div class="progress">
-                      <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="waitheading"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- "Please Wait" Modal ends Here -->
 
     <!-- Login Modal -->
     <div ng-include="'loginmodal.html'"></div>
 
-	<script type="text/javascript">
+    <script type="text/javascript">
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-54475745-2', 'auto');
+        ga('send', 'pageview');
 
-		ga('create', 'UA-54475745-2', 'auto');
-		ga('send', 'pageview');
-
-		function start(){
+        function start() {
 
             $("#opendivmyPleaseWait").hide();
 
             load_Gapi();
 
             $('body').append('<div class="popover-filter"></div>');
-		}
+        }
 
-        function process_dialog(heading){
+        function process_dialog(heading) {
             var header = document.getElementById("waitheading");
             header.innerHTML = heading;
             $("#opendivmyPleaseWait").click();
@@ -249,48 +412,49 @@
         var googleUser = {};
 
         var load_Gapi = function() {
-            gapi.load('auth2', function(){
-              auth2 = gapi.auth2.init({
-                cookiepolicy: 'single_host_origin'
-              });
-              attachSignin(document.getElementById('customLoginBtn'));
-              attachSignin(document.getElementById('customSignUpBtn'));
+            gapi.load('auth2', function() {
+                auth2 = gapi.auth2.init({
+                    cookiepolicy: 'single_host_origin'
+                });
+                attachSignin(document.getElementById('customLoginBtn'));
+                attachSignin(document.getElementById('customSignUpBtn'));
             });
         }
 
         function attachSignin(element) {
             auth2.attachClickHandler(element, {},
                 function(googleUser) {
-                if(element.id == "customLoginBtn")
-                    onSignIn(googleUser);
-                if(element.id == "customSignUpBtn")
-                    onSignUp(googleUser);
-                }, function(error) {
-                  alert(JSON.stringify(error, undefined, 2));
+                    if (element.id == "customLoginBtn")
+                        onSignIn(googleUser);
+                    if (element.id == "customSignUpBtn")
+                        onSignUp(googleUser);
+                },
+                function(error) {
+                    alert(JSON.stringify(error, undefined, 2));
                 }
             );
         }
 
-	</script>
+    </script>
 
     <!-- DropDown list code ends-->
     <script src="js/load-image.all.min.js"></script>
 
-	<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
-	<link href="css/pe-icon-7-stroke.css" type="text/css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" type="text/css" rel="stylesheet">
+    <link href="css/pe-icon-7-stroke.css" type="text/css" rel="stylesheet">
     <script async src="js/bootstrap-datepicker.js"></script>
-	<script async src="js/bootstrap-select.js"></script>
-	<script async src="js/get-shit-done.js"></script>
-	<script async src="js/gsdk-bootstrapswitch.js"></script>
-	<script async src="js/gsdk-checkbox.js"></script>
-	<script async src="js/gsdk-morphing.js"></script>
-	<script async src="js/gsdk-radio.js"></script>
-	<script async src="js/jquery.flexisel.js"></script>
-	<script async src="js/jquery.tagsinput.js"></script>
-	<script async src="js/jquery-ui.custom.min.js"></script>
-	<script async src="js/retina.min.js"></script>
+    <script async src="js/bootstrap-select.js"></script>
+    <script async src="js/get-shit-done.js"></script>
+    <script async src="js/gsdk-bootstrapswitch.js"></script>
+    <script async src="js/gsdk-checkbox.js"></script>
+    <script async src="js/gsdk-morphing.js"></script>
+    <script async src="js/gsdk-radio.js"></script>
+    <script async src="js/jquery.flexisel.js"></script>
+    <script async src="js/jquery.tagsinput.js"></script>
+    <script async src="js/jquery-ui.custom.min.js"></script>
+    <script async src="js/retina.min.js"></script>
 
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/merchant.js"></script>
     <script src="js/angular-multi-step-form.min.js"></script>
     <script async src="js/tawk.js"></script>
@@ -298,5 +462,6 @@
     <!-- For Autocomplete Feature -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
     <script src="js/ngAutocomplete.js"></script>
-  </body>
+</body>
+
 </html>
