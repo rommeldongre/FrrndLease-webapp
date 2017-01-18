@@ -1,6 +1,6 @@
 var merchantApp = angular.module('merchantApp', ['headerApp', 'footerApp', 'ngAutocomplete']);
 
-merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', 'matchFbIdService', function($scope, modalService, userFactory, matchFbIdService){
+merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', function($scope, modalService, userFactory){
 
     // sign up scope object
     $scope.user = {
@@ -157,11 +157,6 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
                         });
                         var obj = JSON.parse(response.Message);
 						userFactory.setLocalStorageValues($scope.user.userId,$scope.user.name,obj.access_token,response.Id);
-                        multiStepForm.nextStep();
-                        if(req.status == "facebook"){
-                            getFacebookFriends($scope.user.email);
-							matchFbIdService.updateFbId();
-                        }
                     }
 				}else{
                     $scope.$apply(function(){
@@ -196,61 +191,6 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         });
     }
 
-    var getFacebookFriends = function(email){
-        FB.api(
-            '/me/friends', function (response) {
-                if (response && !response.error) {
-                    var friends = response.data.length;
-					if(response.data.length!=0){
-						for(var i =0;i<=response.data.length;i++){
-							if (response.data.hasOwnProperty(i)) {
-								var friend_name = response.data[i].name;
-								var friend_id= response.data[i].id+"@fb";
-								addFriendDbCreate(friend_name, '-', friend_id, email, friends);
-							}
-						}
-					}else{
-						if(friends>0){
-							$scope.user.error = "You have " + friends + " Facebook friends on FrrndLease. Say Hi to them!";
-						}
-					}
-                }
-            }
-        );
-    }
-
-    var addFriendDbCreate = function(name, mobile, email, user, friends){
-        if(name == '')
-            name = null;
-        if(email == '')
-            email = null;
-		var code = localStorage.getItem("userReferralCode");
-        var req = {
-            id: email,
-            fullName: name,
-            mobile: mobile,
-            userId: user,
-			referralCode: code
-        }
-        addFriendSend(req, friends);
-    }
-
-    var addFriendSend = function(req, friends){
-        $.ajax({
-            url: '/AddFriend',
-            type:'get',
-            data: {req: JSON.stringify(req)},
-            contentType:"application/json",
-            dataType: "json",
-
-            success: function(response) {
-                $scope.user.error = "You have " + friends + " Facebook friends in your FrrndLease friendlist";
-            },
-            error: function() {
-            }
-        });
-    }
-
 	var getQueryVariable = function (variable) {
         var query = window.location.search.substring(1);
         var vars = query.split("&");
@@ -262,7 +202,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         }
     }
 
-	if(window.location.href.indexOf("index.html") > -1){
+	if(window.location.href.indexOf("merchant.html") > -1){
 		var token = getQueryVariable("ref_token");
 		if(token === undefined || token=="undefined"){
 		}else{
