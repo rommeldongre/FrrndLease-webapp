@@ -74,7 +74,7 @@
                                 
                                 <hr>
                                 <div class="text-center">
-                                    <form id="agreement" ng-if="lease.status=='LeaseStarted'" action="GetLeaseAgreement" method="POST" target="_blank" style="display:inline;">
+                                    <form id="agreement" ng-if="lease.status=='LeaseStarted'||lease.status=='LeaseEnded'" action="GetLeaseAgreement" method="POST" target="_blank" style="display:inline;">
                                        <input type="hidden" name="leaseId" value="{{lease.leaseId}}" />
                                        <button type="submit" class="btn btn-primary btn-fill btn-sm">
                                            Download Agreement
