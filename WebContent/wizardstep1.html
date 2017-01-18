@@ -5,7 +5,7 @@
             <label class="primary-file-input-label" for="primary-file-input-add" style="font-size: x-large;">
                 <i class="fa fa-plus" aria-hidden="true" style="display:initial;"></i> Item Image
             </label>
-            <input id="primary-file-input-add" type="file" bg-model="primaryFile" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" ng-style="primaryFile == true ? { 'display':'inline%'} : { 'display': 'none' }" />
+            <input id="primary-file-input-add" type="file" accept="image/*" onchange="angular.element(this).scope().uploadImage(files[0])" ng-style="primaryFile == true ? { 'display':'inline%'} : { 'display': 'none' }" />
         </div>
         <div ng-if="item.image != 'loading' && item.image != '' && item.image != null && item.image != 'null' && item.image != undefined" class="actions">
             <label class="primary-file-input-label" for="primary-file-input" style="font-size: x-large;">
