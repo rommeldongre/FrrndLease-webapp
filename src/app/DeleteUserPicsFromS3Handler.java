@@ -51,7 +51,7 @@ public class DeleteUserPicsFromS3Handler extends Connect implements AppHandler{
 				return rs;
 			}
 			
-			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserId(), rq.isProfile());
+			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserUid(), rq.isProfile());
 			
 			int result = s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, link);
 			

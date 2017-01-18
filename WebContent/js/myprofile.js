@@ -444,17 +444,21 @@ myProfile.controller('myProfileCtrl', ['$scope',
                         var req = {
                             userId: userFactory.user,
                             accessToken: userFactory.userAccessToken,
+                            userUid: $scope.user.userUid,
                             image: Pic,
                             existingLink: $scope.profilePic,
-                            profile: isProfile
+                            profile: isProfile,
+                            multiple: false
                         }
                     }else{
                         var req = {
                             userId: userFactory.user,
                             accessToken: userFactory.userAccessToken,
+                            userUid: $scope.user.userUid,
                             image: Pic,
                             existingLink: $scope.photoId,
-                            profile: isProfile
+                            profile: isProfile,
+                            multiple: false
                         }
                     }
                     
@@ -516,6 +520,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
             var req = {
                 userId: userFactory.user,
                 accessToken: userFactory.userAccessToken,
+                userUid: $scope.user.userUid,
                 link: $scope.profilePic,
                 profile: isProfile
             }
@@ -523,6 +528,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
             var req = {
                 userId: userFactory.user,
                 accessToken: userFactory.userAccessToken,
+                userUid: $scope.user.userUid,
                 link: $scope.photoId,
                 profile: isProfile
             }

@@ -59,24 +59,37 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 					existingLink = null;
 			}
 
-			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserId(), rq.isProfile());
+			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserUid(), rq.isProfile());
 
 			String link = null;
-			if(rq.isProfile()){
-				link = s3Bucket.uploadImage(Bucket_Name.USERS_BUCKET, Path_Name.USER_PROFILE_PIC, File_Name.PROFILE_PIC, image, null);
+			
+			if(rq.isMultiple()){
+				link = s3Bucket.uploadImage(Bucket_Name.USERS_BUCKET, Path_Name.USER_PROFILE_PIC, File_Name.PROFILE_NORMAL, image, null);
 				if(link != null){
-					if(existingLink != null)
+					if(existingLink != null){
 						s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, existingLink);
-					
-					s3Bucket.saveUserPics(link);
+						s3Bucket.replaceNormalImageLink(link, existingLink);
+					}else{
+						s3Bucket.saveNormalImageLink(link);
+					}
 				}
-			}else{
-				link = s3Bucket.uploadImage(Bucket_Name.USERS_BUCKET, Path_Name.USER_PHOTO_ID, File_Name.PHOTO_ID, image, null);
-				if(link != null){
-					if(existingLink != null)
-						s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, existingLink);
-					
-					s3Bucket.saveUserPics(link);
+			} else {
+				if(rq.isProfile()){
+					link = s3Bucket.uploadImage(Bucket_Name.USERS_BUCKET, Path_Name.USER_PROFILE_PIC, File_Name.PROFILE_PIC, image, null);
+					if(link != null){
+						if(existingLink != null)
+							s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, existingLink);
+						
+						s3Bucket.saveUserPics(link);
+					}
+				}else{
+					link = s3Bucket.uploadImage(Bucket_Name.USERS_BUCKET, Path_Name.USER_PHOTO_ID, File_Name.PHOTO_ID, image, null);
+					if(link != null){
+						if(existingLink != null)
+							s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, existingLink);
+						
+						s3Bucket.saveUserPics(link);
+					}
 				}
 			}
 			

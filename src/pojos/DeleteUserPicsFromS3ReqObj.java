@@ -2,7 +2,7 @@ package pojos;
 
 public class DeleteUserPicsFromS3ReqObj extends ReqObj{
 
-	String userId, accessToken;
+	String userId, accessToken, userUid;
 	String link;
 	boolean profile;
 
@@ -20,6 +20,14 @@ public class DeleteUserPicsFromS3ReqObj extends ReqObj{
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+
+	public String getUserUid() {
+		return userUid;
+	}
+
+	public void setUserUid(String userUid) {
+		this.userUid = userUid;
 	}
 
 	public String getLink() {
