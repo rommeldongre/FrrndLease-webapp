@@ -41,6 +41,7 @@ public class ErrorCat {
 	final public int FLS_ITEMS_ES_HOLD = 232;
 	final public int FLS_ITEMS_ES_ARCHIVED = 233;
 	final public int FLS_ITEMS_DELETE_ARCHIVED = 234;
+	final public int FLS_RAZOR_EXCEPTION = 235;
 	
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -123,6 +124,7 @@ public class ErrorCat {
 	final public String FLS_ITEMS_ES_HOLD_M = "Cannot put Item  on Hold as it is not InStore or Wished";
 	final public String FLS_ITEMS_ES_ARCHIVED_M = "Cannot Archive Item as it is not InStore or Wished";
 	final public String FLS_ITEMS_DELETE_ARCHIVED_M = "Cannot Delete Item as it is not Archived State";
+	final public String FLS_RAZOR_EXCEPTION_M = "Couldn't get Data from Razor Pay API";
 	
 	
 	//String query variables.
