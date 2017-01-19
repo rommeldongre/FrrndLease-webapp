@@ -307,18 +307,20 @@ public class Items extends Connect {
 		try {
 			LOGGER.info("Checking if leases and requests exist...");
 
-			String sqlCheckLease = "SELECT * FROM leases WHERE lease_item_id=?";
+			String sqlCheckLease = "SELECT * FROM leases WHERE lease_item_id=? AND lease_status=?";
 			stmt1 = hcp.prepareStatement(sqlCheckLease);
 			stmt1.setInt(1, id);
+			stmt1.setString(2, "Active");
 			rs1 = stmt1.executeQuery();
 			if(rs1.next()) {
 				res.setData(FLS_DUPLICATE_ENTRY, "0", "Cannot delete. This item is in leases table!!");
 				return;
 			}
 			
-			String sqlCheckRequests = "SELECT * FROM requests WHERE request_item_id=?";
+			String sqlCheckRequests = "SELECT * FROM requests WHERE request_item_id=? AND request_status=?";
 			stmt2 = hcp.prepareStatement(sqlCheckRequests);
 			stmt2.setInt(1, id);
+			stmt2.setString(2, "Active");
 			rs2 = stmt2.executeQuery();
 			if(rs2.next()) {
 				res.setData(FLS_DUPLICATE_ENTRY, "0", "Cannot delete. This item is in requests table!!");
@@ -331,6 +333,12 @@ public class Items extends Connect {
 			rs3 = stmt3.executeQuery();			
 
 			if (rs3.next()) {
+				
+				if(!rs3.getString("item_status").equals("Archived")){
+					LOGGER.info("Delete Unsuccessful as Item Not in Archived State.");
+					res.setData(FLS_ITEMS_DELETE_ARCHIVED, "0", FLS_ITEMS_DELETE_ARCHIVED_M);
+					return;
+				}
 
 				if(rs3.getString("item_uid") != null && rs3.getString("item_primary_image_link") != null){
 					FlsS3Bucket s3Bucket = new FlsS3Bucket(rs3.getString("item_uid"));
@@ -491,7 +499,7 @@ public class Items extends Connect {
 		id = im.getId();
 		status = im.getStatus();
 		image = im.getImage();
-		String item_uid=null;
+		String item_uid=null,item_status=null;
 		String link =null;
 		int Lease_Id= im.getLeaseId();
 		
@@ -514,18 +522,27 @@ public class Items extends Connect {
 			while (rs.next()) {
 				check = rs.getInt("item_id");
 				item_uid = rs.getString("item_uid");
+				item_status = rs.getString("item_status");
+				Id = String.valueOf(check);
 				
 				if(status.equals("OnHold")){
 					
-					// Updating credits
-					credits.logCredit(rs.getString("item_user_id"), 10, "Item Put OnHold", "", Credit.SUB);
-					
-					try {
-						Event event = new Event();
-						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_ON_HOLD, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> has been put on hold because of inappropriate content.");
-					} catch (Exception e) {
-						e.printStackTrace();
+					if(item_status.equals("InStore") || item_status.equals("Wished")){
+						// Updating credits
+						credits.logCredit(rs.getString("item_user_id"), 10, "Item Put OnHold", "", Credit.SUB);
+						
+						try {
+							Event event = new Event();
+							event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_ON_HOLD, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> has been put on hold because of inappropriate content.");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}else{
+						LOGGER.info("Item Cannot be put on Hold as it is not InStore or Wished...");
+						res.setData(FLS_ITEMS_ES_HOLD, Id, FLS_ITEMS_ES_HOLD_M);
+						return;
 					}
+					
 				} else if (status.equals("InStore")){
 					
 					// Updating credits
@@ -536,6 +553,15 @@ public class Items extends Connect {
 						event.createEvent("admin@frrndlease.com", rs.getString("item_user_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ITEM_INSTORE, id, "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + item_uid + "\">" + rs.getString("item_name") + "</a> is back in store.");
 					} catch (Exception e) {
 						e.printStackTrace();
+					}
+				}else if(status.equals("Archived")){
+					
+					if(!item_status.equals("InStore") && !item_status.equals("Wished")){
+						LOGGER.info("Item Cannot be Archived as it is not InStore or Wished...");
+						res.setData(FLS_ITEMS_ES_ARCHIVED, Id, FLS_ITEMS_ES_ARCHIVED_M);
+						return;
+					}else{
+						LOGGER.info(item_status);
 					}
 				}
 			}
@@ -576,18 +602,20 @@ public class Items extends Connect {
 			LOGGER.warning("Couldnt create a statement");
 			e.printStackTrace();
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}finally{
 			try {
-				rs.close();
-				
-				stmt.close();
-				stmt2.close();
-				
-				hcp.close();
+				if(rs != null)rs.close();
+				if(stmt != null)stmt.close();
+				if(stmt2 != null)stmt2.close();
+				if(hcp != null)hcp.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 		}
 	}
 
@@ -920,7 +948,6 @@ public class Items extends Connect {
 			
 			if(rs1.next()){
 				switch(rs1.getString("item_status")){
-					case "OnHold":
 					case "InStore":
 						String sqlArchiveItem = "UPDATE `items` SET `item_status`='Archived' WHERE item_id = ? AND item_user_id = ?";
 						ps2 = hcp.prepareStatement(sqlArchiveItem);
@@ -947,6 +974,10 @@ public class Items extends Connect {
 							res.setData(FLS_ITEMS_DP_DEFAULT, Id, FLS_ITEMS_DP_DEFAULT_M);
 						}
 						
+						break;
+					case "OnHold":
+						LOGGER.info("This item id:" + id + " is on Hold so cannot archive it.");
+						res.setData(FLS_ITEMS_DP_HOLD, Id, FLS_ITEMS_DP_HOLD_M);
 						break;
 					case "LeaseReady":
 					case "PickedUpOut":

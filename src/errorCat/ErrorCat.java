@@ -37,6 +37,10 @@ public class ErrorCat {
 	final public int FLS_ENGAGEMENT_DATE_EXCEPTION = 228;
 	final public int FLS_AMOUNT_NEGATIVE = 229;
 	final public int FLS_OWNER_REQUESTS_LIMIT = 230;
+	final public int FLS_ITEMS_DP_HOLD = 231;
+	final public int FLS_ITEMS_ES_HOLD = 232;
+	final public int FLS_ITEMS_ES_ARCHIVED = 233;
+	final public int FLS_ITEMS_DELETE_ARCHIVED = 234;
 	
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -115,6 +119,11 @@ public class ErrorCat {
 	final public String FLS_ENGAGEMENT_DATE_EXCEPTION_M = "Sorry, To Date is before intial Credit Date";
 	final public String FLS_AMOUNT_NEGATIVE_M = "Sorry! The amount cannot be negative or zero.";
 	final public String FLS_OWNER_REQUESTS_LIMIT_M = "This owner cannot accept more requests";
+	final public String FLS_ITEMS_DP_HOLD_M = "Item is on Hold, Please remove the item from hold first by contacting the admin.";
+	final public String FLS_ITEMS_ES_HOLD_M = "Cannot put Item  on Hold as it is not InStore or Wished";
+	final public String FLS_ITEMS_ES_ARCHIVED_M = "Cannot Archive Item as it is not InStore or Wished";
+	final public String FLS_ITEMS_DELETE_ARCHIVED_M = "Cannot Delete Item as it is not Archived State";
+	
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";
