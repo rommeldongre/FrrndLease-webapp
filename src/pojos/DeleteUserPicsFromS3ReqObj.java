@@ -4,7 +4,7 @@ public class DeleteUserPicsFromS3ReqObj extends ReqObj{
 
 	String userId, accessToken, userUid;
 	String link;
-	boolean profile;
+	boolean profile, multiple;
 
 	public String getUserId() {
 		return userId;
@@ -44,6 +44,14 @@ public class DeleteUserPicsFromS3ReqObj extends ReqObj{
 
 	public void setProfile(boolean profile) {
 		this.profile = profile;
+	}
+
+	public boolean isMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(boolean multiple) {
+		this.multiple = multiple;
 	}
 	
 }

@@ -22,6 +22,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
     var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
     
     $scope.user = {};
+                                            
+    // Saving multiple images in case of uber user
+    $scope.images = [{link:""}, {link:""}, {link:""}, {link:""}, {link:""}, {link:""}];
     
     $scope.options = {
         country: 'in',
@@ -60,6 +63,12 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     $scope.userFeeExpiry = $filter('date')($scope.userFeeExpiry);
                 else
                     $scope.userFeeExpiry = 'NA';
+                
+                if(response.data.imageLinks != ""){
+                    for(var i in response.data.imageLinks){
+                        $scope.images[i].link = response.data.imageLinks[i];
+                    }
+                }
                 
                 Mobile = response.data.mobile;
                 Email = response.data.email;
@@ -440,26 +449,18 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 function(canvas){
                     var Pic = canvas.toDataURL();
 
+                    var req = {
+                        userId: userFactory.user,
+                        accessToken: userFactory.userAccessToken,
+                        userUid: $scope.user.userUid,
+                        image: Pic,
+                        existingLink: $scope.photoId,
+                        profile: isProfile,
+                        multiple: false
+                    }
+                    
                     if(isProfile){
-                        var req = {
-                            userId: userFactory.user,
-                            accessToken: userFactory.userAccessToken,
-                            userUid: $scope.user.userUid,
-                            image: Pic,
-                            existingLink: $scope.profilePic,
-                            profile: isProfile,
-                            multiple: false
-                        }
-                    }else{
-                        var req = {
-                            userId: userFactory.user,
-                            accessToken: userFactory.userAccessToken,
-                            userUid: $scope.user.userUid,
-                            image: Pic,
-                            existingLink: $scope.photoId,
-                            profile: isProfile,
-                            multiple: false
-                        }
+                        req.existingLink = $scope.profilePic;
                     }
                     
                     $scope.$apply(function(){
@@ -514,30 +515,28 @@ myProfile.controller('myProfileCtrl', ['$scope',
         reader.readAsDataURL(file);
     }
     
-    $scope.deleteUserPic = function(isProfile){
+    $scope.deleteUserPic = function(isProfile, isMultiple, index){
         
-        if(isProfile){
-            var req = {
-                userId: userFactory.user,
-                accessToken: userFactory.userAccessToken,
-                userUid: $scope.user.userUid,
-                link: $scope.profilePic,
-                profile: isProfile
-            }
-        }else{
-            var req = {
-                userId: userFactory.user,
-                accessToken: userFactory.userAccessToken,
-                userUid: $scope.user.userUid,
-                link: $scope.photoId,
-                profile: isProfile
-            }
+        var req = {
+            userId: userFactory.user,
+            accessToken: userFactory.userAccessToken,
+            userUid: $scope.user.userUid,
+            link: $scope.photoId,
+            profile: isProfile,
+            multiple: isMultiple
         }
         
-        if(isProfile)
-            $scope.profilePic = "loading";
-        else
-            $scope.photoId = "loading";
+        if(isMultiple){
+            req.link = $scope.images[index].link;
+            $scope.images[index].link = "loading";
+        }else{
+            if(isProfile){
+                req.link = $scope.profilePic;
+                $scope.profilePic = "loading";
+            }else{
+                $scope.photoId = "loading";
+            }
+        }
         
         $.ajax({
             url: '/DeleteUserPicsFromS3',
@@ -548,10 +547,14 @@ myProfile.controller('myProfileCtrl', ['$scope',
             success: function(response) {
                 if(response.code == 0){
                     $scope.$apply(function(){
-                        if(isProfile)
-                            $scope.profilePic = "";
-                        else
-                            $scope.photoId = "";
+                        if(isMultiple){
+                            $scope.images[index].link = "";
+                        }else{
+                            if(isProfile)
+                                $scope.profilePic = "";
+                            else
+                                $scope.photoId = "";
+                        }
                     });
                 }else{
                     modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){

@@ -924,6 +924,83 @@ headerApp.directive('uploadImage', ['userFactory', 'modalService', function(user
     };
 }]);
 
+headerApp.directive('uploadUserImage', ['userFactory', 'modalService', function(userFactory, modalService) {
+    return {
+        scope: {
+            uploadUserImage: '=',
+            userUid: '@',
+            id: '@'
+        },
+        link: function(scope, element, attrs) {
+            element.bind("change", function (changeEvent) {
+                EXIF.getData(changeEvent.target.files[0], function(){
+                    exif = EXIF.getAllTags(this);
+                    picOrientation = exif.Orientation;
+                });
+
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    loadImage(
+                        event.target.result,
+                        function(canvas){
+                            var Pic = canvas.toDataURL();
+
+                            var req = {
+                                userId: userFactory.user,
+                                accessToken: userFactory.userAccessToken,
+                                userUid: scope.userUid,
+                                image: canvas.toDataURL(),
+                                existingLink: scope.uploadUserImage.link,
+                                profile: false,
+                                multiple: true
+                            }
+
+                            scope.$apply(function(){
+                                scope.uploadUserImage.link = "loading";
+                            });
+
+                            $.ajax({
+                                url: '/SaveUserPicsInS3',
+                                type: 'post',
+                                data: JSON.stringify(req),
+                                contentType: "application/json",
+                                dataType: "json",
+
+                                success: function(response) {
+                                    if(response.code == 0){
+                                        scope.$apply(function(){
+                                            scope.uploadUserImage.link = response.imageLink;
+                                        });
+                                    }else{
+                                        scope.$apply(function(){
+                                            scope.uploadUserImage.link = "";
+                                        });
+                                        modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+                                            if(response.code == 400)
+                                                logoutService.logout();
+                                        },function(){});
+                                    }
+                                },
+
+                                error: function() {
+                                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                                }
+                            });
+                        },
+                        {
+                            maxWidth: 300,
+                            maxHeight: 300,
+                            canvas: true,
+                            orientation: picOrientation
+                        }
+                    );
+                }
+                reader.readAsDataURL(changeEvent.target.files[0]);
+            });
+        }
+    };
+}]);
+
 headerApp.directive('sendMessageTo', ['userFactory', 'modalService', 'bannerService', function(userFactory, modalService, bannerService){
     return {
         scope:{

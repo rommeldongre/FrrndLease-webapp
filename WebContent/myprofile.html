@@ -16,7 +16,7 @@
                     <label class="primary-file-input-label" for="primary-file-input" style="font-size:small;">
                         <i class="fa fa-plus" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Add Profile
                     </label>
-                    <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], true)" style="display:none;" />
+                    <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], true, false, 0)" style="display:none;" />
                 </div>
                 <div ng-if="profilePic=='loading'" class="loading-actions">
                     <div class="loading-primary-image" style="font-size:small;">
@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div ng-if="profilePic != 'loading' && profilePic != '' && profilePic != null && profilePic != 'null' && profilePic != undefined" class="actions">
-                    <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(true)">
+                    <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(true, false, 0)">
                         <i class="fa fa-times"></i>
                     </button>
                     <label class="primary-file-input-label" for="primary-file-input" style="font-size:small;">
@@ -138,14 +138,15 @@
             </form>
             <br/>
         </div>
-    </div><br/><hr/>
+    </div><br/>
+    <hr/>
     <div class="container-fluid">
         <div class="row" style="display:flex;flex-wrap:wrap;">
             <div class="col-lg-3 col-md-4" style="border-right:1px solid #ccc;">
                 <!-- Nav tabs -->
                 <ul class="nav nav-stacked nav-icons" ng-init="selected=0">
                     <li class="ng-class:{'active':selected == 0}" ng-click="selected = 0">
-                        <a href=""><i class="fa fa-info-circle"></i><br/>Pictures</a>
+                        <a href=""><i class="fa fa-info-circle"></i><br/>Images</a>
                     </li>
                     <li class="ng-class:{'active':selected == 1}" ng-click="selected = 1">
                         <a href=""><i class="fa fa-info-circle"></i><br/>About</a>
@@ -162,7 +163,29 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div class="tab-pane ng-class:{'active':selected == 0}">
-                        <p>Larger, yet dramatically thinner. More powerful, but remarkably power efficient. With a smooth metal surface that seamlessly meets the new Retina HD display. </p>
+                        <div class="loaded-img" style="margin-right:5px;" ng-repeat="image in images">
+                            <img load-image="image.link" max-width="150" max-height="150" ng-src="" alt="..." />
+                            <div ng-if="image.link == '' || image.link == null || image.link == 'null' || image.link == undefined" class="empty-actions">
+                                <label for="{{$index}}" class="file-input-label">
+                                    <i class="fa fa-plus" aria-hidden="true" style="display:initial;"></i> Add Image
+                                </label>
+                                <input id="{{$index}}" type="file" upload-user-image="image" user-uid="{{user.userUid}}" style="display:none;" />
+                            </div>
+                            <div ng-if="image.link=='loading'" class="loading-actions">
+                                <div class="loading-image">
+                                    <i class="fa fa-refresh fa-spin" aria-hidden="true" style="display:initial;"></i> Please Wait..
+                                </div>
+                            </div>
+                            <div ng-if="image.link!='loading' && image.link != '' && image.link != null && image.link != 'null' && image.link != undefined" class="actions">
+                                <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(false, true, $index)">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <label for="{{$index}}" class="file-input-label">
+                                    <i class="fa fa-image" aria-hidden="true" style="display:initial;"></i> Change Image
+                                </label>
+                                <input id="{{$index}}" type="file" upload-user-image="image" user-uid="{{user.userUid}}" style="display:none;" />
+                            </div>
+                        </div>
                     </div>
                     <div class="tab-pane ng-class:{'active':selected == 1}">
                         <p>The first thing you notice when you hold the phone is how great it feels in your hand. The cover glass curves down around the sides to meet the anodized aluminum enclosure in a remarkable, simplified design. There are no distinct edges. No gaps. Just a smooth, seamless bond of metal and glass that feels like one continuous surface.</p>

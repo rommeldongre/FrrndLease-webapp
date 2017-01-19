@@ -59,7 +59,7 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 					existingLink = null;
 			}
 
-			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserUid(), rq.isProfile());
+			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserUid(), true);
 
 			String link = null;
 			
@@ -80,7 +80,7 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 						if(existingLink != null)
 							s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, existingLink);
 						
-						s3Bucket.saveUserPics(link);
+						s3Bucket.saveUserPics(link, rq.isProfile());
 					}
 				}else{
 					link = s3Bucket.uploadImage(Bucket_Name.USERS_BUCKET, Path_Name.USER_PHOTO_ID, File_Name.PHOTO_ID, image, null);
@@ -88,7 +88,7 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 						if(existingLink != null)
 							s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, existingLink);
 						
-						s3Bucket.saveUserPics(link);
+						s3Bucket.saveUserPics(link, rq.isProfile());
 					}
 				}
 			}

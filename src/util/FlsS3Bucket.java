@@ -337,7 +337,7 @@ public class FlsS3Bucket extends Connect {
 	    return pos;
 	}
 	
-	public void saveUserPics(String link){
+	public void saveUserPics(String link, boolean profile){
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
@@ -350,7 +350,7 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlSavePic = "UPDATE users ";
 
-			if(isProfile)
+			if(profile)
 				sqlSavePic = sqlSavePic + "SET user_profile_picture=? WHERE user_uid=?";
 			else
 				sqlSavePic = sqlSavePic + "SET user_photo_id=? WHERE user_uid=?";
@@ -381,7 +381,7 @@ public class FlsS3Bucket extends Connect {
 		
 	}
 	
-	public void deleteUserPics(){
+	public void deleteUserPics(boolean profile){
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
@@ -390,7 +390,7 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlDeleteUserPics = "UPDATE users ";
 			
-			if(isProfile)
+			if(profile)
 				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_profile_picture=? WHERE user_uid=?";
 			else
 				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_photo_id=? WHERE user_uid=?";
@@ -616,7 +616,10 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlGetImagesLinks = "SELECT item_image_link FROM images WHERE item_uid=?";
 			ps1 = hcp.prepareStatement(sqlGetImagesLinks);
-			ps1.setString(1, uid);
+			if(isProfile)
+				ps1.setString(1, userUid);
+			else
+				ps1.setString(1, uid);
 			
 			rs1 = ps1.executeQuery();
 			

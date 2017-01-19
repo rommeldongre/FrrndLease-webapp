@@ -14,6 +14,8 @@ public class GetProfileResObj extends ResObj {
 	float lat, lng;
 	boolean photoIdVerified;
 	String userStatus, userSecStatus, userNotification, userFeeExpiry;
+	
+	String[] imageLinks;
 
 	public int getCode() {
 		return code;
@@ -208,5 +210,13 @@ public class GetProfileResObj extends ResObj {
 		}else{
 			this.userFeeExpiry = userFeeExpiry;
 		}
+	}
+
+	public String[] getImageLinks() {
+		return imageLinks;
+	}
+
+	public void setImageLinks(String[] imageLinks) {
+		this.imageLinks = imageLinks;
 	}
 }
