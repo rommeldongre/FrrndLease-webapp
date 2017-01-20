@@ -69,16 +69,15 @@ public class EditProfileHandler extends Connect implements AppHandler {
 			}
 			
 			LOGGER.info("Updating users table...");
-			String sql = "UPDATE users SET user_full_name=?, user_location=?, user_address=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=? WHERE user_id=?";
+			String sql = "UPDATE users SET user_full_name=?, user_location=?, user_locality=?, user_sublocality=?, user_lat=?, user_lng=? WHERE user_id=?";
 			ps1 = hcp.prepareStatement(sql);
 			ps1.setString(1, rq.getFullName());
 			ps1.setString(2, rq.getLocation());
-			ps1.setString(3, rq.getAddress());
-			ps1.setString(4, rq.getLocality());
-			ps1.setString(5, rq.getSublocality());
-			ps1.setFloat(6, rq.getLat());
-			ps1.setFloat(7, rq.getLng());
-			ps1.setString(8, rq.getUserId());
+			ps1.setString(3, rq.getLocality());
+			ps1.setString(4, rq.getSublocality());
+			ps1.setFloat(5, rq.getLat());
+			ps1.setFloat(6, rq.getLng());
+			ps1.setString(7, rq.getUserId());
 
 			rs1 = ps1.executeUpdate();
 			

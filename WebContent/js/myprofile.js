@@ -8,6 +8,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                                         'logoutService',
                                         '$timeout',
                                         '$filter',
+                                        'Map',
 										function($scope, 
 										userFactory, 
 										profileFactory, 
@@ -15,11 +16,12 @@ myProfile.controller('myProfileCtrl', ['$scope',
 										modalService,
                                         logoutService,
                                         $timeout,
-                                        $filter){
+                                        $filter,
+                                        Map){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
+    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Location = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
     
     $scope.user = {};
                                             
@@ -48,8 +50,11 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.fullname = response.data.fullName;
 				$scope.user.mobile = response.data.mobile;
                 $scope.user.email = response.data.email;
-				$scope.location = response.data.address;
+				$scope.location = response.data.location;
+                $scope.address = response.data.address;
                 $scope.locality = response.data.locality;
+                $scope.lat = response.data.lat;
+                $scope.lng = response.data.lng;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
 				$scope.profilePic = response.data.profilePic;
@@ -74,6 +79,16 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 Email = response.data.email;
                 SecStatus = response.data.userSecStatus;
                 Notification = response.data.userNotification;
+    
+                Map.init();
+                Map.search($scope.address).then(
+                    function(res){
+                        Map.addMarker(res);
+                    },
+                    function(status){
+                        console.log(status);
+                    }
+                );
             } else {
                 $scope.user.userId = "";
                 $scope.fullname = "";
@@ -369,9 +384,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
             data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
             success: function(response){
                 if(response.status == 'OK'){
-                    Address = response.results[0].formatted_address;
+                    Location = response.results[0].formatted_address;
                     $scope.$apply(function(){
-                        $scope.location = Address;
+                        $scope.location = Location;
                     });
                     response.results[0].address_components.forEach(function(component){
                         if(component.types.indexOf("sublocality_level_1") != -1)
@@ -396,7 +411,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
 			userId : userFactory.user,
 			fullName : $scope.fullname,
 			location : $scope.location,
-            address: Address,
+            address: '',
             locality: Locality,
             sublocality: Sublocality,
             lat: Lat,
@@ -570,4 +585,51 @@ myProfile.controller('myProfileCtrl', ['$scope',
         
     }
     
+    $scope.search = function() {
+        Map.search($scope.address)
+        .then(
+            function(res) { // success
+                Map.addMarker(res);
+            },
+            function(status) { // error
+                console.log(status);
+            }
+        );
+    }
+    
 }]);
+
+myProfile.service('Map', function($q) {
+    
+    this.init = function() {
+        var options = {
+            center: new google.maps.LatLng(40.7127837, -74.00594130000002),
+            zoom: 13,
+            disableDefaultUI: true   
+        }
+        this.map = new google.maps.Map(document.getElementById("map"), options);
+        this.places = new google.maps.places.PlacesService(this.map);
+    }
+    
+    this.search = function(str) {
+        var d = $q.defer();
+        this.places.textSearch({query: str}, function(results, status) {
+            if (status == 'OK') {
+                d.resolve(results[0]);
+            }
+            else d.reject(status);
+        });
+        return d.promise;
+    }
+    
+    this.addMarker = function(res) {
+        if(this.marker) this.marker.setMap(null);
+        this.marker = new google.maps.Marker({
+            map: this.map,
+            position: res.geometry.location,
+            animation: google.maps.Animation.DROP
+        });
+        this.map.setCenter(res.geometry.location);
+    }
+    
+});
