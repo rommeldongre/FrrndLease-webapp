@@ -115,15 +115,14 @@ public class GetOrdersByXHandler extends Connect implements AppHandler {
 					rs.addResList(orders_rs1);
 					offset = offset + 1;
 				}
-				rs.setLastOrderId(offset);
+				LOGGER.info("Orders successfully added in response object");
+				rs.setCode(FLS_SUCCESS);
+				rs.setMessage(FLS_SUCCESS_M);
 			} else {
-				rs.setCode(404);
-				LOGGER.warning("End of DB");
+				rs.setCode(FLS_ENTRY_NOT_FOUND);
+				rs.setMessage(FLS_ENTRY_NOT_FOUND_M);
+				LOGGER.warning("Entry not found in table");
 			}
-			
-			LOGGER.info("Orders successfully added in response object");
-			rs.setCode(FLS_SUCCESS);
-			rs.setMessage(FLS_SUCCESS_M);
 			rs.setLastOrderId(offset);
 		} catch (SQLException e) {
 			LOGGER.warning("Error Check Stacktrace");

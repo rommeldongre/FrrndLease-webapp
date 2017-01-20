@@ -11,21 +11,29 @@
 	getData = function (){
 		var UserId = document.getElementById("ownerId").value;
 		
+		var CreditId = document.getElementById("creditId").value;
+		
 		var Offset = document.getElementById("offset").value;
 		Offset = parseInt(Offset);
 		
 		var Limit = document.getElementById("limit").value;
 		Limit = parseInt(Limit);
 		
-		GetCreditTimeline(UserId,Offset,Limit);
+		GetCreditTimeline(UserId,CreditId,Offset,Limit);
 	};
 	
-	function GetCreditTimeline(user,offset,limit){
+	function GetCreditTimeline(userId,creditId,offset,limit){
 	
-		if (user ===''){
+		if (userId ===''){
 			reqUserId = null;
 		}else{
-			reqUserId = user;
+			reqUserId = userId;
+		}
+		
+		if (creditId ===''){
+			CreditId = -1;
+		}else{
+			CreditId = creditId;
 		}
 		
 		if (offset ==='' || offset== null) {
@@ -42,15 +50,14 @@
 		
 		var req = {
 			userId: reqUserId,
+			creditId: CreditId,
 			cookie: Offset,
 			limit: Limit
 		};
-		console.log(JSON.stringify(req));
 		GetCreditTimelineSend(req);
 	}
 		
 	GetCreditTimelineSend = function(req) {
-		alert("Inside send");
 		$.ajax({
 			url: '/GetCreditTimeline',
 			type: 'post',
@@ -59,7 +66,6 @@
 			dataType:"json",
 			
 			success: function(response) {
-				alert('Working');
 				console.log(response);
 				document.getElementById("size").value = response.resList.length;
 				document.getElementById("Code").value = response.returnCode;
@@ -81,6 +87,7 @@
 <h1> GET CREDIT TIMELINE FORM</h1>
 	<form>
 		User Id : <input type="text" name="ownerId" id="ownerId" ><br/><br/>
+		Credit Id: <input type="text" name="creditId" id="creditId" ><br/><br/>
 		Batch Limit: <input type="text" name="limit" id="limit" ><br/><br/>
 		Offset Value: <input type="text" name="offset" id="offset" ><br/><br/>
 		<input type="button" value="Next" onclick="getData()">
