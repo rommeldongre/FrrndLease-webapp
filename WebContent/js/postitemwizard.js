@@ -20,6 +20,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     $scope.posted = false;
     $scope.shared = false;
     $scope.invited = false;
+	$scope.primaryFile = false;
     
     var userId = userFactory.user;
     var userAccessToken = userFactory.userAccessToken;
@@ -59,9 +60,19 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             error:function() {}
         });
     }
+	
+	var checkenv = function(){
+		
+		if(window.location.href.indexOf("localhost") > -1){
+			$scope.primaryFile = true;
+		}
+	}
     
     // called on the page load
     populateCategory('');
+	checkenv();
+	
+	
     
     $scope.categorySelected = function(i){
         $scope.selectedCategory = i;

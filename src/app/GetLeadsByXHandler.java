@@ -75,6 +75,8 @@ public class GetLeadsByXHandler extends Connect implements AppHandler {
 				sql = sql + "tb1.lead_type='" + type + "' ORDER BY tb1.lead_id DESC LIMIT " + offset + ","+limit;
 			}
 			
+			LOGGER.info(sql);
+			
 			sql_stmt = hcp.prepareStatement(sql);
 
 			dbResponse = sql_stmt.executeQuery();

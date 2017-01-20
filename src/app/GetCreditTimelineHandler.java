@@ -48,13 +48,20 @@ public class GetCreditTimelineHandler extends Connect implements AppHandler {
 		try {
 			// storing the front end data in appropriate variable
 			int offset = rq.getCookie();
+			int limit = rq.getLimit();
+			int credit_id = rq.getCreditId();
+			String user_id= rq.getUserId();
 			
 			// Prepare SQL
-			String sql = "SELECT * FROM `credit_log` WHERE credit_user_id=? ORDER BY credit_date DESC LIMIT ?,?";	
+			String sql = "SELECT tb_credit.credit_log_id , tb_credit.credit_date, tb_credit.credit_user_id, tb_users.user_full_name, tb_credit.credit_amount, tb_credit.credit_type, tb_credit.credit_desc FROM `credit_log` tb_credit INNER JOIN users tb_users ON tb_credit.credit_user_id = tb_users.user_id WHERE ";
+			
+			if(credit_id!=-1){
+				 sql = sql + "tb_credit.credit_log_id='"+credit_id+"' AND ";
+			}
+					
+				   sql = sql + "tb_credit.credit_user_id='"+user_id+"' ORDER BY tb_credit.credit_date DESC LIMIT " + offset + ","+limit;	
+			
 			sql_stmt = hcp.prepareStatement(sql);
-			sql_stmt.setString(1, rq.getUserId());
-			sql_stmt.setInt(2, rq.getCookie());
-			sql_stmt.setInt(3, rq.getLimit());
 			
 			dbResponse = sql_stmt.executeQuery();
 			
@@ -62,6 +69,7 @@ public class GetCreditTimelineHandler extends Connect implements AppHandler {
 				while (dbResponse.next()) {
 					GetCreditTimelineResObj rs1 = new GetCreditTimelineResObj();
 					rs1.setUserId(dbResponse.getString("credit_user_id"));
+					rs1.setUserName(dbResponse.getString("user_full_name"));
 					rs1.setCredit_date(dbResponse.getString("credit_date"));
 					rs1.setCredit_amount(dbResponse.getInt("credit_amount"));
 					rs1.setCredit_type(dbResponse.getString("credit_type"));

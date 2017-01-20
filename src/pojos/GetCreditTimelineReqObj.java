@@ -10,6 +10,9 @@ public class GetCreditTimelineReqObj extends ReqObj{
 		
 		// limit till which to get the items
 		int limit;
+		
+		// id of that particular credit entry
+		int creditId;
 
 		public String getUserId() {
 			return userId;
@@ -34,4 +37,13 @@ public class GetCreditTimelineReqObj extends ReqObj{
 		public void setLimit(int limit) {
 			this.limit = limit;
 		}
+
+		public int getCreditId() {
+			return creditId;
+		}
+
+		public void setCreditId(int creditId) {
+			this.creditId = creditId;
+		}
+		
 }
