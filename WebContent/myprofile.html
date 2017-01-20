@@ -202,19 +202,22 @@
                     </div>
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 2}">
-                    <textarea class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;"></textarea><br/>
-                    <span>{{500 - user.about.length}} left</span><button class="btn btn-primary btn-fill pull-right">Save</button>
+                    <form name="about" ng-submit="about.$valid && saveAbout()">
+                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;" autofocus required></textarea><br/>
+                        <span>{{500 - user.about.length}} left</span>
+                        <button class="btn btn-primary btn-fill pull-right">Save</button>
+                    </form>
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 3}">
-                    <form>
+                    <form name="infoForm" ng-submit="saveInfo()">
                         <label class="control-label">Website - </label>
-                        <input type="text" class="form-control" placeholder="Website" required>
+                        <input type="text" class="form-control" placeholder="Website" autofocus>
                         <label class="control-label">Email - </label>
-                        <input type="text" class="form-control" placeholder="Email" required>
+                        <input type="email" class="form-control" placeholder="Email">
                         <label class="control-label">Phone No - </label>
-                        <input type="text" class="form-control" placeholder="Phone No" required>
+                        <input type="number" maxlength="10" class="form-control" placeholder="Phone No">
                         <label class="control-label">Business Hours - </label>
-                        <input type="text" class="form-control" placeholder="Business Hours" required>
+                        <input type="text" class="form-control" placeholder="Business Hours">
                         <br/>
                         <button class="btn btn-fill btn-primary pull-right">Save</button>
                     </form>

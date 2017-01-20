@@ -597,6 +597,14 @@ myProfile.controller('myProfileCtrl', ['$scope',
         );
     }
     
+    $scope.saveInfo = function(){
+        
+    }
+    
+    $scope.saveAbout = function(){
+        
+    }
+    
 }]);
 
 myProfile.service('Map', function($q) {
