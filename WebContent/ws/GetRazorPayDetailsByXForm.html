@@ -2,38 +2,34 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Credit Timeline</title>
+<title>Razor Pay Details By X</title>
 <script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
 <script type="text/javascript">
 	var Token = 0;
 	var itemNextIdArray = [];
+	var time = " 00:00:00";
 	
 	getData = function (){
-		var UserId = document.getElementById("ownerId").value;
-		
-		var CreditId = document.getElementById("creditId").value;
-		
+		var Order = document.getElementById("razorPayId").value;
+				
 		var Offset = document.getElementById("offset").value;
 		Offset = parseInt(Offset);
 		
 		var Limit = document.getElementById("limit").value;
 		Limit = parseInt(Limit);
 		
-		GetCreditTimeline(UserId,CreditId,Offset,Limit);
+		
+		var UserId = document.getElementById("userId").value;
+		
+		GetRazorPayDetailsByX(Order,Offset,Limit,UserId);
 	};
 	
-	function GetCreditTimeline(userId,creditId,offset,limit){
+	function GetRazorPayDetailsByX(order,offset,limit,userId){
 	
-		if (userId ===''){
-			reqUserId = null;
+		if (order ===''){
+			orderId = null;
 		}else{
-			reqUserId = userId;
-		}
-		
-		if (creditId ===''){
-			CreditId = -1;
-		}else{
-			CreditId = creditId;
+			orderId = order;
 		}
 		
 		if (offset ==='' || offset== null) {
@@ -48,29 +44,34 @@
 			Limit = limit;
 		}
 		
+		if (userId ==='' || userId == null) {
+			userId ="";
+		}else{
+			UserId = userId;
+		}
+		
 		var req = {
-			userId: reqUserId,
-			creditId: CreditId,
+			razorPayId: orderId,
 			cookie: Offset,
-			limit: Limit
+			limit: Limit,
+			userId: UserId
 		};
-		GetCreditTimelineSend(req);
+		GetRazorPayDetailsByXSend(req);
 	}
 		
-	GetCreditTimelineSend = function(req) {
+	GetRazorPayDetailsByXSend = function(req) {
 		$.ajax({
-			url: '/GetCreditTimeline',
+			url: '/GetRazorPayDetailsByX',
 			type: 'post',
 			data: JSON.stringify(req),
 			contentType:"application/json",
 			dataType:"json",
 			
 			success: function(response) {
-				console.log(response);
 				document.getElementById("size").value = response.resList.length;
-				document.getElementById("Code").value = response.returnCode;
-				document.getElementById("Message").value = "Success!";
-				document.getElementById("offsetVal").value = response.lastItemId;
+				document.getElementById("Code").value = response.code;
+				document.getElementById("Message").value = response.message;
+				document.getElementById("offsetVal").value = response.lastOrderId;
 				var div = document.getElementById("output");
 				div.innerHTML = JSON.stringify(response.resList);
 			},
@@ -84,10 +85,10 @@
 </script>
 </head>
 <body>
-<h1> GET CREDIT TIMELINE FORM</h1>
+<h1> Razor Pay Details By X FORM</h1>
 	<form>
-		User Id : <input type="text" name="ownerId" id="ownerId" ><br/><br/>
-		Credit Id: <input type="text" name="creditId" id="creditId" ><br/><br/>
+		Razor Pay Id : <input type="text" name="razorPayId" id="razorPayId" ><br/><br/>
+		User Id: <input type="text" name="userId" id="userId" ><br/><br/>
 		Batch Limit: <input type="text" name="limit" id="limit" ><br/><br/>
 		Offset Value: <input type="text" name="offset" id="offset" ><br/><br/>
 		<input type="button" value="Next" onclick="getData()">
