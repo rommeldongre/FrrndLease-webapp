@@ -19,7 +19,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
+    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null,lastOffset = 0;
     
     $scope.user = {};
     
@@ -81,6 +81,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     // getting the profile
     displayProfile();
+	$("#openBtn_orderDetails").hide();
                                             
     $scope.verifyEmail = function(e){
         var req = {
@@ -559,6 +560,66 @@ myProfile.controller('myProfileCtrl', ['$scope',
             }
         });
         
+    }
+	$scope.viewOrders = function(){
+		$("#openBtn_orderDetails").click();
+		getOrders(lastOffset);
+		$scope.showNext = true;
+	}
+	
+		var getOrders = function(token){
+			
+        var req = {
+			type: "FLS_ALL",
+			userId: userFactory.user,
+			cookie: token,
+			limit: 10,
+			searchString: "",
+			fromDate: "",
+			toDate: ""
+        }
+        displayOrders(req);
+    }
+
+    var displayOrders = function(req){
+        $.ajax({
+            url: '/GetOrdersByX',
+            type:'post',
+            data: JSON.stringify(req),
+            contentType:"application/json",
+            dataType: "json",
+            success: function(response) {
+                if(response.code == 0){
+					if(lastOffset == 0){
+						$scope.$apply(function(){
+                        $scope.orders = [response.resList];
+                    });
+					}else{
+						$scope.$apply(function(){
+							$scope.orders.push(response.resList);
+						});
+					}
+                    lastOffset = response.lastOrderId;
+                }else{
+					$scope.showNext = false;
+					console.log("ReturnCode not Zero");
+                }
+            },
+            error:function() {
+				console.log("After Error");
+            }
+        });
+    }
+	
+	$scope.cancel_credit = function(){
+		lastOffset = 0;
+		$scope.orders = [];
+	}
+	
+	// called when load Next Orders button is clicked
+    $scope.loadNextOrders = function(){
+        getOrders(lastOffset);
+		
     }
     
 }]);
