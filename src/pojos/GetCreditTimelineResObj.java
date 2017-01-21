@@ -11,6 +11,9 @@ public class GetCreditTimelineResObj extends ResObj{
 	//User ID
 	String userId;
 	
+	//User Name
+	String userName;
+	
 	//Date on which credit was credited
 	String credit_date;
 	
@@ -45,6 +48,14 @@ public class GetCreditTimelineResObj extends ResObj{
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getCredit_date() {

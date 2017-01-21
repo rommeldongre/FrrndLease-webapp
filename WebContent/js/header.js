@@ -297,6 +297,7 @@ headerApp.controller('headerCtrl', ['$scope',
 	var getCredit = function(Offset){
 		var req = {
 			userId : userFactory.user,
+			creditId: -1,
 			cookie: Offset,
 			limit: 3
 		}
