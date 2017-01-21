@@ -215,7 +215,7 @@
                         <label class="control-label">Email - </label>
                         <input type="email" class="form-control" ng-model="mail" placeholder="Email">
                         <label class="control-label">Phone No - </label>
-                        <input type="number" maxlength="10" class="form-control" ng-model="phoneNo" placeholder="Phone No">
+                        <input type="text" class="form-control" ng-model="phoneNo" placeholder="Phone No">
                         <label class="control-label">Business Hours - </label>
                         <input type="text" class="form-control" ng-model="bHours" placeholder="Business Hours">
                         <br/>
@@ -223,7 +223,7 @@
                     </form>
                 </div>
             </div><br/>
-            <i ng-if="saving" class="fa fa-refresh fa-spin" aria-hidden="true"></i>
+            <i ng-if="user.savingDetails" class="fa fa-refresh fa-spin" aria-hidden="true"></i>
         </div>
     </div><br/><br/>
 </div>

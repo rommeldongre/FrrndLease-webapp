@@ -15,6 +15,8 @@ public class GetProfileResObj extends ResObj {
 	boolean photoIdVerified;
 	String userStatus, userSecStatus, userNotification, userFeeExpiry;
 	
+	String about, website, mail, phoneNo, businessHours;
+	
 	String[] imageLinks;
 
 	public int getCode() {
@@ -218,5 +220,45 @@ public class GetProfileResObj extends ResObj {
 
 	public void setImageLinks(String[] imageLinks) {
 		this.imageLinks = imageLinks;
+	}
+
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	public String getBusinessHours() {
+		return businessHours;
+	}
+
+	public void setBusinessHours(String businessHours) {
+		this.businessHours = businessHours;
 	}
 }

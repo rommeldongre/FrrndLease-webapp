@@ -82,6 +82,12 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 SecStatus = response.data.userSecStatus;
                 Notification = response.data.userNotification;
     
+                $scope.user.about = response.data.about;
+                $scope.website = response.data.website;
+                $scope.mail = response.data.mail;
+                $scope.phoneNo = response.data.phoneNo;
+                $scope.bHours = response.data.businessHours;
+                
                 Map.init();
                 Map.search($scope.address).then(
                     function(res){
