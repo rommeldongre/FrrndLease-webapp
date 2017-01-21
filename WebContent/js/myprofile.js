@@ -9,6 +9,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                                         '$timeout',
                                         '$filter',
                                         'Map',
+                                        'profileApi',
 										function($scope, 
 										userFactory, 
 										profileFactory, 
@@ -17,7 +18,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
                                         logoutService,
                                         $timeout,
                                         $filter,
-                                        Map){
+                                        Map,
+                                        profileApi){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
@@ -33,7 +35,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         sendToCarousel: false
     };
     
-    $scope.details = '';
+    $scope.user.savingDetails = false;
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
@@ -585,7 +587,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
         
     }
     
-    $scope.search = function() {
+    var search = function() {
         Map.search($scope.address)
         .then(
             function(res) { // success
@@ -597,12 +599,37 @@ myProfile.controller('myProfileCtrl', ['$scope',
         );
     }
     
-    $scope.saveInfo = function(){
+    $scope.saveInfo = function(type){
         
-    }
-    
-    $scope.saveAbout = function(){
+        $scope.user.savingDetails = true;
         
+        var req = {
+            userId: userFactory.user,
+            accessToken: userFactory.userAccessToken,
+            userAddress: $scope.address,
+            about: $scope.user.about,
+            website: $scope.website,
+            email: $scope.mail,
+            phoneNo: $scope.phoneNo,
+            businessHours: $scope.bHours,
+            detailsType: "CONTACT_INFO"
+        }
+        
+        if(type == 'ADDRESS'){
+            req.detailsType = "ADDRESS";
+            search();
+        } else if (type == 'ABOUT') {
+            req.detailsType = "ABOUT";
+        } else if (type == 'CONTACT_INFO') {
+            req.detailsType = "CONTACT_INFO";
+        }
+        
+        profileApi.saveDetails(req).then(
+            function(response){
+                $scope.user.savingDetails = false;
+            },
+            function(error){}
+        );
     }
     
 }]);
@@ -641,3 +668,15 @@ myProfile.service('Map', function($q) {
     }
     
 });
+
+myProfile.factory('profileApi', ['$http', function($http){
+    
+    var profileApi = {};
+    
+    profileApi.saveDetails = function(req){
+        return $http.post('/SaveProfileDetails', JSON.stringify(req));
+    }
+    
+    return profileApi;
+    
+}]);

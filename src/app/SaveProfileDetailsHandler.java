@@ -8,7 +8,6 @@ import connect.Connect;
 import pojos.ReqObj;
 import pojos.ResObj;
 import pojos.SaveProfileDetailsReqObj;
-import pojos.SaveProfileDetailsReqObj.details_type;
 import pojos.SaveProfileDetailsResObj;
 import util.FlsLogger;
 import util.OAuth;
@@ -39,7 +38,7 @@ public class SaveProfileDetailsHandler extends Connect implements AppHandler {
 
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
-		ResultSet rs1 = null;
+		int rs1;
 
 		try {
 
@@ -54,9 +53,8 @@ public class SaveProfileDetailsHandler extends Connect implements AppHandler {
 			}
 
 			String sql = "UPDATE users SET ";
-
-			details_type detailsType = rq.getDetailsType();
-			switch (detailsType.name()) {
+			
+			switch (rq.getDetailsType()) {
 			case "ADDRESS":
 				sql = sql + "user_address=? WHERE user_id=?";
 				ps1 = hcp.prepareStatement(sql);
@@ -80,14 +78,14 @@ public class SaveProfileDetailsHandler extends Connect implements AppHandler {
 				break;
 			}
 
-			rs1 = ps1.executeQuery();
+			rs1 = ps1.executeUpdate();
 
-			if (rs1.next()) {
-				LOGGER.info("Updated the " + detailsType.name() + " for the user id - " + userId);
+			if (rs1 == 1) {
+				LOGGER.info("Updated the " + rq.getDetailsType() + " for the user id - " + userId);
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
 			} else {
-				LOGGER.info("Not able to update the " + detailsType.name() + " for the user id - " + userId);
+				LOGGER.info("Not able to update the " + rq.getDetailsType() + " for the user id - " + userId);
 				rs.setCode(FLS_INVALID_MESSAGE);
 				rs.setMessage(FLS_INVALID_MESSAGE_M);
 			}
@@ -98,7 +96,6 @@ public class SaveProfileDetailsHandler extends Connect implements AppHandler {
 			rs.setMessage(FLS_SQL_EXCEPTION_M);
 		} finally {
 			try {
-				if (rs1 != null) rs1.close();
 				if (ps1 != null) ps1.close();
 				if (hcp != null) hcp.close();
 			} catch (Exception e) {

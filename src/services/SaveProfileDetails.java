@@ -26,7 +26,7 @@ public class SaveProfileDetails extends HttpServlet {
 
 	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse) throws ServletException, IOException {
 
-		LOGGER.info("Inside Post of ValidatePromo Service");
+		LOGGER.info("Inside Post of SaveProfileDetails Service");
 
 		ObjectMapper mapper = new ObjectMapper();
 		SaveProfileDetailsReqObj request = mapper.readValue(httprequest.getInputStream(), SaveProfileDetailsReqObj.class);

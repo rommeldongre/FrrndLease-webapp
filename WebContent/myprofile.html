@@ -166,7 +166,7 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div class="tab-pane ng-class:{'active':selected == 0}">
-                    <form name="searchForm" novalidate ng-submit="search()">
+                    <form name="searchForm" novalidate ng-submit="saveInfo('ADDRESS')">
                         <div class="input-group">
                             <input name="place" type="text" class="form-control" ng-model="address" required autofocus />
                             <span class="input-group-btn">
@@ -202,27 +202,28 @@
                     </div>
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 2}">
-                    <form name="about" ng-submit="about.$valid && saveAbout()">
+                    <form name="about" ng-submit="about.$valid && saveInfo('ABOUT')">
                         <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;" autofocus required></textarea><br/>
                         <span>{{500 - user.about.length}} left</span>
                         <button class="btn btn-primary btn-fill pull-right">Save</button>
                     </form>
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 3}">
-                    <form name="infoForm" ng-submit="saveInfo()">
+                    <form name="infoForm" ng-submit="saveInfo('CONTACT_INFO')">
                         <label class="control-label">Website - </label>
-                        <input type="text" class="form-control" placeholder="Website" autofocus>
+                        <input type="text" class="form-control" ng-model="website" placeholder="Website" autofocus>
                         <label class="control-label">Email - </label>
-                        <input type="email" class="form-control" placeholder="Email">
+                        <input type="email" class="form-control" ng-model="mail" placeholder="Email">
                         <label class="control-label">Phone No - </label>
-                        <input type="number" maxlength="10" class="form-control" placeholder="Phone No">
+                        <input type="number" maxlength="10" class="form-control" ng-model="phoneNo" placeholder="Phone No">
                         <label class="control-label">Business Hours - </label>
-                        <input type="text" class="form-control" placeholder="Business Hours">
+                        <input type="text" class="form-control" ng-model="bHours" placeholder="Business Hours">
                         <br/>
                         <button class="btn btn-fill btn-primary pull-right">Save</button>
                     </form>
                 </div>
-            </div>
+            </div><br/>
+            <i ng-if="saving" class="fa fa-refresh fa-spin" aria-hidden="true"></i>
         </div>
     </div><br/><br/>
 </div>

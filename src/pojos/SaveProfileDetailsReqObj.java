@@ -4,11 +4,7 @@ public class SaveProfileDetailsReqObj extends ReqObj {
 
 	String userId, accessToken, userAddress, about, website, email, phoneNo, businessHours;
 
-	public enum details_type {
-		ADDRESS, ABOUT, CONTACT_INFO
-	}
-
-	details_type detailsType;
+	String detailsType;
 
 	public String getUserId() {
 		return userId;
@@ -74,11 +70,11 @@ public class SaveProfileDetailsReqObj extends ReqObj {
 		this.businessHours = businessHours;
 	}
 
-	public details_type getDetailsType() {
+	public String getDetailsType() {
 		return detailsType;
 	}
 
-	public void setDetailsType(details_type detailsType) {
+	public void setDetailsType(String detailsType) {
 		this.detailsType = detailsType;
 	}
 
