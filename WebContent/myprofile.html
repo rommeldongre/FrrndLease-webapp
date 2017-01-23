@@ -4,6 +4,7 @@
             <strong>My Profile</strong>
         </div>
         <div class="right_title col-lg-10 col-md-10">
+			<a class="btn btn-primary btn-simple" ng-click="viewOrders()"><u>View My Orders</u></a>
             <a class="btn btn-primary btn-simple" href="/UserProfile?userUid={{user.userUid}}"><u>View Public Profile</u></a>
         </div>
     </div>
@@ -226,4 +227,49 @@
             <i ng-if="user.savingDetails" class="fa fa-refresh fa-spin" aria-hidden="true"></i>
         </div>
     </div><br/><br/>
+	
+<!-- Order Details pop up starts here-->
+<button href="#myModalTableOrders" id="openBtn_orderDetails" data-toggle="modal" class="btn btn-default">Modal</button>
+
+<div class="modal fade" id="myModalTableOrders" data-backdrop="static" data-keyboard="false">
+<div class="modal-dialog modal-lg">
+	<div class="modal-content">
+		<div class="modal-header">
+		<button type="button" class="close" ng-click="cancel_credit()" data-dismiss="modal" aria-hidden="true">×</button>
+		<h3 class="modal-title">Order Details</h3>
+		</div>
+		<div class="modal-body">
+		<!--<h5 class="text-center">Credit Timeline is as follows</h5>-->
+		<table id="ordersTable" class="table table-striped" style='table-layout:fixed;word-wrap:break-word;'>
+			<thead>
+            <tr>
+				<th class="tablecell" style="width: 15%">Order Id</th>
+                <th class="tablecell" style="width: 20%">Date</th>
+				<th class="tablecell" style="width: 10%">Amount</th>
+				<th class="tablecell" style="width: 15%">Promo Code</th>
+				<th class="tablecell" style="width: 20%">Razor Pay Id</th>
+				<th class="tablecell" style="width: 20%">Credit Type</th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="order in orders" >
+            <tr ng-repeat="y in order" >
+				<td>{{ y.orderId }}</td>
+				<td>{{ y.orderDate }}</td>
+				<td>{{ y.amount }}</td>
+				<td>{{ y.promoCode }}</td>
+				<td class="text-center">{{y.razorPayId}}</td>
+				<td>{{ y.creditType }}</td>
+			  </tr>
+        </tbody>
+		</table>
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-default btn-fill" ng-click="cancel_credit()" data-dismiss="modal" ng-click="">Cancel</button>
+		<button class="btn btn-primary btn-fill" style="text-align: end;margin-top: 0%;" id="next_orders" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextOrders()">Load More</button>
+		</div>
+				
+	</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Order Details Details pop up ends here-->
 </div>
