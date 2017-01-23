@@ -47,6 +47,12 @@ public class UserProfile extends HttpServlet {
 				httprequest.setAttribute("locality", response.getLocality());
 				httprequest.setAttribute("wishedList", response.getWishedList());
 				httprequest.setAttribute("friends", response.getFriends());
+				httprequest.setAttribute("address", response.getAddress());
+				httprequest.setAttribute("about", response.getAbout());
+				httprequest.setAttribute("website", response.getWebsite());
+				httprequest.setAttribute("mail", response.getEmail());
+				httprequest.setAttribute("phoneNo", response.getPhoneNo());
+				httprequest.setAttribute("bHours", response.getBusinessHours());
 			} else {
 				httprequest.setAttribute("code", response.getCode());
 				httprequest.setAttribute("message", "This user does not exist");
