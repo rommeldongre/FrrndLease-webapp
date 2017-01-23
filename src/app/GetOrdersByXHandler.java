@@ -68,7 +68,7 @@ public class GetOrdersByXHandler extends Connect implements AppHandler {
 			
 			
 			//already getting all data from orders table
-			sql = "SELECT tb_orders.order_id , tb_orders.order_date, tb_orders.order_user_id, tb_users.user_full_name, tb_orders.amount, tb_orders.promo_code, tb_orders.razor_pay_id, tb_orders.credit_log_id, tb_orders.order_type FROM `orders` tb_orders INNER JOIN users tb_users ON tb_orders.order_user_id = tb_users.user_id WHERE ";
+			sql = "SELECT tb_orders.order_id , tb_orders.order_date, tb_orders.order_user_id, tb_users.user_full_name, tb_orders.amount, tb_orders.promo_code, tb_orders.razor_pay_id, tb_orders.credit_log_id, tb_orders.order_type, tb_credits.credit_type FROM `orders` tb_orders INNER JOIN users tb_users ON tb_orders.order_user_id = tb_users.user_id INNER JOIN credit_log tb_credits ON tb_orders.credit_log_id = tb_credits.credit_log_id WHERE ";
 			
 			if(!fromDate.equals(time)){
 				if(fromDate.equals(toDate)){
@@ -111,6 +111,7 @@ public class GetOrdersByXHandler extends Connect implements AppHandler {
 					orders_rs1.setRazorPayId(rs1.getString("razor_pay_id"));
 					orders_rs1.setCreditLogId(rs1.getInt("credit_log_id"));
 					orders_rs1.setOrderType(rs1.getString("order_type"));
+					orders_rs1.setCreditType(rs1.getString("credit_type"));
 					
 					rs.addResList(orders_rs1);
 					offset = offset + 1;
