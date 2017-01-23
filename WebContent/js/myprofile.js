@@ -26,6 +26,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
     var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null,lastOffset = 0;
     
     $scope.user = {};
+	
+	// Saving multiple images in case of uber user
+    $scope.images = [{link:""}, {link:""}, {link:""}, {link:""}, {link:""}, {link:""}];
     
     $scope.options = {
         country: 'in',
