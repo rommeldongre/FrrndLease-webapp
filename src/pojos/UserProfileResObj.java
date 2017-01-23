@@ -10,6 +10,8 @@ public class UserProfileResObj extends ResObj {
 
 	// Profile Details
 	String address, about, website, email, phoneNo, businessHours;
+	String[] imageLinks;
+	boolean uber;
 
 	public int getCode() {
 		return code;
@@ -129,6 +131,22 @@ public class UserProfileResObj extends ResObj {
 
 	public void setBusinessHours(String businessHours) {
 		this.businessHours = businessHours;
+	}
+
+	public String[] getImageLinks() {
+		return imageLinks;
+	}
+
+	public void setImageLinks(String[] imageLinks) {
+		this.imageLinks = imageLinks;
+	}
+
+	public boolean isUber() {
+		return uber;
+	}
+
+	public void setUber(boolean uber) {
+		this.uber = uber;
 	}
 
 }

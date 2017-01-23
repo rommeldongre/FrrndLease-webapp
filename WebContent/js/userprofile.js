@@ -19,8 +19,14 @@ userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForC
         website: $window.website,
         mail: $window.mail,
         phoneNo: $window.phoneNo,
-        bHours: $window.bHours
+        bHours: $window.bHours,
+        uber: $window.uber
     };
+    
+    if($window.imageLinks != '' && $window.imageLinks != null)
+        $scope.user.imageLinks = $window.imageLinks.split(",");
+    else
+        $scope.user.imageLinks = [];
     
     // getting the width and height of the carousel when window is resized
     $(window).resize(function(){

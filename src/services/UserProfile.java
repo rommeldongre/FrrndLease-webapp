@@ -53,6 +53,26 @@ public class UserProfile extends HttpServlet {
 				httprequest.setAttribute("mail", response.getEmail());
 				httprequest.setAttribute("phoneNo", response.getPhoneNo());
 				httprequest.setAttribute("bHours", response.getBusinessHours());
+				httprequest.setAttribute("uber", response.isUber());
+				
+				String[] arr = response.getImageLinks();
+
+				String links = null;
+				
+				if(arr != null){
+					for(int i = 0; i < arr.length; i++){
+						if(links == null)
+							links = arr[i];
+						else
+							links = links + "," + arr[i];
+					}
+				}
+				
+				if(links == null)
+					httprequest.setAttribute("imageLinks", "");
+				else
+					httprequest.setAttribute("imageLinks", links);
+				
 			} else {
 				httprequest.setAttribute("code", response.getCode());
 				httprequest.setAttribute("message", "This user does not exist");

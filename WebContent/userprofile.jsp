@@ -119,13 +119,13 @@
                                     </div>
                                 </div>
                                 <hr/>
-                                <div class="row">
+                                <div ng-if="user.uber" class="row">
                                     <div class="left_title col-lg-4 col-md-4">
                                         Profile Details
                                     </div>
                                 </div>
-                                <hr/>
-                                <div class="row">
+                                <hr ng-if="user.uber" />
+                                <div ng-if="user.uber" class="row">
                                     <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3">
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-icons" ng-init="selected=0" style="text-align:center;">
@@ -143,30 +143,55 @@
                                             </li>
                                         </ul>
                                         <!-- Tab panes -->
-                                        <div class="tab-content">
+                                        <div class="tab-content text-center">
                                             <div class="tab-pane ng-class:{'active':selected == 0}">
-                                                <span>{{user.address}}</span>
+                                                <span><strong>{{user.address}}</strong></span>
                                                 <div id="map"></div>
                                             </div>
                                             <div class="tab-pane ng-class:{'active':selected == 1}">
-                                                <img load-image="" max-width="150" max-height="150" ng-src="" alt="..." />
+                                                <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-repeat="image in user.imageLinks" />
                                             </div>
                                             <div class="tab-pane ng-class:{'active':selected == 2}">
-                                                <span>{{user.about}}</span>
+                                                <h5><i class="fa fa-quote-left" aria-hidden="true"></i> {{user.about}} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
                                             </div>
                                             <div class="tab-pane ng-class:{'active':selected == 3}">
-                                                <span>Website - </span>
-                                                <span>{{user.website}}</span>
-                                                <span>Email - </span>
-                                                <span>{{user.mail}}</span>
-                                                <span>Phone No - </span>
-                                                <span>{{user.phoneNo}}</span>
-                                                <span>Business Hours - </span>
-                                                <span>{{user.bHours}}</span>
+                                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="right" title="Website" tooltip style="margin:0px;">
+                                                    <div class="icon icon-sm" style="margin-top:0px;">
+                                                        <i class="fa fa-globe" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="description">
+                                                        <h5>{{user.website != '' ? user.website : 'None'}}</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="right" title="Email" tooltip style="margin:0px;">
+                                                    <div class="icon icon-sm" style="margin-top:0px;">
+                                                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="description">
+                                                        <h5>{{user.mail != '' ? user.mail : 'None'}}</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="right" title="Phone No" tooltip style="margin:0px;">
+                                                    <div class="icon icon-sm" style="margin-top:0px;">
+                                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="description">
+                                                        <h5>{{user.phoneNo != '' ? user.phoneNo : 'None'}}</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="info info-horizontal btn-tooltip" data-toggle="tooltip" data-placement="right" title="Business Hours" tooltip style="margin:0px;">
+                                                    <div class="icon icon-sm" style="margin-top:0px;">
+                                                        <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="description">
+                                                        <h5>{{user.bHours != '' ? user.bHours : 'None'}}</h5>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div><br/><br/><hr/>
+                                </div>
+                                <hr ng-if="user.uber" />
                                 <div class="container-fluid">
                                     <h4>Wished Items -
                                         <br/>
@@ -301,6 +326,8 @@
             var mail = "${mail}";
             var phoneNo = "${phoneNo}";
             var bHours = "${bHours}";
+            var imageLinks = "${imageLinks}";
+            var uber = ${uber};
 
             function start() {
                 load_Gapi();

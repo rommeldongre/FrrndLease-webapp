@@ -84,7 +84,7 @@ public class GetProfileHandler extends Connect implements AppHandler {
 				rs.setPhoneNo(result.getString("phone_no"));
 				rs.setBusinessHours(result.getString("business_hours"));
 				
-				FlsS3Bucket s3Bucket = new FlsS3Bucket(result.getString("user_uid"));
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(result.getString("user_uid"), true);
 				rs.setImageLinks(s3Bucket.getImagesLinks());
 				
 				rs.setCode(FLS_SUCCESS);
