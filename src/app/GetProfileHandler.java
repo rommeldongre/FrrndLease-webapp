@@ -12,6 +12,7 @@ import pojos.GetProfileResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
+import util.FlsS3Bucket;
 
 public class GetProfileHandler extends Connect implements AppHandler {
 
@@ -77,6 +78,15 @@ public class GetProfileHandler extends Connect implements AppHandler {
 				rs.setProfilePic(result.getString("user_profile_picture"));
 				rs.setLiveStatus(result.getInt("user_live_status"));
 				rs.setUserFeeExpiry(result.getString("user_fee_expiry"));
+				rs.setAbout(result.getString("about"));
+				rs.setWebsite(result.getString("website"));
+				rs.setMail(result.getString("email"));
+				rs.setPhoneNo(result.getString("phone_no"));
+				rs.setBusinessHours(result.getString("business_hours"));
+				
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(result.getString("user_uid"));
+				rs.setImageLinks(s3Bucket.getImagesLinks());
+				
 				rs.setCode(FLS_SUCCESS);
 
 				LOGGER.info("Printing out ResultSet: " + rs.getFullName() + ", " + rs.getMobile() + ", "

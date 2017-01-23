@@ -17,7 +17,7 @@
                     <label class="primary-file-input-label" for="primary-file-input" style="font-size:small;">
                         <i class="fa fa-plus" aria-hidden="true" width="50" height="50" style="display:initial;"></i> Add Profile
                     </label>
-                    <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], true)" style="display:none;" />
+                    <input id="primary-file-input" type="file" accept="image/*" onchange="angular.element(this).scope().uploadProfilePic(files[0], true, false, 0)" style="display:none;" />
                 </div>
                 <div ng-if="profilePic=='loading'" class="loading-actions">
                     <div class="loading-primary-image" style="font-size:small;">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div ng-if="profilePic != 'loading' && profilePic != '' && profilePic != null && profilePic != 'null' && profilePic != undefined" class="actions">
-                    <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(true)">
+                    <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(true, false, 0)">
                         <i class="fa fa-times"></i>
                     </button>
                     <label class="primary-file-input-label" for="primary-file-input" style="font-size:small;">
@@ -77,7 +77,8 @@
                 <input type="text" class="form-control" ng-disabled="true" ng-model="userFeeExpiry">
                 <a class="input-group-addon" href="" data-toggle="modal" data-target="#uberPayModal"><i class="fa fa-inr" aria-hidden="true"></i></a>
             </div>
-            <br/><hr/>
+            <br/>
+            <hr/>
             <label class="control-label">Notification Preferences - </label>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
@@ -96,7 +97,8 @@
                         <i ng-if="notification=='EMAIL' || notification=='NONE'" class="fa fa-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
                     </button>
                 </div>
-            </div><hr/>
+            </div>
+            <hr/>
             <form name="secForm">
                 <label ng-if="(status=='mobile_activated')" class="control-label">Email</label>
                 <div ng-if="(status=='mobile_activated')" class="input-group">
@@ -137,7 +139,94 @@
             </form>
             <br/>
         </div>
+    </div><br/>
+    <hr/>
+    <div class="row">
+        <div class="left_title col-lg-4 col-md-4">
+            Profile Details
+        </div>
     </div>
+    <hr/>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3">
+            <!-- Nav tabs -->
+            <ul class="nav nav-icons" ng-init="selected=0" style="text-align:center;">
+                <li class="ng-class:{'active':selected == 0}" ng-click="selected = 0">
+                    <a href=""><i class="fa fa-map-marker" aria-hidden="true"></i><br/>Address</a>
+                </li>
+                <li class="ng-class:{'active':selected == 1}" ng-click="selected = 1">
+                    <a href=""><i class="fa fa-picture-o" aria-hidden="true"></i><br/>Store Pics</a>
+                </li>
+                <li class="ng-class:{'active':selected == 2}" ng-click="selected = 2">
+                    <a href=""><i class="fa fa-info" aria-hidden="true"></i><br/>About</a>
+                </li>
+                <li class="ng-class:{'active':selected == 3}" ng-click="selected = 3">
+                    <a href=""><i class="fa fa-phone-square" aria-hidden="true"></i><br/>Contact Info</a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane ng-class:{'active':selected == 0}">
+                    <form name="searchForm" novalidate ng-submit="saveInfo('ADDRESS')">
+                        <div class="input-group">
+                            <input name="place" type="text" class="form-control" ng-model="address" required autofocus />
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" ng-disabled="searchForm.$invalid">Save</button>
+                            </span>
+                        </div>
+                    </form>
+                    <div id="map"></div>
+                </div>
+                <div class="tab-pane ng-class:{'active':selected == 1}">
+                    <div class="loaded-img" style="margin-right:5px;" ng-repeat="image in images">
+                        <img load-image="image.link" max-width="150" max-height="150" ng-src="" alt="..." />
+                        <div ng-if="image.link == '' || image.link == null || image.link == 'null' || image.link == undefined" class="empty-actions">
+                            <label for="{{$index}}" class="file-input-label">
+                                <i class="fa fa-plus" aria-hidden="true" style="display:initial;"></i> Add Image
+                            </label>
+                            <input id="{{$index}}" type="file" upload-user-image="image" user-uid="{{user.userUid}}" style="display:none;" />
+                        </div>
+                        <div ng-if="image.link=='loading'" class="loading-actions">
+                            <div class="loading-image">
+                                <i class="fa fa-refresh fa-spin" aria-hidden="true" style="display:initial;"></i> Please Wait..
+                            </div>
+                        </div>
+                        <div ng-if="image.link!='loading' && image.link != '' && image.link != null && image.link != 'null' && image.link != undefined" class="actions">
+                            <button type="button" class="btn btn-danger btn-simple" ng-click="deleteUserPic(false, true, $index)">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <label for="{{$index}}" class="file-input-label">
+                                <i class="fa fa-image" aria-hidden="true" style="display:initial;"></i> Change Image
+                            </label>
+                            <input id="{{$index}}" type="file" upload-user-image="image" user-uid="{{user.userUid}}" style="display:none;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane ng-class:{'active':selected == 2}">
+                    <form name="about" ng-submit="about.$valid && saveInfo('ABOUT')">
+                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;" autofocus required></textarea><br/>
+                        <span>{{500 - user.about.length}} left</span>
+                        <button class="btn btn-primary btn-fill pull-right">Save</button>
+                    </form>
+                </div>
+                <div class="tab-pane ng-class:{'active':selected == 3}">
+                    <form name="infoForm" ng-submit="saveInfo('CONTACT_INFO')">
+                        <label class="control-label">Website - </label>
+                        <input type="text" class="form-control" ng-model="website" placeholder="Website" autofocus>
+                        <label class="control-label">Email - </label>
+                        <input type="email" class="form-control" ng-model="mail" placeholder="Email">
+                        <label class="control-label">Phone No - </label>
+                        <input type="text" class="form-control" ng-model="phoneNo" placeholder="Phone No">
+                        <label class="control-label">Business Hours - </label>
+                        <input type="text" class="form-control" ng-model="bHours" placeholder="Business Hours">
+                        <br/>
+                        <button class="btn btn-fill btn-primary pull-right">Save</button>
+                    </form>
+                </div>
+            </div><br/>
+            <i ng-if="user.savingDetails" class="fa fa-refresh fa-spin" aria-hidden="true"></i>
+        </div>
+    </div><br/><br/>
 	
 <!-- Order Details pop up starts here-->
 <button href="#myModalTableOrders" id="openBtn_orderDetails" data-toggle="modal" class="btn btn-default">Modal</button>

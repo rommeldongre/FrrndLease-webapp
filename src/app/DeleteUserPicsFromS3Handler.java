@@ -44,6 +44,7 @@ public class DeleteUserPicsFromS3Handler extends Connect implements AppHandler{
 			}
 
 			String link = rq.getLink();
+			String userUid = rq.getUserId();
 			
 			if (link.equals("null") || link.isEmpty() || link == null || link.equals("")){
 				rs.setCode(FLS_INVALID_OPERATION);
@@ -51,12 +52,22 @@ public class DeleteUserPicsFromS3Handler extends Connect implements AppHandler{
 				return rs;
 			}
 			
-			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserId(), rq.isProfile());
+			if (userUid == null || userUid.isEmpty()) {
+				rs.setCode(FLS_INVALID_OPERATION);
+				rs.setMessage("Please try refreshing the page!!");
+				return rs;
+			}
+			
+			FlsS3Bucket s3Bucket = new FlsS3Bucket(rq.getUserUid(), true);
 			
 			int result = s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, link);
 			
 			if(result == 1){
-				s3Bucket.deleteUserPics();
+				if(rq.isMultiple()){
+					s3Bucket.deleteNormalImageLink(link);
+				}else{
+					s3Bucket.deleteUserPics(rq.isProfile());
+				}
 			}
 			
 			rs.setCode(FLS_SUCCESS);
