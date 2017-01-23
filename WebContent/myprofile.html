@@ -254,7 +254,7 @@
         <tbody ng-repeat="order in orders" >
             <tr ng-repeat="y in order" >
 				<td>{{ y.orderId }}</td>
-				<td>{{ y.orderDate }}</td>
+				<td>{{ y.orderDate | date}}</td>
 				<td>{{ y.amount }}</td>
 				<td>{{ y.promoCode }}</td>
 				<td class="text-center">{{y.razorPayId}}</td>

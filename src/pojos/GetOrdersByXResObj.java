@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetOrdersByXResObj extends ResObj{
 	
 	int orderId,amount,creditLogId;
@@ -27,7 +31,14 @@ public class GetOrdersByXResObj extends ResObj{
 		return orderDate;
 	}
 	public void setOrderDate(String orderDate) {
-		this.orderDate = orderDate;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(orderDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.orderDate = Long.toString(date.getTime());
 	}
 	public String getOrderUserId() {
 		return orderUserId;
