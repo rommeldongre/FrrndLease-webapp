@@ -581,10 +581,10 @@ public class Event extends Connect{
 		String ACCOUNT_SID = "ACd0d67cc952f254e5cce8e6912527750a";
 		String AUTH_TOKEN = "69d7e761d7361e35fe43afd55acff5ff";
 		
-		/*if(ENV_CONFIG.equals("dev")){
+		if(ENV_CONFIG.equals("dev")){
 			LOGGER.warning("Sms Sent in dev environment");
 			return true;
-		}*/
+		}
 		
 		PreparedStatement ps = null;
 		ResultSet rs = null;
