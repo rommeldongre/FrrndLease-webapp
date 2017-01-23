@@ -26,6 +26,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
     var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null,lastOffset = 0;
     
     $scope.user = {};
+	$scope.orders = [];
 	
 	// Saving multiple images in case of uber user
     $scope.images = [{link:""}, {link:""}, {link:""}, {link:""}, {link:""}, {link:""}];
@@ -668,15 +669,10 @@ myProfile.controller('myProfileCtrl', ['$scope',
             dataType: "json",
             success: function(response) {
                 if(response.code == 0){
-					if(lastOffset == 0){
-						$scope.$apply(function(){
-                        $scope.orders = [response.resList];
-                    });
-					}else{
 						$scope.$apply(function(){
 							$scope.orders.push(response.resList);
 						});
-					}
+					
                     lastOffset = response.lastOrderId;
                 }else{
 					$scope.showNext = false;
