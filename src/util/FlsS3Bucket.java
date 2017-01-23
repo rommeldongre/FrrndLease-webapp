@@ -38,7 +38,7 @@ public class FlsS3Bucket extends Connect {
 	
 	private String uid = null;
 	private int leaseId = -1;
-	private String userId = null;
+	private String userUid = null;
 	private boolean isProfile = true;
 	
 	private String BASE_URL = "https://s3-ap-southeast-1.amazonaws.com/";
@@ -67,7 +67,8 @@ public class FlsS3Bucket extends Connect {
 		LEASE_ENDED,
 		PICKED_UP_IN,
 		PROFILE_PIC,
-		PHOTO_ID
+		PHOTO_ID,
+		PROFILE_NORMAL
 	}
 	
 	public FlsS3Bucket(String Uid){
@@ -79,8 +80,8 @@ public class FlsS3Bucket extends Connect {
 		this.leaseId = LeaseId;
 	}
 	
-	public FlsS3Bucket(String UserId, boolean IsProfile){
-		this.userId = UserId;
+	public FlsS3Bucket(String UserUid, boolean IsProfile){
+		this.userUid = UserUid;
 		this.isProfile = IsProfile;
 	}
 	
@@ -117,9 +118,9 @@ public class FlsS3Bucket extends Connect {
 		else if(pathName == Path_Name.ITEM_LEASE)
 			path = uid + "/lease-" + leaseId + "/";
 		else if(pathName == Path_Name.USER_PROFILE_PIC)
-			path = userId + "/profile/";
+			path = userUid + "/profile/";
 		else if(pathName == Path_Name.USER_PHOTO_ID)
-			path = userId + "/photo_id/";
+			path = userUid + "/photo_id/";
 		else path = null;
 		
 		return path;
@@ -152,6 +153,8 @@ public class FlsS3Bucket extends Connect {
 			name = "ProfilePic-" + r + ".png";
 		else if(fileName == File_Name.PHOTO_ID)
 			name = "PhotoId-" + r + ".png";
+		else if (fileName == File_Name.PROFILE_NORMAL)
+			name = userUid + r + ".png";
 		else
 			name = null;
 			
@@ -334,7 +337,7 @@ public class FlsS3Bucket extends Connect {
 	    return pos;
 	}
 	
-	public void saveUserPics(String link){
+	public void saveUserPics(String link, boolean profile){
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
@@ -347,21 +350,21 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlSavePic = "UPDATE users ";
 
-			if(isProfile)
-				sqlSavePic = sqlSavePic + "SET user_profile_picture=? WHERE user_id=?";
+			if(profile)
+				sqlSavePic = sqlSavePic + "SET user_profile_picture=? WHERE user_uid=?";
 			else
-				sqlSavePic = sqlSavePic + "SET user_photo_id=? WHERE user_id=?";
+				sqlSavePic = sqlSavePic + "SET user_photo_id=? WHERE user_uid=?";
 			
 			ps1 = hcp.prepareStatement(sqlSavePic);
 			ps1.setString(1, link);
-			ps1.setString(2, userId);
+			ps1.setString(2, userUid);
 			
 			rs1 = ps1.executeUpdate();
 			
 			if(rs1 == 1){
-				LOGGER.info("User Id : " + userId + " pic changed to : " + link);
+				LOGGER.info("User Uid : " + userUid + " pic changed to : " + link);
 			}else{
-				LOGGER.info("User Id : " + userId + " pic not changed");
+				LOGGER.info("User Uid : " + userUid + " pic not changed");
 			}
 			
 		}catch(SQLException e){
@@ -378,7 +381,7 @@ public class FlsS3Bucket extends Connect {
 		
 	}
 	
-	public void deleteUserPics(){
+	public void deleteUserPics(boolean profile){
 		
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
@@ -387,14 +390,14 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlDeleteUserPics = "UPDATE users ";
 			
-			if(isProfile)
-				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_profile_picture=? WHERE user_id=?";
+			if(profile)
+				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_profile_picture=? WHERE user_uid=?";
 			else
-				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_photo_id=? WHERE user_id=?";
+				sqlDeleteUserPics = sqlDeleteUserPics + "SET user_photo_id=? WHERE user_uid=?";
 			
 			ps1 = hcp.prepareStatement(sqlDeleteUserPics);
 			ps1.setString(1, null);
-			ps1.setString(2, userId);
+			ps1.setString(2, userUid);
 			
 			int result = ps1.executeUpdate();
 			
@@ -467,7 +470,10 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlInsertImageLink = "INSERT INTO images (item_uid, item_image_link) VALUES (?,?)";
 			ps1 = hcp.prepareStatement(sqlInsertImageLink);
-			ps1.setString(1, uid);
+			if(isProfile)
+				ps1.setString(1, userUid);
+			else
+				ps1.setString(1, uid);
 			ps1.setString(2, link);
 			
 			int result = ps1.executeUpdate();
@@ -610,7 +616,10 @@ public class FlsS3Bucket extends Connect {
 			
 			String sqlGetImagesLinks = "SELECT item_image_link FROM images WHERE item_uid=?";
 			ps1 = hcp.prepareStatement(sqlGetImagesLinks);
-			ps1.setString(1, uid);
+			if(isProfile)
+				ps1.setString(1, userUid);
+			else
+				ps1.setString(1, uid);
 			
 			rs1 = ps1.executeQuery();
 			

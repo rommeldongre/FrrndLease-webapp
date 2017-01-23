@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2056;
+	public final int appBuild = 2057;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2130,6 +2130,36 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2056;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds columns for profile details of the user
+				if (dbBuild < 2057) {
+					
+					// New Column for users profile details
+					String sqlProfileDetails = "ALTER TABLE `users` ADD `about` TEXT NULL AFTER `user_response_count`, ADD `website` VARCHAR(255) NULL AFTER `about`, ADD `email` VARCHAR(255) NULL AFTER `website`, ADD `phone_no` VARCHAR(255) NULL AFTER `email`, ADD `business_hours` VARCHAR(255) NULL AFTER `phone_no`";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlProfileDetails);
+						ps1.executeUpdate();
+						ps1.close();						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2057;
 					updateDBBuild(dbBuild);
 				}
 				

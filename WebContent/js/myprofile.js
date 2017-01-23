@@ -8,6 +8,8 @@ myProfile.controller('myProfileCtrl', ['$scope',
                                         'logoutService',
                                         '$timeout',
                                         '$filter',
+                                        'Map',
+                                        'profileApi',
 										function($scope, 
 										userFactory, 
 										profileFactory, 
@@ -15,20 +17,25 @@ myProfile.controller('myProfileCtrl', ['$scope',
 										modalService,
                                         logoutService,
                                         $timeout,
-                                        $filter){
+                                        $filter,
+                                        Map,
+                                        profileApi){
     
     localStorage.setItem("prevPage","myapp.html#/myprofile");
     
-    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Address = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
+    var Email = '', Mobile = '', SecStatus = 0, Notification = 'NONE', Location = '', Sublocality = '', Locality = '', Lat = 0.0, Lng = 0.0, picOrientation=null;
     
     $scope.user = {};
+                                            
+    // Saving multiple images in case of uber user
+    $scope.images = [{link:""}, {link:""}, {link:""}, {link:""}, {link:""}, {link:""}];
     
     $scope.options = {
         country: 'in',
         sendToCarousel: false
     };
     
-    $scope.details = '';
+    $scope.user.savingDetails = false;
     
     if(userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
         window.location.replace("myapp.html");
@@ -45,8 +52,11 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.fullname = response.data.fullName;
 				$scope.user.mobile = response.data.mobile;
                 $scope.user.email = response.data.email;
-				$scope.location = response.data.address;
+				$scope.location = response.data.location;
+                $scope.address = response.data.address;
                 $scope.locality = response.data.locality;
+                $scope.lat = response.data.lat;
+                $scope.lng = response.data.lng;
 				$scope.credit = response.data.credit;
 				$scope.referralCode = response.data.referralCode;
 				$scope.profilePic = response.data.profilePic;
@@ -61,10 +71,32 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 else
                     $scope.userFeeExpiry = 'NA';
                 
+                if(response.data.imageLinks != ""){
+                    for(var i in response.data.imageLinks){
+                        $scope.images[i].link = response.data.imageLinks[i];
+                    }
+                }
+                
                 Mobile = response.data.mobile;
                 Email = response.data.email;
                 SecStatus = response.data.userSecStatus;
                 Notification = response.data.userNotification;
+    
+                $scope.user.about = response.data.about;
+                $scope.website = response.data.website;
+                $scope.mail = response.data.mail;
+                $scope.phoneNo = response.data.phoneNo;
+                $scope.bHours = response.data.businessHours;
+                
+                Map.init();
+                Map.search($scope.address).then(
+                    function(res){
+                        Map.addMarker(res);
+                    },
+                    function(status){
+                        console.log(status);
+                    }
+                );
             } else {
                 $scope.user.userId = "";
                 $scope.fullname = "";
@@ -360,9 +392,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
             data: 'address='+location+"&key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g",
             success: function(response){
                 if(response.status == 'OK'){
-                    Address = response.results[0].formatted_address;
+                    Location = response.results[0].formatted_address;
                     $scope.$apply(function(){
-                        $scope.location = Address;
+                        $scope.location = Location;
                     });
                     response.results[0].address_components.forEach(function(component){
                         if(component.types.indexOf("sublocality_level_1") != -1)
@@ -387,7 +419,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
 			userId : userFactory.user,
 			fullName : $scope.fullname,
 			location : $scope.location,
-            address: Address,
+            address: '',
             locality: Locality,
             sublocality: Sublocality,
             lat: Lat,
@@ -440,22 +472,18 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 function(canvas){
                     var Pic = canvas.toDataURL();
 
+                    var req = {
+                        userId: userFactory.user,
+                        accessToken: userFactory.userAccessToken,
+                        userUid: $scope.user.userUid,
+                        image: Pic,
+                        existingLink: $scope.photoId,
+                        profile: isProfile,
+                        multiple: false
+                    }
+                    
                     if(isProfile){
-                        var req = {
-                            userId: userFactory.user,
-                            accessToken: userFactory.userAccessToken,
-                            image: Pic,
-                            existingLink: $scope.profilePic,
-                            profile: isProfile
-                        }
-                    }else{
-                        var req = {
-                            userId: userFactory.user,
-                            accessToken: userFactory.userAccessToken,
-                            image: Pic,
-                            existingLink: $scope.photoId,
-                            profile: isProfile
-                        }
+                        req.existingLink = $scope.profilePic;
                     }
                     
                     $scope.$apply(function(){
@@ -510,28 +538,28 @@ myProfile.controller('myProfileCtrl', ['$scope',
         reader.readAsDataURL(file);
     }
     
-    $scope.deleteUserPic = function(isProfile){
+    $scope.deleteUserPic = function(isProfile, isMultiple, index){
         
-        if(isProfile){
-            var req = {
-                userId: userFactory.user,
-                accessToken: userFactory.userAccessToken,
-                link: $scope.profilePic,
-                profile: isProfile
-            }
-        }else{
-            var req = {
-                userId: userFactory.user,
-                accessToken: userFactory.userAccessToken,
-                link: $scope.photoId,
-                profile: isProfile
-            }
+        var req = {
+            userId: userFactory.user,
+            accessToken: userFactory.userAccessToken,
+            userUid: $scope.user.userUid,
+            link: $scope.photoId,
+            profile: isProfile,
+            multiple: isMultiple
         }
         
-        if(isProfile)
-            $scope.profilePic = "loading";
-        else
-            $scope.photoId = "loading";
+        if(isMultiple){
+            req.link = $scope.images[index].link;
+            $scope.images[index].link = "loading";
+        }else{
+            if(isProfile){
+                req.link = $scope.profilePic;
+                $scope.profilePic = "loading";
+            }else{
+                $scope.photoId = "loading";
+            }
+        }
         
         $.ajax({
             url: '/DeleteUserPicsFromS3',
@@ -542,10 +570,14 @@ myProfile.controller('myProfileCtrl', ['$scope',
             success: function(response) {
                 if(response.code == 0){
                     $scope.$apply(function(){
-                        if(isProfile)
-                            $scope.profilePic = "";
-                        else
-                            $scope.photoId = "";
+                        if(isMultiple){
+                            $scope.images[index].link = "";
+                        }else{
+                            if(isProfile)
+                                $scope.profilePic = "";
+                            else
+                                $scope.photoId = "";
+                        }
                     });
                 }else{
                     modalService.showModal({}, {bodyText: response.message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
@@ -560,5 +592,97 @@ myProfile.controller('myProfileCtrl', ['$scope',
         });
         
     }
+    
+    var search = function() {
+        Map.search($scope.address)
+        .then(
+            function(res) { // success
+                Map.addMarker(res);
+            },
+            function(status) { // error
+                console.log(status);
+            }
+        );
+    }
+    
+    $scope.saveInfo = function(type){
+        
+        $scope.user.savingDetails = true;
+        
+        var req = {
+            userId: userFactory.user,
+            accessToken: userFactory.userAccessToken,
+            userAddress: $scope.address,
+            about: $scope.user.about,
+            website: $scope.website,
+            email: $scope.mail,
+            phoneNo: $scope.phoneNo,
+            businessHours: $scope.bHours,
+            detailsType: "CONTACT_INFO"
+        }
+        
+        if(type == 'ADDRESS'){
+            req.detailsType = "ADDRESS";
+            search();
+        } else if (type == 'ABOUT') {
+            req.detailsType = "ABOUT";
+        } else if (type == 'CONTACT_INFO') {
+            req.detailsType = "CONTACT_INFO";
+        }
+        
+        profileApi.saveDetails(req).then(
+            function(response){
+                $scope.user.savingDetails = false;
+            },
+            function(error){}
+        );
+    }
+    
+}]);
+
+myProfile.service('Map', function($q) {
+    
+    this.init = function() {
+        var options = {
+            center: new google.maps.LatLng(40.7127837, -74.00594130000002),
+            zoom: 13,
+            disableDefaultUI: true   
+        }
+        this.map = new google.maps.Map(document.getElementById("map"), options);
+        this.places = new google.maps.places.PlacesService(this.map);
+    }
+    
+    this.search = function(str) {
+        var d = $q.defer();
+        this.places.textSearch({query: str}, function(results, status) {
+            if (status == 'OK') {
+                d.resolve(results[0]);
+            }
+            else d.reject(status);
+        });
+        return d.promise;
+    }
+    
+    this.addMarker = function(res) {
+        if(this.marker) this.marker.setMap(null);
+        this.marker = new google.maps.Marker({
+            map: this.map,
+            position: res.geometry.location,
+            animation: google.maps.Animation.DROP
+        });
+        this.map.setCenter(res.geometry.location);
+    }
+    
+});
+
+myProfile.factory('profileApi', ['$http', function($http){
+    
+    var profileApi = {};
+    
+    profileApi.saveDetails = function(req){
+        return $http.post('/SaveProfileDetails', JSON.stringify(req));
+    }
+    
+    return profileApi;
     
 }]);
