@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Save Profile Details</title>
+<script type="text/javascript" src="../js/jquery-1.7.min.js"></script>
+<script type="text/javascript">
+    var UserId = null;
+	
+    start = function(){
+        document.getElementById("userId").value = localStorage.getItem("userloggedin");
+        document.getElementById("accessToken").value = localStorage.getItem("userloggedinAccess");
+    }
+    
+	getData = function (){
+        UserId = document.getElementById("userId").value;
+		if (UserId ==='') UserId = null;
+        
+        var AccessToken = document.getElementById("accessToken").value;
+        
+        var userAddress, about, website, email, phoneNo, businessHours, detailsType;
+        
+        userAddress = document.getElementById("userAddress").value;
+        if (userAddress ==='') userAddress = null;
+        
+        about = document.getElementById("about").value;
+        if (about ==='') about = null;
+        
+        website = document.getElementById("website").value;
+        if (website ==='') website = null;
+        
+        email = document.getElementById("email").value;
+        if (email ==='') email = null;
+        
+        phoneNo = document.getElementById("phoneNo").value;
+        if (phoneNo ==='') phoneNo = null;
+        
+        businessHours = document.getElementById("bHours").value;
+        if (businessHours ==='') businessHours = null;
+        
+        detailsType = document.getElementById("detailsType").value;
+        if (detailsType ==='') detailsType = null;
+        
+        
+        req = {
+            userId: UserId,
+            accessToken: AccessToken,
+            userAddress: userAddress,
+            about: about,
+            website: website,
+            email: email,
+            phoneNo: phoneNo,
+            businessHours: businessHours,
+            detailsType: detailsType
+        }
+        
+        saveImageInS3(req);
+	};
+		
+	saveImageInS3 = function(req) {
+		$.ajax({
+			url: '/SaveProfileDetails',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType:"application/json",
+			dataType:"json",
+			
+			success: function(response) {
+                document.getElementById("code").value = response.code;
+                document.getElementById("message").value = response.message;
+			},
+		
+			error: function() {
+				alert('Not Working');
+			}
+		});
+	};
+	
+</script>
+</head>
+<body onload="start()">
+<h1>Save Image In S3 Form</h1>
+	<form>
+        User Id : <input type="text" name="userId" id="userId"><br/><br/>
+		Access Token: <input type="text" name="accessToken" id="accessToken" ><br/><br/>
+		User Address: <input type="text" name="userAddress" id="userAddress" ><br/><br/>
+		About: <input type="text" name="about" id="about" ><br/><br/>
+		Website: <input type="text" name="website" id="website" ><br/><br/>
+		Email: <input type="text" name="email" id="email" ><br/><br/>
+		Phone No: <input type="text" name="phoneNo" id="phoneNo" ><br/><br/>
+		Business Hours: <input type="text" name="bHours" id="bHours" ><br/><br/>
+		Details Type: <input type="text" name="detailsType" id="detailsType" ><br/><br/>
+		<input type="button" value="Save Profile Details" onclick="getData()">
+    </form>
+    
+    <h1>OUTPUT</h1>
+	Code : <input type="text" name="code" id="code"><br/><br/>
+	Message : <input type="text" name="message" id="message"><br/><br/>
+	<br/>
+	<h3><A href="index.html">INDEX</A></h3>
+</body>
+</html>
