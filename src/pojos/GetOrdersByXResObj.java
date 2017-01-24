@@ -3,7 +3,7 @@ package pojos;
 public class GetOrdersByXResObj extends ResObj{
 	
 	int orderId,amount,creditLogId;
-	String orderDate,orderUserId,orderUserName,promoCode,razorPayId,orderType;
+	String orderDate,orderUserId,orderUserName,promoCode,razorPayId,orderType,creditType;
 	
 	public int getOrderId() {
 		return orderId;
@@ -58,5 +58,11 @@ public class GetOrdersByXResObj extends ResObj{
 	}
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
+	}
+	public String getCreditType() {
+		return creditType;
+	}
+	public void setCreditType(String creditType) {
+		this.creditType = creditType;
 	}
 }
