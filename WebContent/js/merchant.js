@@ -60,6 +60,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
 
     // form sign up
     $scope.formSignup = function(){
+        fbq('track', 'StartRegistration');
         req.friendId = $scope.user.email;
         if($scope.user.userId == $scope.user.mobile){
             req.auth = (CryptoJS.MD5($scope.user.password)).toString();
@@ -75,6 +76,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
 
     // Google sign up
     function onSignUp(googleUser) {
+        fbq('track', 'StartRegistration');
         var profile = googleUser.getBasicProfile();
         req.friendId = profile.getEmail();
         req.status = "google";
@@ -91,6 +93,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
 
     // facebook sign up
     $scope.facebookSignIn = function() {
+        fbq('track', 'StartRegistration');
         FB.login(function(response) {
             // handle the response
             FB.api('/me?fields=id,name,email,first_name,last_name,locale,gender,picture.type(large)', function(response) {
@@ -148,6 +151,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
 
             success: function(response) {
                 if(response.Code === "FLS_SUCCESS") {
+                    fbq('track', 'CompleteRegistration');
                     $scope.$apply(function(){
                         $scope.user.signedUp = true;
                     });

@@ -143,7 +143,7 @@
     <hr/>
     <div class="row">
         <div class="left_title col-lg-4 col-md-4">
-            Profile Details
+            Profile Details <span ng-if="userFeeExpiry == null || userFeeExpiry == '' || userFeeExpiry == undefined" class="label label-warning">These details won't be visible in your public profile page. Please pay the membership fee to make them visible.</span>
         </div>
     </div>
     <hr/>
