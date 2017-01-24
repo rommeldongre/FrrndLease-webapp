@@ -15,6 +15,7 @@ import pojos.ResObj;
 import pojos.UserProfileReqObj;
 import pojos.UserProfileResObj;
 import util.FlsLogger;
+import util.FlsS3Bucket;
 
 public class UserProfileHandler extends Connect implements AppHandler {
 
@@ -59,7 +60,22 @@ public class UserProfileHandler extends Connect implements AppHandler {
 				rs.setUserId(rs1.getString("user_id"));
 				rs.setSublocality(rs1.getString("user_sublocality"));
 				rs.setLocality(rs1.getString("user_locality"));
-				rs.setUserProfilePic(rs1.getString("user_profile_picture"));				
+				rs.setUserProfilePic(rs1.getString("user_profile_picture"));
+
+				// Getting user profile details
+				rs.setAddress(rs1.getString("user_address"));
+				rs.setAbout(rs1.getString("about"));
+				rs.setWebsite(rs1.getString("website"));
+				rs.setEmail(rs1.getString("email"));
+				rs.setPhoneNo(rs1.getString("phone_no"));
+				rs.setBusinessHours(rs1.getString("business_hours"));
+				if(rs1.getString("user_fee_expiry") != null)
+					rs.setUber(true);
+				else
+					rs.setUber(false);
+				
+				FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("user_uid"), true);
+				rs.setImageLinks(s3Bucket.getImagesLinks());
 				
 				// Getting Wished Items List
 				String sqlGetWishedItems = "SELECT item_name FROM items WHERE item_user_id=? AND item_status='Wished' ORDER BY item_lastmodified DESC LIMIT 20";

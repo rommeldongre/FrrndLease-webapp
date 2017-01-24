@@ -481,9 +481,15 @@ public class FlsS3Bucket extends Connect {
 			updateItemsTable();
 			
 			if(result == 1){
-				LOGGER.info("Item uid : " + uid + " link : " + link + " added into images table.");
+				if(isProfile)
+					LOGGER.info("User uid : " + userUid + " link : " + link + " added into images table.");
+				else
+					LOGGER.info("Item uid : " + uid + " link : " + link + " added into images table.");
 			}else{
-				LOGGER.info("Item uid : " + uid + " link : " + link + " not added into images table.");
+				if(isProfile)
+					LOGGER.info("User uid : " + userUid + " link : " + link + " not added into images table.");
+				else
+					LOGGER.info("Item uid : " + uid + " link : " + link + " not added into images table.");
 			}
 			
 		}catch(SQLException e){

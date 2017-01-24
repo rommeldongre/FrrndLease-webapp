@@ -1,6 +1,6 @@
 var userProfileApp = angular.module('userProfileApp', ['headerApp', 'footerApp', 'carouselApp']);
 
-userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForCarousel', 'userFactory', 'bannerService', 'logoutService', 'modalService', function($scope, $window, getItemsForCarousel, userFactory, bannerService, logoutService, modalService){
+userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForCarousel', 'userFactory', 'bannerService', 'logoutService', 'modalService', 'Map', function($scope, $window, getItemsForCarousel, userFactory, bannerService, logoutService, modalService, Map){
     
     // lastItem is used to store the id of the last retrieved item from the database
     var lastItem = 0;
@@ -13,8 +13,20 @@ userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForC
         locality: $window.locality,
         wishedList: $window.wishedList.split(","),
         friends: $window.friends,
-        items: []
+        items: [],
+        address: $window.address,
+        about: $window.about,
+        website: $window.website,
+        mail: $window.mail,
+        phoneNo: $window.phoneNo,
+        bHours: $window.bHours,
+        uber: $window.uber
     };
+    
+    if($window.imageLinks != '' && $window.imageLinks != null)
+        $scope.user.imageLinks = $window.imageLinks.split(",");
+    else
+        $scope.user.imageLinks = [];
     
     // getting the width and height of the carousel when window is resized
     $(window).resize(function(){
@@ -186,4 +198,56 @@ userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForC
 		
 	}
     
+    var search = function() {
+        Map.search($scope.user.address)
+        .then(
+            function(res) { // success
+                Map.addMarker(res);
+            },
+            function(status) { // error
+                console.log(status);
+            }
+        );
+    }
+
+    google.maps.event.addDomListener(window, "load", function(){
+        Map.init();
+        search();
+    });
+
 }]);
+
+userProfileApp.service('Map', function($q) {
+
+    this.init = function() {
+        var options = {
+            center: new google.maps.LatLng(40.7127837, -74.00594130000002),
+            zoom: 13,
+            disableDefaultUI: true
+        }
+        this.map = new google.maps.Map(document.getElementById("map"), options);
+        this.places = new google.maps.places.PlacesService(this.map);
+    }
+
+    this.search = function(str) {
+        var d = $q.defer();
+        this.places.textSearch({query: str}, function(results, status) {
+            if (status == 'OK') {
+                d.resolve(results[0]);
+            }
+            else d.reject(status);
+        });
+        return d.promise;
+    }
+
+    this.addMarker = function(res) {
+        if(this.marker) this.marker.setMap(null);
+        this.marker = new google.maps.Marker({
+            map: this.map,
+            position: res.geometry.location,
+            animation: google.maps.Animation.DROP
+        });
+        this.map.setCenter(res.geometry.location);
+    }
+
+});
