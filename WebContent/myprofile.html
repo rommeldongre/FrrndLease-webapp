@@ -236,7 +236,7 @@
 	<div class="modal-content">
 		<div class="modal-header">
 		<button type="button" class="close" ng-click="cancel_credit()" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 class="modal-title">Order Details</h3>
+		<h3 class="modal-title">Order History</h3>
 		</div>
 		<div class="modal-body">
 		<!--<h5 class="text-center">Credit Timeline is as follows</h5>-->
@@ -244,19 +244,27 @@
 			<thead>
             <tr>
 				<th class="tablecell" style="width: 15%">Order Id</th>
-                <th class="tablecell" style="width: 20%">Date</th>
-				<th class="tablecell" style="width: 10%">Amount</th>
+                <th class="tablecell" style="width: 15%">Date</th>
+				<th class="tablecell" style="width: 15%">Amount Paid</th>
 				<th class="tablecell" style="width: 15%">Promo Code</th>
-				<th class="tablecell" style="width: 20%">Razor Pay Id</th>
-				<th class="tablecell" style="width: 20%">Credit Type</th>
+				<th class="tablecell" style="width: 20%">Transaction Id</th>
+				<th class="tablecell" style="width: 20%">Details</th>
             </tr>
         </thead>
         <tbody ng-repeat="order in orders" >
             <tr ng-repeat="y in order" >
-				<td>{{ y.orderId }}</td>
+				<td>
+				<form id="invoice" action="GetOrderInvoice" method="POST" target="_blank" style="display:inline;">
+                    <input type="hidden" name="orderId" value="{{y.orderId }}" />
+                    <button type="submit" class="btn btn-primary btn-fill btn-sm">
+                        {{ y.orderId }}
+                    </button>
+                </form>
+				</td>
 				<td>{{ y.orderDate | date}}</td>
-				<td>{{ y.amount }}</td>
-				<td>{{ y.promoCode }}</td>
+				<td>{{ 'Rs. '+ y.amount }}</td>
+				<td ng-if="y.promoCode">{{ y.promoCode }}</td>
+				<td  ng-if="!y.promoCode">N.A</td>
 				<td class="text-center">{{y.razorPayId}}</td>
 				<td>{{ y.creditType }}</td>
 			  </tr>
