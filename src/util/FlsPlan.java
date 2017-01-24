@@ -938,11 +938,11 @@ public class FlsPlan extends Connect{
 		        cell5.setVerticalAlignment(Element.ALIGN_MIDDLE);
 		 
 		        PdfPCell cell6 = new PdfPCell();
-		        text = new Paragraph("Rate(INR)", h3);
+		        text = new Paragraph("Rate", h3);
 		        text.setAlignment(Element.ALIGN_CENTER);
 		        cell6.addElement(text);
 		        
-		        text = new Paragraph(String.valueOf(rate), h4);
+		        text = new Paragraph("Rs "+String.valueOf(rate), h4);
 		        text.setAlignment(Element.ALIGN_CENTER);
 		        cell6.addElement(text);
 		        
@@ -956,7 +956,7 @@ public class FlsPlan extends Connect{
 			    text.setAlignment(Element.ALIGN_CENTER);
 			    cell7.addElement(text);
 			        
-			    text = new Paragraph(String.valueOf(amount_payable), h4);
+			    text = new Paragraph("Rs "+String.valueOf(amount_payable), h4);
 			    text.setAlignment(Element.ALIGN_CENTER);
 			    cell7.addElement(text);
 			        
@@ -1021,9 +1021,8 @@ public class FlsPlan extends Connect{
 			    cell11.setHorizontalAlignment(Element.ALIGN_CENTER);
 			    cell11.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			    
-			    
 			    PdfPCell cell12 = new PdfPCell();
-			    text = new Paragraph("Internet Handling Charges  ", h3);
+			    text = new Paragraph("Service Tax% ", h3);
 			    text.setAlignment(Element.ALIGN_CENTER);
 			    cell12.addElement(text);
 			        
@@ -1031,9 +1030,8 @@ public class FlsPlan extends Connect{
 			    cell12.setHorizontalAlignment(Element.ALIGN_CENTER);
 			    cell12.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			    
-			    
 			    PdfPCell cell13 = new PdfPCell();
-			    text = new Paragraph("Rs "+String.valueOf(internet_charges), h4);
+			    text = new Paragraph("Rs "+String.valueOf(service_tax), h4);
 			    text.setAlignment(Element.ALIGN_CENTER);
 			    cell13.addElement(text);
 			        
@@ -1041,9 +1039,8 @@ public class FlsPlan extends Connect{
 			    cell13.setHorizontalAlignment(Element.ALIGN_CENTER);
 			    cell13.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			    
-			    
 			    PdfPCell cell14 = new PdfPCell();
-			    text = new Paragraph("Total", h2);
+			    text = new Paragraph("Internet Handling Charges  ", h3);
 			    text.setAlignment(Element.ALIGN_CENTER);
 			    cell14.addElement(text);
 			        
@@ -1053,13 +1050,33 @@ public class FlsPlan extends Connect{
 			    
 			    
 			    PdfPCell cell15 = new PdfPCell();
-			    text = new Paragraph("Rs "+String.valueOf(amount_total), h4);
+			    text = new Paragraph("Rs "+String.valueOf(internet_charges), h4);
 			    text.setAlignment(Element.ALIGN_CENTER);
 			    cell15.addElement(text);
 			        
 			    cell15.setBorderColor(BaseColor.WHITE);
 			    cell15.setHorizontalAlignment(Element.ALIGN_CENTER);
 			    cell15.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			    
+			    
+			    PdfPCell cell16 = new PdfPCell();
+			    text = new Paragraph("Total", h2);
+			    text.setAlignment(Element.ALIGN_CENTER);
+			    cell16.addElement(text);
+			        
+			    cell16.setBorderColor(BaseColor.WHITE);
+			    cell16.setHorizontalAlignment(Element.ALIGN_CENTER);
+			    cell16.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			    
+			    
+			    PdfPCell cell17 = new PdfPCell();
+			    text = new Paragraph("Rs "+String.valueOf(amount_total), h4);
+			    text.setAlignment(Element.ALIGN_CENTER);
+			    cell17.addElement(text);
+			        
+			    cell17.setBorderColor(BaseColor.WHITE);
+			    cell17.setHorizontalAlignment(Element.ALIGN_CENTER);
+			    cell17.setVerticalAlignment(Element.ALIGN_MIDDLE);
 			    
 		        
 			    table2.addCell(cell8);
@@ -1070,6 +1087,8 @@ public class FlsPlan extends Connect{
 		        table2.addCell(cell13);
 		        table2.addCell(cell14);
 		        table2.addCell(cell15);
+		        table2.addCell(cell16);
+		        table2.addCell(cell17);
 		 
 		        table2.setHorizontalAlignment(Element.ALIGN_RIGHT);
 		        doc.add(table2);
