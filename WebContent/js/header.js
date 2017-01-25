@@ -269,18 +269,22 @@ headerApp.controller('headerCtrl', ['$scope',
     $scope.details = '';
     
     if(window.location.href.indexOf("frrndlease.com") > -1){
-        if(window.location.pathname == '/index.html' || window.location.pathname == '/'){
+        if(window.location.pathname == '/index.html' || window.location.pathname == '/' || window.location.pathname == '/merchant.html'){
             $scope.navClassValue = "navbar navbar-static";
             $scope.showSearch = false;
+            if(window.location.pathname == '/merchant.html')
+                $scope.navClassValue = "navbar navbar-static custom-navbar";
         }
         else{
             $scope.navClassValue = "navbar navbar-default";
             $scope.showSearch = true;
         }
     }else{
-        if(window.location.pathname == '/index.html' || window.location.pathname == '/'){
+        if(window.location.pathname == '/index.html' || window.location.pathname == '/' || window.location.pathname == '/merchant.html'){
             $scope.navClassValue = "navbar navbar-static";
             $scope.showSearch = false;
+            if(window.location.pathname == '/merchant.html')
+                $scope.navClassValue = "navbar navbar-static custom-navbar";
         }
         else{
             $scope.navClassValue = "navbar navbar-default";
