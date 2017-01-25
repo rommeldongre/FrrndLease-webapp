@@ -54,6 +54,14 @@
     <body onload="start()">
         <div id="loader"></div>
         <div id="main">
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=107934726217988";
+            fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
 
             <!--header starts---------------------------------------->
             <div>
@@ -144,6 +152,9 @@
                                             <li class="ng-class:{'active':selected == 3}" ng-click="selected = 3">
                                                 <a href=""><i class="fa fa-phone-square" aria-hidden="true"></i><br/>Contact Info</a>
                                             </li>
+                                            <li class="ng-class:{'active':selected == 4}" ng-click="selected = 4">
+                                                <a href=""><i class="fa fa-facebook" aria-hidden="true"></i><br/>Reviews</a>
+                                            </li>
                                         </ul>
                                         <!-- Tab panes -->
                                         <div class="tab-content text-center">
@@ -190,6 +201,9 @@
                                                         <h5>{{user.bHours != '' ? user.bHours : 'None'}}</h5>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="tab-pane ng-class:{'active':selected == 4}">
+                                                <div id="FC" class="fb-comments" data-href="" style="z-index:4;" data-width="100%" data-numposts="5"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -336,6 +350,7 @@
             var uber = ${uber};
 
             function start() {
+                fbComment_URL();
                 load_Gapi();
                 $('body').append('<div class="popover-filter"></div>');
             }
@@ -361,6 +376,14 @@
                 }, function(error) {
                     alert(JSON.stringify(error, undefined, 2));
                 });
+            }
+            
+            function fbComment_URL(){
+                if(window.location.href.indexOf("frrndlease.com") > -1){
+                    $("#FC").attr('data-href', window.location.href );        //Live Environment
+                }else{
+                // Dev Environment
+                }
             }
 
         </script>
