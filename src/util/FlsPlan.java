@@ -747,6 +747,14 @@ public class FlsPlan extends Connect{
 			e.printStackTrace();
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			try{
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		
 		return output;
