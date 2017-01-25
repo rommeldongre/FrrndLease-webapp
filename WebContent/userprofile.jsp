@@ -102,6 +102,9 @@
                                         <h4 style="text-align:left;">Friends -
                                             <br/>
                                         </h4>
+                                        <h4 ng-if="user.friends.length == 0" style="text-align:center;">
+                                            No friends on FrrndLease.<br/>
+                                        </h4>
                                         <div style="overflow-y:auto;height:275px;">
                                             <div class="card" ng-repeat="friend in user.friends">
                                                 <div class="content" style="text-align:left;">
@@ -125,7 +128,7 @@
                                     </div>
                                 </div>
                                 <hr ng-if="user.uber" />
-                                <div ng-if="user.uber" class="row">
+                                <div ng-hide="!user.uber" class="row">
                                     <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3">
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-icons" ng-init="selected=0" style="text-align:center;">
@@ -133,7 +136,7 @@
                                                 <a href=""><i class="fa fa-map-marker" aria-hidden="true"></i><br/>Address</a>
                                             </li>
                                             <li class="ng-class:{'active':selected == 1}" ng-click="selected = 1">
-                                                <a href=""><i class="fa fa-picture-o" aria-hidden="true"></i><br/>Store Pics</a>
+                                                <a href=""><i class="fa fa-picture-o" aria-hidden="true"></i><br/>Images</a>
                                             </li>
                                             <li class="ng-class:{'active':selected == 2}" ng-click="selected = 2">
                                                 <a href=""><i class="fa fa-info" aria-hidden="true"></i><br/>About</a>
@@ -196,7 +199,11 @@
                                     <h4>Wished Items -
                                         <br/>
                                     </h4>
-                                    <div class="row" ng-if="user.wishedList.length > 0">
+                                    <h4 ng-if="user.wishedList.length == 0 || user.wishedList == ''" style="text-align:center;">Has nothing in the wished List.
+                                        <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Store Your Things &amp; Earn Credits</a>
+                                        <br/><br/>
+                                    </h4>
+                                    <div class="row" ng-if="user.wishedList.length > 0 && user.wishedList != ''">
                                         <div class="alert alert-success">
                                             <div class="container">
                                                 <div class="row" style="display: flex;flex-wrap: wrap;">
@@ -216,8 +223,7 @@
                                     <h4>Items Owned -
                                         <br/>
                                     </h4>
-                                    <h4 ng-if="notPosted" style="text-align:center;">You have not added any item to the friends store.
-                                        <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Offer Item &amp; Earn Credits</a>
+                                    <h4 ng-if="notPosted" style="text-align:center;">Has not added any item to the friends store.
                                         <br/><br/>
                                     </h4>
                                     <!-- Carousel Start -->
