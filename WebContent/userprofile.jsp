@@ -54,6 +54,14 @@
     <body onload="start()">
         <div id="loader"></div>
         <div id="main">
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=107934726217988";
+            fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
 
             <!--header starts---------------------------------------->
             <div>
@@ -102,6 +110,9 @@
                                         <h4 style="text-align:left;">Friends -
                                             <br/>
                                         </h4>
+                                        <h4 ng-if="user.friends.length == 0" style="text-align:center;">
+                                            No friends on FrrndLease.<br/>
+                                        </h4>
                                         <div style="overflow-y:auto;height:275px;">
                                             <div class="card" ng-repeat="friend in user.friends">
                                                 <div class="content" style="text-align:left;">
@@ -125,7 +136,7 @@
                                     </div>
                                 </div>
                                 <hr ng-if="user.uber" />
-                                <div ng-if="user.uber" class="row">
+                                <div ng-hide="!user.uber" class="row">
                                     <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3">
                                         <!-- Nav tabs -->
                                         <ul class="nav nav-icons" ng-init="selected=0" style="text-align:center;">
@@ -133,13 +144,16 @@
                                                 <a href=""><i class="fa fa-map-marker" aria-hidden="true"></i><br/>Address</a>
                                             </li>
                                             <li class="ng-class:{'active':selected == 1}" ng-click="selected = 1">
-                                                <a href=""><i class="fa fa-picture-o" aria-hidden="true"></i><br/>Store Pics</a>
+                                                <a href=""><i class="fa fa-picture-o" aria-hidden="true"></i><br/>Images</a>
                                             </li>
                                             <li class="ng-class:{'active':selected == 2}" ng-click="selected = 2">
                                                 <a href=""><i class="fa fa-info" aria-hidden="true"></i><br/>About</a>
                                             </li>
                                             <li class="ng-class:{'active':selected == 3}" ng-click="selected = 3">
                                                 <a href=""><i class="fa fa-phone-square" aria-hidden="true"></i><br/>Contact Info</a>
+                                            </li>
+                                            <li class="ng-class:{'active':selected == 4}" ng-click="selected = 4">
+                                                <a href=""><i class="fa fa-facebook" aria-hidden="true"></i><br/>Reviews</a>
                                             </li>
                                         </ul>
                                         <!-- Tab panes -->
@@ -188,6 +202,9 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="tab-pane ng-class:{'active':selected == 4}">
+                                                <div id="FC" class="fb-comments" data-href="" style="z-index:4;" data-width="100%" data-numposts="5"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -196,7 +213,11 @@
                                     <h4>Wished Items -
                                         <br/>
                                     </h4>
-                                    <div class="row" ng-if="user.wishedList.length > 0">
+                                    <h4 ng-if="user.wishedList.length == 0 || user.wishedList == ''" style="text-align:center;">Has nothing in the wished List.
+                                        <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Store Your Things &amp; Earn Credits</a>
+                                        <br/><br/>
+                                    </h4>
+                                    <div class="row" ng-if="user.wishedList.length > 0 && user.wishedList != ''">
                                         <div class="alert alert-success">
                                             <div class="container">
                                                 <div class="row" style="display: flex;flex-wrap: wrap;">
@@ -216,8 +237,7 @@
                                     <h4>Items Owned -
                                         <br/>
                                     </h4>
-                                    <h4 ng-if="notPosted" style="text-align:center;">You have not added any item to the friends store.
-                                        <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Offer Item &amp; Earn Credits</a>
+                                    <h4 ng-if="notPosted" style="text-align:center;">Has not added any item to the friends store.
                                         <br/><br/>
                                     </h4>
                                     <!-- Carousel Start -->
@@ -330,6 +350,7 @@
             var uber = ${uber};
 
             function start() {
+                fbComment_URL();
                 load_Gapi();
                 $('body').append('<div class="popover-filter"></div>');
             }
@@ -355,6 +376,14 @@
                 }, function(error) {
                     alert(JSON.stringify(error, undefined, 2));
                 });
+            }
+            
+            function fbComment_URL(){
+                if(window.location.href.indexOf("frrndlease.com") > -1){
+                    $("#FC").attr('data-href', window.location.href );        //Live Environment
+                }else{
+                // Dev Environment
+                }
             }
 
         </script>

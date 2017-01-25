@@ -47,23 +47,26 @@
     <script src="js/jquery.backstretch.js"></script>
     <script src="js/animation.js"></script>
     <!--Loading Animation code CSS & JS Links ends here  -->
+    
+    <!-- Razor pay Api-->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <style>
-        #gsd_footer {
-            width: 100%;
-            min-height: 70px;
-            margin-top: -5px;
-            padding-top: 10px;
-            clear: both;
-            bottom: 0;
+        .parallax {
+            height: 490px;
         }
-        
         @media screen and (max-width:360px) {
             .parallax {
                 height: 640px;
             }
         }
-
+        
+        .custom-navbar {
+            background-color:rgba(0, 0, 0, 0.66);
+            margin-bottom:0;
+            padding-top:0;
+            border-bottom:0;
+        }
     </style>
 
     <!-- Facebook Pixel Code -->
@@ -102,21 +105,11 @@
     <div id="loader">
     </div>
 
-    <nav class="navbar navbar-inverse navbar-transparent navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="myapp.html#/" class="navbar-brand" id="icon"><img src="images/fls-logo_full.png" class="img-responsive" style="width:176px" /></a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar1">
-            </div>
-        </div>
-    </nav>
+    <!--header starts---------------------------------------->
+    <div>
+      <div ng-include="'header.html'"></div>
+    </div>
+    <!--header ends----------------------------------------->
 
     <div class="wrapper" ng-controller="merchantCtrl">
         <div class="parallax filter-black">
@@ -125,7 +118,7 @@
             </div>
             <div class="small-info" style="top:27%;" ng-init="onboarding = false">
                 <h1>Take your Rental Store Online</h1>
-                <h3>Now you can set up an online rental store for your items in 3 simple clicks!</h3><br/><br/>
+                <h3>Set up an online rental store for your items in 3 clicks!</h3><br/><br/>
                 <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;">Let’s Do This</a>
             </div>
         </div>
@@ -137,12 +130,12 @@
                         <!-- Nav tabs -->
                         <ul class="nav nav-text">
                             <li class="ng-class:{'active':(!user.signedUp)}">
-                                <a style="font-size:30px;{{user.signedUp ? 'color:greenyellow;' : ''}}">
+                                <a style="font-size:30px;{{user.signedUp ? 'color:green;' : ''}}">
                                      Sign Up <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                                 </a>
                             </li>
                             <li class="ng-class:{'active':(user.signedUp && !user.verified)}">
-                                <a style="font-size:30px;{{user.verified ? 'color:greenyellow;' : ''}}">
+                                <a style="font-size:30px;{{user.verified ? 'color:green;' : ''}}">
                                     Verify <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                                 </a>
                             </li>
@@ -343,7 +336,7 @@
     <div id="tawk_widget"></div>
 
     <!--Footer starts here-->
-    <div ng-include="'footer.html'" id="gsd_footer"></div>
+    <div ng-include="'footer.html'"></div>
     <!--Footer ends here-->
 
     <script type="text/javascript">

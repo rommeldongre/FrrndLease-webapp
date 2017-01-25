@@ -231,7 +231,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         month: 0,
         conversion: 500,
         amount: 0,
-        promoCode: '',
+        promoCode: 'FREETRIAL',
         discount: 0,
         promoError: '',
         checkingPromo: false,
@@ -244,7 +244,10 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
     });
     
     $scope.validatePromoCode = function(){
-        
+        applyPromoCode();
+    }
+    
+    var applyPromoCode = function(){
         if($scope.payment.promoCode == '' || $scope.payment.promoCode == undefined){
             $scope.payment.promoError = "Please enter a valid promo code!!";
             return;
@@ -348,5 +351,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         }
         
     }
+    
+    applyPromoCode();
 
 }]);
