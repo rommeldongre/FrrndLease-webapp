@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -752,4 +751,5 @@ public class FlsPlan extends Connect{
 		
 		return output;
 	}
+	
 }
