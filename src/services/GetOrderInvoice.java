@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import util.FlsPlan;
+import util.FlsCredit;
 
 @WebServlet(description = "Get Order Invoice", urlPatterns = { "/GetOrderInvoice" })
 public class GetOrderInvoice extends HttpServlet {
@@ -25,13 +25,13 @@ public class GetOrderInvoice extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		FlsPlan plan = new FlsPlan();
+		FlsCredit order = new FlsCredit();
 		
 		try{
 
 			int orderId = Integer.parseInt(request.getParameter("orderId"));
 			
-			ByteArrayOutputStream output = plan.getOrderInvoice(orderId);
+			ByteArrayOutputStream output = order.getOrderInvoice(orderId);
 
 			if(output == null)
 				System.out.println("OutPut Stream NULL");
