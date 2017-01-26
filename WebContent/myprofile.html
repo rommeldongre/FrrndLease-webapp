@@ -169,7 +169,7 @@
                 <div class="tab-pane ng-class:{'active':selected == 0}">
                     <form name="searchForm" novalidate ng-submit="saveInfo('ADDRESS')">
                         <div class="input-group">
-                            <input name="place" type="text" class="form-control" ng-model="address" required autofocus />
+                            <input name="place" type="text" class="form-control" ng-model="address" required />
                             <span class="input-group-btn">
                                 <button class="btn btn-primary btn-fill" ng-disabled="searchForm.$invalid">Save Address</button>
                             </span>
@@ -204,7 +204,7 @@
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 2}">
                     <form name="about" ng-submit="about.$valid && saveInfo('ABOUT')">
-                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;" autofocus required></textarea><br/>
+                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;" required></textarea><br/>
                         <span>{{500 - user.about.length}} left</span>
                         <button class="btn btn-primary btn-fill pull-right">Save About</button>
                     </form>
@@ -212,7 +212,7 @@
                 <div class="tab-pane ng-class:{'active':selected == 3}">
                     <form name="infoForm" ng-submit="saveInfo('CONTACT_INFO')">
                         <label class="control-label">Website - </label>
-                        <input type="text" class="form-control" ng-model="website" placeholder="Website" autofocus>
+                        <input type="text" class="form-control" ng-model="website" placeholder="Website" 
                         <label class="control-label">Email - </label>
                         <input type="email" class="form-control" ng-model="mail" placeholder="Email">
                         <label class="control-label">Phone No - </label>
