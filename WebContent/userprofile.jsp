@@ -111,7 +111,7 @@
                                             <br/>
                                         </h4>
                                         <h4 ng-if="user.friends.length == 0" style="text-align:center;">
-                                            No friends on FrrndLease.<br/>
+                                            No friends on FrrndLease.<a href="myapp.html#/myfriendslist" class="btn btn-primary btn-fill">Add Your Friends</a><br/>
                                         </h4>
                                         <div style="overflow-y:auto;height:275px;">
                                             <div class="card" ng-repeat="friend in user.friends">
@@ -164,6 +164,9 @@
                                             </div>
                                             <div class="tab-pane ng-class:{'active':selected == 1}">
                                                 <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-repeat="image in user.imageLinks" />
+                                                <h4 ng-if="user.imageLinks.length == 0" style="text-align:center;">
+                                                    No images added by the person.<br/>
+                                                </h4>
                                             </div>
                                             <div class="tab-pane ng-class:{'active':selected == 2}">
                                                 <h5><i class="fa fa-quote-left" aria-hidden="true"></i> {{user.about}} <i class="fa fa-quote-right" aria-hidden="true"></i></h5>
