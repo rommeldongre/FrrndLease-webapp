@@ -2,6 +2,9 @@ var merchantApp = angular.module('merchantApp', ['headerApp', 'footerApp', 'ngAu
 
 merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', function($scope, modalService, userFactory){
 
+    if(userFactory.user != "" && userFactory.user != null && userFactory.user != "anonymous")
+        window.location.replace("myapp.html");
+    
     // sign up scope object
     $scope.user = {
         error: '',
