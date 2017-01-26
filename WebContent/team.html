@@ -60,8 +60,17 @@
   </head>
   
   <body onload="start()">
-<div id="loader">
-</div>
+	<div id="loader">
+	</div>
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=733693650065501";
+		fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
 	<div id="main" style="background-image: url('images/bluebackground.jpg');">	
 		
 		<nav class="navbar navbar-default">
