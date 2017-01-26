@@ -141,9 +141,9 @@
         </div>
     </div><br/>
     <hr/>
-    <div class="row">
-        <div class="left_title col-lg-4 col-md-4">
-            Profile Details <span ng-if="userFeeExpiry == 'NA'" class="label label-warning">These details won't be visible in your public profile page. Please pay membership fee to make them visible.</span>
+    <div class="row" style="display:flex;flex-wrap:wrap;">
+        <div class="left_title col-lg-12 col-md-12">
+            Profile Details <span class="label label-warning label-fill" style="vertical-align: middle;">&nbsp;&nbsp;These details won't be visible in your public profile page. Please pay membership fee to make them visible.</span>
         </div>
     </div>
     <hr/>
@@ -212,7 +212,7 @@
                 <div class="tab-pane ng-class:{'active':selected == 3}">
                     <form name="infoForm" ng-submit="saveInfo('CONTACT_INFO')">
                         <label class="control-label">Website - </label>
-                        <input type="text" class="form-control" ng-model="website" placeholder="Website" 
+                        <input type="text" class="form-control" ng-model="website" placeholder="Website" />
                         <label class="control-label">Email - </label>
                         <input type="email" class="form-control" ng-model="mail" placeholder="Email">
                         <label class="control-label">Phone No - </label>
