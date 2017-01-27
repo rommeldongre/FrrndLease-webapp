@@ -51,16 +51,7 @@
     <!-- Razor pay Api-->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <style>
-        .parallax {
-            height: 490px;
-        }
-        @media screen and (max-width:360px) {
-            .parallax {
-                height: 640px;
-            }
-        }
-        
+    <style>        
         .custom-navbar {
             background-color:rgba(0, 0, 0, 0.66);
             margin-bottom:0;
@@ -111,12 +102,12 @@
     </div>
     <!--header ends----------------------------------------->
 
-    <div class="wrapper" ng-controller="merchantCtrl">
+    <div ng-controller="merchantCtrl">
         <div class="parallax filter-black">
             <div class="parallax-image">
                 <img src="css/bluebackground.jpg" alt="..." style="top: 0px;">
             </div>
-            <div class="small-info" style="top:27%;" ng-init="onboarding = false">
+            <div class="small-info" ng-init="onboarding = false">
                 <h1>Take your Rental Store Online</h1>
                 <h3>Set up an online rental store for your items in 3 clicks!</h3><br/><br/>
                 <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;">Let’s Do This</a>
