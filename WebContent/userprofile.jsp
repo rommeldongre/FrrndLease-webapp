@@ -87,7 +87,7 @@
                         <div class="row" style="padding-top:50px" ng-if="${code} == 0">
                             <div class="content">
                                 <div class="row" style="display: flex;flex-wrap: wrap;text-align:center;">
-                                    <div class="col-lg-4 col-md-4">
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                         <img class="avatar border-gray" ng-src="{{(user.profilePic === '' || user.profilePic === null || user.profilePic === NULL || user.profilePic === 'null') ? 'images/user_icon.png' : user.profilePic}}" style="width:150px;height:150px;" alt="Profile Pic">
                                         <h3 class="title" style="word-wrap: break-word;">
                                             <strong>{{user.userFullName}}</strong>
@@ -97,7 +97,7 @@
                                         </div>
                                         <user-badges user-id="user.userId"></user-badges>
                                     </div>
-                                    <div class="col-lg-4 col-md-4" style="border-left: 1px solid #ccc;">
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="border-left: 1px solid #ccc;">
                                         <div style="text-align:left;">
                                             <textarea class="form-control" ng-model="user.message" ng-trim="false" maxlength="500" style="height:176px;"></textarea>
                                             <span>{{500 - user.message.length}} left</span>
@@ -106,7 +106,7 @@
                                         <hr/>
                                         <button class="btn btn-primary btn-fill btn-block" style="margin-top:25px;" ng-click="addFriend()"><i class="fa fa-user-plus" aria-hidden="true"></i> Add Friend</button>
                                     </div>
-                                    <div class="col-lg-4 col-md-4" style="border-left: 1px solid #ccc;">
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="border-left: 1px solid #ccc;">
                                         <h4 style="text-align:left;">Friends -
                                             <br/>
                                         </h4>
