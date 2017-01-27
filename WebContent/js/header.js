@@ -1632,8 +1632,10 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
                     },
                     handler: function (response){
                         userFactory.payMembership($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
-                            if(res.data.code == 0)
-                                window.location.reload();
+                            if(res.data.code == 0){
+                                bannerService.updatebannerMessage("Congratulations you are an uber member and your membership is valid upto " + $scope.payment.month + " months", window.location.href);
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            }
                             else
                                 console.log(res);
                         },
@@ -1649,7 +1651,8 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
                 userFactory.payMembership($scope.payment.promoCode, 0, null).then(function(response){
-                    window.location.reload();
+                    bannerService.updatebannerMessage("Congratulations you are an uber member and your membership is valid upto " + $scope.payment.month + " months", window.location.href);
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
                 },
                 function(error){});
             }else{
