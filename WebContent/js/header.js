@@ -411,7 +411,6 @@ headerApp.controller('headerCtrl', ['$scope',
         function(response){
             if (response.data.code == 0) {
                 $scope.credits = response.data.credit;
-                searchService.saveCurrentLocation(response.data.lat,response.data.lng);
             } else {
                 $scope.credits = "";
             }
@@ -592,7 +591,7 @@ headerApp.factory('profileFactory', ['$http', function($http){
     return dataFactory;
 }]);
 
-headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', function($rootScope, logoutService, $http){
+headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', 'searchService', function($rootScope, logoutService, $http, searchService){
     
     var dataFactory = {};
     
@@ -638,7 +637,8 @@ headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', functi
             navigator.geolocation.getCurrentPosition(function(position) {
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
-                coords = new google.maps.LatLng(latitude, longitude);	
+                coords = new google.maps.LatLng(latitude, longitude);
+                searchService.saveCurrentLocation(latitude, longitude);
 
                 var geocoder = new google.maps.Geocoder();
                 var latLng = new google.maps.LatLng(latitude, longitude);
