@@ -13,9 +13,9 @@ import pojos.PromoCodeModel.Code_Type;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsCredit;
+import util.FlsCredit.Credit;
 import util.FlsLogger;
 import util.OAuth;
-import util.FlsCredit.Credit;
 
 public class PayMembershipHandler extends Connect implements AppHandler {
 
@@ -120,15 +120,19 @@ public class PayMembershipHandler extends Connect implements AppHandler {
 					
 					credits.logCredit(userId, 1, "Bought Membership", promoCode, Credit.ADD);
 					int creditLogId = credits.getCreditLogId(userId, promoCode);
+					
+					int orderId;
 
 					if(amountPaid > 0){
 						credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
-						credits.updateMembership(userId, amountPaid, credit);
+						orderId = credits.getOrderId(creditLogId);
+						credits.updateMembership(orderId, userId, amountPaid, credit);
 					}else{
 						credits.addOrder(userId, 0, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
-						credits.updateMembership(userId, 0, credit);
+						orderId = credits.getOrderId(creditLogId);
+						credits.updateMembership(orderId, userId, 0, credit);
 					}
-
+					
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);
 
@@ -141,7 +145,9 @@ public class PayMembershipHandler extends Connect implements AppHandler {
 					credits.logCredit(userId, 1, "Bought Membership", promoCode, Credit.ADD);
 					int creditLogId = credits.getCreditLogId(userId, promoCode);
 					credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
-					credits.updateMembership(userId, amountPaid, 0);
+					int orderId = credits.getOrderId(creditLogId);
+					credits.updateMembership(orderId, userId, amountPaid, 0);
+					
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);
 				}else{

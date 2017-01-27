@@ -45,7 +45,10 @@ public class FlsEmail extends Connect{
 		String LOGO_URL = "https://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
 		
 		String FROM = "BlueMarble@frrndlease.com", CC = "BlueMarble@frrndlease.com", TO, PREFIX, SUBJECT, BODY;
-		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,EMAIL_ITEM_DETAILS, EMAIL_LEASED_OUT_ITEMS, EMAIL_LEASED_IN_ITEMS, EMAIL_PROFILE_PAGE, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,EMAIL_GET_LEASE_AGGREMENT;
+		String EMAIL_VERIFICATION_URL,EMAIL_INVITATION_URL,EMAIL_FORGOT_PASSWORD,
+		EMAIL_ITEM_DETAILS, EMAIL_LEASED_OUT_ITEMS, EMAIL_LEASED_IN_ITEMS, 
+		EMAIL_PROFILE_PAGE, EMAIL_PICKUP_CONFIRMATION,EMAIL_DELIVERY_PLAN,
+		EMAIL_GET_LEASE_AGGREMENT;
 		
 		int credits;
 		
@@ -481,6 +484,16 @@ public class FlsEmail extends Connect{
 			case FLS_MAIL_UBER_WARN:
 				SUBJECT = ("Membership About to Expire");
 				BODY = "<body>You have less than 3 days left for your uber membership to expiry. Please <a href='" + EMAIL_PROFILE_PAGE + "'>upgrade</a> it to avoid nulling of all your item lease fee.</body>";
+				break;
+				
+			case FLS_CREDITS_INVOICE:
+				SUBJECT = ("Credits Bought on FrrndLease");
+				BODY = "<body>" + obj.getString("message") + "</body>";
+				break;
+				
+			case FLS_MEMBERSHIP_INVOICE:
+				SUBJECT = ("Uber Membership Bought on FrrndLease");
+				BODY = "<body>" + obj.getString("message") + "</body>";
 				break;
 				
 			default:
