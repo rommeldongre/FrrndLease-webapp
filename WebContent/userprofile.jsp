@@ -344,7 +344,7 @@
             var wishedList = "${wishedList}";
             var friends = ${friends};
             var address = "${address}";
-            var about = "${about}";
+            var about = `${about}`;
             var website = "${website}";
             var mail = "${mail}";
             var phoneNo = "${phoneNo}";

@@ -206,8 +206,8 @@
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 2}">
                     <form name="about" ng-submit="about.$valid && saveInfo('ABOUT')">
-                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;" required></textarea><br/>
-                        <span>{{500 - user.about.length}} left</span>
+                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="1000" style="height:176px;" required></textarea><br/>
+                        <span>{{1000 - user.about.length}} left</span>
                         <button class="btn btn-primary btn-fill pull-right">Save About</button>
                     </form>
                 </div>
