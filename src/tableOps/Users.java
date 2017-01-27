@@ -1026,10 +1026,6 @@ public class Users extends Connect {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 			LOGGER.warning(e.getMessage());
-		}catch (Exception e) {
-			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
-			e.printStackTrace();
-			LOGGER.warning(e.getMessage());
 		}finally{
 			try {
 				if(rs1 != null)rs1.close();
