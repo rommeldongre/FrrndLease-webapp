@@ -20,7 +20,7 @@
 							</thead>
 							<tbody ng-repeat="y in leaders">
 									<tr>
-										<td class="text-center">#{{$index + 1}}</td>
+										<td class="text-center" style="font-size:16px;" ng-style="$index == 0 ? { 'color':'#FFD700'} :  ( $index == 1 ? { 'color':'#C0C0C0'} :{ 'color':'#cd7f32'})"><i class="fa fa-trophy" aria-hidden="true"></i></td>
 										<td class="text-center">{{ y.highestCreditValue }}</td>
 										<td class="text-center">{{ y.highestCreditUser }}</td>
 									</tr>
@@ -41,7 +41,7 @@
 							</thead>
 							<tbody ng-repeat="y in leaders">
 									<tr ng-if="y.totalCreditMonthly > 0">
-										<td class="text-center">#{{$index + 1}}</td>
+										<td class="text-center" style="font-size:16px;" ng-style="$index == 0 ? { 'color':'#FFD700'} :  ( $index == 1 ? { 'color':'#C0C0C0'} :{ 'color':'#cd7f32'})"><i class="fa fa-trophy" aria-hidden="true"></i></td>
 										<td class="text-center">{{ y.totalCreditMonthly }}</td>
 										<td class="text-center">{{ y.monthlyCreditUserName }}</td>
 									</tr>
@@ -62,7 +62,7 @@
 							</thead>
 							<tbody ng-repeat="y in leaders">
 									<tr>
-										<td class="text-center">#{{$index + 1}}</td>
+										<td class="text-center" style="font-size:16px;" ng-style="$index == 0 ? { 'color':'#FFD700'} :  ( $index == 1 ? { 'color':'#C0C0C0'} :{ 'color':'#cd7f32'})"><i class="fa fa-trophy" aria-hidden="true"></i></td>
 										<td class="text-center">{{ y.mostRequestedItemName }}</td>
 										<td class="text-center">{{ y.mostRequestedItemUserName }}</td>
 									</tr>
