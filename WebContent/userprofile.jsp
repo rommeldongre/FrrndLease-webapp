@@ -231,7 +231,7 @@
                                                         </span>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <button class="btn btn-success btn-fill" ng-click="storeYourStuff()">Store Your Things</button>
+                                                        <button class="btn btn-success btn-fill" ng-click="storeYourStuff()">I have something to offer!</button>
                                                     </div>
                                                 </div>
                                             </div>
