@@ -1,6 +1,6 @@
 var merchantApp = angular.module('merchantApp', ['headerApp', 'footerApp', 'ngAutocomplete']);
 
-merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', function($scope, modalService, userFactory){
+merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', 'logoutService', function($scope, modalService, userFactory, logoutService){
 
     if(userFactory.user != "" && userFactory.user != null && userFactory.user != "anonymous")
         window.location.replace("myapp.html");
