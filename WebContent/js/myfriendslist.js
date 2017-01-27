@@ -434,4 +434,27 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
         window.location.replace('myfrienddetails.html');
     }
     
+    $scope.deleteFriend = function(index){
+        $.ajax({
+            url: '/DeleteFriend',
+            type:'get',
+            data: {req: JSON.stringify({id: userFactory.user, userId: friendIdArray[index]})},
+            contentType:"application/json",
+            dataType: "json",
+
+            success: function(response) {
+                bannerService.updatebannerMessage(response.Message);
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                if(response.Code == "FLS_SUCCESS"){
+                    $scope.friends.splice(index, 1);
+                }
+            },
+
+            error: function() {
+                var msg = "Not Working";
+                confirmationIndex(msg);
+            }
+        });
+    }
+    
 }]);

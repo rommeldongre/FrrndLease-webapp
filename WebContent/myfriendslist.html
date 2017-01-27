@@ -45,6 +45,9 @@
                 <button ng-if="friend.status == 'pending'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="reinviteFriend($index)" data-toggle="tooltip" data-placement="top" title="Send Reinvite" tooltip>
                     <i class="fa fa-paper-plane"></i>
                 </button>
+                <button ng-if="friend.status == 'pending'" href="" class="btn btn-social btn-facebook btn-simple btn-tooltip" ng-click="deleteFriend($index)" data-toggle="tooltip" data-placement="top" title="Delete Friend" tooltip>
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
     </div>
