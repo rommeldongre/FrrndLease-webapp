@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetItemTimelineResObj{
 
 	int itemId;
@@ -25,7 +29,15 @@ public class GetItemTimelineResObj{
 	}
 
 	public void setItemLogDate(String itemLogDate) {
-		this.itemLogDate = itemLogDate;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(itemLogDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.itemLogDate = Long.toString(date.getTime());
+		
 	}
 
 	public String getItemLogType() {

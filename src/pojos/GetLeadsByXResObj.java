@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetLeadsByXResObj extends ResObj{
 	
 	int leadId;
@@ -15,7 +19,14 @@ public class GetLeadsByXResObj extends ResObj{
 		return leadLogDate;
 	}
 	public void setLeadLogDate(String leadLogDate) {
-		this.leadLogDate = leadLogDate;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(leadLogDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.leadLogDate = Long.toString(date.getTime());
 	}
 	public String getLeadUserId() {
 		return leadUserId;

@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetRazorPayDetailsByXResObj extends ResObj{
 	
 	int amount;
@@ -27,7 +31,14 @@ public class GetRazorPayDetailsByXResObj extends ResObj{
 		return paymentDate;
 	}
 	public void setPaymentDate(String paymentDate) {
-		this.paymentDate = paymentDate;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(paymentDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.paymentDate = Long.toString(date.getTime());
 	}
 	public String getPaymentUserEmail() {
 		return paymentUserEmail;
