@@ -1,6 +1,6 @@
 var merchantApp = angular.module('merchantApp', ['headerApp', 'footerApp', 'ngAutocomplete']);
 
-merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', 'logoutService', function($scope, modalService, userFactory, logoutService){
+merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', function($scope, modalService, userFactory){
 
     if(userFactory.user != "" && userFactory.user != null && userFactory.user != "anonymous")
         window.location.replace("myapp.html");
@@ -280,12 +280,8 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
                         $scope.payment.promoError = "Promo Applied: " + $scope.payment.promoCode;
                         $scope.payment.validPromo = true;
                     }else{
-                        if(response.code == 400)
-                            logoutService.logout();
-                        else{
-                            $scope.payment.discount = 0;
-                            $scope.payment.promoError = response.message;
-                        }
+                        $scope.payment.discount = 0;
+                        $scope.payment.promoError = response.message;
                     }
                 });
             },
