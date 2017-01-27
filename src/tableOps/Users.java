@@ -35,7 +35,7 @@ public class Users extends Connect {
 			check = null, token, address, locality, sublocality, referralCode=null,profilePicture,friendId;
 	private float lat, lng;
 	private String signUpStatus;
-	private int liveStatus, Code, offset, limit, verification;
+	private int liveStatus, Code, offset, limit, verification,userStatus;
 	private UsersModel um;
 	private Response res = new Response();
 
@@ -948,6 +948,7 @@ public class Users extends Connect {
 		
 		verification = um.getVerification();
 		liveStatus = um.getLiveStatus();
+		userStatus = um.getUserStatus();
 		
 		LOGGER.info("Inside Get Users Method");
 		
@@ -964,6 +965,13 @@ public class Users extends Connect {
 			
 			if(liveStatus != -1)
 				sqlGetUsers = sqlGetUsers + " AND user_live_status=" + liveStatus;
+			
+			if(userStatus == 0){
+				sqlGetUsers = sqlGetUsers + " AND user_fee_expiry IS NULL";
+			}else if(userStatus == 1){
+				sqlGetUsers = sqlGetUsers + " AND user_fee_expiry IS NOT NULL";
+			}
+				
 			
 			sqlGetUsers = sqlGetUsers + " ORDER BY user_signup_date DESC LIMIT " + offset + ", " + limit;
 			
@@ -995,7 +1003,9 @@ public class Users extends Connect {
 					obj.put("verification", rs1.getInt("user_verified_flag"));
 					obj.put("profilePic", rs1.getString("user_profile_picture"));
 					obj.put("liveStatus", rs1.getInt("user_live_status"));
-					obj.put("signupDate", CalSignUpDate(rs1.getString("user_signup_date")));
+					obj.put("signupDate", CalDate(rs1.getString("user_signup_date")));
+					obj.put("userFeeExpiry", CalDate(rs1.getString("user_fee_expiry")));
+					
 					
 					array.put(obj);
 					offset = offset + 1;
@@ -1007,13 +1017,16 @@ public class Users extends Connect {
 			}else{
 				Code = FLS_END_OF_DB;
 			}
-			
 			res.setData(Code, Id, message);
 		}catch(SQLException e){
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
 			LOGGER.warning(e.getMessage());
 		}catch (JSONException e) {
+			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
+			e.printStackTrace();
+			LOGGER.warning(e.getMessage());
+		}catch (Exception e) {
 			res.setData(FLS_JSON_EXCEPTION, "0", FLS_JSON_EXCEPTION_M);
 			e.printStackTrace();
 			LOGGER.warning(e.getMessage());
@@ -1197,18 +1210,23 @@ public class Users extends Connect {
 		}
 	}
 	
-	public String CalSignUpDate(String signUpDate) {
+	public String CalDate(String Date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String SignUpdate=null;
+		String Userdate=null;
 		Date date = new Date();
-		try {
-			date = sdf.parse(signUpDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if(Date !=null){
+			try {
+				date = sdf.parse(Date);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			Date = Long.toString(date.getTime());
+			Userdate = Date;
+		}else{
+			Userdate ="";
 		}
-	    signUpDate = Long.toString(date.getTime());
-	    SignUpdate = signUpDate;
-	    return SignUpdate;
+		
+	    return Userdate;
 	}
 	
 }
