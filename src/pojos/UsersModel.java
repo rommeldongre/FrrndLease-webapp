@@ -11,7 +11,7 @@ public class UsersModel {
 
 	private String userId, userUid, email, fullName, mobile, location, auth, activation, status, address, locality, sublocality,
 			referralCode, profilePicture, friendId;
-	private int liveStatus, verification;
+	private int liveStatus, verification,userStatus;
 	private float lat, lng;
 	private JSONObject obj;
 
@@ -58,6 +58,8 @@ public class UsersModel {
 				liveStatus = obj.getInt("liveStatus");
 			if (obj.has("verification"))
 				verification = obj.getInt("verification");
+			if (obj.has("userStatus"))
+				userStatus = obj.getInt("userStatus");
 			if (obj.has("friendId"))
 				if (obj.isNull("friendId")) {
 					friendId = "";
@@ -172,6 +174,14 @@ public class UsersModel {
 
 	public void setVerification(int verification) {
 		this.verification = verification;
+	}
+
+	public int getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(int userStatus) {
+		this.userStatus = userStatus;
 	}
 
 	public String getEmail() {

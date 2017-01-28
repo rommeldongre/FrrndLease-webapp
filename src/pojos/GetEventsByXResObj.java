@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetEventsByXResObj extends ResObj{
 	
 	int quantity = 1;
@@ -36,7 +40,14 @@ public class GetEventsByXResObj extends ResObj{
 		return eventLogDate;
 	}
 	public void setEventLogDate(String eventLogDate) {
-		this.eventLogDate = eventLogDate;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(eventLogDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.eventLogDate = Long.toString(date.getTime());
 	}
 	public String getFromUserId() {
 		return fromUserId;

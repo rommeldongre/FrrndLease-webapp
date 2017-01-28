@@ -210,7 +210,7 @@
                                         </thead>
                                         <tbody ng-repeat="y in timelineArray">
                                             <tr ng-repeat="x in y">
-                                                <td>{{ x.itemLogDate }}</td>
+                                                <td>{{ x.itemLogDate | date}}</td>
                                                 <td>{{ x.itemLogType }}</td>
                                                 <td><img load-image="x.itemLogImageLink" ng-src="" max-width="50" max-height="50"></td>
 											</tr>
