@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2058;
+	public final int appBuild = 2059;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2200,6 +2200,35 @@ public class FlsConfig extends Connect{
 					updateDBBuild(dbBuild);
 				}
 				
+				// This block adds id(primary key) column in friends table
+				if (dbBuild < 2059) {
+					
+					// Creates column for id in friends table
+					String sqlAddIdColumn = "ALTER TABLE `friends` ADD `id` INT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`id`);";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddIdColumn);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2059;
+					updateDBBuild(dbBuild);
+				}
 	}
 	
 	private void updateDBBuild(int version){

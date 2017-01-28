@@ -76,6 +76,11 @@ myApp.config(function($routeProvider){
         controller : 'postItemWizardCtrl'
     })
     
+    .when('/myfrienddetails/:id?', {
+        templateUrl : 'myfrienddetails.html',
+        controller : 'myFriendDetailsCtrl'
+    })
+    
     .otherwise({redirectTo : '/'});
     
 });
