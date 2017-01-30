@@ -123,6 +123,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					rs1.setDistance(dbResponse.getFloat("distance"));
 					rs1.setFriendStatus(dbResponse.getBoolean("friendst"));
 					rs1.setUber(dbResponse.getBoolean("uber"));
+					rs1.setLastModifiedDate(dbResponse.getString("item_lastmodified"));
 					
 					FlsRating rating = new FlsRating(rs1.getItemId());
 					rs1.setItemsAvgRating(rating.getItemsAvgRating());
