@@ -12,17 +12,22 @@ import pojos.BuyCreditsResObj;
 import pojos.PromoCodeModel.Code_Type;
 import pojos.ReqObj;
 import pojos.ResObj;
+import util.Event;
 import util.FlsConfig;
 import util.FlsCredit;
 import util.FlsCredit.Credit;
 import util.FlsLogger;
 import util.OAuth;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 
 public class BuyCreditsHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(BuyCreditsHandler.class.getName());
 
 	int CREDIT_VALUE = FlsConfig.creditValue;
+	
+	private String URL = FlsConfig.prefixUrl;
 	
 	private static BuyCreditsHandler instance = null;
 
@@ -120,20 +125,37 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 							return rs;
 						}
 					}
-
+					
+					int totalCreditsEarned = credit;
+					int creditLogId = -1;
+					
 					String codeType = rs1.getString("code_type");
 					if (codeType.equals("FLS_INTERNAL")) {
 						credits.logCredit(userId, credit, "Applied Promo Code", promoCode, Credit.ADD);
-						int creditLogId = credits.getCreditLogId(userId, promoCode);
+						creditLogId = credits.getCreditLogId(userId, promoCode);
 						credits.addOrder(userId, 0, promoCode, null, creditLogId, Code_Type.FLS_INTERNAL);
 					} else if (codeType.equals("FLS_EXTERNAL")) {
-						int totalCreditsEarned = credit;
 						if (amountPaid > 0) {
 							totalCreditsEarned = totalCreditsEarned + (Integer) amountPaid / CREDIT_VALUE;
 						}
 						credits.logCredit(userId, totalCreditsEarned, "Bought Credits", promoCode, Credit.ADD);
-						int creditLogId = credits.getCreditLogId(userId, promoCode);
+						creditLogId = credits.getCreditLogId(userId, promoCode);
 						credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
+						
+					}
+					
+					int orderId = credits.getOrderId(creditLogId);
+					if(orderId != -1){
+						try {
+							Event event = new Event();
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_CREDITS_INVOICE, 0, 
+							  "Congratulations! You have bought " + totalCreditsEarned + " credits using promo code - " + promoCode
+							+ " Download an Invoice for the same <form action=\"" + URL + "/GetOrderInvoice\" method=\"POST\" target=\"_blank\">"
+			                + "<input type=\"hidden\" name=\"orderId\" value=\"" + orderId + "\" />"
+			                + "<input type=\"submit\" style=\"background-color:#1D62F0\" value=\"Get Invoice\" /></form>");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 
 					rs.setCode(FLS_SUCCESS);
@@ -149,6 +171,21 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 					credits.logCredit(userId, (Integer) amountPaid / CREDIT_VALUE, "Bought Credits", promoCode, Credit.ADD);
 					int creditLogId = credits.getCreditLogId(userId, promoCode);
 					credits.addOrder(userId, amountPaid, promoCode, rq.getRazorPayId(), creditLogId, Code_Type.FLS_EXTERNAL);
+					
+					int orderId = credits.getOrderId(creditLogId);
+					if(orderId != -1){
+						try {
+							Event event = new Event();
+							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_CREDITS_INVOICE, 0, 
+							  "Congratulations! You have bought " + (Integer) amountPaid / CREDIT_VALUE + " credits."
+							+ " Download an Invoice for the same <form action=\"" + URL + "/GetOrderInvoice\" method=\"POST\" target=\"_blank\">"
+			                + "<input type=\"hidden\" name=\"orderId\" value=\"" + orderId + "\" />"
+			                + "<input type=\"submit\" style=\"background-color:#1D62F0\" value=\"Get Invoice\" /></form>");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+					
 					rs.setCode(FLS_SUCCESS);
 					rs.setMessage(FLS_SUCCESS_M);
 					rs.setCreditsBalance(credits.getCurrentCredits(userId));

@@ -411,7 +411,6 @@ headerApp.controller('headerCtrl', ['$scope',
         function(response){
             if (response.data.code == 0) {
                 $scope.credits = response.data.credit;
-                searchService.saveCurrentLocation(response.data.lat,response.data.lng);
             } else {
                 $scope.credits = "";
             }
@@ -592,7 +591,7 @@ headerApp.factory('profileFactory', ['$http', function($http){
     return dataFactory;
 }]);
 
-headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', function($rootScope, logoutService, $http){
+headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', 'searchService', function($rootScope, logoutService, $http, searchService){
     
     var dataFactory = {};
     
@@ -638,7 +637,8 @@ headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', functi
             navigator.geolocation.getCurrentPosition(function(position) {
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
-                coords = new google.maps.LatLng(latitude, longitude);	
+                coords = new google.maps.LatLng(latitude, longitude);
+                searchService.saveCurrentLocation(latitude, longitude);
 
                 var geocoder = new google.maps.Geocoder();
                 var latLng = new google.maps.LatLng(latitude, longitude);
@@ -1117,13 +1117,13 @@ headerApp.directive('userBadges', function(){
                         <div class="social-badges" style="text-align:center;font-size:large;">\
                             <span>Verified:</span>\
                             <div style="display:inline-block;">\
-                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':!badge.userVerifiedFlag,\'orange\':badge.userVeifiedFlag}" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="You get Address Verified when you upload your Photo Id" popover>\
+                                <span style="cursor:help;" class="no-padding btn-tooltip ng-class:{\'text-gray\':!badge.userVerifiedFlag,\'orange\':badge.userVeifiedFlag}" data-toggle="tooltip" title="You get Address Verified when you upload your Photo Id" data-placement="top" tooltip>\
                                     <i class="fa fa-address-card" aria-hidden="true"></i>\
                                 </span>\
-                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':badge.userStatus!=\'facebook\', \'text-facebook\':badge.userStatus==\'facebook\'}" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="You get Facebook verified if you signed up using Facebook" popover>\
+                                <span style="cursor:help;" class="no-padding btn-tooltip ng-class:{\'text-gray\':badge.userStatus!=\'facebook\', \'text-facebook\':badge.userStatus==\'facebook\'}" data-toggle="tooltip" title="You get Facebook verified if you signed up using Facebook" data-placement="top" tooltip>\
                                     <i class="fa fa-facebook-square" aria-hidden="true"></i>\
                                 </span>\
-                                <span style="cursor:help;" class="no-padding ng-class:{\'text-gray\':badge.userStatus!=\'google\',\'text-google\':badge.userStatus==\'google\'}" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="You get Google verified if you signed up using Google" popover>\
+                                <span style="cursor:help;" class="no-padding btn-tooltip ng-class:{\'text-gray\':badge.userStatus!=\'google\',\'text-google\':badge.userStatus==\'google\'}" data-toggle="tooltip" title="You get Google verified if you signed up using Google" data-placement="top" tooltip>\
                                     <i class="fa fa-google-plus-square" aria-hidden="true"></i>\
                                 </span>\
                             </div>\
@@ -1131,16 +1131,16 @@ headerApp.directive('userBadges', function(){
                     </div>\
                     <div style="margin:5px;">\
                         <div style="text-align:center;display:inline-flex;">\
-                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Number of Items Posted by this User" popover>\
+                            <span class="btn-tooltip" style="cursor:help;padding:5px;" data-toggle="tooltip" data-placement="top" title="Number of Items Posted by this User" tooltip>\
                                 <span style="font-size:22px;"><strong>{{badge.userItems}}</strong></span> <span class="text-gray"><i class="fa fa-cubes" aria-hidden="true"></i></span>\
                             </span>\
-                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Number of Leases this User has got and also has given out" popover>\
+                            <span class="btn-tooltip" style="cursor:help;padding:5px;" data-toggle="tooltip" data-placement="top" title="Number of Leases this User has got and also has given out" tooltip>\
                                 <span style="font-size:22px;"><strong>{{badge.userLeases}}</strong></span> <span class="text-gray"><i class="fa fa-file-text-o" aria-hidden="true"></i></span>\
                             </span>\
-                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Average number of Days this user takes to respond to a request" popover>\
+                            <span class="btn-tooltip" style="cursor:help;padding:5px;" data-toggle="tooltip" data-placement="top" title="Average number of Days this user takes to respond to a request" tooltip>\
                                 <span style="font-size:22px;"><strong>{{(badge.responseTime==0) ? \'NA\' : (badge.responseTime/badge.responseCount | number:0)}} </strong></span> <span class="text-gray"><i class="fa fa-hand-paper-o" aria-hidden="true"></i></span>\
                             </span>\
-                            <span style="cursor:help;padding:5px;" data-toggle="popover" title="FrrndLease Says - " data-placement="top" data-content="Total credits owned by this user" popover>\
+                            <span class="btn-tooltip" style="cursor:help;padding:5px;" data-toggle="tooltip" data-placement="top" title="Total credits owned by this user" tooltip>\
                                 <span style="font-size:22px;"><strong>{{badge.userCredit}} </strong></span> <span class="text-gray"><i class="fa fa-diamond"></i></li></span>\
                             </span>\
                         </div>\
@@ -1506,8 +1506,10 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
                     },
                     handler: function (response){
                         userFactory.buyCredits($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
-                            if(res.data.code == 0)
-                                window.location.reload();
+                            if(res.data.code == 0){
+                                $scope.payment.paymentError = "Congratulations you bought " + $scope.payment.credit + " credits";
+                                eventsCount.updateEventsCount();
+                            }
                             else
                                 console.log(res);
                         },
@@ -1523,7 +1525,8 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
                 userFactory.buyCredits($scope.payment.promoCode, 0, null).then(function(response){
-                    window.location.reload();
+                    $scope.payment.paymentError = "Congratulations you bought " + $scope.payment.credit + " credits";
+                    eventsCount.updateEventsCount();
                 },
                 function(error){});
             }else{
@@ -1632,8 +1635,10 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
                     },
                     handler: function (response){
                         userFactory.payMembership($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
-                            if(res.data.code == 0)
-                                window.location.reload();
+                            if(res.data.code == 0){
+                                $scope.payment.paymentError = "Congratulations you are an uber member and your membership is valid upto " + $scope.payment.month + " months";
+                                eventsCount.updateEventsCount();
+                            }
                             else
                                 console.log(res);
                         },
@@ -1649,7 +1654,8 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
                 userFactory.payMembership($scope.payment.promoCode, 0, null).then(function(response){
-                    window.location.reload();
+                    $scope.payment.paymentError = "Congratulations you are an uber member and your membership is valid upto " + $scope.payment.month + " months";
+                    eventsCount.updateEventsCount();
                 },
                 function(error){});
             }else{

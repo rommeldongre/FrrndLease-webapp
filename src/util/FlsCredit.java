@@ -24,10 +24,14 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import connect.Connect;
 import pojos.PromoCodeModel.Code_Type;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 
 public class FlsCredit extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(FlsCredit.class.getName());
+
+	private String URL = FlsConfig.prefixUrl;
 	
 	int CREDIT_VALUE = FlsConfig.creditValue;
 	int MEMBER_VALUE = FlsConfig.memberValue;
@@ -279,7 +283,7 @@ public class FlsCredit extends Connect {
 			return true;
 	}
 	
-	public void updateMembership(String userId, int amountPaid, int promoCredits){
+	public void updateMembership(int orderId, String userId, int amountPaid, int promoCredits){
 		
 		LOGGER.info("Inside updateMembership Method");
 		
@@ -321,6 +325,19 @@ public class FlsCredit extends Connect {
 				}
 			}else{
 				LOGGER.info("Not able to get user fee expiry date for the userId - " + userId);
+			}
+			
+			if(orderId != -1){
+				try {
+					Event event = new Event();
+					event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MEMBERSHIP_INVOICE, 0, 
+					  "Congratulations! You have bought membership for " + monthsEarned + " months."
+					+ " Get an Invoice for the same <form action=\"" + URL + "/GetOrderInvoice\" method=\"POST\" target=\"_blank\">"
+	                + "<input type=\"hidden\" name=\"orderId\" value=\"" + orderId + "\" />"
+	                + "<input type=\"submit\" style=\"background-color:#1D62F0\" value=\"Get Invoice\" /></form>");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 		} catch (Exception e) {
@@ -713,6 +730,46 @@ public class FlsCredit extends Connect {
 		}
 		
 		return output;
+	}
+	
+	public int getOrderId(int creditLogId) {
+		
+		LOGGER.info("Inside getOrderId Method");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		int id = -1;
+		
+		try {
+			
+			if(creditLogId == -1)
+				return -1;
+			
+			String sqlGetOrderId = "SELECT order_id FROM orders WHERE credit_log_id=?";
+			ps1 = hcp.prepareStatement(sqlGetOrderId);
+			ps1.setInt(1, creditLogId);
+			
+			rs1 = ps1.executeQuery();
+			
+			if(rs1.next()){
+				id = rs1.getInt("order_id");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs1 != null) rs1.close();
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return id;
 	}
 
 }
