@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import connect.Connect;
 import pojos.GetEngagementsByXListResObj;
@@ -58,7 +59,10 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 			// storing the front end data in appropriate variables
 			int limit = rq.getLimit();
 			String userId = rq.getUserId();
-			String toDate = rq.getToDate();
+			long toDateLong = Long.parseLong(rq.getToDate());
+		    Date date=new Date(toDateLong);
+		    SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    String toDate = df2.format(date);
 			String interval = rq.getInterval();
 			String interimDate = toDate;
 			String minDate= "";
