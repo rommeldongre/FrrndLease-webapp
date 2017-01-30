@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetCreditTimelineResObj extends ResObj{
 
 	//Return code for GetCreditTimeline
@@ -63,7 +67,14 @@ public class GetCreditTimelineResObj extends ResObj{
 	}
 
 	public void setCredit_date(String credit_date) {
-		this.credit_date = credit_date;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(credit_date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.credit_date = Long.toString(date.getTime());
 	}
 
 	public int getCredit_amount() {
