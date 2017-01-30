@@ -59,7 +59,6 @@ public class GetEngagementsByXHandler extends Connect implements AppHandler {
 			// storing the front end data in appropriate variables
 			int limit = rq.getLimit();
 			String userId = rq.getUserId();
-			//String toDate = rq.getToDate();
 			long toDateLong = Long.parseLong(rq.getToDate());
 		    Date date=new Date(toDateLong);
 		    SimpleDateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
