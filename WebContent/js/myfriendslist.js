@@ -1,6 +1,20 @@
 var myFriendsListApp = angular.module('myApp');
 
-myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'modalService', 'bannerService', 'logoutService', 'eventsCount', 'editFriendModalService', function ($scope, userFactory, modalService, bannerService, logoutService, eventsCount, editFriendModalService) {
+myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 
+                                                  'userFactory', 
+                                                  'modalService', 
+                                                  'bannerService', 
+                                                  'logoutService', 
+                                                  'eventsCount', 
+                                                  'editFriendModalService', 
+                                                  function (
+                                                  $scope, 
+                                                   userFactory, 
+                                                   modalService, 
+                                                   bannerService, 
+                                                   logoutService, 
+                                                   eventsCount,
+                                                   editFriendModalService) {
 
     localStorage.setItem("prevPage", "myapp.html#/myfriendslist");
 
@@ -8,14 +22,9 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     var friendArray = [];
     var lastFriendId = '';
     var arrEmail = [];
-    var errCount = 0,
-        len = 0,
-        count = 1;
+    var errCount = 0, len = 0, count = 1;
     $scope.friends = [];
-    var reasonForAddFriend = null,
-        googleFriendsCounter = 0,
-        counter = 0,
-        checkcounter = 0;
+    var reasonForAddFriend = null, googleFriendsCounter = 0, counter = 0, checkcounter = 0;
     var clientId = '1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com';
     var apiKey = 'API Code';
     var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
@@ -454,25 +463,34 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope', 'userFactory', 'moda
     }
 
     $scope.deleteFriend = function (index) {
-        modalService.showModal({}, {bodyText: "Are you sure you want to delete this friend?",actionButtonText: 'Yes'}).then(
-            function(res) {
+        modalService.showModal({}, {
+            bodyText: "Are you sure you want to delete this friend?",
+            actionButtonText: 'Yes'
+        }).then(
+            function (res) {
                 $.ajax({
                     url: '/DeleteFriend',
                     type: 'get',
-                    data: {req: JSON.stringify({id: userFactory.user, userId: friendIdArray[index]})},
+                    data: {
+                        req: JSON.stringify({
+                            id: userFactory.user,
+                            userId: friendIdArray[index]
+                        })
+                    },
                     contentType: "application/json",
                     dataType: "json",
 
                     success: function (response) {
                         if (response.Code == "FLS_SUCCESS") {
-                            $scope.$apply(function(){
+                            $scope.$apply(function () {
                                 $scope.friends.splice(index, 1);
                             });
                         }
                     },
                     error: function () {}
                 });
-            }, function(){}
+            },
+            function () {}
         );
     }
 
