@@ -16,7 +16,8 @@
     <!--Meta tags For Facebook end here-->
     <meta name="google-signin-scope" content="profile email">
     <meta name="google-signin-client_id" content="1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com">
-    <script src="https://apis.google.com/js/api:client.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>   
+	<script src="https://apis.google.com/js/client.js"></script>
     <script src="js/md5.js"></script>
     <!--for Facebook signin-->
     <script src="js/Facebook_api.js"></script>
@@ -51,16 +52,7 @@
     <!-- Razor pay Api-->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <style>
-        .parallax {
-            height: 490px;
-        }
-        @media screen and (max-width:360px) {
-            .parallax {
-                height: 640px;
-            }
-        }
-        
+    <style>        
         .custom-navbar {
             background-color:rgba(0, 0, 0, 0.66);
             margin-bottom:0;
@@ -111,12 +103,12 @@
     </div>
     <!--header ends----------------------------------------->
 
-    <div class="wrapper" ng-controller="merchantCtrl">
+    <div ng-controller="merchantCtrl">
         <div class="parallax filter-black">
             <div class="parallax-image">
                 <img src="css/bluebackground.jpg" alt="..." style="top: 0px;">
             </div>
-            <div class="small-info" style="top:27%;" ng-init="onboarding = false">
+            <div class="small-info" ng-init="onboarding = false">
                 <h1>Take your Rental Store Online</h1>
                 <h3>Set up an online rental store for your items in 3 clicks!</h3><br/><br/>
                 <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;">Let’s Do This</a>
@@ -154,7 +146,7 @@
                                         <i class="fa fa-facebook-square"></i>
                                     </a>
                                     <a href="" class="btn btn-round btn-fill btn-social btn-google" id="gSignUpWrapper">
-                                        <div id="customSignUpBtn" class="customGPlusSignIn">
+                                        <div id="signUpBtn" class="customGPlusSignIn">
                                             <i class="fa fa-google-plus-square"></i>
                                         </div>
                                     </a>
@@ -371,6 +363,7 @@
                 });
                 attachSignin(document.getElementById('customLoginBtn'));
                 attachSignin(document.getElementById('customSignUpBtn'));
+                attachSignin(document.getElementById('signUpBtn'));
             });
         }
 
@@ -381,6 +374,8 @@
                         onSignIn(googleUser);
                     if (element.id == "customSignUpBtn")
                         onSignUp(googleUser);
+                    if (element.id == "signUpBtn")
+                        onSignUp(googleUser);
                 },
                 function(error) {
 //                    alert(JSON.stringify(error, undefined, 2));
@@ -390,6 +385,12 @@
 
     </script>
 
+    <style>
+        #headerfooteroptions {
+            color: white;
+        }
+    </style>
+   
     <!-- DropDown list code ends-->
     <script src="js/load-image.all.min.js"></script>
 

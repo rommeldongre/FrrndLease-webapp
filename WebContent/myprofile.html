@@ -49,7 +49,7 @@
                     <img load-image="photoId" max-width="150" max-height="150" ng-src="" alt="..." /><br/>
                     <i ng-if="photoId=='loading'" class="fa fa-spinner fa-pulse fa-fw"></i>
                     <span class="sr-only">Loading...</span><br ng-if="photoId=='loading'" />
-                    <i ng-if="addressVerified" class="green" aria-hidden="true">Address Verified</i>
+                    <i ng-if="addressVerified" aria-hidden="true">Address Verified</i>
                     <i ng-if="!addressVerified" class="red" aria-hidden="true">Address Not Verified</i>
                     <hr/>
                     <label class="btn btn-primary btn-fill" for="id-file-input" style="cursor:pointer;">
@@ -61,21 +61,21 @@
         </div>
         <div class="col-lg-6 col-md-6">
             <label class="control-label">Credits</label>
-            <div id="credit" class="input-group">
+            <div id="credit" class="input-group btn-tooltip" data-toggle="tooltip" data-placement="top" title="Total credits in your account" tooltip>
                 <input type="text" class="form-control" ng-disabled="true" ng-model="credit">
-                <a class="input-group-addon" href="" data-toggle="modal" data-target="#paymentModal"><i class="fa fa-plus"></i></a>
+                <a class="input-group-addon" href="" data-toggle="modal" data-target="#paymentModal">BUY</a>
             </div>
             <br/>
             <label class="control-label">Refferal</label>
-            <div id="referralCode" class="input-group">
+            <div id="referralCode" class="input-group btn-tooltip" data-toggle="tooltip" data-placement="top" title="Invite friends using refferal code to earn credits" tooltip>
                 <input type="text" class="form-control" ng-disabled="true" ng-model="referralCode">
-                <a class="input-group-addon" href="myapp.html#/myfriendslist"><i class="fa fa-share-alt"></i></a>
+                <a class="input-group-addon" href="myapp.html#/myfriendslist">INVITE</a>
             </div>
             <br/>
             <label class="control-label">Membership Expiry Date</label>
-            <div id="membershipDate" class="input-group">
+            <div id="membershipDate" class="input-group btn-tooltip" data-toggle="tooltip" data-placement="top" title="Your membership expiry date" tooltip>
                 <input type="text" class="form-control" ng-disabled="true" ng-model="userFeeExpiry">
-                <a class="input-group-addon" href="" data-toggle="modal" data-target="#uberPayModal"><i class="fa fa-inr" aria-hidden="true"></i></a>
+                <a class="input-group-addon" href="" data-toggle="modal" data-target="#uberPayModal">BUY</a>
             </div>
             <br/>
             <hr/>
@@ -105,7 +105,8 @@
                     <input name="email" type="email" class="form-control" id="email" ng-model="user.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/" ng-change="emailTouched()" placeholder="Email">
                     <span class="input-group-btn">
                         <button ng-if="changedText" class="btn btn-fill btn-info" ng-click="undoEmail()">Undo</button>
-                        <button class="btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(secForm.email.$touched && secForm.email.$valid) ? verifyEmail(user.email) : user.error='Not a valid email'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</button>
+                        <button ng-if="secStatus==1" class="btn btn-fill btn-success" ng-disabled="true">verified</button>
+                        <button ng-if="secStatus==0" class="btn btn-fill btn-danger" ng-click="(secForm.email.$touched && secForm.email.$valid) ? verifyEmail(user.email) : user.error='Not a valid email'">Save &amp; verify</button>
                     </span>
                 </div>
                 <label ng-if="(status=='email_activated' || status == 'facebook' || status=='google')" class="control-label">Mobile</label>
@@ -113,7 +114,8 @@
                     <input type="text" class="form-control" id="mobile" ng-model="user.mobile" ng-change="mobileTouched()" placeholder="Mobile">
                     <span class="input-group-btn">
                         <button ng-if="changedText" class="btn btn-fill btn-info" ng-click="undoMobile()">Undo</button>
-                        <button class="btn btn-fill ng-class:{'btn-success':secStatus==1,'btn-danger':secStatus==0}" ng-click="(user.mobile.length == 10) ? verifyMobile(user.mobile) : user.error='Not a valid Mobile Number'">{{(secStatus==1) ? 'verified' : 'Save &amp; verify'}}</button>
+                        <button ng-if="secStatus==1" class="btn btn-fill btn-success" ng-disabled="true">verified</button>
+                        <button ng-if="secStatus==0" class="btn btn-fill btn-danger" ng-click="(user.mobile.length == 10) ? verifyMobile(user.mobile) : user.error='Not a valid Mobile Number'">Save &amp; verify</button>
                     </span>
                 </div>
             </form><br/>
@@ -141,9 +143,9 @@
         </div>
     </div><br/>
     <hr/>
-    <div class="row">
-        <div class="left_title col-lg-4 col-md-4">
-            Profile Details <span ng-if="userFeeExpiry == null || userFeeExpiry == '' || userFeeExpiry == undefined" class="label label-warning">These details won't be visible in your public profile page. Please pay the membership fee to make them visible.</span>
+    <div class="row" style="display:flex;flex-wrap:wrap;">
+        <div class="left_title col-lg-12 col-md-12">
+            Profile Details <span class="label label-warning label-fill" style="vertical-align: middle;">&nbsp;&nbsp;These details won't be visible in your public profile page. Please pay membership fee to make them visible.</span>
         </div>
     </div>
     <hr/>
@@ -169,7 +171,7 @@
                 <div class="tab-pane ng-class:{'active':selected == 0}">
                     <form name="searchForm" novalidate ng-submit="saveInfo('ADDRESS')">
                         <div class="input-group">
-                            <input name="place" type="text" class="form-control" ng-model="address" required autofocus />
+                            <input name="place" type="text" class="form-control" ng-model="address" required />
                             <span class="input-group-btn">
                                 <button class="btn btn-primary btn-fill" ng-disabled="searchForm.$invalid">Save Address</button>
                             </span>
@@ -204,15 +206,15 @@
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 2}">
                     <form name="about" ng-submit="about.$valid && saveInfo('ABOUT')">
-                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="500" style="height:176px;" autofocus required></textarea><br/>
-                        <span>{{500 - user.about.length}} left</span>
-                        <button class="btn btn-primary btn-fill pull-right">Save ABout</button>
+                        <textarea type="text" class="form-control" ng-model="user.about" ng-trim="false" maxlength="1000" style="height:176px;" required></textarea><br/>
+                        <span>{{1000 - user.about.length}} left</span>
+                        <button class="btn btn-primary btn-fill pull-right">Save About</button>
                     </form>
                 </div>
                 <div class="tab-pane ng-class:{'active':selected == 3}">
                     <form name="infoForm" ng-submit="saveInfo('CONTACT_INFO')">
                         <label class="control-label">Website - </label>
-                        <input type="text" class="form-control" ng-model="website" placeholder="Website" autofocus>
+                        <input type="text" class="form-control" ng-model="website" placeholder="Website" />
                         <label class="control-label">Email - </label>
                         <input type="email" class="form-control" ng-model="mail" placeholder="Email">
                         <label class="control-label">Phone No - </label>
