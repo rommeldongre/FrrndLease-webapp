@@ -64,10 +64,14 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
                 if (response.Code == "FLS_SUCCESS") {
                     var obj = JSON.parse(response.Message);
 
+                    obj.isFB = false;
+                    
                     // to check if the friend id is email or not
                     var strIndex = obj.friendId.indexOf('@fb');
-                    if (strIndex != -1)
+                    if (strIndex != -1){
                         obj.friendId = '-';
+                        obj.isFB = true;
+                    }
 
                     if (lastFriendId == '')
                         $scope.$apply(function () {
@@ -463,35 +467,37 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
     }
 
     $scope.deleteFriend = function (index) {
-        modalService.showModal({}, {
-            bodyText: "Are you sure you want to delete this friend?",
-            actionButtonText: 'Yes'
-        }).then(
-            function (res) {
-                $.ajax({
-                    url: '/DeleteFriend',
-                    type: 'get',
-                    data: {
-                        req: JSON.stringify({
-                            id: userFactory.user,
-                            userId: friendIdArray[index]
-                        })
-                    },
-                    contentType: "application/json",
-                    dataType: "json",
+        if(!$scope.friends[index].isFB){
+            modalService.showModal({}, {
+                bodyText: "Are you sure you want to delete this friend?",
+                actionButtonText: 'Yes'
+            }).then(
+                function (res) {
+                    $.ajax({
+                        url: '/DeleteFriend',
+                        type: 'get',
+                        data: {
+                            req: JSON.stringify({
+                                id: userFactory.user,
+                                userId: friendIdArray[index]
+                            })
+                        },
+                        contentType: "application/json",
+                        dataType: "json",
 
-                    success: function (response) {
-                        if (response.Code == "FLS_SUCCESS") {
-                            $scope.$apply(function () {
-                                $scope.friends.splice(index, 1);
-                            });
-                        }
-                    },
-                    error: function () {}
-                });
-            },
-            function () {}
-        );
+                        success: function (response) {
+                            if (response.Code == "FLS_SUCCESS") {
+                                $scope.$apply(function () {
+                                    $scope.friends.splice(index, 1);
+                                });
+                            }
+                        },
+                        error: function () {}
+                    });
+                },
+                function () {}
+            );
+        }
     }
 
     $scope.editFriend = function (index) {
