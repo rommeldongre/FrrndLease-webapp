@@ -69,8 +69,6 @@ public class PromoCode extends Connect {
 			return;
 		}
 		
-		LOGGER.info("Inside addPromoCode Method: After OAUTH");
-		
 		promoCode = pcm.getPromoCode();
 		expiry = pcm.getExpiry();
 		codeType = pcm.getCodeType();
@@ -93,7 +91,6 @@ public class PromoCode extends Connect {
 			
 			if(rs1.next()){
 				res.setData(FLS_DUPLICATE_ENTRY, "0", FLS_DUPLICATE_ENTRY_M);
-				LOGGER.info("Inside addPromoCode Method: DUPLICATE");
 			}else{
 				String sqlAddPromoCode = "INSERT INTO `promo_credits` (`code`, `credit`, `expiry`, `count`, `per_person_count`, `code_type`) VALUES (?, ?, ?, ?, ?, ?)";
 				ps2 = hcp.prepareStatement(sqlAddPromoCode);
@@ -107,9 +104,7 @@ public class PromoCode extends Connect {
 				ps2.executeUpdate();
 				
 				res.setData(FLS_SUCCESS, "0", FLS_ADD_PROMO_CODE);
-				LOGGER.info("Inside addPromoCode Method: After SUCESS");
 			}
-			LOGGER.info("Inside addPromoCode Method: BEFORE CATCH");
 		}catch(SQLException e){
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
@@ -138,9 +133,7 @@ private void editPromoCode(){
 			res.setData(FLS_ACCESS_TOKEN_FAILED, "0", FLS_ACCESS_TOKEN_FAILED_M);
 			return;
 		}
-		
-		LOGGER.info("Inside editPromoCode Method: After OAUTH");
-		
+				
 		promoCode = pcm.getPromoCode();
 		expiry = pcm.getExpiry();
 		codeType = pcm.getCodeType();
@@ -176,12 +169,9 @@ private void editPromoCode(){
 				ps2.executeUpdate();
 				
 				res.setData(FLS_SUCCESS, "0", FLS_UPDATE_PROMO_CODE);
-				LOGGER.info("Inside addPromoCode Method: After UPDATE");
 			}else{
 				res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_PROMO_CODE_EXCEPTION_M);
-				LOGGER.info("Inside addPromoCode Method: After SUCESS");
 			}
-			LOGGER.info("Inside addPromoCode Method: BEFORE CATCH");
 		}catch(SQLException e){
 			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 			e.printStackTrace();
@@ -211,14 +201,6 @@ private void deletePromoCode(){
 		return;
 	}
 	
-	LOGGER.info("Inside editPromoCode Method: After OAUTH");
-	
-	/*promoCode = pcm.getPromoCode();
-	expiry = pcm.getExpiry();
-	codeType = pcm.getCodeType();
-	credit = pcm.getCredit();
-	count = pcm.getCount();
-	perPersonCount = pcm.getPerPersonCount();*/
 	promoCodeId = pcm.getPromoCodeId();
 	
 	Connection hcp = getConnectionFromPool();
@@ -242,12 +224,9 @@ private void deletePromoCode(){
 			ps2.executeUpdate();
 			
 			res.setData(FLS_SUCCESS, "0", FLS_DELETE_PROMO_CODE);
-			LOGGER.info("Inside addPromoCode Method: After UPDATE");
 		}else{
 			res.setData(FLS_ENTRY_NOT_FOUND, "0", FLS_PROMO_CODE_EXCEPTION_M);
-			LOGGER.info("Inside addPromoCode Method: After SUCESS");
 		}
-		LOGGER.info("Inside addPromoCode Method: BEFORE CATCH");
 	}catch(SQLException e){
 		res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
 		e.printStackTrace();
