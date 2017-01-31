@@ -1,8 +1,5 @@
 package services;
 
-import errorCat.ErrorCat;
-import util.FlsLogger;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -12,76 +9,51 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.codehaus.jackson.map.ObjectMapper;
 
-import adminOps.AdminOpsHandler;
-import adminOps.Response;
+import app.EditFriendHandler;
+import app.NotImplementedException;
+import pojos.EditFriendReqObj;
+import pojos.EditFriendResObj;
+import util.FlsLogger;
 
-/**
- * Servlet implementation class EditFriend
- */
-@WebServlet("/EditFriend")
+@WebServlet(description = "Edit Friend Details", urlPatterns = { "/EditFriend" })
 public class EditFriend extends HttpServlet {
 
 	private FlsLogger LOGGER = new FlsLogger(EditFriend.class.getName());
 
 	private static final long serialVersionUID = 1L;
-	private AdminOpsHandler aoh = new AdminOpsHandler();
-	private Response res = new Response();
-	private ErrorCat e = new ErrorCat();
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	protected void doPost(HttpServletRequest httprequest, HttpServletResponse httpresponse)
 			throws ServletException, IOException {
-		response.setContentType("application/json");
-		LOGGER.info("Inside GET Method");
+		// HTTP request to Service request pojo
 
-		doPost(request, response);
-	}
+		LOGGER.info("Inside Post of EditFriend Service");
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		LOGGER.info("Inside POST Method");
-		String table;
-		PrintWriter out = response.getWriter();
-
-		String str = request.getParameter("req");
+		ObjectMapper mapper = new ObjectMapper();
+		EditFriendReqObj request = mapper.readValue(httprequest.getInputStream(), EditFriendReqObj.class);
+		httpresponse.setContentType("application/json");
+		// application logic from here..
+		EditFriendResObj response = null;
 
 		try {
-			JSONObject row = new JSONObject(str);
-			JSONObject obj = new JSONObject();
-			table = "friends";
-			obj.put("table", table);
-			obj.put("operation", "edit");
-			obj.put("row", row);
 
-			// Sending data to Admin-Ops-Handler
-			res = aoh.getInfo(table, obj);
-			JSONObject json = new JSONObject();
+			// App Handler to to process request and create service response
+			// into pojo
+			response = (EditFriendResObj) EditFriendHandler.getInstance().process(request);
 
-			if (res.getIntCode() == e.FLS_SUCCESS) {
-				json.put("Code", "FLS_SUCCESS");
-				json.put("Message", e.FLS_EDIT_FRIEND);
-				json.put("Id", res.getId());
-			}
+			// service response pojo to json
+			PrintWriter out = httpresponse.getWriter();
+			httpresponse.setContentType("text/json");
+			httpresponse.setContentType("application/json; charset=UTF-8");
+			mapper.writeValue(out, response);
 
-			else {
-				json.put("Code", res.getCode());
-				json.put("Message", res.getMessage());
-				json.put("Id", res.getId());
-			}
-
-			out.print(json);
-
-		} catch (JSONException e) {
-			LOGGER.warning("Couldn't parse/retrieve JSON");
-			res.setData(204, "0", "JSON request couldn't be parsed/retrieved (JSON Exception)");
+		} catch (NotImplementedException e) {
+			e.printStackTrace();
+			LOGGER.warning("EditFriend process method not implemented");
+			httpresponse.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED, "EditFriend process method not implemented");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 }

@@ -111,7 +111,7 @@
             <div class="small-info" ng-init="onboarding = false">
                 <h1>Take your Rental Store Online</h1>
                 <h3>Set up an online rental store for your items in 3 clicks!</h3><br/><br/>
-                <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;">Let’s Do This</a>
+                <a class="btn btn-success btn-fill btn-lg" ng-click="(onboarding == false) ? onboarding = true : onboarding = false" style="padding:1em 5em;" onclick="ga('send', 'event', 'index', 'click', 'letsdothis');">Let’s Do This</a>
             </div>
         </div>
 
@@ -142,10 +142,10 @@
                         <div class="tab-content">
                             <div class="tab-pane ng-class:{'active':!user.signedUp}">
                                 <div class="social-area">
-                                    <a href="" class="btn btn-round btn-fill btn-social btn-facebook" id="fbSignInWrapper" ng-click="facebookSignIn()">
+                                    <a href="" class="btn btn-round btn-fill btn-social btn-facebook" id="fbSignInWrapper" ng-click="facebookSignIn()" onclick="ga('send', 'event', 'index', 'click', 'merchantFB');">
                                         <i class="fa fa-facebook-square"></i>
                                     </a>
-                                    <a href="" class="btn btn-round btn-fill btn-social btn-google" id="gSignUpWrapper">
+                                    <a href="" class="btn btn-round btn-fill btn-social btn-google" id="gSignUpWrapper" onclick="ga('send', 'event', 'index', 'click', 'merchantGP');">
                                         <div id="signUpBtn" class="customGPlusSignIn">
                                             <i class="fa fa-google-plus-square"></i>
                                         </div>
@@ -179,7 +179,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group" style="float:right;">
-                                        <button ng-if="!user.signedUp" type="button" class="btn btn-primary btn-fill" ng-click="(form.$valid && user.error=='') ? formSignup() : user.error='Please enter correct data!!'"> Sign Up </button>
+                                        <button ng-if="!user.signedUp" type="button" class="btn btn-primary btn-fill" ng-click="(form.$valid && user.error=='') ? formSignup() : user.error='Please enter correct data!!'" onclick="ga('send', 'event', 'index', 'click', 'merchantSignUp');"> Sign Up </button>
                                     </div>
                                 </form>
                             </div>
