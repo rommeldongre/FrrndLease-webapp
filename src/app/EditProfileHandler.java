@@ -125,8 +125,6 @@ public class EditProfileHandler extends Connect implements AppHandler {
 				if(ps2 != null) ps2.close();
 				if(hcp != null) hcp.close();
 			}catch(Exception e){
-				rs.setCode(FLS_INVALID_OPERATION);
-				rs.setMessage(FLS_INVALID_OPERATION_M);
 				e.printStackTrace();
 			}
 		}

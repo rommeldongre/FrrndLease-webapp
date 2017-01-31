@@ -162,7 +162,7 @@ public class Items extends Connect {
 
 		LOGGER.info("Inside add method...");
 		
-		PreparedStatement stmt = null,s = null, s1 =null, checkWishItem_ps = null; 
+		PreparedStatement stmt = null,s = null, s1 =null, checkWishItem_ps = null, ps1 = null; 
 		Statement stmt1 = null;
 		ResultSet keys = null, rs = null, checkWishItem_rs = null;
 		Connection hcp = getConnectionFromPool();
@@ -259,6 +259,11 @@ public class Items extends Connect {
 				badges.updateItemsCount();
 			}else{
 				res.setData(FLS_DUPLICATE_ENTRY, null, FLS_POST_ITEM_F_M);
+				String sqlUpdateItemsTable = "UPDATE items SET item_lastmodified=now() WHERE item_id=?";
+				ps1 = hcp.prepareStatement(sqlUpdateItemsTable);
+				ps1.setString(1, checkWishItem_rs.getString("item_id"));
+				
+				ps1.executeUpdate();
 			}
 
 		} catch (SQLException e) {
