@@ -10,7 +10,7 @@ public class PromoCodeModel {
 
 	private String promoCode, expiry = null, userId, accessToken;
 
-	private int credit, count = -1, perPersonCount = -1;
+	private int credit, count = -1, perPersonCount = -1, promoCodeId=0;
 	
 	private Code_Type codeType;
 	
@@ -46,6 +46,8 @@ public class PromoCodeModel {
 				count = obj.getInt("count");
 			if (obj.has("perPersonCount"))
 				perPersonCount = obj.getInt("perPersonCount");
+			if (obj.has("promoCodeId"))
+				promoCodeId = obj.getInt("promoCodeId");
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,4 +119,11 @@ public class PromoCodeModel {
 		this.perPersonCount = perPersonCount;
 	}
 
+	public int getPromoCodeId() {
+		return promoCodeId;
+	}
+
+	public void setPromoCodeId(int promoCodeId) {
+		this.promoCodeId = promoCodeId;
+	}
 }
