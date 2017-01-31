@@ -52,15 +52,11 @@ public class GetPromoCodesByXHandler extends Connect implements AppHandler {
 
 			// Prepare SQL
 			String sql = null;
-			
-			/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Calendar c = Calendar.getInstance();*/
-			
+						
 			// storing the front end data in appropriate variables
 			int limit = rq.getLimit();
 			int offset = rq.getCookie();
 			String time =" 00:00:00";
-			//String userId = rq.getUserId();
 			String fromDate = rq.getFromDate();
 			String toDate = rq.getToDate();
 			String search_string = rq.getSearchString();
@@ -108,7 +104,7 @@ public class GetPromoCodesByXHandler extends Connect implements AppHandler {
 					rs.addResList(orders_rs1);
 					offset = offset + 1;
 				}
-				LOGGER.info("Orders successfully added in response object");
+				LOGGER.info("Promo Codes successfully added in response object");
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
 			} else {

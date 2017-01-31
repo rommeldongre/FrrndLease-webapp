@@ -28,10 +28,10 @@
 		var Limit = document.getElementById("limit").value;
 		Limit = parseInt(Limit);
 		
-		GetOrdersByX(Order,UserId,SearchString,Offset,Limit,FromDate,ToDate);
+		GetPromoCodesByX(Order,UserId,SearchString,Offset,Limit,FromDate,ToDate);
 	};
 	
-	function GetOrdersByX(order,userId,searchString,offset,limit,fromDate,toDate){
+	function GetPromoCodesByX(order,userId,searchString,offset,limit,fromDate,toDate){
 	
 		if (order ===''){
 			orderType = "FLS_ALL";
@@ -83,10 +83,10 @@
 			fromDate: FromDate,
 			toDate: ToDate
 		};
-		GetOrdersByXSend(req);
+		GetPromoCodesByXSend(req);
 	}
 		
-	GetOrdersByXSend = function(req) {
+	GetPromoCodesByXSend = function(req) {
 		$.ajax({
 			url: '/GetPromoCodesByX',
 			type: 'post',
