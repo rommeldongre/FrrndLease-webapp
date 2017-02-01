@@ -61,10 +61,22 @@ public class GetCreditsLogByXHandler extends Connect implements AppHandler {
 			int offset = rq.getCookie();
 			int limit = rq.getLimit();
 			String userId = rq.getUserId();
-			String fromDate = rq.getFromDate();
-			String toDate = rq.getToDate();
+			
+			long fromDateLong = Long.parseLong(rq.getFromDate());
+		    Date datefrom=new Date(fromDateLong);
+		    SimpleDateFormat dffromDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    String fromDate = dffromDate.format(datefrom);
+		    
+			
+			long toDateLong = Long.parseLong(rq.getToDate());
+		    Date date=new Date(toDateLong);
+		    SimpleDateFormat dftoDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    String toDate = dftoDate.format(date);
+		    
 			String interval = rq.getInterval();
 			String interimDate = toDate;
+			
+			
 					
 					//already getting all data from events table
 					sql = "SELECT tb1.credit_date, tb1.credit_amount, tb1.credit_type, tb2.user_full_name FROM `credit_log` tb1 INNER JOIN users tb2 WHERE ";
