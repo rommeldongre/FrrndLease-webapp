@@ -243,6 +243,16 @@ public class Items extends Connect {
 						e.printStackTrace();
 					}
 				}
+				
+				if(!userId.equals("anonymous") && FLS_WISHLIST_ADD.equals(status_W)){
+					LOGGER.info("Wish Item for Logged in User");
+					try {
+						Event event = new Event();
+						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_NOMAIL_ADD_WISH_ITEM, itemId, "The Item <a href=\"" + URL + "/myapp.html#/mywishlists"+ "\">" + title + "</a> has been added to your Wish List");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 	
 				// returning the new id
 				sql = "SELECT MAX(item_id) FROM items";
