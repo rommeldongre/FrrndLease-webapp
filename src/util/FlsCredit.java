@@ -370,7 +370,7 @@ public class FlsCredit extends Connect {
 		PreparedStatement ps1 = null,ps2=null;
 		ResultSet rs1 = null,rs2 = null;
 		String credit_type ="";
-		String membership="membership",order_date=null;
+		String membership="membership",order_date=null,unit=null;
 		final String LOGO_URL = "https://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
 		
 		int quantity=0,amount_payable=0,amount_total=0,credits_count=0,discount_value=0,rate=0,internet_charges=0,service_tax=0;
@@ -413,10 +413,20 @@ public class FlsCredit extends Connect {
 					activity = "Uber Membership";
 					quantity = amount_payable/MEMBER_VALUE;
 					rate = MEMBER_VALUE;
+					if(quantity==1){
+						unit = " Month";
+					}else{
+						unit = " Months";
+					}
 				}else{
 					activity = "Credits Bought";
 					quantity = amount_payable/CREDIT_VALUE;
 					rate = CREDIT_VALUE;
+					if(quantity==1){
+						unit = " Credit";
+					}else{
+						unit = " Credits";
+					}
 				}
 				
 				
@@ -533,7 +543,7 @@ public class FlsCredit extends Connect {
 		        text.setAlignment(Element.ALIGN_CENTER);
 		        cell5.addElement(text);
 		        
-		        text = new Paragraph(String.valueOf(quantity), h4);
+		        text = new Paragraph(String.valueOf(quantity)+unit, h4);
 		        text.setAlignment(Element.ALIGN_CENTER);
 		        cell5.addElement(text);
 		        

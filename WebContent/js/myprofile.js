@@ -649,7 +649,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
 		var getOrders = function(token){
 			
         var req = {
-			type: "FLS_ALL",
+			type: "FLS_EXTERNAL",
 			userId: userFactory.user,
 			cookie: token,
 			limit: 10,

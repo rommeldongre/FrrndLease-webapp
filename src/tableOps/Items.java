@@ -162,7 +162,7 @@ public class Items extends Connect {
 
 		LOGGER.info("Inside add method...");
 		
-		PreparedStatement stmt = null,s = null, s1 =null, checkWishItem_ps = null; 
+		PreparedStatement stmt = null,s = null, s1 =null, checkWishItem_ps = null, ps1 = null; 
 		Statement stmt1 = null;
 		ResultSet keys = null, rs = null, checkWishItem_rs = null;
 		Connection hcp = getConnectionFromPool();
@@ -243,6 +243,16 @@ public class Items extends Connect {
 						e.printStackTrace();
 					}
 				}
+				
+				if(!userId.equals("anonymous") && FLS_WISHLIST_ADD.equals(status_W)){
+					LOGGER.info("Wish Item for Logged in User");
+					try {
+						Event event = new Event();
+						event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_NOMAIL_ADD_WISH_ITEM, itemId, "The Item <a href=\"" + URL + "/myapp.html#/mywishlists"+ "\">" + title + "</a> has been added to your Wish List");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 	
 				// returning the new id
 				sql = "SELECT MAX(item_id) FROM items";
@@ -259,6 +269,11 @@ public class Items extends Connect {
 				badges.updateItemsCount();
 			}else{
 				res.setData(FLS_DUPLICATE_ENTRY, null, FLS_POST_ITEM_F_M);
+				String sqlUpdateItemsTable = "UPDATE items SET item_lastmodified=now() WHERE item_id=?";
+				ps1 = hcp.prepareStatement(sqlUpdateItemsTable);
+				ps1.setString(1, checkWishItem_rs.getString("item_id"));
+				
+				ps1.executeUpdate();
 			}
 
 		} catch (SQLException e) {

@@ -36,7 +36,7 @@
                     <!-- Dropdown starts here -->
                     <ul class="nav navbar-nav navbar-right">
 						
-						<li id="headerleaderoptions" class="btn btn-simple btn-tooltip" style="color:#edbf07;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title="See Leader Board" tooltip><i class="fa fa-trophy" data-toggle="modal" data-target="#leaderModal" aria-hidden="true"></i></li>
+						<li id="headerleaderoptions" class="btn btn-simple btn-tooltip" style="color:#05AE0E;font-size:16px;" data-toggle="tooltip" data-placement="bottom" title="See Leader Board" tooltip><i class="fa fa-trophy" data-toggle="modal" data-target="#leaderModal" aria-hidden="true"></i></li>
 						
 						<li ng-if="isAnonymous()"><a id="headerlikeoptions" onclick="ga('send', 'event', 'index', 'click', 'Like');" href="" ><div class="fb-like" data-href="https://www.facebook.com/frrndlease/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
                         
@@ -96,7 +96,7 @@
 						</thead>
 						<tbody ng-repeat="y in creditsArray">
 							<tr ng-repeat="x in y">
-								<td>{{ x.credit_date }}</td>
+								<td>{{ x.credit_date | date}}</td>
 								<td>{{ x.credit_amount }}</td>
 								<td>{{ x.credit_type }}</td>
 							</tr>

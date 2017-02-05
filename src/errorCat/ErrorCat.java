@@ -73,6 +73,8 @@ public class ErrorCat {
 	final public String FLS_ADD_ITEM_RATING = "Thanks for rating";
 	final public String FLS_DELETE_REQUEST = "Request Deleted successfully";
 	final public String FLS_ADD_PROMO_CODE = "Promo Code Generated successfully";
+	final public String FLS_UPDATE_PROMO_CODE = "Promo Code Updated successfully";
+	final public String FLS_DELETE_PROMO_CODE = "Promo Code Deleted successfully";
 	final public String FLS_EDIT_PROFILE = "Your Profile Has Been Updated!!";
 	final public String FLS_CHANGE_PICKUP_STATUS = "Your pickup status has been changed!!";
 	final public String FLS_DELIVERY_PLAN_CHANGED = "Your delivery plan has been saved!!";
@@ -125,6 +127,7 @@ public class ErrorCat {
 	final public String FLS_ITEMS_ES_ARCHIVED_M = "Cannot Archive Item as it is not InStore or Wished";
 	final public String FLS_ITEMS_DELETE_ARCHIVED_M = "Cannot Delete Item as it is not Archived State";
 	final public String FLS_RAZOR_EXCEPTION_M = "Couldn't get Data from Razor Pay API";
+	final public String FLS_PROMO_CODE_EXCEPTION_M = "Couldn't find Promo Code for this id";
 	
 	
 	//String query variables.

@@ -1,5 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GetItemStoreByXResObj extends ResObj {
 
 	// Return code for GetRequestsByUser
@@ -60,6 +64,9 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	// Avg Rating
 	int itemsAvgRating;
+	
+	// Last Modified Date
+	String lastModifiedDate;
 
 	boolean friendStatus, uber;
 
@@ -240,6 +247,19 @@ public class GetItemStoreByXResObj extends ResObj {
 
 	public void setItemsAvgRating(int itemsAvgRating) {
 		this.itemsAvgRating = itemsAvgRating;
+	}
+
+	public String getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(String lastModifiedDate) {
+		try {
+			Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(lastModifiedDate);
+			this.lastModifiedDate = Long.toString(date.getTime());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

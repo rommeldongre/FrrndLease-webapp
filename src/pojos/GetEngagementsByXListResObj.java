@@ -1,6 +1,9 @@
 package pojos;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class GetEngagementsByXListResObj extends ResObj{
@@ -19,7 +22,14 @@ public class GetEngagementsByXListResObj extends ResObj{
 	}
 
 	public void setLastEngagementId(String lastEngagementId) {
-		this.lastEngagementId = lastEngagementId;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(lastEngagementId);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		this.lastEngagementId = Long.toString(date.getTime());
 	}
 
 	public int getCode() {

@@ -2,28 +2,20 @@ package services;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import app.EditProfileHandler;
-import app.NotImplementedException;
-import pojos.EditProfileReqObj;
-import pojos.EditProfileResObj;
-import util.FlsLogger;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.util.JSONPObject;
-import org.json.JSONObject;
+
+import app.EditProfileHandler;
+import app.NotImplementedException;
+import pojos.EditProfileReqObj;
+import pojos.EditProfileResObj;
+import util.FlsLogger;
 
 @WebServlet(description = "Edit Profile for a given UserId", urlPatterns = { "/EditProfile" })
 public class EditProfile extends HttpServlet {
