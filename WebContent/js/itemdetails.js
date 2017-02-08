@@ -200,22 +200,28 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     $scope.deleteItem = function(){
         modalService.showModal({}, {bodyText: 'Are you sure you want to delete the Item?'}).then(
             function(result){
-                    $http({
-                        url:'/DeletePosting?req='+JSON.stringify({id:$scope.item_id,userId:userFactory.user}),
-                        method:"GET"
-                    }).then(function success(response){
-						if(response.data.Code==0){
-							bannerService.updatebannerMessage(response.data.Message,"/index.html");
+                $.ajax({
+                    url: '/DeletePosting',
+                    type: 'get',
+                    data: {
+                        req: JSON.stringify({id:$scope.item_id,userId:userFactory.user})
+                    },
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (response) {
+                        if(response.Code == 0){
+							bannerService.updatebannerMessage(response.Message,"/index.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
-							modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+							modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 								window.location.replace("index.html");
 							},function(){});
 						}
                     },
-                    function error(response){
-                        modalService.showModal({}, {bodyText: response.data.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
-                    });
+                    error: function () {
+                        console.log("Error response");
+                    }
+                });
             }, 
             function(){
 
