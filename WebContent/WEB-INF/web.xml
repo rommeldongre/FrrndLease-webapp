@@ -25,15 +25,15 @@
     <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
     <init-param>
         <param-name>ExpiresByType image</param-name>
-        <param-value>access plus 20 days</param-value>
+        <param-value>access plus 30 days</param-value>
     </init-param>
     <init-param>
         <param-name>ExpiresByType text/css</param-name>
-        <param-value>access plus 10 days</param-value>
+        <param-value>access plus 30 days</param-value>
     </init-param>
     <init-param>
         <param-name>ExpiresByType application/javascript</param-name>
-        <param-value>access plus 10 hours</param-value>
+        <param-value>access plus 30 days</param-value>
     </init-param>
 </filter>
 
@@ -41,6 +41,27 @@
     <filter-name>ExpiresFilter</filter-name>
     <url-pattern>/*</url-pattern>
     <dispatcher>REQUEST</dispatcher>
+</filter-mapping>
+
+<filter>
+ <filter-name>CompressionFilter</filter-name>
+ <filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>
+</filter>
+<filter-mapping>
+ <filter-name>CompressionFilter</filter-name>
+ <url-pattern>*.css</url-pattern>
+</filter-mapping>
+<filter-mapping>
+ <filter-name>CompressionFilter</filter-name>
+ <url-pattern>*.html</url-pattern>
+</filter-mapping>
+<filter-mapping>
+ <filter-name>CompressionFilter</filter-name>
+ <url-pattern>*.js</url-pattern>
+</filter-mapping>
+<filter-mapping>
+ <filter-name>CompressionFilter</filter-name>
+ <url-pattern>/*</url-pattern>
 </filter-mapping>
 
 </web-app>
