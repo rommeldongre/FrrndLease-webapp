@@ -1,67 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>flsv2</display-name>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
+    <display-name>flsv2</display-name>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
 
-<listener>
-    <listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
-</listener>
+    <listener>
+        <listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
+    </listener>
 
-<listener>
-    <listener-class>
-        util.FlsServletContextListener
-    </listener-class>
-</listener>
+    <listener>
+        <listener-class>
+            util.FlsServletContextListener
+        </listener-class>
+    </listener>
 
-<filter>
-    <filter-name>ExpiresFilter</filter-name>
-    <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
-    <init-param>
-        <param-name>ExpiresByType image</param-name>
-        <param-value>access plus 30 days</param-value>
-    </init-param>
-    <init-param>
-        <param-name>ExpiresByType text/css</param-name>
-        <param-value>access plus 30 days</param-value>
-    </init-param>
-    <init-param>
-        <param-name>ExpiresByType application/javascript</param-name>
-        <param-value>access plus 30 days</param-value>
-    </init-param>
-</filter>
+    <filter>
+        <filter-name>ExpiresFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+        <init-param>
+            <param-name>ExpiresByType image</param-name>
+            <param-value>access plus 30 days</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType text/css</param-name>
+            <param-value>access plus 30 days</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType application/javascript</param-name>
+            <param-value>access plus 30 days</param-value>
+        </init-param>
+    </filter>
 
-<filter-mapping>
-    <filter-name>ExpiresFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-</filter-mapping>
+    <filter-mapping>
+        <filter-name>ExpiresFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
 
-<filter>
- <filter-name>CompressionFilter</filter-name>
- <filter-class>net.sf.ehcache.constructs.web.filter.GzipFilter</filter-class>
-</filter>
-<filter-mapping>
- <filter-name>CompressionFilter</filter-name>
- <url-pattern>*.css</url-pattern>
-</filter-mapping>
-<filter-mapping>
- <filter-name>CompressionFilter</filter-name>
- <url-pattern>*.html</url-pattern>
-</filter-mapping>
-<filter-mapping>
- <filter-name>CompressionFilter</filter-name>
- <url-pattern>*.js</url-pattern>
-</filter-mapping>
-<filter-mapping>
- <filter-name>CompressionFilter</filter-name>
- <url-pattern>/*</url-pattern>
-</filter-mapping>
+    <filter>
+        <filter-name>CompressingFilter</filter-name>
+        <filter-class>com.github.ziplet.filter.compression.CompressingFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CompressingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 </web-app>
