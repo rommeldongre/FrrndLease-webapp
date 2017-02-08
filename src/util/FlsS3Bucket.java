@@ -25,6 +25,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GroupGrantee;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -193,7 +194,15 @@ public class FlsS3Bucket extends Connect {
 				}
 				
 				if (imageFile != null) {
-					s3Client.putObject(new PutObjectRequest(BUCKET_NAME, PATH_NAME + FILE_NAME, imageFile).withCannedAcl(CannedAccessControlList.PublicRead));
+					
+					ObjectMetadata metaData = new ObjectMetadata();
+				    metaData.setCacheControl("public, max-age= 31536000");
+				    
+					PutObjectRequest request = new PutObjectRequest(BUCKET_NAME, PATH_NAME + FILE_NAME, imageFile);
+					request.withCannedAcl(CannedAccessControlList.PublicRead);
+					request.withMetadata(metaData);
+					
+					s3Client.putObject(request);
 					imageFile.delete();
 					return BASE_URL + BUCKET_NAME + "/" + PATH_NAME + FILE_NAME;
 				}
