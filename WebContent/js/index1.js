@@ -103,3 +103,7 @@ indexApp.controller('pricingCtrl', ['$scope', '$location', 'modalService', funct
 		});
 	}
 }]);
+
+angular.element(document).ready(function() {
+  angular.bootstrap(document, ['indexApp']);
+});
