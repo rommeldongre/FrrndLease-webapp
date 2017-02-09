@@ -259,6 +259,8 @@ html, body{
 	color: #0066ff;
 	font-family: 'Happy Monkey', serif;
 	-webkit-filter: contrast(200%);
+    margin-top: 180px;
+    font-size: 75px;
 }
 
 #marketingline{
@@ -269,12 +271,14 @@ html, body{
 	/*font-size: 150%;*/
 	font-family: 'Happy Monkey', serif;
 	-webkit-filter: contrast(200%);
+    font-size: 38px;
 }
 
 #marketingstore{
 	display: block;
 	position: relative;
 	text-align: center;
+    margin-top: 27px;
 }
 
 #storebutton{
@@ -432,4 +436,17 @@ ul{
 		position: relative;
 		margin-left: -2%;
 	}
+    
+    #marketingheading{
+        margin-top: 132px;
+        font-size: 55px;
+    }
+    
+    #marketingline{
+        font-size: 27px;
+    }
+    
+    #marketingstore{
+        margin-top: 19.8px;
+    }
 }
