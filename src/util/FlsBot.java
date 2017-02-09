@@ -36,14 +36,32 @@ public class FlsBot extends Connect{
 	        JSONObject c0 = new JSONObject();
 	        JSONObject c1 = new JSONObject();
 
+	        JSONObject attachment = new JSONObject();
+	        JSONObject payload = new JSONObject();
+	        JSONArray buttons = new JSONArray();
+	        JSONObject button1 = new JSONObject();
+
 	        root.put("recipient", c0);
 	        root.put("message", c1);
 
 	        c0.put("id", userId);
-	        c1.put("text", Message);
+	        c1.put("attachment", attachment);
+
+	        attachment.put("type", "template");
+	        attachment.put("payload", payload);
+
+	        payload.put("template_type", "button");
+	        payload.put("text", Message);
+	        payload.put("buttons", buttons);
+
+	          
+	        button1.put("type", "web_url");
+	        button1.put("url", URL);
+	        button1.put("title", "SignUp");
+	        buttons.put(button1);
+	        
 	        botMessage= root.toString();
 		}else{
-			   
 				JSONObject root = new JSONObject();
 		        JSONObject c0 = new JSONObject();
 		        JSONObject c1 = new JSONObject();
