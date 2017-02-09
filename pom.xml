@@ -244,10 +244,10 @@
 				<executions>
 					<execution>
 						<id>default-minify</id>
-						<phase>package</phase>
+						<phase>prepare-package</phase>
 						<configuration>
 							<charset>UTF-8</charset>
-							<nosuffix>true</nosuffix>
+							<!-- <nosuffix>true</nosuffix> -->
 							<skipMerge>true</skipMerge>
 							<webappSourceDir>${basedir}/WebContent</webappSourceDir>
 							<cssSourceDir>css</cssSourceDir>
