@@ -790,7 +790,7 @@ headerApp.service('loginSignupService', ['$rootScope', function($rootScope){
     
 }]);
 
-headerApp.directive('loadImage', ['$timeout', function($timeout){
+headerApp.directive('loadImage', ['$http', function($http){
     return{
         restrict:'A',
         scope: {
@@ -829,21 +829,19 @@ headerApp.directive('loadImage', ['$timeout', function($timeout){
                 
                 if(ImgSrc != 'loading' && ImgSrc != '' && ImgSrc != null && ImgSrc != 'null' && ImgSrc != undefined){
                     attrs.$set('ngSrc', 'images/loader.gif');
-                    $timeout(function(){
-                        loadImage(
-                            ImgSrc,
-                            function(canvas){
-                                element.removeAttr('style');
-                                attrs.$set('ngSrc', canvas.toDataURL());
-                            },
-                            {
-                                maxWidth: MaxWidth,
-                                maxHeight: MaxHeight,
-                                canvas: true,
-                                crossOrigin: "anonymous"
-                            }
-                        );
-				    }, 2000);
+                    loadImage(
+                        ImgSrc,
+                        function(canvas){
+                            element.removeAttr('style');
+                            attrs.$set('ngSrc', canvas.toDataURL());
+                        },
+                        {
+                            maxWidth: MaxWidth,
+                            maxHeight: MaxHeight,
+                            canvas: true,
+                            crossOrigin: "anonymous"
+                        }
+                    );
                 }else if(ImgSrc === '' || ImgSrc === null || ImgSrc === 'null' || ImgSrc === undefined){
                     element.css('width', MaxWidth+"px");
                     element.css('height', MaxHeight+"px");
