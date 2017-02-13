@@ -15,12 +15,12 @@ public class FlsBot extends Connect{
 	private FlsLogger LOGGER = new FlsLogger(FlsBot.class.getName());
 	
 	private String URL = FlsConfig.prefixUrl;
-	private String item_title=null,item_public_url=null;
+	private String item_title=null,item_public_url=null,item_desc=null,item_primary_image_link=null;
 	int item_offset=0;
 	
 	
 	public String sendBotMessage(String userId, String text, int offset){
-		String botMessage = null;
+		String botMessageSearch = null;
 		
 		LOGGER.info("Text from page is "+text);
 		boolean itemFound  = fetchItem(text,offset);
@@ -60,52 +60,62 @@ public class FlsBot extends Connect{
 	        button1.put("title", "SignUp");
 	        buttons.put(button1);
 	        
-	        botMessage= root.toString();
+	        botMessageSearch= root.toString();
 		}else{
-				JSONObject root = new JSONObject();
-		        JSONObject c0 = new JSONObject();
-		        JSONObject c1 = new JSONObject();
-
-		        JSONObject attachment = new JSONObject();
-		        JSONObject payload = new JSONObject();
-		        JSONArray buttons = new JSONArray();
-		        JSONObject button1 = new JSONObject();
-		        JSONObject button2 = new JSONObject();
-		        JSONObject button3 = new JSONObject();
-
-		        root.put("recipient", c0);
-		        root.put("message", c1);
-
-		        c0.put("id", userId);
-		        c1.put("attachment", attachment);
-
-		        attachment.put("type", "template");
-		        attachment.put("payload", payload);
-
-		        payload.put("template_type", "button");
-		        payload.put("text", "An Item was found with title : "+item_title);
-		        payload.put("buttons", buttons);
-
+		      ///Generic Template Starts Here
 		        
-		        button1.put("type", "web_url");
-		        button1.put("url", item_public_url);
-		        button1.put("title", "show Item");
-		        buttons.put(button1);
+				JSONObject root_gp = new JSONObject();
+		        JSONObject c0_gp = new JSONObject();
+		        JSONObject c1_gp = new JSONObject();
 		        
-		        button2.put("type", "postback");
-		        button2.put("title", "Next Item");
-		        button2.put("payload", text+"="+item_offset);
-		        buttons.put(button2);
+		        JSONObject attachment_gp = new JSONObject();
+		        JSONObject payload_gp = new JSONObject();
+		        JSONArray arrayButton_gp = new JSONArray();
+		        JSONArray arrayelements_gp = new JSONArray();
+		        JSONObject elementsObj_gp = new JSONObject();
 		        
-		        button3.put("type", "web_url");
-		        button3.put("url", URL);
-		        button3.put("title", "SignUp");
-		        buttons.put(button3);
+		        JSONObject buttons1_gp = new JSONObject();
+		        JSONObject buttons2_gp = new JSONObject();
+		        JSONObject buttons3_gp = new JSONObject();
+
+		        root_gp.put("recipient", c0_gp);
+		        root_gp.put("message", c1_gp);
+		        c0_gp.put("id", userId);
 		        
-	        botMessage= root.toString();
+		        
+		        c1_gp.put("attachment", attachment_gp);
+		        		attachment_gp.put("type", "template");
+		        		attachment_gp.put("payload", payload_gp);
+		        			payload_gp.put("template_type", "generic");
+		        			payload_gp.put("elements", arrayelements_gp);
+		        				arrayelements_gp.put(elementsObj_gp);
+		        					elementsObj_gp.put("title", item_title);
+		        					elementsObj_gp.put("image_url", item_primary_image_link);
+		        					elementsObj_gp.put("subtitle", item_desc);
+		        						elementsObj_gp.put("buttons", arrayButton_gp);
+		        						
+		        						buttons1_gp.put("type", "web_url");
+		        						buttons1_gp.put("url", item_public_url);
+		        						buttons1_gp.put("title", "View on Website");
+		        					arrayButton_gp.put(buttons1_gp);
+
+		        						
+		        						buttons2_gp.put("type", "postback");
+		        						buttons2_gp.put("title", "Go to Next Item");
+		        						buttons2_gp.put("payload", text+"="+item_offset);
+		        					arrayButton_gp.put(buttons2_gp);
+		        					
+		        					buttons3_gp.put("type", "web_url");
+		        					buttons3_gp.put("url", URL);
+		        					buttons3_gp.put("title", "Sign Up");
+		        					arrayButton_gp.put(buttons3_gp);
+		        					
+		        					
+		        
+		      botMessageSearch= root_gp.toString();
 		}
 		
-		return botMessage;
+		return botMessageSearch;
 		
 	}
 	
@@ -180,6 +190,8 @@ public class FlsBot extends Connect{
 
 			if (rs1.next()) {
 				item_title  = rs1.getString("item_name");
+				item_desc = rs1.getString("item_desc");
+				item_primary_image_link = rs1.getString("item_primary_image_link");
 				item_uid =  rs1.getString("item_uid");
 				item_public_url = URL + "/ItemDetails?uid="+item_uid;
 				item_offset = offset+1;
