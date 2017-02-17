@@ -107,11 +107,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                         dataType: "json",
                         success:function(response){
                             if(response.Code== 0){
-                                bannerService.updatebannerMessage(response.Message,"/index.html");
+                                bannerService.updatebannerMessage(response.Message,"/myapp.html");
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
                             }else{
                                 modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                                    window.location.replace("index.html");
+                                    window.location.replace("myapp.html");
                                 },function(){});
                            }
                         },
@@ -210,11 +210,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                     dataType: "json",
                     success: function (response) {
                         if(response.Code == 0){
-							bannerService.updatebannerMessage(response.Message,"/index.html");
+							bannerService.updatebannerMessage(response.Message,"/myapp.html");
 							$("html, body").animate({ scrollTop: 0 }, "slow");
 						}else{
 							modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-								window.location.replace("index.html");
+								window.location.replace("myapp.html");
 							},function(){});
 						}
                     },

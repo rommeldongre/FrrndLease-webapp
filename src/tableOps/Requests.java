@@ -137,9 +137,10 @@ public class Requests extends Connect {
 			
 			if(rs6.next()){
 				if(rs6.getBoolean("expired")){
-					String sqlCountOwnerRequests = "SELECT COUNT(*) AS requests FROM `requests` tb1 INNER JOIN `items` tb2 ON tb1.request_item_id=tb2.item_id WHERE tb2.item_user_id=?";
+					String sqlCountOwnerRequests = "SELECT COUNT(*) AS requests FROM `requests` tb1 INNER JOIN `items` tb2 ON tb1.request_item_id=tb2.item_id WHERE tb2.item_user_id=?  AND tb1.request_status=?";
 					ps7 = hcp.prepareStatement(sqlCountOwnerRequests);
 					ps7.setString(1, rs6.getString("user_id"));
+					ps7.setString(2, "Active");
 					
 					rs7 = ps7.executeQuery();
 					
