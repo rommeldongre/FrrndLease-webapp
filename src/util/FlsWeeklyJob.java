@@ -52,7 +52,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 			ps2 = hcp.prepareStatement(sqlSelectPrimePlaces);
 			rs2 = ps2.executeQuery();
 			
-			String sqlSelectPhotoIdDate = "SELECT * FROM `config` WHERE option=?";
+			String sqlSelectPhotoIdDate = "SELECT * FROM `config` WHERE config.option=?";
 			ps3 = hcp.prepareStatement(sqlSelectPhotoIdDate);
 			ps3.setString(1, "photo_id_reminder");
 			rs3 = ps3.executeQuery();
