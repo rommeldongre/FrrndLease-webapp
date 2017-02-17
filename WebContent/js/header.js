@@ -828,6 +828,8 @@ headerApp.directive('loadImage', ['$http', function($http){
                     MaxHeight = scope.maxHeight;
                 
                 if(ImgSrc != 'loading' && ImgSrc != '' && ImgSrc != null && ImgSrc != 'null' && ImgSrc != undefined){
+                    element.css('width', MaxWidth+"px");
+                    element.css('height', MaxHeight+"px");
                     attrs.$set('ngSrc', 'images/loader.gif');
                     loadImage(
                         ImgSrc,
