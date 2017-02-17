@@ -68,7 +68,7 @@ public class GetRequestsByUserHandler extends Connect implements AppHandler {
 				// Request Details
 				rs.setRequestId(rs1.getInt("request_id"));
 				rs.setRequestDate(rs1.getString("request_lastmodified"));
-				rs.setMessage(rs1.getString("request_message"));
+				rs.setRequestMessage(rs1.getString("request_message"));
 				
 				// Owner Details
 				rs.setOwnerId(rs1.getString("user_id"));
