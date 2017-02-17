@@ -64,6 +64,23 @@
                         <div class="row" style="margin-top:2%;">
                             <div class="col-md-12">
                                 <h5><i ng-if="request.description.length>0" class="fa fa-quote-left" aria-hidden="true"></i> {{request.description}} <i ng-if="request.description.length>0" class="fa fa-quote-right" aria-hidden="true"></i></h5>
+
+                                <div class="description">
+                                    Request Date - <strong>{{request.requestDate | date}}</strong>
+                                    <span class="text-muted pull-right" ng-if="request.requestMessage!=null">
+                                        <i class="fa fa-quote-left" aria-hidden="true"></i> {{request.requestMessage}} <i class="fa fa-quote-right" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+
+                                <hr>
+                                <div class="text-center">
+                                    <button class="btn btn-danger btn-fill btn-sm" ng-click="deleteRequest(request.requestId,$index)">
+                                        Delete Request
+                                    </button>
+                                    <button class="btn btn-default btn-fill btn-sm" send-message-to="request.ownerId" item-id="request.itemId">
+                                        Send Message
+                                    </button>
+                                </div>
                             </div>
                         </div>
                    </div>
@@ -91,22 +108,7 @@
                             <p class="description text-center">
                                 <i class="fa fa-map-marker text-muted"></i>&nbsp;{{request.distance == '0m' ? 'Under 1km' : request.distance}}&nbsp;-&nbsp;{{request.ownerSublocality+","+request.ownerLocality}}<br>
                                 <user-badges user-id="request.ownerId"></user-badges>
-                                <span class="text-muted" ng-if="request.requestMessage!=null" style="cursor:pointer;" data-toggle="popover" title="You said - " data-placement="top" data-content="{{request.requestMessage}}" popover>
-                                    <i class="fa fa-quote-left" aria-hidden="true"></i> {{request.requestMessage | limitTo: 15}}<span ng-if="request.requestMessage.length > 15">&hellip;</span> <i class="fa fa-quote-right" aria-hidden="true"></i>
-                                </span>
                             </p>
-                        </div>
-                        <div class="description text-center">
-                            <i class="fa fa-calendar" aria-hidden="true"></i> {{request.requestDate | date}}
-                        </div>
-                        <hr>
-                        <div class="text-center">
-                            <button data-toggle="tooltip" data-placement="top" title="Delete Request" class="btn btn-danger btn-simple btn-icon btn-tooltip" ng-click="deleteRequest(request.requestId,$index)" tooltip>
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                            </button>
-                            <button data-toggle="tooltip" data-placement="top" title="Send Message" class="btn btn-social btn-simple btn-icon btn-tooltip" send-message-to="request.ownerId" item-id="request.itemId" tooltip>
-                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
