@@ -1,16 +1,22 @@
 package app;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 import connect.Connect;
 import pojos.ReqObj;
 import pojos.ResObj;
 import pojos.SaveUserPicsInS3ReqObj;
 import pojos.SaveUserPicsInS3ResObj;
+import util.Event;
 import util.FlsLogger;
 import util.FlsS3Bucket;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
 import util.OAuth;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 
 public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 
@@ -35,6 +41,9 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 		
 		SaveUserPicsInS3ReqObj rq = (SaveUserPicsInS3ReqObj) req;
 		SaveUserPicsInS3ResObj rs = new SaveUserPicsInS3ResObj();
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
 		
 		try {
 			OAuth oauth = new OAuth();
@@ -89,6 +98,24 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 							s3Bucket.deleteImage(Bucket_Name.USERS_BUCKET, existingLink);
 						
 						s3Bucket.saveUserPics(link, rq.isProfile());
+						
+						// Changing verification status of the user
+						String sqlUpdateVerification = "UPDATE users SET user_verified_flag=?  WHERE user_id=?";
+						ps1 = hcp.prepareStatement(sqlUpdateVerification);
+						ps1.setInt(1, 0);
+						ps1.setString(2, rq.getUserId());
+						
+						int rs1 = ps1.executeUpdate();
+						
+						if(rs1 == 1){
+							LOGGER.info("User Verficiation changed to unverified and sending a notification to admin");
+							try{
+								Event event = new Event();
+								event.createEvent(rq.getUserId(), "admin@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADMIN_PHOTO_ID_UPLOAD, 0, "User Id - " + rq.getUserId() + " has uploaded the photoid. Please Verifiy!!");
+							}catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
 					}
 				}
 			}
@@ -114,6 +141,13 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 			e.printStackTrace();
 			rs.setCode(FLS_INVALID_OPERATION);
 			rs.setMessage(FLS_INVALID_OPERATION_M);
+		} finally {
+			try {
+				if(ps1 != null) ps1.close();
+				if(hcp != null) hcp.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		LOGGER.info("Finished process method");

@@ -496,6 +496,16 @@ public class FlsEmail extends Connect{
 				BODY = "<body>" + obj.getString("message") + "</body>";
 				break;
 				
+			case FLS_MAIL_ADMIN_PHOTO_ID_UPLOAD:
+				SUBJECT = ("User Uploaded Photo Id");
+				BODY = "<body>" + obj.getString("message") + "</body>";
+				break;
+				
+			case FLS_MAIL_USER_PHOTO_ID_VERIFIED:
+				SUBJECT = ("Congratulations!! Photo Id Verified");
+				BODY = "<body>" + obj.getString("message") + "</body>";
+				break;
+				
 			default:
 				SUBJECT = (" Default Subject");
 				BODY = "Default Message ... Contact us, you should never get this! ";

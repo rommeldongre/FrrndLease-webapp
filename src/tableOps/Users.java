@@ -1130,6 +1130,13 @@ public class Users extends Connect {
 				}else{
 					message = "1";
 					credits.logCredit(userId, 20, "Photo Id Verified", "", Credit.ADD);
+					
+					try{
+						Event event = new Event();
+						event.createEvent("admin@frrndlease.com", userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_USER_PHOTO_ID_VERIFIED, 0, "Congratulations!! Your Photo Id is verified.");
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			
