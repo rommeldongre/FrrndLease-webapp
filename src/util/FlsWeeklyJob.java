@@ -86,7 +86,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
 				
 			}
 			
-			String sqlAddNextPhotoIdDate = "UPDATE `config` SET `value`=(CURRENT_TIMESTAMP + INTERVAL 192 DAY_HOUR) WHERE option=?";
+			String sqlAddNextPhotoIdDate = "UPDATE `config` SET `value`=(CURRENT_TIMESTAMP + INTERVAL 192 DAY_HOUR) WHERE config.option=?";
 			ps4 = hcp.prepareStatement(sqlAddNextPhotoIdDate);
 			ps4.setString(1, "photo_id_reminder");
 			ps4.executeUpdate();
