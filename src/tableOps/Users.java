@@ -1108,6 +1108,8 @@ public class Users extends Connect {
 		
 		try{
 			
+			FlsCredit credits = new FlsCredit();
+			
 			String sqlEditVerification = "UPDATE users SET user_verified_flag=?  WHERE user_id=?";
 			ps1 = hcp.prepareStatement(sqlEditVerification);
 			ps1.setInt(1, verification);
@@ -1122,10 +1124,13 @@ public class Users extends Connect {
 			rs2 = ps2.executeQuery();
 			
 			if(rs2.next()){
-				if(rs2.getInt("user_verified_flag") == 0)
+				if(rs2.getInt("user_verified_flag") == 0){
 					message = "0";
-				else
+					credits.logCredit(userId, 20, "Photo Id Unverified", "", Credit.SUB);
+				}else{
 					message = "1";
+					credits.logCredit(userId, 20, "Photo Id Verified", "", Credit.ADD);
+				}
 			}
 			
 			FlsPlan plan = new FlsPlan();
