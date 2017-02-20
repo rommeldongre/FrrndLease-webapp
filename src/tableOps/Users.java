@@ -1108,6 +1108,8 @@ public class Users extends Connect {
 		
 		try{
 			
+			FlsCredit credits = new FlsCredit();
+			
 			String sqlEditVerification = "UPDATE users SET user_verified_flag=?  WHERE user_id=?";
 			ps1 = hcp.prepareStatement(sqlEditVerification);
 			ps1.setInt(1, verification);
@@ -1122,10 +1124,20 @@ public class Users extends Connect {
 			rs2 = ps2.executeQuery();
 			
 			if(rs2.next()){
-				if(rs2.getInt("user_verified_flag") == 0)
+				if(rs2.getInt("user_verified_flag") == 0){
 					message = "0";
-				else
+					credits.logCredit(userId, 20, "Photo Id Unverified", "", Credit.SUB);
+				}else{
 					message = "1";
+					credits.logCredit(userId, 20, "Photo Id Verified", "", Credit.ADD);
+					
+					try{
+						Event event = new Event();
+						event.createEvent("admin@frrndlease.com", userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_USER_PHOTO_ID_VERIFIED, 0, "Congratulations!! Your Photo Id is verified.");
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			
 			FlsPlan plan = new FlsPlan();
