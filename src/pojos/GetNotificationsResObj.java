@@ -132,6 +132,7 @@ public class GetNotificationsResObj {
 			case "FLS_MAIL_ADD_LEAD":
 			case "FLS_CREDITS_INVOICE":
 			case "FLS_MEMBERSHIP_INVOICE":
+			case "FLS_MAIL_ADMIN_PHOTO_ID_UPLOAD":
 				this.notificationType = Icon_Type.FLS_USER.name();
 				break;
 			case "FLS_MAIL_GRANT_REQUEST_FROM":
@@ -150,6 +151,7 @@ public class GetNotificationsResObj {
 			case "FLS_MAIL_RENEW_LEASE_OWNER":
 			case "FLS_MAIL_RENEW_LEASE_REQUESTOR":
 			case "FLS_MAIL_ITEM_INSTORE":
+			case "FLS_MAIL_USER_PHOTO_ID_VERIFIED":
 				this.notificationType = Icon_Type.FLS_POSITIVE.name();
 				break;
 			case "FLS_MAIL_REJECT_REQUEST_FROM":
