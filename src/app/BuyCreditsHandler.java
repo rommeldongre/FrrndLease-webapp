@@ -144,17 +144,19 @@ public class BuyCreditsHandler extends Connect implements AppHandler {
 						
 					}
 					
-					int orderId = credits.getOrderId(creditLogId);
-					if(orderId != -1){
-						try {
-							Event event = new Event();
-							event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_CREDITS_INVOICE, 0, 
-							  "Congratulations! You have bought " + totalCreditsEarned + " credits using promo code - " + promoCode
-							+ " Download an Invoice for the same <form action=\"" + URL + "/GetOrderInvoice\" method=\"POST\" target=\"_blank\">"
-			                + "<input type=\"hidden\" name=\"orderId\" value=\"" + orderId + "\" />"
-			                + "<input type=\"submit\" style=\"background-color:#1D62F0\" value=\"Get Invoice\" /></form>");
-						} catch (Exception e) {
-							e.printStackTrace();
+					if (codeType.equals("FLS_EXTERNAL")) {
+						int orderId = credits.getOrderId(creditLogId);
+						if(orderId != -1){
+							try {
+								Event event = new Event();
+								event.createEvent(userId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_CREDITS_INVOICE, 0, 
+								  "Congratulations! You have bought " + totalCreditsEarned + " credits using promo code - " + promoCode
+								+ " Download an Invoice for the same <form action=\"" + URL + "/GetOrderInvoice\" method=\"POST\" target=\"_blank\">"
+				                + "<input type=\"hidden\" name=\"orderId\" value=\"" + orderId + "\" />"
+				                + "<input type=\"submit\" style=\"background-color:#1D62F0\" value=\"Get Invoice\" /></form>");
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
 					}
 
