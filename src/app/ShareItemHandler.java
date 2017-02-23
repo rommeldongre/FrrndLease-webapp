@@ -87,11 +87,10 @@ public class ShareItemHandler extends Connect implements AppHandler {
 						if(!rs1.getString("friend_id").equals(rq.getItemOwnerId())){
 							if(rs1.getString("friend_status").equals("signedup")){
 								friendList = friendList + rs1.getString("friend_full_name")+"<br/>";
-								event.createEvent(rq.getUserId(), rs1.getString("friend_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_SHARE_ITEM_FRIEND, rq.getItemId(), "Your Friend "+rq.getUserName()+" has shared an item <a href='" + item_url + rq.getItemUid() + "'>"+rq.getItemTitle()+"</a> with you on FrrndLease");
 							}else{
 								friendList = friendList + rs1.getString("friend_id")+"<br/>";
-								event.createEvent(rq.getUserId(), rs1.getString("friend_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_SHARE_ITEM_FRIEND, rq.getItemId(), "Your Friend "+rq.getUserName()+" has shared an item <a href='" + item_url + rq.getItemUid() + "'>"+rq.getItemTitle()+"</a> with you on FrrndLease");
 							}
+							event.createEvent(rq.getUserId(), rs1.getString("friend_id"), Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_SHARE_ITEM_FRIEND, rq.getItemId(), "Your Friend "+rq.getUserName()+" has shared an item <a href='" + item_url + rq.getItemUid() + "'>"+rq.getItemTitle()+"</a> with you on FrrndLease");
 							friends_count++;
 						}
 					}
