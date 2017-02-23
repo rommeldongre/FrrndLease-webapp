@@ -513,7 +513,7 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_SHARE_ITEM_FRIEND:
 				SUBJECT = (" Item [" + obj.getString("title") + "] shared with you on FrrndLease");
-				BODY = ("<body>Your Friend [" + obj.getString("fromUserName") + "] has shared an item  with you on FrrndLease <br/>" + obj.getString("title")
+				BODY = ("<body>Your Friend '" + obj.getString("fromUserName") + "' has shared an item  with you on FrrndLease <br/>" + obj.getString("title")
 						+ "(" + obj.getString("category") 
 						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
 						+ "<br/>"+ obj.getString("description")+"<br/><br/>"
