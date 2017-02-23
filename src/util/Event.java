@@ -99,7 +99,8 @@ public class Event extends Connect{
 		FLS_CREDITS_INVOICE,
 		FLS_MEMBERSHIP_INVOICE,
 		FLS_MAIL_ADMIN_PHOTO_ID_UPLOAD,
-		FLS_MAIL_USER_PHOTO_ID_VERIFIED
+		FLS_MAIL_USER_PHOTO_ID_VERIFIED,
+		FLS_MAIL_WEEKLY_DIGEST
 	}
 	
 	public enum Event_Type {
@@ -536,6 +537,7 @@ public class Event extends Connect{
 					case FLS_MAIL_REGISTER:
 					case FLS_MAIL_SIGNUP_VALIDATION:
 					case FLS_EMAIL_VERIFICATION:
+					case FLS_MAIL_WEEKLY_DIGEST:
 						return sendEmail(eventId);
 					case FLS_SMS_FORGOT_PASSWORD:
 					case FLS_SMS_SIGNUP_VALIDATION:

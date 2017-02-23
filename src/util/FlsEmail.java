@@ -506,6 +506,11 @@ public class FlsEmail extends Connect{
 				BODY = "<body>" + obj.getString("message") + "</body>";
 				break;
 				
+			case FLS_MAIL_WEEKLY_DIGEST:
+				SUBJECT = ("Weekly Digest");
+				BODY = obj.getString("message");
+				break;
+				
 			default:
 				SUBJECT = (" Default Subject");
 				BODY = "Default Message ... Contact us, you should never get this! ";

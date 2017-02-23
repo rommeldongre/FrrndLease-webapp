@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2058;
+	public final int appBuild = 2059;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2197,6 +2197,37 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2058;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds time stamp coloumn in friends tables
+				if (dbBuild < 2059) {
+					
+					// Add column for friend date
+					String sqlAddFriendTimeStamp = "ALTER TABLE `friends` ADD COLUMN `friend_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `friend_id`";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddFriendTimeStamp);
+						ps1.executeUpdate();
+						ps1.close();
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2059;
 					updateDBBuild(dbBuild);
 				}
 				
