@@ -43,9 +43,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     $scope.item_id = $window.item_id;
     $scope.user_id = $window.userId;
 	$scope.uid     = $window.uid;
-	
-	$scope.loginStatus = true;
-        
+	        
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){
         $scope.showError = true;
@@ -87,15 +85,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	
         });
     }
-	
-	var getLoginStatus = function(){
-		if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous"){
-			$scope.loginStatus = false; 
-                }
-	 }
-    
+	    
     getItemsRating();
-	getLoginStatus();
     
     $scope.requestItem = function(){
         modalService.showModal({}, {messaging: true, bodyText: 'Create A Request. Write a message to Item\'s Owner', actionButtonText: 'Send'}).then(
@@ -378,14 +369,18 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     }
 	
 	$scope.shareItem = function(){
-		$("#openBtn_itemShare").click();
+		if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous"){
+			$('#loginModal').modal('show');
+        }else{
+			$("#openBtn_itemShare").click();
+		}	
 	}
 	
 	$scope.shareWithfriends = function(){
 		$("#openBtn_itemShare").click();
 		
 		var req = {
-                userId: userFactory.user,
+				userId: userFactory.user,
 				userName:userFactory.userName,
 				accessToken: userFactory.userAccessToken,
 				itemId: parseInt($scope.item_id),
@@ -393,8 +388,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				itemUid: $scope.uid,
 				itemOwnerId: $scope.user_id,
 				friendsStatus: $scope.friendsCount
-            }
-           sendshareWithfriends(req);
+			}
+		sendshareWithfriends(req);
 	}
 	
 	var sendshareWithfriends = function(req){

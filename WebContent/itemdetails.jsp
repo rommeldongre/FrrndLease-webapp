@@ -174,7 +174,7 @@
                                     <button type="button" class="btn btn-social btn-fill btn-facebook" ng-click="shareItem()">
                                         <i class="fa fa-facebook-square"></i> Share
                                     </button>
-									<button ng-if="loginStatus" class="btn btn-simple" ng-click="shareItem()" style="padding:8px;">Share on FrrndLease</button>
+									<button class="btn btn-simple" ng-click="shareItem()" style="padding:8px;">Share on FrrndLease</button>
                                     <button ng-if="!userMatch" class="btn btn-simple" ng-click="sendItemMessage()" style="padding:8px;">Message</button>
                                     <button ng-if="!userMatch" class="btn btn-simple" ng-click="wishItem()" style="padding:8px;">Add to Wishlist</button>
                                     <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()" style="padding:8px;">Show Item Timeline</button>
