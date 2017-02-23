@@ -174,6 +174,7 @@
                                     <button type="button" class="btn btn-social btn-fill btn-facebook" ng-click="shareItem()">
                                         <i class="fa fa-facebook-square"></i> Share
                                     </button>
+									<button ng-if="loginStatus" class="btn btn-simple" ng-click="shareItem()" style="padding:8px;">Share on FrrndLease</button>
                                     <button ng-if="!userMatch" class="btn btn-simple" ng-click="sendItemMessage()" style="padding:8px;">Message</button>
                                     <button ng-if="!userMatch" class="btn btn-simple" ng-click="wishItem()" style="padding:8px;">Add to Wishlist</button>
                                     <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()" style="padding:8px;">Show Item Timeline</button>
@@ -219,13 +220,37 @@
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
-                                <button class="btn btn-primary btn-fill" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextItemTimeline()">Show More</button>
+								<button class="btn btn-primary btn-fill" id="next_credits" ng-model="showNext" ng-if="showNext == true" ng-click="loadNextItemTimeline()">Show More</button>
                                 </div>
 
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
                     <!-- sample pop up ends here-->
+					
+					<!-- share pop up starts here-->
+                    <button ng-hide="true" href="#myModalTable_itemShare" id="openBtn_itemShare" data-toggle="modal" class="btn btn-default">Modal</button>
+
+                    <div class="modal fade" id="myModalTable_itemShare" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                    <h3 class="modal-title">Share With Friends</h3>
+                                </div>
+                                <div class="modal-body" ng-init="friendsCount=false">
+									<input type="radio" ng-model="friendsCount" ng-value="true" >All Friends<br>
+									<input type="radio" ng-model="friendsCount" ng-value="false" checked="checked" >Confirmed Friends<br>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
+                                <button class="btn btn-primary btn-fill" id="share_button" ng-model="shareFriends" ng-click="shareWithfriends()">Share</button>
+                                </div>
+
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    <!-- share pop up ends here-->
                 </div>
             </div>
             <div class="col-lg-1 col-md-1"></div>

@@ -43,6 +43,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     $scope.item_id = $window.item_id;
     $scope.user_id = $window.userId;
 	$scope.uid     = $window.uid;
+	
+	$scope.loginStatus = true;
         
     // checking if the response code is 0 or not to show error div of itemdetails div
     if($window.code != 0){
@@ -85,8 +87,15 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	
         });
     }
+	
+	var getLoginStatus = function(){
+		if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous"){
+			$scope.loginStatus = false; 
+                }
+	 }
     
     getItemsRating();
+	getLoginStatus();
     
     $scope.requestItem = function(){
         modalService.showModal({}, {messaging: true, bodyText: 'Create A Request. Write a message to Item\'s Owner', actionButtonText: 'Send'}).then(
@@ -367,5 +376,54 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						}, function(){});
         }
     }
+	
+	$scope.shareItem = function(){
+		$("#openBtn_itemShare").click();
+	}
+	
+	$scope.shareWithfriends = function(){
+		$("#openBtn_itemShare").click();
+		
+		var req = {
+                userId: userFactory.user,
+				userName:userFactory.userName,
+				accessToken: userFactory.userAccessToken,
+				itemId: parseInt($scope.item_id),
+				itemTitle: $scope.item.title,
+				itemUid: $scope.uid,
+				itemOwnerId: $scope.user_id,
+				friendsStatus: $scope.friendsCount
+            }
+           sendshareWithfriends(req);
+	}
+	
+	var sendshareWithfriends = function(req){
+		
+		$.ajax({
+			url: '/ShareItem',
+			type: 'post',
+			data: JSON.stringify(req),
+			contentType: "application/x-www-form-urlencoded",
+			dataType: "json",
+			success: function(response) {
+				if(response.code==0){
+					bannerService.updatebannerMessage(response.message,"");
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+				}else if(response.code==201){
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){})
+				}else{
+					modalService.showModal({}, {bodyText: "Error while Sharing Item, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){});
+				}
+			},
+		
+			error: function() {
+				console.log("Not able to send message");
+			}
+		});
+	}
+	
+	
     
 }]);

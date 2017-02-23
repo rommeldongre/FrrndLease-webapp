@@ -511,6 +511,21 @@ public class FlsEmail extends Connect{
 				BODY = obj.getString("message");
 				break;
 				
+			case FLS_MAIL_SHARE_ITEM_FRIEND:
+				SUBJECT = (" Item [" + obj.getString("title") + "] shared with you on FrrndLease");
+				BODY = ("<body>Your Friend [" + obj.getString("fromUserName") + "] has shared an item  with you on FrrndLease <br/>" + obj.getString("title")
+						+ "(" + obj.getString("category") 
+						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
+						+ "<br/>"+ obj.getString("description")+"<br/><br/>"
+						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") 
+						+ " ></img><br/><br/><a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'><button type='"+"button"+"'>View Item</button></a></body>");
+				break;
+			
+			case FLS_MAIL_SHARE_ITEM_OWNER:
+				SUBJECT = ("Item [" + obj.getString("title") + "] shared with your friends on FrrndLease");
+				BODY = obj.getString("message");
+				break;
+				
 			default:
 				SUBJECT = (" Default Subject");
 				BODY = "Default Message ... Contact us, you should never get this! ";

@@ -134,6 +134,8 @@ public class GetNotificationsResObj {
 			case "FLS_MEMBERSHIP_INVOICE":
 			case "FLS_MAIL_ADMIN_PHOTO_ID_UPLOAD":
 			case "FLS_MAIL_WEEKLY_DIGEST":
+			case "FLS_MAIL_SHARE_ITEM_FRIEND":
+			case "FLS_MAIL_SHARE_ITEM_OWNER":
 				this.notificationType = Icon_Type.FLS_USER.name();
 				break;
 			case "FLS_MAIL_GRANT_REQUEST_FROM":
