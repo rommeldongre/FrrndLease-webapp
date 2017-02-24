@@ -45,8 +45,14 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
     		Connection hcp = getConnectionFromPool();
     		PreparedStatement ps1 = null,ps2=null,ps3=null,ps4=null;
     		ResultSet rs1 = null,rs2=null,rs3=null;
-    		String next_reminder_date=null,photoIdCheckBox="",friendCheckBox="",postItemCheckBox="",wishitemCheckBox="";
+    		String next_reminder_date=null,signUpCheckBox="",photoIdCheckBox="",friendCheckBox="",postItemCheckBox="",wishitemCheckBox="";
     		List<JSONObject> wishedItems = null,postedItems=null,addedFriends=null;
+    		
+    		String signedupCheckBoxString="<strong>Signed Up</strong> - Welcome to FrrndLease!",
+    				photoIdCheckBoxString="<strong>Upload Photo Id</strong> - You are in a Prime area. Just upload a Photo Id and avail of Prime Doorstep delivery!",
+    				friendCheckBoxString="<strong>Invite 2 Friends</strong> - Earn free credits by inviting your friends and increasing your trusted network",
+    				postItemCheckBoxString="<strong>Post 2 Items</strong> - Get 10 free credits to spend for every item that you offer other members",
+    				wishitemCheckBoxString="<strong>Wish 2 Items</strong> - Get notified when items similar to your wishlist are available";
     		
     		Calendar currentCal = Calendar.getInstance();
     		SimpleDateFormat currentSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -91,33 +97,35 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
     				
     				if(places.contains(rs1.getString("user_locality").toUpperCase())){
     					if(!rs1.getBoolean("user_verified_flag")){
-    						photoIdCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + FRIENDLIST_URL + "'><strong>Photo Id uploaded</strong> - By uploading a photo id you automatically qualify for Prime shipping!</a><br/>";
+    						photoIdCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + FRIENDLIST_URL + "'>"+photoIdCheckBoxString+"</a><br/>";
     					}else{
-    						photoIdCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked><strong>Photo Id uploaded</strong> - By uploading a photo id you automatically qualify for Prime shipping!<br/>";
+    						photoIdCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked>"+photoIdCheckBoxString+"<br/>";
     					}
     					
     				}
     				
+    				signUpCheckBox="<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked>"+signedupCheckBoxString+"<br/>";
+    				
     				if(addedFriends.size()<DIGEST_LIMIT){
-    					friendCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + FRIENDLIST_URL + "'><strong>2 Friends Invited</strong> - Earn free credits by inviting your friends and increasing your network</a><br/><br/><br/>";
+    					friendCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + FRIENDLIST_URL + "'>"+friendCheckBoxString+"</a><br/>";
     				}else{
-    					friendCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked><strong>2 Friends Invited</strong> - Earn free credits by inviting your friends and increasing your network <br/><br/><br/>";
+    					friendCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked>"+friendCheckBoxString+"<br/>";
     				}
     				
     				if(postedItems.size()<DIGEST_LIMIT){
-    					postItemCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + POST_ITEM_URL + "'><strong>2 Items Posted</strong>, - Get 10 free credits for every item that you offer other members</a>";
+    					postItemCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + POST_ITEM_URL + "'>"+postItemCheckBoxString+"</a><br/>";
     				}else{
-    					postItemCheckBox ="<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked><strong>2 Items Posted</strong>, - Get 10 free credits for every item that you offer other members";
+    					postItemCheckBox ="<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked>"+postItemCheckBoxString+"<br/>";
     				}
     				
     				if(wishedItems.size()<DIGEST_LIMIT){
-    					wishitemCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + STORE_URL + "'><strong>2 Items Wished</strong>, - When items similar to this get posted, you will be notified</a>";
+    					wishitemCheckBox = "<input type='"+"checkbox"+"' disabled='"+"disabled"+"' ><a href='" + STORE_URL + "'>"+wishitemCheckBoxString+"</a><br/>";
     				}else{
-    					wishitemCheckBox ="<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked><strong>2 Items Wished</strong>, - When items similar to this get posted, you will be notified";
+    					wishitemCheckBox ="<input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked>"+wishitemCheckBoxString+"<br/>";
     				}
     				
     				String BODY = "<body><span style='"+"font-weight:bold;font-size:20px;"+"'>Weekly Digest</span><br/> <br/><br/><br/>"
-    						+"<span style='"+"font-weight:bold;font-size:18px;"+"'>Activity</span><br/> <br/><div align='"+"left"+"' style='"+"padding-left: 20px;"+"'><input type='"+"checkbox"+"' disabled='"+"disabled"+"' checked><strong>Sign Up</strong>, - Welcome to FrrndLease! <br/>"+photoIdCheckBox+postItemCheckBox+"<br/>"+wishitemCheckBox+" <br>"+friendCheckBox+"<br></div>"
+    						+"<span style='"+"font-weight:bold;font-size:18px;"+"'>Profile Completeness</span><br/> <br/><div align='"+"left"+"' style='"+"padding-left: 20px;"+"'>"+signUpCheckBox+friendCheckBox+postItemCheckBox+wishitemCheckBox+photoIdCheckBox+"<br/><br/><br></div>"
     						+"<span style='"+"font-weight:bold;font-size:18px;"+"'>Items Matching Wish List</span><br/><br/><table style='"+"width:100%;"+"'><tbody><tr> ";
     						
     						if(wishedItems.size()==0){
