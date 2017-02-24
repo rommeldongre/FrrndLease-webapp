@@ -78,6 +78,7 @@ public class ErrorCat {
 	final public String FLS_EDIT_PROFILE = "Your Profile Has Been Updated!!";
 	final public String FLS_CHANGE_PICKUP_STATUS = "Your pickup status has been changed!!";
 	final public String FLS_DELIVERY_PLAN_CHANGED = "Your delivery plan has been saved!!";
+	final public String FLS_SHARE_ITEM = "Item successfully shared with friends!!";
 	
 	//String error codes
 	final public String FLS_SQL_EXCEPTION_M = "Couldn't create statement or couldn't execute query (sql exception)";
@@ -128,6 +129,7 @@ public class ErrorCat {
 	final public String FLS_ITEMS_DELETE_ARCHIVED_M = "Cannot Delete Item as it is not Archived State";
 	final public String FLS_RAZOR_EXCEPTION_M = "Couldn't get Data from Razor Pay API";
 	final public String FLS_PROMO_CODE_EXCEPTION_M = "Couldn't find Promo Code for this id";
+	final public String FLS_SHARE_ITEM_EXCEPTION_M = "Couldn't share Item as you have no friends on FrrndLease!!";
 	
 	
 	//String query variables.
