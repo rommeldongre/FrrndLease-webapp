@@ -12,6 +12,10 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
 
 import adminOps.Response;
 import connect.Connect;
@@ -421,6 +425,18 @@ public class Users extends Connect {
 			stmt3.setString(3, fullName);
 			stmt3.setString(4, friendId);
 			stmt3.executeUpdate();
+			
+			try {
+				if(status.equals("facebook")) {
+					// Grab the Scheduler instance from the Factory
+					Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+					JobKey matchjobKey = JobKey.jobKey("FlsMatchFbIdJob", "FlsMatchFbIdGroup");
+					scheduler.triggerJob(matchjobKey);
+				}
+			} catch(SchedulerException e){
+				LOGGER.warning("Not able to start match fb id job");
+				e.printStackTrace();
+			}
 			
 			FlsPlan plan = new FlsPlan();
 			plan.checkPlan(userId);
@@ -904,6 +920,18 @@ public class Users extends Connect {
 					Id = "0";
 					message = "Your account is kept on hold";
 					Code = FLS_ENTRY_NOT_FOUND;
+				}
+				
+				try {
+					if(status.equals("facebook")) {
+						// Grab the Scheduler instance from the Factory
+						Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+						JobKey matchjobKey = JobKey.jobKey("FlsMatchFbIdJob", "FlsMatchFbIdGroup");
+						scheduler.triggerJob(matchjobKey);
+					}
+				} catch(SchedulerException e){
+					LOGGER.warning("Not able to start match fb id job");
+					e.printStackTrace();
 				}
 				
 			} else {

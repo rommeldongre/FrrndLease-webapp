@@ -5,7 +5,6 @@ headerApp.controller('headerCtrl', ['$scope',
 									'userFactory',
 									'profileFactory',
 									'bannerService',
-									'matchFbIdService',
 									'searchService',
 									'statsFactory',
 									'loginSignupService',
@@ -18,7 +17,6 @@ headerApp.controller('headerCtrl', ['$scope',
         userFactory,
         profileFactory,
         bannerService,
-        matchFbIdService,
         searchService,
         statsFactory,
         loginSignupService,
@@ -169,7 +167,6 @@ headerApp.controller('headerCtrl', ['$scope',
                                 userFactory.setLocalStorageValues(UserId, Name, obj.access_token, response.Id);
                                 if (SignUpStatus == "facebook") {
                                     getFacebookFriends(Email);
-                                    matchFbIdService.updateFbId();
                                 } else {
                                     window.location.replace("myapp.html#/wizard");
                                 }
@@ -220,7 +217,6 @@ headerApp.controller('headerCtrl', ['$scope',
                         userFactory.setLocalStorageValues(obj.userId, obj.fullName, obj.access_token, obj.referralCode)
                         if (signUpStatus == "facebook") {
                             getFacebookFriends(obj.userId);
-                            matchFbIdService.updateFbId();
                         } else {
                             window.location.replace("myapp.html#/");
                         }
@@ -520,32 +516,6 @@ headerApp.controller('headerCtrl', ['$scope',
             displayCredits();
         });
 
-        $scope.$on('matchFbId', function (event) {
-            var req = {
-                userId: userFactory.user,
-                accessToken: userFactory.userAccessToken
-            };
-
-            $.ajax({
-                url: '/MatchFbId',
-                type: 'post',
-                data: JSON.stringify(req),
-                contentType: "application/x-www-form-urlencoded",
-                dataType: "json",
-                success: function (response) {
-                    if (response.code != 0) {
-                        console.log(response.code);
-                        console.log(response.message);
-                    }
-                },
-                error: function () {
-                    alert('Not Working');
-                }
-            });
-
-
-        });
-
         $scope.importfb = function () {
 
             FB.login(function (response) {
@@ -769,13 +739,6 @@ headerApp.service('bannerService', ['$rootScope', function ($rootScope) {
         this.data = data;
         this.page = page;
         $rootScope.$broadcast('bannerMessage', this.data, this.page);
-    }
-}]);
-
-headerApp.service('matchFbIdService', ['$rootScope', function ($rootScope) {
-
-    this.updateFbId = function () {
-        $rootScope.$broadcast('matchFbId');
     }
 }]);
 
