@@ -483,7 +483,12 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_UBER_WARN:
 				SUBJECT = ("Membership About to Expire");
-				BODY = "<body>You have less than 3 days left for your uber membership to expiry. Please <a href='" + EMAIL_PROFILE_PAGE + "'>upgrade</a> it to avoid nulling of all your item lease fee.</body>";
+				BODY = "<body>You have less than 3 days left for your uber membership to expiry. Please <a href='" + EMAIL_PROFILE_PAGE + "'>upgrade</a> to continue availing your benefits:-"
+				+"<div align='"+"left"+"' style='"+"padding-left: 100px;"+"'>"
+				+"1. Free Delivery: Get Free Delivery for your items for Prime locations.<br/>"
+				+"2. Get Featured: All your Items show on top of all listings as 'Featured Items'.<br/>"
+				+"3. Get Online Presence : Announce yourself to the world with a Company Profile that is optimized for SEO.<br/>"
+				+"4. Get Online Leads: Receive unlimited Leads for your items.</div></body>";
 				break;
 				
 			case FLS_CREDITS_INVOICE:
