@@ -87,14 +87,15 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
 	   
 	    try {
 	    	hcp.setAutoCommit(false);
-	    	String UpdateFriendUserIdql = "UPDATE `friends` SET friend_id=?, friend_fb_id=? WHERE friend_id=?";
+	    	String UpdateFriendUserIdql = "UPDATE `friends` SET friend_id=?, friend_fb_id=?, friend_status=? WHERE friend_id=?";
 			
 	    	psupdateFbId = hcp.prepareStatement(UpdateFriendUserIdql);
 			
 			LOGGER.info("Statement created. Executing renew query ...");
 			psupdateFbId.setString(1, User_id);
 			psupdateFbId.setString(2, Fb_id);
-			psupdateFbId.setString(3, Fb_id);
+			psupdateFbId.setString(3, "signedup");
+			psupdateFbId.setString(4, Fb_id);
 			renewFbIdAction = psupdateFbId.executeUpdate();
 			
 			if(renewFbIdAction == 0 ){
