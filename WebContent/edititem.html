@@ -79,7 +79,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="lease_value" class="col-sm-4 control-label">Lease Fee</label>
+                            <label for="lease_value" class="col-sm-4 control-label btn-tooltip" data-toggle="tooltip" data-placement="top" title="This is the amount that you want to charge for renting out this item for the lease duration. This is in addition to the Free Credits that you get. Members typically do not charge a fee." tooltip>Lease Fee</label>
                             <div class="col-sm-8" ng-init="item.surcharge=0">
                                 <input type="number" class="form-control" ng-model="item.surcharge" placeholder="Enter Amount(INR)" ng-disabled="item.isMerchant==false">
                             </div>
@@ -87,7 +87,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="lease_value" class="col-sm-4 control-label">Insurance</label>
+                            <label for="lease_value" class="col-sm-4 control-label btn-tooltip" data-toggle="tooltip" data-placement="top" title="This is the 'virtual' deposit that you would like to take for the item. It is not taken from members in good faith. However, if a member damages or loses the item leased, this amount will be recovered from them." tooltip>Insurance</label>
                             <div class="col-sm-8" ng-init="item.leaseValue=1000">
                                 <input type="number" class="form-control" ng-model="item.leaseValue" placeholder="Insurance">
                             </div>
