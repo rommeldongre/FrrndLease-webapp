@@ -309,7 +309,7 @@
                 if(element.id == "customSignUpBtn")
                     onSignUp(googleUser);
                 }, function(error) {
-                  alert(JSON.stringify(error, undefined, 2));
+                  console.log(error);
                 }
             );
         }
