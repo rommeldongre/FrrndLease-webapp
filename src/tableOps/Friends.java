@@ -97,10 +97,11 @@ public class Friends extends Connect {
 		ResultSet rs1 = null, rs2 = null;
 		int rs3;
 		
-		String status = "pending",friend_fb_id=null;
+		String status = "pending",friend_fb_id=null,fbFriendId=null;
 		
 		if(friendId.contains("@fb")){
 			friend_fb_id = friendId;
+			fbFriendId = getUserId(friendId);
 		}
 		
 		try {
@@ -144,7 +145,16 @@ public class Friends extends Connect {
 					res.setData(FLS_SUCCESS, Id, FLS_ADD_FRIEND);
 					LOGGER.info("Congratulations new friendship created!!");
 					Event event = new Event();
-					event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
+					
+					if(fullName.contains("-")){
+						event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
+					}else{
+						if(friendId.contains("@fb")){
+							event.createEvent(fbFriendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM_NAME, 0, "Great start! You have added '<a href=\"" + URL + "/myapp.html#/myfriendslist\">" + fullName + "</a> ' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!");
+						}else{
+							event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM_NAME, 0, "Great start! You have added '<a href=\"" + URL + "/myapp.html#/myfriendslist\">" + fullName + "</a> ' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!");
+						}
+					}
 					event.createEvent(userId, friendId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_TO, 0, "You are now in <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + userId + "</a>\'s Friend List. You can now lease items to each other");
 				
 					FlsCredit credits = new FlsCredit();
@@ -460,5 +470,39 @@ public class Friends extends Connect {
 		}
 		
 		
+	}
+	
+	private String getUserId(String fbId){
+		String userId=null;
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		try {
+			
+			LOGGER.info("Select statement for fetching userId based on FB ID .....");
+			String sqlUserId = "SELECT user_id FROM `users` WHERE user_fb_id =?";
+			ps1 = hcp.prepareStatement(sqlUserId);
+			ps1.setString(1, fbId);
+			rs1 = ps1.executeQuery();
+			
+			
+			if(rs1.next()){
+				userId = rs1.getString("user_id");
+			}
+			
+		} catch(Exception e){
+			LOGGER.warning("not able to get userId based on FB ID");
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs1 != null)rs1.close();
+				if(ps1 != null)ps1.close();
+				if(hcp != null)hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return userId;
 	}
 }
