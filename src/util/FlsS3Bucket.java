@@ -40,7 +40,7 @@ public class FlsS3Bucket extends Connect {
 	private String uid = null;
 	private int leaseId = -1;
 	private String userUid = null;
-	private boolean isProfile = true;
+	private boolean isProfile = false;
 	
 	private String BASE_URL = "https://s3-ap-southeast-1.amazonaws.com/";
 	
