@@ -98,6 +98,8 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
     $scope.reinviteFriend = function (i) {
         if ($scope.friends[i].friendId != '-')
             reinviteFriendSetValues($scope.friends[i].fullName, $scope.friends[i].mobile, $scope.friends[i].friendId, userFactory.user);
+        else
+            facebookInvite();
     }
 
     $scope.directImport = function () {
@@ -150,7 +152,10 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
         }
     }
     $scope.importfb = function () {
-
+        facebookInvite();
+    }
+    
+    var  facebookInvite = function(){
         FB.login(function (response) {
 
             var ref_code = localStorage.getItem("userReferralCode");
@@ -434,29 +439,12 @@ myFriendsListApp.controller('myFriendsListCtrl', ['$scope',
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                if (reasonForAddFriend == "importEmail") {
-                    count++;
-                    if (count == len) {
-                        var validEmail = len - errCount;
-                        modalService.showModal({}, {
-                            bodyText: "Success, Number of email(s) imported: " + validEmail + " ,Number of Invalid email(s): " + errCount,
-                            showCancel: false,
-                            actionButtonText: 'Ok'
-                        }).then(function (result) {
-                            $scope.friends = [];
-                            initialPopulate();
-                            eventsCount.updateEventsCount();
-                        }, function () {});
-                    } else {
-                        directImport_continue();
-                    }
-                } else if (reasonForAddFriend == "importGoogle") {
-                    add_checked_friends_continued();
-                } else {
-                    bannerService.updatebannerMessage("Your Invitation has been sent to your friend.");
-                    $("html, body").animate({
-                        scrollTop: 0
-                    }, "slow");
+                if (response.Code == 'FLS_SUCCESS') {
+                    modalService.showModal({}, {
+                        bodyText: "Your Invitation has been sent to your friend.",
+                        showCancel: false,
+                        actionButtonText: 'Ok'
+                    }).then(function (result) {}, function () {});
                 }
             },
             error: function () {
