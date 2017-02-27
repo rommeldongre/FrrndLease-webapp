@@ -97,7 +97,11 @@ public class Friends extends Connect {
 		ResultSet rs1 = null, rs2 = null;
 		int rs3;
 		
-		String status = "pending";
+		String status = "pending",friend_fb_id=null;
+		
+		if(friendId.contains("@fb")){
+			friend_fb_id = friendId;
+		}
 		
 		try {
 			LOGGER.info("Checking if this friend user has signed up");
@@ -124,7 +128,7 @@ public class Friends extends Connect {
 			
 			if(!rs2.next()){
 				LOGGER.info("This is a new friendship.");
-				String sqlAddFriends = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status) values (?,?,?,?,?)";
+				String sqlAddFriends = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status,friend_fb_id) values (?,?,?,?,?,?)";
 				ps3 = hcp.prepareStatement(sqlAddFriends);
 
 				LOGGER.info("Statement created. Executing query.....");
@@ -133,6 +137,7 @@ public class Friends extends Connect {
 				ps3.setString(3, mobile);
 				ps3.setString(4, userId);
 				ps3.setString(5, status);
+				ps3.setString(6, friend_fb_id);
 				rs3 = ps3.executeUpdate();
 				
 				if(rs3 == 1){
