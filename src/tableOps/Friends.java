@@ -97,12 +97,7 @@ public class Friends extends Connect {
 		ResultSet rs1 = null, rs2 = null;
 		int rs3;
 		
-		String status = "pending",friend_fb_id=null,fbFriendId=null;
-		
-		if(friendId.contains("@fb")){
-			friend_fb_id = friendId;
-			fbFriendId = getUserId(friendId);
-		}
+		String status = "pending";
 		
 		try {
 			LOGGER.info("Checking if this friend user has signed up");
@@ -138,7 +133,12 @@ public class Friends extends Connect {
 				ps3.setString(3, mobile);
 				ps3.setString(4, userId);
 				ps3.setString(5, status);
-				ps3.setString(6, friend_fb_id);
+				if(friendId.contains("@fb")){
+					ps3.setString(6, friendId);
+				}else{
+					ps3.setString(6, null);
+				}
+				
 				rs3 = ps3.executeUpdate();
 				
 				if(rs3 == 1){
@@ -150,7 +150,7 @@ public class Friends extends Connect {
 						event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM, 0, "You have added <a href=\"" + URL + "/myapp.html#/myfriendslist\">" + friendId + "</a> to your Friend List. You can now lease items to each other.");
 					}else{
 						if(friendId.contains("@fb")){
-							event.createEvent(fbFriendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM_NAME, 0, "Great start! You have added '<a href=\"" + URL + "/myapp.html#/myfriendslist\">" + fullName + "</a> ' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!");
+							event.createEvent(getUserId(friendId), userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM_NAME, 0, "Great start! You have added '<a href=\"" + URL + "/myapp.html#/myfriendslist\">" + fullName + "</a> ' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!");
 						}else{
 							event.createEvent(friendId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_FRIEND_FROM_NAME, 0, "Great start! You have added '<a href=\"" + URL + "/myapp.html#/myfriendslist\">" + fullName + "</a> ' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!");
 						}
