@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2059;
+	public final int appBuild = 2060;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2228,6 +2228,53 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2059;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This updates status of friends signedup through facebook
+				if (dbBuild < 2060) {
+					
+					// Add column for friend date
+					String sqlgetFriendStatus = "SELECT tb_users.user_id,tb_users.user_fb_id,tb_friends.friend_user_id FROM `friends` tb_friends INNER JOIN users tb_users ON tb_friends.friend_id=tb_users.user_id WHERE tb_friends.friend_status='pending'";
+					ResultSet rs1 =null;
+					PreparedStatement ps1= null;
+					try {
+						getConnection();
+						ps1 = connection.prepareStatement(sqlgetFriendStatus);
+						rs1= ps1.executeQuery();
+						
+						while(rs1.next()){
+							if(!rs1.getString("user_fb_id").equals(null)){
+								String sqlChangeFriendStatus = "UPDATE friends SET friend_status=?, friend_fb_id=? WHERE friend_id=? AND friend_user_id=?";
+								PreparedStatement ps2 = connection.prepareStatement(sqlChangeFriendStatus);
+								ps2.setString(1, "signedup");
+								ps2.setString(2, rs1.getString("user_fb_id"));
+								ps2.setString(3, rs1.getString("user_id"));
+								ps2.setString(4, rs1.getString("friend_user_id"));
+								ps2.executeUpdate();
+								ps2.close();
+							}
+						}
+						
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							rs1.close();
+							ps1.close();
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2060;
 					updateDBBuild(dbBuild);
 				}
 				

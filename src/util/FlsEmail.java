@@ -192,7 +192,12 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Your Friend '" + obj.getString("from")	+ "' has been added to your Friend List. ");
 				BODY = "Great start! You have added '" + obj.getString("from") + "' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!";
 				break;
-
+				
+			case FLS_MAIL_ADD_FRIEND_FROM_NAME:
+				SUBJECT = (" Your Friend '" + obj.getString("fromUserName")	+ "' has been added to your Friend List. ");
+				BODY = "Great start! You have added '" + obj.getString("fromUserName") + "' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!";
+				break;
+			
 			case FLS_MAIL_ADD_FRIEND_TO:
 				SUBJECT = (" Your Friend '" + obj.getString("from") + "' has added you to their Friend List");
 				BODY = "You are now on '" + obj.getString("from") + "'\'s Friend List. Once you Sign Up, you can lease items to each other at discounted credits!<br/> <br/>"

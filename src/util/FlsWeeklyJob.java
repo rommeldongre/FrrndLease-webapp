@@ -60,7 +60,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job{
     		
     		try {
     			
-    			String sqlSelectUsersToRemind = "SELECT * FROM `users` WHERE user_email IS NOT NULL";
+    			String sqlSelectUsersToRemind = "SELECT * FROM `users` WHERE user_email NOT IN('admin@frrndlease.com','ops@frrndlease.com') AND user_email IS NOT NULL AND user_email <> ''";
     			ps1 = hcp.prepareStatement(sqlSelectUsersToRemind);
     			rs1 = ps1.executeQuery();
     			

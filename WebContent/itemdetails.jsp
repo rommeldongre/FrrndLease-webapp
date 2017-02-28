@@ -43,7 +43,7 @@
     <script src="js/jquery.backstretch.js"></script>
     <script src="js/animation.js"></script>
     <!--Loading Animation code CSS & JS Links ends here  -->
-	    
+        
 </head>
     
 <body onload="start()">
@@ -256,8 +256,8 @@
                                     <h3 class="modal-title">Share With Friends</h3>
                                 </div>
                                 <div class="modal-body" ng-init="friendsCount=false">
-									<input type="radio" ng-model="friendsCount" ng-value="true" >All Friends<br>
-									<input type="radio" ng-model="friendsCount" ng-value="false" checked="checked" >Confirmed Friends<br>
+									<input type="radio" ng-model="friendsCount" ng-value="true" >All Friends &nbsp; &nbsp; &nbsp; 
+									<input type="radio" ng-model="friendsCount" ng-value="false" checked="checked" >Confirmed Friends
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
