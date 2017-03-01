@@ -61,15 +61,10 @@ public class GetItemRatingHandler extends Connect implements AppHandler {
 			LOGGER.info("Got total ratings for item id " + rq.getItemId() + " ---- " + totalRating);
 			LOGGER.info("Total number of raters for this item id are " + totalRaters);
 			
-			if(totalRating != 0){
-				rs.setCode(FLS_SUCCESS);
-				rs.setMessage(FLS_SUCCESS_M);
-				rs.setTotalRating(totalRating);
-				rs.setTotalRaters(totalRaters);
-			}else{
-				rs.setCode(FLS_END_OF_DB);
-				rs.setMessage(FLS_END_OF_DB_M);
-			}
+			rs.setCode(FLS_SUCCESS);
+			rs.setMessage(FLS_SUCCESS_M);
+			rs.setTotalRating(totalRating);
+			rs.setTotalRaters(totalRaters);
 			
 		}catch(Exception e){
 			e.printStackTrace();
