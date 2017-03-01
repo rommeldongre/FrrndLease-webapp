@@ -506,10 +506,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                             contact.selected = false;
 							
 							$scope.$apply(function(){
-								console.log(contact);
 								if(contact.number!='-'){
-									//console.log(contact);
-									console.log(contact.number+"is the number");
 									$scope.contacts.push(contact);
 									
 								}
