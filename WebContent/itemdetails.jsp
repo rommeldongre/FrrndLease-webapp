@@ -92,7 +92,23 @@
                                 <div class="col-lg-6 col-md-6" style="border-left: 1px solid #ccc;">
                                     <img class="img-rounded loaded-img" style="margin-right:10px;margin-bottom:10px;cursor: pointer;" load-image="image" max-width="150" max-height="150" ng-src="" alt="..." ng-click="selectedImage($index)" ng-repeat="image in item.imageLinks" />
                                     <hr/>
-                                    <h5 class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" ng-disabled="raters < 0" style="text-align:center;" tooltip>
+                                    <h5 ng-if="raters == 0" style="filter: grayscale(100%);">
+                                        <span>
+                                            <img src="images/very-unhappy-n.jpg" style="width:10%;">
+                                        </span>
+                                        <span>
+                                            <img src="images/unhappy-n.jpg" style="width:10%;">
+                                        </span>
+                                        <span>
+                                            <img src="images/happy-n.jpg" style="width:10%;">
+                                        </span>
+                                        <span>
+                                            <img src="images/very-happy-n.jpg" style="width:10%;">
+                                        </span>
+                                        <br/>
+                                        <span>({{raters}} Ratings)</span>
+                                    </h5>
+                                    <h5 class="btn-tooltip" data-toggle="tooltip" data-placement="top" title="Item's Rating" style="text-align:center;" tooltip>
                                         <span ng-if="rating == 1">
                                             <img src="images/very-unhappy-n.jpg" style="width:10%;">
                                             Average User Experience for this item is<strong> Very unhappy</strong>
@@ -110,7 +126,7 @@
                                             Average User Experience for this item is<strong> Very happy</strong>
                                         </span>
                                         <br/>
-                                        <span style="color:#ccc"> ({{raters}} Ratings)</span>
+                                        <span ng-if="raters != 0">({{raters}} Ratings)</span>
                                     </h5>
                                 </div>
                             </div>
@@ -133,7 +149,7 @@
                                             <i class="fa fa-location-arrow" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
-                                            <h5 ng-if='"${sublocality}" != null && "${sublocality}" != ""'>${sublocality}, ${locality}</h5>
+                                            <h5><span ng-if='"${sublocality}" != null && "${sublocality}" != ""'>${sublocality},</span> <span ng-if='"${locality}" != null && "${locality}" != ""'>${locality}</span></h5>
                                         </div>
                                     </div>
                                 </div>
