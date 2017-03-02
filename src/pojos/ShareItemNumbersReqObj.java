@@ -3,7 +3,7 @@ package pojos;
 
 public class ShareItemNumbersReqObj extends ReqObj{
 	
-	String name,number;
+	String name,number,email;
 	
 	public String getName() {
 		return name;
@@ -16,5 +16,11 @@ public class ShareItemNumbersReqObj extends ReqObj{
 	}
 	public void setNumber(String number) {
 		this.number = number;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

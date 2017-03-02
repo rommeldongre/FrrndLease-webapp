@@ -256,6 +256,8 @@
                                     <h3 class="modal-title">Share Item</h3>
                                 </div>
                                 <div class="modal-body" ng-init="friendsCount=false">
+									<label>Add Message for friends</label><br />
+									<textarea class="form-control" ng-model="shareMessage" ng-trim="false" maxlength="500" ></textarea>
 									<input type="checkbox" ng-model="flsState" ng-change="checkflsState()" />FrrndLease friends
 									<div ng-show="flsStatus">
 										<input type="radio" ng-model="friendsCount" ng-value="true" >All Friends &nbsp; &nbsp; &nbsp; 
@@ -264,9 +266,12 @@
 									<span class="divider"> OR </span>
 									<input type="checkbox" ng-model="googleState" ng-change="checkflsState()" />Google Contacts
 									<div ng-show="googleStatus">
+									<div class="col-xs-4">
+									<input type="checkbox" ng-model="addFriendState" ng-change="checkflsState()" />Add to FriendList
+									</div><br/>
 									<div class="row">
 									<div class="col-xs-4"></div>
-										<div class="col-xs-4">
+									<div class="col-xs-4">
 										<button ng-if="!googleNumbers" class="btn btn-social btn-fill btn-google btn-block" ng-click="importgoogle()" href="">
 											<i class="fa fa-google-plus"></i> Share
 										</button>

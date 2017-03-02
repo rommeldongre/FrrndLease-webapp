@@ -6,9 +6,10 @@ import java.util.List;
 public class ShareItemReqObj extends ReqObj{
 	
 	String userId,userName,
-		   accessToken,itemTitle,itemUid,itemOwnerId;
+		   accessToken,itemTitle,itemUid,itemOwnerId,
+		   shareMessage;
 	int itemId,friendNumbersLength;
-	boolean friendsStatus,flsStatus,googleStatus;
+	boolean friendsStatus,flsStatus,googleStatus,addFriendStatus;
 	
 	List<ShareItemNumbersReqObj> friendNumbers = new ArrayList<>();
 	
@@ -48,6 +49,12 @@ public class ShareItemReqObj extends ReqObj{
 	public void setItemOwnerId(String itemOwnerId) {
 		this.itemOwnerId = itemOwnerId;
 	}
+	public String getShareMessage() {
+		return shareMessage;
+	}
+	public void setShareMessage(String shareMessage) {
+		this.shareMessage = shareMessage;
+	}
 	public int getItemId() {
 		return itemId;
 	}
@@ -77,6 +84,12 @@ public class ShareItemReqObj extends ReqObj{
 	}
 	public void setGoogleStatus(boolean googleStatus) {
 		this.googleStatus = googleStatus;
+	}
+	public boolean isAddFriendStatus() {
+		return addFriendStatus;
+	}
+	public void setAddFriendStatus(boolean addFriendStatus) {
+		this.addFriendStatus = addFriendStatus;
 	}
 	public List<ShareItemNumbersReqObj> getFriendNumbers() {
 		return friendNumbers;
