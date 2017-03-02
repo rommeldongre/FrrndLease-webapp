@@ -103,7 +103,8 @@ public class Event extends Connect{
 		FLS_MAIL_USER_PHOTO_ID_VERIFIED,
 		FLS_MAIL_WEEKLY_DIGEST,
 		FLS_MAIL_SHARE_ITEM_FRIEND,
-		FLS_MAIL_SHARE_ITEM_OWNER
+		FLS_MAIL_SHARE_ITEM_OWNER,
+		FLS_SMS_SHARE_ITEM_FRIEND
 	}
 	
 	public enum Event_Type {
@@ -546,6 +547,7 @@ public class Event extends Connect{
 					case FLS_SMS_SIGNUP_VALIDATION:
 					case FLS_SMS_REGISTER:
 					case FLS_MOBILE_VERIFICATION:
+					case FLS_SMS_SHARE_ITEM_FRIEND:
 						return sendSms(eventId);
 					case FLS_MAIL_ADD_FRIEND_TO:
 						return sendEmailToFriend(rs.getString("from_user_id"), rs.getString("to_user_id"), eventId);

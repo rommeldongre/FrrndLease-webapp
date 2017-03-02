@@ -130,6 +130,7 @@ public class ErrorCat {
 	final public String FLS_RAZOR_EXCEPTION_M = "Couldn't get Data from Razor Pay API";
 	final public String FLS_PROMO_CODE_EXCEPTION_M = "Couldn't find Promo Code for this id";
 	final public String FLS_SHARE_ITEM_EXCEPTION_M = "Couldn't share Item as you have no friends on FrrndLease!!";
+	final public String FLS_SHARE_ITEM_GOOGLE_EXCEPTION_M = "Couldn't share Item as you have no friends on Google!!";
 	
 	
 	//String query variables.

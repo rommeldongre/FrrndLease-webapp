@@ -8,6 +8,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											'modalService',
                                             'logoutService',
                                             'eventsCount',
+											'$filter',
 											function($scope, 
 											$window, 
 											$http, 
@@ -15,7 +16,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											bannerService, 
 											modalService,
                                             logoutService,
-                                            eventsCount){
+                                            eventsCount,
+											$filter){
     
     var user = localStorage.getItem("userloggedin");
     
@@ -59,6 +61,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
         $scope.userMatch = false;
     }
     
+	$scope.googleNumbers = false;
+	
     var getItemsRating = function(){
         
         var req = {
@@ -329,6 +333,22 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 		});
 	}
     
+	$scope.checkflsState = function(){
+		if($scope.flsState){ //If it is checked
+			$scope.flsStatus= true;
+			
+		}else{
+			$scope.flsStatus= false;
+		}
+		if($scope.googleState){ //If it is checked
+			$scope.googleStatus= true;
+			
+		}else{
+			$scope.googleStatus= false;
+		}
+		
+		
+	}
     $scope.shareItem = function(){
         var link = null;
 
@@ -377,6 +397,17 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	}
 	
 	$scope.shareWithfriends = function(){
+		
+		var reqListArray = [];
+		
+		var selectedContacts = $filter('filter')($scope.contacts, {selected:true});
+        for(var i in selectedContacts){
+			var reqList = {};
+			reqList["name"] = selectedContacts[i].name;
+			reqList["number"] = selectedContacts[i].number;
+			reqListArray.push(reqList);
+        }
+		
 		$("#openBtn_itemShare").click();
 		
 		var req = {
@@ -387,7 +418,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				itemTitle: $scope.item.title,
 				itemUid: $scope.uid,
 				itemOwnerId: $scope.user_id,
-				friendsStatus: $scope.friendsCount
+				friendsStatus: $scope.friendsCount,
+				flsStatus: $scope.flsStatus,
+				googleStatus: $scope.googleStatus,
+				friendNumbersLength: reqListArray.length,
+				friendNumbers: reqListArray
 			}
 		sendshareWithfriends(req);
 	}
@@ -419,6 +454,80 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 		});
 	}
 	
+	var clientId = '1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com';
+	var scopes = 'https://www.googleapis.com/auth/contacts.readonly';
+	
+	var load_Gapi = function(){						//for google
+		gapi.load('auth2', function() {
+			gapi.auth2.init();
+		});
+	}
+    
+	load_Gapi();
+	
+	$scope.contacts = [];
+	
+	$scope.importgoogle = function(){
+		$scope.googleNumbers = true;
+		window.setTimeout(authorize);
+	}
+	
+	var authorize = function(){
+		gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthorization);
+        //calls handleAuthorization()
+	}
+	
+	var handleAuthorization = function(authorizationResult){
+		if (authorizationResult && !authorizationResult.error) {
+            $.get("https://www.google.com/m8/feeds/contacts/default/thin?alt=json&access_token=" + authorizationResult.access_token + "&max-results=500&v=3.0",
+                function(response){
+                    var arr = response.feed.entry;
+                    for(var i in arr){
+                        var contact = {};
+                        if(arr[i].gd$phoneNumber){
+                            contact.user = response.feed.author[0].email.$t;
+
+                            try{
+                                contact.number = arr[i].gd$phoneNumber[0].$t;
+                            }catch(Exception){
+                                contact.number = "-";
+                            }
+                            try{
+                                contact.name = arr[i].gd$name.gd$fullName.$t;
+                            }catch (Exception){	
+                                contact.name = "-";
+                            }
+                            try{
+                                contact.email =  arr[i].gd$email[0].address;
+                            }catch(Exception){	
+                                contact.email = "-";
+                            }
+
+                            contact.selected = false;
+							
+							$scope.$apply(function(){
+								if(contact.number!='-'){
+									$scope.contacts.push(contact);
+									
+								}
+							});
+                        }
+                        
+                    }
+					
+                }
+            );
+        }	
+	}
+	
+	$scope.cancel_share = function () {
+            $scope.contacts = [];
+			$scope.flsStatus= false;
+			$scope.googleState = false;
+			$scope.googleStatus = false;
+			$scope.googleNumbers = false;
+			
+        }
 	
     
 }]);
