@@ -130,23 +130,46 @@ public class ShareItemHandler extends Connect implements AppHandler {
 	}
 	
 	private String addFriend(Object req){
-		String addedList="",status="pending";
+		String addedList="",status="pending",
+			   friendId="",friendName="";
+		
 		ShareItemReqObj rq = (ShareItemReqObj) req;
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1=null,ps2=null;
-		ResultSet rs1 =null;
+		PreparedStatement ps1=null,ps2=null,ps3=null;
+		ResultSet rs1 =null,rs2=null;
 		
 		try {
-			
 			for(int i=0;i<rq.getFriendNumbersLength();i++){
+				
+				LOGGER.info("Checking if this friend user has signed up");
+				String sqlCheckUser = "SELECT user_id,user_full_name FROM users WHERE user_id IN(?,?) ORDER BY user_signup_date ASC LIMIT 1";
+				ps3 = hcp.prepareStatement(sqlCheckUser);
+				ps3.setString(1, rq.getFriendNumbers().get(i).getEmail());
+				ps3.setString(2, rq.getFriendNumbers().get(i).getNumber());
+				rs2 = ps3.executeQuery();
+				
+				if(rs2.next()){
+					status = "signedup";
+					friendId = rs2.getString("user_id");
+					friendName = rs2.getString("user_full_name");
+					LOGGER.info("This user has already signed up");
+				}else{
+					LOGGER.info("This user has not signed up");
+					if(!rq.getFriendNumbers().get(i).getEmail().equals("-")){
+						friendId = rq.getFriendNumbers().get(i).getEmail();
+					}else{
+						friendId = rq.getFriendNumbers().get(i).getNumber();
+					}
+					friendName = rq.getFriendNumbers().get(i).getName();
+				}
 				
 				String checkFriendsql = "SELECT * from friends WHERE friend_id IN(?,?) AND friend_user_id=?";
 				LOGGER.info("Select statement for fetching item details for email .....");
 				LOGGER.info(checkFriendsql);
 				ps1 = hcp.prepareStatement(checkFriendsql);
 				ps1.setString(1, rq.getFriendNumbers().get(i).getEmail());
-				ps1.setString(2, rq.getFriendNumbers().get(i).getNumber().toString()+"@google");
+				ps1.setString(2, rq.getFriendNumbers().get(i).getNumber().toString());
 				ps1.setString(3, rq.getUserId());
 				rs1 = ps1.executeQuery();
 				
@@ -154,18 +177,10 @@ public class ShareItemHandler extends Connect implements AppHandler {
 					String addFriendsql = "insert into friends (friend_id,friend_full_name,friend_mobile,friend_user_id,friend_status,friend_fb_id) values (?,?,?,?,?,?)";
 					LOGGER.info("insert statement for adding new friend through phone number .....");
 					ps2 = hcp.prepareStatement(addFriendsql);
-					if(!rq.getFriendNumbers().get(i).getEmail().equals("-")){
-						ps2.setString(1, rq.getFriendNumbers().get(i).getEmail());
-					}else{
-						ps2.setString(1, rq.getFriendNumbers().get(i).getNumber().toString()+"@google");
-					}
-					ps2.setString(2, rq.getFriendNumbers().get(i).getName());
+					ps2.setString(1, friendId);
+					ps2.setString(2, friendName);
 					ps2.setString(3,  rq.getFriendNumbers().get(i).getNumber());
-					if(!rq.getUserId().equals("-")){
-						ps2.setString(4,  rq.getUserId());
-					}else{
-						ps2.setString(4,  null);
-					}
+					ps2.setString(4,  rq.getUserId());
 					ps2.setString(5,  status);
 					ps2.setString(6,  null);
 					ps2.executeUpdate();
@@ -190,6 +205,7 @@ public class ShareItemHandler extends Connect implements AppHandler {
 				if(rs1 != null)rs1.close();
 				if(ps1 != null)ps1.close();
 				if(ps2 != null)ps2.close();
+				if(ps3 != null)ps3.close();
 				if(hcp != null)hcp.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -212,7 +228,7 @@ public class ShareItemHandler extends Connect implements AppHandler {
 		Event event = new Event();
 		try {
 			
-			String sql = "SELECT friend_id,friend_full_name,friend_status from friends WHERE friend_user_id='"+userId+ "' AND friend_id NOT LIKE '%@fb%' AND friend_id NOT LIKE '%@google%' AND ";
+			String sql = "SELECT friend_id,friend_full_name,friend_status from friends WHERE friend_user_id='"+userId+ "' AND friend_id NOT LIKE '%@fb%' AND friend_id NOT REGEXP '^-?[0-9]+$' AND ";
 			
 			if(flsfriendsStatus){
 				sql = sql + "friend_status LIKE '%' ";
