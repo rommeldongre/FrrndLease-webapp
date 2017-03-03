@@ -62,6 +62,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
     }
     
 	$scope.googleNumbers = false;
+	$scope.addFriend= true;
 	
     var getItemsRating = function(){
         
@@ -346,8 +347,12 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 		}else{
 			$scope.googleStatus= false;
 		}
-		
-		
+		if($scope.addFriendState){ //If it is checked
+			$scope.addFriend= true;
+			
+		}else{
+			$scope.addFriend= false;
+		}		
 	}
     $scope.shareItem = function(){
         var link = null;
@@ -399,12 +404,16 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	$scope.shareWithfriends = function(){
 		
 		var reqListArray = [];
+		if($scope.shareMessage === undefined || $scope.shareMessage== null || $scope.shareMessage==""){
+			$scope.shareMessage = "";
+		}
 		
 		var selectedContacts = $filter('filter')($scope.contacts, {selected:true});
         for(var i in selectedContacts){
 			var reqList = {};
 			reqList["name"] = selectedContacts[i].name;
 			reqList["number"] = selectedContacts[i].number;
+			reqList["email"] = selectedContacts[i].email;
 			reqListArray.push(reqList);
         }
 		
@@ -418,9 +427,11 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				itemTitle: $scope.item.title,
 				itemUid: $scope.uid,
 				itemOwnerId: $scope.user_id,
+				shareMessage: $scope.shareMessage,
 				friendsStatus: $scope.friendsCount,
 				flsStatus: $scope.flsStatus,
 				googleStatus: $scope.googleStatus,
+				addFriendStatus: $scope.addFriend,
 				friendNumbersLength: reqListArray.length,
 				friendNumbers: reqListArray
 			}
@@ -439,6 +450,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				if(response.code==0){
 					bannerService.updatebannerMessage(response.message,"");
                     $("html, body").animate({ scrollTop: 0 }, "slow");
+					cancel_share();
 				}else if(response.code==201){
 					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 						}, function(){})
@@ -521,13 +533,16 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	}
 	
 	$scope.cancel_share = function () {
-            $scope.contacts = [];
+		cancel_share();
+        }
+		
+	var cancel_share = function(){
+			$scope.contacts = [];
 			$scope.flsStatus= false;
 			$scope.googleState = false;
 			$scope.googleStatus = false;
 			$scope.googleNumbers = false;
-			
-        }
-	
+			$scope.shareMessage =''; 
+	}
     
 }]);
