@@ -69,7 +69,26 @@ public class GetEventsByXHandler extends Connect implements AppHandler {
 				sql = sql + "datetime BETWEEN '"+fromDate+"' AND '"+toDate+"' AND ";
 			}
 			
-			sql = sql + "tb1.archived='" + status + "' ORDER BY tb1.event_id DESC LIMIT " + offset + ","+limit;
+			switch (status) {
+			case "FLS_ACTIVE_IN_APP":
+				sql = sql + "tb1.archived='FLS_ACTIVE' AND tb1.event_type='FLS_EVENT_NOTIFICATION'";
+				break;
+			case "FLS_ARCHIVED_IN_APP":
+				sql = sql + "tb1.archived='FLS_ARCHIVED' AND tb1.event_type='FLS_EVENT_NOTIFICATION'";
+				break;
+			case "FLS_NOT_IN_APP":
+				sql = sql + "tb1.event_type='FLS_EVENT_NOT_NOTIFICATION'";
+				break;
+			case "FLS_ALL":
+				sql = sql + "tb1.archived LIKE '%'";
+				break;
+
+			default:
+				sql = sql + "tb1.archived LIKE '%'";
+				break;
+			}
+			
+			sql = sql + " ORDER BY tb1.event_id DESC LIMIT " + offset + ","+limit;
 			
 			LOGGER.info(sql);
 			
