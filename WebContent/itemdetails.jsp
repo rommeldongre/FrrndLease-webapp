@@ -169,7 +169,7 @@
                                             <i class="fa fa-university" aria-hidden="true"></i>
                                         </div>
                                         <div class="description">
-                                            <h5><i class="fa fa-rupee" aria-hidden="true"></i>${leaseValue}</h5>
+                                            <h5><rupee>${leaseValue}</rupee></h5>
                                         </div>
                                     </div>
                                 </div>

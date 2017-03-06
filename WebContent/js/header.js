@@ -1753,3 +1753,12 @@ headerApp.controller('leaderCtrl', ['$scope', function ($scope) {
 
     displayLeaders();
 }]);
+
+headerApp.directive('rupee', function () {
+    return {
+        restrict: 'E',
+        transclude:true,
+        template: '<i class="fa fa-rupee" aria-hidden="true"></i><span ng-transclude></span>'
+
+    };
+});
