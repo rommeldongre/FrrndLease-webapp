@@ -79,7 +79,7 @@
                                                     </p>
                                                     <p class="category">
                                                         <label ng-if="item.sublocality != '' || item.locality != ''">
-                                                            <i class="fa fa-map-marker"></i>&nbsp;{{item.distance == '0m' ? 'Under 1km' : item.distance}}&nbsp;-&nbsp;{{item.sublocality+","+item.locality}}
+                                                            <i class="fa fa-map-marker"></i>&nbsp;{{item.distance == '0m' ? 'Under 1km' : item.distance}}&nbsp;-&nbsp;<span ng-if="item.sublocality != ''">{{item.sublocality}},</span>{{item.locality}}
                                                         </label>
                                                     </p><hr style="margin-top:5px;margin-bottom:5px;"/>
                                                     <div class="footer">
