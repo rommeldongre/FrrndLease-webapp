@@ -13,17 +13,17 @@ headerApp.controller('headerCtrl', ['$scope',
 									'eventsCount',
                                     '$rootScope',
 									function ($scope,
-        $timeout,
-        userFactory,
-        profileFactory,
-        bannerService,
-        searchService,
-        statsFactory,
-        loginSignupService,
-        logoutService,
-        modalService,
-        eventsCount,
-        $rootScope) {
+									$timeout,
+									userFactory,
+									profileFactory,
+									bannerService,
+									searchService,
+									statsFactory,
+									loginSignupService,
+									logoutService,
+									modalService,
+									eventsCount,
+									$rootScope) {
 
         // sign up starts here
 

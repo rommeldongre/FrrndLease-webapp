@@ -43,7 +43,7 @@
     <script src="js/jquery.backstretch.js"></script>
     <script src="js/animation.js"></script>
     <!--Loading Animation code CSS & JS Links ends here  -->
-	    
+        
 </head>
     
 <body onload="start()">
@@ -252,16 +252,61 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-                                    <h3 class="modal-title">Share With Friends</h3>
+                                    <button type="button" ng-click="cancel_share()" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                    <h3 class="modal-title">Share Item</h3>
                                 </div>
                                 <div class="modal-body" ng-init="friendsCount=false">
-									<input type="radio" ng-model="friendsCount" ng-value="true" >All Friends<br>
-									<input type="radio" ng-model="friendsCount" ng-value="false" checked="checked" >Confirmed Friends<br>
+									<label>Add Message for friends</label><br />
+									<textarea class="form-control" ng-model="shareMessage" ng-trim="false" maxlength="500" ></textarea>
+									<input type="checkbox" ng-model="flsState" ng-change="checkflsState()" />FrrndLease friends
+									<div ng-show="flsStatus">
+										<input type="radio" ng-model="friendsCount" ng-value="true" >All Friends &nbsp; &nbsp; &nbsp; 
+										<input type="radio" ng-model="friendsCount" ng-value="false" checked="checked" >Confirmed Friends<br/>
+									</div>
+									<span class="divider"> OR </span>
+									<input type="checkbox" ng-model="googleState" ng-change="checkflsState()" />Google Contacts
+									<div ng-show="googleStatus">
+									<div class="col-xs-4">
+									<input type="checkbox" ng-model="addFriendState" ng-change="checkflsState()" />Add to FriendList
+									</div><br/>
+									<div class="row">
+									<div class="col-xs-4"></div>
+									<div class="col-xs-4">
+										<button ng-if="!googleNumbers" class="btn btn-social btn-fill btn-google btn-block" ng-click="importgoogle()" href="">
+											<i class="fa fa-google-plus"></i> Share
+										</button>
+									</div>
+									<div class="col-xs-4"></div>
+									</div>
+									<div class="table-responsive" ng-if="googleNumbers">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>Name</th>
+													<th>Email</th>
+													<th>Mobile</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="contact in contacts">
+													<td>{{$index}}</td>
+													<td>{{contact.name}}</td>
+													<td>{{contact.email}}</td>
+													<td>{{contact.number}}</td>
+													<td>
+														<input type="checkbox" ng-model="contact.selected">
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									</div>
                                 </div>
                                 <div class="modal-footer">
-                                <button type="button" class="btn btn-default btn-fill" data-dismiss="modal" ng-click="">Cancel</button>
-                                <button class="btn btn-primary btn-fill" id="share_button" ng-model="shareFriends" ng-click="shareWithfriends()">Share</button>
+                                <button type="button" class="btn btn-default btn-fill" ng-click="cancel_share()"  data-dismiss="modal" ng-click="">Cancel</button>
+                                <button class="btn btn-primary btn-fill" id="share_button" ng-disabled="!flsStatus && !googleStatus" ng-model="shareFriends" ng-click="shareWithfriends()">Share</button>
                                 </div>
 
                             </div><!-- /.modal-content -->
