@@ -48,7 +48,7 @@
         <link rel="stylesheet" type="text/css" href="css/material-scrolltop.css">
         <!-- Material Scroll Top button ends here -->
 
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
     </head>
 
     <body onload="start()">
