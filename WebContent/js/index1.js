@@ -14,7 +14,7 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
     $scope.details = '';
     
     // remove this code and uncomment the below one when using https
-    $scope.search.location = "Gokhalenagar, Pune, Maharashtra, India";
+    $scope.search.location = "Pune, Maharashtra, India";
     
     searchService.saveCurrentLocation(18.533617, 73.828651);
         $timeout(function(){
