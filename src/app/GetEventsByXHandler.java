@@ -70,16 +70,16 @@ public class GetEventsByXHandler extends Connect implements AppHandler {
 			}
 			
 			switch (status) {
-			case "FLS_ACTIVE_IN_APP":
+			case "ActiveInApp":
 				sql = sql + " AND tb1.archived='FLS_ACTIVE' AND tb1.event_type='FLS_EVENT_NOTIFICATION'";
 				break;
-			case "FLS_ARCHIVED_IN_APP":
+			case "ArchivedInApp":
 				sql = sql + " AND tb1.archived='FLS_ARCHIVED' AND tb1.event_type='FLS_EVENT_NOTIFICATION'";
 				break;
-			case "FLS_NOT_IN_APP":
+			case "NotInApp":
 				sql = sql + " AND tb1.event_type='FLS_EVENT_NOT_NOTIFICATION'";
 				break;
-			case "FLS_ALL":
+			case "All":
 				break;
 
 			default:
