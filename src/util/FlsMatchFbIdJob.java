@@ -29,7 +29,7 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
 	public void fbIdTask(){
     	
     	LOGGER.info("Inside Fb Id Task job");
-    	String user_fb_id=null,user_id=null;
+    	String user_fb_id="",user_id="";
     	
     	Connection hcp = getConnectionFromPool();
   	    PreparedStatement psgetFbId=null;
@@ -84,22 +84,22 @@ public class FlsMatchFbIdJob extends Connect implements org.quartz.Job {
   	    Connection hcp = getConnectionFromPool();
   	    PreparedStatement psupdateFbId=null;
   	    int renewFbIdAction = 0;
+  	    String status="signedup";
 	   
 	    try {
 	    	hcp.setAutoCommit(false);
-	    	String UpdateFriendUserIdql = "UPDATE `friends` SET friend_id=?, friend_fb_id=?, friend_status=? WHERE friend_id=?";
+	    	String UpdateFriendUserIdql = "UPDATE `friends` tb_friends SET tb_friends.friend_id = ?, tb_friends.friend_status=? WHERE tb_friends.friend_id=?";
 			
 	    	psupdateFbId = hcp.prepareStatement(UpdateFriendUserIdql);
 			
-			LOGGER.info("Statement created. Executing renew query ...");
+			LOGGER.info("Statement created. Executing update query ...");
 			psupdateFbId.setString(1, User_id);
-			psupdateFbId.setString(2, Fb_id);
-			psupdateFbId.setString(3, "signedup");
-			psupdateFbId.setString(4, Fb_id);
+			psupdateFbId.setString(2, status);
+			psupdateFbId.setString(3, Fb_id);
 			renewFbIdAction = psupdateFbId.executeUpdate();
 			
 			if(renewFbIdAction == 0 ){
-				LOGGER.warning("Error occured while firing Update query on friends table for Updating friend ID");
+				LOGGER.warning("Error occured while firing 1st Update query on friends table for Updating friend ID");
 				hcp.rollback();
 				return;
 			}

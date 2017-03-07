@@ -192,7 +192,12 @@ public class FlsEmail extends Connect{
 				SUBJECT = (" Your Friend '" + obj.getString("from")	+ "' has been added to your Friend List. ");
 				BODY = "Great start! You have added '" + obj.getString("from") + "' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!";
 				break;
-
+				
+			case FLS_MAIL_ADD_FRIEND_FROM_NAME:
+				SUBJECT = (" Your Friend '" + obj.getString("fromUserName")	+ "' has been added to your Friend List. ");
+				BODY = "Great start! You have added '" + obj.getString("fromUserName") + "' to your Friend List. Once he/she responds, you will be able to lease items to each other with discounted credits!";
+				break;
+			
 			case FLS_MAIL_ADD_FRIEND_TO:
 				SUBJECT = (" Your Friend '" + obj.getString("from") + "' has added you to their Friend List");
 				BODY = "You are now on '" + obj.getString("from") + "'\'s Friend List. Once you Sign Up, you can lease items to each other at discounted credits!<br/> <br/>"
@@ -518,12 +523,7 @@ public class FlsEmail extends Connect{
 				
 			case FLS_MAIL_SHARE_ITEM_FRIEND:
 				SUBJECT = (" Item [" + obj.getString("title") + "] shared with you on FrrndLease");
-				BODY = ("<body>Your Friend '" + obj.getString("fromUserName") + "' has shared an item  with you on FrrndLease <br/>" + obj.getString("title")
-						+ "(" + obj.getString("category") 
-						+ ") | Insurance: " + obj.getInt("leaseValue") + "| Lease Term : " + obj.getString("leaseTerm")
-						+ "<br/>"+ obj.getString("description")+"<br/><br/>"
-						+ "<img width=\"300\" src='" + obj.getString("imageLinks") + "' alt=" + obj.getString("title") 
-						+ " ></img><br/><br/><a href='" + EMAIL_ITEM_DETAILS + obj.getString("uid") + "'><button type='"+"button"+"'>View Item</button></a></body>");
+				BODY = obj.getString("message");
 				break;
 			
 			case FLS_MAIL_SHARE_ITEM_OWNER:

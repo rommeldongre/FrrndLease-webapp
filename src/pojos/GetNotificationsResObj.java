@@ -125,6 +125,7 @@ public class GetNotificationsResObj {
 				this.notificationType = Icon_Type.FLS_ITEM.name();
 				break;
 			case "FLS_MAIL_ADD_FRIEND_FROM":
+			case "FLS_MAIL_ADD_FRIEND_FROM_NAME":
 			case "FLS_MAIL_ADD_FRIEND_TO":
 			case "FLS_MAIL_DELETE_FRIEND_FROM":
 			case "FLS_MAIL_DELETE_FRIEND_TO":
