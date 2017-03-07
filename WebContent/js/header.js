@@ -546,9 +546,6 @@ headerApp.controller('headerCtrl', ['$scope',
             });
         }
 
-        // getting current location on header load
-        userFactory.getCurrentLocation();
-
         // listening broadcast for current location
         $scope.$on('currentLocation', function (event, location) {
             $scope.search.location = location;
@@ -563,7 +560,6 @@ headerApp.controller('headerCtrl', ['$scope',
                         longitude = position.coords.longitude;
                         coords = new google.maps.LatLng(latitude, longitude);
                         searchService.saveCurrentLocation(latitude, longitude);
-                        console.log(position);
                         var geocoder = new google.maps.Geocoder();
                         var latLng = new google.maps.LatLng(latitude, longitude);
                         geocoder.geocode({
@@ -584,6 +580,9 @@ headerApp.controller('headerCtrl', ['$scope',
                 console.log("Geolocation is not supported by this browser.");
             }
         });
+
+        // getting current location on header load
+        userFactory.getCurrentLocation();
 
 }]);
 

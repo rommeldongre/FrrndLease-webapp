@@ -344,6 +344,8 @@
 			
 	</script>
     
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g"></script>
+    
     <!-- Angularjs api -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
     <script src="js/ui-bootstrap-tpls-1.3.2.min.js"></script>
@@ -371,7 +373,6 @@
 	<script src="js/bootstrap.min.js"></script>
     <!-- For Autocomplete Feature -->
     <script src="js/load-image.all.min.js"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places"></script>
     <script src="js/ngAutocomplete.js"></script>
 </body>
 </html>
