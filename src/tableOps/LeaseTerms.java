@@ -225,7 +225,7 @@ public class LeaseTerms extends Connect {
 	private void getNext() {
 		check = null;
 		LOGGER.info("Inside GetNext method");
-		String sql = "SELECT * FROM leaseterms WHERE term_name > ? ORDER BY term_name LIMIT 1"; //
+		String sql = "SELECT * FROM leaseterms WHERE term_duration > ? ORDER BY term_duration LIMIT 1"; //
 
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -235,7 +235,7 @@ public class LeaseTerms extends Connect {
 			stmt = hcp.prepareStatement(sql);
 
 			LOGGER.info("Statement created. Executing getNext query...");
-			stmt.setString(1, token);
+			stmt.setInt(1, Integer.parseInt(token));
 
 			rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -246,7 +246,7 @@ public class LeaseTerms extends Connect {
 
 				message = json.toString();
 				LOGGER.warning(message);
-				check = rs.getString("term_name");
+				check = String.valueOf(rs.getInt("term_duration"));
 			}
 
 			if (check != null) {

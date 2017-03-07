@@ -144,7 +144,7 @@ editItemApp.controller('editItemCtrl', ['$scope',
     }
     
     // called on the page load
-    populateLeaseTerm('');
+    populateLeaseTerm('0');
     
     $scope.leaseTermSelected = function(i){
         $scope.selectedLeaseTerm = i;
