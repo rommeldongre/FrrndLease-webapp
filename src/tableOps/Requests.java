@@ -255,7 +255,12 @@ public class Requests extends Connect {
 						ownerUserId = rs2.getString("item_user_id");
 						Event event = new Event();
 						event.createEvent(ownerUserId, userId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_FROM, Integer.parseInt(itemId), "You have sucessfully Requested the item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> on Friend Lease. The Owner of the item will respond within a week!");
-						event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease. Check out <a href=\"" + URL + "/myapp.html#/myincomingrequests\">Your Incoming Requests</a>");
+						if(msg.equals(null)){
+							event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease. Check out <a href=\"" + URL + "/myapp.html#/myincomingrequests\">Your Incoming Requests</a>");
+						}else{
+							event.createEvent(userId, ownerUserId, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_MAKE_REQUEST_TO, Integer.parseInt(itemId), "Your Item <a href=\"" + URL + "/ItemDetails?uid=" + rs2.getString("item_uid") + "\">" + rs2.getString("item_name") + "</a> has been requested on Friend Lease with a message <i>"+msg+"</i>.Check out <a href=\"" + URL + "/myapp.html#/myincomingrequests\">Your Incoming Requests</a>");
+						}
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 						res.setData(FLS_DUPLICATE_ENTRY, "0", "Something is wrong with us we'll get back to you ASAP!!");
