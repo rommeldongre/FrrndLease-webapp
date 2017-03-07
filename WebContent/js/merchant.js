@@ -223,7 +223,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
 	}
 
     // remove this code and uncomment the below one when using https
-    $scope.user.location = "Gokhalenagar, Pune, Maharashtra, India";
+    $scope.user.location = "Pune, Maharashtra, India";
 
     $scope.$on('currentLocation', function(event, location){
         $scope.user.location = location;

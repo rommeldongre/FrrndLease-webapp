@@ -553,6 +553,37 @@ headerApp.controller('headerCtrl', ['$scope',
         $scope.$on('currentLocation', function (event, location) {
             $scope.search.location = location;
         });
+                                        
+        $scope.$on('getLocation', function(event) {
+            // getting the current location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                        coords = new google.maps.LatLng(latitude, longitude);
+                        searchService.saveCurrentLocation(latitude, longitude);
+                        console.log(position);
+                        var geocoder = new google.maps.Geocoder();
+                        var latLng = new google.maps.LatLng(latitude, longitude);
+                        geocoder.geocode({
+                            'latLng': latLng
+                        }, function (results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                $rootScope.$broadcast('currentLocation', results[4].formatted_address);
+                            } else {
+                                console.log("Geocode was unsucessfull in detecting your current location");
+                            }
+                        });
+                    }, function (error) {
+                        console.log(error);
+                    }, 
+                    {timeout: 30000, enableHighAccuracy: true, maximumAge: 75000}
+                );
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
+        });
 
 }]);
 
@@ -646,31 +677,7 @@ headerApp.factory('userFactory', ['$rootScope', 'logoutService', '$http', 'searc
     }
 
     dataFactory.getCurrentLocation = function () {
-
-        // getting the current location
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                latitude = position.coords.latitude;
-                longitude = position.coords.longitude;
-                coords = new google.maps.LatLng(latitude, longitude);
-                searchService.saveCurrentLocation(latitude, longitude);
-
-                var geocoder = new google.maps.Geocoder();
-                var latLng = new google.maps.LatLng(latitude, longitude);
-                geocoder.geocode({
-                    'latLng': latLng
-                }, function (results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        $rootScope.$broadcast('currentLocation', results[4].formatted_address);
-                    } else {
-                        console.log("Geocode was unsucessfull in detecting your current location");
-                    }
-                });
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
-
+        $rootScope.$broadcast('getLocation');
     }
 
     return dataFactory;
@@ -1453,10 +1460,8 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
         $scope.user.code = ref_code;
     }
 
-
-
     // remove this code and uncomment the below one when using https
-    $scope.location = "Gokhalenagar, Pune, Maharashtra, India";
+    $scope.location = "Pune, Maharashtra, India";
 
     $scope.$on('currentLocation', function (event, location) {
         $scope.location = location;
