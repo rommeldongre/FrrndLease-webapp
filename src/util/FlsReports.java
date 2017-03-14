@@ -3,6 +3,7 @@ package util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,18 +39,35 @@ public class FlsReports extends Connect {
 		try {
 
 			String sql = createQuery(rq.getReport(), rq.getFreq(), rq.getFrom(), rq.getTo());
-
+			
+			ps1 = hcp.prepareStatement(sql);
+			rs1 = ps1.executeQuery();
+			
+			ResultSetMetaData metaData = rs1.getMetaData();
+			int count = metaData.getColumnCount();
+			
+			System.out.println(count);
+			
+			int[] signupData = new int[count];
+			String[] labels = new String[count];
+			
+			int i = 0;
+			
+			if(rs1.next()){
+				while(i < count){
+					labels[i] = metaData.getColumnLabel(i+1);
+					signupData[i] = rs1.getInt(labels[i]);
+					System.out.println(labels[i]);
+					System.out.println(signupData[i]);
+					i++;
+				}
+			}
+			
 			rs.setCode(FLS_SUCCESS);
 			rs.setMessage(FLS_SUCCESS_M);
-			rs.setLabels(new String[] { "January", "February", "March", "April", "May", "June", "July", "August",
-					"September", "October", "December" });
-			rs.setSeries(new String[] { "Sign Up", "Requests", "Leases" });
-			int[] data1 = new int[] { 65, 59, 80, 81, 56, 55, 40, 81, 56, 55, 40 };
-			int[] data2 = new int[] { 28, 48, 40, 19, 86, 27, 90, 81, 56, 55, 40 };
-			int[] data3 = new int[] { 78, 78, 90, 89, 36, 77, 50, 31, 36, 75, 20 };
-			rs.addData(data1);
-			rs.addData(data2);
-			rs.addData(data3);
+			rs.setLabels(labels);
+			rs.setSeries(new String[]{"Sign Up"});
+			rs.addData(signupData);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,25 +92,26 @@ public class FlsReports extends Connect {
 
 	private String createQuery(Report report, Freq freq, String from, String to) {
 
-		String sql = "SELECT SUM(CASE WHEN user_signup_date < '2016-12-25' THEN 1 END) as `2016-12-25`, SUM(CASE WHEN user_signup_date > '2016-12-25' THEN 1 END) as `2016-12-26` from users";
+		String sql = "SELECT";
 
 		switch (freq) {
-		case WEEKLY:
-			try {
-				Date fromDate = stringToDate(from), toDate = stringToDate(to);
-
-				while (fromDate.compareTo(toDate) < 0) {
-					Date ad = addDays(fromDate, 7);
-					System.out.println(fromDate + "----" + ad);
-					fromDate = ad;
+			case WEEKLY:
+				try {
+					Date fromDate = stringToDate(from), toDate = stringToDate(to);
+	
+					while (fromDate.compareTo(toDate) < 0) {
+						Date ad = addDays(fromDate, 7);
+						sql = sql + " SUM(CASE WHEN user_signup_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+						fromDate = ad;
+					}
+					sql = sql.substring(0, sql.length()-1);
+					sql = sql + " from users";
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			break;
-		case MONTHLY:
-			break;
+				break;
+			case MONTHLY:
+				break;
 		}
 
 		return sql;
