@@ -46,7 +46,7 @@ public class FlsReports extends Connect {
 			ResultSetMetaData metaData = rs1.getMetaData();
 			int count = metaData.getColumnCount();
 			
-			System.out.println(count);
+			LOGGER.info("Number of columns - " + count);
 			
 			int[] signupData = new int[count];
 			String[] labels = new String[count];
@@ -57,11 +57,12 @@ public class FlsReports extends Connect {
 				while(i < count){
 					labels[i] = metaData.getColumnLabel(i+1);
 					signupData[i] = rs1.getInt(labels[i]);
-					System.out.println(labels[i]);
-					System.out.println(signupData[i]);
 					i++;
 				}
 			}
+			
+			LOGGER.info("Labels found - " + labels);
+			LOGGER.info("Data found - " + signupData);
 			
 			rs.setCode(FLS_SUCCESS);
 			rs.setMessage(FLS_SUCCESS_M);
