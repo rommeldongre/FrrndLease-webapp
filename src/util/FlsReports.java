@@ -25,6 +25,14 @@ public class FlsReports extends Connect {
 	public enum Freq {
 		WEEKLY, MONTHLY
 	}
+	
+	public enum Traction {
+		SIGN_UP,
+		REQUESTS,
+		LEASES,
+		ITEMS,
+		WISHES
+	}
 
 	public GetReportResObj generateReport(GetReportReqObj rq) {
 
@@ -38,37 +46,56 @@ public class FlsReports extends Connect {
 
 		try {
 
-			String sql = createQuery(rq.getReport(), rq.getFreq(), rq.getFrom(), rq.getTo());
+			Traction[] tractions = Traction.values();
 			
-			ps1 = hcp.prepareStatement(sql);
-			rs1 = ps1.executeQuery();
+			int sCount = tractions.length;
+			String[] series = new String[sCount];
 			
-			ResultSetMetaData metaData = rs1.getMetaData();
-			int count = metaData.getColumnCount();
+			int j = 0;
 			
-			LOGGER.info("Number of columns - " + count);
-			
-			int[] signupData = new int[count];
-			String[] labels = new String[count];
-			
-			int i = 0;
-			
-			if(rs1.next()){
-				while(i < count){
-					labels[i] = metaData.getColumnLabel(i+1);
-					signupData[i] = rs1.getInt(labels[i]);
-					i++;
+			for(Traction traction: tractions){
+				String sql = createQuery(rq.getReport(), traction, rq.getFreq(), rq.getFrom(), rq.getTo());
+				
+				ps1 = hcp.prepareStatement(sql);
+				rs1 = ps1.executeQuery();
+				
+				ResultSetMetaData metaData = rs1.getMetaData();
+				int count = metaData.getColumnCount();
+				
+				String[] labels = new String[count];
+
+				int[] data = new int[count];
+				
+				int i = 0;
+				
+				if(rs1.next()){
+					while(i < count){
+						labels[i] = metaData.getColumnLabel(i+1);
+						data[i] = rs1.getInt(labels[i]);
+						i++;
+					}
 				}
+				
+				rs.setLabels(labels);
+				rs.addData(data);
+				
+				if(traction.equals(Traction.SIGN_UP))
+					series[j] = "Sign Up";
+				else if(traction.equals(Traction.ITEMS))
+					series[j] = "Items";
+				else if(traction.equals(Traction.LEASES))
+					series[j] = "Leases";
+				else if(traction.equals(Traction.REQUESTS))
+					series[j] = "Requests";
+				else if(traction.equals(Traction.WISHES))
+					series[j] = "Wishes";
+				
+				j++;
 			}
-			
-			LOGGER.info("Labels found - " + labels);
-			LOGGER.info("Data found - " + signupData);
 			
 			rs.setCode(FLS_SUCCESS);
 			rs.setMessage(FLS_SUCCESS_M);
-			rs.setLabels(labels);
-			rs.setSeries(new String[]{"Sign Up"});
-			rs.addData(signupData);
+			rs.setSeries(series);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,41 +118,110 @@ public class FlsReports extends Connect {
 
 	}
 
-	private String createQuery(Report report, Freq freq, String from, String to) {
+	private String createQuery(Report report, Traction traction, Freq freq, String from, String to) {
 
 		String sql = "SELECT";
 
-		switch (freq) {
-			case WEEKLY:
-				try {
-					Date fromDate = stringToDate(from), toDate = stringToDate(to);
-	
-					while (fromDate.compareTo(toDate) < 0) {
-						Date ad = addDays(fromDate, 7);
-						sql = sql + " SUM(CASE WHEN user_signup_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
-						fromDate = ad;
+		Date fromDate = stringToDate(from), toDate = stringToDate(to);
+		
+		switch(traction){
+			case SIGN_UP:
+				while (fromDate.compareTo(toDate) < 0) {
+					Date ad = addWeekDays(fromDate);
+					if(freq.equals(Freq.WEEKLY)){
+						ad = addWeekDays(fromDate);
+					} else if (freq.equals(Freq.MONTHLY)) {
+						ad = addMonthDays(fromDate);
 					}
-					sql = sql.substring(0, sql.length()-1);
-					sql = sql + " from users";
-				} catch (Exception e) {
-					e.printStackTrace();
+					sql = sql + " SUM(CASE WHEN user_signup_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+					fromDate = ad;
 				}
+				
+				sql = sql.substring(0, sql.length()-1);
+				sql = sql + " from users";
 				break;
-			case MONTHLY:
+			case REQUESTS:
+				while (fromDate.compareTo(toDate) < 0) {
+					Date ad = addWeekDays(fromDate);
+					if(freq.equals(Freq.WEEKLY)){
+						ad = addWeekDays(fromDate);
+					} else if (freq.equals(Freq.MONTHLY)) {
+						ad = addMonthDays(fromDate);
+					}
+					sql = sql + " SUM(CASE WHEN request_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+					fromDate = ad;
+				}
+				
+				sql = sql.substring(0, sql.length()-1);
+				sql = sql + " from requests";
+				break;
+			case LEASES:
+				while (fromDate.compareTo(toDate) < 0) {
+					Date ad = addWeekDays(fromDate);
+					if(freq.equals(Freq.WEEKLY)){
+						ad = addWeekDays(fromDate);
+					} else if (freq.equals(Freq.MONTHLY)) {
+						ad = addMonthDays(fromDate);
+					}
+					sql = sql + " SUM(CASE WHEN lease_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+					fromDate = ad;
+				}
+				
+				sql = sql.substring(0, sql.length()-1);
+				sql = sql + " from leases";
+				break;
+			case ITEMS:
+				while (fromDate.compareTo(toDate) < 0) {
+					Date ad = addWeekDays(fromDate);
+					if(freq.equals(Freq.WEEKLY)){
+						ad = addWeekDays(fromDate);
+					} else if (freq.equals(Freq.MONTHLY)) {
+						ad = addMonthDays(fromDate);
+					}
+					sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+					fromDate = ad;
+				}
+				
+				sql = sql.substring(0, sql.length()-1);
+				sql = sql + " from items WHERE item_status NOT IN ('Wished', 'Archived')";
+				break;
+			case WISHES:
+				while (fromDate.compareTo(toDate) < 0) {
+					Date ad = addWeekDays(fromDate);
+					if(freq.equals(Freq.WEEKLY)){
+						ad = addWeekDays(fromDate);
+					} else if (freq.equals(Freq.MONTHLY)) {
+						ad = addMonthDays(fromDate);
+					}
+					sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+					fromDate = ad;
+				}
+				
+				sql = sql.substring(0, sql.length()-1);
+				sql = sql + " from items WHERE item_status='Wished'";
 				break;
 		}
+
+		
 
 		return sql;
 
 	}
 
-	private Date addDays(Date date, int days) {
+	private Date addWeekDays(Date date) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		cal.add(Calendar.DATE, days);
+		cal.add(Calendar.DATE, 7);
 		return cal.getTime();
 	}
 
+	private Date addMonthDays(Date date) {
+		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, 7);
+		return cal.getTime();
+	}
+	
 	private Date stringToDate(String date) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		Date d = new Date();
