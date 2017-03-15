@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2060;
+	public final int appBuild = 2061;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2275,6 +2275,76 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2060;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block adds time stamp column in items, requests, leases
+				if (dbBuild < 2061) {
+					
+					// Add columns for date
+					String sqlAddItemDate = "ALTER TABLE `items` ADD COLUMN `item_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `item_id`";
+					String sqlAddRequestDate = "ALTER TABLE `requests` ADD COLUMN `request_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `request_id`";
+					String sqlAddLeaseDate = "ALTER TABLE `leases` ADD COLUMN `lease_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `lease_id`";
+					
+					// Update date columns
+					String sqlUpdateItemDate = "UPDATE `items` SET `item_date`=`item_lastmodified`";
+					String sqlUpdateItemDateR = "UPDATE `items` SET `item_lastmodified`=`item_date`";
+					
+					String sqlUpdateRequestDate = "UPDATE `requests` SET `request_date`=`request_lastmodified`";
+					String sqlUpdateRequestDateR = "UPDATE `requests` SET `request_lastmodified`=`request_date`";
+					
+					String sqlUpdateLeaseDate = "UPDATE `leases` INNER JOIN `items` ON `item_id`=`lease_item_id` SET `lease_date`=`item_lastmodified`";
+					
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddItemDate);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlAddRequestDate);
+						ps2.executeUpdate();
+						ps2.close();
+						
+						PreparedStatement ps3 = connection.prepareStatement(sqlAddLeaseDate);
+						ps3.executeUpdate();
+						ps3.close();
+						
+						PreparedStatement ps4 = connection.prepareStatement(sqlUpdateItemDate);
+						ps4.executeUpdate();
+						ps4.close();
+						
+						PreparedStatement ps5 = connection.prepareStatement(sqlUpdateRequestDate);
+						ps5.executeUpdate();
+						ps5.close();
+						
+						PreparedStatement ps6 = connection.prepareStatement(sqlUpdateItemDateR);
+						ps6.executeUpdate();
+						ps6.close();
+						
+						PreparedStatement ps7 = connection.prepareStatement(sqlUpdateRequestDateR);
+						ps7.executeUpdate();
+						ps7.close();
+						
+						PreparedStatement ps8 = connection.prepareStatement(sqlUpdateLeaseDate);
+						ps8.executeUpdate();
+						ps8.close();
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println(e.getStackTrace());
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+							System.out.println(e.getStackTrace());
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2061;
 					updateDBBuild(dbBuild);
 				}
 				
