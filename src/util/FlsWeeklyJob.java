@@ -48,11 +48,17 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 				postItemCheckBox = "", wishitemCheckBox = "";
 		List<JSONObject> recentWishes = null, wishedItems = null, postedItems = null, addedFriends = null;
 
-		String signedupCheckBoxString = "<strong>Signed Up</strong> - Welcome to FrrndLease!",
-				photoIdCheckBoxString = "<strong>Upload Photo Id</strong> - You are in a Prime area. Just upload a Photo Id and avail of Prime Doorstep delivery!",
-				friendCheckBoxString = "<strong>Invite 2 Friends</strong> - Earn free credits by inviting your friends and increasing your trusted network",
-				postItemCheckBoxString = "<strong>Post 2 Items</strong> - Get 10 free credits to spend for every item that you offer other members",
-				wishitemCheckBoxString = "<strong>Wish 2 Items</strong> - Get notified when items similar to your wishlist are available";
+		String  signedupCheckBoxTitle="<strong>Signed Up</strong>",
+				photoIdCheckBoxTitle="<strong>Upload Photo Id</strong>",
+				friendCheckBoxTitle="<strong>Invite 2 Friends</strong>",
+				postItemCheckBoxTitle="<strong>Post 2 Items</strong>",
+				wishitemCheckBoxtitle="<strong>Wish 2 Items</strong>";
+		
+		String signedupCheckBoxString = " - Welcome to FrrndLease!",
+				photoIdCheckBoxString = " - You are in a Prime area. Just upload a Photo Id and avail of Prime Doorstep delivery!",
+				friendCheckBoxString = " - Earn free credits by inviting your friends and increasing your trusted network",
+				postItemCheckBoxString = " - Get 10 free credits to spend for every item that you offer other members",
+				wishitemCheckBoxString = " - Get notified when items similar to your wishlist are available";
 
 		Calendar currentCal = Calendar.getInstance();
 		SimpleDateFormat currentSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -99,39 +105,39 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 				if (places.contains(rs1.getString("user_locality").toUpperCase())) {
 					if (!rs1.getBoolean("user_verified_flag")) {
 						photoIdCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' ><a href='"
-								+ FRIENDLIST_URL + "'>" + photoIdCheckBoxString + "</a><br/>";
+								+ FRIENDLIST_URL + "'>" + photoIdCheckBoxTitle + "</a>"+photoIdCheckBoxString+"<br/>";
 					} else {
 						photoIdCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' checked>"
-								+ photoIdCheckBoxString + "<br/>";
+								+ photoIdCheckBoxTitle+photoIdCheckBoxString + "<br/>";
 					}
 
 				}
 
 				signUpCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' checked>"
-						+ signedupCheckBoxString + "<br/>";
+						+ signedupCheckBoxTitle+signedupCheckBoxString + "<br/>";
 
 				if (addedFriends.size() < DIGEST_LIMIT) {
 					friendCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' ><a href='"
-							+ FRIENDLIST_URL + "'>" + friendCheckBoxString + "</a><br/>";
+							+ FRIENDLIST_URL + "'>" + friendCheckBoxTitle + "</a>"+friendCheckBoxString+"<br/>";
 				} else {
 					friendCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' checked>"
-							+ friendCheckBoxString + "<br/>";
+							+ friendCheckBoxTitle+friendCheckBoxString + "<br/>";
 				}
 
 				if (postedItems.size() < DIGEST_LIMIT) {
 					postItemCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' ><a href='"
-							+ POST_ITEM_URL + "'>" + postItemCheckBoxString + "</a><br/>";
+							+ POST_ITEM_URL + "'>" + postItemCheckBoxTitle + "</a>"+postItemCheckBoxString+"<br/>";
 				} else {
 					postItemCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' checked>"
-							+ postItemCheckBoxString + "<br/>";
+							+ postItemCheckBoxTitle+postItemCheckBoxString + "<br/>";
 				}
 
 				if (wishedItems.size() < DIGEST_LIMIT) {
 					wishitemCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' ><a href='"
-							+ STORE_URL + "'>" + wishitemCheckBoxString + "</a><br/>";
+							+ STORE_URL + "'>" + wishitemCheckBoxtitle + "</a>"+wishitemCheckBoxString+"<br/>";
 				} else {
 					wishitemCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' checked>"
-							+ wishitemCheckBoxString + "<br/>";
+							+ wishitemCheckBoxtitle+wishitemCheckBoxString + "<br/>";
 				}
 
 				String BODY = "<body><span style='" + "font-weight:bold;font-size:20px;"
