@@ -17,6 +17,8 @@ editItemApp.controller('editItemCtrl', ['$scope',
     
     $scope.editable = false;
 	
+	$scope.leaseTermList = "";
+	
     var userId = userFactory.user;
     var userAccessToken = userFactory.userAccessToken;
     
@@ -131,12 +133,16 @@ editItemApp.controller('editItemCtrl', ['$scope',
                 if(response.Code === "FLS_SUCCESS") {
                     $scope.$apply(function(){
                         $scope.leaseTerms.push(JSON.parse(response.Message).termName);
+						$scope.leaseTermList = $scope.leaseTermList + JSON.parse(response.Message).termName+ "--> "+JSON.parse(response.Message).termDesc+",\n\n     ";
                     });
                     $scope.item.leaseTerm = $scope.leaseTerms[$scope.selectedLeaseTerm];
                     populateLeaseTerm(response.Id);
                 }
                 else{
-                    //all lease terms are loaded
+					$scope.$apply(function(){
+						$scope.leaseTermToolTip="Lease Term Details are as follow:- \n\n"+$scope.leaseTermList;
+						$("#lease_term_tooltip").attr('title', $scope.leaseTermToolTip);
+					});
                 }
             },
             error:function() {}
@@ -144,7 +150,7 @@ editItemApp.controller('editItemCtrl', ['$scope',
     }
     
     // called on the page load
-    populateLeaseTerm('');
+    populateLeaseTerm('0');
     
     $scope.leaseTermSelected = function(i){
         $scope.selectedLeaseTerm = i;
