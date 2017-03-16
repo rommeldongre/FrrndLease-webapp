@@ -223,6 +223,12 @@ public class Requests extends Connect {
 					return;
 				}
 				
+				if(rs3.getString("user_locality") == null || rs3.getString("user_locality").isEmpty()){
+					LOGGER.warning("User locality is null");
+					res.setData(FLS_UNLIKE_LOCATION, "0", FLS_UNLIKE_LOCATION_M);
+					return;
+				}
+				
 				if(!(rs2.getString("user_locality").equals(rs3.getString("user_locality")))){
 					LOGGER.warning("Users are not in the same locality");
 					res.setData(FLS_UNLIKE_LOCATION, "0", FLS_UNLIKE_LOCATION_M);

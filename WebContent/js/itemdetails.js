@@ -116,7 +116,10 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
                             }else{
                                 modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-                                    window.location.replace("myapp.html");
+                                    if(response.code == 236)
+                                        window.location.replace("myapp.html#/myprofile");
+                                    else
+                                        window.location.replace("myapp.html");
                                 },function(){});
                            }
                         },
