@@ -71,7 +71,7 @@ public class FlsReports extends Connect {
 				if(rs1.next()){
 					while(i < count){
 						labels[i] = metaData.getColumnLabel(i+1);
-						data[i] = rs1.getInt(labels[i]);
+						data[i] = rs1.getInt(i+1);
 						i++;
 					}
 				}
@@ -131,10 +131,11 @@ public class FlsReports extends Connect {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
 						ad = addWeekDays(fromDate);
+						sql = sql + " SUM(CASE WHEN user_signup_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					} else if (freq.equals(Freq.MONTHLY)) {
 						ad = addMonthDays(fromDate);
+						sql = sql + " SUM(CASE WHEN user_signup_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 					}
-					sql = sql + " SUM(CASE WHEN user_signup_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					fromDate = ad;
 				}
 				
@@ -147,10 +148,11 @@ public class FlsReports extends Connect {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
 						ad = addWeekDays(fromDate);
+						sql = sql + " SUM(CASE WHEN request_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					} else if (freq.equals(Freq.MONTHLY)) {
 						ad = addMonthDays(fromDate);
+						sql = sql + " SUM(CASE WHEN request_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 					}
-					sql = sql + " SUM(CASE WHEN request_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					fromDate = ad;
 				}
 				
@@ -163,10 +165,11 @@ public class FlsReports extends Connect {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
 						ad = addWeekDays(fromDate);
+						sql = sql + " SUM(CASE WHEN lease_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					} else if (freq.equals(Freq.MONTHLY)) {
 						ad = addMonthDays(fromDate);
+						sql = sql + " SUM(CASE WHEN lease_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 					}
-					sql = sql + " SUM(CASE WHEN lease_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					fromDate = ad;
 				}
 				
@@ -179,10 +182,11 @@ public class FlsReports extends Connect {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
 						ad = addWeekDays(fromDate);
+						sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					} else if (freq.equals(Freq.MONTHLY)) {
 						ad = addMonthDays(fromDate);
+						sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 					}
-					sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					fromDate = ad;
 				}
 				
@@ -195,10 +199,12 @@ public class FlsReports extends Connect {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
 						ad = addWeekDays(fromDate);
+						sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
 					} else if (freq.equals(Freq.MONTHLY)) {
 						ad = addMonthDays(fromDate);
+						sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 					}
-					sql = sql + " SUM(CASE WHEN item_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+					
 					fromDate = ad;
 				}
 				
@@ -223,7 +229,15 @@ public class FlsReports extends Connect {
 	private Date addMonthDays(Date date) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
-		cal.add(Calendar.DATE, 7);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		if(month < 12)
+			cal.set(Calendar.MONTH, month+1);
+		else if (month == 12){
+			cal.set(Calendar.YEAR, year+1);
+			cal.set(Calendar.MONTH, 1);
+		}
+		cal.set(Calendar.DAY_OF_MONTH, 1);
 		return cal.getTime();
 	}
 	
