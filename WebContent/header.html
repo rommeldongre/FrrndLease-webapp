@@ -10,13 +10,9 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a href="myapp.html#/" class="navbar-brand" id="icon"><img src="images/fls-logo_full.png" style="width:176px" /></a>
+                    <a href="myapp.html#/wizard" class="btn btn-primary btn-fill" ng-if="isLoggedIn()"><i class="fa fa-camera" aria-hidden="true"></i> <span id="headerThings">Store Your Things</span></a>
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar1">
-
-                    <!-- Store Your Stuff button -->
-                    <li class="nav navbar-nav" ng-if="isLoggedIn()">
-                        <a href="myapp.html#/wizard" class="btn btn-primary btn-fill">Store Your Things</a>
-                    </li>
                     
                     <!-- Searchbar starts here -->
                     <li class="nav navbar-nav" ng-if="showSearch && isLoggedIn()" style="margin-left:3px;margin-top:15px;margin-bottom:15px;">

@@ -1,6 +1,6 @@
 var postItemWizardApp = angular.module('myApp');
 
-postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', '$filter', function($scope, modalService, userFactory, eventsCount, $filter){
+postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', '$filter', '$routeParams', function($scope, modalService, userFactory, eventsCount, $filter, $routeParams){
     
     $scope.steps = [
         {
@@ -28,6 +28,9 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     $scope.refferalCode = localStorage.getItem("userReferralCode");
     
     $scope.item = {};
+    
+    if($routeParams.title != undefined)
+        $scope.item.title = $routeParams.title;
     
     $scope.categories = [];
     

@@ -126,6 +126,7 @@ public class FlsReports extends Connect {
 		
 		switch(traction){
 			case SIGN_UP:
+				sql = sql + " SUM(CASE WHEN user_signup_date < '" + dateToString(fromDate) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 				while (fromDate.compareTo(toDate) < 0) {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
@@ -141,6 +142,7 @@ public class FlsReports extends Connect {
 				sql = sql + " from users";
 				break;
 			case REQUESTS:
+				sql = sql + " SUM(CASE WHEN request_date < '" + dateToString(fromDate) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 				while (fromDate.compareTo(toDate) < 0) {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
@@ -156,6 +158,7 @@ public class FlsReports extends Connect {
 				sql = sql + " from requests";
 				break;
 			case LEASES:
+				sql = sql + " SUM(CASE WHEN lease_date < '" + dateToString(fromDate) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 				while (fromDate.compareTo(toDate) < 0) {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
@@ -171,6 +174,7 @@ public class FlsReports extends Connect {
 				sql = sql + " from leases";
 				break;
 			case ITEMS:
+				sql = sql + " SUM(CASE WHEN item_date < '" + dateToString(fromDate) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 				while (fromDate.compareTo(toDate) < 0) {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){
@@ -186,6 +190,7 @@ public class FlsReports extends Connect {
 				sql = sql + " from items WHERE item_status NOT IN ('Wished', 'Archived')";
 				break;
 			case WISHES:
+				sql = sql + " SUM(CASE WHEN item_date < '" + dateToString(fromDate) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 				while (fromDate.compareTo(toDate) < 0) {
 					Date ad = addWeekDays(fromDate);
 					if(freq.equals(Freq.WEEKLY)){

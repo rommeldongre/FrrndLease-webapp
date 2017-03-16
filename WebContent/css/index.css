@@ -416,6 +416,10 @@ ul{
 	max-height: 300px;
 }
 
+#headerThings{
+    display: inline-block;
+}
+
 @media screen and (max-width: 1000px){
 	#carouselinner{
 		max-height: 300px;
@@ -448,5 +452,9 @@ ul{
     
     #marketingstore{
         margin-top: 19.8px;
+    }
+    
+    #headerThings{
+        display: none;
     }
 }
