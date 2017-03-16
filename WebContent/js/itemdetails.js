@@ -173,8 +173,6 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 						status: item_status,
                         image: $scope.item.primaryImageLink};
         
-        modalService.showModal({}, {bodyText: 'Are you sure you want to add this Item to your Wishlist?'}).then(
-            function(result){
 				if (userFactory.user == "" || userFactory.user == null || userFactory.user == "anonymous")
 					$('#loginModal').modal('show');
 				else
@@ -192,10 +190,6 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 								modalService.showModal({}, {bodyText: "Not Working",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
 							}
 						});
-            },
-            function(){
-
-            });
     }
     
     $scope.editItem = function(){
