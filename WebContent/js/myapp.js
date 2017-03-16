@@ -71,7 +71,7 @@ myApp.config(function($routeProvider){
         controller : 'editItemCtrl'
     })
     
-    .when('/wizard', {
+    .when('/wizard/:title?', {
         templateUrl : 'postitemwizard.html',
         controller : 'postItemWizardCtrl'
     })

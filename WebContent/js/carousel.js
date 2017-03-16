@@ -208,12 +208,12 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         window.location.replace("ItemDetails?uid="+uid);
     }
     
-    $scope.offerStuffClicked = function(){
+    $scope.offerStuffClicked = function(title){
        if(user == "" || user == null || user == 'anonymous'){
             $('#registerModal').modal('show');
         }
         else{
-            window.location.replace("myapp.html#/wizard");
+            window.location.replace("myapp.html#/wizard/" + title);
         }
     }
     
