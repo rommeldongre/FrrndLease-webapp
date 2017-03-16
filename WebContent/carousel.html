@@ -1,6 +1,26 @@
     <div ng-app="carouselApp">
         <div ng-controller="carouselCtrl">
             <div class="container-fluid">
+                <div class="row" ng-if="showWishes">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 text-center">
+                                    <h4 style="margin: 0 0 5px 0;">Members are looking for these items. Click to post yours.</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 text-center">
+                                    <button class="btn btn-success btn-fill btn-round btn-sm" ng-repeat="wish in wishes" ng-click="offerStuffClicked(wish)" onclick="ga('send', 'event', 'index', 'click', 'StoreYourThings');" style="margin:0 1px;">
+                                        {{wish | limitTo: 20}}
+                                        <span ng-if="wish.length > 20">&hellip;</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-2 col-sm-12" style="border-right:thin solid #eee;">
                         <div ng-repeat="c in categories" >
@@ -104,25 +124,6 @@
                             <div class="row" style="margin-bottom:10px;">
                                 <div ng-if="showNext" style="text-align:center;">
                                     <button ng-click="loadNextSlide()" onclick="ga('send', 'event', 'index', 'click', 'LoadMore');" class="btn btn-primary btn-sm btn-round btn-fill" id="successBtn" >Load more...</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="alert alert-success" ng-if="showWishes" style="margin-top: 20px;">
-                        <div class="container">
-                            <div class="row" style="display: flex;flex-wrap: wrap;">
-                                <div class="col-md-9">
-                                    Top Ten Wished Items -
-                                    <span class="label label-success" ng-repeat="wish in wishes">
-                                        {{wish | limitTo: 20}}
-                                        <span ng-if="wish.length > 20">&hellip;</span>
-                                    </span>
-                                </div>
-                                <div class="col-md-3">
-                                    <button ng-click="offerStuffClicked()" onclick="ga('send', 'event', 'index', 'click', 'StoreYourThings');" id="storebutton" class="btn btn-success btn-fill">I have something to offer!</button>
                                 </div>
                             </div>
                         </div>

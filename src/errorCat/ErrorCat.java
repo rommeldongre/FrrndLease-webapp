@@ -42,6 +42,7 @@ public class ErrorCat {
 	final public int FLS_ITEMS_ES_ARCHIVED = 233;
 	final public int FLS_ITEMS_DELETE_ARCHIVED = 234;
 	final public int FLS_RAZOR_EXCEPTION = 235;
+	final public int FLS_INVALID_LOCALITY = 236;
 	
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -131,6 +132,7 @@ public class ErrorCat {
 	final public String FLS_PROMO_CODE_EXCEPTION_M = "Couldn't find Promo Code for this id";
 	final public String FLS_SHARE_ITEM_EXCEPTION_M = "Couldn't share Item as you have no friends on FrrndLease!!";
 	final public String FLS_SHARE_ITEM_GOOGLE_EXCEPTION_M = "Couldn't share Item as you have no friends on Google!!";
+	final public String FLS_INVALID_LOCALITY_M = "Please enter your location first.";
 	
 	
 	//String query variables.
