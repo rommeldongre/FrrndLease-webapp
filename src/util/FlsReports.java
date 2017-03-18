@@ -27,6 +27,7 @@ public class FlsReports extends Connect {
 	}
 	
 	public enum Traction {
+		ENGAGEMENTS,
 		SIGN_UP,
 		REQUESTS,
 		LEASES,
@@ -79,7 +80,9 @@ public class FlsReports extends Connect {
 				rs.setLabels(labels);
 				rs.addData(data);
 				
-				if(traction.equals(Traction.SIGN_UP))
+				if(traction.equals(Traction.ENGAGEMENTS))
+					series[j] = "Engagements";
+				else if(traction.equals(Traction.SIGN_UP))
 					series[j] = "Sign Up";
 				else if(traction.equals(Traction.ITEMS))
 					series[j] = "Items";
@@ -125,6 +128,23 @@ public class FlsReports extends Connect {
 		Date fromDate = stringToDate(from), toDate = stringToDate(to);
 		
 		switch(traction){
+			case ENGAGEMENTS:
+				sql = sql + " SUM(CASE WHEN credit_date < '" + dateToString(fromDate) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
+				while (fromDate.compareTo(toDate) < 0) {
+					Date ad = addWeekDays(fromDate);
+					if(freq.equals(Freq.WEEKLY)){
+						ad = addWeekDays(fromDate);
+						sql = sql + " SUM(CASE WHEN credit_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(ad) + "',";
+					} else if (freq.equals(Freq.MONTHLY)) {
+						ad = addMonthDays(fromDate);
+						sql = sql + " SUM(CASE WHEN credit_date BETWEEN '" + dateToString(fromDate) + "' AND '" + dateToString(ad) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
+					}
+					fromDate = ad;
+				}
+				
+				sql = sql.substring(0, sql.length()-1);
+				sql = sql + " from credit_log where credit_amount > 0";
+				break;
 			case SIGN_UP:
 				sql = sql + " SUM(CASE WHEN user_signup_date < '" + dateToString(fromDate) + "' THEN 1 END) as '" + dateToString(fromDate) + "',";
 				while (fromDate.compareTo(toDate) < 0) {
