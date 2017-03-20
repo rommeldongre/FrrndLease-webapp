@@ -131,6 +131,10 @@ public class FlsExport extends Connect{
 					output.append(dbResponse.getBoolean("user_live_status"));
 					output.append(",");
 					output.append(dbResponse.getString("user_status"));
+					output.append(",");
+					output.append(dbResponse.getString("user_items"));
+					output.append(",");
+					output.append(dbResponse.getString("user_leases"));
 					output.append("\n");
 					LOGGER.info("Success");
 				}

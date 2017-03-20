@@ -47,7 +47,7 @@ public class ExportUsers extends HttpServlet {
         try {
         	
             OutputStream o = response.getOutputStream();
-            String header = "SignUp Date,Fee Expiry Date,Id,Profile Pic,Plan,Full Name,Sub Locality,Locality,Credits,Verification,Status,SignUp Status\n";
+            String header = "SignUp Date,Fee Expiry Date,Id,Profile Pic,Plan,Full Name,Sub Locality,Locality,Credits,Verification,Status,SignUp Status,Item Count,Lease Count\n";
             o.write(header.getBytes());
 
             StringBuffer line = new StringBuffer();
