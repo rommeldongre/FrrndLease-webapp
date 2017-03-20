@@ -1,6 +1,6 @@
 var carouselApp = angular.module('carouselApp', []);
 
-carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarousel', 'searchService', 'eventsCount', function($scope, $timeout, getItemsForCarousel, searchService, eventsCount){
+carouselApp.controller('carouselCtrl', ['$scope', '$timeout', '$location', '$anchorScroll', 'getItemsForCarousel', 'searchService', 'eventsCount', function($scope, $timeout, $location, $anchorScroll, getItemsForCarousel, searchService, eventsCount){
     // lastItem is used to store the id of the last retrieved item from the database
     var lastItem = 0;
     // selected category is stored in this variable
@@ -36,6 +36,13 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         }
         $scope.search.string = searchString;
         initPopulate();
+		
+		//check if item has been searched from index page or not
+		if(window.location.href.indexOf("index.html") > -1 && searchString != ""){
+			$location.hash('friendstoreline');
+			$anchorScroll();
+			}
+			
         if(searchString != "" && searchString != null && searchString != "undefined")
             addToWishList(searchString);
         
