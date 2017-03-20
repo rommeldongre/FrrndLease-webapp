@@ -20,10 +20,10 @@ import util.FlsExport;
 import util.FlsLogger;
 import util.FlsPlan;
 
-@WebServlet(description = "Export Leads as CSV", urlPatterns = { "/ExportLeads" })
-public class ExportLeads extends HttpServlet {
+@WebServlet(description = "Export Leads as CSV", urlPatterns = { "/ExportUsers" })
+public class ExportUsers extends HttpServlet {
 	
-	private FlsLogger LOGGER = new FlsLogger(ExportLeads.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(ExportUsers.class.getName());
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -39,21 +39,19 @@ public class ExportLeads extends HttpServlet {
 		LOGGER.info("Inside POST Method");
 		
 		response.setContentType("text/csv");
-		response.setHeader("Content-Disposition", "attachment; filename=\"Leads.csv\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"Users.csv\"");
 		
-		FlsExport exportLeads = new FlsExport();
-		String leadType = request.getParameter("type");
-		String fromDate = request.getParameter("fromDate");
-		String toDate = request.getParameter("toDate");
+		FlsExport exportUsers = new FlsExport();
+		String userType = request.getParameter("type");
 		
         try {
         	
             OutputStream o = response.getOutputStream();
-            String header = "lead Id,Lead Date,Lead Email,Lead Type,Lead Url\n";
+            String header = "SignUp Date,Fee Expiry Date,Id,Profile Pic,Plan,Full Name,Sub Locality,Locality,Credits,Verification,Status,SignUp Status\n";
             o.write(header.getBytes());
 
             StringBuffer line = new StringBuffer();
-            line = exportLeads.getLeads(leadType,fromDate,toDate);
+            line = exportUsers.getUsers(userType);
             if(line!=null){
             	 o.write(line.toString().getBytes());
             }
