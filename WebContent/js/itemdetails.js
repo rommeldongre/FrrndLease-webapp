@@ -445,8 +445,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 			dataType: "json",
 			success: function(response) {
 				if(response.code==0){
-					bannerService.updatebannerMessage(response.message,"");
-                    $("html, body").animate({ scrollTop: 0 }, "slow");
+					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
+						}, function(){})
 					cancel_share();
 				}else if(response.code==201){
 					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
