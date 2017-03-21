@@ -2356,8 +2356,9 @@ public class FlsConfig extends Connect{
 					// ticket_notes
 					String sqlCreateTicketNotes = "CREATE TABLE `fls`.`ticket_notes` ( `note_id` INT(255) NOT NULL AUTO_INCREMENT , `note_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `note` VARCHAR(255) NOT NULL , `ticket_id` INT(255) NOT NULL , PRIMARY KEY (`note_id`))";
 					// ticket type
-					String sqlCreateTicketTypes = "CREATE TABLE `fls`.`ticket_types` ( `type_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_type` ENUM('GENERAL','VERIFY_ID','PRIME_PICKUP') NOT NULL DEFAULT 'GENERAL' , `script` VARCHAR(255) NOT NULL , PRIMARY KEY (`type_id`))";
-					
+					String sqlCreateTicketTypes = "CREATE TABLE `fls`.`ticket_types` ( `type_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_type` VARCHAR(255) NOT NULL , `script` VARCHAR(255) NOT NULL , PRIMARY KEY (`type_id`))";
+					// inserting few types GENERAL, VERIFY_ID, PRIME_PICKUP
+					String sqlInsertTicketTypes = "INSERT INTO `ticket_types` (`ticket_type`, `script`) VALUES ('GENERAL', 'Dummy 1'), ('VERIFY_ID', 'Dummy 2'), ('PRIME_PICKUP', 'Dummy 3')";
 					try {
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlCreateTicketsTable);
@@ -2371,6 +2372,10 @@ public class FlsConfig extends Connect{
 						PreparedStatement ps3 = connection.prepareStatement(sqlCreateTicketTypes);
 						ps3.executeUpdate();
 						ps3.close();
+						
+						PreparedStatement ps4 = connection.prepareStatement(sqlInsertTicketTypes);
+						ps4.executeUpdate();
+						ps4.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 					} finally {
