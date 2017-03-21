@@ -42,20 +42,22 @@ public class ExportUsers extends HttpServlet {
 		response.setHeader("Content-Disposition", "attachment; filename=\"Users.csv\"");
 		
 		FlsExport exportUsers = new FlsExport();
-		String userType = request.getParameter("type");
+		int verification = Integer.parseInt(request.getParameter("verification"));
+		int liveStatus = Integer.parseInt(request.getParameter("liveStatus"));
+		int userStatus = Integer.parseInt(request.getParameter("userStatus"));
 		
         try {
         	
             OutputStream o = response.getOutputStream();
             String header = "SignUp Date,Fee Expiry Date,Id,UID,Profile Pic,Plan,Full Name,Mobile,Email,Secondary Id Status,Sub Locality,Locality,Referral Code,Friend Referral Code,Notification,Credits,Verification,Status,SignUp Status,Item Count,Lease Count,Response Time,Response Count,About,Website,Business Email,Business Number,Business Hours\n";
             o.write(header.getBytes());
-
+            
             StringBuffer line = new StringBuffer();
-            line = exportUsers.getUsers(userType);
+            line = exportUsers.getUsers(verification,liveStatus,userStatus);
             if(line!=null){
             	 o.write(line.toString().getBytes());
             }
-           
+            
             o.flush();
             o.close();
             LOGGER.info("Finished Generating CSV file");

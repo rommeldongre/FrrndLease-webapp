@@ -84,7 +84,7 @@ public class FlsExport extends Connect{
 	}
 	
 	
-	public StringBuffer getUsers(String userType){
+	public StringBuffer getUsers(int verification,int liveStatus,int userStatus){
 		StringBuffer output = new StringBuffer();
 		
 		Connection hcp = getConnectionFromPool();
@@ -96,11 +96,22 @@ public class FlsExport extends Connect{
 			// Prepare SQL
 			String sql = null;
 			
-			// storing the front end data in appropriate variables
-			String type = userType;
-			 
-			// getting all data from users table
-			sql = "SELECT tb1.* FROM users tb1 ORDER BY tb1.user_signup_date DESC";
+			sql = "SELECT * FROM `users` WHERE user_id NOT IN ('admin@frrndlease.com', 'ops@frrndlease.com')";
+			
+			if(verification != -1)
+				sql = sql + " AND user_verified_flag=" + verification;
+			
+			if(liveStatus != -1)
+				sql = sql + " AND user_live_status=" + liveStatus;
+			
+			if(userStatus == 0){
+				sql = sql + " AND user_fee_expiry IS NULL";
+			}else if(userStatus == 1){
+				sql = sql + " AND user_fee_expiry IS NOT NULL";
+			}
+				
+			
+			sql = sql + " ORDER BY user_signup_date DESC";
 					
 			sql_stmt = hcp.prepareStatement(sql);
 
