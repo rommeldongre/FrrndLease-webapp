@@ -2352,7 +2352,7 @@ public class FlsConfig extends Connect{
 				if (dbBuild < 2062) {
 					
 					// tickets table
-					String sqlCreateTicketsTable = "CREATE TABLE `fls`.`tickets` ( `ticket_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_user_id` VARCHAR(255) NOT NULL , `due_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_type` VARCHAR(255) NOT NULL , `ticket_status` ENUM('FLS_OPEN','FLS_CLOSED','FLS_DEFER') NOT NULL DEFAULT 'FLS_OPEN' , PRIMARY KEY (`ticket_id`))";
+					String sqlCreateTicketsTable = "CREATE TABLE `fls`.`tickets` ( `ticket_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_user_id` VARCHAR(255) NOT NULL , `due_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_type` VARCHAR(255) NOT NULL , `ticket_status` ENUM('FLS_OPEN','FLS_CLOSED') NOT NULL DEFAULT 'FLS_OPEN' , PRIMARY KEY (`ticket_id`))";
 					// ticket_notes
 					String sqlCreateTicketNotes = "CREATE TABLE `fls`.`ticket_notes` ( `note_id` INT(255) NOT NULL AUTO_INCREMENT , `note_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `note` VARCHAR(255) NOT NULL , `ticket_id` INT(255) NOT NULL , PRIMARY KEY (`note_id`))";
 					// ticket type

@@ -113,6 +113,15 @@ public class AdminOpsHandler extends ErrorCat {
 			pcm.getData(jsonobj1);
 			res = promoCode.selectOp(operation, pcm, jsonobj2);
 			break;
+			
+		case "tickets":
+			Tickets tickets = new Tickets();
+			TicketModel tkm = new TicketModel();
+			
+			LOGGER.info("Ticket table is selected");
+			tkm.getData(jsonobj1);
+			res = tickets.selectOp(operation, tkm, jsonobj2);
+			break;
 
 		default:
 			LOGGER.info("Table not present..");
