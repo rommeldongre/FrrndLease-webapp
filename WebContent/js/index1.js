@@ -1,6 +1,6 @@
 var indexApp = angular.module('indexApp', ['headerApp', 'carouselApp', 'footerApp', 'ngAutocomplete']);
 
-indexApp.controller('indexCtrl', ['$scope', '$timeout', '$location', '$anchorScroll', 'userFactory', 'getItemsForCarousel', 'scrollService', 'searchService', function($scope, $timeout, $location, $anchorScroll, userFactory, getItemsForCarousel, scrollService, searchService){
+indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItemsForCarousel', 'scrollService', 'searchService', function($scope, $timeout, userFactory, getItemsForCarousel, scrollService, searchService){
     
     localStorage.setItem("prevPage","index.html");
     
