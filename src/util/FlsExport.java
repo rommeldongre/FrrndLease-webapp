@@ -114,15 +114,31 @@ public class FlsExport extends Connect{
 					output.append(",");
 					output.append(dbResponse.getString("user_id"));
 					output.append(",");
+					output.append(dbResponse.getString("user_uid"));
+					output.append(",");
 					output.append(dbResponse.getString("user_profile_picture"));
 					output.append(",");
 					output.append(dbResponse.getString("user_plan"));
 					output.append(",");
 					output.append(dbResponse.getString("user_full_name"));
 					output.append(",");
+					output.append(dbResponse.getString("user_mobile"));
+					output.append(",");
+					output.append(dbResponse.getString("user_email"));
+					output.append(",");
+					output.append(dbResponse.getString("user_sec_status"));
+					output.append(",");
+					/*output.append(dbResponse.getString("user_location"));
+					output.append(",");*/
 					output.append(dbResponse.getString("user_sublocality"));
 					output.append(",");
 					output.append(dbResponse.getString("user_locality"));
+					output.append(",");
+					output.append(dbResponse.getString("user_referral_code"));
+					output.append(",");
+					output.append(dbResponse.getString("user_referrer_code"));
+					output.append(",");
+					output.append(dbResponse.getString("user_notification"));
 					output.append(",");
 					output.append(dbResponse.getString("user_credit"));
 					output.append(",");
@@ -132,10 +148,25 @@ public class FlsExport extends Connect{
 					output.append(",");
 					output.append(dbResponse.getString("user_status"));
 					output.append(",");
-					output.append(dbResponse.getString("user_items"));
+					output.append(dbResponse.getInt("user_items"));
 					output.append(",");
-					output.append(dbResponse.getString("user_leases"));
+					output.append(dbResponse.getInt("user_leases"));
+					output.append(",");
+					output.append(dbResponse.getInt("user_response_time"));
+					output.append(",");
+					output.append(dbResponse.getInt("user_response_count"));
+					output.append(",");
+					output.append(dbResponse.getString("about"));
+					output.append(",");
+					output.append(dbResponse.getString("website"));
+					output.append(",");
+					output.append(dbResponse.getString("email"));
+					output.append(",");
+					output.append(dbResponse.getString("phone_no"));
+					output.append(",");
+					output.append(dbResponse.getString("business_hours"));
 					output.append("\n");
+					
 					LOGGER.info("Success");
 				}
 			} else {
