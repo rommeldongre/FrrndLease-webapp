@@ -2,10 +2,9 @@ var itemDetailsApp = angular.module('itemDetailsApp', ['headerApp', 'footerApp']
 
 itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											'$window', 
-											'$http', 
-											'$location',
-											'$anchorScroll',											
+											'$http',											
 											'userFactory', 
+											'scrollService',
 											'bannerService', 
 											'modalService',
                                             'logoutService',
@@ -13,10 +12,9 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											'$filter',
 											function($scope, 
 											$window, 
-											$http, 
-											$location,
-											$anchorScroll,
+											$http,
 											userFactory, 
+											scrollService,
 											bannerService, 
 											modalService,
                                             logoutService,
@@ -117,8 +115,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                         success:function(response){
                             if(response.Code== 0){
                                 bannerService.updatebannerMessage(response.Message,"/myapp.html");
-								$location.hash('navbar');
-								$anchorScroll();
+								scrollService.scrollToDiv("navbar");
                             }else{
                                 modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
                                     if(response.code == 236)
@@ -218,8 +215,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
                     success: function (response) {
                         if(response.Code == 0){
 							bannerService.updatebannerMessage(response.Message,"/myapp.html");
-							$location.hash('navbar');
-							$anchorScroll();
+							scrollService.scrollToDiv("navbar");
 						}else{
 							modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'OK'}).then(function(result){
 								window.location.replace("myapp.html");
@@ -323,8 +319,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 			success: function(response) {
 				if(response.code==0){
 					bannerService.updatebannerMessage("Message Sent!!");
-					$location.hash('navbar');
-					$anchorScroll();
+					scrollService.scrollToDiv("navbar");
 					
 				}else{
 					modalService.showModal({}, {bodyText: "Error while sending message, please try again later" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
@@ -452,9 +447,8 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 			dataType: "json",
 			success: function(response) {
 				if(response.code==0){
+					scrollService.scrollToDiv("navbar");
 					bannerService.updatebannerMessage(response.message,"");
-					$location.hash('navbar');
-					$anchorScroll();
 					cancel_share();
 				}else if(response.code==201){
 					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
