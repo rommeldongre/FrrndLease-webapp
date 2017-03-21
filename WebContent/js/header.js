@@ -2,11 +2,8 @@ var headerApp = angular.module('headerApp', ['ui.bootstrap', 'ngAutocomplete']);
 
 headerApp.controller('headerCtrl', ['$scope',
 									'$timeout',
-									'$location',
-									'$anchorScroll',
 									'userFactory',
 									'profileFactory',
-									'scrollService',
 									'bannerService',
 									'searchService',
 									'statsFactory',
@@ -17,11 +14,8 @@ headerApp.controller('headerCtrl', ['$scope',
                                     '$rootScope',
 									function ($scope,
 									$timeout,
-									$location,
-									$anchorScroll,
 									userFactory,
 									profileFactory,
-									scrollService,
 									bannerService,
 									searchService,
 									statsFactory,
@@ -405,11 +399,6 @@ headerApp.controller('headerCtrl', ['$scope',
             searchService.saveSearchTitle(searchString);
         }
 
-		$scope.$on('scrollDiv', function (event, data) {
-			$location.hash(data);
-			$anchorScroll();
-        });
-		
         $scope.$on('bannerMessage', function (event, data, page) {
             // updating the notifications count in the header
             displayUnreadNotifications();
@@ -750,11 +739,12 @@ headerApp.service('modalService', ['$uibModal',
 
     }]);
 
-headerApp.service('scrollService', ['$rootScope', function ($rootScope) {
+headerApp.service('scrollService', ['$rootScope', '$location', '$anchorScroll',function ($rootScope, $location, $anchorScroll) {
 
     this.scrollToDiv = function (data) {
         this.data = data;
-        $rootScope.$broadcast('scrollDiv', this.data);
+		$location.hash(data);
+		$anchorScroll();
     }
 }]);
 
