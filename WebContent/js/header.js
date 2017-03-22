@@ -739,6 +739,15 @@ headerApp.service('modalService', ['$uibModal',
 
     }]);
 
+headerApp.service('scrollService', ['$rootScope', '$location', '$anchorScroll',function ($rootScope, $location, $anchorScroll) {
+
+    this.scrollToDiv = function (data) {
+        this.data = data;
+		$location.hash(data);
+		$anchorScroll();
+    }
+}]);
+
 headerApp.service('bannerService', ['$rootScope', function ($rootScope) {
 
     this.updatebannerMessage = function (data, page) {

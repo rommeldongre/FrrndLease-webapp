@@ -1,6 +1,6 @@
 var indexApp = angular.module('indexApp', ['headerApp', 'carouselApp', 'footerApp', 'ngAutocomplete']);
 
-indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItemsForCarousel', 'searchService', function($scope, $timeout, userFactory, getItemsForCarousel, searchService){
+indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItemsForCarousel', 'scrollService', 'searchService', function($scope, $timeout, userFactory, getItemsForCarousel, scrollService, searchService){
     
     localStorage.setItem("prevPage","index.html");
     
@@ -41,6 +41,9 @@ indexApp.controller('indexCtrl', ['$scope', '$timeout', 'userFactory', 'getItems
     
     $scope.searching = function(){
         searchService.sendDataToCarousel();
+		if($scope.search.string!="" || $scope.search.string!=null || typeof $scope.search.string !== 'undefined'){
+			scrollService.scrollToDiv("friendstoreline");
+		}
     }
     
     $scope.searchStringChanged = function(searchString){
