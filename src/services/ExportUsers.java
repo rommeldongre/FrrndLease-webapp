@@ -20,10 +20,10 @@ import util.FlsExport;
 import util.FlsLogger;
 import util.FlsPlan;
 
-@WebServlet(description = "Export Leads as CSV", urlPatterns = { "/ExportLeads" })
-public class ExportLeads extends HttpServlet {
+@WebServlet(description = "Export Leads as CSV", urlPatterns = { "/ExportUsers" })
+public class ExportUsers extends HttpServlet {
 	
-	private FlsLogger LOGGER = new FlsLogger(ExportLeads.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(ExportUsers.class.getName());
 	private static final long serialVersionUID = 1L;
 
 	@Override
@@ -39,25 +39,25 @@ public class ExportLeads extends HttpServlet {
 		LOGGER.info("Inside POST Method");
 		
 		response.setContentType("text/csv");
-		response.setHeader("Content-Disposition", "attachment; filename=\"Leads.csv\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"Users.csv\"");
 		
-		FlsExport exportLeads = new FlsExport();
-		String leadType = request.getParameter("type");
-		String fromDate = request.getParameter("fromDate");
-		String toDate = request.getParameter("toDate");
+		FlsExport exportUsers = new FlsExport();
+		int verification = Integer.parseInt(request.getParameter("verification"));
+		int liveStatus = Integer.parseInt(request.getParameter("liveStatus"));
+		int userStatus = Integer.parseInt(request.getParameter("userStatus"));
 		
         try {
         	
             OutputStream o = response.getOutputStream();
-            String header = "lead Id,Lead Date,Lead Email,Lead Type,Lead Url\n";
+            String header = "SignUp Date,Fee Expiry Date,Id,UID,Profile Pic,Plan,Full Name,Mobile,Email,Secondary Id Status,Sub Locality,Locality,Referral Code,Friend Referral Code,Notification,Credits,Verification,Status,SignUp Status,Item Count,Lease Count,Response Time,Response Count,About,Website,Business Email,Business Number,Business Hours\n";
             o.write(header.getBytes());
-
+            
             StringBuffer line = new StringBuffer();
-            line = exportLeads.getLeads(leadType,fromDate,toDate);
+            line = exportUsers.getUsers(verification,liveStatus,userStatus);
             if(line!=null){
             	 o.write(line.toString().getBytes());
             }
-           
+            
             o.flush();
             o.close();
             LOGGER.info("Finished Generating CSV file");
