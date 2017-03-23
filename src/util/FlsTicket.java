@@ -163,6 +163,11 @@ public class FlsTicket extends Connect {
 
 		try {
 
+			int idCheck = checkTicketId(ticketId);
+			if (idCheck == 0) {
+				return -1;
+			}
+			
 			String sqlAddNote = "INSERT INTO `ticket_notes` (`note`, `ticket_id`) VALUES (?,?)";
 
 			ps1 = hcp.prepareStatement(sqlAddNote);
@@ -177,9 +182,59 @@ public class FlsTicket extends Connect {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return result;
+	}
+
+	private int checkTicketId(int ticketId) {
+		LOGGER.info("Inside checkTicketId Method");
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		int idCheck = 0;
+
+		try {
+
+			String sqlAddNote = "SELECT * FROM `tickets` WHERE ticket_id=? LIMIT 1";
+
+			ps1 = hcp.prepareStatement(sqlAddNote);
+			ps1.setInt(1, ticketId);
+			rs1 = ps1.executeQuery();
+
+			if (rs1.next()) {
+				idCheck = 1;
+				LOGGER.info("Found the ticket for ticket id - " + ticketId);
+			} else {
+				LOGGER.info("Not able to find the ticket for ticket id - " + ticketId);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs1 != null)
+					rs1.close();
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return idCheck;
 	}
 
 }
