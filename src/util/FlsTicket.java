@@ -3,6 +3,10 @@ package util;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import connect.Connect;
 
@@ -10,7 +14,7 @@ public class FlsTicket extends Connect {
 
 	private FlsLogger LOGGER = new FlsLogger(FlsTicket.class.getName());
 
-	public int addTicketType(String ticketType, String script) {
+	public int addTicketType(String ticketType, String script, int dueDate) {
 
 		LOGGER.info("Inside addTicketType Method");
 
@@ -20,11 +24,12 @@ public class FlsTicket extends Connect {
 
 		try {
 
-			String sqlAddTicketType = "INSERT INTO `ticket_types` (`ticket_type`, `script`) VALUES (?,?)";
+			String sqlAddTicketType = "INSERT INTO `ticket_types` (`ticket_type`, `script`, `due_date`) VALUES (?,?,?)";
 
 			ps1 = hcp.prepareStatement(sqlAddTicketType);
 			ps1.setString(1, ticketType);
 			ps1.setString(2, script);
+			ps1.setInt(3, dueDate);
 			result = ps1.executeUpdate();
 
 			if (result == 1)
@@ -34,6 +39,15 @@ public class FlsTicket extends Connect {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return result;
@@ -45,28 +59,98 @@ public class FlsTicket extends Connect {
 
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
 		int result = 0;
 
 		try {
 
+			int dd = getDueDate(ticketType);
+			if (dd == -1) {
+				return dd;
+			}
+
 			String sqlAddTicket = "INSERT INTO `tickets` (`ticket_user_id`, `due_date`, `ticket_type`) VALUES (?,?,?)";
 
-			ps1 = hcp.prepareStatement(sqlAddTicket);
+			ps1 = hcp.prepareStatement(sqlAddTicket, Statement.RETURN_GENERATED_KEYS);
 			ps1.setString(1, userId);
-			ps1.setString(2, dueDate);
+			if (dueDate == null) {
+				GregorianCalendar cal = new GregorianCalendar();
+				cal.setTimeInMillis(System.currentTimeMillis());
+				cal.add(Calendar.DATE, dd);
+				ps1.setDate(2, new java.sql.Date(cal.getTimeInMillis()));
+			} else {
+				ps1.setString(2, dueDate);
+			}
 			ps1.setString(3, ticketType);
 			result = ps1.executeUpdate();
 
-			if (result == 1)
+			if (result == 1) {
 				LOGGER.info("Ticket Added");
-			else
+				rs1 = ps1.getGeneratedKeys();
+				rs1.next();
+				result = rs1.getInt(1);
+			} else {
 				LOGGER.info("Not able to add Ticket");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (rs1 != null)
+					rs1.close();
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return result;
+	}
+
+	private int getDueDate(String ticketType) {
+
+		LOGGER.info("Inside getDueDate Method");
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		int dueDate = -1;
+
+		try {
+
+			String sqlAddNote = "SELECT * FROM `ticket_types` WHERE ticket_type=? LIMIT 1";
+
+			ps1 = hcp.prepareStatement(sqlAddNote);
+			ps1.setString(1, ticketType);
+			rs1 = ps1.executeQuery();
+
+			if (rs1.next()) {
+				dueDate = rs1.getInt("due_date");
+				LOGGER.info("Found the ticket type - " + ticketType);
+			} else {
+				LOGGER.info("Not able to find the ticket type - " + ticketType);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs1 != null)
+					rs1.close();
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return dueDate;
 	}
 
 	public int addNote(String note, int ticketId) {

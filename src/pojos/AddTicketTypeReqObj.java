@@ -3,6 +3,7 @@ package pojos;
 public class AddTicketTypeReqObj extends ReqObj {
 
 	String userId, accessToken, ticketType, script;
+	int dueDate;
 
 	public String getUserId() {
 		return userId;
@@ -34,6 +35,14 @@ public class AddTicketTypeReqObj extends ReqObj {
 
 	public void setScript(String script) {
 		this.script = script;
+	}
+
+	public int getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(int dueDate) {
+		this.dueDate = dueDate;
 	}
 
 }

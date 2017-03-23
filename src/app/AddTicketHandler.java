@@ -1,23 +1,23 @@
 package app;
 
 import connect.Connect;
-import pojos.AddTicketTypeReqObj;
-import pojos.AddTicketTypeResObj;
+import pojos.AddTicketReqObj;
+import pojos.AddTicketResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.FlsLogger;
 import util.FlsTicket;
 import util.OAuth;
 
-public class AddTicketTypeHandler extends Connect implements AppHandler {
+public class AddTicketHandler extends Connect implements AppHandler {
 
-	private FlsLogger LOGGER = new FlsLogger(AddTicketTypeHandler.class.getName());
+	private FlsLogger LOGGER = new FlsLogger(AddTicketHandler.class.getName());
 
-	private static AddTicketTypeHandler instance;
+	private static AddTicketHandler instance;
 
-	public static AddTicketTypeHandler getInstance() {
+	public static AddTicketHandler getInstance() {
 		if (instance == null)
-			instance = new AddTicketTypeHandler();
+			instance = new AddTicketHandler();
 		return instance;
 	}
 
@@ -28,10 +28,10 @@ public class AddTicketTypeHandler extends Connect implements AppHandler {
 	@Override
 	public ResObj process(ReqObj req) throws Exception {
 
-		LOGGER.info("Inside process method of AddTicketTypeHandler");
-		
-		AddTicketTypeReqObj rq = (AddTicketTypeReqObj) req;
-		AddTicketTypeResObj rs = new AddTicketTypeResObj();
+		LOGGER.info("Inside process method of AddTicketHandler");
+
+		AddTicketReqObj rq = (AddTicketReqObj) req;
+		AddTicketResObj rs = new AddTicketResObj();
 
 		try {
 
@@ -46,15 +46,20 @@ public class AddTicketTypeHandler extends Connect implements AppHandler {
 			}
 
 			FlsTicket ticket = new FlsTicket();
-			int result = ticket.addTicketType(rq.getTicketType(), rq.getScript(), rq.getDueDate());
+			int result = ticket.addTicket(rq.getTicketUserId(), rq.getDueDate(), rq.getTicketType());
 
-			if (result == 1) {
+			if (result > 0) {
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
-			} else {
-				rs.setCode(FLS_TICKET_TYPE_NOT_ADDED);
-				rs.setMessage(FLS_TICKET_TYPE_NOT_ADDED_M);
+			} else if(result == 0) {
+				rs.setCode(FLS_TICKET_NOT_ADDED);
+				rs.setMessage(FLS_TICKET_NOT_ADDED_M);
+			} else if (result < 0) {
+				rs.setCode(FLS_TICKET_TYPE_NOT_FOUND);
+				rs.setMessage(FLS_TICKET_TYPE_NOT_FOUND_M);
 			}
+			
+			rs.setTicketId(result);
 
 		} catch (Exception e) {
 			e.printStackTrace();

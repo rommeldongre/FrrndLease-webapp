@@ -44,6 +44,8 @@ public class ErrorCat {
 	final public int FLS_RAZOR_EXCEPTION = 235;
 	final public int FLS_INVALID_LOCALITY = 236;
 	final public int FLS_TICKET_TYPE_NOT_ADDED = 237;
+	final public int FLS_TICKET_NOT_ADDED = 238;
+	final public int FLS_TICKET_TYPE_NOT_FOUND = 239;
 	
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -135,7 +137,8 @@ public class ErrorCat {
 	final public String FLS_SHARE_ITEM_GOOGLE_EXCEPTION_M = "Couldn't share Item as you have no friends on Google!!";
 	final public String FLS_INVALID_LOCALITY_M = "Please enter your location first.";
 	final public String FLS_TICKET_TYPE_NOT_ADDED_M = "Sorry!! Not able to add a new ticket type.";
-	
+	final public String FLS_TICKET_NOT_ADDED_M = "Sorry!! Not able to create a new ticket.";
+	final public String FLS_TICKET_TYPE_NOT_FOUND_M = "Not able to find this ticket type!!";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";
