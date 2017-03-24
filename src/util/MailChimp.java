@@ -18,39 +18,8 @@ public class MailChimp {
 	private static final String USER_LIST_ID = "2aebe3dba5"; 
 	private static final String LEAD_LIST_ID = "f8d48a3de3";
 	
-	public void addMemberToList(){
-		
-        MailchimpClient client = new MailchimpClient(MAIL_CHIMP_API_KEY);
-        LOGGER.info("Inside mailchimp method ");
-        try {
-            EditMemberMethod.CreateOrUpdate method = new EditMemberMethod.CreateOrUpdate(USER_LIST_ID, "abc@xyz.com");
-            method.status = "subscribed";
-            method.merge_fields = new MailchimpObject();
-            method.merge_fields.mapping.put("FNAME", "Sample First Name");
-            method.merge_fields.mapping.put("LNAME", "Sample Last Name");
-            method.merge_fields.mapping.put("FULLNAME", "Sample Full Name");
-            method.merge_fields.mapping.put("LOCATION", "Pune");
-            method.merge_fields.mapping.put("MOBILE", "1234567890");
-
-            MemberInfo member = client.execute(method);
-            client.execute(method);
-            System.out.println("The user has been successfully subscribed: " + member.toJson());
-
-        }catch(Exception e){
-        	LOGGER.info("Exception inside RunMailChimp method");
-        	e.printStackTrace();
-        } finally {
-            try {
-				client.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				LOGGER.info("Exception while closing mailchimp client");
-				e.printStackTrace();
-			}
-        }
-    }
 	
-public void addLeadToList(int leadID,String leadEmail,String leadType, String leadUrl,String leadTime){
+	public void addLeadToList(int leadID,String leadEmail,String leadType, String leadUrl,String leadTime){
 		 
         MailchimpClient client = new MailchimpClient(MAIL_CHIMP_API_KEY);
         LOGGER.info("Inside mailchimp method ");
