@@ -17,17 +17,8 @@ public class MailChimp {
 	private static final String MAIL_CHIMP_API_KEY ="0798aa292dbc37321458d36f9d02ba9d-us13";
 	private static final String USER_LIST_ID = "2aebe3dba5"; 
 	private static final String LEAD_LIST_ID = "f8d48a3de3";
-	private static final String SUBSCRIBED = "subscribed";
-	private static final String UNSUBSCRIBED = "unsubscribed";
 	
 	public void addMemberToList(){
-		
-		/* String status = checkMemberInList(LEAD_LIST_ID,leadEmail);
-        
-        if(status.toLowerCase().equals(SUBSCRIBED) || status.toLowerCase().equals(UNSUBSCRIBED)){
-        	LOGGER.info("User "+leadEmail+" already present in lead list in MailChimp");
-        	return;
-        }*/
 		
         MailchimpClient client = new MailchimpClient(MAIL_CHIMP_API_KEY);
         LOGGER.info("Inside mailchimp method ");
@@ -87,32 +78,6 @@ public void addLeadToList(int leadID,String leadEmail,String leadType, String le
 				e.printStackTrace();
 			}
         }
-    }
-	
-private String checkMemberInList(String listId, String email){
-		
-		String userStatus=null;
-        MailchimpClient client = new MailchimpClient(MAIL_CHIMP_API_KEY);
-        LOGGER.info("Inside checkMemberInList method ");
-        try {
-        	GetMemberMethod method = new GetMemberMethod(listId, email);
-
-            MemberInfo member = client.execute(method);
-            userStatus = member.status;
-
-        }catch(Exception e){
-        	LOGGER.info("Exception inside RunMailChimp method");
-        	e.printStackTrace();
-        } finally {
-            try {
-				client.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				LOGGER.info("Exception while closing mailchimp client");
-				e.printStackTrace();
-			}
-        }
-        return userStatus;
     }
 
 }
