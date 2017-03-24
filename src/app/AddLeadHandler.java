@@ -17,6 +17,7 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import util.Event;
 import util.FlsLogger;
+import util.MailChimp;
 import util.OAuth;
 import util.Event.Event_Type;
 import util.Event.Notification_Type;
@@ -46,8 +47,8 @@ public class AddLeadHandler extends Connect implements AppHandler {
 		AddLeadResObj rs = new AddLeadResObj();
 		
 		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null,ps2=null;
-		ResultSet rs1 = null;
+		PreparedStatement ps1 = null,ps2=null,ps3=null;
+		ResultSet rs1 = null,rs3=null;
 		int rs2=0;
 		try {
 			
@@ -73,6 +74,18 @@ public class AddLeadHandler extends Connect implements AppHandler {
 						return rs;
 					}
 					
+					LOGGER.info("Select statement for getting row from leads table .....");
+					String sqlGetLeadEmail = "select * from leads where lead_email=?";
+					ps3 = hcp.prepareStatement(sqlGetLeadEmail);
+					ps3.setString(1, rq.getLeadEmail());
+					rs3 = ps3.executeQuery();
+					
+					if(rs3.next()){
+						MailChimp mce = new MailChimp();
+						mce.addLeadToList(rs3.getInt("lead_id"),rs3.getString("lead_email"),rs3.getString("lead_type"),rs3.getString("lead_url"),rs3.getString("lead_datetime"));
+						LOGGER.info("after calling mailchimp method ");
+					}
+					
 					Event event = new Event();
 					event.createEvent(rq.getLeadEmail(), "admin@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_ADD_LEAD, 0, "A new Lead <b>" + rq.getLeadEmail() + "</b> of type <b><i>"+rq.getLeadType()+"</i></b> has been added.");
 					event.createEvent("admin@frrndlease.com", rq.getLeadEmail(), Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_ADD_LEAD, 0, "Thank You for subscribing to FrrndLease. You will recieve periodic updates about our exciting offers");
@@ -84,7 +97,7 @@ public class AddLeadHandler extends Connect implements AppHandler {
 					rs.setMessage(FLS_DUPLICATE_ENTRY_LEAD);
 				}
 		} catch (NullPointerException e) {
-			LOGGER.warning("Null Pointer Exception in Send Message App Handler");
+			LOGGER.warning("Null Pointer Exception in Add Lead App Handler");
 			rs.setCode(FLS_NULL_POINT);
 			rs.setMessage(FLS_NULL_POINT_M);
 			e.printStackTrace();
@@ -96,8 +109,10 @@ public class AddLeadHandler extends Connect implements AppHandler {
 		}finally {
 			try {
 				if(rs1 != null)rs1.close();
+				if(rs3 != null)rs3.close();
 				if(ps1 != null)ps1.close();
 				if(ps2 != null)ps2.close();
+				if(ps3 != null)ps3.close();
 				if(hcp != null)hcp.close();
 			} catch (Exception e) {
 				e.printStackTrace();
