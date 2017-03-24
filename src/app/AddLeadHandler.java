@@ -16,6 +16,7 @@ import pojos.AddLeadResObj;
 import pojos.ReqObj;
 import pojos.ResObj;
 import util.Event;
+import util.FlsConfig;
 import util.FlsLogger;
 import util.MailChimp;
 import util.OAuth;
@@ -25,6 +26,7 @@ import util.Event.Notification_Type;
 public class AddLeadHandler extends Connect implements AppHandler {
 
 	private FlsLogger LOGGER = new FlsLogger(AddLeadHandler.class.getName());
+	String ENV_CONFIG = FlsConfig.env;
 	
 	private static AddLeadHandler instance = null;
 
@@ -74,16 +76,21 @@ public class AddLeadHandler extends Connect implements AppHandler {
 						return rs;
 					}
 					
-					LOGGER.info("Select statement for getting row from leads table .....");
-					String sqlGetLeadEmail = "select * from leads where lead_email=?";
-					ps3 = hcp.prepareStatement(sqlGetLeadEmail);
-					ps3.setString(1, rq.getLeadEmail());
-					rs3 = ps3.executeQuery();
-					
-					if(rs3.next()){
-						MailChimp mce = new MailChimp();
-						mce.addLeadToList(rs3.getInt("lead_id"),rs3.getString("lead_email"),rs3.getString("lead_type"),rs3.getString("lead_url"),rs3.getString("lead_datetime"));
-						LOGGER.info("after calling mailchimp method ");
+					if(!ENV_CONFIG.equals("dev")){
+						LOGGER.info("Select statement for getting row from leads table .....");
+						String sqlGetLeadEmail = "select * from leads where lead_email=?";
+						ps3 = hcp.prepareStatement(sqlGetLeadEmail);
+						ps3.setString(1, rq.getLeadEmail());
+						rs3 = ps3.executeQuery();
+						
+						if(rs3.next()){
+							MailChimp mce = new MailChimp();
+							mce.addLeadToList(rs3.getInt("lead_id"),rs3.getString("lead_email"),rs3.getString("lead_type"),rs3.getString("lead_url"),rs3.getString("lead_datetime"));
+							LOGGER.info("after calling mailchimp method ");
+						}
+						
+					}else{
+						LOGGER.warning("Dev environment for MailChimp");
 					}
 					
 					Event event = new Event();
