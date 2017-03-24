@@ -139,8 +139,8 @@ public class FlsExport extends Connect{
 					output.append(",");
 					output.append(dbResponse.getString("user_sec_status"));
 					output.append(",");
-					/*output.append(dbResponse.getString("user_location"));
-					output.append(",");*/
+					output.append("\"" + dbResponse.getString("user_location") + "\"");
+					output.append(",");
 					output.append(dbResponse.getString("user_sublocality"));
 					output.append(",");
 					output.append(dbResponse.getString("user_locality"));
