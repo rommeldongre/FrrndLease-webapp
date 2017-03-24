@@ -1,0 +1,29 @@
+<div class="container-fluid" id="midcontainer" ng-cloak>
+
+    <div class="row" style="display: flex;flex-wrap: wrap;">
+        <div class="col-lg-6 col-md-6 col-lg-offset-3 col-md-offset-3 text-center">
+            <button class="btn btn-success btn-fill" ng-click="deleteWish(wish.itemId, $index)" ng-repeat="wish in wishes" style="margin:2px;">{{wish.title}} &nbsp;&nbsp;&nbsp; x</button>
+            <br/><br/><br/>
+            <form name="form">
+                <label class="control-label">I Wish I had a ... </label>
+                <div class="input-group">
+                    <input name="wish" type="text" class="form-control" ng-model="wish.title" placeholder="Save a wish ...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-fill btn-primary" ng-click="addWish(wish.title)">Save</button>
+                    </span>
+                </div>
+            </form><br/>
+            <span style="color:red;">{{error.wish}}</span>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="form-group" style="float:right;">
+        <button type="button" ng-if="wished" class="btn btn-primary btn-fill" ng-click="$nextStep()">
+            Next<span class="fa fa-chevron-right"></span>
+        </button>
+        <button type="button" id="skip_button" ng-if="!wished" class="btn btn-default btn-simple" ng-click="$nextStep()">Skip this step</button>
+    </div>
+
+</div>

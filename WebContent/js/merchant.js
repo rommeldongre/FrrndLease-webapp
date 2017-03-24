@@ -191,6 +191,7 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
                     $scope.$apply(function(){
                         $scope.user.verified = true;
                     });
+                    applyPromoCode();
                 }
             },
             error: function() {
@@ -259,9 +260,9 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         $scope.payment.checkingPromo = true;
         
         var req = {
-            userId: userFactory.user,
+            userId: localStorage.getItem("userloggedin"),
             promoCode: $scope.payment.promoCode,
-            accessToken: userFactory.userAccessToken
+            accessToken: localStorage.getItem("userloggedinAccess")
         }
         
         $.ajax({
@@ -350,7 +351,5 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         }
         
     }
-    
-    applyPromoCode();
 
 }]);

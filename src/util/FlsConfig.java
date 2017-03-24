@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2061;
+	public final int appBuild = 2062;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2345,6 +2345,51 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2061;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates tickets table 
+				if (dbBuild < 2062) {
+					
+					// tickets table
+					String sqlCreateTicketsTable = "CREATE TABLE `fls`.`tickets` ( `ticket_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_user_id` VARCHAR(255) NOT NULL , `due_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_type` VARCHAR(255) NOT NULL , `ticket_status` ENUM('OPEN','CLOSED') NOT NULL DEFAULT 'OPEN' , PRIMARY KEY (`ticket_id`))";
+					// ticket_notes
+					String sqlCreateTicketNotes = "CREATE TABLE `fls`.`ticket_notes` ( `note_id` INT(255) NOT NULL AUTO_INCREMENT , `note_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `note` VARCHAR(255) NOT NULL , `ticket_id` INT(255) NOT NULL , PRIMARY KEY (`note_id`))";
+					// ticket type
+					String sqlCreateTicketTypes = "CREATE TABLE `fls`.`ticket_types` ( `type_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_type` VARCHAR(255) NOT NULL , `script` VARCHAR(255) NOT NULL , `due_date` INT(255) NOT NULL DEFAULT 1, PRIMARY KEY (`type_id`))";
+					// inserting few types GENERAL, VERIFY_ID, PRIME_PICKUP
+					String sqlInsertTicketTypes = "INSERT INTO `ticket_types` (`ticket_type`, `script`, `due_date`) VALUES ('USER_CONTACT', '1. Call user \n2. Get posting \n3. Recommend item \n 4. Ask about membership', 7), ('VERIFY_ID', 'Go to this users profile and verify the uploaded photo id.', 1), ('PICKUP', '1. Confirm address \n2. Confirm photo id \n3. Schedule time', 1)";
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlCreateTicketsTable);
+						ps1.executeUpdate();
+						ps1.close();
+						
+						PreparedStatement ps2 = connection.prepareStatement(sqlCreateTicketNotes);
+						ps2.executeUpdate();
+						ps2.close();
+						
+						PreparedStatement ps3 = connection.prepareStatement(sqlCreateTicketTypes);
+						ps3.executeUpdate();
+						ps3.close();
+						
+						PreparedStatement ps4 = connection.prepareStatement(sqlInsertTicketTypes);
+						ps4.executeUpdate();
+						ps4.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2062;
 					updateDBBuild(dbBuild);
 				}
 				

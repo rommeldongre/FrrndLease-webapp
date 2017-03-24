@@ -1,8 +1,12 @@
 var postItemWizardApp = angular.module('myApp');
 
-postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', '$filter', '$routeParams', function($scope, modalService, userFactory, eventsCount, $filter, $routeParams){
+postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'userFactory', 'eventsCount', '$filter', '$routeParams', 'getItemsForCarousel', function($scope, modalService, userFactory, eventsCount, $filter, $routeParams, getItemsForCarousel){
     
     $scope.steps = [
+        {
+            templateUrl: 'wizardstep4.html',
+            title: 'What are your top three wishes?'
+        },
         {
             templateUrl: 'wizardstep1.html',
             title: 'Post an item to earn 10 credits'
@@ -17,6 +21,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         }
     ];
     
+    $scope.wished = false;
     $scope.posted = false;
     $scope.shared = false;
     $scope.invited = false;
@@ -390,5 +395,125 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             addFriendSetValues(selectedContacts[i].name, selectedContacts[i].mobile, selectedContacts[i].email);
         }
 	}
+    
+    $scope.wishes = [];
+    
+    var initWishlist = function(){
+        $scope.wishes = [];
+        var req = {
+            cookie: 0,
+            userId: userFactory.user,
+			match_userId: null,
+            category: null,
+            limit: 3,
+            lat: 0.0,
+            lng: 0.0,
+            searchString: '',
+            itemStatus: ['Wished']
+        };
+        displayWishlist(req);
+    }
+    
+    var displayWishlist = function(req){
+        getItemsForCarousel.getItems(req).then(
+            function(response){
+                if(response.data.returnCode == 0){
+                    $scope.wishes.push.apply($scope.wishes, response.data.resList);
+                    if($scope.wishes.length == 3)
+                        $scope.wished = true;
+                    else
+                        $scope.wished = false;
+                }
+            },
+            function(error){
+                console.log("Not able to get items " + error.message);
+            }
+        );
+    }
+    
+    $scope.error = {};
+    $scope.wish = {};
+    
+    $scope.addWish = function(wish){
+        if(wish == "" || wish == undefined){
+            $scope.error.wish = "Not a valid wish!!";
+        } else if($scope.wishes.length == 3) {
+            $scope.error.wish = "Enough for now!! You can always add more wishes from your wish list.";
+        } else {
+            $scope.wish.title = "";
+            $scope.error.wish = "";
+            var req = {
+                userId: userFactory.user,
+                title: wish,
+                id: 0,
+                description: '',
+                category: 'Kids',
+                leaseValue: 0,
+                leaseTerm: '',
+                status: 'Wished',
+                image: ''
+            }
+            sendAddWishItem(req);
+        }
+    }
+	
+	var sendAddWishItem = function(req){
+        $.ajax({
+            url: '/WishItem',
+            type:'post',
+            data: {req : JSON.stringify(req)},
+            contentType:"application/x-www-form-urlencoded",
+            dataType: "JSON",
+            success: function(response) {
+				if(response.Code == 0){
+					$scope.wishes = [];
+					initWishlist();
+				}else{
+					modalService.showModal({}, {bodyText: response.Message,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
+						$scope.wishes = [];
+						initWishlist();
+					}, function(){});
+				}
+            },
+            error: function() {
+                console.log("Invalid Entry");
+            }
+        });
+    }
+    
+    $scope.deleteWish = function(itemId, index){
+        var req = {
+            id: itemId,
+            userId: userFactory.user
+        }
+
+        sendDeleteWishItem(req, index);
+    }
+    
+    var sendDeleteWishItem = function(req, index){
+        $.ajax({
+            url: '/DeleteWishlist',
+            type: 'get',
+            data: {req : JSON.stringify(req)},
+            contentType:"application/json",
+            dataType:"json",
+            success: function(response) {
+				if(response.Code == 0){
+                    $scope.$apply(function(){
+					   $scope.wishes.splice(index, 1);
+                        if($scope.wishes.length == 3)
+                            $scope.wished = true;
+                        else
+                            $scope.wished = false;
+                    });
+                    $scope.error.wish = "";
+				}
+            },
+            error: function() {
+            }
+        });
+    }
+    
+    initWishlist();
     
 }]);
