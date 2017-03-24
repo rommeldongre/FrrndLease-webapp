@@ -2352,13 +2352,13 @@ public class FlsConfig extends Connect{
 				if (dbBuild < 2062) {
 					
 					// tickets table
-					String sqlCreateTicketsTable = "CREATE TABLE `fls`.`tickets` ( `ticket_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_user_id` VARCHAR(255) NOT NULL , `due_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_type` VARCHAR(255) NOT NULL , `ticket_status` ENUM('FLS_OPEN','FLS_CLOSED') NOT NULL DEFAULT 'FLS_OPEN' , PRIMARY KEY (`ticket_id`))";
+					String sqlCreateTicketsTable = "CREATE TABLE `fls`.`tickets` ( `ticket_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_user_id` VARCHAR(255) NOT NULL , `due_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `ticket_type` VARCHAR(255) NOT NULL , `ticket_status` ENUM('OPEN','CLOSED') NOT NULL DEFAULT 'OPEN' , PRIMARY KEY (`ticket_id`))";
 					// ticket_notes
 					String sqlCreateTicketNotes = "CREATE TABLE `fls`.`ticket_notes` ( `note_id` INT(255) NOT NULL AUTO_INCREMENT , `note_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , `note` VARCHAR(255) NOT NULL , `ticket_id` INT(255) NOT NULL , PRIMARY KEY (`note_id`))";
 					// ticket type
 					String sqlCreateTicketTypes = "CREATE TABLE `fls`.`ticket_types` ( `type_id` INT(255) NOT NULL AUTO_INCREMENT , `ticket_type` VARCHAR(255) NOT NULL , `script` VARCHAR(255) NOT NULL , `due_date` INT(255) NOT NULL DEFAULT 1, PRIMARY KEY (`type_id`))";
 					// inserting few types GENERAL, VERIFY_ID, PRIME_PICKUP
-					String sqlInsertTicketTypes = "INSERT INTO `ticket_types` (`ticket_type`, `script`, `due_date`) VALUES ('GENERAL', 'Common Problems', 1), ('VERIFY_ID', 'Go to this user profile and verify the photo id which he uploaded.', 1), ('PRIME_PICKUP', 'Pickup the item leased.', 1)";
+					String sqlInsertTicketTypes = "INSERT INTO `ticket_types` (`ticket_type`, `script`, `due_date`) VALUES ('USER_CONTACT', '1. Call user \n2. Get posting \n3. Recommend item \n 4. Ask about membership', 7), ('VERIFY_ID', 'Go to this users profile and verify the uploaded photo id.', 1), ('PICKUP', '1. Confirm address \n2. Confirm photo id \n3. Schedule time', 1)";
 					try {
 						getConnection();
 						PreparedStatement ps1 = connection.prepareStatement(sqlCreateTicketsTable);

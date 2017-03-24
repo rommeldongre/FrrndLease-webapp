@@ -5,7 +5,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
     $scope.steps = [
         {
             templateUrl: 'wizardstep4.html',
-            title: 'What do you wish for?'
+            title: 'What are your top three wishes?'
         },
         {
             templateUrl: 'wizardstep1.html',
@@ -438,7 +438,7 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
         if(wish == "" || wish == undefined){
             $scope.error.wish = "Not a valid wish!!";
         } else if($scope.wishes.length == 3) {
-            $scope.error.wish = "Cannot add more than 3 wishes!!";
+            $scope.error.wish = "Enough for now!! You can always add more wishes from your wish list.";
         } else {
             $scope.wish.title = "";
             $scope.error.wish = "";
