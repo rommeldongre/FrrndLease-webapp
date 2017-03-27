@@ -517,7 +517,7 @@ public class FlsEmail extends Connect{
 				break;
 				
 			case FLS_MAIL_WEEKLY_DIGEST:
-				SUBJECT = ("Your weekly update");
+				SUBJECT = ("While you were busy");
 				BODY = obj.getString("message");
 				break;
 				
