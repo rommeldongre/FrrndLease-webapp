@@ -139,8 +139,8 @@ public class FlsExport extends Connect{
 					output.append(",");
 					output.append(dbResponse.getString("user_sec_status"));
 					output.append(",");
-					/*output.append(dbResponse.getString("user_location"));
-					output.append(",");*/
+					output.append("\"" + dbResponse.getString("user_location") + "\"");
+					output.append(",");
 					output.append(dbResponse.getString("user_sublocality"));
 					output.append(",");
 					output.append(dbResponse.getString("user_locality"));
@@ -149,9 +149,15 @@ public class FlsExport extends Connect{
 					output.append(",");
 					output.append(dbResponse.getString("user_referrer_code"));
 					output.append(",");
+					output.append(dbResponse.getString("user_photo_id"));
+					output.append(",");
 					output.append(dbResponse.getString("user_notification"));
 					output.append(",");
 					output.append(dbResponse.getString("user_credit"));
+					output.append(",");
+					output.append(dbResponse.getFloat("user_lat"));
+					output.append(",");
+					output.append(dbResponse.getFloat("user_lng"));
 					output.append(",");
 					output.append(dbResponse.getBoolean("user_verified_flag"));
 					output.append(",");
