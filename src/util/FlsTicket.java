@@ -302,11 +302,6 @@ public class FlsTicket extends Connect {
 
 		try {
 
-			int idCheck = checkTicketId(ticketId);
-			if (idCheck == 0) {
-				LOGGER.info("Not a valid ticket!!");
-			}
-
 			String sqlGetTicket = "SELECT * FROM `tickets` WHERE ticket_id=?";
 
 			ps1 = hcp.prepareStatement(sqlGetTicket);
