@@ -10,11 +10,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import connect.Connect;
 import pojos.GetTicketDetailsResObj;
+import pojos.GetTicketsByXListResObj;
+import pojos.GetTicketsByXResObj;
+import pojos.TicketNote;
 
 public class FlsTicket extends Connect {
 
@@ -22,6 +22,10 @@ public class FlsTicket extends Connect {
 
 	public static enum Ticket_Status {
 		OPEN, CLOSED
+	}
+
+	public static enum Filter_Status {
+		DONE, DUE, PENDING
 	}
 
 	public int addTicketType(String ticketType, String script, int dueDate) {
@@ -321,22 +325,19 @@ public class FlsTicket extends Connect {
 				ps2.setInt(1, ticketId);
 				rs2 = ps2.executeQuery();
 
-				JSONArray notes = new JSONArray();
-
 				while (rs2.next()) {
-					JSONObject note = new JSONObject();
-					note.put("noteId", rs2.getInt("note_id"));
-					note.put("noteDate", dateToString(rs2.getDate("note_date")));
-					note.put("note", rs2.getString("note"));
+					TicketNote note = new TicketNote();
+					note.setId(rs2.getInt("note_id"));
+					note.setDate(dateToString(rs2.getDate("note_date")));
+					note.setNote(rs2.getString("note"));
 
-					notes.put(note);
+					rs.addNotes(note);
 				}
 
-				rs.setNotes(notes);
 				rs.setCode(FLS_SUCCESS);
 				rs.setMessage(FLS_SUCCESS_M);
 
-				LOGGER.info("Got the ticket details fro ticket id - " + ticketId);
+				LOGGER.info("Got the ticket details for ticket id - " + ticketId);
 
 			} else {
 				LOGGER.info("Not able to get ticket details for ticket id - " + ticketId);
@@ -367,6 +368,75 @@ public class FlsTicket extends Connect {
 
 		return rs;
 
+	}
+
+	public GetTicketsByXListResObj getTicketsByX(Filter_Status filterStatus, String ticketUserId, int cookie,
+			int limit) {
+
+		LOGGER.info("Inside getTicketsByX method");
+
+		GetTicketsByXListResObj rs = new GetTicketsByXListResObj();
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+
+		try {
+
+			// Prepare SQL
+			String sql = "SELECT tb1.*, tb2.user_profile_picture FROM tickets tb1 INNER JOIN users tb2 ON tb1.ticket_user_id=tb2.user_id WHERE";
+
+			if (filterStatus.equals(Filter_Status.DONE)) {
+				sql = sql + " tb1.ticket_status='CLOSED'";
+			} else if (filterStatus.equals(Filter_Status.DUE)) {
+				sql = sql + " tb1.ticket_status='OPEN' AND tb1.due_date <= CURRENT_TIMESTAMP";
+			} else if (filterStatus.equals(Filter_Status.PENDING)) {
+				sql = sql + " tb1.ticket_status='OPEN' AND tb1.due_date > CURRENT_TIMESTAMP";
+			}
+
+			if (ticketUserId != null)
+				sql = sql + " AND tb1.ticket_user_id='" + ticketUserId + "'";
+
+			sql = sql + " ORDER BY tb1.due_date DESC LIMIT " + cookie + ", " + limit;
+
+			ps1 = hcp.prepareStatement(sql);
+			rs1 = ps1.executeQuery();
+
+			while (rs1.next()) {
+				GetTicketsByXResObj ticket = new GetTicketsByXResObj();
+				ticket.setTicketId(rs1.getInt("ticket_id"));
+				ticket.setTicketDate(dateToString(rs1.getDate("ticket_date")));
+				ticket.setTicketUserId(rs1.getString("ticket_user_id"));
+				ticket.setDueDate(dateToString(rs1.getDate("due_date")));
+				ticket.setTicketType(rs1.getString("ticket_type"));
+				ticket.setProfilePic(rs1.getString("user_profile_picture"));
+
+				rs.addTickets(ticket);
+				cookie = cookie + 1;
+			}
+
+			rs.setOffset(cookie);
+			rs.setCode(FLS_SUCCESS);
+			rs.setMessage(FLS_SUCCESS_M);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			rs.setCode(FLS_INVALID_OPERATION);
+			rs.setMessage(FLS_INVALID_OPERATION_M);
+		} finally {
+			try {
+				if (rs1 != null)
+					rs1.close();
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return rs;
 	}
 
 	private String dateToString(Date date) {

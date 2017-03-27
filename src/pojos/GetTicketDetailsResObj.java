@@ -1,12 +1,14 @@
 package pojos;
 
-import org.json.JSONArray;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetTicketDetailsResObj extends ResObj {
 
 	int code;
 	String message, ticketDate, ticketUserId, dueDate, ticketType, ticketStatus;
-	JSONArray notes = new JSONArray();
+
+	List<TicketNote> notes = new ArrayList<>();
 
 	public int getCode() {
 		return code;
@@ -64,12 +66,16 @@ public class GetTicketDetailsResObj extends ResObj {
 		this.ticketStatus = ticketStatus;
 	}
 
-	public JSONArray getNotes() {
+	public List<TicketNote> getNotes() {
 		return notes;
 	}
 
-	public void setNotes(JSONArray notes) {
+	public void setNotes(List<TicketNote> notes) {
 		this.notes = notes;
+	}
+	
+	public void addNotes(TicketNote note) {
+		this.notes.add(note);
 	}
 
 }
