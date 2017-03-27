@@ -141,7 +141,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 				}
 
 				String BODY = "<body><span style='" + "font-weight:bold;font-size:20px;"
-						+ "'>Your weekly update</span><br/> <br/><br/><br/>" + "<span style='"
+						+ "'>Earn another Stripe - Complete your profile today!</span><br/> <br/><br/><br/>" + "<span style='"
 						+ "font-weight:bold;font-size:18px;" + "'>Profile Completeness</span><br/> <br/><div align='"
 						+ "left" + "' style='" + "padding-left: 20px;" + "'>" + signUpCheckBox + friendCheckBox
 						+ postItemCheckBox + wishitemCheckBox + photoIdCheckBox + "<br/><br/><br></div>"
