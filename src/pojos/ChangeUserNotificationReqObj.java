@@ -3,6 +3,7 @@ package pojos;
 public class ChangeUserNotificationReqObj extends ReqObj {
 
 	String userId, notification, accessToken;
+	int periodicUpdate;
 
 	public String getUserId() {
 		return userId;
@@ -26,6 +27,14 @@ public class ChangeUserNotificationReqObj extends ReqObj {
 
 	public void setAccessToken(String accessToken) {
 		this.accessToken = accessToken;
+	}
+
+	public int getPeriodicUpdate() {
+		return periodicUpdate;
+	}
+
+	public void setPeriodicUpdate(int periodicUpdate) {
+		this.periodicUpdate = periodicUpdate;
 	}
 
 }

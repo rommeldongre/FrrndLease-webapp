@@ -64,6 +64,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                 $scope.status = response.data.userStatus;
                 $scope.secStatus = response.data.userSecStatus;
                 $scope.notification = response.data.userNotification;
+				$scope.periodicUpdateFlag = response.data.periodicUpdate;
                 $scope.photoId = response.data.photoId;
 				$scope.addressVerified = response.data.photoIdVerified;
                 $scope.userFeeExpiry = response.data.userFeeExpiry;
@@ -203,6 +204,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
     
     $scope.changeEmailNotification = function(){
         var active = false;
+		var periodic_update_flag = $scope.periodicUpdateFlag;
         if($scope.status == 'email_activated' || $scope.status == 'facebook' || $scope.status == 'google'){
             active = true;
         }else{
@@ -230,30 +232,15 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     n = 'EMAIL';
                     break;
             }
-            $.ajax({
-                url: '/ChangeUserNotification',
-                type: 'post',
-                data: JSON.stringify({userId:userFactory.user, notification: n, accessToken: userFactory.userAccessToken}),
-                contentType:"application/json",
-                dataType:"json",
-                success: function(response){
-                    if(response.code == 0)
-                        $scope.$apply(function(){
-                            $scope.notification = n;
-                            Notification = n;
-                        });
-                    if(response.code == 400)
-                        logoutService.logout();
-                },
-                error: function(){
-                    console.log("not able to change notification");
-                }
-            });
+           
+			changeNotification(n,periodic_update_flag);
+			
         }
     }
     
     $scope.changeSmsNotification = function(){
         var active = false;
+		var periodic_update_flag = $scope.periodicUpdateFlag;
         if($scope.status == 'mobile_activated'){
             active = true;
         }else{
@@ -281,17 +268,38 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     n = 'SMS';
                     break;
             }
-            $.ajax({
+			
+			changeNotification(n,periodic_update_flag);
+			
+        }
+    }
+	
+	$scope.changeUpdateNotification = function(){
+		
+		var updateFlag;
+		if($scope.periodicUpdateFlag==1){
+			updateFlag=0;
+		}else{
+			updateFlag=1;
+		}
+		
+		changeNotification($scope.notification,updateFlag);
+	}
+	
+	var changeNotification = function(notification,update){
+		
+		$.ajax({
                 url: '/ChangeUserNotification',
                 type: 'post',
-                data: JSON.stringify({userId:userFactory.user, notification: n, accessToken: userFactory.userAccessToken}),
+                data: JSON.stringify({userId:userFactory.user, notification: notification, periodicUpdate: update, accessToken: userFactory.userAccessToken}),
                 contentType:"application/json",
                 dataType:"json",
                 success: function(response){
                     if(response.code == 0)
                         $scope.$apply(function(){
-                            $scope.notification = n;
-                            Notification = n;
+                            $scope.notification = notification;
+							$scope.periodicUpdateFlag = update;
+                            Notification = notification;
                         });
                     if(response.code == 400)
                         logoutService.logout();
@@ -300,8 +308,7 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     console.log("not able to change notification");
                 }
             });
-        }
-    }
+	}
     
     $scope.emailTouched = function(){
         $scope.changedText = true;
