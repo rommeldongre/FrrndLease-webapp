@@ -16,7 +16,7 @@ public class FlsConfig extends Connect{
 	//This is the build of the app, hardcoded here.
 	//Increase it on every change that needs a upgrade hook
 
-	public final int appBuild = 2062;
+	public final int appBuild = 2063;
 
 	public static int dbBuild = 0;		//This holds the build of the db, got from the database
 	public static String env = null;	//This holds the env, got from the db
@@ -2390,6 +2390,33 @@ public class FlsConfig extends Connect{
 					
 					// The dbBuild version value is changed in the database
 					dbBuild = 2062;
+					updateDBBuild(dbBuild);
+				}
+				
+				// This block creates tickets table 
+				if (dbBuild < 2063) {
+					
+					// tickets table
+					String sqlAddLastModifiedInTickets = "ALTER TABLE `tickets` ADD `ticket_lastmodified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `ticket_date`";
+					try {
+						getConnection();
+						PreparedStatement ps1 = connection.prepareStatement(sqlAddLastModifiedInTickets);
+						ps1.executeUpdate();
+						ps1.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						try {
+							// close and reset connection to null
+							connection.close();
+							connection = null;
+						} catch (Exception e){
+							e.printStackTrace();
+						}
+					}
+					
+					// The dbBuild version value is changed in the database
+					dbBuild = 2063;
 					updateDBBuild(dbBuild);
 				}
 				
