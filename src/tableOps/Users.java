@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.json.JSONArray;
@@ -25,9 +27,11 @@ import util.Event.Event_Type;
 import util.Event.Notification_Type;
 import util.Event.User_Notification;
 import util.FlsCredit.Credit;
+import util.FlsConfig;
 import util.FlsCredit;
 import util.FlsLogger;
 import util.FlsPlan;
+import util.MailChimp;
 import util.OAuth;
 import util.ReferralCode;
 
@@ -341,6 +345,9 @@ public class Users extends Connect {
 		 
 		String userNotification = User_Notification.EMAIL.name();
 		String user_fb_id= null;
+		String ENV_CONFIG = FlsConfig.env;
+		
+		Map<String, String> usermap = new HashMap<String, String>();
 		
 		if(friendId.contains("@fb")){
 			user_fb_id=friendId;
@@ -353,8 +360,8 @@ public class Users extends Connect {
 		}
 		
 		String  referrer_code=null;
-		PreparedStatement stmt = null, stmt1 = null,stmt2=null,stmt3 = null, stmt4 = null;
-		ResultSet rs1 = null,rs2=null;
+		PreparedStatement stmt = null, stmt1 = null,stmt2=null,stmt3 = null, stmt4 = null, stmt5=null;
+		ResultSet rs1 = null,rs2=null,rs3=null;
 		Connection hcp = getConnectionFromPool();
 
 		try {
@@ -453,6 +460,52 @@ public class Users extends Connect {
 			stmt4.setString(2, userId);
 			stmt4.executeUpdate();
 			
+			//sending values to mail chimp
+			LOGGER.info("Before calling mailchimp method ");
+			if(!ENV_CONFIG.equals("dev") && (!email.equals("") || !email.equals("null")|| !email.equals(null)) ){
+				LOGGER.info("Select statement for getting row from users table for mailchimp .....");
+				String sqlGetUserInfo = "select * from users where user_id=?";
+				stmt5 = hcp.prepareStatement(sqlGetUserInfo);
+				stmt5.setString(1, email);
+				rs3 = stmt5.executeQuery();
+				
+				if(rs3.next()){
+					usermap.put("SIGNUP_DAT", rs3.getString("user_signup_date"));
+					usermap.put("FEE_EXPIRY", rs3.getString("user_fee_expiry"));
+					usermap.put("UID", rs3.getString("user_uid"));
+					usermap.put("PROFILE", rs3.getString("user_profile_picture"));
+					usermap.put("PLAN", rs3.getString("user_plan"));
+					usermap.put("FULL_NAME", rs3.getString("user_full_name"));
+					usermap.put("MOBILE", String.valueOf(rs3.getInt("user_mobile")));
+					usermap.put("SEC_ID", rs3.getString("user_sec_status"));
+					usermap.put("SUB_LOC", rs3.getString("user_sublocality"));
+					usermap.put("LOCALITY", rs3.getString("user_locality"));
+					usermap.put("REF_CODE", rs3.getString("user_referral_code"));
+					usermap.put("PHOTO_ID", rs3.getString("user_photo_id"));
+					usermap.put("FRIEND_REF", rs3.getString("user_referrer_code"));
+					usermap.put("CREDITS", String.valueOf(rs3.getInt("user_credit")));
+					usermap.put("VERIFY", String.valueOf(rs3.getInt("user_verified_flag")));
+					usermap.put("STATUS",  String.valueOf(rs3.getInt("user_live_status")));
+					usermap.put("SIGN_SOURC", rs3.getString("user_status"));
+					usermap.put("ITEM_COUNT", String.valueOf(rs3.getInt("user_items")));
+					usermap.put("LEASE_COUN", String.valueOf(rs3.getInt("user_leases")));
+					usermap.put("ABOUT", rs3.getString("about"));
+					usermap.put("WEBSITE", rs3.getString("website"));
+					usermap.put("BUS_EMAIL", rs3.getString("email"));
+					usermap.put("LOCATION", rs3.getString("user_location"));
+					usermap.put("BUS_NUM", rs3.getString("phone_no"));
+					usermap.put("BUS_HOURS", rs3.getString("business_hours"));
+
+					
+					MailChimp mce = new MailChimp();
+					mce.addUserToList(email,usermap);
+					LOGGER.info("after calling mailchimp method ");
+				}
+				
+			}else{
+				LOGGER.warning("Dev environment for MailChimp");
+			}
+			
 			try {
 				Event event = new Event();
 				if (status.equals("email_pending")){
@@ -489,9 +542,11 @@ public class Users extends Connect {
 			e.printStackTrace();
 		}finally{
 			try {
+				if(stmt5 != null) stmt5.close();
 				if(stmt4 != null) stmt4.close();
 				if(rs1!=null) rs1.close();
 				if(rs2 != null)rs2.close();
+				if(rs3 != null)rs3.close();
 				if(stmt3 != null) stmt3.close();
 				if(stmt2 != null)stmt2.close();
 				if(stmt!=null) stmt.close();
