@@ -49,6 +49,7 @@ public class ErrorCat {
 	final public int FLS_NOTE_NOT_ADDED = 240;
 	final public int FLS_TICKET_NOT_FOUND = 241;
 	final public int FLS_TICKET_STATUS_FAILED = 242;
+	final public int FLS_TICKET_DUE_DATE_FAILED = 243;
 	
 	//String success messages
 	final public String FLS_ITEMS_ADD = "Item added into  items table";
@@ -145,6 +146,7 @@ public class ErrorCat {
 	final public String FLS_NOTE_NOT_ADDED_M = "Sorry!! Not able to add a new note.";
 	final public String FLS_TICKET_NOT_FOUND_M = "Sorry!! This ticket does not exist.";
 	final public String FLS_TICKET_STATUS_FAILED_M = "Sorry!! Not able to change the ticket status";
+	final public String FLS_TICKET_DUE_DATE_FAILED_M = "Sorry!! Not able to update the due date";
 	
 	//String query variables.
 	final public String FLS_WISHLIST_ADD = "Wished";

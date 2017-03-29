@@ -137,9 +137,9 @@ public class FlsTicket extends Connect {
 
 		try {
 
-			String sqlAddNote = "SELECT * FROM `ticket_types` WHERE ticket_type=? LIMIT 1";
+			String sqlGetDueDate = "SELECT * FROM `ticket_types` WHERE ticket_type=? LIMIT 1";
 
-			ps1 = hcp.prepareStatement(sqlAddNote);
+			ps1 = hcp.prepareStatement(sqlGetDueDate);
 			ps1.setString(1, ticketType);
 			rs1 = ps1.executeQuery();
 
@@ -190,9 +190,10 @@ public class FlsTicket extends Connect {
 			ps1.setInt(2, ticketId);
 			result = ps1.executeUpdate();
 
-			if (result == 1)
+			if (result == 1) {
 				LOGGER.info("Note Added for ticket id - " + ticketId);
-			else
+				updateTicketLastModified(ticketId);
+			} else
 				LOGGER.info("Not able to add a note for ticket id - " + ticketId);
 
 		} catch (Exception e) {
@@ -208,6 +209,79 @@ public class FlsTicket extends Connect {
 			}
 		}
 
+		return result;
+	}
+
+	private void updateTicketLastModified(int ticketId) {
+
+		LOGGER.info("Inside updateTicketLastModified Method");
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int result = 0;
+
+		try {
+
+			String sqlTicketModifiedDate = "UPDATE tickets SET ticket_lastmodified=now() WHERE ticket_id=?";
+
+			ps1 = hcp.prepareStatement(sqlTicketModifiedDate);
+			ps1.setInt(1, ticketId);
+			result = ps1.executeUpdate();
+
+			if (result == 1) {
+				LOGGER.info("Last modified date updated for ticket id - " + ticketId);
+			} else
+				LOGGER.info("Not able to update last modified date for ticket id - " + ticketId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public int updateDueDate(int ticketId, String dueDate) {
+
+		LOGGER.info("Inside updateDueDate Method");
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int result = 0;
+
+		try {
+
+			String sqlUpdateDueDate = "UPDATE tickets SET due_date=? WHERE ticket_id=?";
+
+			ps1 = hcp.prepareStatement(sqlUpdateDueDate);
+			ps1.setString(1, dueDate);
+			ps1.setInt(2, ticketId);
+			result = ps1.executeUpdate();
+
+			if (result == 1) {
+				LOGGER.info("Due date updated for ticket id - " + ticketId);
+			} else
+				LOGGER.info("Not able to update due date for ticket id - " + ticketId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return result;
 	}
 
@@ -451,7 +525,7 @@ public class FlsTicket extends Connect {
 		String d = df.format(date);
 		return d;
 	}
-	
+
 	private long dateToLong(String d) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
