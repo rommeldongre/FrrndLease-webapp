@@ -49,7 +49,7 @@ public class ExportUsers extends HttpServlet {
         try {
         	
             OutputStream o = response.getOutputStream();
-            String header = "SignUp Date,Fee Expiry Date,Id,UID,Profile Pic,Plan,Full Name,Mobile,Email,Secondary Id Status,Sub Locality,Locality,Referral Code,Friend Referral Code,Notification,Credits,Verification,Status,SignUp Status,Item Count,Lease Count,Response Time,Response Count,About,Website,Business Email,Business Number,Business Hours\n";
+            String header = "SignUp Date,Fee Expiry Date,Id,UID,Profile Pic,Plan,Full Name,Mobile,Email,Secondary Id Status,Location,Sub Locality,Locality,Referral Code,Photo Id,Friend Referral Code,Notification,Credits,User Latitude,User Longitude,Verification,Status,SignUp Status,Item Count,Lease Count,Response Time,Response Count,About,Website,Business Email,Business Number,Business Hours\n";
             o.write(header.getBytes());
             
             StringBuffer line = new StringBuffer();
