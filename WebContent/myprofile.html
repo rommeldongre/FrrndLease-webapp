@@ -82,19 +82,27 @@
             <label class="control-label">Notification Preferences - </label>
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <div class="btn-group" role="group">
-                    <button type="button" ng-class="((status=='email_activated' || status == 'facebook' || status=='google') ? 'btn btn-simple btn-success' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeEmailNotification()">
+                    <button type="button" class="btn-tooltip" ng-class="((status=='email_activated' || status == 'facebook' || status=='google') ? 'btn btn-simple btn-success' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeEmailNotification()" data-toggle="tooltip" title="Get Notifications via email" data-placement="top" tooltip>
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                        EMAIL
+                        Email
                         <i ng-if="notification=='EMAIL' || notification=='BOTH'" class="fa fa-check-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
                         <i ng-if="notification=='SMS' || notification=='NONE'" class="fa fa-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
                     </button>
                 </div>
                 <div class="btn-group" role="group">
-                    <button type="button" ng-class="((status=='mobile_activated') ? 'btn btn-simple btn-success' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeSmsNotification()">
+                    <button type="button" class="btn-tooltip" ng-class="((status=='mobile_activated') ? 'btn btn-simple btn-success' : ((secStatus==1) ? 'btn btn-simple btn-success' : 'btn btn-simple btn-danger'))" ng-click="changeSmsNotification()" data-toggle="tooltip" title="Get Notifications via SMS" data-placement="top" tooltip>
                         <i class="fa fa-mobile" aria-hidden="true"></i>
                         SMS
                         <i ng-if="notification=='SMS' || notification=='BOTH'" class="fa fa-check-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
                         <i ng-if="notification=='EMAIL' || notification=='NONE'" class="fa fa-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
+                    </button>
+                </div>
+				<div class="btn-group" role="group">
+                    <button type="button" ng-disabled="notification=='SMS' || notification=='NONE'" class="btn-tooltip" ng-class="notification=='EMAIL' || notification=='BOTH' ? 'btn btn-simple btn-success' : 'btn btn-simple btn-default'" ng-click="changeUpdateNotification()" data-toggle="tooltip" title="Get updates/offers via email. Only applicable it Email notification is enabled" data-placement="top" tooltip>
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        Updates
+                        <i ng-if="periodicUpdateFlag==1" class="fa fa-check-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
+                        <i ng-if="periodicUpdateFlag==0" class="fa fa-square-o" aria-hidden="true" style="float: right;margin-top: 1%;"></i>
                     </button>
                 </div>
             </div>

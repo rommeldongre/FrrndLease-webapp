@@ -556,6 +556,9 @@ public class FlsEmail extends Connect{
 
 			if(notificationType == Notification_Type.FLS_MAIL_ADD_LEAD){
 				template = ve.getTemplate("templates/leadEmail.vm");
+			}else if(notificationType == Notification_Type.FLS_MAIL_WEEKLY_DIGEST){
+				context.put("url", EMAIL_PROFILE_PAGE);
+				template = ve.getTemplate("templates/updatesEmail.vm");
 			}else{
 				template = ve.getTemplate("templates/defaultEmail.vm");
 			}

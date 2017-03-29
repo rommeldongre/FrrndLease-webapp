@@ -401,7 +401,7 @@ public class Event extends Connect{
 		return response;
 	}
 	
-	public int changeUserNotification(String userId, User_Notification userNotification){
+	public int changeUserNotification(String userId, User_Notification userNotification, int update){
 		
 		LOGGER.info("Inside changeUserNotification Method");
 		
@@ -412,10 +412,11 @@ public class Event extends Connect{
 			
 			hcp.setAutoCommit(false);
 			
-			String sqlNotification = "UPDATE users SET user_notification=? WHERE user_id=?";
+			String sqlNotification = "UPDATE users SET user_notification=?,user_periodic_updates_flag=? WHERE user_id=?";
 			ps = hcp.prepareStatement(sqlNotification);
 			ps.setString(1, userNotification.name());
-			ps.setString(2, userId);
+			ps.setInt(2, update);
+			ps.setString(3, userId);
 			
 			int count = ps.executeUpdate();
 			

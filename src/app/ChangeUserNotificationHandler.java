@@ -43,7 +43,7 @@ public class ChangeUserNotificationHandler extends Connect implements AppHandler
 			}
 			
 			Event event = new Event();
-			int result = event.changeUserNotification(rq.getUserId(), User_Notification.valueOf(rq.getNotification()));
+			int result = event.changeUserNotification(rq.getUserId(), User_Notification.valueOf(rq.getNotification()), rq.getPeriodicUpdate());
 
 			if (result == 1) {
 				rs.setCode(FLS_SUCCESS);
