@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -136,9 +137,9 @@ public class FlsTicket extends Connect {
 
 		try {
 
-			String sqlAddNote = "SELECT * FROM `ticket_types` WHERE ticket_type=? LIMIT 1";
+			String sqlGetDueDate = "SELECT * FROM `ticket_types` WHERE ticket_type=? LIMIT 1";
 
-			ps1 = hcp.prepareStatement(sqlAddNote);
+			ps1 = hcp.prepareStatement(sqlGetDueDate);
 			ps1.setString(1, ticketType);
 			rs1 = ps1.executeQuery();
 
@@ -189,9 +190,10 @@ public class FlsTicket extends Connect {
 			ps1.setInt(2, ticketId);
 			result = ps1.executeUpdate();
 
-			if (result == 1)
+			if (result == 1) {
 				LOGGER.info("Note Added for ticket id - " + ticketId);
-			else
+				updateTicketLastModified(ticketId);
+			} else
 				LOGGER.info("Not able to add a note for ticket id - " + ticketId);
 
 		} catch (Exception e) {
@@ -207,6 +209,79 @@ public class FlsTicket extends Connect {
 			}
 		}
 
+		return result;
+	}
+
+	private void updateTicketLastModified(int ticketId) {
+
+		LOGGER.info("Inside updateTicketLastModified Method");
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int result = 0;
+
+		try {
+
+			String sqlTicketModifiedDate = "UPDATE tickets SET ticket_lastmodified=now() WHERE ticket_id=?";
+
+			ps1 = hcp.prepareStatement(sqlTicketModifiedDate);
+			ps1.setInt(1, ticketId);
+			result = ps1.executeUpdate();
+
+			if (result == 1) {
+				LOGGER.info("Last modified date updated for ticket id - " + ticketId);
+			} else
+				LOGGER.info("Not able to update last modified date for ticket id - " + ticketId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public int updateDueDate(int ticketId, String dueDate) {
+
+		LOGGER.info("Inside updateDueDate Method");
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		int result = 0;
+
+		try {
+
+			String sqlUpdateDueDate = "UPDATE tickets SET due_date=? WHERE ticket_id=?";
+
+			ps1 = hcp.prepareStatement(sqlUpdateDueDate);
+			ps1.setString(1, dueDate);
+			ps1.setInt(2, ticketId);
+			result = ps1.executeUpdate();
+
+			if (result == 1) {
+				LOGGER.info("Due date updated for ticket id - " + ticketId);
+			} else
+				LOGGER.info("Not able to update due date for ticket id - " + ticketId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		return result;
 	}
 
@@ -306,18 +381,24 @@ public class FlsTicket extends Connect {
 
 		try {
 
-			String sqlGetTicket = "SELECT * FROM `tickets` WHERE ticket_id=?";
+			String sqlGetTicket = "SELECT tb1.*, tb2.user_full_name, tb2.user_sublocality, tb2.user_locality, tb2.user_profile_picture, tb3.script FROM tickets tb1 INNER JOIN users tb2 ON tb1.ticket_user_id=tb2.user_id INNER JOIN ticket_types tb3 ON tb1.ticket_type=tb3.ticket_type WHERE ticket_id=?";
 
 			ps1 = hcp.prepareStatement(sqlGetTicket);
 			ps1.setInt(1, ticketId);
 			rs1 = ps1.executeQuery();
 
 			if (rs1.next()) {
-				rs.setTicketDate(dateToString(rs1.getDate("ticket_date")));
-				rs.setTicketUserId(rs1.getString("ticket_user_id"));
+				rs.setCreationDate(dateToLong(rs1.getString("ticket_date")));
+				rs.setLastModifiedDate(dateToLong(rs1.getString("ticket_lastmodified")));
+				rs.setUserId(rs1.getString("ticket_user_id"));
 				rs.setDueDate(dateToString(rs1.getDate("due_date")));
-				rs.setTicketType(rs1.getString("ticket_type"));
-				rs.setTicketStatus(rs1.getString("ticket_status"));
+				rs.setType(rs1.getString("ticket_type"));
+				rs.setScript(rs1.getString("script"));
+				rs.setStatus(rs1.getString("ticket_status"));
+				rs.setUserName(rs1.getString("user_full_name"));
+				rs.setProfilePic(rs1.getString("user_profile_picture"));
+				rs.setSublocality(rs1.getString("user_sublocality"));
+				rs.setLocality(rs1.getString("user_locality"));
 
 				String sqlGetNotes = "SELECT * FROM `ticket_notes` WHERE ticket_id=?";
 
@@ -328,10 +409,10 @@ public class FlsTicket extends Connect {
 				while (rs2.next()) {
 					TicketNote note = new TicketNote();
 					note.setId(rs2.getInt("note_id"));
-					note.setDate(dateToString(rs2.getDate("note_date")));
+					note.setDate(dateToLong(rs2.getString("note_date")));
 					note.setNote(rs2.getString("note"));
 
-					rs.addNotes(note);
+					rs.addNote(note);
 				}
 
 				rs.setCode(FLS_SUCCESS);
@@ -443,6 +524,17 @@ public class FlsTicket extends Connect {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String d = df.format(date);
 		return d;
+	}
+
+	private long dateToLong(String d) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		try {
+			date = sdf.parse(d);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date.getTime();
 	}
 
 }

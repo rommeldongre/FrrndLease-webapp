@@ -6,7 +6,8 @@ import java.util.List;
 public class GetTicketDetailsResObj extends ResObj {
 
 	int code;
-	String message, ticketDate, ticketUserId, dueDate, ticketType, ticketStatus;
+	String message, userId, type, script, status, userName, profilePic, sublocality, locality, dueDate;
+	Long creationDate, lastModifiedDate;
 
 	List<TicketNote> notes = new ArrayList<>();
 
@@ -26,20 +27,68 @@ public class GetTicketDetailsResObj extends ResObj {
 		this.message = message;
 	}
 
-	public String getTicketDate() {
-		return ticketDate;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setTicketDate(String ticketDate) {
-		this.ticketDate = ticketDate;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-	public String getTicketUserId() {
-		return ticketUserId;
+	public String getType() {
+		return type;
 	}
 
-	public void setTicketUserId(String ticketUserId) {
-		this.ticketUserId = ticketUserId;
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public String getSublocality() {
+		return sublocality;
+	}
+
+	public void setSublocality(String sublocality) {
+		this.sublocality = sublocality;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
 	}
 
 	public String getDueDate() {
@@ -50,20 +99,20 @@ public class GetTicketDetailsResObj extends ResObj {
 		this.dueDate = dueDate;
 	}
 
-	public String getTicketType() {
-		return ticketType;
+	public Long getCreationDate() {
+		return creationDate;
 	}
 
-	public void setTicketType(String ticketType) {
-		this.ticketType = ticketType;
+	public void setCreationDate(Long creationDate) {
+		this.creationDate = creationDate;
 	}
 
-	public String getTicketStatus() {
-		return ticketStatus;
+	public Long getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
-	public void setTicketStatus(String ticketStatus) {
-		this.ticketStatus = ticketStatus;
+	public void setLastModifiedDate(Long lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	public List<TicketNote> getNotes() {
@@ -73,8 +122,8 @@ public class GetTicketDetailsResObj extends ResObj {
 	public void setNotes(List<TicketNote> notes) {
 		this.notes = notes;
 	}
-	
-	public void addNotes(TicketNote note) {
+
+	public void addNote(TicketNote note) {
 		this.notes.add(note);
 	}
 
