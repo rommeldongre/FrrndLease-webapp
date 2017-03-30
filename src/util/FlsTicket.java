@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 
 import connect.Connect;
 import pojos.GetTicketDetailsResObj;
+import pojos.GetTicketTypesResObj;
 import pojos.GetTicketsByXListResObj;
 import pojos.GetTicketsByXResObj;
 import pojos.TicketNote;
@@ -246,7 +247,7 @@ public class FlsTicket extends Connect {
 			}
 		}
 	}
-	
+
 	public int updateDueDate(int ticketId, String dueDate) {
 
 		LOGGER.info("Inside updateDueDate Method");
@@ -281,7 +282,7 @@ public class FlsTicket extends Connect {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -400,7 +401,7 @@ public class FlsTicket extends Connect {
 				rs.setSublocality(rs1.getString("user_sublocality"));
 				rs.setLocality(rs1.getString("user_locality"));
 
-				String sqlGetNotes = "SELECT * FROM `ticket_notes` WHERE ticket_id=?";
+				String sqlGetNotes = "SELECT * FROM `ticket_notes` WHERE ticket_id=? ORDER BY note_date DESC";
 
 				ps2 = hcp.prepareStatement(sqlGetNotes);
 				ps2.setInt(1, ticketId);
@@ -535,6 +536,54 @@ public class FlsTicket extends Connect {
 			e.printStackTrace();
 		}
 		return date.getTime();
+	}
+
+	public GetTicketTypesResObj getTicketTypes() {
+		LOGGER.info("Inside getTicketTypes Method");
+
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+
+		GetTicketTypesResObj rs = new GetTicketTypesResObj();
+
+		try {
+
+			String sqlGetTicketType = "SELECT * FROM `ticket_types`";
+
+			ps1 = hcp.prepareStatement(sqlGetTicketType);
+			rs1 = ps1.executeQuery();
+
+			while (rs1.next()) {
+				rs.addType(rs1.getString("ticket_type"));
+				rs.addScript(rs1.getString("script"));
+				rs.addDue(rs1.getInt("due_date"));
+			}
+
+			if (!rs.getTypes().isEmpty()) {
+				rs.setCode(FLS_SUCCESS);
+				rs.setMessage(FLS_SUCCESS_M);
+			} else {
+				rs.setCode(FLS_TICKET_TYPES_LIST_FAIL);
+				rs.setMessage(FLS_TICKET_TYPES_LIST_FAIL_M);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs1 != null)
+					rs1.close();
+				if (ps1 != null)
+					ps1.close();
+				if (hcp != null)
+					hcp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return rs;
 	}
 
 }
