@@ -162,7 +162,7 @@ public class GetProfileResObj extends ResObj {
 	public void setPhotoIdVerified(boolean photoIdVerified) {
 		this.photoIdVerified = photoIdVerified;
 	}
-	
+
 	public String getProfilePic() {
 		return profilePic;
 	}

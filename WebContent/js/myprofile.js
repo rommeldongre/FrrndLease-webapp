@@ -232,9 +232,9 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     n = 'EMAIL';
                     break;
             }
-           
+
 			changeNotification(n,periodic_update_flag);
-			
+
         }
     }
     
@@ -268,26 +268,26 @@ myProfile.controller('myProfileCtrl', ['$scope',
                     n = 'SMS';
                     break;
             }
-			
+
 			changeNotification(n,periodic_update_flag);
-			
+
         }
     }
-	
+
 	$scope.changeUpdateNotification = function(){
-		
+
 		var updateFlag;
 		if($scope.periodicUpdateFlag==1){
 			updateFlag=0;
 		}else{
 			updateFlag=1;
 		}
-		
+
 		changeNotification($scope.notification,updateFlag);
 	}
-	
+
 	var changeNotification = function(notification,update){
-		
+
 		$.ajax({
                 url: '/ChangeUserNotification',
                 type: 'post',
