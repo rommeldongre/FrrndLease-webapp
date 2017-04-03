@@ -221,19 +221,22 @@
                                         <br/><br/>
                                     </h4>
                                     <div class="row" ng-if="user.wishedList.length > 0 && user.wishedList != ''">
-                                        <div class="alert alert-success">
+                                        <div class="col-lg-12 col-md-12">
                                             <div class="container">
-                                                <div class="row" style="display: flex;flex-wrap: wrap;">
-                                                    <div class="col-md-9">
-                                                        <span class="label label-success" ng-repeat="wish in user.wishedList">
-                                                        {{wish | limitTo: 20}}
-                                                        <span ng-if="wish.length > 20">&hellip;</span>
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <button class="btn btn-success btn-fill" ng-click="storeYourStuff()">I have something to offer!</button>
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-md-12 text-center">
+                                                        <h4 style="margin: 0 0 5px 0;">Click to post yours.</h4>
                                                     </div>
                                                 </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12 col-md-12 text-center">
+                                                        <button class="btn btn-success btn-fill btn-round btn-sm" ng-repeat="wish in user.wishedList" ng-click="offerStuffClicked(wish)" style="margin:0 1px;">
+                                                            {{wish | limitTo: 20}}
+                                                            <span ng-if="wish.length > 20">&hellip;</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <hr/>
                                             </div>
                                         </div>
                                     </div>
