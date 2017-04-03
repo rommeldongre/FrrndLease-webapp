@@ -195,6 +195,9 @@ public class FlsPlan extends Connect{
 					event.createEvent(reqUser, user, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_FROM_SELF, itemId, "You have sucessfully leased an item to <a href=\"" + URL + "/myapp.html#/myleasedoutitems\">" + reqUser + "</a> on Friend Lease ");
 					event.createEvent(user, reqUser, Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_GRANT_LEASE_TO_SELF, itemId, "An item has been leased by <a href=\"" + URL + "/myapp.html#/myleasedinitems\">" + user + "</a> to you on Friend Lease ");
 				}else{
+					FlsTicket ticket = new FlsTicket();
+					ticket.addTicket(user, null, "PICKUP");
+					
 					event.createEvent("admin@frrndlease.com", "ops@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_PICKUP_READY, itemId, "The lease item - " + itemId + " is ready to be picked up.");
 					event.createEvent("ops@frrndlease.com", "admin@frrndlease.com", Event_Type.FLS_EVENT_NOTIFICATION, Notification_Type.FLS_MAIL_OPS_PICKUP_READY, itemId, "The lease item - " + itemId + " is ready to be picked up.");
 				}

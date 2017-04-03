@@ -11,6 +11,7 @@ import pojos.SaveUserPicsInS3ResObj;
 import util.Event;
 import util.FlsLogger;
 import util.FlsS3Bucket;
+import util.FlsTicket;
 import util.FlsS3Bucket.Bucket_Name;
 import util.FlsS3Bucket.File_Name;
 import util.FlsS3Bucket.Path_Name;
@@ -108,6 +109,9 @@ public class SaveUserPicsInS3Handler extends Connect implements AppHandler{
 						int rs1 = ps1.executeUpdate();
 						
 						if(rs1 == 1){
+							FlsTicket ticket = new FlsTicket();
+							ticket.addTicket(rq.getUserId(), null, "VERIFY_ID");
+							
 							LOGGER.info("User Verficiation changed to unverified and sending a notification to admin");
 							try{
 								Event event = new Event();

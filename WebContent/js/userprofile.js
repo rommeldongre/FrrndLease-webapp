@@ -23,6 +23,15 @@ userProfileApp.controller('userProfileCtrl', ['$scope', '$window', 'getItemsForC
         uber: $window.uber
     };
     
+    $scope.offerStuffClicked = function(title){
+        if(userFactory.user == "" || userFactory.user == null || userFactory.user == 'anonymous'){
+            $('#registerModal').modal('show');
+        }
+        else{
+            window.location.replace("myapp.html#/wizard/" + title);
+        }
+    }
+    
     if($window.imageLinks != '' && $window.imageLinks != null)
         $scope.user.imageLinks = $window.imageLinks.split(",");
     else
