@@ -121,45 +121,49 @@ postItemWizardApp.controller('postItemWizardCtrl', ['$scope', 'modalService', 'u
             item_title = null;
         
         var item_image = $scope.item.image;
-        if(item_image == '' || item_image == undefined)
-            item_image = null;
-
-        var req = {
-            id: 0,
-            title: item_title,
-            description: "",
-            category: $scope.item.category,
-            userId: userId,
-            leaseValue: 1000,
-            leaseTerm: 'Month',
-            status: "InStore",
-            image: item_image,
-            accessToken: userAccessToken
-        }
-        
-        $.ajax({
-            url: '/PostItem',
-            type: 'post',
-            data: JSON.stringify(req),
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "json",
-
-            success: function(response) {
-                if(response.code == 0){
-                    modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
-                        function(result){
-                            $scope.posted = true;
-                            $scope.item.uid = response.uid;
-                            eventsCount.updateEventsCount();
-							postToWall();
-                        },function(result){});
-                }
-            },
-
-            error: function() {
-                modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+        if(item_image == '' || item_image == undefined){
+            modalService.showModal({}, {bodyText: "Please upload an image. Image will make your item stand out.", showCancel:false, actionButtonText: 'OK'}).then(function(result){},function(result){});
+        }else {
+            
+            var req = {
+                id: 0,
+                title: item_title,
+                description: "",
+                category: $scope.item.category,
+                userId: userId,
+                leaseValue: 1000,
+                leaseTerm: 'Month',
+                status: "InStore",
+                image: item_image,
+                accessToken: userAccessToken
             }
-        });
+
+            $.ajax({
+                url: '/PostItem',
+                type: 'post',
+                data: JSON.stringify(req),
+                contentType: "application/x-www-form-urlencoded",
+                dataType: "json",
+
+                success: function(response) {
+                    if(response.code == 0){
+                        modalService.showModal({}, {bodyText: response.message, showCancel:false, actionButtonText: 'OK'}).then(
+                            function(result){
+                                $scope.posted = true;
+                                $scope.item.uid = response.uid;
+                                eventsCount.updateEventsCount();
+                                postToWall();
+                            },function(result){});
+                    }
+                },
+
+                error: function() {
+                    modalService.showModal({}, {bodyText: "Something is Wrong with the network.",showCancel: false,actionButtonText: 'OK'}).then(function(result){},function(){});
+                }
+            });
+            
+        }
+
     }
     
     $scope.editItem = function(){
