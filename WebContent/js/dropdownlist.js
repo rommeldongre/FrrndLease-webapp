@@ -65,6 +65,10 @@ $(function(){
                   $('#gsd_privacy').html(response);
             });
 			
+			$.get("blogdiv.html", function(response) {
+                  $('#gsd_blog').html(response);
+            });
+			
 			var link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
