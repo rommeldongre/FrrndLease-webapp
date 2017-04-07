@@ -1,6 +1,6 @@
-var flyerIndexApp = angular.module('flyerIndexApp', ['headerApp', 'carouselApp', 'footerApp', 'ngAutocomplete','ui.bootstrap', 'ngAutocomplete']);
+var flyerIndexApp = angular.module('flyerIndexApp', ['headerApp', 'carouselApp', 'footerApp', 'ngAutocomplete','ui.bootstrap']);
 
-flyerIndexApp.controller('flyerIndexCtrl', ['$scope', '$timeout', 'userFactory', 'getItemsForCarousel', 'scrollService', 'searchService', function($scope, $timeout, userFactory, getItemsForCarousel, scrollService, searchService){
+flyerIndexApp.controller('flyerIndexCtrl', ['$scope', '$timeout', 'userFactory', 'statsFactory', 'getItemsForCarousel', 'scrollService', 'searchService', '$rootScope', function($scope, $timeout, userFactory, statsFactory, getItemsForCarousel, scrollService, searchService,$rootScope){
     
     localStorage.setItem("prevPage","index.html");
     
@@ -13,13 +13,34 @@ flyerIndexApp.controller('flyerIndexCtrl', ['$scope', '$timeout', 'userFactory',
     
     $scope.details = '';
     
+	var displayStats = function () {
+            statsFactory.getStats().then(
+                function (response) {
+                    if (response.data.message == "Success") {
+                        $scope.item_count = response.data.itemCount;
+                        $scope.user_count = response.data.userCount;
+                    } else {
+                        $scope.item_count = "";
+                        $scope.user_count = "";
+                    }
+                },
+                function (error) {
+                    console.log("unable to get count: " + error.message);
+                });
+        }
+		
     // remove this code and uncomment the below one when using https
     $scope.search.location = "Pune, Maharashtra, India";
     
-    searchService.saveCurrentLocation(18.533617, 73.828651);
-        $timeout(function(){
-            searchService.sendDataToCarousel();
-        }, 2000);
+    searchService.saveCurrentLocation(18.533617, 73.828651);	
+		if (window.location.href.indexOf("library.html") > -1) {
+			$timeout(function(){
+				// populating the site Stats
+				displayStats();
+				searchService.sendDataToCarousel();
+			}, 2000);
+		}
+        
     
     userFactory.getCurrentLocation();
     
@@ -56,64 +77,12 @@ flyerIndexApp.controller('flyerIndexCtrl', ['$scope', '$timeout', 'userFactory',
     
 }]);
 
-flyerIndexApp.controller('pricingCtrl', ['$scope', '$location', 'modalService', function($scope, $location, modalService){
-	
-	$scope.primeLead = function(){
-		modalService.showModal({}, {submitting: true, labelText: 'Enter Email for recieve Updates', actionButtonText: 'Submit'}).then(function(result){
-            var Lead_email = result;
-			var Lead_type= "uber";
-			var Lead_url= "";
-			var loc_url = $location.url();
-			
-			if(loc_url=="/"){
-				Lead_url = "myapp"
-			}else if(loc_url==""){
-				Lead_url = "index"
-			}else{
-				Lead_url = loc_url;
-			}	
-				
-		   var req = {
-                leadEmail : Lead_email,
-				leadType: Lead_type,
-				leadUrl: Lead_url
-            }
-			sendLeadEmail(req);	
-        }, function(){});
-    }
-	
-	var sendLeadEmail = function(req){
-		
-		$.ajax({
-			url: '/AddLead',
-			type: 'post',
-			data: JSON.stringify(req),
-			contentType: "application/x-www-form-urlencoded",
-			dataType: "json",
-			success: function(response) {
-				if(response.code==0 || response.code==225){
-					modalService.showModal({}, {bodyText: response.message ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
-					}, function(){});
-				}else{
-					modalService.showModal({}, {bodyText: "Some Error Occured. Please try after some time" ,showCancel: false,actionButtonText: 'Ok'}).then(function(result){
-					}, function(){});
-				}
-			},
-		
-			error: function() {
-				console.log("Not able to send message");
-			}
-		});
-	}
-}]);
-
 flyerIndexApp.controller('headerCtrl', ['$scope',
 									'$timeout',
 									'userFactory',
 									'profileFactory',
 									'bannerService',
 									'searchService',
-									'statsFactory',
 									'loginSignupService',
                                     'logoutService',
                                     'modalService',
@@ -125,7 +94,6 @@ flyerIndexApp.controller('headerCtrl', ['$scope',
 									profileFactory,
 									bannerService,
 									searchService,
-									statsFactory,
 									loginSignupService,
 									logoutService,
 									modalService,
@@ -430,65 +398,6 @@ flyerIndexApp.controller('headerCtrl', ['$scope',
             }
         }
 
-        $scope.showCredit = function () {
-            $("#openBtn_credit").click();
-            $scope.showNext = true;
-            getCredit(lastOffset);
-        }
-
-        var getCredit = function (Offset) {
-            var req = {
-                userId: userFactory.user,
-                creditId: -1,
-                cookie: Offset,
-                limit: 3
-            }
-
-            getCreditSend(req);
-        }
-
-        var getCreditSend = function (req) {
-            $.ajax({
-                url: '/GetCreditTimeline',
-                type: 'post',
-                data: JSON.stringify(req),
-                contentType: "application/json",
-                dataType: "json",
-                success: function (response) {
-                    if (response.returnCode == 0) {
-                        if (lastOffset == 0) {
-                            $scope.$apply(function () {
-                                $scope.creditsArray = [response.resList];
-                            });
-                            getCredit(response.lastItemId);
-                        } else {
-                            $scope.$apply(function () {
-                                $scope.creditsArray.push(response.resList);
-                            });
-                        }
-                        lastOffset = response.lastItemId;
-                    } else {
-                        $scope.showNext = false;
-                        console.log("ReturnCode not Zero");
-                    }
-                },
-                error: function () {
-                    console.log("not able to get credit log data");
-                }
-
-            });
-        }
-
-        $scope.cancel_credit = function () {
-            lastOffset = 0;
-            $scope.creditsArray = [];
-        }
-
-        // called when Show More Credits button is clicked
-        $scope.loadNextCredit = function () {
-            getCredit(lastOffset);
-        }
-
         if (userFactory.user == "" || userFactory.user == null) {
             localStorage.setItem("userloggedin", "anonymous");
         } else {
@@ -496,28 +405,12 @@ flyerIndexApp.controller('headerCtrl', ['$scope',
         }
 
         $scope.searching = function () {
-            if (window.location.hash == '#/')
                 searchService.sendDataToCarousel();
-            else
-                window.location.replace('myapp.html#/');
         }
 
         $scope.searchStringChanged = function (searchString) {
             searchService.saveSearchTitle(searchString);
         }
-
-        $scope.$on('bannerMessage', function (event, data, page) {
-            // updating the notifications count in the header
-            displayUnreadNotifications();
-            $scope.successBanner = data;
-            $scope.bannerVal = true;
-            $timeout(function () {
-                $scope.bannerVal = false;
-                if (page === undefined || page == null || page == "") {} else {
-                    window.location.replace(page);
-                }
-            }, 5000);
-        });
 
         $scope.$on('headerLocationChanged', function (event, data) {
             $scope.search.location = data;
@@ -526,72 +419,6 @@ flyerIndexApp.controller('headerCtrl', ['$scope',
         $scope.$on('searchDataEmpty', function (event, data) {
             $scope.search.string = data;
         });
-
-        var displayStats = function () {
-            statsFactory.getStats().then(
-                function (response) {
-                    if (response.data.message == "Success") {
-                        $scope.item_count = response.data.itemCount;
-                        $scope.user_count = response.data.userCount;
-                    } else {
-                        $scope.item_count = "";
-                        $scope.user_count = "";
-                    }
-                },
-                function (error) {
-                    console.log("unable to get count: " + error.message);
-                });
-        }
-
-        var displayCredits = function () {
-            profileFactory.getProfile(userFactory.user).then(
-                function (response) {
-                    if (response.data.code == 0) {
-                        $scope.credits = response.data.credit;
-                    } else {
-                        $scope.credits = "";
-                    }
-                },
-                function (error) {
-                    console.log("unable to get credits: " + error.message);
-                });
-        }
-
-        $scope.head = {};
-
-        var displayUnreadNotifications = function () {
-            $.ajax({
-                url: '/GetUnreadEventsCount',
-                type: 'post',
-                data: JSON.stringify({
-                    userId: userFactory.user
-                }),
-                contentType: "application/json",
-                dataType: "json",
-
-                success: function (response) {
-                    if (response.code == 0) {
-                        $scope.$apply(function () {
-                            $scope.head.unread = response.unreadCount;
-                        });
-                    }
-                },
-                error: function () {}
-            });
-        }
-
-        // populating the credits
-        displayCredits();
-
-        // populating the site Stats
-        displayStats();
-
-        // fetching the unread notifications
-        displayUnreadNotifications();
-
-        $scope.openNotifications = function () {
-            window.location.replace("myapp.html#/mynotifications");
-        }
 
         $scope.isAdmin = function () {
             if (userFactory.user == 'frrndlease@greylabs.org')
