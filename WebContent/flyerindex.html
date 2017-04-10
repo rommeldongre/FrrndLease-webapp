@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Meta tags For Facebook start here-->
+    <meta property="og:title" content="FrrndLease" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="images/fls_cover_image.jpg" />
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="315" />
+    <meta property="og:url" content="https://www.frrndLease.com/" />
+    <meta property="og:description" content="The Doorstep Library of Things" />
+    <!--Meta tags For Facebook end here-->
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="1074096639539-cect2rfj254j3q1i5fo7lmbfhm93jg34.apps.googleusercontent.com">
+
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>FrrndLease - The Doorstep Library of Things</title>
+
+    <link rel="shortcut icon" href="images/fls-favicon.ico" type="image/x-icon">
+
+    <!-- Bootstrap -->
+    <link href="css/index.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/gsdk.min.css" rel="stylesheet">
+	
+	<style>
+		.custom-bullet li {
+			display: block;
+		}
+
+		.custom-bullet li:before{
+			content: "\e080";
+			font-family: 'Glyphicons Halflings';
+			font-size: 9px;
+			float: left;
+			margin-top: 4px;
+			margin-left: -17px;
+			color: #CCCCCC;
+		}
+		
+		#marketingline1{
+			position: relative;
+			display: block;
+			text-align: center;
+			color: #0066ff;
+			/*font-size: 150%;*/
+			font-family: 'Happy Monkey', serif;
+			-webkit-filter: contrast(200%);
+			font-size: 38px;
+			margin-top: 100px;
+		}
+		
+		.navbar-default { margin : 0 !important; }
+	</style>
+
+</head>
+
+<body onload="start()">
+
+	<div>
+    <div>
+        <!--header starts---------------------------------------->
+		<div ng-controller="headerCtrl" id="navbar">
+        <nav class="navbar navbar-default" role="navigation" style="background-color: #fcfeff;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span> 
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="myapp.html#/" class="navbar-brand" id="icon"><img src="images/fls-logo_full.png" style="width:176px" /></a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar1">
+				    
+                    <!-- Dropdown starts here -->
+                    <ul class="nav navbar-nav navbar-right">
+						
+						<li><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'HowItWorks');" href="howitworks.html">How it Works</a></li>
+						
+						<li><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Pricing');" href="pricing.html">Pricing</a></li>
+
+                        <li><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Signup');" href="library.html">Library</a></li>
+						
+						<li><a id="headerlikeoptions" onclick="ga('send', 'event', 'index', 'click', 'Like');" href="" ><div class="fb-like" data-href="https://www.facebook.com/frrndlease/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div></a></li>
+                        
+						<li><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Login');" href="" data-toggle="modal" data-target="#loginModal"><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a></li>
+
+                        <li><a id="headerfooteroptions" onclick="ga('send', 'event', 'index', 'click', 'Signup');" href="" data-toggle="modal" data-target="#registerModal"><i class="fa fa-user-plus" aria-hidden="true"></i> Signup</a></li>
+
+                    </ul>
+                    <!-- Dropdown ends here -->
+                    
+                </div>
+            </div>
+        </nav>
+		
+		</div>
+        <!--header ends----------------------------------------->
+
+        <div ng-controller="flyerIndexCtrl">
+			<div class="row section section-features-2" style="display:flex;flex-wrap:wrap;">
+					<div class="col-md-6 col-sm-6">	
+					 <img src="css/makespaceforlife-cir.jpg" class="img-responsive" alt="FrrndLease" width="700" height="0" style="margin-left:2%;"> 
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+						<div id="marketingline1"><strong>Your Friends are waiting to rent you their things ... Just Ask!</strong></div>
+						<div id="marketingstore">
+							<button ng-click="storeYourStuff()" onclick="ga('send', 'event', 'index', 'click', 'StoreYourThings');" id="storebutton" class="btn btn-success btn-fill">Earn Credits For Your Things. Sign Up Now!</button>
+						</div>
+					</div>
+            </div>
+        </div>
+
+		
+    </div>
+	</div>
+
+
+    <div>
+		<!-- Features Section -->
+		<div class="section section-features-2" style="background-image: url('images/bluebackground.jpg');">
+			<div class="container">
+				<div class="description">
+    
+					<ul class="custom-bullet">
+						<li><h4>Rent things for kids and parties, instead of buying them … and <b>save money and space!</b></h4></li>
+						<li><h4>We deliver and pickup … so you get the convenience of online shopping <b>at your doorstep</b></h4></li>
+						<li><h4>We only allow transactions with <b>vetted members</b>… so you can be assured of the quality of your renting experience</h4></li>
+						<li><h4>We allow you to offer your things for rent … so you can <b>earn credits to rent</b> for free!</h4></li>
+					</ul>
+				</div>			
+			</div>
+			
+		</div><!-- section -->
+		<!-- Features Section Ends -->
+		</div>
+		
+		
+    <!--The tawk.to widget code will get populated here from file chatbox.html.-->
+    <div id="tawk_widget"></div>
+
+    <!--Footer starts here-->
+    <div ng-include="'footer.html'" id="gsd_footer"></div>
+    <!--Footer ends here-->
+	
+	<div ng-include="'loginmodal.html'"></div>
+    <div ng-include="'signupmodal.html'"></div>
+    <!-- "Please Wait" Modal ends Here -->
+
+    <script type="text/javascript" defer>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-54475745-2', 'auto');
+        ga('send', 'pageview');
+
+        function start() {
+
+            footerFlag = 'collapsed';
+            look_good();
+
+            $("#opendivmyPleaseWait").hide();
+
+            load_Gapi();
+
+            $('body').append('<div class="popover-filter"></div>');
+
+            $("#search_btn_home").click(function() {
+                $('html,body').animate({
+                        scrollTop: $("#friendstoreline").offset().top
+                    },
+                    'slow');
+            });
+        }
+
+        function process_dialog(heading) {
+            var header = document.getElementById("waitheading");
+            header.innerHTML = heading;
+            $("#opendivmyPleaseWait").click();
+        }
+
+        var googleUser = {};
+
+        var load_Gapi = function() {
+            gapi.load('auth2', function() {
+                auth2 = gapi.auth2.init({
+                    cookiepolicy: 'single_host_origin'
+                });
+                attachSignin(document.getElementById('customLoginBtn'));
+                attachSignin(document.getElementById('customSignUpBtn'));
+            });
+        }
+
+        function attachSignin(element) {
+            auth2.attachClickHandler(element, {},
+                function(googleUser) {
+                    if (element.id == "customLoginBtn")
+                        onSignIn(googleUser);
+                    if (element.id == "customSignUpBtn")
+                        onSignUp(googleUser);
+                },
+                function(error) {
+                    console.log(error);
+                }
+            );
+        }
+
+        function increaseSizeOfFooter() {
+            if (footerFlag == 'collapsed') {
+                $('#footerpanel').height('50%');
+                footerFlag = 'expanded';
+            } else if (footerFlag == 'expanded') {
+                $('#footerpanel').height('30%');
+                footerFlag = 'collapsed';
+            }
+
+        }
+
+        function look_good() {
+            var height = $(window).height();
+            var width = $(window).height();
+
+            $("#footerpanel").css({
+                'position': 'relative',
+                'margin-top': -(height * 0.15) + 'px', //-10% of height
+            });
+
+            $("#footerpanel").css({
+                'position': 'relative',
+                'margin-top': -(height * 0.05) + 'px', //5% of height
+                'bottom': '0',
+            });
+        }
+
+    </script>
+
+    <link href='https://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' media="print" onload="this.media='all';">
+
+    <style>
+        #gsd_footer {
+            width: 100%;
+            min-height: 70px;
+            margin-top: -5px;
+            padding-top: 10px;
+            clear: both;
+            bottom: 0;
+        }
+        
+        #gsd_wrapper {
+            width: 100%;
+            min-height: 70px;
+            clear: both;
+            bottom: 0;
+        }
+
+    </style>
+
+    <!-- For Autocomplete Feature -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmvX5_FU3TIzFpzPYtwA6yfzSFiFlD_5g&libraries=places" defer></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!--Loading Animation code CSS & JS Links  -->
+    <link href="css/animation.min.css" type="text/css" rel="stylesheet" media="print" onload="this.media='all';">
+    <script src="js/jquery.backstretch.min.js" defer></script>
+    <script src="js/animation.min.js" defer></script>
+    <!--Loading Animation code CSS & JS Links ends here  -->
+
+    <!-- DropDown list code-->
+    <script src="js/dropdownlist.min.js" defer></script>
+    <!-- DropDown list code ends-->
+
+    <!-- Angularjs api -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js" defer></script>
+    <script src="js/ui-bootstrap-tpls-1.3.2.min.js" defer></script>
+    <script src="js/flyerindex.min.js" defer></script>
+    <script src="js/header.min.js" defer></script>
+	<script src="js/carousel.min.js" defer></script>
+    <script src="js/footer.min.js" defer></script>
+    <script src="js/load-image.all.min.js" defer></script>
+    <script src="js/ngAutocomplete.min.js" defer></script>
+    <!-- Angularjs api ends -->
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script async src="js/bootstrap-select.js" defer></script>
+    <script async src="js/get-shit-done.min.js"></script>
+    <script async src="js/gsdk-bootstrapswitch.min.js" defer></script>
+    <script async src="js/jquery.flexisel.min.js" defer></script>
+    <script async src="js/jquery.tagsinput.min.js" defer></script>
+    <script async src="js/jquery-ui.custom.min.js" defer></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/tawk.min.js" defer></script>
+    <script src="js/bootstrap.min.js" defer></script>
+
+    <script src="https://apis.google.com/js/api:client.js" defer></script>
+    <script src="js/md5.min.js" defer></script>
+    <!--for Facebook signin-->
+    <script src="js/Facebook_api.js" defer></script>
+
+    <!-- Google Code for Fls Signup Conversion Page
+    In your html page, add the snippet and call
+    goog_report_conversion when someone clicks on the
+    chosen link or button. -->
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion_async.js" defer></script>
+</body>
+
+</html>
