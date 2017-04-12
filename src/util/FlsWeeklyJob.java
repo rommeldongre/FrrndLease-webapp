@@ -261,8 +261,8 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 	}
 	
 	public String leaderBoardString(){
-		String leaderBoard="";
-		int limit =3,count=1;
+		String leaderBoard="",comma=",   ";
+		int limit =3;
 		
 		LOGGER.info("Inside leaderBoardString to fetch top 3 Monthly users");
 		
@@ -279,12 +279,10 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 			rs1 = ps1.executeQuery();
 			
 			while (rs1.next()) {
-				leaderBoard = leaderBoard +"<b>"+rs1.getString("totalCredit_monthly")+"</b>&nbsp;"+rs1.getString("monthly_credit_user");
-				if(count<limit){
-					leaderBoard = leaderBoard+",&nbsp;&nbsp;&nbsp;";
-				}
-				count = count+1;
+				leaderBoard = leaderBoard +"<b>"+rs1.getString("totalCredit_monthly")+"</b>&nbsp;"+rs1.getString("monthly_credit_user")+comma;
 			}
+			leaderBoard = leaderBoard.substring(0, leaderBoard.length() - comma.length());
+			
 			 
 		} catch (Exception e) {
 			// TODO: handle exception
