@@ -279,10 +279,12 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 			rs1 = ps1.executeQuery();
 			
 			while (rs1.next()) {
-				leaderBoard = leaderBoard + count+")"+"<b>"+rs1.getString("totalCredit_monthly")+"</b> - "+rs1.getString("monthly_credit_user")+"     ";
+				leaderBoard = leaderBoard +"<b>"+rs1.getString("totalCredit_monthly")+"</b>&nbsp;"+rs1.getString("monthly_credit_user");
+				if(count<limit){
+					leaderBoard = leaderBoard+",&nbsp;&nbsp;&nbsp;";
+				}
 				count = count+1;
 			}
-			leaderBoard = "<b>Monthly Active Users:</b> "+ leaderBoard;
 			 
 		} catch (Exception e) {
 			// TODO: handle exception
