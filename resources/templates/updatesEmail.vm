@@ -7,9 +7,15 @@
         	<td>$body</td>
         </tr>
         <tr style="text-align:center;">
-        	<td valign="top" style="padding-bottom:5px;">
+        	<td valign="top" style="padding-bottom:2px;">
         		<u>Account Status</u>: <br>
-        		You have <strong>$credits credits</strong> left to spend on FrrndLease.<br><br>
+        		You have <strong>$credits credits</strong> left to spend on FrrndLease.
+            </td>
+         </tr>
+         <tr style="text-align:center;">
+        	<td valign="top" style="padding-bottom:5px;">
+        		<u>Most Monthly Credits</u>: <br>
+        		$leaderBoard<br><br>
             </td>
          </tr>
          <tr style="text-align:center;">

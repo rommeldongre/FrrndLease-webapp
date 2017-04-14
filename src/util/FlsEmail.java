@@ -41,6 +41,9 @@ public class FlsEmail extends Connect{
 
 		String ENV_CONFIG = FlsConfig.env;
 		String URL = FlsConfig.prefixUrl;
+		String LEADER =null;
+		
+		FlsWeeklyJob FWJ = new FlsWeeklyJob();
 		
 		String LOGO_URL = "https://s3-ap-south-1.amazonaws.com/fls-meta/fls-logo.png";
 		
@@ -558,6 +561,8 @@ public class FlsEmail extends Connect{
 				template = ve.getTemplate("templates/leadEmail.vm");
 			}else if(notificationType == Notification_Type.FLS_MAIL_WEEKLY_DIGEST){
 				context.put("url", EMAIL_PROFILE_PAGE);
+				LEADER = FWJ.leaderBoardString();
+				context.put("leaderBoard", LEADER);
 				template = ve.getTemplate("templates/updatesEmail.vm");
 			}else{
 				template = ve.getTemplate("templates/defaultEmail.vm");
