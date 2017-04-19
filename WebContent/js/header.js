@@ -764,6 +764,14 @@ headerApp.service('eventsCount', ['$rootScope', function ($rootScope) {
     }
 }]);
 
+headerApp.service('paymentService', ['$rootScope', function ($rootScope) {
+	
+	this.updateFinalAmount = function (data) {
+        $rootScope.$broadcast('finalPaymentAmount', data);
+    }
+	
+}]);
+
 headerApp.service('searchService', ['$rootScope', function ($rootScope) {
 
     this.lat = 0.0;
@@ -1477,7 +1485,54 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 
 }]);
 
-headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount', function ($scope, userFactory, eventsCount) {
+headerApp.controller('summaryModalCtrl', ['$scope', '$window', 'userFactory', 'paymentService', function ($scope, $window, userFactory, paymentService) {
+	
+	$scope.email ="",$scope.number="";
+	$scope.productinfo = "FrrndLease";
+	var base_url ="";
+	
+	if (window.location.href.indexOf("frrndlease.com") > -1) {
+		base_url = "https://www.frrndlease.com/";
+	}else{
+		base_url = "http://8164ef1c.ngrok.io/";
+	}
+	
+	$scope.surl = base_url+"payuresponse.jsp";
+	$scope.furl = base_url+"payuresponse.jsp";
+	
+    expr = /@/;  // no quotes here
+	
+	$scope.$on('finalPaymentAmount', function(event, amt){
+		
+		console.log("BroadCast Message recieved");
+		
+		$scope.amount = amt;
+		$scope.name = userFactory.userName;
+		if(expr.test(userFactory.user)){
+			$scope.email = userFactory.user;
+		}else{
+			$scope.number = userFactory.user;
+		}
+		
+		
+	});
+	
+	$scope.summaryform = function () {
+		if (window.location.href.indexOf("frrndlease.com") > -1) {
+			$scope.error ='Currently we are not supporting payments!!';
+		}else{
+			$window.location.href = 'payuform.jsp?amount='+$scope.amount+'&firstname='+$scope.name+'&email='+$scope.email+'&phone='+$scope.number+'&productinfo='+$scope.productinfo+'&surl='+$scope.surl+'&furl='+$scope.furl;
+		}
+		
+	}
+	
+}]);
+	
+	
+    
+	
+
+headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount', 'paymentService', function ($scope, userFactory, eventsCount,paymentService) {
 
     $scope.payment = {
         credit: 0,
@@ -1602,10 +1657,18 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         }
 
     }
+	
+	 $scope.paymentSummary = function () {
+		 
+		var payableAmt = $scope.payment.amount - $scope.payment.discount;
+		localStorage.setItem("promoCode", $scope.payment.promoCode);
+		
+		paymentService.updateFinalAmount(payableAmt);
+	 }
 
 }]);
 
-headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount', function ($scope, userFactory, eventsCount) {
+headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount', 'paymentService', function ($scope, userFactory, eventsCount, paymentService) {
 
     $scope.payment = {
         month: 0,
@@ -1730,6 +1793,14 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         }
 
     }
+	
+	$scope.paymentSummary = function () {
+		 
+		var payableAmt = $scope.payment.amount - $scope.payment.discount;
+		localStorage.setItem("promoCode", $scope.payment.promoCode);
+		
+		paymentService.updateFinalAmount(payableAmt);
+	}
 
 }]);
 

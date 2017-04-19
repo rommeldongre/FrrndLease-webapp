@@ -259,8 +259,8 @@
 				<th class="tablecell" style="width: 20%">Transaction Id</th>
 				<th class="tablecell" style="width: 20%">Details</th>
             </tr>
-        </thead>
-        <tbody ng-repeat="order in orders" >
+ 	 </thead>
+		<tbody ng-repeat="order in orders" >
             <tr ng-repeat="y in order" >
 				<td>
 				<form id="invoice" action="GetOrderInvoice" method="POST" target="_blank" style="display:inline;">
@@ -277,7 +277,7 @@
 				<td class="text-center">{{y.razorPayId}}</td>
 				<td>{{ y.creditType }}</td>
 			  </tr>
-        </tbody>
+	     </tbody>
 		</table>
 		</div>
 		<div class="modal-footer">
