@@ -1485,7 +1485,7 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 
 }]);
 
-headerApp.controller('summaryModalCtrl', ['$scope', '$window', 'userFactory', 'paymentService', function ($scope, $window, userFactory, paymentService) {
+headerApp.controller('summaryModalCtrl', ['$scope', '$window', 'paymentService', function ($scope, $window, paymentService) {
 	
 	$scope.email ="",$scope.number="";
 	$scope.productinfo = "FrrndLease";
@@ -1507,11 +1507,12 @@ headerApp.controller('summaryModalCtrl', ['$scope', '$window', 'userFactory', 'p
 		console.log("BroadCast Message recieved");
 		
 		$scope.amount = amt;
-		$scope.name = userFactory.userName;
-		if(expr.test(userFactory.user)){
-			$scope.email = userFactory.user;
+		$scope.name = localStorage.getItem("userloggedinName");
+		var user = localStorage.getItem("userloggedin");
+		if(expr.test(user)){
+			$scope.email = user;
 		}else{
-			$scope.number = userFactory.user;
+			$scope.number = user;
 		}
 		
 		

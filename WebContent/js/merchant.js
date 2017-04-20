@@ -1,6 +1,6 @@
 var merchantApp = angular.module('merchantApp', ['headerApp', 'footerApp', 'ngAutocomplete']);
 
-merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', function($scope, modalService, userFactory){
+merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory', 'paymentService', function($scope, modalService, userFactory,paymentService){
 
     if(userFactory.user != "" && userFactory.user != null && userFactory.user != "anonymous")
         window.location.replace("myapp.html");
@@ -308,31 +308,9 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
             if(window.location.href.indexOf("frrndlease.com") > -1){
                 $scope.payment.paymentError = 'Currently we are not supporting payments!!';
             }else{
-                var options = {
-                    key: "rzp_test_GwL1Gj4oI20Jeq",
-                    amount: payableAmt * 100,
-                    name: "Grey Labs LLP",
-                    description: "Paying Membership Fee",
-                    image: "images/fls-logo.png",
-                    prefill: {
-                        name: userFactory.userName,
-                        email: userFactory.user
-                    },
-                    handler: function (response){
-                        userFactory.payMembership($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function(res){
-                            if(res.data.code == 0)
-                                window.location.replace("myapp.html#/myprofile");
-                            else
-                                console.log(res);
-                        },
-                        function(error){});
-                    },
-                    modal: {
-                        ondismiss: function(){}
-                    }
-                }
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
+				localStorage.setItem("promoCode", $scope.payment.promoCode);
+				paymentService.updateFinalAmount(payableAmt);
+				$('#summaryModal').modal('show');
             }
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
