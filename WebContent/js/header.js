@@ -1535,7 +1535,7 @@ headerApp.controller('summaryModalCtrl', ['$scope', '$window', 'paymentService',
 }]);
 	
 	
-headerApp.controller('paymentModalCtrl', ['$scope', '$uibModal','userFactory', 'eventsCount', 'paymentService', function ($scope, $uibModal, userFactory, eventsCount,paymentService) {
+headerApp.controller('paymentModalCtrl', ['$scope','userFactory', 'eventsCount', 'paymentService', function ($scope, userFactory, eventsCount,paymentService) {
 
     $scope.payment = {
         credit: 0,
