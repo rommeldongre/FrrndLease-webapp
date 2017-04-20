@@ -218,29 +218,30 @@ function submitOrder() {
 	
 	<div>
 		<!-- Features Section -->
-		<div class="section section-features-2" style="background-image: url('images/bluebackground.jpg');">
+		<div class="section section-features-2" style="background-image: url('images/bluebackground.jpg');min-height: 350px;">
 			<div class="container">
-               <h2 class="text-center" id="icon" style="color:#0066ff;font-size: 200%;"><strong>Payment Status</strong></h2>
-               <div class="row">
+               <h2 class="text-center" id="icon" style="color:#0066ff;font-size: 250%;"><strong>Payment Status</strong></h2>
+			   <br/><br/>
+               <div class="row" style="text-align: center;">
                    <div class="col-md-4">
-                   	   <h4 class="section-title">Status:</h4>
-                       <p><%= status %></p>
-
+                   	   <h3 class="section-title">Status:</h3>
+                       <p class="text-muted" style="font-size:20px"><%= status %></p>			
                    </div>
                      <div class="col-md-4">
-                       <h4 class="section-title">Amount:</h4>
-                       <p><%= amount %></p>
+                       <h3 class="section-title">Amount:</h3>
+                       <p class="text-muted" style="font-size:20px"><%= amount %></p>
 
                    </div>
                    <div class="col-md-4">
-                       <h4 class="section-title">Transaction Id:</h4>
-                       <p><%= txnid %></p>
+                       <h3 class="section-title">Transaction Id:</h3>
+                       <p class="text-muted" style="font-size:20px"><%= txnid %></p>
                    </div>
-               </div>
+			   </div>
            </div>  
 			
 		</div><!-- section -->
 		<!-- Features Section Ends -->
+	</div>
 	</div>
       
 	  
