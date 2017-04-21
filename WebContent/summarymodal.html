@@ -1,0 +1,44 @@
+<div ng-controller="summaryModalCtrl" class="modal modal-small fade" id="summaryModal" tabindex="-1" role="dialog" aria-labelledby="summaryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="paymentModalLabel">Payment Summary</h4>
+            </div>
+            <div class="modal-body" style="text-align:left;">
+				<form name="form">
+					<label class="control-label">Final Amount</label>
+					<div id="amount" style="width:100%;" class="input-group btn-tooltip form-group"" data-toggle="tooltip" data-placement="top" title="Final Amount to be paid" tooltip>
+						<input type="text" class="form-control" ng-disabled="true" ng-model="amount">
+					</div>
+					<br/>
+					<label class="control-label">Full Name</label>
+					<div id="name" style="width:100%;" class="input-group btn-tooltip form-group"" data-toggle="tooltip" data-placement="top" title="User Full Name" tooltip>
+						<input type="text" class="form-control" ng-disabled="true" ng-model="name">
+					</div>
+					<br/>
+					<label class="control-label">Phone Number</label>
+					<div id="number" style="width:100%;" class="input-group btn-tooltip form-group"" data-toggle="tooltip" data-placement="top" title="User Phone Number" tooltip>
+						<input type="text" class="form-control" ng-model="number" ng-change="(number.length == 10) ? error='' : error='Mobile number must have 10 digits'" ng-model="number">
+					</div>
+					<br/>
+					<label class="control-label">Email</label>
+					<div id="email" style="width:100%;" class="input-group btn-tooltip form-group"" data-toggle="tooltip" data-placement="top" title="User Email Id" tooltip>
+						<input type="email" class="form-control" ng-model="email" ng-change="(form.email.$dirty && form.email.$valid) ? error='' : error='Please enter a valid email'">
+					</div>
+					<br/>
+				</form>
+            </div>
+            <div class="modal-footer">
+                <div class="row" ng-if="error != ''" style="color:red;margin-bottom:10%;">
+                    {{error}}
+                </div>
+				<button type="button" class="btn btn-default btn-fill" ng-click="cancel_credit()" data-dismiss="modal" ng-click="">Cancel</button>
+				<!--<button class="btn btn-primary btn-fill" style="text-align: end;margin-top: 0%;" id="finalPay" ng-model="showNext" ng-click="loadNextOrders()">Complete Payment</button>-->
+				<a class="btn btn-primary btn-fill" ng-click="(form.$valid && error=='') ? summaryform() : error='Please enter all fields correctly!!'">Complete Payment</a>
+            </div>
+        </div>
+    </div>
+</div>
