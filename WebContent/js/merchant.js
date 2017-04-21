@@ -305,13 +305,9 @@ merchantApp.controller('merchantCtrl', ['$scope', 'modalService', 'userFactory',
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
         
         if(payableAmt > 0){
-            if(window.location.href.indexOf("frrndlease.com") > -1){
-                $scope.payment.paymentError = 'Currently we are not supporting payments!!';
-            }else{
 				localStorage.setItem("promoCode", $scope.payment.promoCode);
 				paymentService.updateFinalAmount(payableAmt);
 				$('#summaryModal').modal('show');
-            }
         }else if(payableAmt == 0){
             if($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo){
                 userFactory.payMembership($scope.payment.promoCode, 0, null).then(function(response){

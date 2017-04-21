@@ -1519,17 +1519,11 @@ headerApp.controller('summaryModalCtrl', ['$scope', '$window', 'paymentService',
 	});
 	
 	$scope.summaryform = function () {
-		if (window.location.href.indexOf("frrndlease.com") > -1) {
-			$scope.error ='Currently we are not supporting payments!!';
-		}else{
 			if(base_url == ""){
 				$scope.error ='Please enter Valid ngrok URL to test payment in local host!!';
 			}else{
 				$window.location.href = 'payuform.jsp?amount='+$scope.amount+'&firstname='+$scope.name+'&email='+$scope.email+'&phone='+$scope.number+'&productinfo='+$scope.productinfo+'&surl='+$scope.surl+'&furl='+$scope.furl;
 			}
-			
-		}
-		
 	}
 	
 }]);
@@ -1612,14 +1606,10 @@ headerApp.controller('paymentModalCtrl', ['$scope','userFactory', 'eventsCount',
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
 
         if (payableAmt > 0) {
-            if (window.location.href.indexOf("frrndlease.com") > -1) {
-                $scope.payment.paymentError = 'Currently we are not supporting payments!!';
-            } else {
 				localStorage.setItem("promoCode", $scope.payment.promoCode);
 				paymentService.updateFinalAmount(payableAmt);
 				$('#paymentModal').modal('hide');
-				$('#summaryModal').modal('show');
-            }
+				$('#summaryModal').modal('show');  
         } else if (payableAmt == 0) {
             if ($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo) {
                 userFactory.buyCredits($scope.payment.promoCode, 0, null).then(function (response) {
@@ -1717,14 +1707,10 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
 
         if (payableAmt > 0) {
-            if (window.location.href.indexOf("frrndlease.com") > -1) {
-                $scope.payment.paymentError = 'Currently we are not supporting payments!!';
-            } else {
 				localStorage.setItem("promoCode", $scope.payment.promoCode);
 				paymentService.updateFinalAmount(payableAmt);
 				$('#uberPayModal').modal('hide');
-				$('#summaryModal').modal('show');
-            }
+				$('#summaryModal').modal('show'); 
         } else if (payableAmt == 0) {
             if ($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo) {
                 userFactory.payMembership($scope.payment.promoCode, 0, null).then(function (response) {
