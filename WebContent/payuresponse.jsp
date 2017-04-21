@@ -1,5 +1,6 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.security.*" %>
+<%@ page import="util.FlsConfig" %>
 
 <%!
 public boolean empty(String s)
@@ -36,10 +37,16 @@ public boolean empty(String s)
 	}
 %>
 <% 	
+	String merchant_key="",salt="";
+	String ENV_CONFIG = FlsConfig.env;
 	
-	//Test Credentials
-	String merchant_key="rjQUPktU";
-	String salt="e5iIg1jwi8";
+	if(ENV_CONFIG.equals("dev")){
+		merchant_key="rjQUPktU";
+		salt="e5iIg1jwi8";
+	}else{
+		 merchant_key="jiiHHEai";
+		 salt="U7GF69H5hs";
+	}
 	
 	/*String action1 ="";
 	String base_url="https://test.payu.in";

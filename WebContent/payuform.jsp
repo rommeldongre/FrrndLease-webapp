@@ -1,5 +1,6 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.security.*" %>
+<%@ page import="util.FlsConfig" %>
 
 <%!
 public boolean empty(String s)
@@ -36,28 +37,23 @@ public boolean empty(String s)
 	}
 %>
 <% 	
-	/*String merchant_key="JBZaLc";
-	String salt="GQs7yium";*/
-	
-	//String merchant_key="jiiHHEai";
-	//String salt="U7GF69H5hs";
-	
-	/*String salt="C7Xj1BWzrp";
-	String merchant_key="D9AtYIE3";*/
-	
-	//Test Credentials
-	String merchant_key="rjQUPktU";
-	String salt="e5iIg1jwi8";
+	String merchant_key="",salt="",base_url="";
+	String ENV_CONFIG = FlsConfig.env;
+
+	if(ENV_CONFIG.equals("dev")){
+		merchant_key="rjQUPktU";
+		salt="e5iIg1jwi8";
+		base_url="https://test.payu.in";
+	}else{
+	 	merchant_key="jiiHHEai";
+	 	salt="U7GF69H5hs";
+	 	base_url="https://secure.payu.in";
+	}
 	
 	String action1 ="";
-	String base_url="https://test.payu.in";
 	int error=0;
 	String hashString="";
 	int amount =100;
-	String productinfo="Sample info",firstname="Aniruddh",email="aniruddh92@gmail.com";
-	
- 
-
 	
 	Enumeration paramNames = request.getParameterNames();
 	Map<String,String> params= new HashMap<String,String>();
@@ -84,8 +80,6 @@ public boolean empty(String s)
 	String txn="abcd";
 	String hash="";
 	String hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10";
-	//String hashSequence = merchant_key+"|"+txnid+"|"+amount+"|"+productinfo+"|"+firstname+"|"+email+"|";
-	//String hashSequence = params.get("key")+"|"+params.get("txnid")+"|"+params.get("amount")+"|"+params.get("firstname")+"|"+params.get("email")+"|"+params.get("udf1")+"|"+params.get("udf2")+"|"+params.get("udf3")+"|"+params.get("udf4")+"|"+params.get("udf5")+"|||||";
 	System.out.println("hash Sequence generated");
 	if(empty(params.get("hash")) && params.size()>0)
 	{
