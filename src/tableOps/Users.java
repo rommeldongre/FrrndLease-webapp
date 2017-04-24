@@ -118,12 +118,7 @@ public class Users extends Connect {
 			LOGGER.info("Edit Live Status is selected");
 			editLiveStatus();
 			break;
-			
-		case "editstatus":
-			LOGGER.info("Edit Status is selected");
-			editStatus();
-			break;
-			
+				
 		case "editverification":
 			LOGGER.info("Edit Verification is selected");
 			editVerification();
@@ -1079,6 +1074,7 @@ public class Users extends Connect {
 					obj.put("fullName", rs1.getString("user_full_name"));
 					obj.put("mobile", rs1.getString("user_mobile"));
 					obj.put("status", rs1.getString("user_status"));
+					obj.put("userActivation", rs1.getString("user_activation"));
 					obj.put("credit", rs1.getInt("user_credit"));
 					obj.put("lat", rs1.getFloat("user_lat"));
 					obj.put("lng", rs1.getFloat("user_lng"));
@@ -1179,47 +1175,6 @@ public class Users extends Connect {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	private void editStatus(){
-		
-		userId = um.getUserId();
-		status = um.getStatus();
-		int statusCheck=0;
-		
-		LOGGER.info("Inside Edit Status Method");
-		
-		Connection hcp = getConnectionFromPool();
-		PreparedStatement ps1 = null;
-		
-		try{
-			
-			String sqlEditStatus = "UPDATE users SET user_status=?  WHERE user_id=?";
-			ps1 = hcp.prepareStatement(sqlEditStatus);
-			ps1.setString(1, status);
-			ps1.setString(2, userId);
-			
-			statusCheck = ps1.executeUpdate();
-			
-				if(statusCheck == 1)
-					res.setData(FLS_SUCCESS, "0", message);
-				else
-					res.setData(FLS_SQL_EXCEPTION, "0", message);
-						
-		}catch(SQLException e){
-			res.setData(FLS_SQL_EXCEPTION, "0", FLS_SQL_EXCEPTION_M);
-			e.printStackTrace();
-			LOGGER.warning(e.getMessage());
-		}finally{
-			try {
-				if(ps1 != null)ps1.close();
-				if(hcp != null)hcp.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 	}
 	
 	private void editVerification(){
