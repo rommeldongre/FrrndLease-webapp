@@ -21,7 +21,7 @@ public class Connect extends ErrorCat {
 	//private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
 
 	// Local - Database
-	private static String url = "jdbc:mysql://127.0.0.1:3306/fls?autoReconnect=true";
+	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private static String name = "root";
 	private static String pass = "root";
 
@@ -77,9 +77,9 @@ public class Connect extends ErrorCat {
     private DataSource getDataSource() {
     	if (HikariDS == null) {
     		HikariConfig config = new HikariConfig();
-    		config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
-    		config.setUsername("root");
-    		config.setPassword("root");
+    		config.setJdbcUrl(url);
+    		config.setUsername(name);
+    		config.setPassword(pass);
     		config.setMaximumPoolSize(10);
     		config.setMinimumIdle(2);
     		config.setIdleTimeout(10);
@@ -106,9 +106,9 @@ public class Connect extends ErrorCat {
     private DataSource getReadDataSource() {
     	if (readHikariDS == null) {
     		HikariConfig config = new HikariConfig();
-    		config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
-    		config.setUsername("root");
-    		config.setPassword("root");
+    		config.setJdbcUrl(url);
+    		config.setUsername(name);
+    		config.setPassword(pass);
     		config.setMaximumPoolSize(10);
     		config.setMinimumIdle(2);
     		config.setIdleTimeout(10);
