@@ -15,12 +15,13 @@ public class Connect extends ErrorCat {
 
 	protected static Connection connection = null;
 	protected static HikariDataSource HikariDS = null;
-
+	protected static HikariDataSource readHikariDS = null;
+	
 	//Cannot use LOGGER class because it is being used on startup 
 	//private static FlsLogger LOGGER = new FlsLogger(Connect.class.getName());
 
 	// Local - Database
-	private static String url = "jdbc:mysql://127.0.0.1:3306/fls?autoReconnect=true";
+	private static String url = "jdbc:mysql://127.0.0.1:3306/fls";
 	private static String name = "root";
 	private static String pass = "root";
 
@@ -76,9 +77,9 @@ public class Connect extends ErrorCat {
     private DataSource getDataSource() {
     	if (HikariDS == null) {
     		HikariConfig config = new HikariConfig();
-    		config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/fls");
-    		config.setUsername("root");
-    		config.setPassword("root");
+    		config.setJdbcUrl(url);
+    		config.setUsername(name);
+    		config.setPassword(pass);
     		config.setMaximumPoolSize(10);
     		config.setMinimumIdle(2);
     		config.setIdleTimeout(10);
@@ -90,6 +91,36 @@ public class Connect extends ErrorCat {
     	return HikariDS;
     }
     
+    public Connection getReadConnectionFromPool() {
+    	
+    	Connection conn = null;
+    	try {
+    		DataSource ds = getReadDataSource();
+    		conn = ds.getConnection();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    	return conn;
+    }
+
+    private DataSource getReadDataSource() {
+    	if (readHikariDS == null) {
+    		HikariConfig config = new HikariConfig();
+    		config.setJdbcUrl(url);
+    		config.setUsername(name);
+    		config.setPassword(pass);
+    		config.setMaximumPoolSize(10);
+    		config.setMinimumIdle(2);
+    		config.setIdleTimeout(10);
+    		config.setConnectionTimeout(5000);
+    		config.setValidationTimeout(1000);
+    		config.setReadOnly(true);
+    		
+    		readHikariDS = new HikariDataSource(config);
+    	}
+    	return readHikariDS;
+    }
+    
     public void closeHikariConnection(){
     	if(HikariDS!=null){
     		HikariDS.close();
@@ -97,7 +128,13 @@ public class Connect extends ErrorCat {
     	}else{
     		System.out.println("Hikari Datasource is null...");
     	}
+    	if (readHikariDS!=null) {
+    		readHikariDS.close();
+    			System.out.println("Closing Hikari Read Connection in Connect Class....");
+		} else {
+			System.out.println("Hikari Read Datasource is null...");
+		}
     	
     }
     
-}
+    }

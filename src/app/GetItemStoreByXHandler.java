@@ -39,7 +39,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 		GetItemStoreByXReqObj rq = (GetItemStoreByXReqObj) req;
 
 		GetItemStoreByXListResObj rs = new GetItemStoreByXListResObj();
-		Connection hcp = getConnectionFromPool();
+		Connection hcp = getReadConnectionFromPool();
 		PreparedStatement sql_stmt = null;
 		ResultSet dbResponse = null;
 

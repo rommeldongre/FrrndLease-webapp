@@ -37,7 +37,7 @@ public class GetRequestsByXHandler extends Connect implements AppHandler {
 		
 		GetRequestsByXResObj rs = new GetRequestsByXResObj();
 		
-		Connection hcp = getConnectionFromPool();
+		Connection hcp = getReadConnectionFromPool();
 		PreparedStatement sql_stmt = null;
 		ResultSet dbResponse = null;
 		
