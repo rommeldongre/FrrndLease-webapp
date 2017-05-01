@@ -2,6 +2,7 @@ package services;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletResponse;
@@ -44,6 +45,8 @@ public class GetItemStoreByX extends HttpServlet {
 			
 			// application logic comes here --------		
 			GetItemStoreByXListResObj Response = null;
+			Date date = new Date();
+			LOGGER.info("Just before try catch"+date.toString());
 		
 			try {
 				//App handler to process request and create Service response pojo
@@ -56,6 +59,7 @@ public class GetItemStoreByX extends HttpServlet {
 				httpresponse.setContentType("application/json; charset=UTF-8");	
 				mapper.writeValue(out, Response);
 				LOGGER.info("Finished POST method");
+				LOGGER.info("Finished POST method"+date.toString());
 					
 			} catch (NotImplementedException e) {
 				e.printStackTrace();
