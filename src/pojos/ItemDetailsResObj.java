@@ -3,7 +3,7 @@ package pojos;
 public class ItemDetailsResObj extends ResObj {
 
 	private String title, category, description, userId, leaseTerm, status, primaryImageLink, message, uid, locality,
-			sublocality;
+			sublocality, userName;
 	int id, leaseValue, code, surcharge;
 
 	String[] imageLinks;
@@ -134,6 +134,14 @@ public class ItemDetailsResObj extends ResObj {
 
 	public void setSublocality(String sublocality) {
 		this.sublocality = sublocality;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

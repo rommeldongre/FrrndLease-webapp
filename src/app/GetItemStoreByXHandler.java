@@ -96,7 +96,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 				sql = sql + " AND tb1.item_user_id='"+userId+"'";
 			
 			if(searchString != "" || searchString != null)
-				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%')";
+				sql = sql + " AND (tb1.item_name LIKE '%"+searchString+"%' OR tb1.item_desc LIKE '%"+searchString+"%' OR tb2.user_full_name LIKE '%"+searchString+"%')";
 			
 			sql = sql + " ORDER BY uber DESC, friendst DESC, distance, tb1.item_id DESC LIMIT "+offset+", "+limit;
 			

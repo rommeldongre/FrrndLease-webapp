@@ -46,7 +46,7 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 		try {
 
 			LOGGER.info("Creating sql statement for fetching items details");
-			String itemDetailsSql = "SELECT * FROM items WHERE item_uid=?";
+			String itemDetailsSql = "SELECT tb1.*, tb2.user_full_name FROM items tb1 Inner Join users tb2 ON tb1.item_user_id=tb2.user_id WHERE item_uid=?";
 
 			ps1 = hcp.prepareStatement(itemDetailsSql);
 			ps1.setString(1, rq.getUid());
@@ -65,6 +65,7 @@ public class ItemDetailsHandler extends Connect implements AppHandler {
 				rs.setLeaseValue(Integer.parseInt(rs1.getString("item_lease_value")));
 				rs.setSurcharge(rs1.getInt("item_surcharge"));
 				rs.setUid(rs1.getString("item_uid"));
+				rs.setUserName(rs1.getString("user_full_name"));
 				
 				FlsS3Bucket s3Bucket = new FlsS3Bucket(rs1.getString("item_uid"));
 				rs.setImageLinks(s3Bucket.getImagesLinks());

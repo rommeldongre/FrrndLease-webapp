@@ -191,7 +191,9 @@
                                     <button type="button" class="btn btn-social btn-fill btn-facebook" ng-click="shareItem()">
                                         <i class="fa fa-facebook-square"></i> Share
                                     </button>
+                                    <a class="btn btn-social btn-fill btn-success" href="https://web.whatsapp.com/send?text=https://www.frrndlease.com/ItemDetails?uid=${uid}" data-action="share/whatsapp/share"><i class="fa fa-whatsapp" aria-hidden="true"></i> Share </a>
 									<button class="btn btn-primary btn-simple" ng-click="shareItem()" style="padding:8px;">Share on FrrndLease</button>
+                                    <button class="btn btn-primary btn-simple" ng-click="friendsList()" style="padding:8px;">Show all the items from this person</button>
                                     <button ng-if="!userMatch" class="btn btn-primary btn-simple" ng-click="sendItemMessage()" style="padding:8px;">Message</button>
                                     <button ng-if="!userMatch" class="btn btn-primary btn-simple" ng-click="wishItem()" style="padding:8px;">Add to Wishlist</button>
                                     <button class="btn btn-primary btn-simple" ng-click="showItemTimeline()" style="padding:8px;">Show Item Timeline</button>
@@ -336,6 +338,7 @@
 		var leaseTerm = "${leaseTerm}";
         var primaryImageLink = "${primaryImageLink}";
         var imageLinks = "${imageLinks}";
+        var userName = "${userName}";
 		
         var item_id = "${itemId}";
         
