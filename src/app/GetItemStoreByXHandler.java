@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import connect.Connect;
 import pojos.GetItemStoreByXListResObj;
@@ -39,9 +40,10 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 		GetItemStoreByXReqObj rq = (GetItemStoreByXReqObj) req;
 
 		GetItemStoreByXListResObj rs = new GetItemStoreByXListResObj();
-		Connection hcp = getConnectionFromPool();
+		Connection hcp = getReadConnectionFromPool();
 		PreparedStatement sql_stmt = null;
 		ResultSet dbResponse = null;
+		Date date = new Date();
 
 		LOGGER.info("Inside process method " + rq.getUserId() + ", " + rq.getCookie()+ ", "+rq.getMatch_userId());
 		// TODO: Core of the processing takes place here
@@ -61,6 +63,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			Float lat = rq.getLat(), lng = rq.getLng();
 			String searchString = rq.getSearchString();
 			
+			LOGGER.info("Just before SQL query start "+date.toString());
 			sql = "SELECT DISTINCT tb1.*";
 			
 			sql = sql + ", (CASE WHEN tb2.user_fee_expiry IS NOT NULL AND tb2.user_fee_expiry >= NOW() THEN true ELSE false END) AS uber";
@@ -100,6 +103,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 			sql_stmt = hcp.prepareStatement(sql);
 
 			dbResponse = sql_stmt.executeQuery();
+			LOGGER.info("Just after SQL query execute "+date.toString());
 			
 			if (dbResponse.next()) {
 				dbResponse.previous();
@@ -132,6 +136,7 @@ public class GetItemStoreByXHandler extends Connect implements AppHandler {
 					offset = offset + 1;
 				}
 				rs.setLastItemId(offset);
+				LOGGER.info("Just after finishing while loop "+date.toString());
 			} else {
 				rs.setReturnCode(404);
 				LOGGER.warning("End of DB");

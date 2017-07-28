@@ -44,6 +44,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 		Connection hcp = getConnectionFromPool();
 		PreparedStatement ps1 = null, ps2 = null, ps3 = null, ps4 = null;
 		ResultSet rs1 = null, rs2 = null, rs3 = null;
+		int userWishedItems=0;
 		String next_reminder_date = null, signUpCheckBox = "", photoIdCheckBox = "", friendCheckBox = "",
 				postItemCheckBox = "", wishitemCheckBox = "";
 		List<JSONObject> recentWishes = null, wishedItems = null, postedItems = null, addedFriends = null;
@@ -99,6 +100,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 				LOGGER.info("Sending a weekly digest to single user");
 				recentWishes = getRecentWishItems();
 				wishedItems = getWishItems(rs1.getString("user_id"), "Wished");
+				userWishedItems = userWishedItems(rs1.getString("user_id"), "Wished");
 				postedItems = getItems(rs1.getString("user_id"), "InStore");
 				addedFriends = getFriends(rs1.getString("user_id"));
 
@@ -132,7 +134,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 							+ postItemCheckBoxTitle+postItemCheckBoxString + "<br/>";
 				}
 
-				if (wishedItems.size() < DIGEST_LIMIT) {
+				if (userWishedItems < DIGEST_LIMIT) {
 					wishitemCheckBox = "<input type='" + "checkbox" + "' disabled='" + "disabled" + "' ><a href='"
 							+ STORE_URL + "'>" + wishitemCheckBoxtitle + "</a>"+wishitemCheckBoxString+"<br/>";
 				} else {
@@ -166,7 +168,7 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 						+ "'><tbody><tr>";
 				
 				if (wishedItems.size() == 0) {
-					BODY = BODY + "No Items Wished";
+					BODY = BODY + "No Items Matching WishList";
 					LOGGER.info("Wish Items null");
 				} else {
 					LOGGER.info("Wish Items not null");
@@ -256,6 +258,92 @@ public class FlsWeeklyJob extends Connect implements org.quartz.Job {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public String leaderBoardString(){
+		String leaderBoard="",comma=",   ";
+		int limit =3;
+		
+		LOGGER.info("Inside leaderBoardString to fetch top 3 Monthly users");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			LOGGER.info("Getting monthly credit users");
+			String GetUsersMonthlySql = "SELECT tb1.credit_user_id AS credit_monthly_user, SUM(tb1.credit_amount) AS totalCredit_monthly, tb2.user_full_name AS monthly_credit_user FROM `credit_log` tb1 LEFT JOIN users tb2 ON tb1.credit_user_id = tb2.user_id WHERE tb1.credit_date BETWEEN (CURDATE() - INTERVAL 30 DAY) AND CURDATE() GROUP BY credit_user_id ORDER BY totalCredit_monthly DESC LIMIT ?";
+			ps1 = hcp.prepareStatement(GetUsersMonthlySql);
+			ps1.setInt(1, limit);
+			rs1 = ps1.executeQuery();
+			
+			while (rs1.next()) {
+				leaderBoard = leaderBoard +"<b>"+rs1.getString("totalCredit_monthly")+"</b>&nbsp;"+rs1.getString("monthly_credit_user")+comma;
+			}
+			leaderBoard = leaderBoard.substring(0, leaderBoard.length() - comma.length());
+			
+			 
+		} catch (Exception e) {
+			// TODO: handle exception
+			LOGGER.warning("Exception Occured while fetching the users wish item count!!");
+			e.printStackTrace();
+		}finally{
+				try {
+					if (rs1 != null)
+						rs1.close();
+					if (ps1 != null)
+						ps1.close();
+					if (hcp != null)
+						hcp.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return leaderBoard;
+		
+	}
+	private int userWishedItems(String userId, String status){
+		int userWishItemCount =0;
+		
+		LOGGER.info("Inside userWishedItems to fetch users recent wish items count");
+		
+		Connection hcp = getConnectionFromPool();
+		PreparedStatement ps1 = null;
+		ResultSet rs1 = null;
+		
+		try {
+			
+			String sqlGetUserWishItems = "SELECT * FROM `items` WHERE item_user_id=? AND item_status=? ORDER BY item_id DESC LIMIT "
+					+ DIGEST_LIMIT;
+			ps1 = hcp.prepareStatement(sqlGetUserWishItems);
+			ps1.setString(1, userId);
+			ps1.setString(2, status);
+			rs1 = ps1.executeQuery();
+
+			while (rs1.next()) {
+				userWishItemCount = userWishItemCount+1;
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			LOGGER.warning("Exception Occured while fetching the users wish item count!!");
+			e.printStackTrace();
+		}finally{
+				try {
+					if (rs1 != null)
+						rs1.close();
+					if (ps1 != null)
+						ps1.close();
+					if (hcp != null)
+						hcp.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return userWishItemCount;
 	}
 
 	private List<JSONObject> getRecentWishItems() {

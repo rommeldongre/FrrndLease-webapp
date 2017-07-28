@@ -221,7 +221,7 @@ public class ShareItemHandler extends Connect implements AppHandler {
 		String URL = FlsConfig.prefixUrl;
 		String item_url = URL + "/ItemDetails?uid=";
 		
-		Connection hcp = getConnectionFromPool();
+		Connection hcp = getReadConnectionFromPool();
 		PreparedStatement ps1 = null,ps2=null;
 		ResultSet rs1 = null,rs2=null;
 		

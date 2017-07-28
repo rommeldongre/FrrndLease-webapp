@@ -302,7 +302,7 @@ headerApp.controller('headerCtrl', ['$scope',
         $scope.details = '';
 
         if (window.location.href.indexOf("frrndlease.com") > -1) {
-            if (window.location.pathname == '/index.html' || window.location.pathname == '/' || window.location.pathname == '/merchant.html') {
+            if (window.location.pathname == '/index.html' || window.location.pathname == '/' || window.location.pathname == '/merchant.html' || window.location.pathname == '/index-one-pager.html') {
                 $scope.navClassValue = "navbar navbar-static";
                 $scope.showSearch = false;
                 if (window.location.pathname == '/merchant.html')
@@ -312,7 +312,7 @@ headerApp.controller('headerCtrl', ['$scope',
                 $scope.showSearch = true;
             }
         } else {
-            if (window.location.pathname == '/index.html' || window.location.pathname == '/' || window.location.pathname == '/merchant.html') {
+            if (window.location.pathname == '/index.html' || window.location.pathname == '/' || window.location.pathname == '/merchant.html' || window.location.pathname == '/index-one-pager.html') {
                 $scope.navClassValue = "navbar navbar-static";
                 $scope.showSearch = false;
                 if (window.location.pathname == '/merchant.html')
@@ -762,6 +762,14 @@ headerApp.service('eventsCount', ['$rootScope', function ($rootScope) {
     this.updateEventsCount = function () {
         $rootScope.$broadcast('updateEventsCount');
     }
+}]);
+
+headerApp.service('paymentService', ['$rootScope', function ($rootScope) {
+	
+	this.updateFinalAmount = function (data) {
+        $rootScope.$broadcast('finalPaymentAmount', data);
+    }
+	
 }]);
 
 headerApp.service('searchService', ['$rootScope', function ($rootScope) {
@@ -1477,7 +1485,51 @@ headerApp.controller('signUpModalCtrl', ['$scope', 'loginSignupService', 'modalS
 
 }]);
 
-headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount', function ($scope, userFactory, eventsCount) {
+headerApp.controller('summaryModalCtrl', ['$scope', '$window', 'paymentService', function ($scope, $window, paymentService) {
+	
+	$scope.email ="",$scope.number="";
+	$scope.productinfo = "FrrndLease";
+	var base_url ="";
+	
+	if (window.location.href.indexOf("frrndlease.com") > -1) {
+		base_url = "https://www.frrndlease.com/";
+	}else{
+		base_url = "";
+	}
+	
+	$scope.surl = base_url+"payuresponse.jsp";
+	$scope.furl = base_url+"payuresponse.jsp";
+	
+    expr = /@/;  // no quotes here
+	
+	$scope.$on('finalPaymentAmount', function(event, amt){
+		
+		console.log("BroadCast Message recieved");
+		
+		$scope.amount = amt;
+		$scope.name = localStorage.getItem("userloggedinName");
+		var user = localStorage.getItem("userloggedin");
+		if(expr.test(user)){
+			$scope.email = user;
+		}else{
+			$scope.number = user;
+		}
+		
+		
+	});
+	
+	$scope.summaryform = function () {
+			if(base_url == ""){
+				$scope.error ='Please enter Valid ngrok URL to test payment in local host!!';
+			}else{
+				$window.location.href = 'payuform.jsp?amount='+$scope.amount+'&firstname='+$scope.name+'&email='+$scope.email+'&phone='+$scope.number+'&productinfo='+$scope.productinfo+'&surl='+$scope.surl+'&furl='+$scope.furl;
+			}
+	}
+	
+}]);
+	
+	
+headerApp.controller('paymentModalCtrl', ['$scope','userFactory', 'eventsCount', 'paymentService', function ($scope, userFactory, eventsCount,paymentService) {
 
     $scope.payment = {
         credit: 0,
@@ -1554,36 +1606,10 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
 
         if (payableAmt > 0) {
-            if (window.location.href.indexOf("frrndlease.com") > -1) {
-                $scope.payment.paymentError = 'Currently we are not supporting payments!!';
-            } else {
-                var options = {
-                    key: "rzp_test_GwL1Gj4oI20Jeq",
-                    amount: payableAmt * 100,
-                    name: "Grey Labs LLP",
-                    description: "Buying Credits",
-                    image: "images/fls-logo.png",
-                    prefill: {
-                        name: userFactory.userName,
-                        email: userFactory.user
-                    },
-                    handler: function (response) {
-                        userFactory.buyCredits($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function (res) {
-                                if (res.data.code == 0) {
-                                    $scope.payment.paymentError = "Congratulations you bought " + $scope.payment.credit + " credits";
-                                    eventsCount.updateEventsCount();
-                                } else
-                                    console.log(res);
-                            },
-                            function (error) {});
-                    },
-                    modal: {
-                        ondismiss: function () {}
-                    }
-                }
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            }
+				localStorage.setItem("promoCode", $scope.payment.promoCode);
+				paymentService.updateFinalAmount(payableAmt);
+				$('#paymentModal').modal('hide');
+				$('#summaryModal').modal('show');  
         } else if (payableAmt == 0) {
             if ($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo) {
                 userFactory.buyCredits($scope.payment.promoCode, 0, null).then(function (response) {
@@ -1602,10 +1628,9 @@ headerApp.controller('paymentModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         }
 
     }
-
 }]);
 
-headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount', function ($scope, userFactory, eventsCount) {
+headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount', 'paymentService', function ($scope, userFactory, eventsCount, paymentService) {
 
     $scope.payment = {
         month: 0,
@@ -1682,36 +1707,10 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         var payableAmt = $scope.payment.amount - $scope.payment.discount;
 
         if (payableAmt > 0) {
-            if (window.location.href.indexOf("frrndlease.com") > -1) {
-                $scope.payment.paymentError = 'Currently we are not supporting payments!!';
-            } else {
-                var options = {
-                    key: "rzp_test_GwL1Gj4oI20Jeq",
-                    amount: payableAmt * 100,
-                    name: "Grey Labs LLP",
-                    description: "Paying Membership Fee",
-                    image: "images/fls-logo.png",
-                    prefill: {
-                        name: userFactory.userName,
-                        email: userFactory.user
-                    },
-                    handler: function (response) {
-                        userFactory.payMembership($scope.payment.promoCode, payableAmt, response.razorpay_payment_id).then(function (res) {
-                                if (res.data.code == 0) {
-                                    $scope.payment.paymentError = "Congratulations you are an uber member and your membership is valid upto " + $scope.payment.month + " months";
-                                    eventsCount.updateEventsCount();
-                                } else
-                                    console.log(res);
-                            },
-                            function (error) {});
-                    },
-                    modal: {
-                        ondismiss: function () {}
-                    }
-                }
-                var rzp1 = new Razorpay(options);
-                rzp1.open();
-            }
+				localStorage.setItem("promoCode", $scope.payment.promoCode);
+				paymentService.updateFinalAmount(payableAmt);
+				$('#uberPayModal').modal('hide');
+				$('#summaryModal').modal('show'); 
         } else if (payableAmt == 0) {
             if ($scope.payment.amount == $scope.payment.discount && $scope.payment.validPromo) {
                 userFactory.payMembership($scope.payment.promoCode, 0, null).then(function (response) {
@@ -1730,7 +1729,6 @@ headerApp.controller('uberPayModalCtrl', ['$scope', 'userFactory', 'eventsCount'
         }
 
     }
-
 }]);
 
 headerApp.controller('leaderCtrl', ['$scope', function ($scope) {

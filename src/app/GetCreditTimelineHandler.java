@@ -37,7 +37,7 @@ public class GetCreditTimelineHandler extends Connect implements AppHandler {
 		GetCreditTimelineReqObj rq = (GetCreditTimelineReqObj) req;
 
 		GetCreditTimelineListResObj rs = new GetCreditTimelineListResObj();
-		Connection hcp = getConnectionFromPool();
+		Connection hcp = getReadConnectionFromPool();
 		PreparedStatement sql_stmt = null;
 		ResultSet dbResponse = null;
 

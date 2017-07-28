@@ -10,9 +10,12 @@ import pojos.ReqObj;
 import pojos.ResObj;
 import pojos.VerificationReqObj;
 import pojos.VerificationResObj;
+import util.Event;
 import util.FlsCredit;
 import util.FlsLogger;
 import util.OAuth;
+import util.Event.Event_Type;
+import util.Event.Notification_Type;
 import util.FlsCredit.Credit;
 
 public class VerificationHandler extends Connect implements AppHandler {
@@ -42,6 +45,7 @@ public class VerificationHandler extends Connect implements AppHandler {
 		ResultSet rs1 = null;
 		
 		String verification = rq.getVerification();
+		Event event = new Event();
 		
 		LOGGER.info("Inside Process Method of verification handler");
 
@@ -79,6 +83,7 @@ public class VerificationHandler extends Connect implements AppHandler {
 								OAuth oauth = new OAuth();
 								String access_token = oauth.generateOAuth(rs1.getString("user_id"));
 								rs.setAccess_token(access_token);
+								event.createEvent(rs1.getString("user_id"), rs1.getString("user_id"), Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_MAIL_REGISTER, 0, "Your email has been registered on FrrndLease.");
 							}else{
 								rs.setCode(FLS_SQL_EXCEPTION);
 								rs.setMessage("Some issues on our side. Trying to fix them ASAP!!");
@@ -104,6 +109,7 @@ public class VerificationHandler extends Connect implements AppHandler {
 								OAuth oauth = new OAuth();
 								String access_token = oauth.generateOAuth(rs1.getString("user_id"));
 								rs.setAccess_token(access_token);
+								event.createEvent(rs1.getString("user_id"), rs1.getString("user_id"), Event_Type.FLS_EVENT_NOT_NOTIFICATION, Notification_Type.FLS_SMS_REGISTER, 0, "Your mobile number has been registered on FrrndLease.");
 							}else{
 								rs.setCode(FLS_SQL_EXCEPTION);
 								rs.setMessage("Some issues on our side. Trying to fix them ASAP!!");

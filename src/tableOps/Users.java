@@ -118,7 +118,7 @@ public class Users extends Connect {
 			LOGGER.info("Edit Live Status is selected");
 			editLiveStatus();
 			break;
-			
+				
 		case "editverification":
 			LOGGER.info("Edit Verification is selected");
 			editVerification();
@@ -1074,6 +1074,7 @@ public class Users extends Connect {
 					obj.put("fullName", rs1.getString("user_full_name"));
 					obj.put("mobile", rs1.getString("user_mobile"));
 					obj.put("status", rs1.getString("user_status"));
+					obj.put("userActivation", rs1.getString("user_activation"));
 					obj.put("credit", rs1.getInt("user_credit"));
 					obj.put("lat", rs1.getFloat("user_lat"));
 					obj.put("lng", rs1.getFloat("user_lng"));

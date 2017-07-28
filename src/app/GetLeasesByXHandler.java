@@ -37,7 +37,7 @@ public class GetLeasesByXHandler extends Connect implements AppHandler {
 		
 		GetLeasesByXResObj rs = new GetLeasesByXResObj();
 		
-		Connection hcp = getConnectionFromPool();
+		Connection hcp = getReadConnectionFromPool();
 		PreparedStatement sql_stmt = null;
 		ResultSet dbResponse = null;
 		
