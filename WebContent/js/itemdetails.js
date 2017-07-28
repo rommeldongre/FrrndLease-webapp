@@ -9,6 +9,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											'modalService',
                                             'logoutService',
                                             'eventsCount',
+                                            'searchService',
 											'$filter',
 											function($scope, 
 											$window, 
@@ -19,6 +20,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 											modalService,
                                             logoutService,
                                             eventsCount,
+                                            searchService,
 											$filter){
     
     var user = localStorage.getItem("userloggedin");
@@ -30,6 +32,7 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 	$scope.item.category = $window.category;
 	$scope.item.leaseValue = $window.leaseValue;
 	$scope.item.leaseTerm = $window.leaseTerm;
+    $scope.item.userName = $window.userName;
                                                 
     if($window.imageLinks != '' && $window.imageLinks != null)
         $scope.item.imageLinks = $window.imageLinks.split(",");
@@ -387,9 +390,13 @@ itemDetailsApp.controller('itemDetailsCtrl', ['$scope',
 				});
 			}, {scope: 'email,public_profile,user_friends'});
         }else{
-			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){
-						}, function(){});
+			modalService.showModal({}, {bodyText: "Functionality not supported on Localhost" ,showCancel: false,actionButtonText: 'OK'}).then(function(result){}, function(){});
         }
+    }
+
+    $scope.friendsList = function () {
+        localStorage.setItem("searchText", $scope.item.userName);
+        window.location.replace("myapp.html#/");
     }
 	
 	$scope.shareItem = function(){

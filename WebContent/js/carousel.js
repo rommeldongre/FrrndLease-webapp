@@ -27,6 +27,7 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         longitude = lng;
         s = s.toLowerCase();
         if(s != '' && s != "undefined"){
+            localStorage.removeItem("searchText");
             searchString = s.replace(/[^0-9a-zA-Z ]/g, " ");
             $scope.search.show = true;
         }
@@ -38,12 +39,14 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         initPopulate();
 			
         if(searchString != "" && searchString != null && searchString != "undefined")
-            addToWishList(searchString);
+            if(localStorage.getItem("searchText") != searchString)
+                addToWishList(searchString);
         
         getPlaceFromCoordinates(latitude,longitude);
     });
     
     $scope.clearSearch = function(){
+        localStorage.removeItem("searchText");
         searchService.clearSearchTitle();
         searchService.sendDataToCarousel();
     }
@@ -96,6 +99,13 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
         
         $scope.showNext = false;
         
+        var s = localStorage.getItem("searchText");
+        if(s != undefined && s != "" && s!= null){
+            searchString = s;
+            $scope.search.string = searchString;
+            $scope.search.show = true;
+        }
+
         populateCarousel(lastItem);
     }
     

@@ -695,14 +695,26 @@ public class Event extends Connect{
 					
 					if(rs2.next()){
 						// Senders Data
-						obj.put("fromUserId", rs2.getString("senders_user_id"));
-						obj.put("fromUserName", rs2.getString("senders_full_name"));
+						if(rs2.getString("senders_user_id") == null || rs2.getString("senders_user_id").equals("") || rs2.getString("senders_user_id").equals("null"))
+							obj.put("fromUserId", "admin@frrndlease.com");
+						else
+							obj.put("fromUserId", rs2.getString("senders_user_id"));
+						if(rs2.getString("senders_full_name") == null || rs2.getString("senders_full_name").equals("") || rs2.getString("senders_full_name").equals("null"))
+							obj.put("fromUserName", "Admin");
+						else
+							obj.put("fromUserName", rs2.getString("senders_full_name"));
 						if(rs2.getString("senders_profile_pic") == null || rs2.getString("senders_profile_pic").equals("") || rs2.getString("senders_profile_pic").equals("null"))
 							obj.put("fromProfilePic", "");
 						else
 							obj.put("fromProfilePic", rs2.getString("senders_profile_pic"));
-						obj.put("fromUserActivation", rs2.getString("senders_user_activation"));
-						obj.put("fromUserRefferalCode", rs2.getString("senders_refferal_code"));
+						if(rs2.getString("senders_user_activation") == null || rs2.getString("senders_user_activation").equals("") || rs2.getString("senders_user_activation").equals("null"))
+							obj.put("fromUserActivation", "");
+						else
+							obj.put("fromUserActivation", rs2.getString("senders_user_activation"));
+						if(rs2.getString("senders_refferal_code") == null || rs2.getString("senders_refferal_code").equals("") || rs2.getString("senders_refferal_code").equals("null"))
+							obj.put("fromUserRefferalCode", "");
+						else
+							obj.put("fromUserRefferalCode", rs2.getString("senders_refferal_code"));
 						
 						// Receivers Data
 						obj.put("toUserId", rs2.getString("user_id"));

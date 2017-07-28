@@ -51,6 +51,7 @@ public class ItemDetails extends HttpServlet {
 				httprequest.setAttribute("locality", response.getLocality());
 				httprequest.setAttribute("sublocality", response.getSublocality());
 				httprequest.setAttribute("primaryImageLink", response.getPrimaryImageLink());
+				httprequest.setAttribute("userName", response.getUserName());
 				
 				String[] arr = response.getImageLinks();
 
