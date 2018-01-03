@@ -42,6 +42,8 @@ carouselApp.controller('carouselCtrl', ['$scope', '$timeout', 'getItemsForCarous
             if(localStorage.getItem("searchText") != searchString)
                 addToWishList(searchString);
         
+        $('html,body').animate({scrollTop: $("#carouselObject").offset().top - 100}, 'slow');
+
         getPlaceFromCoordinates(latitude,longitude);
     });
     
