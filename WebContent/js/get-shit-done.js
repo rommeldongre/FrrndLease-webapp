@@ -361,7 +361,7 @@ $(document).ready(function(){
 
 examples = {
     initContactUsMap: function(){
-        var myLatlng = new google.maps.LatLng(18.534391, 73.828634);
+        var myLatlng = new google.maps.LatLng(18.549, 73.8391);
         var mapOptions = {
           zoom: 14,
           center: myLatlng,
